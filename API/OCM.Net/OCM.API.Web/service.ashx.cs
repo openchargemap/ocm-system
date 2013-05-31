@@ -272,7 +272,7 @@ namespace OCM.API
         private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, SearchFilterSettings filter)
         {
             //get list of charge points for output:
-            List<OCM.API.Common.Model.ChargePoint> dataList = new ChargePointManager().GetChargePoints(filter);
+            List<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetChargePoints(filter);
             int numResults = dataList.Count;
 
             //send response
@@ -282,7 +282,7 @@ namespace OCM.API
         private void OutputCompactPOIList(HttpContext context, SearchFilterSettings filter)
         {
             //get list of charge points as compact POISearchResult List for output:
-            List<OCM.API.Common.Model.ChargePoint> dataList = new ChargePointManager().GetChargePoints(filter);
+            List<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetChargePoints(filter);
             int numResults = dataList.Count;
 
             List<POISearchResult> poiList = new List<POISearchResult>();

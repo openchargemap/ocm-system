@@ -41,9 +41,9 @@ namespace OCM.MVC.Controllers
             //approves/publishes the given edit directly
             using (var editQueueManager = new EditQueueManager())
             {
-                editQueueManager.ProcessEditQueueItem(id, true);
+                editQueueManager.ProcessEditQueueItem(id, true, (int)Session["UserID"]);
 
-                return View();
+                return RedirectToAction("Index", "EditQueue");
             }
         }
         //
@@ -54,32 +54,7 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
-        //
-        // GET: /EditQueue/Create
-
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        //
-        // POST: /EditQueue/Create
-
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
+       
         //
         // GET: /EditQueue/Edit/5
 

@@ -33,7 +33,7 @@ namespace OCM.API.Common
         {
             try
             {
-                var cpManager = new ChargePointManager();
+                var cpManager = new POIManager();
                 bool enableEditQueue = bool.Parse(ConfigurationManager.AppSettings["EnableEditQueue"]);
                 bool addToQueueAndDB = true; //if true item is entered in edit queue and to the ChargePoint list in db
                 bool isUpdate = false;
@@ -76,7 +76,7 @@ namespace OCM.API.Common
                 if (poi.ID > 0 && !String.IsNullOrEmpty(poi.UUID))
                 {
                     //poi is an update, validate
-                    if (dataModel.ChargePoints.Count(c => c.ID == poi.ID && c.UUID == poi.UUID) == 1)
+                    if (dataModel.ChargePoints.Any(c => c.ID == poi.ID && c.UUID == poi.UUID))
                     {
                         //update is valid poi, check if user has permission to perform an update
                         isUpdate = true;
@@ -186,7 +186,7 @@ namespace OCM.API.Common
 
 
                     //updates allowed for this user, go ahead and store the update
-                    Core.Data.ChargePoint cpData = new Core.Data.ChargePoint();
+                    var cpData = new Core.Data.ChargePoint();
                     if (isUpdate) cpData = dataModel.ChargePoints.First(c => c.ID == poi.ID);
 
                     //set/update cp properties

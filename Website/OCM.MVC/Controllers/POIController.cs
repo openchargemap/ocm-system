@@ -134,7 +134,7 @@ namespace OCM.MVC.Controllers
 
         public ActionResult Index(POIBrowseModel filter)
         {
-            var cpManager = new API.Common.ChargePointManager();
+            var cpManager = new API.Common.POIManager();
 
             //dropdown selections of -1 represent an intended null selection, fix this by nulling relevant items
             filter.CountryIDs = this.ConvertNullableSelection(filter.CountryIDs);
@@ -233,7 +233,7 @@ namespace OCM.MVC.Controllers
         //[OutputCache(Duration=240, VaryByParam="id")]
         public ActionResult Details(int id, string layout)
         {
-            OCM.API.Common.ChargePointManager cpManager = new API.Common.ChargePointManager();
+            OCM.API.Common.POIManager cpManager = new API.Common.POIManager();
             var poi = cpManager.Get(id, true);
             ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
 
@@ -258,7 +258,7 @@ namespace OCM.MVC.Controllers
 
         public ActionResult AddMediaItem(int id)
         {
-            var cpManager = new API.Common.ChargePointManager();
+            var cpManager = new API.Common.POIManager();
             var poi = cpManager.Get(id, true);
 
             return View(poi);

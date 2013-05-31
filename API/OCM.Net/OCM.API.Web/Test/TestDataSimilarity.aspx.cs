@@ -13,7 +13,7 @@ namespace OCM.API.Test
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var evseManager = new ChargePointManager();
+            var evseManager = new POIManager();
             var testPoint = evseManager.Get(3400);
 
             if (testPoint != null)

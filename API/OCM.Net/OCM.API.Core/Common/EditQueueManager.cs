@@ -34,7 +34,7 @@ namespace OCM.API.Common
 
             var redundantEdits = new List<Model.EditQueueItem>();
 
-            var cpManager = new ChargePointManager();
+            var cpManager = new POIManager();
 
             foreach (var item in sourceList)
             {
@@ -54,7 +54,7 @@ namespace OCM.API.Common
             DataModel.SaveChanges();
         }
 
-        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, ChargePointManager cpManager)
+        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, POIManager cpManager)
         {
             var queueItem = Model.Extensions.EditQueueItem.FromDataModel(item);
 
@@ -80,7 +80,7 @@ namespace OCM.API.Common
                         && (filter.ShowEditsOnly == false || (filter.ShowEditsOnly == true && i.PreviousData != null))
                         )).OrderByDescending(e => e.DateSubmitted);
 
-            var cpManager = new ChargePointManager();
+            var cpManager = new POIManager();
             var outputList = new List<Model.EditQueueItem>();
 
             //perform object level differencing on json contents of edit queue items (very expensive), used to get summary and count of differences per item
@@ -109,7 +109,7 @@ namespace OCM.API.Common
                     //processing a POI add/edit
                     //get diff between previous and edit    
 
-                    ChargePointManager poiManager = new ChargePointManager();
+                    POIManager poiManager = new POIManager();
                     Model.ChargePoint poiA = DeserializePOIFromJSON(queueItem.PreviousData);
                     Model.ChargePoint poiB = DeserializePOIFromJSON(queueItem.EditData);
 

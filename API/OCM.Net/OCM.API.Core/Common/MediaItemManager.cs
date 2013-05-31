@@ -18,7 +18,7 @@ namespace OCM.API.Common
 
             var mediaItem = new MediaItem();
 
-            var poi = new ChargePointManager().Get(chargePointId);
+            var poi = new POIManager().Get(chargePointId);
             string[] urls = UploadPOIImageToStorage(tempFolder, sourceImageFile, poi);
             mediaItem.ItemURL = urls[0];
             mediaItem.ItemThumbnailURL = urls[1];

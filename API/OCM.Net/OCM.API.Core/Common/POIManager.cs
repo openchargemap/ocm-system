@@ -11,11 +11,11 @@ using System.ComponentModel.DataAnnotations;
 namespace OCM.API.Common
 {
 
-    public class ChargePointManager
+    public class POIManager
     {
         public bool LoadUserComments = false;
 
-        public ChargePointManager()
+        public POIManager()
         {
             LoadUserComments = false;
         }

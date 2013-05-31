@@ -95,7 +95,7 @@ namespace OCM.API.Common.DataSummary
             }
 
             //populate recently modified charge points TODO: differentiate between updated since and created since?
-            ChargePointManager cpManager = new ChargePointManager();            
+            POIManager cpManager = new POIManager();            
             summary.UpdatedChargePoints = cpManager.GetChargePoints(filterSettings);
             return summary; 
         }

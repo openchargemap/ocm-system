@@ -101,7 +101,7 @@
     <Compile Include="Common\MediaItemManager.cs" />
     <Compile Include="Common\SearchFilterSettings.cs" />
     <Compile Include="Common\AuditLogManager.cs" />
-    <Compile Include="Common\ChargePointManager.cs" />
+    <Compile Include="Common\POIManager.cs" />
     <Compile Include="Common\DataSummaryManager.cs" />
     <Compile Include="Common\Extensions\AddressInfo.cs" />
     <Compile Include="Common\Extensions\AuditLog.cs" />

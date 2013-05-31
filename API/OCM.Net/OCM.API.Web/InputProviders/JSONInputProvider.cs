@@ -29,7 +29,7 @@ namespace OCM.API.InputProviders
 
                 //validate cp submission
 
-                if (ChargePointManager.IsValid(cp))
+                if (POIManager.IsValid(cp))
                 {
                     return true;
                 }
