@@ -114,6 +114,7 @@ namespace OCM.API.Common
                     Model.ChargePoint poiB = DeserializePOIFromJSON(queueItem.EditData);
 
                     bool poiUpdateRequired = false;
+                    
                     if (poiA != null)
                     {
                         //this is an edit, load the latest version of the POI as version 'A'
@@ -121,29 +122,40 @@ namespace OCM.API.Common
                         if (poiManager.HasDifferences(poiA, poiB))
                         {
                             poiUpdateRequired = true;
-
-
                         }
                     }
 
                     //save poi update
+                    var poiData = new Core.Data.ChargePoint();
 
+                    //if its an edit, load the original details before applying the change
+                    if (poiUpdateRequired) poiData = DataModel.ChargePoints.First(c => c.ID == poiB.ID);
 
-                    //update edit queue item as process
+                    //set/update cp properties
+                    poiManager.PopulateChargePoint_SimpleToData(poiB, poiData, DataModel);
+
+                    //set status type to published if previously unset
+                    if (poiData.SubmissionStatusTypeID == null)
+                    {
+                        poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                    }
+
+                    if (poiData.ID == 0)
+                    {
+                        //new item, set contributor on poi details
+                        poiData.Contributor = DataModel.Users.First(u => u.ID == queueItem.User.ID);
+                    }
+
+                    //publish edit
+                    DataModel.SaveChanges();
+
+                    //update edit queue item as processed
                     queueItem.IsProcessed = true;
                     queueItem.ProcessedByUser = Model.Extensions.User.FromDataModel(DataModel.Users.FirstOrDefault(u => u.ID == userId));
                     queueItem.DateProcessed = DateTime.UtcNow;
                     DataModel.SaveChanges();
-
                 }
-
-
             }
-
-
-            //save poi update/new
-
-            throw new NotImplementedException();
         }
     }
 }
