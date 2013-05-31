@@ -67,10 +67,10 @@
     <Compile Include="Base\ConnectionInfo.cs" />
     <Compile Include="Base\ConnectionType.cs" />
     <Compile Include="Base\CheckinStatusType.cs" />
-    <Compile Include="Base\ContactSubmission.cs" />
+    <Compile Include="Extended\ContactSubmission.cs" />
     <Compile Include="Base\MediaItem.cs" />
     <Compile Include="Base\DataType.cs" />
-    <Compile Include="Base\DiffItem.cs" />
+    <Compile Include="Extended\DiffItem.cs" />
     <Compile Include="Base\EntityType.cs" />
     <Compile Include="Base\EditQueueItem.cs" />
     <Compile Include="Base\CurrentType.cs" />
@@ -82,8 +82,9 @@
     <Compile Include="Base\MetadataGroup.cs" />
     <Compile Include="Base\MetadataValue.cs" />
     <Compile Include="Base\OperatorInfo.cs" />
-    <Compile Include="Base\POISearchResult.cs" />
-    <Compile Include="Base\SimpleReferenceType.cs" />
+    <Compile Include="Extended\EditQueueFilter.cs" />
+    <Compile Include="Extended\POISearchResult.cs" />
+    <Compile Include="Extended\SimpleReferenceType.cs" />
     <Compile Include="Base\StatusType.cs" />
     <Compile Include="Base\SubmissionStatusType.cs" />
     <Compile Include="Base\UsageType.cs" />
