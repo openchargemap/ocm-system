@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Import.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="OCM_API_Identitifer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">System</Value>
+    </Setting>
+    <Setting Name="OCM_API_SessionToken" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Geonames_API_Username" Type="System.String" Scope="User">
+      <Value Profile="(Default)">demo</Value>
+    </Setting>
+    <Setting Name="Import_DataFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\..\..\..\..\..\..\import_sample_data\</Value>
+    </Setting>
+    <Setting Name="APIKey_Coulomb" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="APIPwd_Coulomb" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="APIKey_NobilDotNo" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

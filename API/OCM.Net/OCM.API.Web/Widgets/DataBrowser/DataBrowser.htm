@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>OCM Data Browser</title>
+    <link href="StyleSheet.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js"></script>
+    <script type="text/javascript" src="databrowser.js"></script>
+</head>
+<body>
+    <h1>Browse Data</h1>
+    <div id="searchOptions">
+        ID:
+        <input type="text" id="ocm_findby_id" value="" />
+        Title:
+        <input type="text" id="ocm_findby_locationtitle" value="" />
+        Country:
+        <select id="ocm_findby_countrycode">
+            <option value="">(All)</option>
+            <option value="US">US</option>
+            <option value="GB">GB</option>
+        </select>
+        Submission Status:
+        <select id="ocm_findby_submissionstatustypeid">
+            <option value="">(All Published Items)</option>
+            <option value="1">Submission Under Review</option>
+            <option value="50">Imported and Under Review</option>
+            <option value="100">Imported and Published</option>
+            <option value="200">Submission Published</option>
+            <option value="1000">Delisted</option>
+        </select>
+        <input type="button" value="Go" onclick="searchItems();" />
+    </div>
+    <table>
+        <tr>
+            <td>
+                <div id="gridContainer">
+                </div>
+            </td>
+            <td>
+                <div id="editContainer">
+                </div>
+            </td>
+        </tr>
+    </table>
+    <textarea id="debug" rows="5" cols="80"></textarea>
+</body>
+</html>

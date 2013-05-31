@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <widget xmlns = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "org.openchargemap.app"
+        versionCode="3.0.1"
+        version   = "3.0.1">
+
+    <!-- versionCode is optional and Android only -->
+
+    <name>OpenChargeMap</name>
+
+    <description>
+        Open Charge Map is the world's largest open global registry of electric vehicle charging locations.
+    </description>
+
+    <author href="http://openchargemap.org" email="apps@webprofusion.com">
+        Christopher Cook
+    </author>
+    
+    <preference name="webviewbounce" value="false" />
+    <preference name="phonegap-version" value="2.3.0" />
+    <preference name="android-minSdkVersion" value="8" />
+	<icon src="images/AppIcon114x114.png" />
+	<gap:splash src="images/AppSplashscreen480x800.png" />
+	<gap:plugin name="ChildBrowser" />
+	<gap:plugin name="GAPlugin" />
+
+	<!--permissions-->
+	<access origin="*" />
+	<feature name="http://api.phonegap.com/1.0/geolocation"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+</widget>

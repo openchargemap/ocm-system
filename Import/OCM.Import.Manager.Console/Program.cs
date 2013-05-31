@@ -1,0 +1,122 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OCM.Import;
+using OCM.Import.Providers;
+
+namespace OCM.Import.Manager.Console
+{
+    class Program
+    {
+        static string LogFile = "import.log";
+        static bool EnableLogging = false;
+
+        enum ActionType
+        {
+            DataImport,
+            NetworkServices
+        }
+
+        static void LogEvent(string message)
+        {
+            LogEvent(message, false);
+        }
+
+        static void LogEvent(string message, bool createFile)
+        {
+            if (!EnableLogging)
+            {
+                System.Console.WriteLine(message);
+            }
+            else
+            {
+
+                message += "\r\n";
+                if (createFile)
+                {
+                    System.IO.File.WriteAllText(LogFile, message);
+                }
+                else
+                {
+                    System.IO.File.AppendAllText(LogFile, message);
+                }
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            bool isAutomaticMode = false;
+            bool isAPIImportMode = false;
+
+            string importFolder = "";
+            string OCM_API_Identifier = null;
+            string OCM_API_SessionToken = null;
+
+            LogEvent("Starting Import:", true);
+            if (args.Length > 0)
+            {
+                LogEvent("Arguments supplied: ");
+
+                for (int i = 0; i < args.Length; i++)
+                {
+                    string arg = args[i];
+                    LogEvent("arg: " + arg);
+                    if (arg == "-auto") isAutomaticMode = true;
+                    if (arg == "-api") isAPIImportMode = true;
+                    //if (arg == "-log") EnableLogging = true;
+
+                    try
+                    {
+                        if (arg == "-api_identifier")
+                        {
+                            OCM_API_Identifier = args[i + 1];
+                        }
+
+                        if (arg == "-api_sessiontoken")
+                        {
+                            OCM_API_SessionToken = args[i + 1];
+                        }
+                    }
+                    catch (Exception) { LogEvent("Invalid parameter supplied."); }
+                }
+            }
+            else
+            {
+                LogEvent("No Arguments supplied.");
+            }
+
+            if (isAutomaticMode)
+            {
+                bool actionPerformed = false;
+
+                ActionType mode = ActionType.DataImport;
+
+                if (mode == ActionType.DataImport && isAPIImportMode == true && OCM_API_Identifier != null && OCM_API_SessionToken != null)
+                {
+                    ExportType exportType = ExportType.API;
+
+                    ImportManager importManager = new ImportManager();
+                    LogEvent("Performing Import, Publishing via API (" + OCM_API_Identifier + ":" + OCM_API_SessionToken + "): " + DateTime.Now.ToShortTimeString());
+                    importManager.PerformImportProcessing(exportType, importFolder, OCM_API_Identifier, OCM_API_SessionToken, true);
+                    LogEvent("Import Processed. Exiting. " + DateTime.Now.ToShortTimeString());
+
+                    actionPerformed = true;
+                }
+
+                if (mode == ActionType.NetworkServices)
+                {
+                    //network service polling
+                    //OCM.API.NetworkServices.ServiceManager serviceManager = new OCM.API.NetworkServices.ServiceManager();
+                    //serviceManager.Test(OCM.API.NetworkServices.ServiceProvider.CoulombChargePoint);
+                }
+
+                if (!actionPerformed)
+                {
+                    LogEvent("Nothing to do. Exiting. " + DateTime.Now.ToShortTimeString());
+                }
+            }
+
+        }
+    }
+}

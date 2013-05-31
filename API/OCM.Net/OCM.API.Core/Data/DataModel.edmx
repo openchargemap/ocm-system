@@ -1,0 +1,2123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="OCM.Core.Data.OCMEntities.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="OCMCoreDataOCMEntitiesStoreContainer">
+          <EntitySet Name="AddressInfo" EntityType="OCM.Core.Data.OCMEntities.Store.AddressInfo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AuditLog" EntityType="OCM.Core.Data.OCMEntities.Store.AuditLog" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChargePoint" EntityType="OCM.Core.Data.OCMEntities.Store.ChargePoint" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChargerType" EntityType="OCM.Core.Data.OCMEntities.Store.ChargerType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CheckinStatusType" EntityType="OCM.Core.Data.OCMEntities.Store.CheckinStatusType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ConnectionInfo" EntityType="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ConnectionType" EntityType="OCM.Core.Data.OCMEntities.Store.ConnectionType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Country" EntityType="OCM.Core.Data.OCMEntities.Store.Country" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CurrentType" EntityType="OCM.Core.Data.OCMEntities.Store.CurrentType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DataProvider" EntityType="OCM.Core.Data.OCMEntities.Store.DataProvider" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DataProviderStatusType" EntityType="OCM.Core.Data.OCMEntities.Store.DataProviderStatusType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DataType" EntityType="OCM.Core.Data.OCMEntities.Store.DataType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EditQueueItem" EntityType="OCM.Core.Data.OCMEntities.Store.EditQueueItem" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EntityType" EntityType="OCM.Core.Data.OCMEntities.Store.EntityType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MediaItem" EntityType="OCM.Core.Data.OCMEntities.Store.MediaItem" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MetadataField" EntityType="OCM.Core.Data.OCMEntities.Store.MetadataField" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MetadataGroup" EntityType="OCM.Core.Data.OCMEntities.Store.MetadataGroup" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MetadataValue" EntityType="OCM.Core.Data.OCMEntities.Store.MetadataValue" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Operator" EntityType="OCM.Core.Data.OCMEntities.Store.Operator" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="StatusType" EntityType="OCM.Core.Data.OCMEntities.Store.StatusType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SubmissionStatusType" EntityType="OCM.Core.Data.OCMEntities.Store.SubmissionStatusType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SystemConfig" EntityType="OCM.Core.Data.OCMEntities.Store.SystemConfig" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UsageType" EntityType="OCM.Core.Data.OCMEntities.Store.UsageType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="User" EntityType="OCM.Core.Data.OCMEntities.Store.User" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserComment" EntityType="OCM.Core.Data.OCMEntities.Store.UserComment" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserCommentType" EntityType="OCM.Core.Data.OCMEntities.Store.UserCommentType" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_AddressInfo_Country" Association="OCM.Core.Data.OCMEntities.Store.FK_AddressInfo_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="AddressInfo" EntitySet="AddressInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AuditLog_User" Association="OCM.Core.Data.OCMEntities.Store.FK_AuditLog_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AuditLog" EntitySet="AuditLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_AddressInfo" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_AddressInfo">
+            <End Role="AddressInfo" EntitySet="AddressInfo" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="ChargePoint1" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_DataProvider" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProvider" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_Operator" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_Operator">
+            <End Role="Operator" EntitySet="Operator" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_StatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_StatusType">
+            <End Role="StatusType" EntitySet="StatusType" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_SubmissionStatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_SubmissionStatusType">
+            <End Role="SubmissionStatusType" EntitySet="SubmissionStatusType" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_UsageType" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_UsageType">
+            <End Role="UsageType" EntitySet="UsageType" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_User" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_ChargerType" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_ChargerType">
+            <End Role="ChargerType" EntitySet="ChargerType" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_CurrentType" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_CurrentType">
+            <End Role="CurrentType" EntitySet="CurrentType" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_StatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_StatusType">
+            <End Role="StatusType" EntitySet="StatusType" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataProvider_DataProviderStatus" Association="OCM.Core.Data.OCMEntities.Store.FK_DataProvider_DataProviderStatus">
+            <End Role="DataProviderStatusType" EntitySet="DataProviderStatusType" />
+            <End Role="DataProvider" EntitySet="DataProvider" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueue_User" Association="OCM.Core.Data.OCMEntities.Store.FK_EditQueue_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueue_User1" Association="OCM.Core.Data.OCMEntities.Store.FK_EditQueue_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueueItem_EntityType" Association="OCM.Core.Data.OCMEntities.Store.FK_EditQueueItem_EntityType">
+            <End Role="EntityType" EntitySet="EntityType" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MediaItem_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_MediaItem_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="MediaItem" EntitySet="MediaItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MediaItem_User" Association="OCM.Core.Data.OCMEntities.Store.FK_MediaItem_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="MediaItem" EntitySet="MediaItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataField_DataType" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataField_DataType">
+            <End Role="DataType" EntitySet="DataType" />
+            <End Role="MetadataField" EntitySet="MetadataField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataField_MetadataGroup" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataField_MetadataGroup">
+            <End Role="MetadataGroup" EntitySet="MetadataGroup" />
+            <End Role="MetadataField" EntitySet="MetadataField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataGroup_User" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataGroup_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="MetadataGroup" EntitySet="MetadataGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataValue_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="MetadataValue" EntitySet="MetadataValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_MetadataField" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataValue_MetadataField">
+            <End Role="MetadataField" EntitySet="MetadataField" />
+            <End Role="MetadataValue" EntitySet="MetadataValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Operator_AddressInfo" Association="OCM.Core.Data.OCMEntities.Store.FK_Operator_AddressInfo">
+            <End Role="AddressInfo" EntitySet="AddressInfo" />
+            <End Role="Operator" EntitySet="Operator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SystemConfig_DataType" Association="OCM.Core.Data.OCMEntities.Store.FK_SystemConfig_DataType">
+            <End Role="DataType" EntitySet="DataType" />
+            <End Role="SystemConfig" EntitySet="SystemConfig" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_CheckinStatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_CheckinStatusType">
+            <End Role="CheckinStatusType" EntitySet="CheckinStatusType" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_User" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_UserCommentType" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_UserCommentType">
+            <End Role="UserCommentType" EntitySet="UserCommentType" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AddressInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressLine1" Type="nvarchar" MaxLength="1000" />
+          <Property Name="AddressLine2" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Town" Type="nvarchar" MaxLength="100" />
+          <Property Name="StateOrProvince" Type="nvarchar" MaxLength="100" />
+          <Property Name="Postcode" Type="nvarchar" MaxLength="100" />
+          <Property Name="CountryID" Type="int" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="Longitude" Type="float" />
+          <Property Name="ContactTelephone1" Type="nvarchar" MaxLength="200" />
+          <Property Name="ContactTelephone2" Type="nvarchar" MaxLength="200" />
+          <Property Name="ContactEmail" Type="nvarchar" MaxLength="500" />
+          <Property Name="AccessComments" Type="nvarchar(max)" />
+          <Property Name="GeneralComments" Type="nvarchar(max)" />
+          <Property Name="RelatedURL" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EventDate" Type="datetime" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="EventDescription" Type="nvarchar(max)" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ChargePoint">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UUID" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ParentChargePointID" Type="int" />
+          <Property Name="DataProviderID" Type="int" Nullable="false" />
+          <Property Name="DataProvidersReference" Type="nvarchar" MaxLength="100" />
+          <Property Name="OperatorID" Type="int" />
+          <Property Name="OperatorsReference" Type="nvarchar" MaxLength="100" />
+          <Property Name="UsageTypeID" Type="int" />
+          <Property Name="AddressInfoID" Type="int" />
+          <Property Name="NumberOfPoints" Type="int" />
+          <Property Name="GeneralComments" Type="nvarchar(max)" />
+          <Property Name="DatePlanned" Type="smalldatetime" />
+          <Property Name="DateLastConfirmed" Type="smalldatetime" />
+          <Property Name="StatusTypeID" Type="int" />
+          <Property Name="DateLastStatusUpdate" Type="smalldatetime" />
+          <Property Name="DataQualityLevel" Type="int" />
+          <Property Name="DateCreated" Type="smalldatetime" />
+          <Property Name="SubmissionStatusTypeID" Type="int" />
+          <Property Name="UsageCost" Type="nvarchar" MaxLength="200" />
+          <Property Name="ContributorUserID" Type="int" />
+        </EntityType>
+        <EntityType Name="ChargerType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="IsFastChargeCapable" Type="bit" Nullable="false" />
+          <Property Name="DisplayOrder" Type="int" />
+        </EntityType>
+        <EntityType Name="CheckinStatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="tinyint" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="IsPositive" Type="bit" />
+          <Property Name="IsAutomatedCheckin" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ConnectionInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ChargePointID" Type="int" Nullable="false" />
+          <Property Name="ConnectionTypeID" Type="int" Nullable="false" />
+          <Property Name="Reference" Type="nvarchar" MaxLength="100" />
+          <Property Name="StatusTypeID" Type="int" />
+          <Property Name="Amps" Type="int" />
+          <Property Name="Voltage" Type="int" />
+          <Property Name="PowerKW" Type="float" />
+          <Property Name="LevelTypeID" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="CurrentTypeID" Type="smallint" />
+        </EntityType>
+        <EntityType Name="ConnectionType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="FormalName" Type="nvarchar" MaxLength="200" />
+          <Property Name="IsDiscontinued" Type="bit" />
+          <Property Name="IsObsolete" Type="bit" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ISOCode" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="CurrentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="smallint" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="DataProvider">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="250" />
+          <Property Name="WebsiteURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="DataProviderStatusTypeID" Type="int" />
+        </EntityType>
+        <EntityType Name="DataProviderStatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="IsProviderEnabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="tinyint" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EditQueueItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="IsProcessed" Type="bit" Nullable="false" />
+          <Property Name="ProcessedByUserID" Type="int" />
+          <Property Name="DateSubmitted" Type="smalldatetime" Nullable="false" />
+          <Property Name="DateProcessed" Type="smalldatetime" />
+          <Property Name="EditData" Type="nvarchar(max)" />
+          <Property Name="PreviousData" Type="nvarchar(max)" />
+          <Property Name="EntityID" Type="int" />
+          <Property Name="EntityTypeID" Type="smallint" />
+        </EntityType>
+        <EntityType Name="EntityType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="smallint" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="MediaItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ItemURL" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="ItemThumbnailURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ChargePointID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="DateCreated" Type="smalldatetime" Nullable="false" />
+          <Property Name="IsEnabled" Type="bit" Nullable="false" />
+          <Property Name="IsVideo" Type="bit" Nullable="false" />
+          <Property Name="IsFeaturedItem" Type="bit" Nullable="false" />
+          <Property Name="MetadataValue" Type="nvarchar" MaxLength="1000" />
+          <Property Name="IsExternalResource" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MetadataField">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MetadataGroupID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="DataTypeID" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MetadataGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="GroupOwnerUserID" Type="int" Nullable="false" />
+          <Property Name="IsRestrictedEdit" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MetadataValue">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ChargePointID" Type="int" Nullable="false" />
+          <Property Name="MetadataFieldID" Type="int" Nullable="false" />
+          <Property Name="ItemValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Operator">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" MaxLength="250" />
+          <Property Name="WebsiteURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="PhonePrimaryContact" Type="nvarchar" MaxLength="100" />
+          <Property Name="PhoneSecondaryContact" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsPrivateIndividual" Type="bit" />
+          <Property Name="AddressInfoID" Type="int" />
+          <Property Name="BookingURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactEmail" Type="nvarchar" MaxLength="500" />
+          <Property Name="FaultReportEmail" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsRestrictedEdit" Type="bit" />
+        </EntityType>
+        <EntityType Name="StatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="IsOperational" Type="bit" />
+        </EntityType>
+        <EntityType Name="SubmissionStatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="IsLive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SystemConfig">
+          <Key>
+            <PropertyRef Name="ConfigKeyName" />
+          </Key>
+          <Property Name="ConfigKeyName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ConfigValue" Type="nvarchar" MaxLength="500" />
+          <Property Name="DataTypeID" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="UsageType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="IsPayAtLocation" Type="bit" />
+          <Property Name="IsMembershipRequired" Type="bit" />
+          <Property Name="IsAccessKeyRequired" Type="bit" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IdentityProvider" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Identifier" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="CurrentSessionToken" Type="nvarchar" MaxLength="100" />
+          <Property Name="Profile" Type="nvarchar(max)" />
+          <Property Name="Location" Type="nvarchar" MaxLength="500" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="Longitude" Type="float" />
+          <Property Name="WebsiteURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="ReputationPoints" Type="int" />
+          <Property Name="Permissions" Type="nvarchar(max)" />
+          <Property Name="PermissionsRequested" Type="nvarchar(max)" />
+          <Property Name="DateCreated" Type="smalldatetime" Nullable="false" />
+          <Property Name="DateLastLogin" Type="smalldatetime" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsEmergencyChargingProvider" Type="bit" />
+          <Property Name="IsProfilePublic" Type="bit" />
+          <Property Name="IsPublicChargingProvider" Type="bit" />
+          <Property Name="APIKey" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="UserComment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ChargePointID" Type="int" Nullable="false" />
+          <Property Name="UserCommentTypeID" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="Rating" Type="tinyint" />
+          <Property Name="RelatedURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="CheckinStatusTypeID" Type="tinyint" />
+          <Property Name="UserID" Type="int" />
+        </EntityType>
+        <EntityType Name="UserCommentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_AddressInfo_Country">
+          <End Role="Country" Type="OCM.Core.Data.OCMEntities.Store.Country" Multiplicity="0..1" />
+          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.Store.AddressInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AddressInfo">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AuditLog_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="1" />
+          <End Role="AuditLog" Type="OCM.Core.Data.OCMEntities.Store.AuditLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AuditLog">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_AddressInfo">
+          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.Store.AddressInfo" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AddressInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="AddressInfoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="0..1" />
+          <End Role="ChargePoint1" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint1">
+              <PropertyRef Name="ParentChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_DataProvider">
+          <End Role="DataProvider" Type="OCM.Core.Data.OCMEntities.Store.DataProvider" Multiplicity="1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProvider">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="DataProviderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_Operator">
+          <End Role="Operator" Type="OCM.Core.Data.OCMEntities.Store.Operator" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Operator">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="OperatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_StatusType">
+          <End Role="StatusType" Type="OCM.Core.Data.OCMEntities.Store.StatusType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="StatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_SubmissionStatusType">
+          <End Role="SubmissionStatusType" Type="OCM.Core.Data.OCMEntities.Store.SubmissionStatusType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubmissionStatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="SubmissionStatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_UsageType">
+          <End Role="UsageType" Type="OCM.Core.Data.OCMEntities.Store.UsageType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UsageType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="UsageTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="ContributorUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_ChargerType">
+          <End Role="ChargerType" Type="OCM.Core.Data.OCMEntities.Store.ChargerType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargerType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="LevelTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_CurrentType">
+          <End Role="CurrentType" Type="OCM.Core.Data.OCMEntities.Store.CurrentType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="CurrentTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_StatusType">
+          <End Role="StatusType" Type="OCM.Core.Data.OCMEntities.Store.StatusType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="StatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataProvider_DataProviderStatus">
+          <End Role="DataProviderStatusType" Type="OCM.Core.Data.OCMEntities.Store.DataProviderStatusType" Multiplicity="0..1" />
+          <End Role="DataProvider" Type="OCM.Core.Data.OCMEntities.Store.DataProvider" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProviderStatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DataProvider">
+              <PropertyRef Name="DataProviderStatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EditQueue_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.Store.EditQueueItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EditQueueItem">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EditQueue_User1">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.Store.EditQueueItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EditQueueItem">
+              <PropertyRef Name="ProcessedByUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EditQueueItem_EntityType">
+          <End Role="EntityType" Type="OCM.Core.Data.OCMEntities.Store.EntityType" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.Store.EditQueueItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EditQueueItem">
+              <PropertyRef Name="EntityTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MediaItem_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
+          <End Role="MediaItem" Type="OCM.Core.Data.OCMEntities.Store.MediaItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MediaItem">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MediaItem_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="1" />
+          <End Role="MediaItem" Type="OCM.Core.Data.OCMEntities.Store.MediaItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MediaItem">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataField_DataType">
+          <End Role="DataType" Type="OCM.Core.Data.OCMEntities.Store.DataType" Multiplicity="1" />
+          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.Store.MetadataField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataField">
+              <PropertyRef Name="DataTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataField_MetadataGroup">
+          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.Store.MetadataGroup" Multiplicity="1" />
+          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.Store.MetadataField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataGroup">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataField">
+              <PropertyRef Name="MetadataGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataGroup_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="1" />
+          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.Store.MetadataGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataGroup">
+              <PropertyRef Name="GroupOwnerUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataValue_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
+          <End Role="MetadataValue" Type="OCM.Core.Data.OCMEntities.Store.MetadataValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataValue">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataValue_MetadataField">
+          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.Store.MetadataField" Multiplicity="1" />
+          <End Role="MetadataValue" Type="OCM.Core.Data.OCMEntities.Store.MetadataValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataField">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataValue">
+              <PropertyRef Name="MetadataFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Operator_AddressInfo">
+          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.Store.AddressInfo" Multiplicity="0..1" />
+          <End Role="Operator" Type="OCM.Core.Data.OCMEntities.Store.Operator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AddressInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Operator">
+              <PropertyRef Name="AddressInfoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SystemConfig_DataType">
+          <End Role="DataType" Type="OCM.Core.Data.OCMEntities.Store.DataType" Multiplicity="0..1" />
+          <End Role="SystemConfig" Type="OCM.Core.Data.OCMEntities.Store.SystemConfig" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SystemConfig">
+              <PropertyRef Name="DataTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_CheckinStatusType">
+          <End Role="CheckinStatusType" Type="OCM.Core.Data.OCMEntities.Store.CheckinStatusType" Multiplicity="0..1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CheckinStatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="CheckinStatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_UserCommentType">
+          <End Role="UserCommentType" Type="OCM.Core.Data.OCMEntities.Store.UserCommentType" Multiplicity="1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserCommentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="UserCommentTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="udf_GetDistanceFromLatLonKM" ReturnType="float" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Latitude1" Type="float" Mode="In" />
+          <Parameter Name="Longitude1" Type="float" Mode="In" />
+          <Parameter Name="Latitude2" Type="float" Mode="In" />
+          <Parameter Name="Longitude2" Type="float" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OCM.Core.Data.OCMEntities" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="OCMEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="AddressInfoList" EntityType="OCM.Core.Data.OCMEntities.AddressInfo" />
+          <EntitySet Name="AuditLogs" EntityType="OCM.Core.Data.OCMEntities.AuditLog" />
+          <EntitySet Name="ChargePoints" EntityType="OCM.Core.Data.OCMEntities.ChargePoint" />
+          <EntitySet Name="ChargerTypes" EntityType="OCM.Core.Data.OCMEntities.ChargerType" />
+          <EntitySet Name="CheckinStatusTypes" EntityType="OCM.Core.Data.OCMEntities.CheckinStatusType" />
+          <EntitySet Name="ConnectionInfoList" EntityType="OCM.Core.Data.OCMEntities.ConnectionInfo" />
+          <EntitySet Name="ConnectionTypes" EntityType="OCM.Core.Data.OCMEntities.ConnectionType" />
+          <EntitySet Name="Countries" EntityType="OCM.Core.Data.OCMEntities.Country" />
+          <EntitySet Name="CurrentTypes" EntityType="OCM.Core.Data.OCMEntities.CurrentType" />
+          <EntitySet Name="DataProviders" EntityType="OCM.Core.Data.OCMEntities.DataProvider" />
+          <EntitySet Name="DataProviderStatusTypes" EntityType="OCM.Core.Data.OCMEntities.DataProviderStatusType" />
+          <EntitySet Name="DataTypes" EntityType="OCM.Core.Data.OCMEntities.DataType" />
+          <EntitySet Name="EditQueueItems" EntityType="OCM.Core.Data.OCMEntities.EditQueueItem" />
+          <EntitySet Name="EntityTypes" EntityType="OCM.Core.Data.OCMEntities.EntityType" />
+          <EntitySet Name="MetadataFields" EntityType="OCM.Core.Data.OCMEntities.MetadataField" />
+          <EntitySet Name="MetadataGroups" EntityType="OCM.Core.Data.OCMEntities.MetadataGroup" />
+          <EntitySet Name="MetadataValues" EntityType="OCM.Core.Data.OCMEntities.MetadataValue" />
+          <EntitySet Name="Operators" EntityType="OCM.Core.Data.OCMEntities.Operator" />
+          <EntitySet Name="StatusTypes" EntityType="OCM.Core.Data.OCMEntities.StatusType" />
+          <EntitySet Name="SubmissionStatusTypes" EntityType="OCM.Core.Data.OCMEntities.SubmissionStatusType" />
+          <EntitySet Name="SystemConfigs" EntityType="OCM.Core.Data.OCMEntities.SystemConfig" />
+          <EntitySet Name="UsageTypes" EntityType="OCM.Core.Data.OCMEntities.UsageType" />
+          <EntitySet Name="Users" EntityType="OCM.Core.Data.OCMEntities.User" />
+          <EntitySet Name="UserComments" EntityType="OCM.Core.Data.OCMEntities.UserComment" />
+          <EntitySet Name="UserCommentTypes" EntityType="OCM.Core.Data.OCMEntities.UserCommentType" />
+          <AssociationSet Name="FK_AddressInfo_Country" Association="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="AddressInfo" EntitySet="AddressInfoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_AddressInfo" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_AddressInfo">
+            <End Role="AddressInfo" EntitySet="AddressInfoList" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Operator_AddressInfo" Association="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo">
+            <End Role="AddressInfo" EntitySet="AddressInfoList" />
+            <End Role="Operator" EntitySet="Operators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AuditLog_User" Association="OCM.Core.Data.OCMEntities.FK_AuditLog_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="AuditLog" EntitySet="AuditLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_ChargePoint" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+            <End Role="ChargePoint1" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_DataProvider" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProviders" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_Operator" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_Operator">
+            <End Role="Operator" EntitySet="Operators" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_StatusType" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_StatusType">
+            <End Role="StatusType" EntitySet="StatusTypes" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_SubmissionStatusType" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_SubmissionStatusType">
+            <End Role="SubmissionStatusType" EntitySet="SubmissionStatusTypes" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_UsageType" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_UsageType">
+            <End Role="UsageType" EntitySet="UsageTypes" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_User" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_ChargePoint" Association="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_ChargePoint" Association="OCM.Core.Data.OCMEntities.FK_MetadataValue_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+            <End Role="MetadataValue" EntitySet="MetadataValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_ChargePoint" Association="OCM.Core.Data.OCMEntities.FK_UserComment_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+            <End Role="UserComment" EntitySet="UserComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_ChargerType" Association="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargerType">
+            <End Role="ChargerType" EntitySet="ChargerTypes" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_CheckinStatusType" Association="OCM.Core.Data.OCMEntities.FK_UserComment_CheckinStatusType">
+            <End Role="CheckinStatusType" EntitySet="CheckinStatusTypes" />
+            <End Role="UserComment" EntitySet="UserComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_CurrentType" Association="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_CurrentType">
+            <End Role="CurrentType" EntitySet="CurrentTypes" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_StatusType" Association="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_StatusType">
+            <End Role="StatusType" EntitySet="StatusTypes" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataProvider_DataProviderStatus" Association="OCM.Core.Data.OCMEntities.FK_DataProvider_DataProviderStatus">
+            <End Role="DataProviderStatusType" EntitySet="DataProviderStatusTypes" />
+            <End Role="DataProvider" EntitySet="DataProviders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataField_DataType" Association="OCM.Core.Data.OCMEntities.FK_MetadataField_DataType">
+            <End Role="DataType" EntitySet="DataTypes" />
+            <End Role="MetadataField" EntitySet="MetadataFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SystemConfig_DataType" Association="OCM.Core.Data.OCMEntities.FK_SystemConfig_DataType">
+            <End Role="DataType" EntitySet="DataTypes" />
+            <End Role="SystemConfig" EntitySet="SystemConfigs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueue_User" Association="OCM.Core.Data.OCMEntities.FK_EditQueue_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueue_User1" Association="OCM.Core.Data.OCMEntities.FK_EditQueue_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueueItem_EntityType" Association="OCM.Core.Data.OCMEntities.FK_EditQueueItem_EntityType">
+            <End Role="EntityType" EntitySet="EntityTypes" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataField_MetadataGroup" Association="OCM.Core.Data.OCMEntities.FK_MetadataField_MetadataGroup">
+            <End Role="MetadataGroup" EntitySet="MetadataGroups" />
+            <End Role="MetadataField" EntitySet="MetadataFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_MetadataField" Association="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataField">
+            <End Role="MetadataField" EntitySet="MetadataFields" />
+            <End Role="MetadataValue" EntitySet="MetadataValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataGroup_User" Association="OCM.Core.Data.OCMEntities.FK_MetadataGroup_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="MetadataGroup" EntitySet="MetadataGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_User" Association="OCM.Core.Data.OCMEntities.FK_UserComment_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserComment" EntitySet="UserComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_UserCommentType" Association="OCM.Core.Data.OCMEntities.FK_UserComment_UserCommentType">
+            <End Role="UserCommentType" EntitySet="UserCommentTypes" />
+            <End Role="UserComment" EntitySet="UserComments" />
+          </AssociationSet>
+          <AssociationSet Name="ConnectionInfoConnectionType" Association="OCM.Core.Data.OCMEntities.ConnectionInfoConnectionType">
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfoList" />
+            <End Role="ConnectionType" EntitySet="ConnectionTypes" />
+          </AssociationSet>
+          <EntitySet Name="MediaItems" EntityType="OCM.Core.Data.OCMEntities.MediaItem" />
+          <AssociationSet Name="FK_MediaItem_ChargePoint" Association="OCM.Core.Data.OCMEntities.FK_MediaItem_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoints" />
+            <End Role="MediaItem" EntitySet="MediaItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MediaItem_User" Association="OCM.Core.Data.OCMEntities.FK_MediaItem_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="MediaItem" EntitySet="MediaItems" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AddressInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="AddressLine1" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+          <Property Name="AddressLine2" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+          <Property Name="Town" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="StateOrProvince" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Postcode" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="CountryID" Type="Int32" />
+          <Property Name="Latitude" Type="Double" />
+          <Property Name="Longitude" Type="Double" />
+          <Property Name="ContactTelephone1" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="ContactTelephone2" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="AccessComments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="GeneralComments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="RelatedURL" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Country" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="AddressInfo" ToRole="Country" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_AddressInfo" FromRole="AddressInfo" ToRole="ChargePoint" />
+          <NavigationProperty Name="Operators" Relationship="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo" FromRole="AddressInfo" ToRole="Operator" />
+        </EntityType>
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="EventDescription" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_AuditLog_User" FromRole="AuditLog" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ChargePoint">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="UUID" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="ParentChargePointID" Type="Int32" />
+          <Property Name="DataProviderID" Type="Int32" Nullable="false" />
+          <Property Name="DataProvidersReference" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="OperatorID" Type="Int32" />
+          <Property Name="OperatorsReference" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="UsageTypeID" Type="Int32" />
+          <Property Name="AddressInfoID" Type="Int32" />
+          <Property Name="NumberOfPoints" Type="Int32" />
+          <Property Name="GeneralComments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DatePlanned" Type="DateTime" Precision="0" />
+          <Property Name="DateLastConfirmed" Type="DateTime" Precision="0" />
+          <Property Name="StatusTypeID" Type="Int32" />
+          <Property Name="DateLastStatusUpdate" Type="DateTime" Precision="0" />
+          <Property Name="DataQualityLevel" Type="Int32" />
+          <Property Name="DateCreated" Type="DateTime" Precision="0" />
+          <Property Name="SubmissionStatusTypeID" Type="Int32" />
+          <Property Name="UsageCost" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="ContributorUserID" Type="Int32" />
+          <NavigationProperty Name="AddressInfo" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_AddressInfo" FromRole="ChargePoint" ToRole="AddressInfo" />
+          <NavigationProperty Name="ChildChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_ChargePoint" FromRole="ChargePoint" ToRole="ChargePoint1" />
+          <NavigationProperty Name="ParentChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_ChargePoint" FromRole="ChargePoint1" ToRole="ChargePoint" />
+          <NavigationProperty Name="DataProvider" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_DataProvider" FromRole="ChargePoint" ToRole="DataProvider" />
+          <NavigationProperty Name="Operator" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_Operator" FromRole="ChargePoint" ToRole="Operator" />
+          <NavigationProperty Name="StatusType" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_StatusType" FromRole="ChargePoint" ToRole="StatusType" />
+          <NavigationProperty Name="SubmissionStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_SubmissionStatusType" FromRole="ChargePoint" ToRole="SubmissionStatusType" />
+          <NavigationProperty Name="UsageType" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_UsageType" FromRole="ChargePoint" ToRole="UsageType" />
+          <NavigationProperty Name="Contributor" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_User" FromRole="ChargePoint" ToRole="User" />
+          <NavigationProperty Name="Connections" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargePoint" FromRole="ChargePoint" ToRole="ConnectionInfo" />
+          <NavigationProperty Name="MetadataValues" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_ChargePoint" FromRole="ChargePoint" ToRole="MetadataValue" />
+          <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_ChargePoint" FromRole="ChargePoint" ToRole="UserComment" />
+          <NavigationProperty Name="MediaItems" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_ChargePoint" FromRole="ChargePoint" ToRole="MediaItem" />
+        </EntityType>
+        <EntityType Name="ChargerType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="IsFastChargeCapable" Type="Boolean" Nullable="false" />
+          <Property Name="DisplayOrder" Type="Int32" />
+          <NavigationProperty Name="ConnectionInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargerType" FromRole="ChargerType" ToRole="ConnectionInfo" />
+        </EntityType>
+        <EntityType Name="CheckinStatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Byte" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="IsPositive" Type="Boolean" />
+          <Property Name="IsAutomatedCheckin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_CheckinStatusType" FromRole="CheckinStatusType" ToRole="UserComment" />
+        </EntityType>
+        <EntityType Name="ConnectionInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ChargePointID" Type="Int32" Nullable="false" />
+          <Property Name="ConnectionTypeID" Type="Int32" Nullable="false" />
+          <Property Name="Reference" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="StatusTypeID" Type="Int32" />
+          <Property Name="Amps" Type="Int32" />
+          <Property Name="Voltage" Type="Int32" />
+          <Property Name="PowerKW" Type="Double" />
+          <Property Name="CurrentTypeID" Type="Int16" />
+          <Property Name="LevelTypeID" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Comments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargePoint" FromRole="ConnectionInfo" ToRole="ChargePoint" />
+          <NavigationProperty Name="ChargerType" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargerType" FromRole="ConnectionInfo" ToRole="ChargerType" />
+          <NavigationProperty Name="CurrentType" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_CurrentType" FromRole="ConnectionInfo" ToRole="CurrentType" />
+          <NavigationProperty Name="StatusType" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_StatusType" FromRole="ConnectionInfo" ToRole="StatusType" />
+          <NavigationProperty Name="ConnectionType" Relationship="OCM.Core.Data.OCMEntities.ConnectionInfoConnectionType" FromRole="ConnectionInfo" ToRole="ConnectionType" />
+        </EntityType>
+        <EntityType Name="ConnectionType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="FormalName" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="IsDiscontinued" Type="Boolean" />
+          <Property Name="IsObsolete" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="ISOCode" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="AddressInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="Country" ToRole="AddressInfo" />
+        </EntityType>
+        <EntityType Name="CurrentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int16" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Description" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ConnectionInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_CurrentType" FromRole="CurrentType" ToRole="ConnectionInfo" />
+        </EntityType>
+        <EntityType Name="DataProvider">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="250" Unicode="true" FixedLength="false" />
+          <Property Name="WebsiteURL" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DataProviderStatusTypeID" Type="Int32" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_DataProvider" FromRole="DataProvider" ToRole="ChargePoint" />
+          <NavigationProperty Name="DataProviderStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_DataProvider_DataProviderStatus" FromRole="DataProvider" ToRole="DataProviderStatusType" />
+        </EntityType>
+        <EntityType Name="DataProviderStatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="IsProviderEnabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DataProviders" Relationship="OCM.Core.Data.OCMEntities.FK_DataProvider_DataProviderStatus" FromRole="DataProviderStatusType" ToRole="DataProvider" />
+        </EntityType>
+        <EntityType Name="DataType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Byte" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MetadataFields" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_DataType" FromRole="DataType" ToRole="MetadataField" />
+          <NavigationProperty Name="SystemConfigs" Relationship="OCM.Core.Data.OCMEntities.FK_SystemConfig_DataType" FromRole="DataType" ToRole="SystemConfig" />
+        </EntityType>
+        <EntityType Name="EditQueueItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="IsProcessed" Type="Boolean" Nullable="false" />
+          <Property Name="ProcessedByUserID" Type="Int32" />
+          <Property Name="DateSubmitted" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateProcessed" Type="DateTime" Precision="0" />
+          <Property Name="EditData" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="PreviousData" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="EntityID" Type="Int32" />
+          <Property Name="EntityTypeID" Type="Int16" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User" FromRole="EditQueueItem" ToRole="User" />
+          <NavigationProperty Name="ProcessedByUser" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User1" FromRole="EditQueueItem" ToRole="User" />
+          <NavigationProperty Name="EntityType" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueueItem_EntityType" FromRole="EditQueueItem" ToRole="EntityType" />
+        </EntityType>
+        <EntityType Name="EntityType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int16" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EditQueueItems" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueueItem_EntityType" FromRole="EntityType" ToRole="EditQueueItem" />
+        </EntityType>
+        <EntityType Name="MetadataField">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="MetadataGroupID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="DataTypeID" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="DataType" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_DataType" FromRole="MetadataField" ToRole="DataType" />
+          <NavigationProperty Name="MetadataGroup" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_MetadataGroup" FromRole="MetadataField" ToRole="MetadataGroup" />
+          <NavigationProperty Name="MetadataValues" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataField" FromRole="MetadataField" ToRole="MetadataValue" />
+        </EntityType>
+        <EntityType Name="MetadataGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="GroupOwnerUserID" Type="Int32" Nullable="false" />
+          <Property Name="IsRestrictedEdit" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="MetadataFields" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_MetadataGroup" FromRole="MetadataGroup" ToRole="MetadataField" />
+          <NavigationProperty Name="GroupOwner" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_User" FromRole="MetadataGroup" ToRole="User" />
+        </EntityType>
+        <EntityType Name="MetadataValue">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ChargePointID" Type="Int32" Nullable="false" />
+          <Property Name="MetadataFieldID" Type="Int32" Nullable="false" />
+          <Property Name="ItemValue" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_ChargePoint" FromRole="MetadataValue" ToRole="ChargePoint" />
+          <NavigationProperty Name="MetadataField" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataField" FromRole="MetadataValue" ToRole="MetadataField" />
+        </EntityType>
+        <EntityType Name="Operator">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="250" Unicode="true" FixedLength="false" />
+          <Property Name="WebsiteURL" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="PhonePrimaryContact" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="PhoneSecondaryContact" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="IsPrivateIndividual" Type="Boolean" />
+          <Property Name="AddressInfoID" Type="Int32" />
+          <Property Name="BookingURL" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="FaultReportEmail" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="AddressInfo" Relationship="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo" FromRole="Operator" ToRole="AddressInfo" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_Operator" FromRole="Operator" ToRole="ChargePoint" />
+          <Property Type="Boolean" Name="IsRestrictedEdit" />
+        </EntityType>
+        <EntityType Name="StatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="IsOperational" Type="Boolean" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_StatusType" FromRole="StatusType" ToRole="ChargePoint" />
+          <NavigationProperty Name="ConnectionInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_StatusType" FromRole="StatusType" ToRole="ConnectionInfo" />
+        </EntityType>
+        <EntityType Name="SubmissionStatusType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="IsLive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_SubmissionStatusType" FromRole="SubmissionStatusType" ToRole="ChargePoint" />
+        </EntityType>
+        <EntityType Name="SystemConfig">
+          <Key>
+            <PropertyRef Name="ConfigKeyName" />
+          </Key>
+          <Property Name="ConfigKeyName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="ConfigValue" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="DataTypeID" Type="Byte" />
+          <NavigationProperty Name="DataType" Relationship="OCM.Core.Data.OCMEntities.FK_SystemConfig_DataType" FromRole="SystemConfig" ToRole="DataType" />
+        </EntityType>
+        <EntityType Name="UsageType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="IsPayAtLocation" Type="Boolean" />
+          <Property Name="IsMembershipRequired" Type="Boolean" />
+          <Property Name="IsAccessKeyRequired" Type="Boolean" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_UsageType" FromRole="UsageType" ToRole="ChargePoint" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="IdentityProvider" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Identifier" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="Username" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="CurrentSessionToken" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Profile" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Location" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="WebsiteURL" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="ReputationPoints" Type="Int32" />
+          <Property Name="Permissions" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="PermissionsRequested" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateLastLogin" Type="DateTime" Precision="0" />
+          <Property Name="IsProfilePublic" Type="Boolean" />
+          <Property Name="IsEmergencyChargingProvider" Type="Boolean" />
+          <Property Name="IsPublicChargingProvider" Type="Boolean" />
+          <Property Name="EmailAddress" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="AuditLogs" Relationship="OCM.Core.Data.OCMEntities.FK_AuditLog_User" FromRole="User" ToRole="AuditLog" />
+          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_User" FromRole="User" ToRole="ChargePoint" />
+          <NavigationProperty Name="EditQueueItems" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User" FromRole="User" ToRole="EditQueueItem" />
+          <NavigationProperty Name="EditQueueItems1" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User1" FromRole="User" ToRole="EditQueueItem" />
+          <NavigationProperty Name="MetadataGroups" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_User" FromRole="User" ToRole="MetadataGroup" />
+          <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_User" FromRole="User" ToRole="UserComment" />
+          <Property Type="Double" Name="Latitude" />
+          <Property Type="Double" Name="Longitude" />
+          <Property Type="String" Name="APIKey" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MediaItems" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_User" FromRole="User" ToRole="MediaItem" />
+        </EntityType>
+        <EntityType Name="UserComment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ChargePointID" Type="Int32" Nullable="false" />
+          <Property Name="UserCommentTypeID" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Rating" Type="Byte" />
+          <Property Name="RelatedURL" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="CheckinStatusTypeID" Type="Byte" />
+          <NavigationProperty Name="ChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_ChargePoint" FromRole="UserComment" ToRole="ChargePoint" />
+          <NavigationProperty Name="CheckinStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_CheckinStatusType" FromRole="UserComment" ToRole="CheckinStatusType" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_User" FromRole="UserComment" ToRole="User" />
+          <NavigationProperty Name="UserCommentType" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_UserCommentType" FromRole="UserComment" ToRole="UserCommentType" />
+        </EntityType>
+        <EntityType Name="UserCommentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_UserCommentType" FromRole="UserCommentType" ToRole="UserComment" />
+        </EntityType>
+        <Association Name="FK_AddressInfo_Country">
+          <End Role="Country" Type="OCM.Core.Data.OCMEntities.Country" Multiplicity="0..1" />
+          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.AddressInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AddressInfo">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_AddressInfo">
+          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.AddressInfo" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AddressInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="AddressInfoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Operator_AddressInfo">
+          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.AddressInfo" Multiplicity="0..1" />
+          <End Role="Operator" Type="OCM.Core.Data.OCMEntities.Operator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AddressInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Operator">
+              <PropertyRef Name="AddressInfoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AuditLog_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="1" />
+          <End Role="AuditLog" Type="OCM.Core.Data.OCMEntities.AuditLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AuditLog">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="0..1" />
+          <End Role="ChargePoint1" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint1">
+              <PropertyRef Name="ParentChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_DataProvider">
+          <End Role="DataProvider" Type="OCM.Core.Data.OCMEntities.DataProvider" Multiplicity="1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProvider">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="DataProviderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_Operator">
+          <End Role="Operator" Type="OCM.Core.Data.OCMEntities.Operator" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Operator">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="OperatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_StatusType">
+          <End Role="StatusType" Type="OCM.Core.Data.OCMEntities.StatusType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="StatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_SubmissionStatusType">
+          <End Role="SubmissionStatusType" Type="OCM.Core.Data.OCMEntities.SubmissionStatusType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubmissionStatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="SubmissionStatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_UsageType">
+          <End Role="UsageType" Type="OCM.Core.Data.OCMEntities.UsageType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UsageType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="UsageTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChargePoint_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ChargePoint">
+              <PropertyRef Name="ContributorUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataValue_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="1" />
+          <End Role="MetadataValue" Type="OCM.Core.Data.OCMEntities.MetadataValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataValue">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_ChargePoint">
+          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_ChargerType">
+          <End Role="ChargerType" Type="OCM.Core.Data.OCMEntities.ChargerType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargerType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="LevelTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_CheckinStatusType">
+          <End Role="CheckinStatusType" Type="OCM.Core.Data.OCMEntities.CheckinStatusType" Multiplicity="0..1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CheckinStatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="CheckinStatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_CurrentType">
+          <End Role="CurrentType" Type="OCM.Core.Data.OCMEntities.CurrentType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="CurrentTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionInfo_StatusType">
+          <End Role="StatusType" Type="OCM.Core.Data.OCMEntities.StatusType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.ConnectionInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="StatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataProvider_DataProviderStatus">
+          <End Role="DataProviderStatusType" Type="OCM.Core.Data.OCMEntities.DataProviderStatusType" Multiplicity="0..1" />
+          <End Role="DataProvider" Type="OCM.Core.Data.OCMEntities.DataProvider" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProviderStatusType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DataProvider">
+              <PropertyRef Name="DataProviderStatusTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataField_DataType">
+          <End Role="DataType" Type="OCM.Core.Data.OCMEntities.DataType" Multiplicity="1" />
+          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.MetadataField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataField">
+              <PropertyRef Name="DataTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SystemConfig_DataType">
+          <End Role="DataType" Type="OCM.Core.Data.OCMEntities.DataType" Multiplicity="0..1" />
+          <End Role="SystemConfig" Type="OCM.Core.Data.OCMEntities.SystemConfig" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SystemConfig">
+              <PropertyRef Name="DataTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EditQueue_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.EditQueueItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EditQueueItem">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EditQueue_User1">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.EditQueueItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EditQueueItem">
+              <PropertyRef Name="ProcessedByUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EditQueueItem_EntityType">
+          <End Role="EntityType" Type="OCM.Core.Data.OCMEntities.EntityType" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.EditQueueItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EditQueueItem">
+              <PropertyRef Name="EntityTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataField_MetadataGroup">
+          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.MetadataGroup" Multiplicity="1" />
+          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.MetadataField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataGroup">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataField">
+              <PropertyRef Name="MetadataGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataValue_MetadataField">
+          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.MetadataField" Multiplicity="1" />
+          <End Role="MetadataValue" Type="OCM.Core.Data.OCMEntities.MetadataValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataField">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataValue">
+              <PropertyRef Name="MetadataFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataGroup_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="1" />
+          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.MetadataGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataGroup">
+              <PropertyRef Name="GroupOwnerUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_User">
+          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="0..1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserComment_UserCommentType">
+          <End Role="UserCommentType" Type="OCM.Core.Data.OCMEntities.UserCommentType" Multiplicity="1" />
+          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.UserComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserCommentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserComment">
+              <PropertyRef Name="UserCommentTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ConnectionInfoConnectionType">
+          <End Type="OCM.Core.Data.OCMEntities.ConnectionInfo" Role="ConnectionInfo" Multiplicity="*" />
+          <End Type="OCM.Core.Data.OCMEntities.ConnectionType" Role="ConnectionType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="ConnectionType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ConnectionInfo">
+              <PropertyRef Name="ConnectionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MediaItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="ItemURL" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ItemThumbnailURL" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Comment" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ChargePointID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="0" />
+          <Property Type="Boolean" Name="IsEnabled" Nullable="false" />
+          <Property Type="Boolean" Name="IsVideo" Nullable="false" />
+          <NavigationProperty Name="ChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_ChargePoint" FromRole="MediaItem" ToRole="ChargePoint" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_User" FromRole="MediaItem" ToRole="User" />
+          <Property Type="Boolean" Name="IsFeaturedItem" Nullable="false" />
+          <Property Type="String" Name="MetadataValue" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsExternalResource" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_MediaItem_ChargePoint">
+          <End Type="OCM.Core.Data.OCMEntities.ChargePoint" Role="ChargePoint" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.MediaItem" Role="MediaItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargePoint">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MediaItem">
+              <PropertyRef Name="ChargePointID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MediaItem_User">
+          <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.MediaItem" Role="MediaItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MediaItem">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OCMCoreDataOCMEntitiesStoreContainer" CdmEntityContainer="OCMEntities">
+          <EntitySetMapping Name="AddressInfoList">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.AddressInfo">
+              <MappingFragment StoreEntitySet="AddressInfo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="Town" ColumnName="Town" />
+                <ScalarProperty Name="StateOrProvince" ColumnName="StateOrProvince" />
+                <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="ContactTelephone1" ColumnName="ContactTelephone1" />
+                <ScalarProperty Name="ContactTelephone2" ColumnName="ContactTelephone2" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="AccessComments" ColumnName="AccessComments" />
+                <ScalarProperty Name="GeneralComments" ColumnName="GeneralComments" />
+                <ScalarProperty Name="RelatedURL" ColumnName="RelatedURL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuditLogs">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.AuditLog">
+              <MappingFragment StoreEntitySet="AuditLog">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="EventDescription" ColumnName="EventDescription" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChargePoints">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.ChargePoint">
+              <MappingFragment StoreEntitySet="ChargePoint">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UUID" ColumnName="UUID" />
+                <ScalarProperty Name="ParentChargePointID" ColumnName="ParentChargePointID" />
+                <ScalarProperty Name="DataProviderID" ColumnName="DataProviderID" />
+                <ScalarProperty Name="DataProvidersReference" ColumnName="DataProvidersReference" />
+                <ScalarProperty Name="OperatorID" ColumnName="OperatorID" />
+                <ScalarProperty Name="OperatorsReference" ColumnName="OperatorsReference" />
+                <ScalarProperty Name="UsageTypeID" ColumnName="UsageTypeID" />
+                <ScalarProperty Name="AddressInfoID" ColumnName="AddressInfoID" />
+                <ScalarProperty Name="NumberOfPoints" ColumnName="NumberOfPoints" />
+                <ScalarProperty Name="GeneralComments" ColumnName="GeneralComments" />
+                <ScalarProperty Name="DatePlanned" ColumnName="DatePlanned" />
+                <ScalarProperty Name="DateLastConfirmed" ColumnName="DateLastConfirmed" />
+                <ScalarProperty Name="StatusTypeID" ColumnName="StatusTypeID" />
+                <ScalarProperty Name="DateLastStatusUpdate" ColumnName="DateLastStatusUpdate" />
+                <ScalarProperty Name="DataQualityLevel" ColumnName="DataQualityLevel" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="SubmissionStatusTypeID" ColumnName="SubmissionStatusTypeID" />
+                <ScalarProperty Name="UsageCost" ColumnName="UsageCost" />
+                <ScalarProperty Name="ContributorUserID" ColumnName="ContributorUserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChargerTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.ChargerType">
+              <MappingFragment StoreEntitySet="ChargerType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="IsFastChargeCapable" ColumnName="IsFastChargeCapable" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckinStatusTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.CheckinStatusType">
+              <MappingFragment StoreEntitySet="CheckinStatusType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IsPositive" ColumnName="IsPositive" />
+                <ScalarProperty Name="IsAutomatedCheckin" ColumnName="IsAutomatedCheckin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConnectionInfoList">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.ConnectionInfo">
+              <MappingFragment StoreEntitySet="ConnectionInfo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
+                <ScalarProperty Name="ConnectionTypeID" ColumnName="ConnectionTypeID" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="StatusTypeID" ColumnName="StatusTypeID" />
+                <ScalarProperty Name="Amps" ColumnName="Amps" />
+                <ScalarProperty Name="Voltage" ColumnName="Voltage" />
+                <ScalarProperty Name="PowerKW" ColumnName="PowerKW" />
+                <ScalarProperty Name="CurrentTypeID" ColumnName="CurrentTypeID" />
+                <ScalarProperty Name="LevelTypeID" ColumnName="LevelTypeID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConnectionTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.ConnectionType">
+              <MappingFragment StoreEntitySet="ConnectionType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="FormalName" ColumnName="FormalName" />
+                <ScalarProperty Name="IsDiscontinued" ColumnName="IsDiscontinued" />
+                <ScalarProperty Name="IsObsolete" ColumnName="IsObsolete" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ISOCode" ColumnName="ISOCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrentTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.CurrentType">
+              <MappingFragment StoreEntitySet="CurrentType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataProviders">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProvider">
+              <MappingFragment StoreEntitySet="DataProvider">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="DataProviderStatusTypeID" ColumnName="DataProviderStatusTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataProviderStatusTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProviderStatusType">
+              <MappingFragment StoreEntitySet="DataProviderStatusType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IsProviderEnabled" ColumnName="IsProviderEnabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataType">
+              <MappingFragment StoreEntitySet="DataType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EditQueueItems">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.EditQueueItem">
+              <MappingFragment StoreEntitySet="EditQueueItem">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
+                <ScalarProperty Name="ProcessedByUserID" ColumnName="ProcessedByUserID" />
+                <ScalarProperty Name="DateSubmitted" ColumnName="DateSubmitted" />
+                <ScalarProperty Name="DateProcessed" ColumnName="DateProcessed" />
+                <ScalarProperty Name="EditData" ColumnName="EditData" />
+                <ScalarProperty Name="PreviousData" ColumnName="PreviousData" />
+                <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+                <ScalarProperty Name="EntityTypeID" ColumnName="EntityTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntityTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.EntityType">
+              <MappingFragment StoreEntitySet="EntityType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetadataFields">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataField">
+              <MappingFragment StoreEntitySet="MetadataField">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MetadataGroupID" ColumnName="MetadataGroupID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="DataTypeID" ColumnName="DataTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetadataGroups">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataGroup">
+              <MappingFragment StoreEntitySet="MetadataGroup">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="GroupOwnerUserID" ColumnName="GroupOwnerUserID" />
+                <ScalarProperty Name="IsRestrictedEdit" ColumnName="IsRestrictedEdit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetadataValues">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataValue">
+              <MappingFragment StoreEntitySet="MetadataValue">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
+                <ScalarProperty Name="MetadataFieldID" ColumnName="MetadataFieldID" />
+                <ScalarProperty Name="ItemValue" ColumnName="ItemValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Operators">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.Operator">
+              <MappingFragment StoreEntitySet="Operator">
+                <ScalarProperty Name="IsRestrictedEdit" ColumnName="IsRestrictedEdit" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="PhonePrimaryContact" ColumnName="PhonePrimaryContact" />
+                <ScalarProperty Name="PhoneSecondaryContact" ColumnName="PhoneSecondaryContact" />
+                <ScalarProperty Name="IsPrivateIndividual" ColumnName="IsPrivateIndividual" />
+                <ScalarProperty Name="AddressInfoID" ColumnName="AddressInfoID" />
+                <ScalarProperty Name="BookingURL" ColumnName="BookingURL" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="FaultReportEmail" ColumnName="FaultReportEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.StatusType">
+              <MappingFragment StoreEntitySet="StatusType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IsOperational" ColumnName="IsOperational" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubmissionStatusTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.SubmissionStatusType">
+              <MappingFragment StoreEntitySet="SubmissionStatusType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IsLive" ColumnName="IsLive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemConfigs">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.SystemConfig">
+              <MappingFragment StoreEntitySet="SystemConfig">
+                <ScalarProperty Name="ConfigKeyName" ColumnName="ConfigKeyName" />
+                <ScalarProperty Name="ConfigValue" ColumnName="ConfigValue" />
+                <ScalarProperty Name="DataTypeID" ColumnName="DataTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsageTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.UsageType">
+              <MappingFragment StoreEntitySet="UsageType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IsPayAtLocation" ColumnName="IsPayAtLocation" />
+                <ScalarProperty Name="IsMembershipRequired" ColumnName="IsMembershipRequired" />
+                <ScalarProperty Name="IsAccessKeyRequired" ColumnName="IsAccessKeyRequired" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="APIKey" ColumnName="APIKey" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="IdentityProvider" ColumnName="IdentityProvider" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="CurrentSessionToken" ColumnName="CurrentSessionToken" />
+                <ScalarProperty Name="Profile" ColumnName="Profile" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
+                <ScalarProperty Name="ReputationPoints" ColumnName="ReputationPoints" />
+                <ScalarProperty Name="Permissions" ColumnName="Permissions" />
+                <ScalarProperty Name="PermissionsRequested" ColumnName="PermissionsRequested" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="DateLastLogin" ColumnName="DateLastLogin" />
+                <ScalarProperty Name="IsProfilePublic" ColumnName="IsProfilePublic" />
+                <ScalarProperty Name="IsEmergencyChargingProvider" ColumnName="IsEmergencyChargingProvider" />
+                <ScalarProperty Name="IsPublicChargingProvider" ColumnName="IsPublicChargingProvider" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserComments">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.UserComment">
+              <MappingFragment StoreEntitySet="UserComment">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
+                <ScalarProperty Name="UserCommentTypeID" ColumnName="UserCommentTypeID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="RelatedURL" ColumnName="RelatedURL" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CheckinStatusTypeID" ColumnName="CheckinStatusTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCommentTypes">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.UserCommentType">
+              <MappingFragment StoreEntitySet="UserCommentType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MediaItems">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MediaItem">
+              <MappingFragment StoreEntitySet="MediaItem">
+                <ScalarProperty Name="IsExternalResource" ColumnName="IsExternalResource" />
+                <ScalarProperty Name="MetadataValue" ColumnName="MetadataValue" />
+                <ScalarProperty Name="IsFeaturedItem" ColumnName="IsFeaturedItem" />
+                <ScalarProperty Name="IsVideo" ColumnName="IsVideo" />
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ItemThumbnailURL" ColumnName="ItemThumbnailURL" />
+                <ScalarProperty Name="ItemURL" ColumnName="ItemURL" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

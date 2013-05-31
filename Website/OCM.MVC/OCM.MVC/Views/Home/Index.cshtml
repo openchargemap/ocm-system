@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "The global public registry of electric vehicle charging locations";
+}
+
+  
+    <h2>Open Charge Map <small>the global public registry of electric vehicle charging locations</small></h2>
+    <div class="well well-small">
+        
+    <div style="float:left;display:inline;margin-right:1em;">
+        <a href="@Url.Action("Index","POI")">
+            <div class="stat"><h2><span id="summary-locationcount">-----</span></h2><p>Charging Locations</p></div>
+        </a>
+    </div>
+    <div class="info">
+        <h3>Global Charging Locations <small>select a country to show the locations on the map</small></h3>
+        <br />
+        <div id="datasummary"></div>
+        
+        <br />
+        <p>
+            <a class="btn btn-success" href="http://openchargemap.org/app">Search Locations using our Web App &gt;</a>
+            <a class="btn btn-inverse" href="@Url.Action("Index","POI")">Browse All Locations &gt;</a>
+        </p>
+    </div>
+         </div>
+    <p>
+        You can use the map below to quickly browse charging locations anywhere in the world, or select your country from the list above:
+    </p>
+	<iframe id="countrymap" scrolling="no" style="width: 100%; height: 600px; border: 1px solid #c0c0c0; border-radius: 6px;" src="http://openchargemap.org/api/widgets/map/?maptitle=Browse%20Charging%20Locations&countryid=1&maxresults=10000&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage"></iframe>
+    
+    <!--end example-->
+    <div class="row-fluid show-grid">
+        <div class="span4">
+            <h2>Get Involved</h2>
+            <p>If you own a website and would like to include a charging location map, you can embed a customised version of the above map <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">on your own website</a></p>
+            <p>
+                Can't see a charging location you know exists? Please send us the details (click 'Add' on the following page):
+            <br />
+                <br />
+                <a class="highlight" href="http://openchargemap.org/app">Submit A Charging Location&gt;</a>
+            </p>
+        </div>
+        <div class="span4">
+            <h2>Get Charging Station Data</h2>
+            <p>
+                <em>Sat Nav vendors, App Developers, Website Owners:</em> You can access and download
+        our latest charging locations using our <a href="@Url.Action("Index","Develop")">API</a>.
+            </p>
+            <p>
+                You can use this data in your own apps, databases, websites etc. and we even provide
+        some helpful <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">widgets</a> you can include on your own pages to provide maps and to
+        gather data submissions from your users.
+            </p>
+        </div>
+        <div class="span4">
+            <h2>Operators and Data Providers:</h2>
+            <p>
+                <em>EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
+            </p>
+            <p>
+                <strong>We need your data.</strong> You can supply us with your latest charging location
+        information regardless of whether your organisation owns, operates or simply catalogs
+        the available charging locations. Please <a href="@Url.Action("Contact","About")">contact us</a> to get started.
+            </p>
+        </div>
+    </div>
+
+    <h2>Open Charge Map Data License</h2>
+    <div class="license">
+        Use of the services and data hosted by us is subject to the following terms:
+	  <ul>
+          <li>Data supplied by OpenChargeMap.org is derived from a wide variety of public sources and contributions. We accept no liability for the accuracy of this data and provide no assurances.</li>
+          <li>This <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" rel="dct:type">work</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://openchargemap.org" property="cc:attributionName" rel="cc:attributionURL">http://openchargemap.org</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</li>
+      </ul>
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+            <img alt="Creative Commons Licence" style="border-width: 0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a>
+    </div>
+
+    <script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
+    <script type="text/javascript">
+
+        function refreshDataSummary() {
+            // <!--data summary-->
+            var ocm_summary = ocm_getdatasummary();
+            var summarydiv = document.getElementById("datasummary");
+            var totalLocations = 0;
+            for (i = 0; i < ocm_summary.length; i++) {
+                summarydiv.innerHTML += " <a href='javascript:loadCountryMap(\"" + ocm_summary[i].country + "\",\"" + ocm_summary[i].isocode + "\");'><strong>" + ocm_summary[i].country + ":</strong> " + ocm_summary[i].itemcount + "</a>";
+                totalLocations += ocm_summary[i].itemcount;
+            }
+
+            document.getElementById("summary-locationcount").innerHTML = totalLocations;
+        }
+
+        function loadCountryMap(countryName, isoCode) {
+            document.getElementById("countrymap").src = "http://api.openchargemap.io/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=operator,level,usage";
+        }
+
+        refreshDataSummary();
+
+    </script>

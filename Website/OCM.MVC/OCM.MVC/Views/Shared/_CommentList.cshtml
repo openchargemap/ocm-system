@@ -1,0 +1,21 @@
+﻿@model IEnumerable<OCM.API.Common.Model.UserComment>
+
+<div>
+    @foreach (var item in Model.OrderByDescending(p=>p.DateCreated))
+    {
+        <div> 
+            <blockquote>
+                @if (item.Rating!=null) {
+                <strong>Rating: @Html.Raw(item.Rating) out of 5</strong>
+                }
+                <p>@Html.DisplayFor(modelItem => item.Comment)</p>
+                    <small>Comment by <cite title="Source Title">@Html.DisplayFor(modelItem => item.UserName)</cite> @Html.DisplayFor(modelItem => item.DateCreated)</small>
+            </blockquote>
+           
+             @if (item.RelatedURL!=null) {
+                @Html.DisplayFor(modelItem => item.RelatedURL)
+             }
+            
+        </div>   
+    }
+</div>

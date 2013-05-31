@@ -1,0 +1,81 @@
+﻿@using OCM.MVC
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Open Charge Map - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="@ViewBag.Description">
+    <meta name="author" content="Openchargemap.org">
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/bootstrap")
+
+    @Styles.Render("~/Content/css")
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: none;
+            background-color: white;
+        }
+
+        ul.breadcrumb {
+            display: none;
+        }
+
+        div.container {
+            max-height: 800px;
+            overflow: hidden;
+        }
+
+        div.content {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #details-container {
+            border-radius: 0px;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-76936-12']);
+        _gaq.push(['_setDomainName', 'openchargemap.org']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+
+    <!--fav and touch icons -->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-startup-image" href="/app/images/splashscreen/AppSplashscreen320x460.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/app/images/icons/AppIcon_114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/app/images/icons/AppIcon_72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/app/images/icons/AppIcon_57x57.png" />
+    <link rel="icon" type="image/png" href="/app/images/icons/AppIcon_57x57.png" />
+    <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            @RenderBody()
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    @Html.Raw(CommonUtil.GetLocalizationScriptBlock())
+</body>
+</html>

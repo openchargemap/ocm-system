@@ -1,0 +1,75 @@
+﻿@model IEnumerable<OCM.API.Common.Model.ChargePoint>
+
+<small>
+    @if (@Model.Count()>=100) {
+        @:Showing a maximum of 100 matching results:
+    } else {
+        @:There are @Model.Count() matching results
+    }
+</small>
+<div class="results-list">
+    @foreach (var item in Model.Take(100))
+    {
+        <div class="result">
+            <h3>@Html.DisplayFor(m => item.AddressInfo.Title)</h3>
+            <div class="col-left">
+                @Html.DisplayFor(m => item.AddressInfo.AddressLine1)
+                @Html.DisplayFor(m => item.AddressInfo.AddressLine2)
+                @Html.DisplayFor(m => item.AddressInfo.Country.Title)
+                <br />
+                @Html.ActionLink("View", "Details", new { id = item.ID })
+            </div>
+            <div class="col-right">
+                @if (item.AddressInfo.Distance != null)
+                {
+                    @Html.Raw(Math.Round(item.AddressInfo.Distance.Value,2) + " " + item.AddressInfo.DistanceUnit)<br />
+                }
+                @if (item.UsageType != null)
+                {
+                    @item.UsageType.Title
+                    <br />
+                }
+                @if (item.StatusType != null)
+                {
+                    if (item.StatusType.IsOperational!=true)
+                    {
+                        <span class="label label-warning">
+                            @item.StatusType.Title
+                        </span>
+                    } else {
+                           <span>@item.StatusType.Title</span>
+                    }
+                }
+
+                @if (item.Connections != null && item.Connections.Count>0)
+                {
+                    var maxLevel = item.Connections[0];
+                    foreach (var c in item.Connections)
+                    {
+                        if (maxLevel.Level == null && c.Level != null)
+                        {
+                            maxLevel = c;
+                        }
+                        else
+                        {
+                            if (c.Level != null)
+                            {
+                                if (maxLevel.Level.ID > maxLevel.Level.ID)
+                                {
+                                    maxLevel = c;
+                                }
+                            }
+                        }
+                    }
+                    
+                   if (maxLevel.Level!=null)
+                   {
+                       var connectionType = "";
+                       if (maxLevel.ConnectionType != null) { connectionType = maxLevel.ConnectionType.Title; }
+                        <br /><span title="@connectionType">@maxLevel.Level.Title</span>
+                   }
+                }
+            </div>
+        </div>       
+    }
+</div>

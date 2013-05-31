@@ -1,0 +1,31 @@
+﻿@model OCM.API.Common.Model.ContactSubmission
+
+@{
+    ViewBag.Title = "Contact";
+}
+
+
+<h1>Contact Us</h1>
+
+            <p>You should use our <a href="../../../forum/">discussion forum</a> if you wish to ask general questions, if you would like to contact us privately you can do so using the form below. Please do not submit new charging locations using this form, use the <a href="http://openchargemap.org/app"><strong>Add</strong> option in the web app</a> instead:
+            </p>
+@using (Html.BeginForm()){
+
+            <div style="margin-left:20px;">
+                <div>
+                    @Html.LabelFor(model=>model.Name,"Your Name")
+                    @Html.TextBoxFor(model=>model.Name)
+                </div>
+                <div>
+                    @Html.LabelFor(model=>model.Email,"Your Email (required for a response)")
+                    @Html.TextBoxFor(model=>model.Email)
+                </div>
+                <div>
+                    @Html.LabelFor(model=>model.Comment,"Your Comment")
+                    @Html.TextAreaFor(model=>model.Comment, 5,60, null)
+                </div>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-info" value="Send Comment" />
+                </div>
+            </div>
+}

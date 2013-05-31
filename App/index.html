@@ -1,0 +1,789 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="cache-control" content="no-cache">
+
+    <title>Open Charge Map - Web App</title>
+
+    <!-- Standard Meta Tags -->
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="imagetoolbar" content="false" />
+    <meta name="description" content="OpenChargeMap is a global, open registry of electric vehicle charging locations." />
+    <meta name="author" content="www.webprofusion.com" />
+
+    <!-- iOS Specific Settings-->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://openchargemap.org/app/" />
+
+    <!-- Set icons and startup screen images -->
+    <link rel="apple-touch-startup-image" href="images/splashscreen/AppSplashscreen_320x460.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/icons/AppIcon_114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/icons/AppIcon_72x72.png" />
+    <link rel="apple-touch-icon-precomposed" href="images/icons/AppIcon_57x57.png" />
+    <link rel="icon" type="image/png" href="images/icons/AppIcon_57x57.png" />
+
+    <!-- Reset CSS Styles -->
+    <link rel="stylesheet" href="styles/reset.css" />
+
+    <!--JS:Cordova:Begin-->
+    <!-- ReSharper disable Html.PathError -->
+    <script src="phonegap.js"></script>
+    <script src="childbrowser.js"></script>
+    <script src="GAPlugin.js"></script>
+    <!-- ReSharper restore Html.PathError -->
+    <!--JS:Cordova:End-->
+
+    <!-- jQuery Mobile -->
+    <link type="text/css" href="js/ThirdParty/jquery.mobile-1.3.1/jquery.mobile.structure-1.3.1.min.css" rel="stylesheet" />
+    <link type="text/css" href="js/ThirdParty/jquery.mobile-1.3.1/OCM.min.css" rel="stylesheet" />
+    <script src="js/ThirdParty/jquery-1.9.1.min.js"></script>
+    <script src="js/ThirdParty/jquery.validate.min.js"></script>
+    <script src="js/ThirdParty/json2.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300' rel='stylesheet' type='text/css'>
+    <script>
+        /*jslint vars: true, plusplus: true, devel: true, browser: true, nomen: true, indent: 4, white:true, maxerr: 50 */
+        /*global define: false, $: false */
+
+        $(document).bind('mobileinit', function () {
+            'use strict';
+            $.mobile.defaultPageTransition = "none";
+
+            //phonegap related
+            if (window.PhoneGap) {
+
+                /*if (navigator.userAgent.indexOf("AppleWebKit") >= 0) {
+					$.mobile.defaultPageTransition = "none";
+				} else {
+					$.mobile.defaultPageTransition = "slide";
+				}*/
+
+                //$.mobile.buttonMarkup.hoverDelay = 30;
+                $.mobile.allowCrossDomainPages = true;
+                $.mobile.pushStateEnabled = false;
+                $.support.cors = true;
+            }
+        });
+    </script>
+    <script src="js/ThirdParty/jquery.touchToClick.js"></script>
+    <script src="js/ThirdParty/jquery.mobile-1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+    <!--fonts-->
+    <link rel="stylesheet" href="fonts/FontAwesome/jqm/jqm-icon-pack-3.0.0-fa.css" />
+    <link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css">
+    <!--[if IE 7]>
+    <link href="fonts/FontAwesome/css/font-awesome-ie7.min.css" rel="stylesheet">
+    <![endif]-->
+    <!-- Apply App Styles -->
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <!-- JS:LIB:BEGIN -->
+    <!-- App JS -->
+    <script src="js/OCM_Data.js"></script>
+    <script src="js/OfflineCache/OCM_CoreReferenceData.js"></script>
+    <script src="js/OCM_Geolocation.js"></script>
+    <script src="js/OCM_CommonUI.js"></script>
+    <script src="js/OCM_App.js"></script>
+    <script src="js/OCM_App_Util.js"></script>
+    <script src="js/OCM_App_LocationEditor.js"></script>
+    <script src="js/OCM_AppBootstrap.js"></script>
+    <!-- JS:LIB:END -->
+</head>
+<body>
+
+    <!--Begin standard OCM app html block -->
+    <!--Begin App Page Definitions-->
+
+    <!---- Page:Home:Start ---->
+    <div data-role="page" id="home-page">
+        <div data-role="content">
+
+            <div id="home-intro" style="">
+                <img alt="OCM Logo" src="images/icons/AppIcon_64x64.png" style="float: left; padding-right: 1em;" />
+                <strong class="accent">Open Charge Map</strong> the global public registry of electric vehicle charging locations
+            </div>
+
+            <div class="home-menu-container">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <a href="#search-page"><i class="icon-search icon-2x"></i>
+                            <br>
+                            Search</a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#map-page"><i class="icon-map-marker icon-2x"></i>
+                            <br>
+                            Map</a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#favourites-page"><i class="icon-heart icon-2x"></i>
+                            <br>
+                            Favourites</a>
+                    </div>
+                </div>
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <a id="add-location"><i class="icon-plus icon-2x"></i>
+                            <br>
+                            Add Location</a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#settings-page"><i class="icon-cog icon-2x"></i>
+                            <br>
+                            Settings</a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#about-page"><i class="icon-question-sign icon-2x"></i>
+                            <br>
+                            About</a>
+                    </div>
+                </div>
+                <div class="ui-grid-b">
+                    <div class="ui-block-a"></div>
+                    <div class="ui-block-b"></div>
+                    <div class="ui-block-c">
+                        <a id="login-button" href="#login-page"><i class="icon-signin icon-2x"></i>
+                            <br>
+                            Sign In</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="user-profile-info">
+                .
+            </div>
+        </div>
+    </div>
+    <!---- Page:Home:End ---->
+
+    <!---- Page:Search:Start ---->
+    <div data-role="page" id="search-page">
+
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <div style="float: right"><i class="icon-search"></i>&nbsp;Search</div>
+            </div>
+        </div>
+
+        <div data-role="content">
+            <div id="content-placeholder"></div>
+            <div class="ui-body ui-body-d">
+                <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
+                    <input type="search" id="search-location" data-mini="true" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
+                    <input type="button" id="search-button" data-inline="true" data-mini="true" data-icon="search" value="Search" />
+                    <input type="button" id="search-nearby" data-inline="true" data-mini="true" data-icon="screenshot" value="Find Near Me" />
+
+                    <a href="#settings-page" data-inline="true" data-mini="true" data-role="button" data-icon="gear">Settings</a>
+
+                </form>
+                <p id="network-error" style="display: none;">
+                    <strong>There is no data connection available. Application features will be unavailable.</strong>
+                </p>
+            </div>
+
+            <div id="progress-indicator">Loading...</div>
+            <div id="results-list">
+                <div class="result" style="display: none;" id="results-item-template">
+                    <a href="#locationdetails-page" style="overflow: auto;">
+                        <div style="overflow: auto">
+                            <h3>{locationtitle}</h3>
+                            <div style="overflow: auto;">
+                                <div class="result-item-a">
+                                    {location}
+                                    {comments}
+                                </div>
+                                <div class="result-item-b">
+                                    <strong>{distance} {distanceunit}</strong>
+                                    <br />
+                                    <br>
+                                    {status}
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---- Page:Search:End ---->
+
+    <!---- Page:LocationDetails:Start ---->
+    <div data-role="page" id="locationdetails-page" data-theme="c" style="width: 100%; height: 100%;">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <div style="float: right"><i class="icon-search"></i>&nbsp;Location Details</div>
+            </div>
+        </div>
+        <div data-role="content" data-theme="d">
+            <div id="details-content">
+                <div id="details-general" class="content-subsection">
+                    <div style="overflow: hidden;">
+                        <div class="section-heading">
+                            <div id="details-locationtitle"></div>
+                        </div>
+                        <div id="details-options">
+                            <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="icon-heart-empty"></i></div>
+                            <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="icon-comment-alt"></i></div>
+                            <div class="option-item"><i id="option-edit" title="Edit" class="icon-edit"></i></div>
+                        </div>
+                        <div id="details-address"></div>
+                        <div id="details-streetview"></div>
+                        <div id="details-contact-container">
+                            <div id="details-contact"></div>
+                            <div id="details-map"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="details-additional-container" class="content-subsection">
+                    <div class="section-heading">Equipment Details</div>
+                    <div id="details-additional"></div>
+                </div>
+
+                <div id="details-usercomments-container" class="content-subsection">
+                    <div class="section-heading">Comments and Ratings</div>
+
+                    <a href="#submitcomment-page" data-role="button" data-inline="true" data-mini="true" data-icon="plus">Checkin or Add Comment</a>
+                    <!--<a href="#submitcomment-page" data-role="button" data-inline="true" data-icon="alert">Report Fault</a>-->
+
+                    <div id="details-usercomments">
+                        No comments submitted.
+                    </div>
+                </div>
+                <div id="details-advanced-container" class="content-subsection">
+                    <div class="section-heading">Additional Information</div>
+                    <div id="details-advanced" style="font-size:smaller;">
+                        None.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <a id="details-edit" data-role="button" data-inline="true" data-icon="edit">Edit</a>
+        </div>
+    </div>
+    <!---- Page:LocationDetails:End ---->
+
+    <!---- Page:Map:Start ---->
+    <div data-role="page" id="map-page">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <div style="float: right"><i class="icon-map-marker"></i>&nbsp;Map</div>
+            </div>
+        </div>
+
+        <div data-role="content" data-theme="d" style="padding: 0;">
+            <div>
+                <div class="section-heading" id="map-view-resultcount">No Results. Perform a search to see results on this map.</div>
+                <div id="map-view" style="margin-top: 0.5em; position: absolute; width: 99%; min-height: 70%;"></div>
+            </div>
+
+        </div>
+    </div>
+    <!---- Page:Map:End ---->
+
+    <!---- Page:Favourites:Start ---->
+    <div data-role="page" id="favourites-page">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <div style="float: right"><i class="icon-heart"></i>&nbsp;Favourites</div>
+            </div>
+        </div>
+        <div data-role="content" data-theme="d">
+            <div id="favourites-list">
+                <p>You have no favourite locations set. To add or remove a favourite, tap the <i id="I1" title="Toggle Favourite" class="icon-heart-empty"></i>icon when viewing a location.</p>
+            </div>
+        </div>
+    </div>
+    <!---- Page:Favourites:End ---->
+
+    <!---- Page:Login:Start ---->
+    <div data-role="page" id="login-page">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <div style="float: right"><i class="icon-signin"></i>&nbsp;Sign In</div>
+            </div>
+        </div>
+        <div data-role="content" data-theme="d">
+
+            <div class="ui-bar ui-bar-b">Sign In or Register</div>
+
+            <div id="login-panel">
+                <div id="login-summary"></div>
+            </div>
+            <p>
+                Note: A Twitter account is currently required for authentication purposes.
+            </p>
+        </div>
+    </div>
+    <!---- Page:Login:End ---->
+
+    <!---- Page:EditLocation:Start ---->
+    <div data-role="page" id="editlocation-page">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <div style="float: right"><i class="icon-plus"></i>&nbsp;Add Location</div>
+            </div>
+        </div>
+        <div data-role="content">
+            <div class="ui-body ui-body-e">
+                Know about a charging location we haven't already listed? Please provide as much detail as you can using the form below:
+            </div>
+            <form id="editlocation-form" action="#">
+                <div id="edit-location-container" data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                    <h3>Location Details</h3>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_title">Location Title</label>
+                        <input id="edit_addressinfo_title" required="required" placeholder="General Location Name" minlength="2" type="text" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_addressline1">Address Line 1</label>
+                        <input type="text" id="edit_addressinfo_addressline1" name="edit_addressinfo_addressline1" placeholder="First line of Address" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_addressline2">Address Line 2</label>
+                        <input type="text" id="edit_addressinfo_addressline2" name="edit_addressinfo_addressline2" placeholder="Second line of Address (if applicable)" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_town">Town/City</label>
+                        <input type="text" id="edit_addressinfo_town" name="edit_addressinfo_town" placeholder="City or Town Name" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_stateorprovince">State/Province</label>
+                        <input type="text" id="edit_addressinfo_stateorprovince" name="edit_addressinfo_stateorprovince" placeholder="State, Province or Region" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_postcode">Zip/Postcode</label>
+                        <input type="text" id="edit_addressinfo_postcode" name="edit_addressinfo_postcode" placeholder="Zip/Postal Code if applicable" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_countryid">Country</label>
+                        <select id="edit_addressinfo_countryid" name="edit_addressinfo_countryid" data-inline="true">
+                            <option value="">(Not Listed)</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <p>
+                            If you know the Latitude and Longitude of this location please provide it here, otherwise we can try to look it up for you:
+                        <input id="edit-location-lookup" data-inline="true" type="button" value="Lookup" />
+                        </p>
+                        <label for="edit_addressinfo_latitude">Latitude</label>
+                        <input id="edit_addressinfo_latitude" name="edit_addressinfo_latitude" type="number" placeholder="Latitude (if known)" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_longitude">Longitude</label>
+                        <input id="edit_addressinfo_longitude" name="edit_addressinfo_longitude" type="number" placeholder="Longitude (if known)" value="" />
+                    </div>
+                    <div id="editor_map_canvas" style="width: 600px; height: 300px; display: none; margin: 0; padding: 0; background-color: gainsboro;"></div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_accesscomments">Comment for Access/Directions</label>
+                        <input type="text" id="edit_addressinfo_accesscomments" name="ocm_loc_accesscomments" placeholder="How to find, special instructions etc." value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_contacttelephone1">Contact telephone for enquiries</label>
+                        <input id="edit_addressinfo_contacttelephone1" name="edit_addressinfo_contacttelephone1" type="tel" placeholder="Contact number for more info/access." value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_contacttelephone2">Additional Contact telephone</label>
+                        <input id="edit_addressinfo_contacttelephone2" name="edit_addressinfo_contacttelephone2" type="tel" placeholder="Additional contact number (if required)" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_contactemail">Public email for enquiries</label>
+                        <input id="edit_addressinfo_contactemail" name="edit_addressinfo_contactemail" type="email" placeholder="Public email address for enquiries" value="" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_addressinfo_relatedurl">Related Website</label>
+                        <input id="edit_addressinfo_relatedurl" name="edit_addressinfo_relatedurl" type="url" placeholder="Related Website" value="" />
+                    </div>
+                </div>
+
+                <div id="edit-equipmentgeneral" data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                    <h3>General Equipment/Service Info</h3>
+                    <div data-role="fieldcontain">
+                        <label for="edit_numberofpoints">Number of points available</label>
+                        <input id="edit_numberofpoints" name="edit_numberofpoints" type="number" value="1" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_usagetype">Usage Restrictions</label>
+                        <select id="edit_usagetype" name="edit_usagetype" data-inline="true">
+                            <option value="">Unknown</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_usagecost">Usage Cost (if any)</label>
+                        <input type="text" id="edit_usagecost" name="edit_usagecost" value="Free" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_statustype">Status (if known)</label>
+                        <select id="edit_statustype" name="edit_statustype" data-inline="true">
+                            <option value="0">Unknown</option>
+                            <option value="50">Operational</option>
+                            <option value="100">Not Operational</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="edit_generalcomments">Comments or Additional Info</label>
+                        <input type="text" id="edit_generalcomments" name="edit_generalcomments" value="" />
+                    </div>
+                    <div id="edit-operator-container" data-role="fieldcontain">
+                        <label for="edit_operator">Network/Operator</label>
+                        <select id="edit_operator" name="edit_operator" data-inline="true">
+                            <option value="1">Unknown</option>
+                        </select>
+                    </div>
+                    <div id="edit-dataprovider-container" data-role="fieldcontain">
+                        <label for="edit_dataprovider">Data Provider</label>
+                        <select id="edit_dataprovider" name="edit_dataprovider" data-inline="true">
+                            <option value="1">OpenChargeMap Contributor</option>
+                        </select>
+                    </div>
+                    <div id="edit-submissionstatus-container" data-role="fieldcontain">
+                        <label for="edit_submissionstatus">Submission Status</label>
+                        <select id="edit_submissionstatus" name="edit_submissionstatus" data-inline="true">
+                            <option value="1">Submission Under Review</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="edit-connectioneditors">
+                    <div id="edit_connection1" data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                        <h3>Connection 1  - Equipment/Charging Level Info</h3>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_connectiontype">Connection Type</label>
+                            <select id="edit_connection1_connectiontype" name="edit_connection1_connectiontype" data-inline="true">
+                                <option value="" data-placeholder="false">Unknown</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_powerkw">Power (KW)</label>
+                            <input type="number" id="edit_connection1_powerkw" name="edit_connection1_powerkw" value="" />
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_currenttype">Supply Type</label>
+                            <select id="edit_connection1_currenttype" name="edit_connection1_currenttype" data-inline="true">
+                                <option value="" data-placeholder="false">Unknown</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_level">Charger Type/Level</label>
+                            <select id="edit_connection1_level" name="edit_connection1_level" data-inline="true">
+                                <option value="" data-placeholder="false">Unknown</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_amps">Max Current (Amps)</label>
+                            <input type="number" id="edit_connection1_amps" name="edit_connection1_amps" value="" />
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_volts">Max Voltage</label>
+                            <input type="number" id="edit_connection1_volts" name="edit_connection1_volts" value="" />
+                        </div>
+
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_quantity">Quantity of this type</label>
+                            <input type="number" id="edit_connection1_quantity" name="edit_connection1_quantity" value="" />
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="edit_connection1_status">Status</label>
+                            <select id="edit_connection1_status" name="edit_connection1_status" data-inline="true">
+                                <option value="" data-placeholder="false">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
+                <a id="editlocation-submit" data-role="button" data-inline="true" data-icon="plus">Submit</a>
+            </div>
+        </div>
+    </div>
+    <!---- Page:EditLocation:End ---->
+
+    <!---- Page:Comments:Start ---->
+    <div data-role="page" id="submitcomment-page">
+        <div data-role="header" data-position="fixed">
+            <h1>Submit Comment</h1>
+        </div>
+        <div data-role="content">
+            <div class="ui-body ui-body-d">
+                <p style="font-size: 0.8em;">
+                    Submit your comment about this location below. <em>This information <strong>will</strong> be shared publically</em>. If your comment requires action from an editor, please select <em>Suggested Change</em> as the Comment Type.
+                </p>
+                <form id="comment-form" action="#">
+                    <div data-role="fieldcontain">
+                        <label for="checkin-type">Check-In Status</label>
+                        <select id="checkin-type" data-inline="true">
+                            <option value="0">Did Not Visit Location</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="comment-type">Comment Type</label>
+                        <select id="comment-type" data-inline="true">
+                            <option value="10">General Comment</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="comment-rating">Your Rating</label>
+                        <select id="comment-rating" data-inline="true">
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Not Great</option>
+                            <option value="1">1 - Bad</option>
+                            <option value="" selected="selected">Not Rated</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="comment-username">Your Name (will be shown)</label>
+                        <input id="comment-username" type="text" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="comment-text">Your Comment</label>
+                        <textarea id="comment-text"></textarea>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
+                <a id="submitcomment-button" data-role="button" data-inline="true" data-icon="submit">Submit</a>
+            </div>
+        </div>
+    </div>
+    <!---- Page:Comments:End ---->
+
+    <!---- Page:Settings:Start ---->
+    <div data-role="page" id="settings-page">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <div style="float: right"><i class="icon-cog"></i>&nbsp;Settings</div>
+            </div>
+        </div>
+        <div data-role="content">
+
+
+            <form id="options-form" action="#">
+                <div data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                    <h3>Preferences</h3>
+
+                    <div id="search-advanced">
+                        <div data-role="fieldcontain">
+                            <label for="search-distance">Max Distance</label>
+                            <select id="search-distance" data-inline="true">
+                                <option value="">(Any Distance)</option>
+                                <option value="5">Up to 5</option>
+                                <option value="10">Up to 10</option>
+                                <option value="20">Up to 20</option>
+                                <option value="30">Up to 30</option>
+                                <option value="50">Up to 50</option>
+                                <option value="100" selected="selected">Up to 100</option>
+                                <option value="200">Up to 200</option>
+                                <option value="500">Up to 500</option>
+                                <option value="1000">Up to 1000</option>
+                                <option value="3000">Up to 3000</option>
+                                <option value="10000">Up to 10000</option>
+                                <option value="20000">Up to 20000</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="search-distance-unit">Distance Units</label>
+                            <select name="search-distance-unit" id="search-distance-unit" data-role="slider" data-inline="true">
+                                <option selected="selected">Miles</option>
+                                <option>KM</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain" style="display: none;">
+                            <label for="option-enable-experiments">Experimental Features</label>
+                            <select name="option-enable-experiments" id="option-enable-experiments" data-role="slider">
+                                <option value="off" selected="selected">Off</option>
+                                <option value="on">On</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                    <h3>Filters</h3>
+                    <div data-role="fieldcontain">
+                        <label for="filter-submissionstatus">Submission Status</label>
+                        <select id="filter-submissionstatus" data-inline="true">
+                            <option value="200" selected="selected">Published</option>
+                            <option value="1">Awaiting Approval</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="filter-operator">Operator</label>
+                        <select name="filter-operator" id="filter-operator" multiple="multiple" data-native-menu="false" data-inline="true">
+                            <option>Choose options</option>
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="filter-connectiontype">Connection Type</label>
+                        <select name="filter-connectiontype" id="filter-connectiontype" multiple="multiple" data-native-menu="false" data-inline="true">
+                            <option>Choose options</option>
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="filter-connectionlevel">Charging Levels</label>
+                        <select name="filter-connectionlevel" id="filter-connectionlevel" multiple="multiple" data-native-menu="false" data-inline="true">
+                            <option>Choose options</option>
+                            <option value="" selected="selected">(All)</option>
+                            <option value="1">Level 1 (Low Power)</option>
+                            <option value="1">Level 2 (Medium Power)</option>
+                            <option value="3">Level 3 (High Power)</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="filter-usagetype">Usage Type</label>
+                        <select name="filter-usagetype" id="filter-usagetype" multiple="multiple" data-native-menu="false" data-inline="true">
+                            <option>Choose options</option>
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="filter-statustype">Status Type</label>
+                        <select name="filter-statustype" id="filter-statustype" multiple="multiple" data-native-menu="false" data-inline="true">
+                            <option>Choose options</option>
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!---- Page:Settings:End ---->
+
+    <!---- Page:About:Start ---->
+    <div data-role="page" id="about-page">
+        <div data-role="header" data-position="fixed">
+            <div>
+                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <div style="float: right"><i class="icon-question-sign"></i>&nbsp;About</div>
+            </div>
+        </div>
+        <div data-role="content">
+            <div class="ui-body ui-body-a">
+                <div data-role="collapsible" data-collapsed="false">
+                    <h2>About This App</h2>
+                    <h3>Open Charge Map App APPVERSION</h3>
+                    <p>
+                        <img alt="OCM Logo" src="images/icons/AppIcon_72x72.png" style="float: right; padding: 4px;" />
+                        <strong>Open Charge Map</strong> is the world's largest
+                    <abbr title="Our data is accessible in full, globally. Our development is also open source.">open</abbr>
+                        global registry of electric vehicle charging locations, dedicated to providing the most complete information possible.
+                    </p>
+                    <p>
+                        You can use this app to find charging equipment locations near you, provide ratings and comments and to submit details of locations we don't currently have.
+                    </p>
+
+                    <p>
+                        <strong>To change search options or to Sign In as an editor or approver see <a href="#settings-page" data-icon="info">Settings</a>.</strong>
+                    </p>
+                    <p>
+                        Please send us your <a target="_blank" href="http://openchargemap.org/about/contact">feedback &amp; comments</a>. You can read more about the project at <a target="_blank" href="http://openchargemap.org">http://openchargemap.org</a>.
+                    </p>
+                    <p style="font-size: smaller;"><strong>Privacy Notice:</strong> This application may need to use and process your location as provided by you or your device, this information may be temporarily logged in some instances. To prevent sharing your location you may disable Location Services on your device. In addition, as this application is based around open sharing of information, comments or information submitted by you will be made public, however your own location is not shared publically.  If you have questions, <a target="_blank" href="http://openchargemap.org/about/contact">contact us</a>. </p>
+                    <!--<p>
+					<em>If using a mobile device, bookmarking this application to your home screen is highly recommended.</em>
+				</p>-->
+                </div>
+
+                <div data-role="collapsible" data-collapsed="false">
+                    <h4>About Open Charge Map</h4>
+
+                    <p>
+                        For more details about the OpenChargeMap project please visit <a target="_blank" href="http://openchargemap.org">http://openchargemap.org</a>
+                    </p>
+                    <p>
+                        Data supplied by OpenChargeMap.org is derived from public sources and data contributions and is supplied to end users without warranty. Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons BY-SA 3.0.</a>
+                    </p>
+
+                    <h3>Credits</h3>
+                    <p><em>OpenChargeMap Concept, Marketing &amp; Hosting:</em> <a target="_blank" href="http://zerocarbonworld.org">Zero Carbon World</a></p>
+                    <p><em>Data Contributions:</em> OpenChargeMap.org contributors, including: <a target="_blank" href="http://www.carstations.com">Carstations.com</a>, <a target="_blank" href="http://zerocarbonworld.org">Zero Carbon World</a>, <a href="http://www.afdc.energy.gov/afdc/">Alternative Fuels and Advanced Vehicles Data Center (AFDC)</a></p>
+                    <p><em>Development:</em> Database, Web Services and Web/Mobile App development led by <a target="_blank" href="http://twitter.com/#!/electriccarbuyr">Christopher Cook</a> of <a target="_blank" href="http://www.webprofusion.com">Webprofusion Ltd</a>, operator of <a target="_blank" href="http://electriccarbuyer.com">electriccarbuyer.com</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---- Page:About:End ---->
+
+    <!---- Page:Feedback:Start ---->
+    <div data-role="page" id="feedback-page">
+        <div data-role="header" data-position="fixed">
+            <h1>Send Feedback</h1>
+        </div>
+        <div data-role="content">
+            <p>
+                We'd like to hear your feedback about our application and services, the form below is for general comments and feedback not related to a specific location. Note that you can also submit comments against individual charge points on their details page and <a href="#editlocation-page" data-icon="plus">send us details</a> of new locations.
+            </p>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a>
+            </div>
+        </div>
+    </div>
+    <!---- Page:Feedback:End ---->
+
+    <!---- Page:Debug:Start ---->
+    <div data-role="page" id="debug-page">
+        <div data-role="header" data-position="fixed">
+            <h1>Debug Info</h1>
+        </div>
+        <div data-role="content">
+            <div id="debug">
+                Debug content will be shown here
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Page Footer</h4>
+        </div>
+    </div>
+    <!---- Page:Debug:End ---->
+
+    <!---- Page:Experiment:Start ---->
+    <div data-role="page" id="experiment-page">
+        <div data-role="header" data-position="fixed">
+            <h1>Experiments</h1>
+        </div>
+        <div data-role="content">
+            <div id="experiment-output">
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <a href="#search-page" data-role="button" data-inline="true" data-icon="back">Back</a>
+        </div>
+    </div>
+    <!---- Page:Experiment:End ---->
+
+    <!--End Page Definitions -->
+    <!--End standard OCM app HTML block-->
+
+    <!--Late bound scripts-->
+    <script src="js/ThirdParty/analytics.js"></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="js/ThirdParty/jquery.ui.map.full.min.js"></script>
+</body>
+</html>

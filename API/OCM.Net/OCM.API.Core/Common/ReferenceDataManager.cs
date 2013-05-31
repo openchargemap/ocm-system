@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using OCM.API.Common.Model;
+
+namespace OCM.API.Common
+{
+    public class ReferenceDataManager
+    {
+        public Country GetCountryByName(string country)
+        {
+            if (country == null) return null;
+
+             OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+             var selectedCountry = dataModel.Countries.FirstOrDefault(c => c.Title.ToLower() == country.ToLower());
+             return OCM.API.Common.Model.Extensions.Country.FromDataModel(selectedCountry);
+        }
+
+        public CoreReferenceData GetCoreReferenceData()
+        {
+            CoreReferenceData data = new CoreReferenceData();
+
+            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+
+            //list of Levels (ChargerTypes)
+            data.ChargerTypes = new List<Model.ChargerType>();
+            foreach (var cg in dataModel.ChargerTypes)
+            {
+                data.ChargerTypes.Add(Model.Extensions.ChargerType.FromDataModel(cg));
+            }
+
+            //list of connection types
+            data.ConnectionTypes = new List<Model.ConnectionType>();           
+            foreach (var ct in dataModel.ConnectionTypes)
+            {
+                data.ConnectionTypes.Add(Model.Extensions.ConnectionType.FromDataModel(ct));
+            }
+
+            //list of power source types (AC/DC etc)
+            data.CurrentTypes = new List<Model.CurrentType>();
+            foreach (var ct in dataModel.CurrentTypes)
+            {
+                data.CurrentTypes.Add(Model.Extensions.CurrentType.FromDataModel(ct));
+            }
+
+            //list of countries
+            data.Countries = new List<Model.Country>();
+            foreach (var country in dataModel.Countries)
+            {
+                data.Countries.Add(Model.Extensions.Country.FromDataModel(country));
+            }
+
+            //list of Data Providers
+            data.DataProviders = new List<Model.DataProvider>();
+            foreach (var provider in dataModel.DataProviders)
+            {
+                data.DataProviders.Add(Model.Extensions.DataProvider.FromDataModel(provider));
+            }
+
+            //list of Operators
+            data.Operators = new List<Model.OperatorInfo>();
+            foreach (var source in dataModel.Operators)
+            {
+                data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
+            }
+
+            //list of Status Types
+            data.StatusTypes = new List<Model.StatusType>();
+            foreach (var status in dataModel.StatusTypes)
+            {
+                data.StatusTypes.Add(Model.Extensions.StatusType.FromDataModel(status));
+            }
+
+            //list of Usage Types (public etc)
+            data.UsageTypes = new List<Model.UsageType>();
+            foreach (var usage in dataModel.UsageTypes)
+            {
+                data.UsageTypes.Add(Model.Extensions.UsageType.FromDataModel(usage));
+            }
+
+            //list of user comment types
+            data.UserCommentTypes = new List<Model.UserCommentType>();
+            foreach (var commentType in dataModel.UserCommentTypes)
+            {
+                data.UserCommentTypes.Add(Model.Extensions.UserCommentType.FromDataModel(commentType));
+            }
+
+            //list of user comment types
+            data.CheckinStatusTypes = new List<Model.CheckinStatusType>();
+            foreach (var checkinType in dataModel.CheckinStatusTypes)
+            {
+                data.CheckinStatusTypes.Add(Model.Extensions.CheckinStatusType.FromDataModel(checkinType));
+            }
+
+            data.SubmissionStatusTypes = new List<Model.SubmissionStatusType>();
+            foreach (var s in dataModel.SubmissionStatusTypes)
+            {
+                data.SubmissionStatusTypes.Add(Model.Extensions.SubmissionStatusType.FromDataModel(s));
+            }
+
+            data.ChargePoint = new ChargePoint()
+            {
+                AddressInfo = new Model.AddressInfo(),
+                Chargers = new List<Model.ChargerInfo> { new Model.ChargerInfo() },
+                Connections = new List<Model.ConnectionInfo> { new Model.ConnectionInfo() },
+                DateCreated = DateTime.UtcNow,
+                DateLastConfirmed = DateTime.UtcNow,
+                DateLastStatusUpdate = DateTime.UtcNow,
+                GeneralComments = "",
+                DatePlanned = null,
+                ID = -1,
+                NumberOfPoints = 1,
+                StatusType = new Model.StatusType(),
+                OperatorInfo = new Model.OperatorInfo(),
+                DataProvider = new Model.DataProvider(),
+                UsageType = new Model.UsageType(),
+                UUID = Guid.NewGuid().ToString(),
+                DataQualityLevel = 1
+            };
+
+            data.UserComment = new Model.UserComment { ChargePointID = 0, Comment = "", CommentType = data.UserCommentTypes[0], DateCreated = DateTime.UtcNow, ID = 0, CheckinStatusType =  data.CheckinStatusTypes[0]};
+            return data;
+        }
+    }
+}

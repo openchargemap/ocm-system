@@ -1,0 +1,126 @@
+﻿@using OCM.MVC
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Open Charge Map - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@ViewBag.Description">
+    <meta name="author" content="Openchargemap.org">
+
+    @Styles.Render("~/Content/bootstrap")
+
+    @Styles.Render("~/Content/css")
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-76936-12']);
+        _gaq.push(['_setDomainName', 'openchargemap.org']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    <!--fav and touch icons -->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-startup-image" href="/app/images/splashscreen/AppSplashscreen320x460.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/app/images/icons/AppIcon_114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/app/images/icons/AppIcon_72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/app/images/icons/AppIcon_57x57.png" />
+    <link rel="icon" type="image/png" href="/app/images/icons/AppIcon_57x57.png" />
+    <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <header>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <li><a id="nav_home" runat="server" href="~/">home</a></li>
+                            <li><a id="nav_app" runat="server" href="~/poi/">browse</a></li>
+                            <li><a id="nav_develop" runat="server" href="~/develop/">develop</a></li>
+                            <li><a id="nav_discuss" runat="server" href="http://openchargemap.org/forum/">discussions</a></li>
+                            <li><a id="nav_examples" runat="server" href="~/develop/apps/">examples</a></li>
+                            <li><a id="nav_about" runat="server" href="~/about/">about</a></li>
+                            <li><a id="nav_contact" runat="server" href="~/about/contact/">contact</a></li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">my profile
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+
+                                    @if (Session["Username"] != null)
+                                    {
+                                        <li class="nav-header">@Html.Encode(Session["Username"])</li>
+                                        <li>@Html.ActionLink("my profile", "Index", "Profile")</li>
+                                        <li><a href="@Url.Action("SignOut", "Profile")">sign out</a></li>
+                                
+                                    }
+                                    else
+                                    {
+                                        <li><a href="@Url.Action("SignIn", "Profile")"><i class="icon-user"></i>sign in</a></li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                            
+                                <a class="dropdown-toggle" id="languageSelection" role="button" data-toggle="dropdown" data-target="#">
+                                    language
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="languageSelection">
+                                    @foreach (var language in CommonUtil.SupportedLanguages)
+                                    {
+                                        <li><a href="?languagecode=@language.Key">@language.Value</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="header">
+            <div id="branding">
+                &nbsp;
+            </div>
+            <div id="navcontrols">
+                <p>the <em>global</em> registry of electric vehicle charging locations</p>
+
+                follow us: <a href="http://twitter.com/openchargemap">&#64;openchargemap</a><br />
+                get involved: <a runat="server" href="~/forum/">discussions</a><br />
+                recommend us:
+                <g:plusone size="small" count="false"></g:plusone>
+            </div>
+        </div>
+        <div class="content">
+            @RenderBody()
+        </div>
+
+        <footer>
+            Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    @Html.Raw(CommonUtil.GetLocalizationScriptBlock())
+</body>
+</html>

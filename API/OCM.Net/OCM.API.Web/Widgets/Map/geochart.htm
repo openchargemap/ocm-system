@@ -1,0 +1,53 @@
+<!--
+You are free to copy and use this sample in accordance with the terms of the
+Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>OpenChargeMap Global Overview</title>
+  <script type="text/javascript" src="http://www.openchargemap.org/api/widgets/databrowser/datasummary.ashx"></script>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+	google.load('visualization', '1', {packages: ['geochart']});
+
+	function drawVisualization() {
+
+			var ocm_summary = ocm_getdatasummary();
+			var totalLocations = 0;
+
+			var data = new google.visualization.DataTable();
+			data.addRows(ocm_summary.length);
+			data.addColumn('string', 'Country');
+			data.addColumn('number', 'Charging Locations');
+
+			for (i = 0; i < ocm_summary.length; i++) {
+				data.setValue(i, 0, ocm_summary[i].country);
+				data.setValue(i, 1, ocm_summary[i].itemcount);
+
+				totalLocations += ocm_summary[i].itemcount;
+			}
+
+			var options = {
+	  			width: 556,
+	  			height: 347,
+
+      			displayMode: 'regions',
+      			colorAxis: {colors: ['#CCFFCC', '#006600']}
+    		};
+
+			var geochart = new google.visualization.GeoChart(
+				document.getElementById('visualization'));
+				geochart.draw(data, options);
+
+		}
+
+	google.setOnLoadCallback(drawVisualization);
+  </script>
+</head>
+<body style="font-family: Arial;border: 0 none;">
+<div id="visualization"></div>
+</body>
+</html>

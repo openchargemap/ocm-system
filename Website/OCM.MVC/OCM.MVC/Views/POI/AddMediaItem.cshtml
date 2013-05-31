@@ -1,0 +1,41 @@
+﻿@using Microsoft.Web.Helpers
+@model OCM.API.Common.Model.ChargePoint
+
+@{
+    ViewBag.Title = "Add Photos";
+}
+
+@if (ViewBag.UploadCompleted == true)
+{
+    <h2>Upload in Progress</h2>
+    <p>Thanks for your contribution, it takes a few seconds for uploads to be processed, in the meantime you can @Html.ActionLink("return to the location details","Details","POI", new {id=ViewBag.PoiId},null)</p>
+}
+else
+{
+    if (Session["UserID"] != null)
+    {
+        using (Html.BeginForm("AddMediaItem", "POI", FormMethod.Post, new {enctype = "multipart/form-data"}))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+            <h2>Add Your Photos <small>@Model.AddressInfo.Title</small></h2>
+            <p>Thanks for going to the effort of uploading new content, you are awesome! Please choose your images to upload, then hit the upload button.</p>
+
+            <div class="well well-small">
+                 <label for="fileUpload">Select Image to Upload</label>
+        
+                @FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add More Images", uploadText: "Upload File")
+
+                <label for="comment">Comment</label>
+                <textarea id="comment" name="comment" maxlength="1000" placeholder="Comment or description to accompany the image"></textarea>
+            </div>
+            <div class="alert alert-danger">By submitting content to Open Charge Map you are giving us permission to put the content into the public domain to be freely distrubuted. We reserve the right to delete any content which we deem to be inappropriate or irrelevant. We know what cars look like, so please try to submit images which show us something about the location, quality or placement of charging equipment.</div>
+            <input class="btn btn-primary" type="submit" name="submit" value="Upload!" />
+        }
+    }
+    else
+    {
+        <span>Please Sign In to upload</span>
+    }
+}

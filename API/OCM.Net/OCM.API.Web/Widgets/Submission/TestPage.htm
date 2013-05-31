@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OCM Submission Test Page</title>
+    <link href="../../../Styles/StyleSheet.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        div.submissionform label
+        {
+            width: 300px;
+            display: block;
+            float: left;
+        }
+
+        div.submissionform legend
+        {
+            font-weight:bold;
+            padding:0.2em;
+        }
+
+        div.submissionform
+        {
+            border:1px solid gainsboro;
+            background-color: #E0ECF8;
+            padding:4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Submit a new charging point</h1>
+<p>This page is an example use of the OpenChargeMap.org submission widget. This is achieved by including our submission.js script
+    found at <a href="http://www.openchargemap.org/api/widgets/submission/submission.js">http://www.openchargemap.org/api/widgets/submission/submission.js</a>. Styling is controlled by your own CSS. JQuery 1.5 is also required. Use 'view source' to see how it's done</p>
+<!--begin example widget embed-->
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.min.js" type="text/javascript"></script>
+<script src="Submission.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ocm_populateSubmissionForm("ocmsubmission");
+    });
+</script>
+
+<div id="ocmsubmission" class="submissionform"></div>
+<!--end example-->
+
+</body>
+</html>

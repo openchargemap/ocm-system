@@ -1,0 +1,543 @@
+/* palette: OCM green #8dd35f rgb (141,211,95)   */
+
+* {
+    text-shadow: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+body {
+    font-family: 'Oxygen', sans-serif,Arial;
+    font-size: 16px;
+    background-color: black;
+    line-height: normal;
+    color: white;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#branding {
+    padding: 4px;
+    vertical-align: middle;
+}
+
+.low-res {
+    display: inherit;
+}
+
+.medium-res {
+    display: none;
+}
+
+.high-res {
+    display: none;
+}
+
+#branding h1 {
+    padding: 6px;
+    color: white;
+    font-size: 9pt;
+}
+
+#search-advanced {
+    display: inline;
+}
+
+p {
+    font-family: Arial;
+    padding: 6px;
+}
+
+#locationdetails-view {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 90%;
+    border: 2px solid gainsboro;
+    border-top: 5px solid gainsboro;
+    box-shadow: 10px 10px 5px #888;
+    display: none;
+    background-color: #F2F7F3;
+    padding: 8px;
+    margin: 6px;
+}
+
+    #locationdetails-view h1 {
+        font-size: 1.2em;
+        margin-bottom: 0.5em;
+        margin-top: 0.5em;
+    }
+
+#details-additional {
+    line-height: 1.5em;
+}
+
+#details-streetview {
+    max-width: 192px;
+    height: 96px;
+    border: 2px solid #202020;
+    border-top-width: 8px;
+    border-bottom-width: 8px;
+    box-shadow: 4px 4px 8px rgba(50, 50, 50, 0.38);
+}
+
+
+#details-streetview, #details-address, #details-contact-container {
+    min-width: 160px;
+    float: left;
+    /*margin-right: 0.5em;
+    margin-top: 0.5em;*/
+}
+
+#details-contact-container {
+    font-size: 80%;
+    border: 1px solid gainsboro;
+    padding: 8px;
+    background-color: #f3f3f3;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 98%;
+    margin-top: 0.5em;
+}
+
+    #details-contact-container * a, #details-contact-container a:visited, #details-contact-container a:link {
+        text-overflow: ellipsis;
+        max-width: 90%;
+    }
+
+#details-map {
+    text-align: center;
+    border: 8px solid white;
+    margin: 0.5em;
+    max-width: 210px;
+}
+
+@media only screen and (min-width: 800px) {
+    #details-streetview {
+        float: right;
+    }
+}
+
+#progress-indicator {
+    background-position: left center;
+    display: none;
+    position: absolute;
+    border: 1px solid gainsboro;
+    box-shadow: 10px 10px 5px #888;
+    background-color: white;
+    padding: 6px;
+    padding-left: 40px;
+    margin: 6px;
+    background-image: url('../images/ajax-loader.gif');
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    width: 90%;
+    height: 60px;
+    border-radius: 6px;
+}
+
+.info-section {
+    border: 1px solid gainsboro;
+    padding: 16px;
+    background-color: whitesmoke;
+    font-size: 9pt;
+    display: block;
+    line-height: 1.5;
+}
+
+#details-content {
+    border-radius: 6px;
+}
+
+#details-additional {
+    font-size: smaller;
+}
+
+    #details-additional p {
+        margin-left: 0px;
+        padding-left: 0px;
+    }
+
+#map-view {
+    border: 2px solid gainsboro;
+}
+
+
+.ocm-label {
+    width: 8em;
+    display: inline-block;
+}
+
+.footer {
+    font-size: 6pt;
+    color: #4f4f4f;
+    margin-top: 40px;
+    padding: 8px;
+}
+
+    .footer a, .footer a:visited {
+        color: #4f4f4f;
+        font-weight: bold;
+    }
+
+#details-usercomments p {
+    text-overflow: ellipsis;
+    overflow: visible;
+    white-space: normal;
+}
+
+.datatable {
+    border-collapse: collapse;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: smaller;
+    border: 1px solid gainsboro;
+    box-shadow: 2px 2px 6px rgba(50, 50, 50, 0.3);
+}
+
+    .datatable th, .datatable td {
+        text-align: left;
+        padding: 4px;
+    }
+
+    .datatable th {
+        background-color: whitesmoke;
+    }
+
+    .datatable tr {
+        border-bottom: 1px solid gainsboro;
+    }
+
+#login-panel {
+    margin: 8px;
+    border: 1px solid gainsboro;
+    background-color: whitesmoke;
+    padding: 8px;
+}
+
+/*jquery mobile style overrides*/
+.ui-body-c {
+    background-image: none;
+    background-color: #333333;
+}
+
+.ui-content {
+    padding: 0px;
+}
+
+.result {
+    box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
+    margin: 1em;
+    border-radius: 4px;
+}
+
+.results-list {
+    margin: 20px 0px 40px 0px;
+    background-color: white;
+    overflow: auto;
+}
+
+.result > a:active, .result > a:visited, .result > a:link {
+    text-decoration: none !important;
+    color: #111 !important;
+}
+
+.result-item-a, .result-item-b {
+    min-width: 120px;
+    max-width: 50%;
+    font-weight: normal;
+    padding: 8px;
+    font-size: 80%;
+}
+
+.result-item-a {
+    float: left;
+}
+
+.result-item-b {
+    float: left;
+    text-align: left;
+}
+
+@media only screen and (min-width: 800px) {
+    .result-item-b {
+        float: right;
+        text-align: right;
+    }
+}
+
+.alternate {
+}
+
+#network-error {
+    color: Red;
+}
+
+
+#popupPanel-popup {
+    right: 0 !important;
+    left: auto !important;
+}
+
+#popupPanel {
+    width: 300px;
+    border: 1px solid #000;
+    border-right: none;
+    background: rgba(0,0,0,.5);
+    margin: -1px 0;
+}
+
+    #popupPanel .ui-btn {
+        margin: 2em 15px;
+    }
+
+.direction-N, .direction-S, .direction-W, .direction-E, .direction-NW, .direction-NE, .direction-SW, .direction-SE {
+    background-image: url(../images/icons/compass.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    max-height: 16px;
+    max-width: 16px;
+}
+
+.direction-N {
+}
+
+.direction-S {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+}
+
+.direction-W {
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+}
+
+.direction-E {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+
+.direction-NW {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+}
+
+.direction-NE {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+
+.direction-SW {
+    transform: rotate(225deg);
+    -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+}
+
+.direction-SE {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+}
+
+#home-page {
+    padding: 16px;
+}
+
+    #home-page * .ui-grid-b {
+        text-align: center;
+        margin: 1em;
+    }
+
+        #home-page * .ui-grid-b * a {
+            text-decoration: none;
+            color: white;
+            font-size: 1em;
+            margin-bottom: 1em;
+            -webkit-animation-name: menu-anim;
+            -webkit-animation-duration: 0.3s;
+            -webkit-animation-timing-function: ease-in;
+            -webkit-animation-delay: 0s;
+            -webkit-animation-iteration-count: 1;
+            -webkit-animation-direction: alternate;
+            -webkit-animation-play-state: running;
+            text-shadow: 1px 1px 8px rgba(32,32,32, 0.7);
+        }
+
+@-webkit-keyframes menu-anim /* Safari and Chrome */
+{
+    0% {
+        opacity: 0;
+        color: greenyellow;
+    }
+
+    100% {
+        opacity: 1;
+        color: white;
+    }
+}
+
+#home-page * .ui-grid-b * a:hover {
+    text-decoration: none;
+    color: greenyellow;
+    -webkit-filter: blur(1px);
+}
+
+.accent {
+    color: greenyellow;
+}
+
+@media screen and (min-width: 0px) and (max-width: 400px) {
+    #home-page * .ui-grid-b * a {
+        font-size: 80%;
+    }
+}
+
+@media screen and (min-width: 400px) and (max-width: 700px) {
+    #home-page * .ui-grid-b * a {
+        font-size: 90%;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 800px) {
+    #home-page * .ui-grid-b * a {
+        font-size: 100%;
+    }
+}
+
+@media screen and (min-width: 801px) {
+    #home-page * .ui-grid-b * a {
+        font-size: 120%;
+        margin-bottom: 2em;
+    }
+}
+
+#home-intro, #user-profile-info {
+    font-size: 0.8em;
+    min-height: 64px;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: right;
+    color: white;
+}
+
+.home-menu-container {
+    background-color: rgba(255,255,255,0.2);
+    margin-top: 1em;
+    padding: 0.3em;
+    border-radius: 1em;
+}
+
+.disabled-item {
+    -webkit-filter: blur(2px);
+}
+
+#details-content * h3.ui-bar-d {
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.content-subsection {
+    box-shadow: 0px 4px 8px rgba(50, 50, 50, 0.2);
+    margin: 0.2em;
+    border-radius: 4px;
+    padding: 0.3em;
+}
+
+#locationdetails-page .ui-content {
+    padding: 0.5em;
+}
+
+.section-heading, .result h3 {
+    padding: 0.5em;
+    background-color: #8cc63f;
+    color: white;
+    font-size: 0.9em;
+    font-weight: normal;
+    font-family: 'Oswald',Arial;
+}
+
+.section-heading {
+    margin-bottom: 0.5em;
+}
+
+#details-options {
+    border: 1px solid gainsboro;
+    padding: 0.4em;
+    display: inline;
+    margin: 0.3em;
+    float: right;
+    background-color: #fcfcfc;
+}
+
+    #details-options .option-item {
+        display: inline;
+        padding: 0.4em;
+    }
+
+body, h1, h2, h3, .ui-body-b, .ui-body-d, .ui-link, a, a:visited {
+    font-family: 'Oxygen', sans-serif;
+}
+
+.result h3, #home-page .ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300 !important;
+    font-size: 1.1em;
+}
+
+/*page heading bar*/
+div[data-role=header] > div {
+    padding: 0.6em;
+    margin-right: 1em;
+}
+
+    div[data-role=header] > div a, div[data-role=header] > div a:visited {
+        color: white !important;
+        text-decoration: none;
+    }
+
+
+blockquote {
+    background: #f9f9f9;
+    border-left: 6px solid #8cc63f;
+    margin: 1.5em 10px;
+    padding: .5em 10px;
+}
+
+    blockquote:before {
+        color: #ccc;
+        content: open-quote;
+        line-height: .1em;
+        margin-right: .25em;
+        vertical-align: -.4em;
+    }
+
+    blockquote p {
+        display: inline;
+    }
+
+    blockquote small {
+        display: block;
+        line-height: 20px;
+        color: #999999;
+        font-size: 0.8em;
+    }

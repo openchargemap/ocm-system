@@ -1,0 +1,134 @@
+﻿@model OCM.API.Common.Model.ChargePoint
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ChargePoint</legend>
+
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UUID)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UUID)
+            @Html.ValidationMessageFor(model => model.UUID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DataProvidersReference)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DataProvidersReference)
+            @Html.ValidationMessageFor(model => model.DataProvidersReference)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.OperatorsReference)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.OperatorsReference)
+            @Html.ValidationMessageFor(model => model.OperatorsReference)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UsageCost)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UsageCost)
+            @Html.ValidationMessageFor(model => model.UsageCost)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NumberOfPoints)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NumberOfPoints)
+            @Html.ValidationMessageFor(model => model.NumberOfPoints)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.GeneralComments)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.GeneralComments)
+            @Html.ValidationMessageFor(model => model.GeneralComments)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DateLastConfirmed)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateLastConfirmed)
+            @Html.ValidationMessageFor(model => model.DateLastConfirmed)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DateLastStatusUpdate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateLastStatusUpdate)
+            @Html.ValidationMessageFor(model => model.DateLastStatusUpdate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DatePlanned)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DatePlanned)
+            @Html.ValidationMessageFor(model => model.DatePlanned)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DataQualityLevel)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DataQualityLevel)
+            @Html.ValidationMessageFor(model => model.DataQualityLevel)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DateCreated)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateCreated)
+            @Html.ValidationMessageFor(model => model.DateCreated)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MetadataTags)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MetadataTags)
+            @Html.ValidationMessageFor(model => model.MetadataTags)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PercentageSimilarity)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PercentageSimilarity)
+            @Html.ValidationMessageFor(model => model.PercentageSimilarity)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<OCM.API.Common.Model.DiffItem>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+           Field
+        </th>
+        <th>
+            Old Value
+        </th>
+        <th>
+           New Value
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Context)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ValueA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ValueB)
+        </td>
+    </tr>
+}
+
+</table>

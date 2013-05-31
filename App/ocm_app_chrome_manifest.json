@@ -1,0 +1,19 @@
+{
+   "name":"OpenChargeMap",
+   "version":"3.0.1",
+   "description":"Find electric vehicle charging locations nearby using OpenChargeMap, the world's largest open database of EV charging locations.",
+   "app":{
+      "urls":[
+         "http://openchargemap.org/"
+      ],
+      "launch":{
+         "web_url":"http://openchargemap.org/app/index.html"
+      }
+   },
+   "icons":{
+      "128":"images/icons/AppIcon_128x128.png"
+   },
+   "permissions":[
+      "geolocation"
+   ]
+}
