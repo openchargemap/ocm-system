@@ -363,6 +363,235 @@ namespace OCM.API.Common
             }
             return diffList;
         }
+
+
+        /// <summary>
+        /// Populate AddressInfo data from settings in a simple AddressInfo object
+        /// </summary>
+        public Core.Data.AddressInfo PopulateAddressInfo_SimpleToData(Model.AddressInfo simpleAddressInfo, Core.Data.AddressInfo dataAddressInfo)
+        {
+            if (simpleAddressInfo != null && dataAddressInfo == null) dataAddressInfo = new Core.Data.AddressInfo();
+
+            if (simpleAddressInfo != null && dataAddressInfo != null)
+            {
+                dataAddressInfo.Title = simpleAddressInfo.Title;
+                dataAddressInfo.AddressLine1 = simpleAddressInfo.AddressLine1;
+                dataAddressInfo.AddressLine2 = simpleAddressInfo.AddressLine2;
+                dataAddressInfo.Town = simpleAddressInfo.Town;
+                dataAddressInfo.StateOrProvince = simpleAddressInfo.StateOrProvince;
+                dataAddressInfo.Postcode = simpleAddressInfo.Postcode;
+                if (simpleAddressInfo.Country != null) dataAddressInfo.CountryID = simpleAddressInfo.Country.ID;
+                dataAddressInfo.Latitude = simpleAddressInfo.Latitude;
+                dataAddressInfo.Longitude = simpleAddressInfo.Longitude;
+                dataAddressInfo.ContactTelephone1 = simpleAddressInfo.ContactTelephone1;
+                dataAddressInfo.ContactTelephone2 = simpleAddressInfo.ContactTelephone2;
+                dataAddressInfo.ContactEmail = simpleAddressInfo.ContactEmail;
+                dataAddressInfo.AccessComments = simpleAddressInfo.AccessComments;
+                dataAddressInfo.GeneralComments = simpleAddressInfo.GeneralComments;
+                dataAddressInfo.RelatedURL = simpleAddressInfo.RelatedURL;
+            }
+
+            return dataAddressInfo;
+        }
+
+        public void PopulateChargePoint_SimpleToData(Model.ChargePoint simpleChargePoint, Core.Data.ChargePoint dataChargePoint, OCM.Core.Data.OCMEntities dataModel)
+        {
+            if (String.IsNullOrEmpty(dataChargePoint.UUID)) dataChargePoint.UUID = Guid.NewGuid().ToString().ToUpper();
+
+            if (simpleChargePoint.DataProvider != null)
+            {
+                dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == simpleChargePoint.DataProvider.ID);
+            }
+            else
+            {
+                //set to ocm contributor by default
+                dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == (int)StandardDataProviders.OpenChargeMapContrib);
+            }
+
+            dataChargePoint.DataProvidersReference = simpleChargePoint.DataProvidersReference;
+
+            if (simpleChargePoint.OperatorInfo != null)
+            {
+                dataChargePoint.Operator = dataModel.Operators.First(o => o.ID == simpleChargePoint.OperatorInfo.ID);
+            }
+            dataChargePoint.OperatorsReference = simpleChargePoint.OperatorsReference;
+
+            if (simpleChargePoint.UsageType != null) dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
+
+            dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo);
+
+            dataChargePoint.NumberOfPoints = simpleChargePoint.NumberOfPoints;
+            dataChargePoint.GeneralComments = simpleChargePoint.GeneralComments;
+            dataChargePoint.DatePlanned = simpleChargePoint.DatePlanned;
+            dataChargePoint.UsageCost = simpleChargePoint.UsageCost;
+
+            if (simpleChargePoint.DateLastStatusUpdate != null)
+            {
+                dataChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
+            }
+            else
+            {
+                dataChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
+            }
+
+
+            if (simpleChargePoint.DataQualityLevel != null)
+            {
+                dataChargePoint.DataQualityLevel = simpleChargePoint.DataQualityLevel;
+            }
+            else
+            {
+                dataChargePoint.DataQualityLevel = 1;
+            }
+
+            if (dataChargePoint.DateCreated == null)
+            {
+                dataChargePoint.DateCreated = DateTime.UtcNow;
+            }
+
+            var updateConnectionList = new List<OCM.Core.Data.ConnectionInfo>();
+            var deleteList = new List<OCM.Core.Data.ConnectionInfo>();
+
+            if (simpleChargePoint.Connections != null)
+            {
+
+                foreach (var c in simpleChargePoint.Connections)
+                {
+                    var connectionInfo = new Core.Data.ConnectionInfo();
+
+                    //edit existing, if required
+                    if (c.ID > 0) connectionInfo = dataChargePoint.Connections.FirstOrDefault(con => con.ID == c.ID && con.ChargePointID == dataChargePoint.ID);
+                    if (connectionInfo == null)
+                    {
+                        //connection is stale info, start new
+                        c.ID = 0;
+                        connectionInfo = new Core.Data.ConnectionInfo();
+                    }
+
+                    connectionInfo.Reference = c.Reference;
+                    connectionInfo.Amps = c.Amps;
+                    connectionInfo.Voltage = c.Voltage;
+                    connectionInfo.Quantity = c.Quantity;
+                    connectionInfo.PowerKW = c.PowerKW;
+
+                    if (c.ConnectionType != null)
+                    {
+                        connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == c.ConnectionType.ID);
+                    }
+                    else
+                    {
+                        connectionInfo.ConnectionType = null;
+                    }
+
+                    if (c.Level != null)
+                    {
+                        connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == c.Level.ID);
+                    }
+                    else
+                    {
+                        connectionInfo.ChargerType = null;
+                    }
+
+                    if (c.CurrentType != null)
+                    {
+                        connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == c.CurrentType.ID);
+                    }
+                    else
+                    {
+                        connectionInfo.ChargerType = null;
+                    }
+
+                    if (c.StatusType != null)
+                    {
+                        connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == c.StatusType.ID);
+                    }
+                    else
+                    {
+                        connectionInfo.StatusType = null;
+                    }
+
+                    bool addConnection = false;
+
+                    //detect if connection details are non-blank/unknown before adding
+                    if (
+                        !String.IsNullOrEmpty(connectionInfo.Reference)
+                        || connectionInfo.Amps != null
+                        || connectionInfo.Voltage != null
+                        || connectionInfo.PowerKW != null
+                        || (connectionInfo.ConnectionType != null && connectionInfo.ConnectionType.ID > 0)
+                        || (connectionInfo.StatusType != null && connectionInfo.StatusTypeID > 0)
+                        || (connectionInfo.ChargerType != null && connectionInfo.ChargerType.ID > 1)
+                        || (connectionInfo.CurrentType != null && connectionInfo.CurrentType.ID > 0)
+                        || (connectionInfo.Quantity != null && connectionInfo.Quantity > 1)
+                    )
+                    {
+                        addConnection = true;
+                        if (connectionInfo.ChargePoint == null) connectionInfo.ChargePoint = dataChargePoint;
+                    }
+
+                    if (addConnection)
+                    {
+                        //if adding a new connection (not an update) add to model
+                        if (c.ID <= 0)
+                        {
+                            dataChargePoint.Connections.Add(connectionInfo);
+                        }
+                        //track final list of connections being added/updated  -- will then be used to delete by difference
+                        updateConnectionList.Add(connectionInfo);
+                    }
+                    else
+                    {
+                        //remove an existing connection no longer required
+                        //if (c.ID > 0)
+                        {
+                            if (connectionInfo.ChargePoint == null) connectionInfo.ChargePoint = dataChargePoint;
+                            deleteList.Add(connectionInfo);
+                            //dataChargePoint.Connections.Remove(connectionInfo);
+                        }
+                    }
+                }
+
+
+            }
+
+
+            //find existing connections not in updated/added list, add to delete
+            if (dataChargePoint.Connections != null)
+            {
+                foreach (var con in dataChargePoint.Connections)
+                {
+                    if (!updateConnectionList.Contains(con))
+                    {
+                        if (!deleteList.Contains(con))
+                        {
+                            deleteList.Add(con);
+                        }
+                    }
+                }
+            }
+
+            //finally clean up deleted items
+            foreach (var item in deleteList)
+            {
+                dataModel.ConnectionInfoList.Remove(item);
+            }
+
+            if (simpleChargePoint.StatusType != null)
+            {
+                dataChargePoint.StatusType = dataModel.StatusTypes.First(s => s.ID == simpleChargePoint.StatusType.ID);
+            }
+
+            if (simpleChargePoint.SubmissionStatus != null)
+            {
+                dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == simpleChargePoint.SubmissionStatus.ID);
+            }
+            else
+            {
+                dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
+            }
+
+        }
+
     }
 
 }
