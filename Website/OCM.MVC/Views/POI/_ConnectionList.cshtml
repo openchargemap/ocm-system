@@ -1,0 +1,35 @@
+﻿@model IEnumerable<OCM.API.Common.Model.ConnectionInfo>
+
+<table class="table">
+    <tr>
+        <th>Connection Type</th>
+        <th>Max Power (KW)</th>
+        <th>Level</th>
+        <th>Supply Type</th>
+        <th>Voltage</th>
+        <th>Max Current</th>
+        <th>Quantity</th>
+        <th>Comments</th>
+        <th>Reference</th>
+    </tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.ConnectionType.Title)</td>
+        <td>@Html.DisplayFor(modelItem => item.PowerKW)</td>        
+        <td>@Html.DisplayFor(modelItem => item.Level.Title)</td>
+        <td>@Html.DisplayFor(modelItem => item.CurrentType.Title)</td>
+        <td>@Html.DisplayFor(modelItem => item.Voltage)</td>
+        <td>@Html.DisplayFor(modelItem => item.Amps)</td>
+        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+        <td>@Html.DisplayFor(modelItem => item.Comments)</td>
+        <td style="white-space:nowrap"><small>
+            @if (item.Reference == null) {
+            @:OCM-CN-@item.ID
+            } else
+            {@Html.DisplayFor(modelItem => item.Reference)}
+            </small>
+        </td>
+    </tr>
+}
+</table>

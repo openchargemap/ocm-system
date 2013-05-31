@@ -1,0 +1,129 @@
+﻿@model OCM.MVC.Controllers.POIBrowseModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+
+        <div class="control-group">
+            <label class="control-label" for="search-location">Location</label>
+            <div class="controls">
+                <div class="input-append">
+                    <input type="text" value="@Model.SearchLocation" id="search-location" name="searchlocation" placeholder="Place name or Post/Zip Code" data-toggle="tooltip" title="Enter the place name or part of the address to search for locations near a particular place" />
+                    <a class="add-on btn btn-success btn-mini" title="Search Near Me" id="search-nearme" href="#"><i class=" icon-map-marker"></i></a>
+                </div>  
+            </div>
+        </div>
+        
+        <div class="editor-label">
+            <label for="countryids">Country</label>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("countryids", Model.CountryList)
+        </div>
+
+        <div class="editor-label">
+            <label>Distance</label>
+        </div>
+        <div class="editor-field">
+            <select id="distance" name="distance">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="40">40</option>
+                <option value="60">60</option>
+                <option value="100" selected="selected">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+                <option value="2000">2000</option>
+                <option value="10000">10000</option>
+                <option value="20000">20000</option>
+            </select>
+            <select id="distanceunit" name="distanceunit" class="input-small">
+                <option value="miles">Miles</option>
+                <option value="km">KM</option>
+            </select>
+        </div>
+
+
+        <div id="search-advanced">
+            <div class="editor-label">
+                <label>Title</label>
+            </div>
+            <div class="editor-field">
+                <input type="text" name="locationtitle" placeholder="Title of place or business" data-toggle="tooltip" title="You can optionally search location titles for a business name etc. " />
+            </div>
+            <div class="editor-label">
+                <label>Level</label>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownList("levelids", Model.LevelList)
+            </div>
+            <div class="editor-label">
+                <label>Usage</label>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownList("usagetypeids", Model.UsageTypeList)
+            </div>
+            <div class="editor-label">
+                <label>Network/Operator</label>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownList("operatorids", Model.OperatorList)
+            </div>
+            <div class="editor-label">
+                <label>Status Type</label>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownList("statustypeids", Model.StatusTypeList)
+            </div>
+            <div class="editor-label">
+                <label>Data Provider</label>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownList("dataproviderids", Model.DataProviderList)
+            </div>
+            <div class="editor-label">
+                <label>Submission Status</label>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownList("submissiontypeids", Model.SubmissionTypeList)
+            </div>
+        </div>
+        <p>
+            <input type="submit" value="Search" class="btn btn-primary" />
+            <input id="toggle-search-advanced" type="button" value="Show Advanced Search" class="btn btn-info" />
+        </p>
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+
+        $("#search-advanced").hide();
+
+        $("#toggle-search-advanced").on("click", function () {
+            //toggle advanced
+            $("#search-advanced").toggle();
+        });
+
+        $("#search-nearme").on("click", function () {
+            getUserLocation();
+        });
+
+    });
+
+    function getUserLocation() {
+        if (Modernizr.geolocation) {
+            navigator.geolocation.getCurrentPosition(gotUserLocation);
+        } else {
+            alert("Sorry, your browser cannot supply your location information.");
+        }
+    }
+
+    function gotUserLocation(pos) {
+        $("#search-location").val(pos.coords.latitude + "," + pos.coords.longitude);
+    }
+</script>
