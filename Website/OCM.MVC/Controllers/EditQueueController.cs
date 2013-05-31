@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using OCM.API.Common.Model;
 
 namespace OCM.MVC.Controllers
 {
@@ -12,12 +13,13 @@ namespace OCM.MVC.Controllers
         //
         // GET: /EditQueue/
 
-        public ActionResult Index()
+        public ActionResult Index(EditQueueFilter filter)
         {
+            
             using (var editQueueManager = new EditQueueManager())
             {
-                var list = editQueueManager.GetEditQueueItems(null, false).Where(e=>e.Differences.Count>0).OrderByDescending(e=>e.DateSubmitted).Take(100).ToList();
-
+                var list = editQueueManager.GetEditQueueItems(filter);
+                ViewBag.EditFilter = filter;
 
                 return View(list);
             }

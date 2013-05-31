@@ -1,9 +1,12 @@
-﻿@model List<OCM.API.Common.Model.EditQueueItem>
+﻿@using OCM.API.Common.Model
+@model List<OCM.API.Common.Model.EditQueueItem>
 
 @{
     ViewBag.Title = "Edit Queue";
 }
 
 <h2>Edit Queue</h2>
+
+@Html.Partial("_EditQueueFilter", (EditQueueFilter)ViewBag.EditFilter)
 
 @Html.Partial("_DisplayEditQueueList")
