@@ -1,12 +1,9 @@
 ﻿
 using Newtonsoft.Json;
 using OCM.API.Common.Model;
-using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
@@ -38,16 +35,16 @@ namespace OCM.API.Common
             var redundantEdits = new List<Model.EditQueueItem>();
 
             var cpManager = new ChargePointManager();
-            
-            foreach (var item in sourceList) 
+
+            foreach (var item in sourceList)
             {
                 var editItem = GetItemWithDifferences(item, cpManager);
-                if (editItem.Differences.Count==0)
+                if (editItem.Differences.Count == 0)
                 {
                     redundantEdits.Add(editItem);
                 }
-            } 
-   
+            }
+
             //delete redundant edits
             foreach (var item in redundantEdits)
             {
@@ -57,7 +54,7 @@ namespace OCM.API.Common
             DataModel.SaveChanges();
         }
 
-        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item,  ChargePointManager cpManager)
+        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, ChargePointManager cpManager)
         {
             var queueItem = Model.Extensions.EditQueueItem.FromDataModel(item);
 
@@ -71,21 +68,27 @@ namespace OCM.API.Common
             return queueItem;
         }
 
-        public List<Model.EditQueueItem> GetEditQueueItems(DateTime? fromDate, bool isProcessed)
+        public List<Model.EditQueueItem> GetEditQueueItems(EditQueueFilter filter)
         {
+
             var sourceList =
                 DataModel.EditQueueItems.Where(
-                    (i => i.IsProcessed==isProcessed && (fromDate == null || (fromDate != null && i.DateSubmitted >= fromDate))));
+                    i => (
+                        (filter.ShowProcessed || (filter.ShowProcessed == false && i.IsProcessed == false))
+                        && (filter.DateFrom == null || (filter.DateFrom != null && i.DateSubmitted >= filter.DateFrom))
+                        && (filter.DateTo == null || (filter.DateTo != null && i.DateSubmitted <= filter.DateTo))
+                        )).OrderByDescending(e => e.DateSubmitted);
 
-            var outputList = new List<Model.EditQueueItem>();
             var cpManager = new ChargePointManager();
+            var outputList = new List<Model.EditQueueItem>();
 
-            foreach (var item in sourceList) //.Where(e=> e.User.ID!=(int)StandardUsers.System))
+            //perform object level differencing on json contents of edit queue items (very expensive), used to get summary and count of differences per item
+            foreach (var editQueueItem in sourceList)
             {
-                outputList.Add(GetItemWithDifferences(item, cpManager));
-            }                    
-       
-            return outputList;
+                outputList.Add(GetItemWithDifferences(editQueueItem, cpManager));
+            }
+
+            return outputList.Where(i => i.Differences.Count >= filter.MinimumDifferences).Take(filter.MaxResults).ToList();
 
         }
     }
