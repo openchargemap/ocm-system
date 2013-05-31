@@ -341,7 +341,13 @@ namespace OCM.API.Common
                     ".AddressInfo.DistanceUnit",
                     ".AddressInfo.DistanceUnit.DistanceUnit",
                     ".SubmissionStatus.ID",
-                    ".SubmissionStatus.IsLive"
+                    ".SubmissionStatus.IsLive",
+                    ".OperatorInfo.WebsiteURL",
+                    ".OperatorInfo.PhonePrimaryContact",
+                    ".OperatorInfo.IsPrivateIndividual",
+                    ".OperatorInfo.ContactEmail",
+                    ".OperatorInfo.FaultReportEmail",
+                    ".OperatorInfo.ID"
                 };
             objectComparison.ElementsToIgnore.AddRange(exclusionList);
             

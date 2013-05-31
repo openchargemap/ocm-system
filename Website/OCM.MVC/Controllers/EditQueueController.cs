@@ -14,8 +14,7 @@ namespace OCM.MVC.Controllers
         // GET: /EditQueue/
 
         public ActionResult Index(EditQueueFilter filter)
-        {
-            
+        {    
             using (var editQueueManager = new EditQueueManager())
             {
                 var list = editQueueManager.GetEditQueueItems(filter);
@@ -25,11 +24,24 @@ namespace OCM.MVC.Controllers
             }
         }
 
+        [AuthSignedInOnly]
         public ActionResult Cleanup()
         {
             using (var editQueueManager = new EditQueueManager())
             {
                editQueueManager.CleanupRedundantEditQueueitems();
+
+                return View();
+            }
+        }
+
+        [AuthSignedInOnly]
+        public ActionResult Publish(int id)
+        {
+            //approves/publishes the given edit directly
+            using (var editQueueManager = new EditQueueManager())
+            {
+                editQueueManager.ProcessEditQueueItem(id, true);
 
                 return View();
             }

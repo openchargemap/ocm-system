@@ -8,17 +8,21 @@ namespace OCM.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        //
-        // GET: /Home/
 
+        /// <summary>
+        /// Home page
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();
         }
 
-        //
-        // GET: /About/
-        public ActionResult About()
+        /// <summary>
+        /// Access denied
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult NotSignedIn()
         {
             return View();
         }

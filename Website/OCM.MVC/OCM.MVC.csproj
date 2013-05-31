@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Code\CommonUtil.cs" />
+    <Compile Include="App_Code\AuthSignedInOnlyAttribute.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -285,18 +286,19 @@
     <Content Include="Views\POI\Edit.cshtml" />
     <Content Include="Views\Shared\_CommentList.cshtml" />
     <Content Include="Views\Shared\_UserList.cshtml" />
-    <Content Include="Views\Shared\_ConnectionList.cshtml" />
-    <Content Include="Views\Shared\_POISearch.cshtml" />
+    <Content Include="Views\POI\_ConnectionList.cshtml" />
+    <Content Include="Views\POI\_POISearch.cshtml" />
     <Content Include="Views\Shared\_SimpleLayout.cshtml" />
-    <Content Include="Views\Shared\_DisplayEditQueueList.cshtml" />
+    <Content Include="Views\EditQueue\_DisplayEditQueueList.cshtml" />
     <Content Include="Views\EditQueue\Index.cshtml" />
-    <Content Include="Views\Shared\_DisplayPOIDiff.cshtml" />
+    <Content Include="Views\EditQueue\_DisplayPOIDiff.cshtml" />
     <Content Include="Views\LoginProvider\Index.cshtml" />
     <Content Include="Views\Profile\SignIn.cshtml" />
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\POI\AddMediaItem.cshtml" />
     <Content Include="Views\Shared\_MediaItemList.cshtml" />
     <Content Include="Views\EditQueue\_EditQueueFilter.cshtml" />
+    <Content Include="Views\Home\NotSignedIn.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -45,6 +45,11 @@ namespace OCM.API.Common.Model
         System = 1008
     }
 
+    public enum StandardEntityTypes
+    {
+        POI=1
+    }
+
     public class CoreReferenceData
     {
         public List<ChargerType> ChargerTypes { get; set; }
