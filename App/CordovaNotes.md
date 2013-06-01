@@ -1,4 +1,5 @@
-Build process todo:
+Cordova Build Notes
+==============
 - Web Version
 	- Build Web version with suffix for version on css/js refs
 	- Remove/Omit Cordova script include, remove signin link
@@ -20,5 +21,6 @@ Android
 	- Copy AppIcon36x36 to res/drawable-ldpi/ic_launcher.png
 	- Copy AppIcon48x48 to res/drawable-mdpi/ic_launcher.png
 
-General build notes:
+General build notes
+----------
 	- Build system uses Node.js and 'jake' tool. See /misc/build/readme.md
