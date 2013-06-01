@@ -38,7 +38,7 @@ namespace OCM.API.Common
 
             foreach (var item in sourceList)
             {
-                var editItem = GetItemWithDifferences(item, cpManager);
+                var editItem = GetItemWithDifferences(item, cpManager, true);
                 if (editItem.Differences.Count == 0)
                 {
                     redundantEdits.Add(editItem);
@@ -54,13 +54,18 @@ namespace OCM.API.Common
             DataModel.SaveChanges();
         }
 
-        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, POIManager cpManager)
+        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, POIManager cpManager, bool loadCurrentItem)
         {
             var queueItem = Model.Extensions.EditQueueItem.FromDataModel(item);
 
             //get diff between previous and edit
 
             Model.ChargePoint poiA = DeserializePOIFromJSON(queueItem.PreviousData);
+
+            if (loadCurrentItem && poiA != null)
+            {
+                poiA = new POIManager().Get(poiA.ID);
+            }
             Model.ChargePoint poiB = DeserializePOIFromJSON(queueItem.EditData);
 
             queueItem.Differences = cpManager.CheckDifferences(poiA, poiB);
@@ -86,7 +91,7 @@ namespace OCM.API.Common
             //perform object level differencing on json contents of edit queue items (very expensive), used to get summary and count of differences per item
             foreach (var editQueueItem in sourceList)
             {
-                outputList.Add(GetItemWithDifferences(editQueueItem, cpManager));
+                outputList.Add(GetItemWithDifferences(editQueueItem, cpManager, true));
             }
 
             return outputList.Where(i => i.Differences.Count >= filter.MinimumDifferences).Take(filter.MaxResults).ToList();
@@ -99,7 +104,7 @@ namespace OCM.API.Common
 
             //prepare poi details
 
-            var queueItem = Model.Extensions.EditQueueItem.FromDataModel(DataModel.EditQueueItems.FirstOrDefault(e => e.ID == id));
+            var queueItem = DataModel.EditQueueItems.FirstOrDefault(e => e.ID == id);
 
             if (queueItem != null && queueItem.IsProcessed == false)
             {
@@ -107,51 +112,56 @@ namespace OCM.API.Common
                 if (queueItem.EntityType.ID == (int)StandardEntityTypes.POI)
                 {
                     //processing a POI add/edit
-                    //get diff between previous and edit    
 
-                    POIManager poiManager = new POIManager();
-                    Model.ChargePoint poiA = DeserializePOIFromJSON(queueItem.PreviousData);
-                    Model.ChargePoint poiB = DeserializePOIFromJSON(queueItem.EditData);
-
-                    bool poiUpdateRequired = false;
-                    
-                    if (poiA != null)
+                    if (publishEdit)
                     {
-                        //this is an edit, load the latest version of the POI as version 'A'
-                        poiA = poiManager.Get(poiA.ID);
-                        if (poiManager.HasDifferences(poiA, poiB))
+                        //get diff between previous and edit    
+
+                        POIManager poiManager = new POIManager();
+                        Model.ChargePoint poiA = DeserializePOIFromJSON(queueItem.PreviousData);
+                        Model.ChargePoint poiB = DeserializePOIFromJSON(queueItem.EditData);
+
+                        bool poiUpdateRequired = false;
+
+                        if (poiA != null)
                         {
-                            poiUpdateRequired = true;
+                            //this is an edit, load the latest version of the POI as version 'A'
+                            poiA = poiManager.Get(poiA.ID);
+                            if (poiManager.HasDifferences(poiA, poiB))
+                            {
+                                poiUpdateRequired = true;
+                            }
                         }
+
+                        //save poi update
+                        var poiData = new Core.Data.ChargePoint();
+
+                        //if its an edit, load the original details before applying the change
+                        if (poiUpdateRequired) poiData = DataModel.ChargePoints.First(c => c.ID == poiB.ID);
+
+                        //set/update cp properties
+                        poiManager.PopulateChargePoint_SimpleToData(poiB, poiData, DataModel);
+
+                        //set status type to published if previously unset
+                        if (poiData.SubmissionStatusTypeID == null)
+                        {
+                            poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                        }
+
+                        if (poiData.ID == 0)
+                        {
+                            //new item, set contributor on poi details
+                            poiData.Contributor = DataModel.Users.First(u => u.ID == queueItem.User.ID);
+                        }
+
+                        //publish edit
+                        DataModel.SaveChanges();
+
                     }
-
-                    //save poi update
-                    var poiData = new Core.Data.ChargePoint();
-
-                    //if its an edit, load the original details before applying the change
-                    if (poiUpdateRequired) poiData = DataModel.ChargePoints.First(c => c.ID == poiB.ID);
-
-                    //set/update cp properties
-                    poiManager.PopulateChargePoint_SimpleToData(poiB, poiData, DataModel);
-
-                    //set status type to published if previously unset
-                    if (poiData.SubmissionStatusTypeID == null)
-                    {
-                        poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
-                    }
-
-                    if (poiData.ID == 0)
-                    {
-                        //new item, set contributor on poi details
-                        poiData.Contributor = DataModel.Users.First(u => u.ID == queueItem.User.ID);
-                    }
-
-                    //publish edit
-                    DataModel.SaveChanges();
 
                     //update edit queue item as processed
                     queueItem.IsProcessed = true;
-                    queueItem.ProcessedByUser = Model.Extensions.User.FromDataModel(DataModel.Users.FirstOrDefault(u => u.ID == userId));
+                    queueItem.ProcessedByUser = DataModel.Users.FirstOrDefault(u => u.ID == userId);
                     queueItem.DateProcessed = DateTime.UtcNow;
                     DataModel.SaveChanges();
                 }

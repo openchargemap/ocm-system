@@ -219,11 +219,11 @@ namespace OCM.API.Common
                     newID = cpData.ID;
 
                     //is an authorised update, reflect change in edit queue item
-                    if (enableEditQueue && user != null && user.ID>0)
+                    if (enableEditQueue && user != null && user.ID > 0)
                     {
                         var editUser = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
                         editQueueItem.User = editUser;
-                      
+
                         if (newID > 0) editQueueItem.EntityID = newID;
 
                         if (userCanApprove || userCanEdit)
@@ -234,6 +234,16 @@ namespace OCM.API.Common
                         }
 
                         dataModel.SaveChanges();
+                    }
+                    else
+                    {
+                        
+                        //anonymous submission, update edit queue item
+                        if (enableEditQueue && user == null)
+                        {
+                            if (newID > 0) editQueueItem.EntityID = newID;
+                            dataModel.SaveChanges();
+                        }
                     }
 
                

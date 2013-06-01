@@ -46,6 +46,18 @@ namespace OCM.MVC.Controllers
                 return RedirectToAction("Index", "EditQueue");
             }
         }
+
+        [AuthSignedInOnly]
+        public ActionResult MarkAsProcessed(int id)
+        {
+            //approves/publishes the given edit directly
+            using (var editQueueManager = new EditQueueManager())
+            {
+                editQueueManager.ProcessEditQueueItem(id, false, (int)Session["UserID"]);
+
+                return RedirectToAction("Index", "EditQueue");
+            }
+        }
         //
         // GET: /EditQueue/Details/5
 

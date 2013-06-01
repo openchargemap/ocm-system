@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.EditQueueItem>
 
-<table class="table table-striped">
+<table class="table table-striped table-condensed">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.IsProcessed)
-        </th>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.User)
         </th>
@@ -24,27 +22,48 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IsProcessed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Username)
+                @if (item.User == null)
+                {
+                    @: (Anonymous User)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.User.Username)
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateSubmitted)
             </td>
             <td>
+                @if(item.EntityID>0)
+                {
+                @Html.ActionLink("OCM-"+item.EntityID.ToString(),"Details","POI", new {id=item.EntityID}, null)
+                } else {
                 @Html.DisplayFor(modelItem => item.EntityID)
+                }
             </td>
             <td>
-
-                @Html.Partial("_DisplayPOIDiff", item.Differences)
+                <span style="font-size: smaller;">
+                    @Html.Partial("_DisplayPOIDiff", item.Differences)
+                </span>
 
             </td>
             <td>
-                @Html.ActionLink("Publish", "Publish", "EditQueue", new { id = item.ID }, null) |
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                <div class="btn-group">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Action
+                    <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        @if (!item.IsProcessed)
+                        {
+                            <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
+                        }
+                        <li>@Html.ActionLink("Edit", "Edit", new { id = item.ID })</li>
+                        <li>@Html.ActionLink("Details", "Details", new { id = item.ID })</li>
+                        <li>@Html.ActionLink("Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
+                    </ul>
+                </div>
+
             </td>
         </tr>
     }
