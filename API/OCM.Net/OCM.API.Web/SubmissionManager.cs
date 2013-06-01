@@ -212,6 +212,10 @@ namespace OCM.API.Common
 
                         dataModel.ChargePoints.Add(cpData);
                     }
+                    else
+                    {
+                        cpData.DateLastStatusUpdate = DateTime.UtcNow;
+                    }
 
 
                     //save poi
