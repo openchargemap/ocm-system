@@ -1,4 +1,5 @@
-﻿@using OCM.MVC
+﻿@using OCM.API.Common.Model
+@using OCM.MVC
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,24 +42,29 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <div class="nav-collapse">
+                    <div class="nav">
                         <ul class="nav">
                             <li><a id="nav_home" runat="server" href="~/">home</a></li>
-                            <li><a id="nav_app" runat="server" href="~/poi/">browse</a></li>
-                            <li><a id="nav_develop" runat="server" href="~/develop/">develop</a></li>
-                            <li><a id="nav_discuss" runat="server" href="http://openchargemap.org/forum/">discussions</a></li>
-                            <li><a id="nav_examples" runat="server" href="~/develop/apps/">examples</a></li>
-                            <li><a id="nav_about" runat="server" href="~/about/">about</a></li>
-                            <li><a id="nav_contact" runat="server" href="~/about/contact/">contact</a></li>
+                            <li class="dropdown">
+                                <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown">browse <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
+                                    <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
+                                    <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
+                                </ul>
+                            </li>
+
+
+                            <li><a id="nav_develop" href="@Url.Action("Index", "Develop")">develop</a></li>
+                            <li><a id="nav_discuss" href="http://openchargemap.org/forum/">discussions</a></li>
+                            <li><a id="nav_examples" href="@Url.Action("Apps", "Develop")">examples</a></li>
+                            <li><a id="nav_about" href="@Url.Action("Index", "About")">about</a></li>
+                            <li><a id="nav_contact" href="@Url.Action("Contact", "About")">contact</a></li>
 
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">my profile
-                                    <b class="caret"></b>
+                                        <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
 
@@ -76,10 +82,9 @@
                                 </ul>
                             </li>
                             <li class="dropdown">
-                            
-                                <a class="dropdown-toggle" id="languageSelection" role="button" data-toggle="dropdown" data-target="#">
-                                    language
-                                    <b class="caret"></b>
+
+                                <a class="dropdown-toggle" id="languageSelection" role="button" data-toggle="dropdown" data-target="#">language
+                                        <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="languageSelection">
                                     @foreach (var language in CommonUtil.SupportedLanguages)

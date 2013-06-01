@@ -1,7 +1,7 @@
 ﻿body {
-    font-family: 'Oxygen' , sans-serif;
-    padding: 2em 5% 1em 5%;
-    margin: 0px;
+    font-family: 'Oxygen', sans-serif;
+    padding: 0;
+    margin: 0;
     background: -moz-radial-gradient(center, ellipse cover, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%);
     background: -ms-radial-gradient(center, ellipse cover, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%);
     background: -o-radial-gradient(center, ellipse cover, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%);
@@ -76,10 +76,10 @@ div#navcontrols {
 }
 
 div.content {
-    padding: 1em;
+    padding: 2em 1em 1em 1em;
     border-radius: 1em;
     background-color: white;
- /*  background-image: url('images/branding_sm.png');
+    /*  background-image: url('images/branding_sm.png');
     background-position: right 4px;*/
     background-repeat: no-repeat;
 }
@@ -100,8 +100,9 @@ div#ocm_map_container {
     padding: 8px;
     border: none;
 }
+
     .info > h3 {
-       line-height:1em;
+        line-height: 1em;
     }
 
 footer, div.footer {
@@ -142,7 +143,7 @@ label, .display-label {
 }
 
 .display-field {
-     display: block;
+    display: block;
 }
 
 h1, h2, h3, legend, .nav a, .nav a:visited, .nav a:link {
@@ -229,34 +230,34 @@ h3 {
     background-color: rgba(0, 0, 0, 0.66);
     width: 100%;
     height: 700px;
-    border-radius:8px
+    border-radius: 8px;
 }
 
     #details-imageblock > img {
         width: 100%;
         height: auto;
-        border-radius:8px
+        border-radius: 8px;
     }
 
 #details-container {
     position: relative;
     top: -700px;
-   /* z-index: 100;*/
+    /* z-index: 100;*/
     color: white;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
     min-height: 500px;
-    border-radius:8px;
-    padding:1em;
+    border-radius: 8px;
+    padding: 1em;
 }
 
     #details-container a, #details-container a:visited {
-    color: #669900;
-}
+        color: #669900;
+    }
 
-     #details-container a.btn {
-         color: white;
-     }
+        #details-container a.btn {
+            color: white;
+        }
 
     #details-container .tabbable {
         margin: 0.3em;
@@ -313,18 +314,18 @@ h3 {
 }
 
     .stat h2 {
-    margin: 0px;
-    border: none;
-    background-color: #B9FF28;
-    color: white;
-    font-size: 32px;
-    width: 64px;
-    height: 64px;
-    border-radius: 64px;
-    text-align: center;
-    vertical-align: sub;
-    padding: 32px;
-}
+        margin: 0px;
+        border: none;
+        background-color: #B9FF28;
+        color: white;
+        font-size: 32px;
+        width: 64px;
+        height: 64px;
+        border-radius: 64px;
+        text-align: center;
+        vertical-align: sub;
+        padding: 32px;
+    }
 
     .stat p {
         font-family: 'Oswald', sans-serif;
@@ -338,20 +339,22 @@ h3 {
 }
 
 a .stat {
-    text-decoration:none;
-    color:inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 .alert-info {
-    background-color:rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255,0.9);
 }
 
 #details-container .ocm-label, #details-container .table th, #details-container blockquote strong {
     color: #EEFFBB;
 }
+
 #datasummary {
-    font-size: 0.8em;   
+    font-size: 0.8em;
 }
+
 .thumbnail {
     background-color: rgba(0, 0, 0, 0.5);
 }
