@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using OCM.API.Common;
+using OCM.API.Common.DataSummary;
 using OCM.API.Common.Model;
 using System;
 using System.Collections;
@@ -338,6 +339,15 @@ namespace OCM.MVC.Controllers
             {
                 return View();
             }
+        }
+
+
+        public ActionResult Activity()
+        {
+            var summaryManager = new DataSummaryManager();
+            var summary = summaryManager.GetActivitySummary(new SearchFilterSettings());
+
+            return View(summary);
         }
 
         //

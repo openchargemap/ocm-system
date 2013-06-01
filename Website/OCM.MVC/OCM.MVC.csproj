@@ -299,6 +299,7 @@
     <Content Include="Views\Shared\_MediaItemList.cshtml" />
     <Content Include="Views\EditQueue\_EditQueueFilter.cshtml" />
     <Content Include="Views\Home\NotSignedIn.cshtml" />
+    <Content Include="Views\POI\Activity.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

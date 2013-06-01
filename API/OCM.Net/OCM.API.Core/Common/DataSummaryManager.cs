@@ -16,12 +16,6 @@ namespace OCM.API.Common.DataSummary
         public string ItemType { get; set; }
     }
 
-    public class ActivitySummary {
-        public List<UserComment> UserComments { get; set; }
-        public List<ChargePoint> UpdatedChargePoints { get; set; }
-        public List<ChargePoint> DelistedChargePoints { get; set; }
-    }
-  
     /// <summary>
     /// Provide basic summary counts/activity details on a per country basis or relative to specific filter parameters
     /// </summary>
@@ -33,7 +27,7 @@ namespace OCM.API.Common.DataSummary
             string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
             if (HttpContext.Current.Cache["ocm_summary"] == null)
             {
-                List<CountrySummary> list = new List<CountrySummary>();
+                var list = new List<CountrySummary>();
 
                 var dataModel = new Core.Data.OCMEntities();
                 var results = from c in dataModel.ChargePoints
@@ -49,7 +43,7 @@ namespace OCM.API.Common.DataSummary
                     var c = item.g.First().AddressInfo.Country;
                     string countryName = textInfo.ToTitleCase(c.Title.ToLower());
                     string isoCode = c.ISOCode;
-                    list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.g.Count(), ItemType="LocationsPerCountry" });
+                    list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.g.Count(), ItemType = "LocationsPerCountry" });
                 }
 
                 HttpContext.Current.Cache["ocm_summary"] = list.OrderByDescending(i => i.ItemCount).ToList();
@@ -63,7 +57,7 @@ namespace OCM.API.Common.DataSummary
             return output;
         }
 
-        public ActivitySummary GetActivitySummary(SearchFilterSettings filterSettings)
+        public POIRecentActivity GetActivitySummary(SearchFilterSettings filterSettings)
         {
             var dataModel = new Core.Data.OCMEntities();
 
@@ -83,21 +77,32 @@ namespace OCM.API.Common.DataSummary
             }
 
             //populate recently added comments
-            var recentComments =  from c in dataModel.UserComments
-                                  where c.DateCreated>=dateFrom
-                                  select c;
+            var recentComments = from c in dataModel.UserComments
+                                 where c.DateCreated >= dateFrom
+                                 select c;
 
-            ActivitySummary summary = new ActivitySummary();
-            summary.UserComments = new List<UserComment>();
-            foreach (var c in recentComments.OrderByDescending(c=>c.DateCreated))
+            var summary = new POIRecentActivity();
+            summary.RecentComments = new List<UserComment>();
+            foreach (var c in recentComments.Take(10).OrderByDescending(c => c.DateCreated))
             {
-                summary.UserComments.Add(Model.Extensions.UserComment.FromDataModel(c));
+                summary.RecentComments.Add(Model.Extensions.UserComment.FromDataModel(c));
             }
 
             //populate recently modified charge points TODO: differentiate between updated since and created since?
-            POIManager cpManager = new POIManager();            
-            summary.UpdatedChargePoints = cpManager.GetChargePoints(filterSettings);
-            return summary; 
+            var poiManager = new POIManager();
+
+            var allRecentPOIChanges = poiManager.GetChargePoints(filterSettings);
+            summary.POIRecentlyAdded = allRecentPOIChanges.Where(p => p.DateCreated >= dateFrom).Take(10).ToList();
+            summary.POIRecentlyUpdated = allRecentPOIChanges.Where(p => p.DateLastStatusUpdate >= dateFrom && p.DateCreated < dateFrom).Take(10).ToList();
+
+            var recentMedia = dataModel.MediaItems.Where(m => m.DateCreated > dateFrom).Take(10).ToList();
+            summary.RecentMedia = new List<MediaItem>();
+            foreach (var mediaItem in recentMedia.OrderByDescending(m => m.DateCreated))
+            {
+                summary.RecentMedia.Add(Model.Extensions.MediaItem.FromDataModel(mediaItem));
+            }
+
+            return summary;
         }
 
     }
