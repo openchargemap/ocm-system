@@ -70,7 +70,7 @@ footer, div.footer {
     margin: 16px;
     padding: 16px;
     border-top: 1px dotted #A8C536;
-    color:#34495e;
+    color: #34495e;
     text-align: center;
     font-size: 8pt;
 }
@@ -121,7 +121,6 @@ h1, h2 {
     border-bottom: 4px solid #C6E29E;
     font-weight: 300;
     color: #2c3e50;
-    
 }
 
 h1 {
@@ -138,6 +137,7 @@ h3 {
     font-weight: normal;
     font-size: 1.4em;
 }
+
 h4 {
     font-weight: normal;
     font-size: 1.2em;
@@ -332,10 +332,20 @@ a .stat {
     background-color: #34495e;
 }
 
-.navbar-inner { border: none;border-radius: 0;}
+.navbar-inner {
+    border: none;
+    border-radius: 0;
+}
+
 .ocm-backdrop {
     background-image: url('images/world.jpg');
     color: white;
+
+    margin-left: -1em;
+    margin-right: -1em;
+    margin-top: -1.5em;
+    margin-bottom: 1em;
+    border-radius: 0;
 }
 
     .ocm-backdrop a, .ocm-backdrop a:visited {
