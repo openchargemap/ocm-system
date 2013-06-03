@@ -43,16 +43,15 @@ div.header {
 }
 
 div.content {
-    padding: 2em 1em 1em 1em;
-    border-radius: 1em;
-    background-color: white;
-    background-repeat: no-repeat;
+    padding: 0em 0em 1em 0em;
     margin: 0;
 }
 
 .container {
     margin-left: 1em;
     margin-right: 1em;
+    margin-top: 0;
+    padding: 0;
     width: auto;
 }
 
@@ -71,7 +70,7 @@ footer, div.footer {
     margin: 16px;
     padding: 16px;
     border-top: 1px dotted #A8C536;
-    color: white;
+    color:#34495e;
     text-align: center;
     font-size: 8pt;
 }
@@ -124,7 +123,7 @@ h1, h2, h3, h4, legend, .nav a, .nav a:visited, .nav a:link {
     }
 
 h1, h2 {
-    margin-top: 1em;
+    margin-top: 0em;
     padding: 0.3em 0 0.5em 0;
     border-bottom: 4px solid #C6E29E;
     font-weight: 300;
@@ -340,6 +339,7 @@ a .stat {
     background-color: ##34495e;
 }
 
+.navbar-inner { border: none;border-radius: 0;}
 .ocm-backdrop {
     background-image: url('images/world.jpg');
     color: white;
