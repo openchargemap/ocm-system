@@ -8,94 +8,103 @@ namespace OCM.API.Common.Model.Extensions
     {
         public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source)
         {
-            return FromDataModel(source, false);
+            return FromDataModel(source, false, false, false);
         }
 
-        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments)
+        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments, bool loadMediaItems, bool loadMetadataValues)
         {
             if (source == null) return null;
 
-            Model.ChargePoint c = new Model.ChargePoint();
+            var poi = new Model.ChargePoint();
 
-            c.ID = source.ID;
-            c.UUID = source.UUID;
+            poi.ID = source.ID;
+            poi.UUID = source.UUID;
 
             //populate data provider info
             if (source.DataProvider != null)
             {
-                c.DataProvider = DataProvider.FromDataModel(source.DataProvider);
+                poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
             }
-            c.DataProvidersReference = source.DataProvidersReference;
+            poi.DataProvidersReference = source.DataProvidersReference;
 
             if (source.Operator != null)
             {
                 //TODO: populate operator address info
-                c.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
+                poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
             }
-            c.OperatorsReference = source.OperatorsReference;
+            poi.OperatorsReference = source.OperatorsReference;
 
             if (source.UsageType != null)
             {
-                c.UsageType = UsageType.FromDataModel(source.UsageType);
+                poi.UsageType = UsageType.FromDataModel(source.UsageType);
             }
-            c.UsageCost = source.UsageCost;
+            poi.UsageCost = source.UsageCost;
 
             //populate address info
             if (source.AddressInfo != null)
             {
-                c.AddressInfo = AddressInfo.FromDataModel(source.AddressInfo);
+                poi.AddressInfo = AddressInfo.FromDataModel(source.AddressInfo);
             }
 
-            c.NumberOfPoints = source.NumberOfPoints;
-            c.GeneralComments = source.GeneralComments;
+            poi.NumberOfPoints = source.NumberOfPoints;
+            poi.GeneralComments = source.GeneralComments;
 
-            c.DatePlanned = source.DatePlanned; 
-            c.DateLastConfirmed = source.DateLastConfirmed;
+            poi.DatePlanned = source.DatePlanned;
+            poi.DateLastConfirmed = source.DateLastConfirmed;
             if (source.StatusType != null)
             {
-                c.StatusType = StatusType.FromDataModel(source.StatusType);
+                poi.StatusType = StatusType.FromDataModel(source.StatusType);
             }
-            c.DateLastStatusUpdate = source.DateLastStatusUpdate; 
-            c.DataQualityLevel = source.DataQualityLevel;
-            c.DateCreated = source.DateCreated;
-           
-            if (source.SubmissionStatusType != null) c.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
+            poi.DateLastStatusUpdate = source.DateLastStatusUpdate;
+            poi.DataQualityLevel = source.DataQualityLevel;
+            poi.DateCreated = source.DateCreated;
+
+            if (source.SubmissionStatusType != null) poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
 
             //load contributor details (basic not sensitive info)
-            if (source.Contributor != null) c.Contributor = User.BasicFromDataModel(source.Contributor);
+            if (source.Contributor != null) poi.Contributor = User.BasicFromDataModel(source.Contributor);
 
             if (source.Connections != null)
             {
                 if (source.Connections.Count > 0)
                 {
-                    c.Connections = new List<Model.ConnectionInfo>();
+                    poi.Connections = new List<Model.ConnectionInfo>();
                     foreach (var conn in source.Connections)
                     {
-                        c.Connections.Add(ConnectionInfo.FromDataModel(conn));
+                        poi.Connections.Add(ConnectionInfo.FromDataModel(conn));
                     }
                 }
             }
-            
+
             //optionally load user comments
             if (loadUserComments && source.UserComments != null)
             {
                 foreach (var comment in source.UserComments)
                 {
-                    if (c.UserComments == null) c.UserComments = new List<Model.UserComment>();
+                    if (poi.UserComments == null) poi.UserComments = new List<Model.UserComment>();
                     Model.UserComment com = UserComment.FromDataModel(comment);
-                    c.UserComments.Add(com);
+                    poi.UserComments.Add(com);
                 }
             }
 
-            if (source.MediaItems != null)
+            if (loadMediaItems && source.MediaItems != null)
             {
                 foreach (var mediaItem in source.MediaItems)
                 {
-                    if (c.MediaItems==null) c.MediaItems= new List<Model.MediaItem>();
-                    c.MediaItems.Add(MediaItem.FromDataModel(mediaItem));
+                    if (poi.MediaItems == null) poi.MediaItems = new List<Model.MediaItem>();
+                    poi.MediaItems.Add(MediaItem.FromDataModel(mediaItem));
                 }
             }
-            return c;
+
+            if (loadMetadataValues && source.MetadataValues != null)
+            {
+                foreach (var metadataValue in source.MetadataValues)
+                {
+                    if (poi.MetadataValues == null) poi.MetadataValues = new List<Model.MetadataValue>();
+                    poi.MetadataValues.Add(MetadataValue.FromDataModel(metadataValue));
+                }
+            }
+            return poi;
         }
     }
 }

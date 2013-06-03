@@ -25,11 +25,11 @@ namespace OCM.API.Common
             return this.Get(id, false);
         }
 
-        public Model.ChargePoint Get(int id, bool includeComments)
+        public Model.ChargePoint Get(int id, bool includeExtendedInfo)
         {
-            OCMEntities dataModel = new OCMEntities();
+            var dataModel = new OCMEntities();
             var item = dataModel.ChargePoints.FirstOrDefault(c => c.ID == id);
-            return Model.Extensions.ChargePoint.FromDataModel(item, includeComments);
+            return Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo);
         }
 
         [EdmFunction("OCM.Core.Data.OCMEntities.Store", "udf_GetDistanceFromLatLonKM")]
@@ -63,7 +63,7 @@ namespace OCM.API.Common
                 }
 
                 dataList = new List<Model.ChargePoint>();
-                OCMEntities dataModel = new OCMEntities();
+                var dataModel = new OCMEntities();
 
                 //if distance filter provided in miles, convert to KM before use
                 if (settings.DistanceUnit == Model.DistanceUnit.Miles && settings.Distance != null)
@@ -156,7 +156,8 @@ namespace OCM.API.Common
                 
                 foreach (var item in filteredList.Take(maxResults))
                 {
-                    Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments);
+                    //note: if include comments is enabled, media items and metadata values are also included
+                    Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments);
 
                     if (requiresDistance && c.AddressInfo != null)
                     {
@@ -168,6 +169,7 @@ namespace OCM.API.Common
                     if (settings.IsLegacyAPICall && !(settings.APIVersion >= 2))
                     {
                         //for legacy callers, produce artificial list of Charger items
+#pragma warning disable 612  //suppress obsolete warning
                         if (c.Chargers == null || c.Chargers.Count == 0)
                         {
                             if (c.Connections != null)
@@ -188,6 +190,8 @@ namespace OCM.API.Common
                             }
                         }
                     }
+
+#pragma warning restore 612
 
                     if (c != null)
                     {

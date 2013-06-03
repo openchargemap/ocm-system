@@ -102,7 +102,9 @@ namespace OCM.API.Common
             data.ChargePoint = new ChargePoint()
             {
                 AddressInfo = new Model.AddressInfo(),
+#pragma warning disable 612 //suppress obsolete warning
                 Chargers = new List<Model.ChargerInfo> { new Model.ChargerInfo() },
+#pragma warning restore 612
                 Connections = new List<Model.ConnectionInfo> { new Model.ConnectionInfo() },
                 DateCreated = DateTime.UtcNow,
                 DateLastConfirmed = DateTime.UtcNow,
