@@ -1,134 +1,194 @@
 ﻿@model OCM.API.Common.Model.ChargePoint
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Charging Location";
 }
 
-<h2>Edit</h2>
+<h1>Edit Charging Location <small>OCM-@Model.ID : @Model.AddressInfo.Title</small></h1>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>ChargePoint</legend>
+   
 
         @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.UUID)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UUID)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.UUID)
-            @Html.ValidationMessageFor(model => model.UUID)
-        </div>
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab-general" data-toggle="tab" data-localize="ocm.details.locationDetails">Details</a></li>
+                <li><a href="#tab-location" data-toggle="tab" data-localize="ocm.details.locationDetails">Location</a></li>
+                <li><a href="#tab-equipment" data-toggle="tab" data-localize="ocm.details.equipmentDetails">Equipment Info</a></li>
+                <li><a href="#tab-media" data-toggle="tab" data-localize="ocm.details.mediaItems">Photos</a></li>
+                <li><a href="#tab-metadata" data-toggle="tab" data-localize="ocm.details.metaData">Metadata</a></li>
+            </ul>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DataProvidersReference)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DataProvidersReference)
-            @Html.ValidationMessageFor(model => model.DataProvidersReference)
-        </div>
+            <div class="tab-content">
+                <div id="tab-general" class="tab-pane active">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DataProvider)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DisplayTextFor(model => model.DataProvider.Title)
+                        @Html.ValidationMessageFor(model => model.DataProvider)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.OperatorsReference)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.OperatorsReference)
-            @Html.ValidationMessageFor(model => model.OperatorsReference)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DataProvidersReference)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DataProvidersReference)
+                        @Html.ValidationMessageFor(model => model.DataProvidersReference)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UsageCost)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.UsageCost)
-            @Html.ValidationMessageFor(model => model.UsageCost)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.OperatorsReference)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.OperatorsReference)
+                        @Html.ValidationMessageFor(model => model.OperatorsReference)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.NumberOfPoints)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.NumberOfPoints)
-            @Html.ValidationMessageFor(model => model.NumberOfPoints)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.UsageCost)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.UsageCost)
+                        @Html.ValidationMessageFor(model => model.UsageCost)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.GeneralComments)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.GeneralComments)
-            @Html.ValidationMessageFor(model => model.GeneralComments)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.NumberOfPoints)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.NumberOfPoints)
+                        @Html.ValidationMessageFor(model => model.NumberOfPoints)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateLastConfirmed)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateLastConfirmed)
-            @Html.ValidationMessageFor(model => model.DateLastConfirmed)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.GeneralComments)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.GeneralComments)
+                        @Html.ValidationMessageFor(model => model.GeneralComments)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateLastStatusUpdate)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateLastStatusUpdate)
-            @Html.ValidationMessageFor(model => model.DateLastStatusUpdate)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DateLastConfirmed)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DateLastConfirmed)
+                        @Html.ValidationMessageFor(model => model.DateLastConfirmed)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DatePlanned)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DatePlanned)
-            @Html.ValidationMessageFor(model => model.DatePlanned)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DateLastStatusUpdate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DateLastStatusUpdate)
+                        @Html.ValidationMessageFor(model => model.DateLastStatusUpdate)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DataQualityLevel)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DataQualityLevel)
-            @Html.ValidationMessageFor(model => model.DataQualityLevel)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DatePlanned)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DatePlanned)
+                        @Html.ValidationMessageFor(model => model.DatePlanned)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateCreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateCreated)
-            @Html.ValidationMessageFor(model => model.DateCreated)
-        </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DataQualityLevel)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DataQualityLevel)
+                        @Html.ValidationMessageFor(model => model.DataQualityLevel)
+                    </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.MetadataTags)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.MetadataTags)
-            @Html.ValidationMessageFor(model => model.MetadataTags)
-        </div>
+                </div>
+                <div id="tab-location" class="tab-pane">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AddressInfo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.AddressInfo)
+                        @Html.ValidationMessageFor(model => model.AddressInfo)
+                    </div>
+                </div>
+                <div id="tab-equipment" class="tab-pane">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Connections)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Connections)
+                        @Html.ValidationMessageFor(model => model.Connections)
+                    </div>
+                </div>
+                <div id="tab-media" class="tab-pane">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.MediaItems)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.MediaItems)
+                        @Html.ValidationMessageFor(model => model.MediaItems)
+                    </div>
+                </div>
+                <div id="tab-metadata" class="tab-pane">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.MetadataValues)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.MetadataValues)
+                        @Html.ValidationMessageFor(model => model.MetadataValues)
+                    </div>
+                </div>
+            </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.PercentageSimilarity)
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.PercentageSimilarity)
-            @Html.ValidationMessageFor(model => model.PercentageSimilarity)
-        </div>
-
         <p>
             <input type="submit" value="Save" />
         </p>
-    </fieldset>
+    
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<script>
+
+    $(document).ready(function() {
+
+        //setup tabs
+        $('a#tab-general').click(function(e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        //fix map after tab shown
+        $('a[data-toggle="tab"]').on('shown', function(e) {
+            if (e.target.hash == "#tab-location") {
+                map.invalidateSize(false);
+            }
+
+        });
+
+        $('a#tab-equipment').click(function(e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        $('a#tab-media').click(function(e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+        
+        $('a#tab-metadata').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+    });
+</script>

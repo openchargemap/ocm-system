@@ -320,7 +320,9 @@ namespace OCM.MVC.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var poi = new POIManager().Get(id);
+
+            return View(poi);
         }
 
         //
@@ -329,6 +331,8 @@ namespace OCM.MVC.Controllers
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
+            var poi = new POIManager().Get(id);
+
             try
             {
                 // TODO: Add update logic here
@@ -337,7 +341,7 @@ namespace OCM.MVC.Controllers
             }
             catch
             {
-                return View();
+                return View(poi);
             }
         }
 

@@ -13,9 +13,6 @@
 
 <div class="well">
     @Html.Partial("_POISearch",(OCM.MVC.Controllers.POIBrowseModel)Model)
-    
-    Also of interest :
-    <ul><li>@Html.ActionLink("Recent Activity","Activity","POI")</li></ul>
 </div>
 
 @if (ViewBag.FormattedAddress != null)
