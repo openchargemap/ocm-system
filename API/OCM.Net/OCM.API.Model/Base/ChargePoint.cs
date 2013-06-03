@@ -8,17 +8,40 @@ namespace OCM.API.Common.Model
 {
     public class ChargePoint
     {
+        [DisplayName("OCM Ref")]
         public int ID { get; set; }
+
+        [DisplayName("Unique ID")]
         public string UUID { get; set; }
+
+        [DisplayName("Data Provider")]
         public DataProvider DataProvider { get; set; }
+
+        [DisplayName("Data Providers Reference")]
         public string DataProvidersReference { get; set; }
+
+        [DisplayName("Network/Operator")]
         public OperatorInfo OperatorInfo { get; set; }
+
+        [DisplayName("Operators Ref")]
         public string OperatorsReference { get; set; }
+
+        [DisplayName("Usage Type")]
         public UsageType UsageType { get; set; }
+
+        [DisplayName("Usage Cost")]
         public string UsageCost { get; set; }
+
+        [DisplayName("Address")]
         public AddressInfo AddressInfo { get; set; }
+
+        [DisplayName("Number Of Points/Bays")]
         public int? NumberOfPoints { get; set; }
+
+        [DisplayName("General Comments")]
         public string GeneralComments { get; set; }
+
+        [DisplayName("Date Planned")]
         public DateTime? DatePlanned { get; set; }
 
         [DisplayName("Date Last Confirmed")]
@@ -30,20 +53,38 @@ namespace OCM.API.Common.Model
         [DisplayName("Date Status Last Updated")]
         public DateTime? DateLastStatusUpdate { get; set; }
 
+        [DisplayName("Data Quality Level")]
         public int? DataQualityLevel { get; set; }
+
+        [DisplayName("Data Added")]
         public DateTime? DateCreated { get; set; }
+
+        [DisplayName("Contributor")]
         public User Contributor { get; set; }
 
+        [DisplayName("Submission Status")]
         public SubmissionStatusType SubmissionStatus { get; set; }
+
+        [DisplayName("Comments/Checkins")]
         public List<UserComment> UserComments { get; set; }
+
+        [DisplayName("% Similarity")]
         public int? PercentageSimilarity { get; set; }
+
+        [DisplayName("Equipment Info")]
         public List<ConnectionInfo> Connections { get; set; }
+
+        [DisplayName("Media Items")]
         public List<MediaItem> MediaItems { get; set; }
 
+        [DisplayName("Metadata")]
+        public List<MetadataValue> MetadataValues { get; set; }
+
+        
         #region deprecated properties
-        [JsonIgnore]
+        [Obsolete, JsonIgnore]
         public List<ChargerInfo> Chargers { get; set; }
-        [JsonIgnore]
+        [Obsolete, JsonIgnore]
         public string MetadataTags { get; set; }
         #endregion
 
