@@ -150,6 +150,7 @@
   <ItemGroup>
     <Content Include="App_Code\CommonUtil.cs" />
     <Compile Include="App_Code\AuthSignedInOnlyAttribute.cs" />
+    <Compile Include="App_Code\MVCExtensions.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -175,6 +176,7 @@
     <Content Include="Content\images\branding.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\world.jpg" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -307,6 +309,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Scripts\OCM\" />
     <Folder Include="Temp\Uploads\" />
   </ItemGroup>
   <ItemGroup>

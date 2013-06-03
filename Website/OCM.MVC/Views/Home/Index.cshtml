@@ -3,25 +3,26 @@
 }
 
   
-    <h2>Open Charge Map <small>the global public registry of electric vehicle charging locations</small></h2>
-    <div class="well well-small">
+    <h1>Open Charge Map <small>the global public registry of electric vehicle charging locations</small></h1>
+    <div class="well well-small ocm-backdrop">
         
     <div style="float:left;display:inline;margin-right:1em;">
         <a href="@Url.Action("Index","POI")">
             <div class="stat"><h2><span id="summary-locationcount">-----</span></h2><p>Charging Locations</p></div>
         </a>
     </div>
-    <div class="info">
-        <h3>Global Charging Locations <small>select a country to show the locations on the map</small></h3>
-        <br />
-        <div id="datasummary"></div>
+        <div class="info">
+            <h3>Global Charging Locations <small>select a country to show the locations on the map</small></h3>
+            <br />
+            <div id="datasummary"></div>
         
-        <br />
-        <p>
-            <a class="btn btn-success" href="http://openchargemap.org/app">Search Locations using our Web App &gt;</a>
-            <a class="btn btn-inverse" href="@Url.Action("Index","POI")">Browse All Locations &gt;</a>
-        </p>
-    </div>
+            <br />
+            <p>
+                <a class="btn btn-success" href="http://openchargemap.org/app">Search Locations using our Web App &gt;</a>
+                <a class="btn btn-inverse" href="@Url.Action("Index","POI")">Browse All Locations &gt;</a>
+            </p>
+        </div>
+        <div class="pull-right attribution"><a href="http://www.flickr.com/photos/wwworks/2712985992">image credits</a></div>
          </div>
     <p>
         You can use the map below to quickly browse charging locations anywhere in the world, or select your country from the list above:
