@@ -78,13 +78,6 @@ footer, div.footer {
 .license {
     padding: 6px;
     border: 1px solid #FFCC00;
-    background: -moz-linear-gradient(top, rgba(255,255,232,1) 0%, rgba(255,255,175,1) 100%);
-    background: -ms-linear-gradient(top, rgba(255,255,232,1) 0%,rgba(255,255,175,1) 100%);
-    background: -o-linear-gradient(top, rgba(255,255,232,1) 0%,rgba(255,255,175,1) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,232,1)), color-stop(100%,rgba(255,255,175,1)));
-    background: -webkit-linear-gradient(top, rgba(255,255,232,1) 0%,rgba(255,255,175,1) 100%);
-    background: linear-gradient(top, rgba(255,255,232,1) 0%,rgba(255,255,175,1) 100%);
-    background: rgb(255,255,232);
     background-color: #FFFFCC;
     color: #993333;
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffe8', endColorstr='#ffffaf',GradientType=0 );
@@ -336,7 +329,7 @@ a .stat {
 }
 
 .navbar .nav li.dropdown.open > .dropdown-toggle {
-    background-color: ##34495e;
+    background-color: #34495e;
 }
 
 .navbar-inner { border: none;border-radius: 0;}
