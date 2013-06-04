@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "GeoChart";
+    Layout = "~/Views/Shared/_SimpleLayout.cshtml";
+}
+
+<script type="text/javascript" src="http://www.openchargemap.org/api/widgets/databrowser/datasummary.ashx"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load('visualization', '1', { packages: ['geochart'] });
+
+    function drawVisualization() {
+
+        var ocm_summary = ocm_getdatasummary();
+        var totalLocations = 0;
+
+        var data = new google.visualization.DataTable();
+        data.addRows(ocm_summary.length);
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Charging Locations');
+
+        for (i = 0; i < ocm_summary.length; i++) {
+            data.setValue(i, 0, ocm_summary[i].country);
+            data.setValue(i, 1, ocm_summary[i].itemcount);
+
+            totalLocations += ocm_summary[i].itemcount;
+        }
+
+        var options = {
+            width: 840,
+            height: 380,
+            backgroundColor: "#A5BFDD",
+            displayMode: 'regions',
+            colorAxis: { colors: [ '#2ecc71', '#27ae60'] }
+        };
+
+        var geochart = new google.visualization.GeoChart(
+            document.getElementById('visualization')
+        );
+        google.visualization.events.addListener(geochart, "regionClick", function (eventData) {
+            var countryISO = eventData["region"];
+            if (top != null && top.loadCountryMap) {
+                top.loadCountryMap(countryISO, countryISO);
+            }
+        });
+        geochart.draw(data, options);
+    }
+
+    google.setOnLoadCallback(drawVisualization);
+</script>
+
+<div style="text-align: center;background-color: #A5BFDD;height: 100%;padding-left:10%;padding-right:10%;">
+<div id="visualization"></div>
+</div>

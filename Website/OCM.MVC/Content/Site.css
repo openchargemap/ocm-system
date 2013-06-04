@@ -340,11 +340,7 @@ a .stat {
 .ocm-backdrop {
     background-image: url('images/world.jpg');
     color: white;
-
-    margin-left: -1em;
-    margin-right: -1em;
-    margin-top: -1.5em;
-    margin-bottom: 1em;
+    margin: 0 -1em 1em -1em;
     border-radius: 0;
 }
 

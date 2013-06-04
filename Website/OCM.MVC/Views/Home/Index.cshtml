@@ -23,11 +23,10 @@
         </div>
         <div class="pull-right attribution"><a href="http://www.flickr.com/photos/wwworks/2712985992">image credits</a></div>
          </div>
-    <p>
-        You can use the map below to quickly browse charging locations anywhere in the world, or select your country from the list above:
-    </p>
-	<iframe id="countrymap" scrolling="no" style="width: 100%; height: 600px; border: 1px solid #c0c0c0; border-radius: 6px;" src="http://openchargemap.org/api/widgets/map/?maptitle=Browse%20Charging%20Locations&countryid=1&maxresults=10000&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage"></iframe>
-    
+
+<div style="text-align: center;box-shadow: 0px 0px 8px #c0c0c0;padding:1em;">
+	<iframe id="countrymap" scrolling="no" style="border:1px solid black;width: 98%; height: 400px; border: none;" src="http://openchargemap.org/api/widgets/map/?maptitle=Browse%20Charging%20Locations&countryid=1&maxresults=10000&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage"></iframe>
+    </div>
     <!--end example-->
     <div class="row-fluid show-grid">
         <div class="span4">
@@ -35,10 +34,8 @@
             <p>If you own a website and would like to include a charging location map, you can embed a customised version of the above map <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">on your own website</a></p>
             <p>
                 Can't see a charging location you know exists? Please send us the details (click 'Add' on the following page):
-            <br />
-                <br />
-                <a class="highlight" href="http://openchargemap.org/app">Submit A Charging Location&gt;</a>
             </p>
+            <a class="highlight" href="http://openchargemap.org/app">Submit A Charging Location&gt;</a>
         </div>
         <div class="span4">
             <h2>Get Charging Station Data</h2>
@@ -93,9 +90,9 @@
         }
 
         function loadCountryMap(countryName, isoCode) {
-            document.getElementById("countrymap").src = "http://api.openchargemap.io/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=operator,level,usage";
+            document.getElementById("countrymap").src = "http://api.openchargemap.io/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=nearlocation,distance,country,operator,connectiontype,level,usage";
         }
-
+        
         refreshDataSummary();
 
     </script>
