@@ -125,7 +125,6 @@
     <Content Include="Widgets\DataBrowser\DataBrowser.htm" />
     <Content Include="Widgets\DataBrowser\databrowser.js" />
     <Content Include="Widgets\DataBrowser\StyleSheet.css" />
-    <Content Include="Widgets\Map\geochart.htm" />
     <Content Include="Widgets\Map\Icons\ajax-loader.gif" />
     <Content Include="Widgets\Map\Icons\branding_sm.png" />
     <Content Include="Widgets\Map\Icons\green-circle.png" />
