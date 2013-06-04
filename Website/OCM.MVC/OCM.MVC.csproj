@@ -163,6 +163,7 @@
     <Compile Include="Controllers\LoginProviderController.cs" />
     <Compile Include="Controllers\POIController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\WidgetController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -302,6 +303,9 @@
     <Content Include="Views\EditQueue\_EditQueueFilter.cshtml" />
     <Content Include="Views\Home\NotSignedIn.cshtml" />
     <Content Include="Views\POI\Activity.cshtml" />
+    <Content Include="Views\Widget\Map.cshtml" />
+    <Content Include="Views\Widget\GeoChart.cshtml" />
+    <Content Include="Views\Profile\Edit.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -367,7 +371,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.5\tools\Microsoft.Bcl.Build.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.6\tools\Microsoft.Bcl.Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

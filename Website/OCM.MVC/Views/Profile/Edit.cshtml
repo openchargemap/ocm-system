@@ -1,0 +1,204 @@
+﻿@model OCM.API.Common.Model.User
+
+@{
+    ViewBag.Title = "Edit Your Profile";
+}
+
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+<!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
+<![endif]-->
+
+<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+
+<h2>Edit Your Profile</h2>
+
+@using (Html.BeginForm("Edit", "Profile", null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="row-fluid">
+        <div class="span6">
+            <fieldset>
+                <legend>Public Profile</legend>
+                @Html.HiddenFor(model => model.ID)
+
+                <p>
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </p>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Username)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Username)
+                        @Html.ValidationMessageFor(model => model.Username)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Profile)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Profile)
+                        @Html.ValidationMessageFor(model => model.Profile)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Location)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Location)
+                        @Html.ValidationMessageFor(model => model.Location)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.WebsiteURL)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.WebsiteURL)
+                        @Html.ValidationMessageFor(model => model.WebsiteURL)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsProfilePublic)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.IsProfilePublic)
+                        @Html.ValidationMessageFor(model => model.IsProfilePublic)
+                    </div>
+
+                </div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsEmergencyChargingProvider)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.IsEmergencyChargingProvider)
+                        @Html.ValidationMessageFor(model => model.IsEmergencyChargingProvider)
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsPublicChargingProvider)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.IsPublicChargingProvider)
+                        @Html.ValidationMessageFor(model => model.IsPublicChargingProvider)
+                    </div>
+                </div>
+            </fieldset>
+            <p>
+                <input type="submit" value="Save" class="btn btn-success" />
+            </p>
+        </div>
+        <div class="span6">
+
+            <fieldset>
+                <legend>Private Info</legend>
+                <div class="alert alert-info">The following information is not shared with other users or displayed publically</div>
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EmailAddress)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.EmailAddress)
+                        @Html.ValidationMessageFor(model => model.EmailAddress)
+                    </div>
+                </div>
+
+                <p>
+                    Optionally provider your approximate Location (only required for public/emergency charging requests):
+                     <input type="button" id="find_location" value="Find My Location" class="btn btn-info" onclick="getUserLocation()" />
+                </p>
+
+
+                <div id="editor_map_canvas" style="display: none; width: 100%; height: 300px; margin: 1em;">Click Find My Location to start.</div>
+
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Latitude)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Latitude)
+                        @Html.ValidationMessageFor(model => model.Latitude)
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Longitude)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Longitude)
+                        @Html.ValidationMessageFor(model => model.Longitude)
+                    </div>
+                </div>
+
+            </fieldset>
+    </div>
+    
+    </div>
+    
+  
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    function getUserLocation() {
+        if (Modernizr.geolocation) {
+            navigator.geolocation.getCurrentPosition(gotUserLocation);
+        } else {
+            alert("Sorry, your browser cannot supply your location information.");
+        }
+    }
+
+    function gotUserLocation(pos) {
+        showPosInEditor(pos.coords.latitude, pos.coords.longitude);
+        setupMap(pos.coords.latitude, pos.coords.longitude);
+    }
+
+    function showPosInEditor(lat, lng) {
+        $("#@Html.NameFor(model => model.Latitude)").val(lat);
+        $("#@Html.NameFor(model => model.Longitude)").val(lng);
+    }
+
+    function setupMap(currentLat, currentLng) {
+        $("#editor_map_canvas").show();
+        //setup map
+
+        var lat = currentLat;
+        var lng = currentLng;
+
+        var itemPos = [lat, lng];
+
+        //setup map
+        var map = new L.Map('editor_map_canvas');
+
+        // create the tile layer with correct attribution
+        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © OpenStreetMap contributors';
+        var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
+
+        // start the map centred on location
+        map.setView(new L.LatLng(itemPos[0], itemPos[1]), 17);
+        map.addLayer(osm);
+
+        var marker = L.marker(itemPos, { draggable: true });
+        marker.addTo(map);
+        marker.on("move", function (e) {
+            showPosInEditor(e.latlng.lat, e.latlng.lng);
+        });
+
+        map.invalidateSize(false);
+    }
+</script>

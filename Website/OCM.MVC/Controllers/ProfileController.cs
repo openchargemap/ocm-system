@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using OCM.API.Common.Model;
 
 namespace OCM.MVC.Controllers
 {
@@ -12,25 +13,23 @@ namespace OCM.MVC.Controllers
         //
         // GET: /Profile/
 
+        [AuthSignedInOnly]
         public ActionResult Index()
         {
-            
             if (Session["UserID"] != null)
             {
-                UserManager userManager=new UserManager();
-                var user= userManager.GetUser(int.Parse(Session["UserID"].ToString()));
+                UserManager userManager = new UserManager();
+                var user = userManager.GetUser(int.Parse(Session["UserID"].ToString()));
 
                 return View(user);
             }
             return View();
         }
 
-        //
-        // GET: /Profile/Details/5
-
         public ActionResult SignIn(string redirectUrl)
         {
-            return RedirectToAction("Index", "LoginProvider", new {_mode = "silent", _forceLogin = true, _redirectUrl =redirectUrl});
+            return RedirectToAction("Index", "LoginProvider",
+                                    new { _mode = "silent", _forceLogin = true, _redirectUrl = redirectUrl });
         }
 
         public ActionResult SignOut()
@@ -39,82 +38,56 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //
-        // GET: /Profile/Create
-
-        public ActionResult Create()
+        [AuthSignedInOnly]
+        public ActionResult Edit()
         {
-            return View();
+            if (Session["UserID"] != null)
+            {
+                UserManager userManager = new UserManager();
+                var user = userManager.GetUser(int.Parse(Session["UserID"].ToString()));
+
+                return View(user);
+            }
+            else return View();
         }
 
-        //
-        // POST: /Profile/Create
-
+        [AuthSignedInOnly]
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(User updateProfile)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                try
+                {
+                    if (Session["UserID"] != null)
+                    {
+                        // TODO: Add update logic here
+                        var userManager = new UserManager();
+                        var user = userManager.GetUser((int)Session["UserID"]);
+                        user.Username = updateProfile.Username;
+                        user.Profile = updateProfile.Profile;
+                        user.Location = updateProfile.Location;
+                        user.WebsiteURL = updateProfile.WebsiteURL;
+                        user.IsProfilePublic = updateProfile.IsProfilePublic;
+                        user.IsPublicChargingProvider = updateProfile.IsPublicChargingProvider;
+                        user.IsEmergencyChargingProvider = updateProfile.IsEmergencyChargingProvider;
+                        user.EmailAddress = updateProfile.EmailAddress;
+                        user.Latitude = updateProfile.Latitude;
+                        user.Longitude = updateProfile.Longitude;
 
-                return RedirectToAction("Index");
+                        userManager.UpdateUserProfile(user);
+                        return RedirectToAction("Index");
+                    }
+                    else return View();
+                }
+                catch
+                {
+                    return View();
+                }
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //
-        // GET: /Profile/Edit/5
-
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        //
-        // POST: /Profile/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //
-        // GET: /Profile/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        //
-        // POST: /Profile/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return View(updateProfile);
         }
     }
 }
+
