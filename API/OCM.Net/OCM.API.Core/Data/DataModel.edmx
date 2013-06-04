@@ -1313,9 +1313,9 @@
           <Property Name="PermissionsRequested" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DateLastLogin" Type="DateTime" Precision="0" />
-          <Property Name="IsProfilePublic" Type="Boolean" />
-          <Property Name="IsEmergencyChargingProvider" Type="Boolean" />
-          <Property Name="IsPublicChargingProvider" Type="Boolean" />
+          <Property Name="IsProfilePublic" Type="Boolean" Nullable="false" />
+          <Property Name="IsEmergencyChargingProvider" Type="Boolean" Nullable="false" />
+          <Property Name="IsPublicChargingProvider" Type="Boolean" Nullable="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="AuditLogs" Relationship="OCM.Core.Data.OCMEntities.FK_AuditLog_User" FromRole="User" ToRole="AuditLog" />
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_User" FromRole="User" ToRole="ChargePoint" />

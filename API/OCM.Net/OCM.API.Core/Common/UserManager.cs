@@ -97,17 +97,23 @@ namespace OCM.API.Common
                 {
                     if (user.ID > 0)
                     {
-                        OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+                        var dataModel = new Core.Data.OCMEntities();
 
                         var userData = dataModel.Users.First(u => u.ID == user.ID);
                         if (userData != null)
                         {
                             userData.Location = user.Location;
-                            userData.PermissionsRequested = user.PermissionsRequested;
                             userData.Profile = user.Profile;
                             userData.Username = user.Username;
                             userData.WebsiteURL = user.WebsiteURL;
                             
+                            userData.IsProfilePublic = user.IsProfilePublic;
+                            userData.IsPublicChargingProvider = user.IsPublicChargingProvider;
+                            userData.IsEmergencyChargingProvider = user.IsEmergencyChargingProvider;
+                            userData.EmailAddress = user.EmailAddress;
+                            userData.Latitude = user.Latitude;
+                            userData.Longitude = user.Longitude;
+
                             dataModel.SaveChanges();
 
                             return true;
@@ -117,7 +123,7 @@ namespace OCM.API.Common
             }
             catch (Exception)
             {
-                //could update user
+                //could not update user
                 return false;
             }
 

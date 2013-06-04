@@ -38,9 +38,9 @@ namespace OCM.Core.Data
         public string PermissionsRequested { get; set; }
         public System.DateTime DateCreated { get; set; }
         public Nullable<System.DateTime> DateLastLogin { get; set; }
-        public Nullable<bool> IsProfilePublic { get; set; }
-        public Nullable<bool> IsEmergencyChargingProvider { get; set; }
-        public Nullable<bool> IsPublicChargingProvider { get; set; }
+        public bool IsProfilePublic { get; set; }
+        public bool IsEmergencyChargingProvider { get; set; }
+        public bool IsPublicChargingProvider { get; set; }
         public string EmailAddress { get; set; }
         public Nullable<double> Latitude { get; set; }
         public Nullable<double> Longitude { get; set; }
