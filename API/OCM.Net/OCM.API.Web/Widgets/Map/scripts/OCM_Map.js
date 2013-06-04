@@ -76,32 +76,32 @@ OCM_Map.prototype.applyLocalisation = function (isTestMode) {
     return this.ocm_ui.applyLocalisation(isTestMode);
 };
 
-OCM_Map.prototype.showDetailsView = function (element, poi) {
-	  var $element = $(element);
-	  var $detailsView = $("#details-content");
-	  
-	  $detailsView.html("<iframe style='width:100%;height:100%;border:none;' frameborder=0 src='http://openchargemap.org/site/poi/details/"+poi.ID+"?layout=simple&languagecode="+this.language_code+"'></iframe>");
-	  
-	  var leftPos = $element.position().left;
-	      var topPos = $element.position().top;
-	      var maxDialogHeight = $(window).height() - 128;
-	      if (maxDialogHeight<300) maxDialogHeight=300; //workaround firefox differences
-	      if (maxDialogHeight>800) maxDialogHeight=800;
-	      $detailsView.css("left", leftPos);
-	      $detailsView.css("top", topPos);
-	  
-	      //if edit optional available, enable edit controls
-	      var $editControl = $("#details-edit");
-	      if (!this.hasUserPermissionForPOI(poi, "Edit")) {
-	          $editControl.hide();
-	      } else {
-	          $editControl.show();
-	      }
-	  
-	      this.applyLocalisation(ocm_map.mapOptions.isTestLocalisationMode);
-	  
+OCM_Map.prototype.showDetailsView = function(element, poi) {
+    var $element = $(element);
+    var $detailsView = $("#details-content");
+
+    $detailsView.html("<iframe style='width:100%;height:100%;border:none;' frameborder=0 src='http://openchargemap.org/site/poi/details/" + poi.ID + "?layout=simple&languagecode=" + this.language_code + "'></iframe>");
+
+    var leftPos = $element.position().left;
+    var topPos = $element.position().top;
+    var maxDialogHeight = $(window).height() - 128;
+    if (maxDialogHeight < 300) maxDialogHeight = 300; //workaround firefox differences
+    if (maxDialogHeight > 800) maxDialogHeight = 800;
+    $detailsView.css("left", leftPos);
+    $detailsView.css("top", topPos);
+
+    //if edit optional available, enable edit controls
+    var $editControl = $("#details-edit");
+    if (!this.hasUserPermissionForPOI(poi, "Edit")) {
+        $editControl.hide();
+    } else {
+        $editControl.show();
+    }
+
+    this.applyLocalisation(ocm_map.mapOptions.isTestLocalisationMode);
+
     $("#details-content").dialog({ autoOpen: true, width: 510, height: maxDialogHeight, title: this.getLocalisation("ocm.details.locationDetails", "Location Details", ocm_map.mapOptions.isTestLocalisationMode) });
-}
+};
 
 //TODO: deduplicate
 OCM_Map.prototype.showDetailsViewOld = function (element, poi) {
