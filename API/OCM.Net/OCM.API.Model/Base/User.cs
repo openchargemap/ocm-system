@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -26,7 +27,8 @@ namespace OCM.API.Common.Model
         [DisplayName("Location")]
         public string Location { get; set; }
 
-        [DisplayName("Website")]
+        [DisplayName("Website"), ]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Url)]
         public string WebsiteURL { get; set; }
 
         [DisplayName("Reputation Points")]
@@ -42,18 +44,19 @@ namespace OCM.API.Common.Model
         public DateTime? DateLastLogin { get; set; }
 
         [DisplayName("Show Profile to Public")]
-        public bool? IsProfilePublic { get; set; }
+        public bool IsProfilePublic { get; set; }
 
         [DisplayName("Provide Emergency Charging")]
-        public bool? IsEmergencyChargingProvider { get; set; }
+        public bool IsEmergencyChargingProvider { get; set; }
 
         [DisplayName("Provide Public Charging")]
-        public bool? IsPublicChargingProvider { get; set; }
+        public bool IsPublicChargingProvider { get; set; }
         
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
         [DisplayName("Email Address (not public)")]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
         public string EmailAddress { get; set; }
 
         public bool IsCurrentSessionTokenValid {get;set;}
