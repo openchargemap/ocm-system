@@ -87,7 +87,7 @@ footer, div.footer {
     border-radius: 6px;
 }
 
-label, .display-label {
+label, .display-label, .editor-label {
     display: block;
     float: left;
     margin-right: 20px;
@@ -96,7 +96,7 @@ label, .display-label {
     font-weight: bold;
 }
 
-.display-field {
+.display-field, .editor-field {
     display: block;
 }
 
