@@ -350,7 +350,7 @@ namespace OCM.MVC.Controllers
         {
             var summaryManager = new DataSummaryManager();
             var summary = summaryManager.GetActivitySummary(new SearchFilterSettings());
-
+            ViewBag.ShowPOILink = true;
             return View(summary);
         }
 

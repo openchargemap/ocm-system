@@ -338,6 +338,7 @@ a .stat {
 }
 
 .ocm-backdrop {
+    background-color: #2c3e50;
     background-image: url('images/world.jpg');
     color: white;
     margin: 0 -1em 1em -1em;
