@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace OCM.API.Common.Model
@@ -12,33 +13,38 @@ namespace OCM.API.Common.Model
         public int ID { get; set; }
 
         [DisplayName("Unique ID")]
+        [StringLength(100)]
         public string UUID { get; set; }
 
         [DisplayName("Data Provider")]
         public DataProvider DataProvider { get; set; }
 
         [DisplayName("Data Providers Reference")]
+        [StringLength(100)]
         public string DataProvidersReference { get; set; }
 
         [DisplayName("Network/Operator")]
         public OperatorInfo OperatorInfo { get; set; }
 
-        [DisplayName("Operators Ref")]
+        [DisplayName("Operators Own Ref")]
+        [StringLength(100)]
         public string OperatorsReference { get; set; }
 
         [DisplayName("Usage Type")]
         public UsageType UsageType { get; set; }
 
         [DisplayName("Usage Cost")]
+        [StringLength(200)]
         public string UsageCost { get; set; }
 
         [DisplayName("Address")]
         public AddressInfo AddressInfo { get; set; }
 
         [DisplayName("Number Of Points/Bays")]
+        [Range(0, 100)]
         public int? NumberOfPoints { get; set; }
 
-        [DisplayName("General Comments")]
+        [DisplayName("General Comments"), DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
         public string GeneralComments { get; set; }
 
         [DisplayName("Date Planned")]
@@ -54,6 +60,7 @@ namespace OCM.API.Common.Model
         public DateTime? DateLastStatusUpdate { get; set; }
 
         [DisplayName("Data Quality Level")]
+        [Range(1, 5)]
         public int? DataQualityLevel { get; set; }
 
         [DisplayName("Data Added")]
@@ -80,7 +87,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Metadata")]
         public List<MetadataValue> MetadataValues { get; set; }
 
-        
+
         #region deprecated properties
         [Obsolete, JsonIgnore]
         public List<ChargerInfo> Chargers { get; set; }
@@ -115,11 +122,11 @@ namespace OCM.API.Common.Model
             {
                 if (this.Connections.Count > 0)
                 {
-                    description += newline+"Equipment:";
+                    description += newline + "Equipment:";
                     foreach (var c in this.Connections)
                     {
                         description += newline;
-                        if (c.Level != null) description += "Level: " + c.Level.Title;
+                        if (c.Level != null) description += c.Level.Title;
                         if (c.ConnectionType != null) description += " Connection Type:" + c.ConnectionType.Title;
                     }
                 }

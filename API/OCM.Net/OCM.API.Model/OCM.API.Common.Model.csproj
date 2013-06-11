@@ -69,7 +69,6 @@
     <Compile Include="Base\ConnectionInfo.cs" />
     <Compile Include="Base\ConnectionType.cs" />
     <Compile Include="Base\CheckinStatusType.cs" />
-    <Compile Include="Base\POI.cs" />
     <Compile Include="Extended\ContactSubmission.cs" />
     <Compile Include="Base\MediaItem.cs" />
     <Compile Include="Base\DataType.cs" />
@@ -95,6 +94,7 @@
     <Compile Include="Base\User.cs" />
     <Compile Include="Base\UserComment.cs" />
     <Compile Include="Base\UserCommentType.cs" />
+    <Compile Include="Extended\ToJsonExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
