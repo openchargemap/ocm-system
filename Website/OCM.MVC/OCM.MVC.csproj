@@ -32,6 +32,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <MvcBuildViews>true</MvcBuildViews>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -41,6 +42,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <MvcBuildViews>true</MvcBuildViews>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -167,6 +169,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\POIBrowseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +181,12 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\world.jpg" />
+    <Content Include="Content\OCM.css">
+      <DependentUpon>OCM.less</DependentUpon>
+    </Content>
+    <Content Include="Content\OCM.min.css">
+      <DependentUpon>OCM.less</DependentUpon>
+    </Content>
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -240,7 +249,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
-    <Content Include="Content\site.css" />
+    <Content Include="Content\OCM.less" />
     <None Include="Properties\PublishProfiles\OCM.pubxml" />
     <None Include="Properties\PublishProfiles\Publish To Live.pubxml" />
     <Content Include="Global.asax" />
@@ -260,8 +269,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\knockout-2.2.1.debug.js" />
-    <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
@@ -306,13 +314,19 @@
     <Content Include="Views\Widget\Map.cshtml" />
     <Content Include="Views\Widget\GeoChart.cshtml" />
     <Content Include="Views\Profile\Edit.cshtml" />
+    <Content Include="Views\Shared\_EditPOIBasicDetails.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\UserComment.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MetadataGroup.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AddressInfo.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MetadataValue.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\UserComment.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ConnectionInfo.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Scripts\OCM\" />
     <Folder Include="Temp\Uploads\" />
   </ItemGroup>
@@ -358,7 +372,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>57773</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61331/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
