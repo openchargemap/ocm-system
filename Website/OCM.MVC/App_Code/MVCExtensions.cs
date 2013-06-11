@@ -10,25 +10,25 @@ namespace OCM.MVC
 {
     public static class MVCExtensions
     {
-        public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+        public static MvcHtmlString ExtendedLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
         {
-            return LabelFor<TModel, TValue>(html, expression, labelText: null);
+            return ExtendedLabelFor<TModel, TValue>(html, expression, labelText: null);
         }
 
-        public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText)
+        public static MvcHtmlString ExtendedLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText)
         {
-            return LabelFor(html, expression, labelText, htmlAttributes: null, metadataProvider: null);
+            return ExtendedLabelFor(html, expression, labelText, htmlAttributes: null, metadataProvider: null);
         }
 
-        internal static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText, IDictionary<string, object> htmlAttributes, ModelMetadataProvider metadataProvider)
+        internal static MvcHtmlString ExtendedLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText, IDictionary<string, object> htmlAttributes, ModelMetadataProvider metadataProvider)
         {
-            return LabelHelper(html,
+            return ExtendedLabelHelper(html,
                                ModelMetadata.FromLambdaExpression(expression, html.ViewData),
                                ExpressionHelper.GetExpressionText(expression),
                                labelText,
                                htmlAttributes);
         }
-        internal static MvcHtmlString LabelHelper(HtmlHelper html, ModelMetadata metadata, string htmlFieldName, string labelText = null, IDictionary<string, object> htmlAttributes = null)
+        internal static MvcHtmlString ExtendedLabelHelper(HtmlHelper html, ModelMetadata metadata, string htmlFieldName, string labelText = null, IDictionary<string, object> htmlAttributes = null)
         {
             string resolvedLabelText = labelText ?? metadata.DisplayName ?? metadata.PropertyName ?? htmlFieldName.Split('.').Last();
             if (String.IsNullOrEmpty(resolvedLabelText))
@@ -44,6 +44,6 @@ namespace OCM.MVC
         }
 
 
-      
+
     }
 }

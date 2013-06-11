@@ -27,6 +27,6 @@
     </div>
     <div class="span8">
         <h2>Recent Comments <small>added by users</small></h2>
-        @Html.Partial("_CommentList", Model.RecentComments})
+        @Html.DisplayFor(poiSummary=>poiSummary.RecentComments)
     </div>
 </div>

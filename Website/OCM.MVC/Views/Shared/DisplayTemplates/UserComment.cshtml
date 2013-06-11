@@ -1,0 +1,20 @@
+﻿@model OCM.API.Common.Model.UserComment
+<div>
+    @if (ViewBag.ShowPOILink == true)
+    {
+        <a href="@Url.Action("Details", "POI", new { id = Model.ChargePointID })">OCM-@Model.ChargePointID</a>
+    }
+    <blockquote>
+        @if (Model.Rating != null)
+        {
+            <strong>Rating: @Html.Raw(Model.Rating) out of 5</strong>
+        }
+        <p>@Html.DisplayFor(m => m.Comment)</p>
+        <small>Comment by <cite title="Source Title">@Html.DisplayFor(m => m.UserName)</cite> @Html.DisplayFor(m => m.DateCreated)</small>
+    </blockquote>
+
+    @if (Model.RelatedURL != null)
+    {
+        @Html.DisplayFor(m => m.RelatedURL)
+    }
+</div>

@@ -17,8 +17,16 @@
     <li>@Html.ActionLink("Browse", "Index", "POI") <span class="divider">/</span></li>
     <li class="active">@Model.AddressInfo.Title, @Model.AddressInfo.Country.Title <small>OCM-@Model.ID</small></li>
 </ul>
+
+@if (Session["UserID"] != null)
+{
+    <!-- <div class="form-actions">
+        <a href="@Url.Action("Edit", "POI", new { id = Model.ID })" class="btn btn-info">Edit</a>
+    </div>
+       -->
+}
 <div id="details-imageblock"></div>
-<div id="details-container">
+<div id="details-container" class="details-container">
     <h1><span id="location-title">@Html.DisplayFor(poi => poi.AddressInfo.Title)</span><small data-localize="ocm.details.title">charging location</small></h1>
 
     <div class="tabbable">
@@ -34,18 +42,18 @@
             </li>
             <li>
                 <a href="#tab-comments" data-toggle="tab" data-localize="ocm.details.commentsAndRatings">Comments (@if (Model.UserComments != null)
-                                                                    { @Model.UserComments.Count }
-                                                                    else
-                                                                    { @Html.Raw(0) })</a>
+                                                                                                                   { @Model.UserComments.Count }
+                                                                                                                   else
+                                                                                                                   { @Html.Raw(0) })</a>
             </li>
             <li>
                 <a href="#tab-nearby" data-toggle="tab" data-localize="ocm.details.placesNearby">Places Nearby</a>
             </li>
             <li>
-                <a href="#tab-media" data-toggle="tab" data-localize="ocm.details.mediaItems" >Photos (@if (Model.MediaItems != null)
-                                                                          { @Model.MediaItems.Count }
-                                                                          else
-                                                                          { @Html.Raw(0) })</a>
+                <a href="#tab-media" data-toggle="tab" data-localize="ocm.details.mediaItems">Photos (@if (Model.MediaItems != null)
+                                                                                                      { @Model.MediaItems.Count }
+                                                                                                      else
+                                                                                                      { @Html.Raw(0) })</a>
             </li>
         </ul>
 
@@ -64,63 +72,72 @@
                             @Html.DisplayFor(poi => poi.AddressInfo.Country.Title)<br>
                         </address>
 
-                        @if (Model.GeneralComments != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.generalComments">Comments</strong>:
-                                <p>@Html.DisplayFor(poi => poi.GeneralComments)</p>
-                            </div>
-                        }
-                        @if (Model.AddressInfo.AccessComments != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.accessComments">Access Comments</strong>:
-                                <p>@Html.DisplayFor(poi => poi.AddressInfo.AccessComments)</p>
-                            </div>
-                        }
-
-                        @if (Model.NumberOfPoints != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.numberOfPoints">Number Of Points</strong>:
-                            @Html.DisplayFor(poi => poi.NumberOfPoints)
-                            </div>
-                        }
-                        @if (Model.UsageType != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.usageType">Usage</strong>:
-                            @Html.DisplayFor(poi => poi.UsageType.Title)
-                            </div>
-                        }
-                        @if (Model.OperatorInfo != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.networkOperator">Network/Operator</strong>:
-                            @Html.DisplayFor(poi => poi.OperatorInfo.Title)
-                            </div>
-                        }
-                        @if (Model.StatusType != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.operationalStatus">Operational Status</strong>:
-                            @Html.DisplayFor(poi => poi.StatusType.Title)
-                            </div>
-                        }
-
-                        @if (Model.DataProvider != null)
-                        {
-                            <div>
-                                <strong class="ocm-label" data-localize="ocm.details.dataProvider">Data Provider</strong>:
-                                @Html.DisplayFor(poi => poi.DataProvider.Title)
-                                @Html.DisplayFor(poi => poi.DataProvider.WebsiteURL)
-
-                                @if (Model.DataProvider.DataProviderStatusType.ID == 20)
+                        <div class="row-fluid">
+                            <div class="span6">
+                                @if (!String.IsNullOrEmpty(Model.GeneralComments))
                                 {
-                                    <div class="alert alert-info" data-localize="ocm.details.importedNotice">Note: This data is sourced automatically, changes should be submitted to the data provider directly.</div>
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.generalComments">General Comments</strong>:
+                                <p>@Html.DisplayFor(poi => poi.GeneralComments)</p>
+                                    </div>
+                                }
+                                @if (!String.IsNullOrEmpty(Model.AddressInfo.AccessComments))
+                                {
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.accessComments">Access Comments</strong>:
+                                <p>@Html.DisplayFor(poi => poi.AddressInfo.AccessComments)</p>
+                                    </div>
+                                }
+
+                                @if (Model.NumberOfPoints != null)
+                                {
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.numberOfPoints">Number Of Points</strong>:
+                            @Html.DisplayFor(poi => poi.NumberOfPoints)
+                                    </div>
+                                }
+                                @if (Model.UsageType != null)
+                                {
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.usageType">Usage</strong>:
+                            @Html.DisplayFor(poi => poi.UsageType.Title)
+                                    </div>
+                                }
+
+
+                            </div>
+                            <div class="span6">
+                                @if (Model.OperatorInfo != null)
+                                {
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.networkOperator">Network/Operator</strong>:
+                            @Html.DisplayFor(poi => poi.OperatorInfo.Title)
+                                    </div>
+                                }
+                                @if (Model.StatusType != null)
+                                {
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.operationalStatus">Operational Status</strong>:
+                            @Html.DisplayFor(poi => poi.StatusType.Title)
+                                    </div>
+                                }
+
+                                @if (Model.DataProvider != null)
+                                {
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.dataProvider">Data Provider</strong>:
+                                @Html.DisplayFor(poi => poi.DataProvider.Title)
+                                        @Html.DisplayFor(poi => poi.DataProvider.WebsiteURL)
+
+                                        @if (Model.DataProvider.DataProviderStatusType.ID == 20)
+                                        {
+                                            <div class="alert alert-info" data-localize="ocm.details.importedNotice">Note: This data is sourced automatically, changes should be submitted to the data provider directly.</div>
+                                        }
+                                    </div>
                                 }
                             </div>
-                        }
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -136,11 +153,7 @@
                 }
             </div>
             <div id="tab-comments" class="tab-pane">
-
-                @if (Model.UserComments != null)
-                {
-                    Html.RenderPartial("_CommentList", Model.UserComments);
-                }
+                @Html.DisplayFor(m => m.UserComments)
             </div>
             <div id="tab-nearby" class="tab-pane">
             </div>
@@ -149,11 +162,11 @@
                     Upload your own photos for this location:
                     @if (Session["UserID"] != null)
                     {
-                        @Html.ActionLink("Upload", "AddMediaItem", "POI", new { id = Model.ID }, new {@class="btn btn-primary"})
+                        @Html.ActionLink("Upload", "AddMediaItem", "POI", new { id = Model.ID }, new { @class = "btn btn-primary" })
                     }
                     else
                     {
-                        @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new {id=Model.ID}) }, new {@class="btn btn-primary"})
+                        @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new { id = Model.ID }) }, new { @class = "btn btn-primary" })
                     }
 
 
@@ -180,18 +193,18 @@
         $('a#tab-map').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
-            
+
         });
-        
+
         //fix map after tab shown
         //('a[data-toggle="tab"]').on('shown', function (e) {
-        $('a[data-toggle="tab"]').on('shown', function(e) {
+        $('a[data-toggle="tab"]').on('shown', function (e) {
             if (e.target.hash == "#tab-map") {
                 map.invalidateSize(false);
             }
 
         });
-        
+
         $('a#tab-comments').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
@@ -206,7 +219,7 @@
             e.preventDefault();
             $(this).tab('show');
         });
-        
+
         $('a#tab-media').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
@@ -214,9 +227,12 @@
 
         //setup map
 
-        var lat =   @Html.DisplayFor(model => model.AddressInfo.Latitude);
-        var lng =   @Html.DisplayFor(model => model.AddressInfo.Longitude);
-       
+        @{
+            var scriptContent = "var lat = " + Model.AddressInfo.Latitude + "; var lng = " + Model.AddressInfo.Longitude + ";";
+        }
+
+        @Html.Raw(scriptContent)
+
         var itemPos = [lat, lng];
 
         //setup map
@@ -235,9 +251,9 @@
 
         //setup background image
         getLocationImage(itemPos);
-        
+
         //fetch nearby places
-        getNearbyPlaces(itemPos[0],itemPos[1],2);
+        getNearbyPlaces(itemPos[0], itemPos[1], 2);
     });
 
     function getLocationImage(pos) {
@@ -250,14 +266,14 @@
         }
     }
 
-   
+
     /*
      * Construct the URL to call for the API request
      */
-    function constructYelpURL(lat,lng,radius) {
-        
+    function constructYelpURL(lat, lng, radius) {
+
         var URL = "http://api.yelp.com/" +
-            "business_review_search?"+
+            "business_review_search?" +
             "callback=?&limit=10" +
             "&lat=" + lat +
             "&long=" + lng +
@@ -268,27 +284,26 @@
         //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
     }
 
-    function getNearbyPlaces(lat,lng,radius) {
-      
-        var yelpRequestURL = constructYelpURL(lat,lng,radius);
+    function getNearbyPlaces(lat, lng, radius) {
+
+        var yelpRequestURL = constructYelpURL(lat, lng, radius);
 
         $.getJSON(yelpRequestURL, function (data) {
 
             if (data != null) {
-                var output ="<h2>Nearby Places</h2>";
+                var output = "";
                 var poiList = data.businesses;
-				
-                for (var i=0;i<poiList.length;i++)
-                {
+
+                for (var i = 0; i < poiList.length; i++) {
                     var poi = poiList[i];
-                    output +=	"<div style='background-color: rgba(0, 0, 0, 0.66);color:white;padding:0.5em;margin:0.5em;'><img style='float:left;padding-right:1em;' src='"+poi.photo_url_small+"'/> <h3>"+poi.name+
-									"&nbsp;<img src='"+poi.rating_img_url_small+"'/>"+
-									(poi.categories.length>0?" <small>"+ poi.categories[0].name+"</small> ":"")+
-									"<small><a target='_blank' href='"+poi.url+"'>View More Details</a></small></h3>"+
-                                    "<div>Distance: "+(Math.round(poi.distance*10)/10)+"</div>"+
+                    output += "<div class='nearby-place'><img style='float:left;padding-right:1em;' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
+									"&nbsp;<img src='" + poi.rating_img_url_small + "'/>" +
+									(poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
+									"<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
+                                    "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
 									"</div>";
                 }
-				
+
                 $("#tab-nearby").html(output);
             }
         });

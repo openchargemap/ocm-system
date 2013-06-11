@@ -12,121 +12,10 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Helpers;
+using OCM.MVC.Models;
 
 namespace OCM.MVC.Controllers
 {
-    public class POIBrowseModel : OCM.API.Common.SearchFilterSettings
-    {
-        public POIBrowseModel()
-        {
-            this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData();
-            //this.CountryIDs = new int[] { 1 }; //default to uk
-        }
-
-        public string SearchLocation { get; set; }
-        public string Country { get; set; }
-        public List<OCM.API.Common.Model.ChargePoint> POIList { get; set; }
-        public CoreReferenceData ReferenceData { get; set; }
-        public SelectList CountryList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.Countries), this.CountryIDs);
-            }
-        }
-
-        public SelectList LevelList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.ChargerTypes), this.LevelIDs);
-            }
-        }
-
-        public SelectList UsageTypeList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.UsageTypes), this.UsageTypeIDs);
-            }
-        }
-
-        public SelectList StatusTypeList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.StatusTypes), this.StatusTypeIDs);
-            }
-        }
-
-        public SelectList OperatorList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.Operators), this.OperatorIDs);
-            }
-        }
-
-
-        public SelectList ConnectionTypeList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.ConnectionTypes), this.ConnectionTypeIDs);
-            }
-        }
-
-        public SelectList DataProviderList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.DataProviders), null);
-            }
-        }
-
-        public SelectList SubmissionTypeList
-        {
-            get
-            {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.SubmissionStatusTypes), null);
-            }
-        }
-
-        private List<SimpleReferenceDataType> ToListOfSimpleData(IEnumerable list)
-        {
-            List<SimpleReferenceDataType> simpleList = new List<SimpleReferenceDataType>();
-            if (list == null) return simpleList;
-
-            var listEnumerator = list.GetEnumerator();
-            foreach (var item in list)
-            {
-                simpleList.Add((SimpleReferenceDataType)item);
-            }
-
-            return simpleList;
-        }
-
-        private SelectList SimpleSelectList(List<SimpleReferenceDataType> list, int[] selectedItems)
-        {
-            return SimpleSelectList(list, selectedItems, true);
-        }
-
-        private SelectList SimpleSelectList(List<SimpleReferenceDataType> list, int[] selectedItems, bool includeNoSelectionValue)
-        {
-            if (list == null)
-            {
-                return null;
-            }
-            else
-            {
-                if (includeNoSelectionValue)
-                {
-                    list.Insert(0, new SimpleReferenceDataType { ID = -1, Title = "(None Selected)" });
-                }
-                return new SelectList(list, "ID", "Title", (selectedItems != null && selectedItems.Length > 0) ? selectedItems[0].ToString() : null);
-            }
-        }
-    }
 
     public class POIController : Controller
     {
@@ -284,7 +173,7 @@ namespace OCM.MVC.Controllers
                 foreach (string file in Request.Files)
                 {
                     HttpPostedFileBase postedFile = Request.Files[file];
-                    if (postedFile!=null && postedFile.ContentLength>0)
+                    if (postedFile != null && postedFile.ContentLength > 0)
                     {
                         string tmpFile = tempFolder + filePrefix + postedFile.FileName;
                         postedFile.SaveAs(tmpFile);
@@ -317,32 +206,47 @@ namespace OCM.MVC.Controllers
 
         //
         // GET: /POI/Edit/5
-
+        [AuthSignedInOnly]
         public ActionResult Edit(int id)
         {
             var poi = new POIManager().Get(id);
 
+            var refData = new POIBrowseModel();
+
+            ViewBag.ReferenceData = refData;
             return View(poi);
         }
 
         //
         // POST: /POI/Edit/5
 
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [HttpPost, AuthSignedInOnly]
+        public ActionResult Edit(ChargePoint poi)
         {
-            var poi = new POIManager().Get(id);
-
             try
             {
-                // TODO: Add update logic here
+                var user = new UserManager().GetUser((int)Session["UserID"]);
+                if (new SubmissionManager().PerformSubmission(poi, user))
+                {
+                    if (poi.ID > 0)
+                    {
+                        return RedirectToAction("Details", "POI", new { id = poi.ID });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
 
-                return RedirectToAction("Index");
             }
             catch
             {
-                return View(poi);
+                //return View(poi);
             }
+
+            ViewBag.ReferenceData = new POIBrowseModel();
+
+            return View(poi);
         }
 
 
