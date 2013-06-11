@@ -6,13 +6,12 @@ using OCM.API.Common.Model;
 using System.Collections;
 using System.Configuration;
 using Newtonsoft.Json;
+using OCM.Core.Data;
 
 namespace OCM.API.Common
 {
-
-
     /// <summary>
-    /// Used to perform a charge point submission.
+    /// Used to perform a data submission.
     /// </summary>
     public class SubmissionManager
     {
@@ -22,6 +21,20 @@ namespace OCM.API.Common
         public SubmissionManager()
         {
             AllowUpdates = false;
+        }
+
+        //convert a simple POI to data and back again to fully populate all related properties, as submission may only have simple IDs for ref data etc
+        private Model.ChargePoint PopulateFullPOI(OCMEntities dataModel, Model.ChargePoint poi)
+        {
+            //
+            var poiData = new Core.Data.ChargePoint();
+            if (poi.ID > 0) poiData = dataModel.ChargePoints.First(c => c.ID == poi.ID);
+
+            //convert simple poi to fully poulated db version
+            new POIManager().PopulateChargePoint_SimpleToData(poi, poiData, dataModel);
+
+            //convert back to simple POI
+            return Model.Extensions.ChargePoint.FromDataModel(poiData);
         }
 
         /// <summary>
@@ -64,11 +77,11 @@ namespace OCM.API.Common
 
                     //if user is system user, edits/updates are not recorded in edit queue
 
-                    if (user.ID == (int) StandardUsers.System)
+                    if (user.ID == (int)StandardUsers.System)
                     {
                         enableEditQueue = false;
                     }
-                    
+
                 }
 
                 var dataModel = new Core.Data.OCMEntities();
@@ -93,6 +106,9 @@ namespace OCM.API.Common
                     }
                 }
 
+                //convert to DB version of POI and back so that properties are fully populated
+                poi = PopulateFullPOI(dataModel, poi);
+
                 //if user cannot edit, add to edit queue for approval
                 var editQueueItem = new Core.Data.EditQueueItem { DateSubmitted = DateTime.UtcNow };
                 if (enableEditQueue)
@@ -104,9 +120,10 @@ namespace OCM.API.Common
                     //serialize cp as json
                     var jsonOutput = new OutputProviders.JSONOutputProvider();
 
-                    //null extra data we don't want to serialize
+                    //null extra data we don't want to serialize/compare
                     poi.UserComments = null;
                     poi.MetadataTags = null;
+                    poi.MediaItems = null;
 
                     string editData = jsonOutput.PerformSerialisationToString(poi, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
@@ -124,13 +141,7 @@ namespace OCM.API.Common
                         }
                         else
                         {
-                            editQueueItem.PreviousData = jsonOutput.PerformSerialisationToString(currentPOI,
-                                                                                                 new JsonSerializerSettings
-                                                                                                     {
-                                                                                                         NullValueHandling =
-                                                                                                             NullValueHandling
-                                                                                                     .Ignore
-                                                                                                     });
+                            editQueueItem.PreviousData = jsonOutput.PerformSerialisationToString(currentPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                         }
                     }
 
@@ -176,7 +187,7 @@ namespace OCM.API.Common
                         ;
                         ; //failed to send notification
                     }
-                 
+
                     //item is in edit queue for approval.
                     return true;
                 }
@@ -241,7 +252,7 @@ namespace OCM.API.Common
                     }
                     else
                     {
-                        
+
                         //anonymous submission, update edit queue item
                         if (enableEditQueue && user == null)
                         {
@@ -249,8 +260,6 @@ namespace OCM.API.Common
                             dataModel.SaveChanges();
                         }
                     }
-
-               
 
                     System.Diagnostics.Debug.WriteLine("Added/Updated CP:" + cpData.ID);
 
@@ -293,7 +302,7 @@ namespace OCM.API.Common
 
                 }
 
-               
+
                 return true;
             }
             catch (Exception exp)
@@ -307,7 +316,7 @@ namespace OCM.API.Common
 
         }
 
-     
+
         /// <summary>
         /// Submit a new comment against a given charge equipment id
         /// </summary>
@@ -328,11 +337,22 @@ namespace OCM.API.Common
             int commentTypeID = 10; //default to General Comment
             if (comment.CommentType != null) commentTypeID = comment.CommentType.ID;
             dataComment.UserCommentType = dataModel.UserCommentTypes.FirstOrDefault(t => t.ID == commentTypeID);
-            if (comment.CheckinStatusType!=null) dataComment.CheckinStatusType = dataModel.CheckinStatusTypes.FirstOrDefault(t => t.ID == comment.CheckinStatusType.ID);
+            if (comment.CheckinStatusType != null) dataComment.CheckinStatusType = dataModel.CheckinStatusTypes.FirstOrDefault(t => t.ID == comment.CheckinStatusType.ID);
             dataComment.UserName = comment.UserName;
             dataComment.Rating = comment.Rating;
             dataComment.RelatedURL = comment.RelatedURL;
             dataComment.DateCreated = DateTime.UtcNow;
+
+            if (user != null && user.ID > 0)
+            {
+                var ocmUser = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
+
+                if (ocmUser != null)
+                {
+                    dataComment.User = ocmUser;
+                    dataComment.UserName = ocmUser.Username;
+                }
+            }
 
             try
             {

@@ -77,7 +77,7 @@ namespace OCM.API.InputProviders
         public bool ProcessContactUsSubmission(HttpContext context, ref ContactSubmission contactSubmission)
         {
             System.IO.StreamReader sr = new System.IO.StreamReader(context.Request.InputStream);
-           
+
             string responseContent = sr.ReadToEnd().Trim();
 
             string jsonString = responseContent;

@@ -144,7 +144,7 @@ namespace OCM.API
         private void SendBadRequestMessage(HttpContext context, string message)
         {
             context.Response.StatusCode = 400;
-            context.Response.Write("{\"status\":\"error\",\"description\":\""+message+"\"}");
+            context.Response.Write("{\"status\":\"error\",\"description\":\"" + message + "\"}");
             context.Response.End();
         }
 
@@ -167,7 +167,7 @@ namespace OCM.API
             if (APIBehaviourVersion > 0) filter.APIVersion = APIBehaviourVersion;
             if (APIBehaviourVersion >= 2) filter.Action = DefaultAction;
 
-            if (context.Request.Url.Host.ToLower().StartsWith("api") && filter.APIVersion==null)
+            if (context.Request.Url.Host.ToLower().StartsWith("api") && filter.APIVersion == null)
             {
                 //API version is mandatory for api V2 onwards via api.openchargemap.* hostname
                 SendBadRequestMessage(context, "mandatory API Version not specified in request");
@@ -230,7 +230,7 @@ namespace OCM.API
             {
                 context.Response.ContentEncoding = Encoding.Default;
                 context.Response.ContentType = outputProvider.ContentType;
-                
+
                 //apply compression if accepted
                 string encodings = context.Request.Headers.Get("Accept-Encoding");
                 if (encodings != null)
@@ -250,8 +250,8 @@ namespace OCM.API
                         //context.Trace.Warn("Deflate Compression on");
                     }
                 }
-                
-                if (filter.Action == "getchargepoints" || filter.Action=="getpoilist")
+
+                if (filter.Action == "getchargepoints" || filter.Action == "getpoilist")
                 {
                     OutputPOIList(outputProvider, context, filter);
                 }
@@ -317,12 +317,12 @@ namespace OCM.API
             //cache result
             if (HttpContext.Current.Cache["CoreRefData"] != null)
             {
-                data = (CoreReferenceData) HttpContext.Current.Cache["CoreRefData"];
+                data = (CoreReferenceData)HttpContext.Current.Cache["CoreRefData"];
             }
             else
             {
                 data = refDataManager.GetCoreReferenceData();
-                HttpContext.Current.Cache.Add("CoreRefData",data, null,Cache.NoAbsoluteExpiration, new TimeSpan(1,0,0), CacheItemPriority.Normal, null);
+                HttpContext.Current.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
             //TODO: cache gzipped stream
             //send response
