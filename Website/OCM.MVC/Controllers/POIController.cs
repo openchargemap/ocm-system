@@ -155,7 +155,7 @@ namespace OCM.MVC.Controllers
         }
 
         //
-        // POST: /POI/UploadImage
+        // POST: /POI/AddMediaItem
 
         [HttpPost]
         public ActionResult AddMediaItem(int id, FormCollection collection)
@@ -218,9 +218,9 @@ namespace OCM.MVC.Controllers
         }
 
         //
-        // POST: /POI/Edit/5
+        // POST: /POI/Edit/
 
-        [HttpPost, AuthSignedInOnly]
+        [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
         public ActionResult Edit(ChargePoint poi)
         {
             try
@@ -256,32 +256,6 @@ namespace OCM.MVC.Controllers
             var summary = summaryManager.GetActivitySummary(new SearchFilterSettings());
             ViewBag.ShowPOILink = true;
             return View(summary);
-        }
-
-        //
-        // GET: /POI/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        //
-        // POST: /POI/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

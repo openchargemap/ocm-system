@@ -25,12 +25,13 @@
                 @Html.DropDownListFor(model => model.OperatorInfo.ID, (SelectList)ViewBag.ReferenceData.OperatorList)
                 @Html.ValidationMessageFor(model => model.OperatorInfo)
             </div>
+            
             <div class="editor-label">
-                @Html.LabelFor(model => model.OperatorsReference)
+                @Html.LabelFor(model => model.UsageType)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.OperatorsReference)
-                @Html.ValidationMessageFor(model => model.OperatorsReference)
+                @Html.DropDownListFor(model => model.UsageType.ID, (SelectList)ViewBag.ReferenceData.UsageTypeList)                
+                @Html.ValidationMessageFor(model => model.UsageType)
             </div>
 
             <div class="editor-label">
@@ -84,7 +85,15 @@
                 @Html.EditorFor(model => model.DataProvidersReference)
                 @Html.ValidationMessageFor(model => model.DataProvidersReference)
             </div>
-
+            
+            <div class="editor-label">
+                @Html.LabelFor(model => model.OperatorsReference)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.OperatorsReference)
+                @Html.ValidationMessageFor(model => model.OperatorsReference)
+            </div>
+            
             <div class="editor-label">
                 @Html.LabelFor(model => model.DatePlanned)
             </div>
@@ -92,7 +101,7 @@
                 @Html.EditorFor(model => model.DatePlanned)
                 @Html.ValidationMessageFor(model => model.DatePlanned)
             </div>
-
+            
             <div class="editor-label">
                 @Html.LabelFor(model => model.DateLastConfirmed)
             </div>
@@ -101,19 +110,8 @@
                 @Html.ValidationMessageFor(model => model.DateLastConfirmed)
             </div>
 
-            <div class="editor-label">
-                @Html.LabelFor(model => model.DataQualityLevel)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.DataQualityLevel)
-                @Html.ValidationMessageFor(model => model.DataQualityLevel)
-            </div>
+            @Html.HiddenFor(model=>model.DataQualityLevel)
+            
         </fieldset>
     </div>
-
 </div>
-
-
-<script>
-    //$('#tip-statustype').popover();
-</script>
