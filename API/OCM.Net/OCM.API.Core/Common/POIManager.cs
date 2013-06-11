@@ -153,7 +153,7 @@ namespace OCM.API.Common
                 {
                     filteredList = filteredList.OrderByDescending(p => p.c.DateCreated);
                 }
-                
+
                 foreach (var item in filteredList.Take(maxResults))
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
@@ -307,7 +307,7 @@ namespace OCM.API.Common
 
         public List<DiffItem> CheckDifferences(Model.ChargePoint poiA, Model.ChargePoint poiB)
         {
-           
+
             var diffList = new List<DiffItem>();
 
             if (poiA == null && poiB == null)
@@ -339,6 +339,7 @@ namespace OCM.API.Common
                     ".DataProvider.WebsiteURL",
                     ".DataProvider.DataProviderStatusType",
                     ".StatusType.ID",
+                    ".StatusType.IsOperational",
                     ".ConnectionType.FormalName",
                     ".Level.Comments",
                     ".AddressInfo.Distance",
@@ -354,7 +355,7 @@ namespace OCM.API.Common
                     ".OperatorInfo.ID"
                 };
             objectComparison.ElementsToIgnore.AddRange(exclusionList);
-            
+
             if (!objectComparison.Compare(poiA, poiB))
             {
                 //clean up differences we want to exclude
@@ -362,8 +363,14 @@ namespace OCM.API.Common
                 {
                     objectComparison.Differences.RemoveAll(e => e.PropertyName.EndsWith(exclusionSuffix));
                 }
-                
-                diffList.AddRange(objectComparison.Differences.Select(difference => new DiffItem {Context = difference.PropertyName, ValueA = difference.Object1Value, ValueB = difference.Object2Value}));
+
+                diffList.AddRange(objectComparison.Differences.Select(difference => new DiffItem { Context = difference.PropertyName, ValueA = difference.Object1Value, ValueB = difference.Object2Value }));
+
+                //remove items which only vary on null vs ""
+                diffList.RemoveAll(d => (String.IsNullOrWhiteSpace(d.ValueA) || d.ValueA == "(null)") && (String.IsNullOrWhiteSpace(d.ValueB) || d.ValueB == "(null)"));
+
+                //remove items which are in fact the same
+                diffList.RemoveAll(d => d.ValueA == d.ValueB);
             }
             return diffList;
         }
@@ -402,7 +409,7 @@ namespace OCM.API.Common
         {
             if (String.IsNullOrEmpty(dataChargePoint.UUID)) dataChargePoint.UUID = Guid.NewGuid().ToString().ToUpper();
 
-            if (simpleChargePoint.DataProvider != null)
+            if (simpleChargePoint.DataProvider != null && simpleChargePoint.DataProvider.ID >= 0)
             {
                 dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == simpleChargePoint.DataProvider.ID);
             }
@@ -414,13 +421,13 @@ namespace OCM.API.Common
 
             dataChargePoint.DataProvidersReference = simpleChargePoint.DataProvidersReference;
 
-            if (simpleChargePoint.OperatorInfo != null)
+            if (simpleChargePoint.OperatorInfo != null && simpleChargePoint.OperatorInfo.ID >= 0)
             {
                 dataChargePoint.Operator = dataModel.Operators.First(o => o.ID == simpleChargePoint.OperatorInfo.ID);
             }
             dataChargePoint.OperatorsReference = simpleChargePoint.OperatorsReference;
 
-            if (simpleChargePoint.UsageType != null) dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
+            if (simpleChargePoint.UsageType != null && simpleChargePoint.UsageType.ID >= 0) dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
 
             dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo);
 
@@ -439,7 +446,7 @@ namespace OCM.API.Common
             }
 
 
-            if (simpleChargePoint.DataQualityLevel != null)
+            if (simpleChargePoint.DataQualityLevel != null && (simpleChargePoint.DataQualityLevel >= 0 && simpleChargePoint.DataQualityLevel <= 5))
             {
                 dataChargePoint.DataQualityLevel = simpleChargePoint.DataQualityLevel;
             }
@@ -458,7 +465,6 @@ namespace OCM.API.Common
 
             if (simpleChargePoint.Connections != null)
             {
-
                 foreach (var c in simpleChargePoint.Connections)
                 {
                     var connectionInfo = new Core.Data.ConnectionInfo();
@@ -473,12 +479,13 @@ namespace OCM.API.Common
                     }
 
                     connectionInfo.Reference = c.Reference;
+                    connectionInfo.Comments = c.Comments;
                     connectionInfo.Amps = c.Amps;
                     connectionInfo.Voltage = c.Voltage;
                     connectionInfo.Quantity = c.Quantity;
                     connectionInfo.PowerKW = c.PowerKW;
 
-                    if (c.ConnectionType != null)
+                    if (c.ConnectionType != null && c.ConnectionType.ID >= 0)
                     {
                         connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == c.ConnectionType.ID);
                     }
@@ -487,7 +494,7 @@ namespace OCM.API.Common
                         connectionInfo.ConnectionType = null;
                     }
 
-                    if (c.Level != null)
+                    if (c.Level != null && c.Level.ID >= 1)
                     {
                         connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == c.Level.ID);
                     }
@@ -496,16 +503,16 @@ namespace OCM.API.Common
                         connectionInfo.ChargerType = null;
                     }
 
-                    if (c.CurrentType != null)
+                    if (c.CurrentType != null && c.CurrentType.ID >= 10)
                     {
                         connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == c.CurrentType.ID);
                     }
                     else
                     {
-                        connectionInfo.ChargerType = null;
+                        connectionInfo.CurrentType = null;
                     }
 
-                    if (c.StatusType != null)
+                    if (c.StatusType != null && c.StatusType.ID >= 0)
                     {
                         connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == c.StatusType.ID);
                     }
@@ -519,6 +526,7 @@ namespace OCM.API.Common
                     //detect if connection details are non-blank/unknown before adding
                     if (
                         !String.IsNullOrEmpty(connectionInfo.Reference)
+                        || !String.IsNullOrEmpty(connectionInfo.Comments)
                         || connectionInfo.Amps != null
                         || connectionInfo.Voltage != null
                         || connectionInfo.PowerKW != null
