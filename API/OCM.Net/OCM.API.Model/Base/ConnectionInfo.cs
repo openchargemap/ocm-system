@@ -11,7 +11,7 @@ namespace OCM.API.Common.Model
         public int ID { get; set; }
         public ConnectionType ConnectionType { get; set; }
 
-        [DisplayName("Operators Ref"), StringLength(100)]
+        [DisplayName("Operators Own Ref"), StringLength(100)]
         public string Reference { get; set; }
 
         [DisplayName("Operational Status")]
