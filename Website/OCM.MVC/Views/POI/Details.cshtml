@@ -18,12 +18,11 @@
     <li class="active">@Model.AddressInfo.Title, @Model.AddressInfo.Country.Title <small>OCM-@Model.ID</small></li>
 </ul>
 
-@if (Session["UserID"] != null)
+@if (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"]==true)
 {
-    <!-- <div class="form-actions">
+    <div class="form-actions">
         <a href="@Url.Action("Edit", "POI", new { id = Model.ID })" class="btn btn-info">Edit</a>
     </div>
-       -->
 }
 <div id="details-imageblock"></div>
 <div id="details-container" class="details-container">
@@ -126,18 +125,18 @@
                                 {
                                     <div>
                                         <strong class="ocm-label" data-localize="ocm.details.dataProvider">Data Provider</strong>:
-                                @Html.DisplayFor(poi => poi.DataProvider.Title)
+                                        @Html.DisplayFor(poi => poi.DataProvider.Title)
                                         @Html.DisplayFor(poi => poi.DataProvider.WebsiteURL)
 
-                                        @if (Model.DataProvider.DataProviderStatusType.ID == 20)
-                                        {
-                                            <div class="alert alert-info" data-localize="ocm.details.importedNotice">Note: This data is sourced automatically, changes should be submitted to the data provider directly.</div>
-                                        }
                                     </div>
                                 }
                             </div>
                         </div>
 
+                        @if (Model.DataProvider.DataProviderStatusType.ID == 20)
+                        {
+                            <div class="alert alert-info" data-localize="ocm.details.importedNotice">Note: This data is sourced automatically, changes should be submitted to the data provider directly.</div>
+                        }
                     </div>
                 </div>
             </div>
@@ -244,7 +243,7 @@
         var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
 
         // start the map centred on location
-        map.setView(new L.LatLng(itemPos[0], itemPos[1]), 17);
+        map.setView(new L.LatLng(itemPos[0], itemPos[1]), 15);
         map.addLayer(osm);
 
         L.marker(itemPos).addTo(map);
@@ -296,7 +295,7 @@
 
                 for (var i = 0; i < poiList.length; i++) {
                     var poi = poiList[i];
-                    output += "<div class='nearby-place'><img style='float:left;padding-right:1em;' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
+                    output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
 									"&nbsp;<img src='" + poi.rating_img_url_small + "'/>" +
 									(poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
 									"<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +

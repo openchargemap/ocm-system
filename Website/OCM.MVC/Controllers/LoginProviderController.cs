@@ -1,4 +1,5 @@
 ﻿using DotNetOpenAuth.ApplicationBlock;
+using OCM.API.Common;
 using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,11 @@ namespace OCM.MVC.Controllers
                         Session["Identifier"] = screenName;
                         Session["Username"] = userDetails.Username;
                         Session["UserID"] = userDetails.ID;
+
+                        if (UserManager.IsUserAdministrator(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails)))
+                        {
+                            Session["IsAdministrator"] = true;
+                        }
 
                         if (!String.IsNullOrEmpty((string)Session["_redirectURL"]))
                         {

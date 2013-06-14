@@ -26,5 +26,10 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
+
+        public ActionResult GeneralError()
+        {
+            return View();
+        }
     }
 }

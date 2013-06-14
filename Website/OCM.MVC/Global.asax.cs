@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OCM.API.Common;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,13 +18,31 @@ namespace OCM.MVC
     {
         protected void Application_Start()
         {
-
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            // Code that runs when an unhandled error occurs
+
+            // Get the exception object.
+            Exception exc = Server.GetLastError();
+
+            // Handle HTTP errors
+            if (exc.GetType() == typeof(HttpException) || exc.GetType() == typeof(System.Runtime.Serialization.SerializationException))
+            {
+                if (exc.Message.Contains("NoCatch") || exc.Message.Contains("maxUrlLength") || exc.Message.Contains("InMemoryTokenManager") || exc.Message.Contains("non-serializable")) return;
+            }
+
+            AuditLogManager.ReportWebException(Server, AuditEventType.SystemErrorWeb);
+
+            Server.ClearError();
+            Response.RedirectToRoute(new { controller = "Home", action = "GeneralError" });
         }
     }
 }

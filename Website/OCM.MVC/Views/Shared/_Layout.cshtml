@@ -98,6 +98,15 @@
                                 </ul>
                             </li>
 
+                            @if (Session["IsAdministrator"]!=null && (bool)Session["IsAdministrator"]==true)
+                            {
+                            <li class="dropdown">
+                                <a href="@Url.Action("Index", "Admin")" class="dropdown-toggle" data-toggle="dropdown">admin <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("Index", "Admin")">about</a></li>
+                                </ul>
+                            </li>
+                            }
                         </ul>
                     </div>
                 </div>

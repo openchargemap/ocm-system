@@ -51,6 +51,13 @@
             @Html.EditorFor(model => model.Postcode)
             @Html.ValidationMessageFor(model => model.Postcode)
         </div>
+         <div class="editor-label">
+            @Html.LabelFor(model => model.Country)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.Country.ID, (SelectList)ViewBag.ReferenceData.CountryList)
+            @Html.ValidationMessageFor(model => model.Country)
+        </div>
         <div class="editor-label">
             @Html.LabelFor(model => model.ContactTelephone1)
         </div>
