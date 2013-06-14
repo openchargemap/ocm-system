@@ -379,7 +379,7 @@ namespace OCM.API.Common
         /// <summary>
         /// Populate AddressInfo data from settings in a simple AddressInfo object
         /// </summary>
-        public Core.Data.AddressInfo PopulateAddressInfo_SimpleToData(Model.AddressInfo simpleAddressInfo, Core.Data.AddressInfo dataAddressInfo)
+        public Core.Data.AddressInfo PopulateAddressInfo_SimpleToData(Model.AddressInfo simpleAddressInfo, Core.Data.AddressInfo dataAddressInfo, OCMEntities dataModel)
         {
             if (simpleAddressInfo != null && dataAddressInfo == null) dataAddressInfo = new Core.Data.AddressInfo();
 
@@ -391,7 +391,11 @@ namespace OCM.API.Common
                 dataAddressInfo.Town = simpleAddressInfo.Town;
                 dataAddressInfo.StateOrProvince = simpleAddressInfo.StateOrProvince;
                 dataAddressInfo.Postcode = simpleAddressInfo.Postcode;
-                if (simpleAddressInfo.Country != null) dataAddressInfo.CountryID = simpleAddressInfo.Country.ID;
+                if (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0)
+                {
+                    dataAddressInfo.Country = dataModel.Countries.FirstOrDefault(c => c.ID == simpleAddressInfo.Country.ID);
+                    dataAddressInfo.CountryID = dataAddressInfo.Country.ID;
+                }
                 dataAddressInfo.Latitude = simpleAddressInfo.Latitude;
                 dataAddressInfo.Longitude = simpleAddressInfo.Longitude;
                 dataAddressInfo.ContactTelephone1 = simpleAddressInfo.ContactTelephone1;
@@ -429,7 +433,7 @@ namespace OCM.API.Common
 
             if (simpleChargePoint.UsageType != null && simpleChargePoint.UsageType.ID >= 0) dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
 
-            dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo);
+            dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo, dataModel);
 
             dataChargePoint.NumberOfPoints = simpleChargePoint.NumberOfPoints;
             dataChargePoint.GeneralComments = simpleChargePoint.GeneralComments;

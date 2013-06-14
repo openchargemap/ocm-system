@@ -83,7 +83,7 @@ namespace OCM.API.Common.DataSummary
 
             var summary = new POIRecentActivity();
             summary.RecentComments = new List<UserComment>();
-            foreach (var c in recentComments.Take(10).OrderByDescending(c => c.DateCreated))
+            foreach (var c in recentComments.OrderByDescending(c => c.DateCreated).Take(10))
             {
                 summary.RecentComments.Add(Model.Extensions.UserComment.FromDataModel(c));
             }
@@ -92,10 +92,10 @@ namespace OCM.API.Common.DataSummary
             var poiManager = new POIManager();
 
             var allRecentPOIChanges = poiManager.GetChargePoints(filterSettings);
-            summary.POIRecentlyAdded = allRecentPOIChanges.Where(p => p.DateCreated >= dateFrom).Take(10).ToList();
-            summary.POIRecentlyUpdated = allRecentPOIChanges.Where(p => p.DateLastStatusUpdate >= dateFrom && p.DateCreated < dateFrom).Take(10).ToList();
+            summary.POIRecentlyAdded = allRecentPOIChanges.Where(p => p.DateCreated >= dateFrom).OrderByDescending(p=>p.DateCreated).Take(10).ToList();
+            summary.POIRecentlyUpdated = allRecentPOIChanges.Where(p => p.DateLastStatusUpdate >= dateFrom && p.DateCreated!=p.DateLastStatusUpdate).OrderByDescending(p=>p.DateLastStatusUpdate).Take(10).ToList();
 
-            var recentMedia = dataModel.MediaItems.Where(m => m.DateCreated > dateFrom).Take(10).ToList();
+            var recentMedia = dataModel.MediaItems.Where(m => m.DateCreated > dateFrom && m.IsEnabled==true).OrderByDescending(m=>m.DateCreated).Take(10).ToList();
             summary.RecentMedia = new List<MediaItem>();
             foreach (var mediaItem in recentMedia.OrderByDescending(m => m.DateCreated))
             {
