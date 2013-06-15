@@ -13,10 +13,8 @@
         <div class="result">
             <h3>@Html.DisplayFor(m => item.AddressInfo.Title)</h3>
             <div class="col-left">
-                @Html.DisplayFor(m => item.AddressInfo.AddressLine1)
-                @Html.DisplayFor(m => item.AddressInfo.AddressLine2)
-                @Html.DisplayFor(m => item.AddressInfo.Country.Title)
-                <br />
+                @Html.DisplayFor(m => item.AddressInfo)
+                
                 @Html.ActionLink("View", "Details", new { id = item.ID })
             </div>
             <div class="col-right">

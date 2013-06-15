@@ -100,6 +100,8 @@ namespace OCM.API.Common
 
                 dataModel.AuditLogs.Add(auditEntry);
                 dataModel.SaveChanges();
+
+                System.Diagnostics.Debug.WriteLine("Log:"+auditEntry.EventDescription);
             }
             catch (Exception)
             {

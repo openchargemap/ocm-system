@@ -7,6 +7,8 @@ using OCM.Core.Data;
 using OCM.API.Common.Model;
 using KellermanSoftware.CompareNetObjects;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Objects;
+using System.Diagnostics;
 
 namespace OCM.API.Common
 {
@@ -47,6 +49,9 @@ namespace OCM.API.Common
         /// <returns></returns>
         public List<Model.ChargePoint> GetChargePoints(SearchFilterSettings settings)
         {
+            
+            System.Diagnostics.Debug.WriteLine(DateTime.Now);
+
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
 
@@ -154,6 +159,14 @@ namespace OCM.API.Common
                     filteredList = filteredList.OrderByDescending(p => p.c.DateCreated);
                 }
 
+
+                //query is of type IQueryable
+                string sql = filteredList.ToString();
+
+                //writes to output window
+                System.Diagnostics.Debug.WriteLine(sql);
+
+
                 foreach (var item in filteredList.Take(maxResults))
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
@@ -207,6 +220,8 @@ namespace OCM.API.Common
             {
                 dataList = (List<Model.ChargePoint>)HttpContext.Current.Cache[cacheKey];
             }
+
+            System.Diagnostics.Debug.WriteLine(DateTime.Now);
 
             return dataList.Take(settings.MaxResults).ToList();
         }

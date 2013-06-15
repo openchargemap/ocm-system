@@ -1,0 +1,20 @@
+﻿@model OCM.API.Common.Model.User
+
+@{
+    ViewBag.Title = "User";
+}
+
+<h2>Edit User Details</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Edit User</legend>
+        @Html.EditorForModel()
+   
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}

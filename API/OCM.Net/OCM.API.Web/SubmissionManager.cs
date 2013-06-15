@@ -24,17 +24,22 @@ namespace OCM.API.Common
         }
 
         //convert a simple POI to data and back again to fully populate all related properties, as submission may only have simple IDs for ref data etc
-        private Model.ChargePoint PopulateFullPOI(OCMEntities dataModel, Model.ChargePoint poi)
+        private Model.ChargePoint PopulateFullPOI(Model.ChargePoint poi)
         {
-            //
+            OCMEntities tempDataModel = new OCMEntities();
             var poiData = new Core.Data.ChargePoint();
-            if (poi.ID > 0) poiData = dataModel.ChargePoints.First(c => c.ID == poi.ID);
+            if (poi.ID > 0) poiData = tempDataModel.ChargePoints.First(c => c.ID == poi.ID);
 
             //convert simple poi to fully poulated db version
-            new POIManager().PopulateChargePoint_SimpleToData(poi, poiData, dataModel);
+            new POIManager().PopulateChargePoint_SimpleToData(poi, poiData, tempDataModel);
 
             //convert back to simple POI
-            return Model.Extensions.ChargePoint.FromDataModel(poiData);
+            var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData);
+            
+            //clear temp changes from the poi
+            //dataModel.Entry(poiData).Reload();
+            tempDataModel.Dispose();
+            return modelPOI;
         }
 
         /// <summary>
@@ -51,37 +56,22 @@ namespace OCM.API.Common
                 bool addToQueueAndDB = true; //if true item is entered in edit queue and to the ChargePoint list in db
                 bool isUpdate = false;
                 bool userCanEdit = false;
-                bool userCanApprove = false;
 
                 //if user signed in, check if they have required permission to perform an edit/approve (if required)
                 if (user != null)
                 {
                     int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
 
-                    if (UserManager.IsUserAdministrator(user)
-                        || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All")
-                        || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString()))
-                        )
+                    if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All") || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString())))
                     {
                         userCanEdit = true;
-                        userCanApprove = true;
-                    }
-                    else
-                    {
-
-                        if (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Approver, countryId.ToString()))
-                        {
-                            userCanApprove = true;
-                        }
                     }
 
                     //if user is system user, edits/updates are not recorded in edit queue
-
                     if (user.ID == (int)StandardUsers.System)
                     {
                         enableEditQueue = false;
                     }
-
                 }
 
                 var dataModel = new Core.Data.OCMEntities();
@@ -107,7 +97,7 @@ namespace OCM.API.Common
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
-                poi = PopulateFullPOI(dataModel, poi);
+                poi = PopulateFullPOI(poi);
 
                 //if user cannot edit, add to edit queue for approval
                 var editQueueItem = new Core.Data.EditQueueItem { DateSubmitted = DateTime.UtcNow };
@@ -122,7 +112,6 @@ namespace OCM.API.Common
 
                     //null extra data we don't want to serialize/compare
                     poi.UserComments = null;
-                    poi.MetadataTags = null;
                     poi.MediaItems = null;
 
                     string editData = jsonOutput.PerformSerialisationToString(poi, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -150,6 +139,24 @@ namespace OCM.API.Common
                     editQueueItem = dataModel.EditQueueItems.Add(editQueueItem);
                     //TODO: send notification of new item for approval
 
+                    dataModel.SaveChanges();
+
+                    //if previous edit queue item exists by same user for same POI, mark as processed
+                    var previousEdits = dataModel.EditQueueItems.Where(e => e.UserID == editQueueItem.UserID && e.EntityID == editQueueItem.EntityID && e.EntityTypeID == editQueueItem.EntityTypeID && e.ID != editQueueItem.ID && e.IsProcessed != true);
+                    foreach (var previousEdit in previousEdits)
+                    {
+                        previousEdit.IsProcessed = true;
+                        if (editQueueItem.User != null)
+                        {
+                            previousEdit.ProcessedByUser = editQueueItem.User;
+                        }
+                        else
+                        {
+                            editQueueItem.ProcessedByUser = dataModel.Users.FirstOrDefault(u => u.ID == (int)StandardUsers.System);
+                        }
+                        previousEdit.DateProcessed = DateTime.UtcNow;
+
+                    }
                     dataModel.SaveChanges();
                 }
 
@@ -203,18 +210,11 @@ namespace OCM.API.Common
                     //set/update cp properties
                     cpManager.PopulateChargePoint_SimpleToData(poi, cpData, dataModel);
 
-                    //if item has no submission status and user permitted to approve or edit, set to published
-                    if (userCanApprove || userCanEdit)
+                    //if item has no submission status and user permitted to edit, set to published
+                    if (userCanEdit && cpData.SubmissionStatusTypeID == null)
                     {
-                        if (cpData.SubmissionStatusTypeID == null)
-                        {
-                            cpData.SubmissionStatusType =
-                                dataModel.SubmissionStatusTypes.First(
-                                    s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
-                        }
+                        cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
                     }
-
-                    //TODO: prevent update if no changes have been made to target item (other than date modified etc)
 
                     if (!isUpdate)
                     {
@@ -228,9 +228,9 @@ namespace OCM.API.Common
                         cpData.DateLastStatusUpdate = DateTime.UtcNow;
                     }
 
-
                     //save poi
                     dataModel.SaveChanges();
+
                     newID = cpData.ID;
 
                     //is an authorised update, reflect change in edit queue item
@@ -241,7 +241,8 @@ namespace OCM.API.Common
 
                         if (newID > 0) editQueueItem.EntityID = newID;
 
-                        if (userCanApprove || userCanEdit)
+                        //if user is authorised to edit, process item automatically without review
+                        if (userCanEdit)
                         {
                             editQueueItem.ProcessedByUser = editUser;
                             editQueueItem.DateProcessed = DateTime.UtcNow;
@@ -252,7 +253,6 @@ namespace OCM.API.Common
                     }
                     else
                     {
-
                         //anonymous submission, update edit queue item
                         if (enableEditQueue && user == null)
                         {
@@ -265,12 +265,12 @@ namespace OCM.API.Common
 
                     if (user != null)
                     {
-                        AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem,
-                                            "Modified OCM-" + cpData.ID, null);
+                        AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem, "Modified OCM-" + cpData.ID, null);
                         //add reputation points
                         new UserManager().AddReputationPoints(user, 1);
                     }
 
+                    //if new item added, send notification
                     if (!isUpdate)
                     {
                         try
@@ -302,7 +302,6 @@ namespace OCM.API.Common
 
                 }
 
-
                 return true;
             }
             catch (Exception exp)
@@ -313,9 +312,7 @@ namespace OCM.API.Common
                 //error performing submission
                 return false;
             }
-
         }
-
 
         /// <summary>
         /// Submit a new comment against a given charge equipment id
