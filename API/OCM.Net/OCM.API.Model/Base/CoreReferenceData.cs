@@ -28,7 +28,11 @@ namespace OCM.API.Common.Model
         Imported_UnderReview = 50,
         Imported_Published = 100,
         Submitted_Published = 200,
-        Delisted = 1000
+        Submission_Rejected_Incomplete = 250,
+        Delisted = 1000,
+        Delisted_Duplicate = 1001,
+        Delisted_NoLongerActive = 1002,
+        Delisted_NotPublicInformation = 1010
     }
 
     public enum StandardCommentTypes
