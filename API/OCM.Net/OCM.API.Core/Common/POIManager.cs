@@ -49,7 +49,7 @@ namespace OCM.API.Common
         /// <returns></returns>
         public List<Model.ChargePoint> GetChargePoints(SearchFilterSettings settings)
         {
-            
+
             System.Diagnostics.Debug.WriteLine(DateTime.Now);
 
             string cacheKey = settings.HashKey;
@@ -110,21 +110,21 @@ namespace OCM.API.Common
                                       where
                                           c.ParentChargePointID == null //exclude under review and delisted charge points
                                           && (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null)
-                                          && ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == 100 || c.SubmissionStatusTypeID == 200))
+                                          && ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
                                                 || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
                                                 || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
                                                 ) //by default return live cps only, otherwise use specific submission statusid
+                                          && (c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
                                           && (settings.ChargePointID == null || c.ID == settings.ChargePointID)
                                           && (settings.CountryCode == null || c.AddressInfo.Country.ISOCode == settings.CountryCode)
                                           && (settings.OperatorName == null || c.Operator.Title == settings.OperatorName)
                                           && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
                                           && (settings.LocationTitle == null || c.AddressInfo.Title.Contains(settings.LocationTitle))
-                                          && (settings.ConnectionType == null || c.Connections.Count(conn => conn.ConnectionType.Title == settings.ConnectionType) > 0)
-                                          //&& (settings.FastChargeOnly == false || c.ChargerTypes.Count(chgt => chgt.IsFastChargeCapable == true) > 0)
-                                          && (settings.MinPowerKW == null || c.Connections.Count(conn => conn.PowerKW >= settings.MinPowerKW) > 0)
+                                          && (settings.ConnectionType == null || c.Connections.Any(conn => conn.ConnectionType.Title == settings.ConnectionType))
+                                          && (settings.MinPowerKW == null || c.Connections.Any(conn => conn.PowerKW >= settings.MinPowerKW))
                                           && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
-                                          && (filterByConnectionTypes == false || (filterByConnectionTypes == true && c.Connections.Count(conn => settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)) > 0))
-                                          && (filterByLevels == false || (filterByLevels == true && c.Connections.Count(chg => settings.LevelIDs.Contains((int)chg.ChargerType.ID)) > 0))
+                                          && (filterByConnectionTypes == false || (filterByConnectionTypes == true && c.Connections.Any(conn => settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID))))
+                                          && (filterByLevels == false || (filterByLevels == true && c.Connections.Any(chg => settings.LevelIDs.Contains((int)chg.ChargerType.ID))))
                                           && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
                                           && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                           && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
