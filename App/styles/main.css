@@ -1,5 +1,29 @@
 /* palette: OCM green #8dd35f rgb (141,211,95)   */
 
+@font-face {
+    font-family: 'Oxygen';
+    src: url('../fonts/Oxygen/oxygen-light-webfont.eot');
+    src: url('../fonts/Oxygen/oxygen-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Oxygen/oxygen-light-webfont.woff') format('woff'),
+         url('../fonts/Oxygen/oxygen-light-webfont.ttf') format('truetype'),
+         url('../fonts/Oxygen/oxygen-light-webfont.svg#oxygenlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Oswald';
+    src: url('../fonts/Oswald/oswald-light-webfont.eot');
+    src: url('../fonts/Oswald/oswald-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Oswald/oswald-light-webfont.woff') format('woff'),
+         url('../fonts/Oswald/oswald-light-webfont.ttf') format('truetype'),
+         url('../fonts/Oswald/oswald-light-webfont.svg#oswaldlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 * {
     text-shadow: none;
     box-shadow: none;
@@ -50,7 +74,6 @@ body {
 }
 
 p {
-    font-family: Arial;
     padding: 6px;
 }
 

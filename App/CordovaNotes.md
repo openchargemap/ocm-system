@@ -14,8 +14,8 @@ Cordova Build Notes
         - Drag www folder to project root
         - Set ExternalHosts entry (expand then add) to * to allow all remote hosts
         - Disabled transitions (slide seems to show content, then slide)
-		- Replace icon with icon57x57, icon"2x with 114x114, icon 72 with 72x72
-        - If app sub,mission fails due to iPad 57x57 vs 72x72 icon, try building as iphone, then set back to universal and rebuild/
+		- Replace icon with icon57x57 named Default~iphone.png, icon"2x with 114x114 named Default@2x~iphone.png, icon 72 with 72x72
+        - If app submission fails due to iPad 57x57 vs 72x72 icon, try building as iphone, then set back to universal and rebuild/
 Android
 	- Copy AppIcon_72x72.png to res/drawable-hdpi/ic_launcher.png
 	- Copy AppIcon36x36 to res/drawable-ldpi/ic_launcher.png
