@@ -119,6 +119,9 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
-      
+        public ActionResult AppLogin()
+        {
+            return View();
+        }
     }
 }

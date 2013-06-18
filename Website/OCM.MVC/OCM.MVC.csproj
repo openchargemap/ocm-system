@@ -332,6 +332,7 @@
     <Content Include="Views\Shared\EditorTemplates\User.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\AddressInfo.cshtml" />
+    <Content Include="Views\LoginProvider\AppLogin.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
