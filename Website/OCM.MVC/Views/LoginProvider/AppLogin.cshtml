@@ -10,6 +10,22 @@
     <title>Complete App Login</title>
 
     <script>
+        function getCookie(c_name) {
+            //http://www.w3schools.com/js/js_cookies.asp
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    var val = unescape(y);
+                    if (val == "null") val = null;
+                    return val;
+                }
+            }
+            return null;
+        };
+
         function getSignInResult() {
             var userInfo = {
                 "Identifier": this.getCookie("Identifier"),
