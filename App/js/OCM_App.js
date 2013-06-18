@@ -23,12 +23,14 @@ function OCM_App() {
     this.isLocationEditMode = false;
 
     this.baseURL = "http://openchargemap.org/app/";
-    this.loginProviderRedirectURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=" + this.baseURL;
+    this.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+    this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     this.enableExperimental = false;
     this.searchInProgress = false;
     this.enableCommentSubmit = true;
     this.appInitialised = false;
     this.renderingMode = "jqm";
+    this.isRunningUnderCordova= false;
     this.ocm_app_context = this;
     //this.baseURL = "http://localhost:8090/App/";
     //this.loginProviderRedirectURL = "http://localhost:8089/LoginProvider/Default.aspx?_mode=silent&_forceLogin=true&_redirectURL=" + this.baseURL;
@@ -169,31 +171,31 @@ OCM_App.prototype.initApp = function () {
 
 };
 
-OCM_App.prototype.initDeferredUI = function () {
-    this.logEvent("Init of deferred UI..");
+OCM_App.prototype.postLoginInit = function () {
     var userInfo = this.getLoggedInUserInfo();
 
-    if (window.PhoneGap) {
-        //temp disable sign in on phonegap
-        $("#nav-items").navbar("create");
-        $('#search-page').trigger('create');
-    } else {
-
-        //if user logged in, enable features
-        if (!this.isUserSignedIn()) {
+    //if user logged in, enable features
+    if (!this.isUserSignedIn()) {
             //user is not signed in
             //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");		
-            $("#login-summary").append("<input type=\"button\" id=\"login-button\" data-inline=\"true\" data-mini=\"true\" data-icon=\"arrow-r\" value=\"Sign In\" onclick='ocm_app.beginLogin();'/>").trigger("create");;
+	            $("#login-summary").html("<input type=\"button\" id=\"login-button\" data-inline=\"true\" data-mini=\"true\" data-icon=\"arrow-r\" value=\"Sign In\" onclick='ocm_app.beginLogin();'/>").trigger("create");;
             $("#user-profile-info").html("You are not currently signed in.");
             $("#login-button ").show();
-        } else {
+    } else {
             //user is signed in
             $("#user-profile-info").html("You are signed in as: " + userInfo.Username + " <input type=\"button\" data-mini=\"true\" data-inline='true' value=\"Sign Out\" onclick='ocm_app.logout();' />").trigger("create");
             $("#login-button").hide();
             
-        }
     }
+    
+};
 
+OCM_App.prototype.initDeferredUI = function () {
+    this.logEvent("Init of deferred UI..");
+  
+    //check if user sign in
+    this.postLoginInit();
+    
     if ($("#option-enable-experiments").val() == "on") {
         this.enableExperimental = true;
         $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>").trigger("create");
@@ -233,18 +235,68 @@ OCM_App.prototype.isUserSignedIn = function () {
 
 OCM_App.prototype.beginLogin = function () {
     this.showProgressIndicator();
-    window.location = this.loginProviderRedirectURL;
+
+    if (this.isRunningUnderCordova)
+    {
+        //do phonegapped login using InAppBrowser
+        var ref = window.open(this.loginProviderRedirectBaseURL +'AppLogin', '_blank', 'location=yes');
+        var _app =this;
+        ref.addEventListener('loadstop', function (event) {
+        	_app.hideProgressIndicator();
+
+            _app.logEvent('fetching login result: ' + event.url);
+        
+            		ref.executeScript({
+                        code: "getSignInResult();"
+                    }, function(result) {
+                        if (result!=null) {
+                ref.close();
+                             var userInfo = result[0];
+                             
+                             _app.logEvent('got login: ' + userInfo.Username);
+                             
+                             _app.setLoggedInUserInfo(userInfo);
+                             _app.postLoginInit();
+            }
+                        else {
+                        	//no sign in result
+                        }
+                        
+                        //return to home
+                        $.mobile.changePage("#home-page");
+
+                    });
+            		    
+       
+        });
+        ref.addEventListener('loaderror', function (event) { 
+        	_app.logEvent('error: ' + event.message); }
+        );
+        ref.addEventListener('exit', function (event) { 
+        	_app.logEvent(event.type); 
+        });
+    }
+    else {
+    	//do normal web login 
+        window.location = this.loginProviderRedirectURL;
+    }
 };
 
 OCM_App.prototype.logout = function () {
     this.clearCookie("Identifier");
     this.clearCookie("Username");
     this.clearCookie("OCMSessionToken");
-    this.clearCookie("AccessToken", null);
+    this.clearCookie("AccessToken");
     this.clearCookie("AccessPermissions");
 
+    if (this.isRunningUnderCordova){
+    	$.mobile.changePage("#home-page");
+    }
+    else {
     var app = this.ocm_app_context;
     setTimeout(function () { window.location = app.baseURL; }, 100);
+    }
+   
 };
 
 OCM_App.prototype.getLoggedInUserInfo = function () {
@@ -258,6 +310,15 @@ OCM_App.prototype.getLoggedInUserInfo = function () {
     return userInfo;
 };
 
+OCM_App.prototype.setLoggedInUserInfo = function (userInfo) {
+ 
+    this.setCookie("Identifier", userInfo.Identifier);
+    this.setCookie("Username",userInfo.Username);
+    this.setCookie("OCMSessionToken", userInfo.OCMSessionToken);
+    this.setCookie("AccessToken", userInfo.AccessToken);
+    this.setCookie("AccessPermissions", userInfo.AccessPermissions);
+  
+};
 OCM_App.prototype.storeSettings = function () {
     //save option settings to cookies
     this.setCookie("optsearchdist", $('#search-distance').val());
@@ -784,18 +845,6 @@ OCM_App.prototype.hasUserPermissionForPOI = function (poi, permissionLevel) {
                 }
             }
         }
-
-        if (permissionLevel == "Approve") {
-            //check if user has country level or all countries approval permission
-            if (userInfo.Permissions.indexOf("[CountryLevel_Approver=All]") != -1) {
-                return true;
-            }
-            if (poi.AddressInfo.Country != null) {
-                if (userInfo.Permissions.indexOf("[CountryLevel_Approver=" + poi.AddressInfo.Country.ID + "]") != -1) {
-                    return true;
-                }
-            }
-        }
     }
     return false;
 };
@@ -841,6 +890,16 @@ function showSearchOptions() {
 }
 
 OCM_App.prototype.showMessage = function (msg) {
-    alert(msg);
+    if (this.isRunningUnderCordova)
+    {
+        navigator.notification.alert(
+           msg,  // message
+           function () { ;;},         // callback
+           'Open Charge Map',            // title
+           'OK'                  // buttonName
+       );
+    } else {
+        alert(msg);
+    }
 
 };

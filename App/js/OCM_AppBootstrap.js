@@ -19,7 +19,8 @@ function startApp() {
 }
 
 function onDeviceReady() {
-	'use strict';
+    'use strict';
+    ocm_app.isRunningUnderCordova = true;
 	ocm_app.logEvent("Cordova Loaded, onDeviceReady Fired.");
 	if (navigator.network.connection.type == Connection.NONE) {
 		$("#network-error").show();
@@ -36,7 +37,9 @@ function onDeviceReady() {
 }
 
 function bootStrap() {
-	if (window.PhoneGap) {
+    if (window.cordova) {
+        ocm_app.isRunningUnderCordova = true;
+        ocm_app.logEvent("Phonegap enabled. Operating as mobile app.");
 		document.addEventListener("deviceready", onDeviceReady, false);
 	} else {
 		ocm_app.logEvent("Phonegap not enabled. Operating as desktop browser.");

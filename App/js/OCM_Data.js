@@ -198,7 +198,15 @@ OCM_Data.prototype.isLocalStorageAvailable = function () {
 
 OCM_Data.prototype.setCachedDataObject = function (itemName, itemValue) {
 	if (this.isLocalStorageAvailable()) {
+		if (typeof itemValue === 'undefined') itemValue=null;
+		if (itemValue===null ){
+			localStorage.removeItem(itemName);
+		}
+		else
+			{
 		localStorage.setItem(itemName, JSON.stringify(itemValue));
+			}
+		
 	}
 };
 
