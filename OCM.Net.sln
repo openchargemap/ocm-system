@@ -29,26 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.0 to 1.1", "1.0 to 1.1", 
 		..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Schema Update 1.0 to 1.1.sql = ..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Schema Update 1.0 to 1.1.sql
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App", "App\", "{382E3719-469F-42B1-A915-077F1C824894}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/App"
-		Debug.AspNetCompiler.PhysicalPath = "App\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\App\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/App"
-		Release.AspNetCompiler.PhysicalPath = "App\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\App\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "55116"
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1 to 1.2", "1.1 to 1.2", "{ABEA90AD-3975-46BC-86AE-AB7974D83E1A}"
 	ProjectSection(SolutionItems) = preProject
 		..\Database\Schema\SQLServer\UpgradeScripts\1.1 to 1.2\UpdateSchema1.2.sql = ..\Database\Schema\SQLServer\UpgradeScripts\1.1 to 1.2\UpdateSchema1.2.sql
@@ -80,6 +60,27 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCM.MVC", "Website\OCM.MVC\OCM.MVC.csproj", "{10B51133-EEA6-41E4-8F90-62597E400C2F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BAEE068-B233-4645-8015-088CC85FF5C9}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App", "http://localhost:55116", "{382E3719-469F-42B1-A915-077F1C824894}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/App"
+		Debug.AspNetCompiler.PhysicalPath = "App\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\App\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/App"
+		Release.AspNetCompiler.PhysicalPath = "App\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\App\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "App\"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,25 +158,6 @@ Global
 		{D59550EF-227C-48CB-B97A-200BB2AEE27C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D59550EF-227C-48CB-B97A-200BB2AEE27C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D59550EF-227C-48CB-B97A-200BB2AEE27C}.Release|x86.ActiveCfg = Release|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Local|Any CPU.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Local|Any CPU.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Local|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Local|Mixed Platforms.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Local|x86.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Any CPU.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Any CPU.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|x86.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
-		{382E3719-469F-42B1-A915-077F1C824894}.Release|x86.ActiveCfg = Debug|Any CPU
 		{FB8CC59F-B6E7-49DA-8D89-F6BB1BD4254C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB8CC59F-B6E7-49DA-8D89-F6BB1BD4254C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB8CC59F-B6E7-49DA-8D89-F6BB1BD4254C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -276,6 +258,26 @@ Global
 		{10B51133-EEA6-41E4-8F90-62597E400C2F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{10B51133-EEA6-41E4-8F90-62597E400C2F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{10B51133-EEA6-41E4-8F90-62597E400C2F}.Release|x86.ActiveCfg = Release|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Local|Any CPU.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Local|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Local|Mixed Platforms.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Local|x86.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Any CPU.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Any CPU.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|Mixed Platforms.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.ProductionWithSecrets|x86.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
+		{382E3719-469F-42B1-A915-077F1C824894}.Release|x86.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

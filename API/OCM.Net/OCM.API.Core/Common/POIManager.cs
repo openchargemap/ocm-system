@@ -83,6 +83,7 @@ namespace OCM.API.Common
                 bool filterByUsage = false;
                 bool filterByStatus = false;
                 bool filterByDataProvider = false;
+                int? countryCodeFilterID = null;
 
                 if (settings.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
                 else { settings.ConnectionTypeIDs = new int[] { -1 }; }
@@ -93,8 +94,26 @@ namespace OCM.API.Common
                 if (settings.OperatorIDs != null) { filterByOperators = true; }
                 else { settings.OperatorIDs = new int[] { -1 }; }
 
-                if (settings.CountryIDs != null) { filterByCountries = true; }
-                else { settings.CountryIDs = new int[] { -1 }; }
+                //either filter by named country code or by country id list
+                if (settings.CountryCode != null)
+                {
+                    var filterCountry = dataModel.Countries.FirstOrDefault(c => c.ISOCode == settings.CountryCode);
+                    if (filterCountry != null)
+                    {
+                        filterByCountries = true;
+                        settings.CountryIDs = new int[] { filterCountry.ID };
+                    }
+                    else
+                    {
+                        filterByCountries = false;
+                        settings.CountryIDs = new int[] { -1 };
+                    }
+                }
+                else
+                {
+                    if (settings.CountryIDs != null) { filterByCountries = true; }
+                    else { settings.CountryIDs = new int[] { -1 }; }
+                }
 
                 if (settings.UsageTypeIDs != null) { filterByUsage = true; }
                 else { settings.UsageTypeIDs = new int[] { -1 }; }
@@ -116,7 +135,6 @@ namespace OCM.API.Common
                                                 ) //by default return live cps only, otherwise use specific submission statusid
                                           && (c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
                                           && (settings.ChargePointID == null || c.ID == settings.ChargePointID)
-                                          && (settings.CountryCode == null || c.AddressInfo.Country.ISOCode == settings.CountryCode)
                                           && (settings.OperatorName == null || c.Operator.Title == settings.OperatorName)
                                           && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
                                           && (settings.LocationTitle == null || c.AddressInfo.Title.Contains(settings.LocationTitle))
