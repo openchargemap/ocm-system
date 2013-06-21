@@ -110,6 +110,7 @@ legend,
 .nav a:visited,
 .nav a:link {
   font-family: 'Oswald', Arial, sans-serif;
+  font-weight: 300;
 }
 .nav a,
 .nav a:visited,
@@ -127,7 +128,6 @@ h2 {
   padding: 0.3em 0 0.2em 0;
   border-bottom: 0.1em solid #c6e29e;
   color: #2c3e50;
-  font-weight: 300;
 }
 h1 {
   font-size: 2.2em;
@@ -138,11 +138,9 @@ h2 {
   font-size: 1.8em;
 }
 h3 {
-  font-weight: normal;
   font-size: 1.4em;
 }
 h4 {
-  font-weight: normal;
   font-size: 1.2em;
 }
 .results-list {
