@@ -19,6 +19,7 @@ function OCM_LocationSearchParams() {
 	this.additionalParams = null;
 	this.includeComments = false;
 	this.enableCaching = true;
+	this.clientName="ocm.webapp";
 }
 
 function OCM_Data() {
@@ -35,7 +36,7 @@ OCM_Data.prototype.fetchLocationDataList = function (countrycode, lat, lon, dist
 
 	$.ajax({
 		type: "GET",
-		url: this.serviceBaseURL + "/poi/?verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams + "&callback=" + callbackname,
+		url: this.serviceBaseURL + "/poi/?client="+this.clientName+"&verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams + "&callback=" + callbackname,
 		jsonp: false,
 		contentType: "application/json;",
 		dataType: "jsonp",
@@ -46,7 +47,7 @@ OCM_Data.prototype.fetchLocationDataList = function (countrycode, lat, lon, dist
 
 OCM_Data.prototype.fetchLocationDataListByParam = function (params, callbackname, errorcallback) {
 
-	var serviceURL = this.serviceBaseURL + "/poi/?verbose=false&output=json";
+	var serviceURL = this.serviceBaseURL + "/poi/?client="+this.clientName+"&verbose=false&output=json";
 	var serviceParams = "";
 	if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
 	if (params.latitude != null) serviceParams += "&latitude=" + params.latitude;
@@ -80,7 +81,7 @@ OCM_Data.prototype.fetchLocationDataListByParam = function (params, callbackname
 };
 
 OCM_Data.prototype.fetchLocationById = function (id, callbackname, errorcallback) {
-    var serviceURL = this.serviceBaseURL + "/poi/?output=json&includecomments=true&chargepointid=" + id;
+    var serviceURL = this.serviceBaseURL + "/poi/?client="+this.clientName+"&output=json&includecomments=true&chargepointid=" + id;
     if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
     $.ajax({
@@ -107,7 +108,7 @@ OCM_Data.prototype.fetchCoreReferenceData = function (callbackname) {
 
 	$.ajax({
 		type: "GET",
-		url: this.serviceBaseURL + "/referencedata/?output=json&callback=" + callbackname,
+		url: this.serviceBaseURL + "/referencedata/?client="+this.clientName+"&output=json&callback=" + callbackname,
 		jsonp: false,
 		contentType: "application/json;",
 		dataType: "jsonp",
@@ -136,7 +137,7 @@ OCM_Data.prototype.submitLocation = function (data, authSessionInfo, completedCa
 
 	$.ajax({
 		type: "POST",
-		url: this.serviceBaseURL + "/?action=cp_submission&format=json" + authInfoParams,
+		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=cp_submission&format=json" + authInfoParams,
 		data: jsonString,
 		complete: function (jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
 		error: this.handleGeneralAjaxError
@@ -149,7 +150,7 @@ OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, complete
 
 	$.ajax({
 		type: "POST",
-		url: this.serviceBaseURL + "/?action=comment_submission&format=json",
+		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=comment_submission&format=json",
 		data: jsonString,
 		success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
 		error: this.handleGeneralAjaxError

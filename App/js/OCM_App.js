@@ -32,6 +32,7 @@ function OCM_App() {
     this.renderingMode = "jqm";
     this.isRunningUnderCordova= false;
     this.ocm_app_context = this;
+    //this.ocm_data.clientName="ocm.app.android";
     //this.baseURL = "http://localhost:8090/App/";
     //this.loginProviderRedirectURL = "http://localhost:8089/LoginProvider/Default.aspx?_mode=silent&_forceLogin=true&_redirectURL=" + this.baseURL;
     //this.ocm_data.serviceBaseURL = "http://localhost:55883/";
@@ -195,6 +196,11 @@ OCM_App.prototype.initDeferredUI = function () {
   
     //check if user sign in
     this.postLoginInit();
+    
+    if (this.isRunningUnderCordova)
+    {
+    	navigator.splashscreen.hide();
+    }
     
     if ($("#option-enable-experiments").val() == "on") {
         this.enableExperimental = true;

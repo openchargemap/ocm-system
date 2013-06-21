@@ -74,7 +74,7 @@ body {
 }
 
 p {
-    padding: 6px;
+    padding: 1em;
 }
 
 #locationdetails-view {
@@ -396,33 +396,12 @@ p {
             color: white;
             font-size: 1em;
             margin-bottom: 1em;
-            -webkit-animation-name: menu-anim;
-            -webkit-animation-duration: 0.3s;
-            -webkit-animation-timing-function: ease-in;
-            -webkit-animation-delay: 0s;
-            -webkit-animation-iteration-count: 1;
-            -webkit-animation-direction: alternate;
-            -webkit-animation-play-state: running;
             text-shadow: 1px 1px 8px rgba(32,32,32, 0.7);
         }
-
-@-webkit-keyframes menu-anim /* Safari and Chrome */
-{
-    0% {
-        opacity: 0;
-        color: greenyellow;
-    }
-
-    100% {
-        opacity: 1;
-        color: white;
-    }
-}
 
 #home-page * .ui-grid-b * a:hover {
     text-decoration: none;
     color: greenyellow;
-    -webkit-filter: blur(1px);
 }
 
 .accent {
