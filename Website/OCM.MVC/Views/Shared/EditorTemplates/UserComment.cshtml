@@ -1,28 +1,25 @@
 ﻿@model OCM.API.Common.Model.UserComment
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm("Comment","POI")) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>UserComment</legend>
-
         @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.ChargePointID)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ChargePointID)
+         <div class="editor-label">
+            @Html.LabelFor(model => model.CommentType)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.ChargePointID)
-            @Html.ValidationMessageFor(model => model.ChargePointID)
+            @Html.DropDownListFor(model => model.CommentType.ID, (SelectList)ViewBag.ReferenceData.UserCommentTypeList)
+            @Html.ValidationMessageFor(model => model.CommentType)
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UserName)
+         <div class="editor-label">
+            @Html.LabelFor(model => model.CheckinStatusType)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.UserName)
-            @Html.ValidationMessageFor(model => model.UserName)
+            @Html.DropDownListFor(model => model.CheckinStatusType.ID, (SelectList)ViewBag.ReferenceData.CheckinStatusTypeList)
+            @Html.ValidationMessageFor(model => model.CheckinStatusType)
         </div>
 
         <div class="editor-label">
@@ -37,7 +34,7 @@
             @Html.LabelFor(model => model.Rating)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Rating)
+             @Html.DropDownListFor(model => model.Rating, (SelectList)ViewBag.ReferenceData.RatingTypeList)
             @Html.ValidationMessageFor(model => model.Rating)
         </div>
 
@@ -49,20 +46,7 @@
             @Html.ValidationMessageFor(model => model.RelatedURL)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateCreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateCreated)
-            @Html.ValidationMessageFor(model => model.DateCreated)
-        </div>
-
         <p>
-            <input type="submit" value="Save" />
+            <input type="submit" class="btn btn-primary" value="Submit Comment" />
         </p>
-    </fieldset>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

@@ -168,6 +168,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\POIBrowseModel.cs" />
+    <Compile Include="Models\POIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -323,7 +324,6 @@
     <Content Include="Views\Shared\EditorTemplates\UserComment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MetadataGroup.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressInfo.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\MetadataValue.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\UserComment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ConnectionInfo.cshtml" />
     <Content Include="Views\Home\GeneralError.cshtml" />

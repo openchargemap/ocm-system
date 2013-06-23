@@ -93,6 +93,37 @@ namespace OCM.MVC.Models
             }
         }
 
+        public SelectList UserCommentTypeList
+        {
+            get
+            {
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData.UserCommentTypes), null, false);
+            }
+        }
+
+        public SelectList CheckinStatusTypeList
+        {
+            get
+            {
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData.CheckinStatusTypes), null, false);
+            }
+        }
+
+        public SelectList RatingTypeList
+        {
+            get
+            {
+                var ratingtypes = new List<SimpleReferenceDataType>();
+                ratingtypes.Add(new SimpleReferenceDataType { ID = 5, Title = "5 - Excellent" });
+                ratingtypes.Add(new SimpleReferenceDataType { ID = 4, Title = "4 - Good" });
+                ratingtypes.Add(new SimpleReferenceDataType { ID = 3, Title = "3 - Average" });
+                ratingtypes.Add(new SimpleReferenceDataType { ID = 2, Title = "2 - Not Good" });
+                ratingtypes.Add(new SimpleReferenceDataType { ID = 1, Title = "1 - Bad" });
+
+                return SimpleSelectList(ratingtypes, null, true);
+            }
+        }
+
         private List<SimpleReferenceDataType> ToListOfSimpleData(IEnumerable list)
         {
             List<SimpleReferenceDataType> simpleList = new List<SimpleReferenceDataType>();

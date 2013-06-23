@@ -135,13 +135,19 @@ namespace OCM.MVC.Controllers
                 ViewBag.ImageList = imageList.ToList();
             }
 
+            POIViewModel viewModel = new POIViewModel();
+            viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID=0} };
+            viewModel.POI = poi;
+
+            ViewBag.ReferenceData = new POIBrowseModel();
+
             if (layout == "simple")
             {
-                return View("Details", "_SimpleLayout", poi);
+                return View("Details", "_SimpleLayout", viewModel);
             }
             else
             {
-                return View(poi);
+                return View(viewModel);
             }
 
         }
@@ -249,6 +255,35 @@ namespace OCM.MVC.Controllers
             return View(poi);
         }
 
+        [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
+        public ActionResult Comment(POIViewModel model)
+        {
+            var comment = model.NewComment;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = new UserManager().GetUser((int)Session["UserID"]);
+                    if (new SubmissionManager().PerformSubmission(comment, user) > 0)
+                    {
+                        if (comment.ChargePointID > 0)
+                        {
+                            return RedirectToAction("Details", "POI", new { id = comment.ChargePointID });
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index");
+                        }
+                    }
+
+                }
+                catch
+                {
+                    //return View(poi);
+                }
+            }
+            return RedirectToAction("Index");
+        }
 
         public ActionResult Activity()
         {

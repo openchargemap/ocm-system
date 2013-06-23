@@ -93,7 +93,19 @@
             @Html.ValidationMessageFor(model => model.Quantity)
         </div>
     </div>
+    
     <div class="span4">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Level)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.Level.ID, (SelectList)ViewBag.ReferenceData.LevelList)
+            @Html.ValidationMessageFor(model => model.Level)
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+   <div class="span4">
         <div class="editor-label">
             @Html.LabelFor(model => model.Comments)
         </div>
@@ -101,5 +113,6 @@
             @Html.TextAreaFor(model => model.Comments)
             @Html.ValidationMessageFor(model => model.Comments)
         </div>
+        
     </div>
 </div>
