@@ -11,19 +11,19 @@ namespace OCM.API.Common.Model
         public int ID { get; set; }
         public int ChargePointID { get; set; }
 
-        [DisplayName("Comment/Checkin Type")]
+        [DisplayName("Comment Type")]
         public UserCommentType CommentType { get; set; }
 
         [DisplayName("Name"),StringLength(100)]
         public string UserName { get; set; }
 
-        [DisplayName("Comment"), StringLength(100)]
+        [DisplayName("Comment"), StringLength(2000), DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
         public string Comment { get; set; }
 
-        [DisplayName("Rating"), Range(0,5)]
+        [DisplayName("Rating")]
         public byte? Rating { get; set; }
 
-        [DisplayName("Related Website"), StringLength(500), DataType(System.ComponentModel.DataAnnotations.DataType.Url)]
+        [DisplayName("Web link"), StringLength(500), DataType(System.ComponentModel.DataAnnotations.DataType.Url)]
         public string RelatedURL { get; set; }
 
         [DisplayName("Date Created")]
