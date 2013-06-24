@@ -146,11 +146,13 @@ OCM_Data.prototype.submitLocation = function (data, authSessionInfo, completedCa
 
 OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, completedCallback, failureCallback) {
 
+	var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
+
 	var jsonString = JSON.stringify(data);
 
 	$.ajax({
 		type: "POST",
-		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=comment_submission&format=json",
+		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=comment_submission&format=json" + authInfoParams,
 		data: jsonString,
 		success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
 		error: this.handleGeneralAjaxError

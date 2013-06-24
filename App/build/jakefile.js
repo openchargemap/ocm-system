@@ -11,7 +11,7 @@ var moment = require("moment");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "3.1.0_"+ moment().format('YYYYMMDD');
+var releaseVersion = "3.1.1_"+ moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/webapp";
@@ -171,7 +171,9 @@ task("copy-index", ["use-min-js", "remove-debug"], function () {
           //update version info
           finalIndexFile = finalIndexFile.replace(/(APPVERSION)/gmi, releaseVersion);
 
-          //copt index.html to target
+          finalIndexFile = finalIndexFile.replace(/(TARGETNAME)/gmi, trg.replace("mobile/",""));
+
+          //copy index.html to target
           console.log("Copying to Target: " + trg);
 
           fs.writeFileSync(buildDir + "/" + trg + "/" + indexFileName, finalIndexFile);

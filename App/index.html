@@ -32,9 +32,7 @@
     <link rel="stylesheet" href="styles/reset.css" />
 
     <!--JS:Cordova:Begin-->
-    <script src="phonegap.js"></script>
     <script src="cordova.js"></script>
-    <script src="GAPlugin.js"></script>
     <!--JS:Cordova:End-->
 
     <!-- jQuery Mobile -->
@@ -543,7 +541,7 @@
                             <option value="5">5 - Excellent</option>
                             <option value="4">4 - Good</option>
                             <option value="3">3 - Average</option>
-                            <option value="2">2 - Not Great</option>
+                            <option value="2">2 - Not Good</option>
                             <option value="1">1 - Bad</option>
                             <option value="" selected="selected">Not Rated</option>
                         </select>
@@ -784,5 +782,8 @@
     <script src="js/ThirdParty/analytics.js"></script>
     <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script src="js/ThirdParty/jquery.ui.map.full.min.js"></script>
+    <script>
+    	ocm_app.ocm_data.clientName="ocm.app.TARGETNAME";
+    </script>
 </body>
 </html>

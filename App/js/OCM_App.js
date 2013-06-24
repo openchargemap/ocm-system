@@ -30,9 +30,9 @@ function OCM_App() {
     this.enableCommentSubmit = true;
     this.appInitialised = false;
     this.renderingMode = "jqm";
-    this.isRunningUnderCordova= false;
+    this.isRunningUnderCordova = false;
     this.ocm_app_context = this;
-    //this.ocm_data.clientName="ocm.app.android";
+    this.ocm_data.clientName = "ocm.app.webapp";
     //this.baseURL = "http://localhost:8090/App/";
     //this.loginProviderRedirectURL = "http://localhost:8089/LoginProvider/Default.aspx?_mode=silent&_forceLogin=true&_redirectURL=" + this.baseURL;
     //this.ocm_data.serviceBaseURL = "http://localhost:55883/";
@@ -52,7 +52,7 @@ OCM_App.prototype.initApp = function () {
     this.appInitialised = true;
 
     //wire up button events
-    
+
     $(document).delegate("#search-nearby", "click",
 				function () {
 				    app.performSearch(true, false);
@@ -91,10 +91,10 @@ OCM_App.prototype.initApp = function () {
 		}
 	);
 
-    $(document).delegate("#option-favourite", "click", function() {
-         app.toggleFavouritePOI(app.selectedPOI, null);
+    $(document).delegate("#option-favourite", "click", function () {
+        app.toggleFavouritePOI(app.selectedPOI, null);
     });
-    
+
     $(document).delegate("#option-edit", "click", function () {
 
         if (app.isUserSignedIn()) {
@@ -106,9 +106,9 @@ OCM_App.prototype.initApp = function () {
         return false;
     });
 
-    $(document).delegate("#option-checkin", "click", function () { 
+    $(document).delegate("#option-checkin", "click", function () {
         //show checkin/comment page   
-        $.mobile.changePage( "#submitcomment-page");
+        $.mobile.changePage("#submitcomment-page");
         return false;
     });
 
@@ -177,31 +177,30 @@ OCM_App.prototype.postLoginInit = function () {
 
     //if user logged in, enable features
     if (!this.isUserSignedIn()) {
-            //user is not signed in
-            //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");		
-	            $("#login-summary").html("<input type=\"button\" id=\"login-button\" data-inline=\"true\" data-mini=\"true\" data-icon=\"arrow-r\" value=\"Sign In\" onclick='ocm_app.beginLogin();'/>").trigger("create");;
-            $("#user-profile-info").html("You are not currently signed in.");
-            $("#login-button ").show();
+        //user is not signed in
+        //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");		
+        $("#login-summary").html("<input type=\"button\" id=\"login-button\" data-inline=\"true\" data-mini=\"true\" data-icon=\"arrow-r\" value=\"Sign In\" onclick='ocm_app.beginLogin();'/>").trigger("create");;
+        $("#user-profile-info").html("You are not currently signed in.");
+        $("#login-button ").show();
     } else {
-            //user is signed in
-            $("#user-profile-info").html("You are signed in as: " + userInfo.Username + " <input type=\"button\" data-mini=\"true\" data-inline='true' value=\"Sign Out\" onclick='ocm_app.logout();' />").trigger("create");
-            $("#login-button").hide();
-            
+        //user is signed in
+        $("#user-profile-info").html("You are signed in as: " + userInfo.Username + " <input type=\"button\" data-mini=\"true\" data-inline='true' value=\"Sign Out\" onclick='ocm_app.logout();' />").trigger("create");
+        $("#login-button").hide();
+
     }
-    
+
 };
 
 OCM_App.prototype.initDeferredUI = function () {
     this.logEvent("Init of deferred UI..");
-  
+
     //check if user sign in
     this.postLoginInit();
-    
-    if (this.isRunningUnderCordova)
-    {
-    	navigator.splashscreen.hide();
+
+    if (this.isRunningUnderCordova) {
+        navigator.splashscreen.hide();
     }
-    
+
     if ($("#option-enable-experiments").val() == "on") {
         this.enableExperimental = true;
         $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>").trigger("create");
@@ -242,48 +241,48 @@ OCM_App.prototype.isUserSignedIn = function () {
 OCM_App.prototype.beginLogin = function () {
     this.showProgressIndicator();
 
-    if (this.isRunningUnderCordova)
-    {
+    if (this.isRunningUnderCordova) {
         //do phonegapped login using InAppBrowser
-        var ref = window.open(this.loginProviderRedirectBaseURL +'AppLogin', '_blank', 'location=yes');
-        var _app =this;
+        var ref = window.open(this.loginProviderRedirectBaseURL + 'AppLogin', '_blank', 'location=yes');
+        var _app = this;
         ref.addEventListener('loadstop', function (event) {
-        	_app.hideProgressIndicator();
+            _app.hideProgressIndicator();
 
             _app.logEvent('fetching login result: ' + event.url);
-        
-            		ref.executeScript({
-                        code: "getSignInResult();"
-                    }, function(result) {
-                        if (result!=null) {
-                ref.close();
-                             var userInfo = result[0];
-                             
-                             _app.logEvent('got login: ' + userInfo.Username);
-                             
-                             _app.setLoggedInUserInfo(userInfo);
-                             _app.postLoginInit();
-            }
-                        else {
-                        	//no sign in result
-                        }
-                        
-                        //return to home
-                        $.mobile.changePage("#home-page");
 
-                    });
-            		    
-       
+            ref.executeScript({
+                code: "getSignInResult();"
+            }, function (result) {
+                if (result != null) {
+                    ref.close();
+                    var userInfo = result[0];
+
+                    _app.logEvent('got login: ' + userInfo.Username);
+
+                    _app.setLoggedInUserInfo(userInfo);
+                    _app.postLoginInit();
+                }
+                else {
+                    //no sign in result
+                }
+
+                //return to home
+                $.mobile.changePage("#home-page");
+
+            });
+
+
         });
-        ref.addEventListener('loaderror', function (event) { 
-        	_app.logEvent('error: ' + event.message); }
+        ref.addEventListener('loaderror', function (event) {
+            _app.logEvent('error: ' + event.message);
+        }
         );
-        ref.addEventListener('exit', function (event) { 
-        	_app.logEvent(event.type); 
+        ref.addEventListener('exit', function (event) {
+            _app.logEvent(event.type);
         });
     }
     else {
-    	//do normal web login 
+        //do normal web login 
         window.location = this.loginProviderRedirectURL;
     }
 };
@@ -295,14 +294,14 @@ OCM_App.prototype.logout = function () {
     this.clearCookie("AccessToken");
     this.clearCookie("AccessPermissions");
 
-    if (this.isRunningUnderCordova){
-    	$.mobile.changePage("#home-page");
+    if (this.isRunningUnderCordova) {
+        $.mobile.changePage("#home-page");
     }
     else {
-    var app = this.ocm_app_context;
-    setTimeout(function () { window.location = app.baseURL; }, 100);
+        var app = this.ocm_app_context;
+        setTimeout(function () { window.location = app.baseURL; }, 100);
     }
-   
+
 };
 
 OCM_App.prototype.getLoggedInUserInfo = function () {
@@ -317,13 +316,13 @@ OCM_App.prototype.getLoggedInUserInfo = function () {
 };
 
 OCM_App.prototype.setLoggedInUserInfo = function (userInfo) {
- 
+
     this.setCookie("Identifier", userInfo.Identifier);
-    this.setCookie("Username",userInfo.Username);
+    this.setCookie("Username", userInfo.Username);
     this.setCookie("OCMSessionToken", userInfo.OCMSessionToken);
     this.setCookie("AccessToken", userInfo.AccessToken);
     this.setCookie("AccessPermissions", userInfo.AccessPermissions);
-  
+
 };
 OCM_App.prototype.storeSettings = function () {
     //save option settings to cookies
@@ -653,8 +652,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         $("#option-favourite").removeClass("icon-heart");
         $("#option-favourite").addClass("icon-heart-empty");
     }
-    
-    //TODO: all users can initiate edit - requires API change
+
     //if edit option available to user, enable edit controls
     var $editControl = $("#details-edit");
     if (!this.hasUserPermissionForPOI(poi, "Edit")) {
@@ -662,7 +660,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     } else {
         $editControl.show();
     }
-    
+
     //TODO: bug/ref data load when editor opens clears settings
 
     var $element = $(element);
@@ -691,10 +689,10 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         for (var c = 0; c < poi.UserComments.length; c++) {
             var comment = poi.UserComments[c];
             var commentDate = this.ocm_ui.fixJSONDate(comment.DateCreated);
-            commentOutput += "<blockquote><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") +
+            commentOutput += "<blockquote><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") + " ["+
                 (comment.CommentType != null ? " : " + comment.CommentType.Title : "") +
                 (comment.CheckinStatusType != null ? " : " + comment.CheckinStatusType.Title : "") +
-                "</strong>" +
+                "]</strong>" +
                 "<p>" + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
 				"<small><cite>" + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() + "</cite></small>" +
 				"</blockquote>";
@@ -741,7 +739,7 @@ OCM_App.prototype.isFavouritePOI = function (poi, itineraryName) {
     return false;
 };
 
-OCM_App.prototype.addFavouritePOI = function(poi, itineraryName) {
+OCM_App.prototype.addFavouritePOI = function (poi, itineraryName) {
     if (poi != null) {
         if (!this.isFavouritePOI(poi, itineraryName)) {
             var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
@@ -763,7 +761,7 @@ OCM_App.prototype.addFavouritePOI = function(poi, itineraryName) {
     }
 };
 
-OCM_App.prototype.removeFavouritePOI = function(poi, itineraryName) {
+OCM_App.prototype.removeFavouritePOI = function (poi, itineraryName) {
     if (poi != null) {
         if (this.isFavouritePOI(poi, itineraryName)) {
             var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
@@ -788,7 +786,7 @@ OCM_App.prototype.removeFavouritePOI = function(poi, itineraryName) {
     }
 };
 
-OCM_App.prototype.toggleFavouritePOI = function(poi, itineraryName) {
+OCM_App.prototype.toggleFavouritePOI = function (poi, itineraryName) {
     if (poi != null) {
         if (this.isFavouritePOI(poi, itineraryName)) {
             this.removeFavouritePOI(poi, itineraryName);
@@ -896,11 +894,10 @@ function showSearchOptions() {
 }
 
 OCM_App.prototype.showMessage = function (msg) {
-    if (this.isRunningUnderCordova)
-    {
+    if (this.isRunningUnderCordova) {
         navigator.notification.alert(
            msg,  // message
-           function () { ;;},         // callback
+           function () {;; },         // callback
            'Open Charge Map',            // title
            'OK'                  // buttonName
        );
