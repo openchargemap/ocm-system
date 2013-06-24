@@ -691,7 +691,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
             var commentDate = this.ocm_ui.fixJSONDate(comment.DateCreated);
             commentOutput += "<blockquote><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") + " ["+
                 (comment.CommentType != null ? " : " + comment.CommentType.Title : "") +
-                (comment.CheckinStatusType != null ? " : " + comment.CheckinStatusType.Title : "") +
+                (comment.CheckinStatusType != null ? " - " + comment.CheckinStatusType.Title : "") +
                 "]</strong>" +
                 "<p>" + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
 				"<small><cite>" + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() + "</cite></small>" +
