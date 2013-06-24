@@ -9,6 +9,18 @@
         {
             <strong>Rating: @Html.Raw(Model.Rating) out of 5</strong>
         }
+        [
+         @if (Model.CommentType != null)
+        {
+            <strong>@Model.CommentType.Title</strong>
+        }
+        ,
+        @if (Model.CheckinStatusType != null)
+        {
+            <strong>@Model.CheckinStatusType.Title</strong>
+        }
+       
+        ]
         <p>@Html.DisplayFor(m => m.Comment)</p>
         <small>Comment by <cite title="Source Title">@Html.DisplayFor(m => m.UserName)</cite> @Html.DisplayFor(m => m.DateCreated)</small>
     </blockquote>
