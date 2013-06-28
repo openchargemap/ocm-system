@@ -301,7 +301,6 @@
     <Content Include="Views\POI\Index.cshtml" />
     <Content Include="Views\POI\Details.cshtml" />
     <Content Include="Views\POI\Edit.cshtml" />
-    <Content Include="Views\Shared\_CommentList.cshtml" />
     <Content Include="Views\Shared\_UserList.cshtml" />
     <Content Include="Views\POI\_ConnectionList.cshtml" />
     <Content Include="Views\POI\_POISearch.cshtml" />
@@ -333,6 +332,7 @@
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\AddressInfo.cshtml" />
     <Content Include="Views\LoginProvider\AppLogin.cshtml" />
+    <Content Include="Views\Profile\View.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

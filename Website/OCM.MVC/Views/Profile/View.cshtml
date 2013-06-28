@@ -1,0 +1,85 @@
+﻿@model OCM.API.Common.Model.User
+
+@{
+    ViewBag.Title = "OCM User Profile - " + Model.Username;
+}
+
+<h2>@Model.Username - Profile and Stats</h2>
+
+@if (Model.IsProfilePublic)
+{
+    <div class="row-fluid">
+        <div class="span8">
+            <fieldset>
+                <legend>Profile</legend>
+
+                <div class="display-group">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.Username)
+                    </div>
+                    <div class="display-field">
+                        @if (Model.IdentityProvider == "Twitter")
+                        {
+                            <a href="https://twitter.com/@Model.Identifier" target="_blank">@Html.DisplayFor(model => model.Username)</a>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.Username)
+                        }
+                    </div>
+                </div>
+
+                <div class="display-group">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.DateCreated)
+                    </div>
+                    <div class="display-field">
+                        @Html.DisplayFor(model => model.DateCreated)
+                    </div>
+                </div>
+                <div class="display-group">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.Profile)
+                    </div>
+                    <div class="display-field">
+                        @Html.DisplayFor(model => model.Profile)
+                    </div>
+                </div>
+
+                <div class="display-group">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.Location)
+                    </div>
+                    <div class="display-field">
+                        @Html.DisplayFor(model => model.Location)
+                    </div>
+                </div>
+                <div class="display-group">
+                    <div class="display-label">
+                        @Html.DisplayNameFor(model => model.WebsiteURL)
+                    </div>
+                    <div class="display-field">
+                        @Html.DisplayFor(model => model.WebsiteURL)
+                    </div>
+                </div>
+
+
+            </fieldset>
+
+        </div>
+        <div class="span4">
+            <fieldset>
+                <legend>Community Stats</legend>
+                <div class="stat">
+                    <h2><span id="summary-reputation">@Html.DisplayFor(model => model.ReputationPoints)</span></h2>
+                    <p>Reputation Points</p>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+}
+else
+{
+    <p>The user profile is not public.</p>
+}

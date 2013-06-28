@@ -39,6 +39,14 @@ namespace OCM.MVC.Controllers
         }
 
         [AuthSignedInOnly]
+        public ActionResult View(int id)
+        {
+            UserManager userManager = new UserManager();
+            var user = userManager.GetUser(id);
+            return View(user);
+        }
+
+        [AuthSignedInOnly]
         public ActionResult Edit()
         {
             if (Session["UserID"] != null)

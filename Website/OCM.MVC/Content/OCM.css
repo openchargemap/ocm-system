@@ -112,6 +112,11 @@ legend,
   font-family: 'Oswald', Arial, sans-serif;
   font-weight: 300;
 }
+h1 small,
+h2 small,
+h3 small {
+  font-weight: 300;
+}
 .nav a,
 .nav a:visited,
 .nav a:link {

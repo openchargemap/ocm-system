@@ -71,7 +71,14 @@
             <a href="@Url.Action("EditUser", "Admin", new {id=item.ID })"> @Html.DisplayFor(modelItem => item.Identifier)</a>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Username)
+            @if (item.IdentityProvider == "Twitter")
+            {
+                <a href="https://twitter.com/@item.Identifier" target="_blank">@Html.DisplayFor(modelItem => item.Username)</a>
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => item.Username)
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Profile)

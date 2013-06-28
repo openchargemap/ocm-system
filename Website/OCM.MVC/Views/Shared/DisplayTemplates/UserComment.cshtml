@@ -22,7 +22,14 @@
        
         ]
         <p>@Html.DisplayFor(m => m.Comment)</p>
-        <small>Comment by <cite title="Source Title">@Html.DisplayFor(m => m.UserName)</cite> @Html.DisplayFor(m => m.DateCreated)</small>
+        <small>Comment by 
+            <cite title="Source Title">
+            @if (Model.User!=null) {
+               <a href="@Url.Action("View", "Profile", new {id=Model.User.ID })">@Html.DisplayFor(m => m.User.Username)</a>
+            } else {
+                @Html.DisplayFor(m => m.UserName)
+            }                                             
+            </cite> @Html.DisplayFor(m => m.DateCreated)</small>
     </blockquote>
 
     @if (Model.RelatedURL != null)

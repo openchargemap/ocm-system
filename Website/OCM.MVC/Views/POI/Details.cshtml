@@ -18,7 +18,7 @@
     <li class="active">@Model.POI.AddressInfo.Title, @Model.POI.AddressInfo.Country.Title <small>OCM-@Model.POI.ID</small></li>
 </ul>
 
-@if (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true)
+@if (Session["UserID"] != null)
 {
     <div class="form-actions">
         <a href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
