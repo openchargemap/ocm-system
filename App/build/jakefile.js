@@ -11,7 +11,7 @@ var moment = require("moment");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "3.1.1_"+ moment().format('YYYYMMDD');
+var releaseVersion = "3.2.0_"+ moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/webapp";

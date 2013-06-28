@@ -52,15 +52,15 @@ OCM_App.prototype.initApp = function () {
     this.appInitialised = true;
 
     //wire up button events
-
-    $(document).delegate("#search-nearby", "click",
+    
+    $(document).delegate("#search-nearby", "vclick",
 				function () {
 				    app.performSearch(true, false);
 				    return false;
 				}
 			);
 
-    $(document).delegate("#search-button", "click",
+    $(document).delegate("#search-button", "vclick",
 				function () {
 				    app.performSearch(false, true);
 				    return false;
@@ -75,7 +75,7 @@ OCM_App.prototype.initApp = function () {
         }
     });
 
-    $(document).delegate("#editlocation-submit", "click",
+    $(document).delegate("#editlocation-submit", "vclick",
 				function () {
 				    if (app.validateLocationEditor() == true) {
 				        app.performLocationSubmit();
@@ -84,18 +84,18 @@ OCM_App.prototype.initApp = function () {
 				}
 			);
 
-    $(document).delegate("#details-edit", "click",
+    $(document).delegate("#details-edit", "vclick",
 		function () {
 		    app.showLocationEditor();
 		    return false;
 		}
 	);
 
-    $(document).delegate("#option-favourite", "click", function () {
+    $(document).delegate("#option-favourite", "vclick", function () {
         app.toggleFavouritePOI(app.selectedPOI, null);
     });
 
-    $(document).delegate("#option-edit", "click", function () {
+    $(document).delegate("#option-edit", "vclick", function () {
 
         if (app.isUserSignedIn()) {
             //show editor
@@ -106,9 +106,14 @@ OCM_App.prototype.initApp = function () {
         return false;
     });
 
-    $(document).delegate("#option-checkin", "click", function () {
+    $(document).delegate("#option-checkin, #btn-checkin", "vclick", function () {
         //show checkin/comment page   
-        $.mobile.changePage("#submitcomment-page");
+    	if (app.isUserSignedIn()) {
+            //show checkin
+    		$.mobile.changePage("#submitcomment-page");
+    	} else {
+    		app.showMessage("Please Sign In before commenting.");
+    	}
         return false;
     });
 
@@ -116,7 +121,7 @@ OCM_App.prototype.initApp = function () {
         app.refreshMapView();
     });
 
-    $(document).delegate("#submitcomment-button", "click",
+    $(document).delegate("#submitcomment-button", "vclick",
 				function () {
 				    if (app.enableCommentSubmit == true) {
 				        app.enableCommentSubmit = false;
@@ -133,7 +138,7 @@ OCM_App.prototype.initApp = function () {
         app.enableCommentSubmit = true;
     });
 
-    $(document).delegate("#add-location", "click", function (event, ui) {
+    $(document).delegate("#add-location", "vclick", function (event, ui) {
         app.isLocationEditMode = false;
         app.selectedPOI = null;
         app.showLocationEditor();

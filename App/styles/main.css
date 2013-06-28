@@ -19,7 +19,7 @@
          url('../fonts/Oswald/oswald-light-webfont.woff') format('woff'),
          url('../fonts/Oswald/oswald-light-webfont.ttf') format('truetype'),
          url('../fonts/Oswald/oswald-light-webfont.svg#oswaldlight') format('svg');
-    font-weight: normal;
+    font-weight: 300;
     font-style: normal;
 
 }
@@ -251,7 +251,7 @@ p {
 }
 
 .ui-content {
-    padding: 0px;
+    padding: 0;
 }
 
 .result {
@@ -272,15 +272,17 @@ p {
 }
 
 .result-item-a, .result-item-b {
-    min-width: 120px;
-    max-width: 50%;
-    font-weight: normal;
+   
+    width: 40%;
+    font-weight: 300;
+    font-family:'Oxygen',Arial;
     padding: 8px;
-    font-size: 80%;
+    font-size: 0.8em;
 }
 
 .result-item-a {
     float: left;
+    border-right:1px dotted rgb(230,230,230);
 }
 
 .result-item-b {
@@ -288,6 +290,10 @@ p {
     text-align: left;
 }
 
+.result-item-a p, .result-item-b p
+{
+	padding:1em 0 0 0;
+}
 @media only screen and (min-width: 800px) {
     .result-item-b {
         float: right;
@@ -328,6 +334,7 @@ p {
     width: 16px;
     max-height: 16px;
     max-width: 16px;
+    margin-left:20px;
 }
 
 .direction-N {
@@ -474,21 +481,23 @@ p {
     background-color: #8cc63f;
     color: white;
     font-size: 0.9em;
-    font-weight: normal;
+    font-weight: 300;
     font-family: 'Oswald',Arial;
 }
 
 .section-heading {
     margin-bottom: 0.5em;
+    border-radius:0.2em;
 }
 
 #details-options {
-    border: 1px solid gainsboro;
-    padding: 0.4em;
+    padding: 0.2em;
     display: inline;
-    margin: 0.3em;
-    float: right;
-    background-color: #fcfcfc;
+    margin: 0.1em;
+    float:right;
+    background-color:#8cc63f;
+    font-size:1.5em;
+    border-radius:0.2em;
 }
 
     #details-options .option-item {
@@ -496,11 +505,12 @@ p {
         padding: 0.4em;
     }
 
-body, h1, h2, h3, .ui-body-b, .ui-body-d, .ui-link, a, a:visited {
+body, h1, h2, h3, .ui-body-b, .ui-body-d, a, a:visited {
     font-family: 'Oxygen', sans-serif;
+    
 }
 
-.result h3, #home-page .ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header {
+.result h3, #home-page .ui-link,a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header {
     font-family: 'Oswald', sans-serif;
     font-weight: 300 !important;
     font-size: 1.1em;
