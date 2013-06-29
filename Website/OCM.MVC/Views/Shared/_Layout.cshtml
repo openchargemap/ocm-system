@@ -8,7 +8,10 @@
     <meta name="viewport" content="height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="description" content="@ViewBag.Description" />
     <meta name="author" content="Openchargemap.org" />
+    @if (ViewBag.EnableAppMarkeplaceLinks == true)
+    {
     <meta name="apple-itunes-app" content="app-id=528951115">
+    }
 
     @Styles.Render("~/Content/bootstrap")
 
@@ -88,7 +91,7 @@
                                     }
                                     else
                                     {
-                                        <li><a href="@Url.Action("SignIn", "Profile")">sign in</a></li>
+                                        <li><a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Request.Url.AbsoluteUri })">sign in</a></li>
                                     }
                                     <li class="divider"></li>
                                     <li class="nav-header">Languages</li>
@@ -99,16 +102,16 @@
                                 </ul>
                             </li>
 
-                            @if (Session["IsAdministrator"]!=null && (bool)Session["IsAdministrator"]==true)
+                            @if (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true)
                             {
-                            <li class="dropdown">
-                                <a href="@Url.Action("Index", "Admin")" class="dropdown-toggle" data-toggle="dropdown">admin <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="@Url.Action("Index", "Admin")">dashboard</a></li>
-                                    <li><a href="@Url.Action("Index", "EditQueue")">edit queue</a></li>
-                                    <li><a href="@Url.Action("Users", "Admin")">users</a></li>
-                                </ul>
-                            </li>
+                                <li class="dropdown">
+                                    <a href="@Url.Action("Index", "Admin")" class="dropdown-toggle" data-toggle="dropdown">admin <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="@Url.Action("Index", "Admin")">dashboard</a></li>
+                                        <li><a href="@Url.Action("Index", "EditQueue")">edit queue</a></li>
+                                        <li><a href="@Url.Action("Users", "Admin")">users</a></li>
+                                    </ul>
+                                </li>
                             }
                         </ul>
                     </div>

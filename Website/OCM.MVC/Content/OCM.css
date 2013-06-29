@@ -350,8 +350,8 @@ div.stat {
   -webkit-box-shadow: 0px 0px 8px #c0c0c0;
   box-shadow: 0px 0px 8px #c0c0c0;
 }
-.map-box > img {
-  max-width: none;
+.map-box img {
+  max-width: none !important;
 }
 div.details-plain {
   padding: 0;

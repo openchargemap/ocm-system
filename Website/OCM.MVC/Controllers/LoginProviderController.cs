@@ -32,7 +32,14 @@ namespace OCM.MVC.Controllers
             //if denied access, redirect to normal redirect url
             if (denied != null)
             {
-                return Redirect(_redirectURL);
+                if (_redirectURL == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return Redirect(_redirectURL);
+                }
             }
 
             //if initiating a login, attempt to authenticate with twitter
