@@ -140,6 +140,7 @@ OCM_Data.prototype.submitLocation = function (data, authSessionInfo, completedCa
 		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=cp_submission&format=json" + authInfoParams,
 		data: jsonString,
 		complete: function (jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
+		crossDomain: true,
 		error: this.handleGeneralAjaxError
 	});
 };
@@ -155,6 +156,7 @@ OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, complete
 		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=comment_submission&format=json" + authInfoParams,
 		data: jsonString,
 		success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
+		crossDomain: true,
 		error: this.handleGeneralAjaxError
 	});
 };

@@ -6,6 +6,10 @@ http://openchargemap.org
 See http://www.openchargemap.org/ for more details
 */
 
+/*jslint browser: true, devel: true, eqeq: true, white: true */
+/*global define, $, window, document, OCM_CommonUI, OCM_Geolocation, OCM_Data, OCM_LocationSearchParams */
+
+
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
     this.ocm_geo = new OCM_Geolocation();
@@ -52,20 +56,18 @@ OCM_App.prototype.initApp = function () {
     this.appInitialised = true;
 
     //wire up button events
-    
+
     $(document).delegate("#search-nearby", "vclick",
-				function () {
-				    app.performSearch(true, false);
-				    return false;
-				}
-			);
+        function () {
+            app.performSearch(true, false);
+            return false;
+        });
 
     $(document).delegate("#search-button", "vclick",
-				function () {
-				    app.performSearch(false, true);
-				    return false;
-				}
-			);
+        function () {
+            app.performSearch(false, true);
+            return false;
+        });
 
     $("#popupPanel").on({
         popupbeforeposition: function () {
@@ -77,7 +79,7 @@ OCM_App.prototype.initApp = function () {
 
     $(document).delegate("#editlocation-submit", "vclick",
 				function () {
-				    if (app.validateLocationEditor() == true) {
+				    if (app.validateLocationEditor() === true) {
 				        app.performLocationSubmit();
 				    }
 				    return false;
@@ -88,8 +90,7 @@ OCM_App.prototype.initApp = function () {
 		function () {
 		    app.showLocationEditor();
 		    return false;
-		}
-	);
+		});
 
     $(document).delegate("#option-favourite", "vclick", function () {
         app.toggleFavouritePOI(app.selectedPOI, null);
@@ -107,13 +108,13 @@ OCM_App.prototype.initApp = function () {
     });
 
     $(document).delegate("#option-checkin, #btn-checkin", "vclick", function () {
-        //show checkin/comment page   
-    	if (app.isUserSignedIn()) {
+        //show checkin/comment page
+        if (app.isUserSignedIn()) {
             //show checkin
-    		$.mobile.changePage("#submitcomment-page");
-    	} else {
-    		app.showMessage("Please Sign In before commenting.");
-    	}
+            $.mobile.changePage("#submitcomment-page");
+        } else {
+            app.showMessage("Please Sign In before commenting.");
+        }
         return false;
     });
 
@@ -123,7 +124,7 @@ OCM_App.prototype.initApp = function () {
 
     $(document).delegate("#submitcomment-button", "vclick",
 				function () {
-				    if (app.enableCommentSubmit == true) {
+				    if (app.enableCommentSubmit === true) {
 				        app.enableCommentSubmit = false;
 				        app.performCommentSubmit();
 				    }
@@ -148,10 +149,13 @@ OCM_App.prototype.initApp = function () {
     $(document).delegate("#favourites-page", "pageshow", function () {
         //get list of favourites as POI list and render in standard search page
         var favouritesList = app.getFavouritePOIList();
-        if (favouritesList == null || favouritesList.length == 0) {
+        if (favouritesList === null || favouritesList.length === 0) {
             $("#favourites-list").html("<p>You have no favourite locations set. To add or remove a favourite, tap the <i title=\"Toggle Favourite\" class=\"icon-heart-empty\"></i> icon when viewing a location.</p>");
         } else {
-            if ($.mobile) $.mobile.changePage("#search-page");
+            if ($.mobile) {
+                $.mobile.changePage("#search-page");
+            }
+
             app.renderLocationList(favouritesList);
 
             //TODO: manage favourites in single page?
@@ -171,8 +175,8 @@ OCM_App.prototype.initApp = function () {
     $('#search-distance-unit').change(function () { app.storeSettings(); });
     $('#option-enable-experiments').change(function () { app.storeSettings(); });
 
-    //setTimeout(function(){	
-    ocm_app.initDeferredUI();
+    //setTimeout(function(){
+    app.initDeferredUI();
     //},50);
 
 };
@@ -183,8 +187,8 @@ OCM_App.prototype.postLoginInit = function () {
     //if user logged in, enable features
     if (!this.isUserSignedIn()) {
         //user is not signed in
-        //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");		
-        $("#login-summary").html("<input type=\"button\" id=\"login-button\" data-inline=\"true\" data-mini=\"true\" data-icon=\"arrow-r\" value=\"Sign In\" onclick='ocm_app.beginLogin();'/>").trigger("create");;
+        //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");
+        $("#login-summary").html("<input type=\"button\" id=\"login-button\" data-inline=\"true\" data-mini=\"true\" data-icon=\"arrow-r\" value=\"Sign In\" onclick='ocm_app.beginLogin();'/>").trigger("create");
         $("#user-profile-info").html("You are not currently signed in.");
         $("#login-button ").show();
     } else {
@@ -199,6 +203,8 @@ OCM_App.prototype.postLoginInit = function () {
 OCM_App.prototype.initDeferredUI = function () {
     this.logEvent("Init of deferred UI..");
 
+    var app = this;
+
     //check if user sign in
     this.postLoginInit();
 
@@ -211,6 +217,8 @@ OCM_App.prototype.initDeferredUI = function () {
         $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>").trigger("create");
         $("#navbar").trigger("create");
         $("#navbar").navbar("refresh");
+
+
         $("#experiment-page").delegate('pageshow', function (event, ui) {
             app.initExperimentalContent();
         });
@@ -221,26 +229,36 @@ OCM_App.prototype.initDeferredUI = function () {
     //if cached results exist, render them
     var cachedResults = this.ocm_data.getCachedDataObject("SearchResults");
     var cachedResult_Location = this.ocm_data.getCachedDataObject("SearchResults_Location");
-    if (cachedResults != null) {
-        if (cachedResult_Location != null) document.getElementById("search-location").value = cachedResult_Location;
-        setTimeout(function () { ocm_app.renderLocationList(cachedResults); }, 50);
+
+    if (cachedResults !== null) {
+        if (cachedResult_Location !== null) {
+            document.getElementById("search-location").value = cachedResult_Location;
+        }
+        setTimeout(function () {
+            app.renderLocationList(cachedResults);
+        }, 50);
     }
 
     //if ID of location passed in, show details view
-    var idParam = ocm_app.getParameter("id");
-    if (idParam != null && idParam != "") {
+    var idParam = app.getParameter("id");
+    if (idParam !== null && idParam !== "") {
 
-        var _id = parseInt(ocm_app.getParameter("id"));
+        var poiId = parseInt(app.getParameter("id"),10);
         setTimeout(function () {
-            ocm_app.showDetailsViewById(_id);
+            app.showDetailsViewById(poiId);
         }, 100);
     }
 };
 
 OCM_App.prototype.isUserSignedIn = function () {
     var userInfo = this.getLoggedInUserInfo();
-    if (userInfo.Username != null && userInfo.Username != "") return true;
-    else return false;
+
+    if (userInfo.Username !== null && userInfo.Username !== "") {
+        return true;
+    }
+    else {
+        return false;
+    }
 };
 
 OCM_App.prototype.beginLogin = function () {
@@ -248,12 +266,12 @@ OCM_App.prototype.beginLogin = function () {
 
     if (this.isRunningUnderCordova) {
         //do phonegapped login using InAppBrowser
-        var ref = window.open(this.loginProviderRedirectBaseURL + 'AppLogin', '_blank', 'location=yes');
-        var _app = this;
-        ref.addEventListener('loadstop', function (event) {
-            _app.hideProgressIndicator();
+        var app = this, ref = window.open(this.loginProviderRedirectBaseURL + 'AppLogin', '_blank', 'location=yes');
 
-            _app.logEvent('fetching login result: ' + event.url);
+        ref.addEventListener('loadstop', function (event) {
+            app.hideProgressIndicator();
+
+            app.logEvent('fetching login result: ' + event.url);
 
             ref.executeScript({
                 code: "getSignInResult();"
@@ -262,32 +280,32 @@ OCM_App.prototype.beginLogin = function () {
                     ref.close();
                     var userInfo = result[0];
 
-                    _app.logEvent('got login: ' + userInfo.Username);
+                    app.logEvent('got login: ' + userInfo.Username);
 
-                    _app.setLoggedInUserInfo(userInfo);
-                    _app.postLoginInit();
+                    app.setLoggedInUserInfo(userInfo);
+                    app.postLoginInit();
                 }
                 else {
-                    //no sign in result
+                    app.logEvent('no sign in result received');
                 }
 
                 //return to home
                 $.mobile.changePage("#home-page");
 
             });
-
-
         });
+
         ref.addEventListener('loaderror', function (event) {
-            _app.logEvent('error: ' + event.message);
+            app.logEvent('error: ' + event.message);
         }
         );
+
         ref.addEventListener('exit', function (event) {
-            _app.logEvent(event.type);
+            app.logEvent(event.type);
         });
     }
     else {
-        //do normal web login 
+        //do normal web login
         window.location = this.loginProviderRedirectURL;
     }
 };
@@ -418,11 +436,10 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
             } else {
                 // try to gecode text location name, if new lookup not
                 // attempted, continue to rendering
-                var lookupAttempted = this.ocm_geo.determineGeocodedLocation(
-						locationText, $.proxy(
-								this.determineGeocodedLocationCompleted, this));
-                if (lookupAttempted == true)
+                var lookupAttempted = this.ocm_geo.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this));
+                if (lookupAttempted == true) {
                     return;
+                }
             }
         }
 
@@ -467,10 +484,6 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
 };
 
 OCM_App.prototype.handleSearchError = function (result) {
-    //self.hideProgressIndicator();
-
-    //self.logEvent("Search status: "+result.status);
-
     if (result.status == 200) {
         //all ok
     } else {
@@ -694,7 +707,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         for (var c = 0; c < poi.UserComments.length; c++) {
             var comment = poi.UserComments[c];
             var commentDate = this.ocm_ui.fixJSONDate(comment.DateCreated);
-            commentOutput += "<blockquote><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") + " ["+
+            commentOutput += "<blockquote><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") + " [" +
                 (comment.CommentType != null ? " : " + comment.CommentType.Title : "") +
                 (comment.CheckinStatusType != null ? " - " + comment.CheckinStatusType.Title : "") +
                 "]</strong>" +
