@@ -4,32 +4,32 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ac5f9f75e925410e94bc811b271d265c" Name="Overview">
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.AddressInfo" Width="1.5" PointX="0.75" PointY="13.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.AuditLog" Width="1.5" PointX="3" PointY="40.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ChargePoint" Width="1.5" PointX="3" PointY="4.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ChargerType" Width="1.5" PointX="6" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.CheckinStatusType" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ConnectionInfo" Width="1.5" PointX="8.25" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ConnectionType" Width="1.5" PointX="10.5" PointY="2.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.Country" Width="1.5" PointX="1.5" PointY="20.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.CurrentType" Width="1.5" PointX="6" PointY="11.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.DataProvider" Width="1.5" PointX="0.75" PointY="23.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.DataProviderStatusType" Width="1.5" PointX="1.5" PointY="26.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.DataType" Width="1.5" PointX="3.75" PointY="14.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.EditQueueItem" Width="1.5" PointX="6" PointY="40" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.EntityType" Width="1.5" PointX="3.75" PointY="38.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataField" Width="1.5" PointX="6" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataGroup" Width="1.5" PointX="3.75" PointY="17.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataValue" Width="1.5" PointX="8.25" PointY="6.875" IsExpanded="true" />
+      <Diagram DiagramId="ac5f9f75e925410e94bc811b271d265c" Name="Overview" ZoomLevel="75">
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.AddressInfo" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.AuditLog" Width="1.5" PointX="3" PointY="30.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ChargePoint" Width="1.5" PointX="3" PointY="13.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ChargerType" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.CheckinStatusType" Width="1.5" PointX="6" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ConnectionInfo" Width="1.5" PointX="5.25" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.ConnectionType" Width="1.5" PointX="7.5" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.Country" Width="1.5" PointX="1.5" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.CurrentType" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.DataProvider" Width="1.5" PointX="0.75" PointY="21.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.DataProviderStatusType" Width="1.5" PointX="1.5" PointY="26.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.DataType" Width="1.5" PointX="3" PointY="34" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.EditQueueItem" Width="1.5" PointX="6" PointY="15.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.EntityType" Width="1.5" PointX="3.75" PointY="26.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataField" Width="1.5" PointX="5.25" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataGroup" Width="1.5" PointX="3" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataValue" Width="1.5" PointX="7.5" PointY="20.25" IsExpanded="true" />
         <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.Operator" Width="1.5" PointX="0.75" PointY="29.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.StatusType" Width="1.5" PointX="0.75" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.SubmissionStatusType" Width="1.5" PointX="0.75" PointY="33.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.SystemConfig" Width="1.5" PointX="6" PointY="19.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UsageType" Width="1.5" PointX="0.75" PointY="36.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.User" Width="1.5" PointX="0.75" PointY="39" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UserComment" Width="1.5" PointX="5.25" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UserCommentType" Width="1.5" PointX="3" PointY="23.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.StatusType" Width="1.5" PointX="0.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.SubmissionStatusType" Width="1.5" PointX="0.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.SystemConfig" Width="1.5" PointX="5.25" PointY="34" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UsageType" Width="1.5" PointX="0.75" PointY="36.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.User" Width="1.5" PointX="0.75" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UserComment" Width="1.5" PointX="8.25" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UserCommentType" Width="1.5" PointX="6" PointY="26.75" IsExpanded="true" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" ManuallyRouted="false" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_AddressInfo" ManuallyRouted="false" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo" ManuallyRouted="false" />
@@ -60,7 +60,7 @@
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_UserComment_User" ManuallyRouted="false" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_UserComment_UserCommentType" ManuallyRouted="false" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.ConnectionInfoConnectionType" />
-        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MediaItem" Width="1.5" PointX="10.94582032549466" PointY="0.84312525430839758" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MediaItem" Width="1.5" PointX="8.25" PointY="15.375" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_MediaItem_ChargePoint" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_MediaItem_User" />
       </Diagram>

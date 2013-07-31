@@ -30,7 +30,7 @@ namespace OCM.API.Common
             var poiData = new Core.Data.ChargePoint();
             if (poi.ID > 0) poiData = tempDataModel.ChargePoints.First(c => c.ID == poi.ID);
 
-            //convert simple poi to fully poulated db version
+            //convert simple poi to fully populated db version
             new POIManager().PopulateChargePoint_SimpleToData(poi, poiData, tempDataModel);
 
             //convert back to simple POI
@@ -426,6 +426,11 @@ namespace OCM.API.Common
                 return -2; //error saving
             }
 
+        }
+
+        public int PerformSubmission(Common.Model.MediaItem mediaItem, Model.User user)
+        {
+            return -1;
         }
 
         public bool SubmitContactSubmission(ContactSubmission contactSubmission)

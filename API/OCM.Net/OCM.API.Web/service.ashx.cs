@@ -82,7 +82,7 @@ namespace OCM.API
                         else
                         {
                             context.Response.StatusCode = 202;
-                            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                            //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
                         }
                     }
                     else
@@ -94,7 +94,7 @@ namespace OCM.API
                         else
                         {
                             context.Response.StatusCode = 500;
-                            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                            //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
                         }
                     }
                 }

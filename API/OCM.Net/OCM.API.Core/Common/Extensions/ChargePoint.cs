@@ -79,7 +79,7 @@ namespace OCM.API.Common.Model.Extensions
             //optionally load user comments
             if (loadUserComments && source.UserComments != null)
             {
-                foreach (var comment in source.UserComments)
+                foreach (var comment in source.UserComments.OrderByDescending(cm=>cm.DateCreated))
                 {
                     if (poi.UserComments == null) poi.UserComments = new List<Model.UserComment>();
                     Model.UserComment com = UserComment.FromDataModel(comment);
