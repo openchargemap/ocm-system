@@ -1,4 +1,4 @@
-@using OCM.API.Common.Model
+﻿@using OCM.API.Common.Model
 @using OCM.MVC
 <!DOCTYPE html>
 <html>
@@ -47,12 +47,13 @@
                 <div class="container">
                     <div class="nav">
                         <ul class="nav">
-                            <li><a id="nav_home" runat="server" href="~/">home</a></li>
+                            <li><a id="nav_home" href="@Url.Action("Index", "Home")">home</a></li>
 
                             <li class="dropdown">
                                 <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown">browse <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
+                                    <li><a href="http://openchargemap.org/app">add a location</a></li>
                                     <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
                                     <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
                                 </ul>
