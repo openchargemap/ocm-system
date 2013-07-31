@@ -119,6 +119,10 @@
       <Project>{FB8CC59F-B6E7-49DA-8D89-F6BB1BD4254C}</Project>
       <Name>OCM.API.Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj">
+      <Project>{ac9dbd28-f8b3-4e2e-a2c6-6a7f6a65b160}</Project>
+      <Name>OCM.API.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj">
       <Project>{F330ECA1-D079-4EE0-AEB4-30A3FD67FE03}</Project>
       <Name>OCM.API.Common.Model</Name>

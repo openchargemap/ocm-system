@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace OCM.Import.Providers
 {
@@ -246,7 +247,10 @@ namespace OCM.Import.Providers
             try
             {
                 string fullPath = System.IO.Path.GetFullPath(path);
-                InputData = System.IO.File.ReadAllText(fullPath, SourceEncoding);
+                using (StreamReader sr = new StreamReader(fullPath, true))
+                {
+                    InputData = sr.ReadToEnd();
+                }
                 return true;
             }
             catch (Exception)

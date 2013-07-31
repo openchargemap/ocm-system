@@ -7,8 +7,16 @@ using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
+    public enum ChademoImportType
+    {
+        Western,
+        Japan
+    }
+
     public class ImportProvider_ChademoGroup : ImportProvider_GenericKML
     {
+        public ChademoImportType ImportType { get; set; }
+
         public ImportProvider_ChademoGroup()
         {
             ProviderName = "chademo.com";
@@ -16,6 +24,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = null;
             IsAutoRefreshed = false;
             IsProductionReady = true;
+            ImportType = ChademoImportType.Western;
         }
 
         public override void SetDataProviderDetails(ChargePoint cp, XmlNode item)
@@ -28,7 +37,17 @@ namespace OCM.Import.Providers
         public override void ParseBasicDetails(ChargePoint cp, XmlNode item)
         {
             cp.AddressInfo.Title = RemoveFormattingCharacters(item["name"].InnerText);
-            cp.AddressInfo.AddressLine1 = ConvertUppercaseToTitleCase(RemoveFormattingCharacters(item["description"].InnerText));
+            string sourcetext = item["description"].InnerText;
+            if (ImportType == ChademoImportType.Japan)
+            {
+                int indexOfTelephone=  sourcetext.IndexOf("[");
+                cp.AddressInfo.AddressLine1 = sourcetext.Substring(0, indexOfTelephone).Trim();
+                cp.AddressInfo.ContactTelephone1 = sourcetext.Substring(indexOfTelephone+5,sourcetext.IndexOf("]")-(indexOfTelephone+5));
+            }
+            else
+            {
+                cp.AddressInfo.AddressLine1 = ConvertUppercaseToTitleCase(RemoveFormattingCharacters(item["description"].InnerText));
+            }
         }
 
         public override List<ConnectionInfo> ParseConnectionInfo(XmlNode item)

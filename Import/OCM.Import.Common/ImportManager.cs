@@ -174,6 +174,7 @@ namespace OCM.Import
                 && previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1
                 && previous.AddressInfo.Latitude == current.AddressInfo.Latitude
                 && previous.AddressInfo.Longitude == current.AddressInfo.Longitude
+                || (current.DataProvidersReference!=null && current.DataProvidersReference.Length>0 && previous.DataProvidersReference==current.DataProvidersReference)
                 )
             {
                 return true;
@@ -281,20 +282,20 @@ namespace OCM.Import
             string inputDataPathPrefix = defaultDataPath;
 
             //Working - Auto refreshed
-             providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
+            /* providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
              providers.Add(new ImportProvider_CarStations() { InputPath = inputDataPathPrefix + "carstations.com\\jsonresults.txt" });
              providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
              providers.Add(new ImportProvider_UKChargePointRegistry() { InputPath = inputDataPathPrefix + "chargepoints.dft.gov.uk\\data.json" });
              providers.Add(new ImportProvider_Mobie() { InputPath = inputDataPathPrefix + "mobie.pt\\data.json.txt" });
              providers.Add(new ImportProvider_AFDC() { InputPath = inputDataPathPrefix + "afdc\\data.json" });
              providers.Add(new ImportProvider_ESB_eCars() { InputPath = inputDataPathPrefix + "esb_ecars\\data.kml" });
-
+            */
             //Working -manual refresh
             //providers.Add(new ImportProvider_NobilDotNo() { InputPath = inputDataPathPrefix + "nobil\\nobil.json.txt" });
 
             //Dev
             //providers.Add(new ImportProvider_CoulombChargepoint() { InputPath = inputDataPathPrefix + "coulomb\\data.json.txt" });
-            //providers.Add(new ImportProvider_GenericKML() { InputPath = inputDataPathPrefix + "generic_kml\\data.kml" });
+            providers.Add(new ImportProvider_ChademoGroup() { InputPath = inputDataPathPrefix + "chademo\\chademo_jp.kml", ImportType= ChademoImportType.Japan, DefaultCountryID=114});
            
             //obsolete
             //providers.Add(new ImportProvider_PODPoint() { InputPath = inputDataPathPrefix + "pod-point.com\\export.htm" });

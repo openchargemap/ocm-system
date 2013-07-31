@@ -65,8 +65,6 @@ namespace OCM.Import.Providers
                 cp.DateLastStatusUpdate = DateTime.Now;
                 cp.AddressInfo = new AddressInfo();
 
-                //carstations.com have requested we not use the station names from their data, so we use address
-                //cp.AddressInfo.Title = item["name"] != null ? item["name"].ToString() : item["address"].ToString();
                 try
                 {
                     

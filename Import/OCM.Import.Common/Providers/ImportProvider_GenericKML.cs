@@ -5,11 +5,15 @@ using System.Text;
 using OCM.API.Common.Model;
 using Newtonsoft.Json.Linq;
 using System.Xml;
+using System.Xml.Linq;
+using System.IO;
 
 namespace OCM.Import.Providers
 {
     public class ImportProvider_GenericKML : BaseImportProvider, IImportProvider
     {
+        public int? DefaultCountryID { get; set; }
+
         public ImportProvider_GenericKML()
         {
             ProviderName = "Generic_KML";
@@ -36,7 +40,8 @@ namespace OCM.Import.Providers
             List<ChargePoint> outputList = new List<ChargePoint>();
 
             XmlDocument xmlDoc = new XmlDocument();
-            InputData = InputData.Replace(" xmlns=\"http://earth.google.com/kml/2.0\"","");
+            InputData = InputData.Replace(" xmlns=\"http://earth.google.com/kml/2.0\"", "");
+          
             xmlDoc.LoadXml(InputData);
 
             XmlNodeList dataList = xmlDoc.SelectNodes("//Placemark");
@@ -63,7 +68,8 @@ namespace OCM.Import.Providers
 
                 //determine country or leave for geolocation
                 int? countryID = null;
-               
+                if (DefaultCountryID != null && countryID == null) countryID = DefaultCountryID;
+
                 if (countryID == null)
                 {
                     this.Log("Country Not Matched, will require Geolocation:" + cp.AddressInfo.AddressLine1.ToString());
