@@ -13,6 +13,8 @@ namespace OCM.API.Common.DataSummary
         public string CountryName { get; set; }
         public string ISOCode { get; set; }
         public int ItemCount { get; set; }
+        public int LocationCount { get; set; }
+        public int StationCount { get; set; }
         public string ItemType { get; set; }
     }
 
@@ -33,7 +35,7 @@ namespace OCM.API.Common.DataSummary
                 var results = from c in dataModel.ChargePoints
                               where c.SubmissionStatusType.IsLive == true
                               group c by c.AddressInfo.Country into g
-                              select new { g, NumItems = g.Count() };
+                              select new { g, NumItems = g.Count(), NumStations=g.Sum(s=>s.NumberOfPoints>0?s.NumberOfPoints:1) };
 
                 CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
                 TextInfo textInfo = cultureInfo.TextInfo;
@@ -43,7 +45,7 @@ namespace OCM.API.Common.DataSummary
                     var c = item.g.First().AddressInfo.Country;
                     string countryName = textInfo.ToTitleCase(c.Title.ToLower());
                     string isoCode = c.ISOCode;
-                    list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.g.Count(), ItemType = "LocationsPerCountry" });
+                    list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.NumItems, LocationCount=item.NumItems, StationCount=(int)item.NumStations, ItemType = "LocationsPerCountry" });
                 }
 
                 HttpContext.Current.Cache["ocm_summary"] = list.OrderByDescending(i => i.ItemCount).ToList();
@@ -51,7 +53,7 @@ namespace OCM.API.Common.DataSummary
             var cachedresults = (List<CountrySummary>)HttpContext.Current.Cache["ocm_summary"];
             foreach (var item in cachedresults)
             {
-                output += "ocm_summary[ocm_summary.length]={\"country\":\"" + item.CountryName + "\", \"isocode\":\"" + item.ISOCode + "\", \"itemcount\":" + item.ItemCount + "}; \r\n";
+                output += "ocm_summary[ocm_summary.length]={\"country\":\"" + item.CountryName + "\", \"isocode\":\"" + item.ISOCode + "\", \"itemcount\":" + item.LocationCount + ", \"locationcount\":" + item.LocationCount + ", \"stationcount\":" + item.StationCount + "}; \r\n";
             }
             output += " return ocm_summary; }";
             return output;
