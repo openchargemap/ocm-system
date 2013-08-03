@@ -27,7 +27,9 @@ function OCM_App() {
     this.isLocationEditMode = false;
 
     this.baseURL = "http://openchargemap.org/app/";
+    //this.baseURL = "http://localhost:81";
     this.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+    //this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
     this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     this.enableExperimental = false;
     this.searchInProgress = false;
@@ -37,9 +39,8 @@ function OCM_App() {
     this.isRunningUnderCordova = false;
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
-    //this.baseURL = "http://localhost:8090/App/";
-    //this.loginProviderRedirectURL = "http://localhost:8089/LoginProvider/Default.aspx?_mode=silent&_forceLogin=true&_redirectURL=" + this.baseURL;
-    //this.ocm_data.serviceBaseURL = "http://localhost:55883/";
+
+    //this.ocm_data.serviceBaseURL = "http://localhost:81/API/v2";
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -117,6 +118,28 @@ OCM_App.prototype.initApp = function () {
         }
         return false;
     });
+
+    $(document).delegate("#option-uploadphoto", "vclick", function () {
+        //show upload page
+        if (app.isUserSignedIn()) {
+            //show checkin
+            $.mobile.changePage("#submitmediaitem-page");
+        } else {
+            app.showMessage("Please Sign In before uploading.");
+        }
+        return false;
+    });
+
+
+    $(document).delegate("#submitmediaitem-button", "vclick",
+              function () {
+
+                  app.performMediaItemSubmit();
+
+                  return false;
+              }
+          );
+
 
     $(document).delegate("#map-page", "pageshow", function () {
         app.refreshMapView();
@@ -243,7 +266,7 @@ OCM_App.prototype.initDeferredUI = function () {
     var idParam = app.getParameter("id");
     if (idParam !== null && idParam !== "") {
 
-        var poiId = parseInt(app.getParameter("id"),10);
+        var poiId = parseInt(app.getParameter("id"), 10);
         setTimeout(function () {
             app.showDetailsViewById(poiId);
         }, 100);
@@ -378,6 +401,26 @@ OCM_App.prototype.performCommentSubmit = function () {
 
     //submit
     this.ocm_data.submitUserComment(item, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), $.proxy(this.submissionFailed, this));
+};
+
+OCM_App.prototype.performMediaItemSubmit = function () {
+
+    var $fileupload = $(':file');
+    var file = $fileupload[0].files[0];
+
+    name = file.name;
+    size = file.size;
+    type = file.type;
+
+    var formData = new FormData($('#mediaitem-form')[0]);
+    var id = this.selectedPOI.ID;
+    var comment = $("#comment").val();
+
+    //show progress
+    this.showProgressIndicator();
+
+    //submit
+    this.ocm_data.submitMediaItem(formData, id, comment, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), $.proxy(this.submissionFailed, this));
 };
 
 OCM_App.prototype.submissionCompleted = function (jqXHR, textStatus) {
@@ -721,6 +764,26 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
 
     } else {
         $("#details-usercomments").html("No comments submitted.");
+    }
+
+    if (poi.MediaItems != null) {
+        var mediaItemOutput = "<div class='comments'>";
+
+        for (var c = 0; c < poi.MediaItems.length; c++) {
+            var mediaItem = poi.MediaItems[c];
+            if (mediaItem.IsEnabled == true) {
+                var itemDate = this.ocm_ui.fixJSONDate(mediaItem.DateCreated);
+                mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a href='" + mediaItem.ItemURL + "' target='_blank'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+				"<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" +
+				"</blockquote>";
+            }
+        }
+        mediaItemOutput += "</div>";
+
+        $("#details-mediaitems").html(mediaItemOutput);
+
+    } else {
+        $("#details-mediaitems").html("No photos submitted.");
     }
 
     var leftPos = $element.position().left;

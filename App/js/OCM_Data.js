@@ -161,6 +161,43 @@ OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, complete
 	});
 };
 
+OCM_Data.prototype.submitMediaItem = function (data, id, comment, authSessionInfo, completedCallback, failureCallback) {
+
+	var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
+
+	$.ajax({
+	    url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams+ "&id="+id+"&comment="+escape(comment), 
+	    type: 'POST',
+	    xhr: function () {  // custom xhr
+	        var myXhr = $.ajaxSettings.xhr();
+	        if (myXhr.upload) { // check if upload property exists
+	            //myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // for handling the progress of the upload
+	        }
+	        return myXhr;
+	    },
+	    success:  function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
+	    error: this.handleGeneralAjaxError,
+	    data: data,
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+	    crossDomain: true
+	});
+
+    /*
+    var jsonString = JSO.stringify(data);
+
+	$.ajax({
+		type: "POST",
+		url: this.serviceBaseURL + "/?client="+this.clientName+"&action=mediaitem_submission" + authInfoParams,
+		data: jsonString,
+		success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
+		crossDomain: true,
+		error: this.handleGeneralAjaxError
+	});
+    */
+};
+
 OCM_Data.prototype.getRefDataByID = function (refDataList, id) {
 	if (id != "") id = parseInt(id);
 
@@ -211,7 +248,7 @@ OCM_Data.prototype.setCachedDataObject = function (itemName, itemValue) {
 			{
 		localStorage.setItem(itemName, JSON.stringify(itemValue));
 			}
-		
+
 	}
 };
 
