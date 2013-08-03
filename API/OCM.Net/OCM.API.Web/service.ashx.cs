@@ -8,6 +8,7 @@ using OCM.API.Common.Model;
 using System.Text;
 using System.IO.Compression;
 using System.Web.Caching;
+using System.Configuration;
 
 namespace OCM.API
 {
@@ -138,6 +139,16 @@ namespace OCM.API
                         context.Response.Write("Error");
                     }
                 }
+
+                if (context.Request["action"] == "mediaitem_submission")
+                {
+                    var p = inputProvider as OCM.API.InputProviders.HTMLFormInputProvider;
+                    MediaItem m = new MediaItem();
+                    if (p.ProcessMediaItemSubmission(context, ref m, user.ID))
+                    {
+                        submissionManager.PerformSubmission(m, user);
+                    }
+                }
             }
         }
 
@@ -231,26 +242,30 @@ namespace OCM.API
                 context.Response.ContentEncoding = Encoding.Default;
                 context.Response.ContentType = outputProvider.ContentType;
 
-                //apply compression if accepted
-                string encodings = context.Request.Headers.Get("Accept-Encoding");
-                if (encodings != null)
+                if (ConfigurationManager.AppSettings["EnableOutputCompression"] == "true")
                 {
-                    encodings = encodings.ToLower();
+                    //apply compression if accepted
+                    string encodings = context.Request.Headers.Get("Accept-Encoding");
 
-                    if (encodings.ToLower().Contains("gzip"))
+                    if (encodings != null)
                     {
-                        context.Response.Filter = new GZipStream(context.Response.Filter, CompressionMode.Compress);
-                        context.Response.AppendHeader("Content-Encoding", "gzip");
-                        //context.Trace.Warn("GZIP Compression on");
+                        encodings = encodings.ToLower();
+
+                        if (encodings.ToLower().Contains("gzip"))
+                        {
+                            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionMode.Compress);
+                            context.Response.AppendHeader("Content-Encoding", "gzip");
+                            //context.Trace.Warn("GZIP Compression on");
+                        }
+                        else
+                        {
+                            context.Response.Filter = new DeflateStream(context.Response.Filter, CompressionMode.Compress);
+                            context.Response.AppendHeader("Content-Encoding", "deflate");
+                            //context.Trace.Warn("Deflate Compression on");
+                        }
                     }
-                    else
-                    {
-                        context.Response.Filter = new DeflateStream(context.Response.Filter, CompressionMode.Compress);
-                        context.Response.AppendHeader("Content-Encoding", "deflate");
-                        //context.Trace.Warn("Deflate Compression on");
-                    }
+
                 }
-
                 if (filter.Action == "getchargepoints" || filter.Action == "getpoilist")
                 {
                     OutputPOIList(outputProvider, context, filter);

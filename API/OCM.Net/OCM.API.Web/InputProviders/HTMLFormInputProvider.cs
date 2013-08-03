@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using OCM.API.Common;
 using OCM.API.Common.Model;
+using System.Threading.Tasks;
 
 namespace OCM.API.InputProviders
 {
@@ -33,29 +34,29 @@ namespace OCM.API.InputProviders
 
             //build connection info list 
             //connection 1 to n
-             
+
             cp.Connections = new List<Common.Model.ConnectionInfo>();
             for (int i = 1; i <= 2; i++)
             {
                 var connectionInfo = new Common.Model.ConnectionInfo();
 
-                int? connectionTypeID = ParseInt(context.Request["ocm_cp_connection"+i+"_type"]);
+                int? connectionTypeID = ParseInt(context.Request["ocm_cp_connection" + i + "_type"]);
                 if (connectionTypeID != null)
                 {
                     //TODO: remove/retire or remove entity reference for reference data lookup
                     var connectionType = new OCM.Core.Data.OCMEntities().ConnectionTypes.First(ct => ct.ID == (int)connectionTypeID);
                     connectionInfo.ConnectionType = OCM.API.Common.Model.Extensions.ConnectionType.FromDataModel(connectionType);
                 }
-                         
-                int? chargerLevelID = ParseInt(context.Request["ocm_cp_connection"+i+"_level"]);
+
+                int? chargerLevelID = ParseInt(context.Request["ocm_cp_connection" + i + "_level"]);
                 if (chargerLevelID != null)
                 {
                     connectionInfo.Level = new Common.Model.ChargerType() { ID = (int)chargerLevelID };
                 }
-                    
+
                 connectionInfo.Amps = ParseInt(context.Request["ocm_cp_connection" + i + "_amps"]);
                 connectionInfo.Voltage = ParseInt(context.Request["ocm_cp_connection" + i + "_volts"]);
-                    
+
                 if (connectionInfo != null)
                 {
                     cp.Connections.Add(connectionInfo);
@@ -94,6 +95,48 @@ namespace OCM.API.InputProviders
         {
             //not implemented
             return false;
+        }
+
+        public bool ProcessMediaItemSubmission(HttpContext context, ref MediaItem mediaItem, int userId)
+        {
+            try
+            {
+                var files = context.Request.Files;
+                string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
+                int chargePointId = int.Parse(context.Request["id"]);
+                string comment = context.Request["comment"];
+                var tempFiles = new List<string>();
+
+                string tempFolder = context.Server.MapPath("~/temp/uploads/");
+                foreach (string file in context.Request.Files)
+                {
+                    var postedFile = context.Request.Files[file];
+                    if (postedFile != null && postedFile.ContentLength > 0)
+                    {
+                        string tmpFile = tempFolder + filePrefix + postedFile.FileName;
+                        postedFile.SaveAs(tmpFile);
+                        tempFiles.Add(tmpFile);
+                    }
+                }
+
+                var task = Task.Factory.StartNew(() =>
+                {
+                    var mediaManager = new MediaItemManager();
+
+                    foreach (var tmpFile in tempFiles)
+                    {
+                        var photoAdded = mediaManager.AddPOIMediaItem(tempFolder, tmpFile, chargePointId, comment, false, userId);
+                    }
+
+                }, TaskCreationOptions.LongRunning);
+
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
