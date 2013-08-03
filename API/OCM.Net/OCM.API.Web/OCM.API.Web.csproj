@@ -109,6 +109,7 @@
     <Content Include="Templates\Notifications\FaultReport.htm" />
     <Content Include="Templates\Notifications\LocationSubmitted.htm" />
     <Content Include="Templates\Notifications\LocationCommentReceived.htm" />
+    <Content Include="Temp\Uploads\readme.txt" />
     <Content Include="Test\JSONSubmissionTest.aspx" />
     <Content Include="Test\MailTest.aspx" />
     <Content Include="Test\TestDataSimilarity.aspx" />
@@ -269,9 +270,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Temp\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
