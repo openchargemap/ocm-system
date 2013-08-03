@@ -20,14 +20,14 @@ namespace OCM.API.Common.Model.Extensions
             {
                 ID = source.ID,
                 Username = source.Username,
-                Profile = source.Profile,
-                Location = source.Location,
-                WebsiteURL = source.WebsiteURL,
+                //Profile = source.Profile,
+                //Location = source.Location,
+                //WebsiteURL = source.WebsiteURL,
                 ReputationPoints = source.ReputationPoints,
-                DateCreated = source.DateCreated,
-                IsProfilePublic = source.IsProfilePublic,
-                IsPublicChargingProvider = source.IsPublicChargingProvider,
-                IsEmergencyChargingProvider = source.IsEmergencyChargingProvider
+                //DateCreated = source.DateCreated,
+                //IsProfilePublic = source.IsProfilePublic,
+                //IsPublicChargingProvider = source.IsPublicChargingProvider,
+                //IsEmergencyChargingProvider = source.IsEmergencyChargingProvider
             };
         }
 

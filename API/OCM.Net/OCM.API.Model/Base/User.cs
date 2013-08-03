@@ -44,13 +44,13 @@ namespace OCM.API.Common.Model
         public DateTime? DateLastLogin { get; set; }
 
         [DisplayName("Show Profile to Public")]
-        public bool IsProfilePublic { get; set; }
+        public bool? IsProfilePublic { get; set; }
 
         [DisplayName("Provide Emergency Charging")]
-        public bool IsEmergencyChargingProvider { get; set; }
+        public bool? IsEmergencyChargingProvider { get; set; }
 
         [DisplayName("Provide Public Charging")]
-        public bool IsPublicChargingProvider { get; set; }
+        public bool? IsPublicChargingProvider { get; set; }
         
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
@@ -59,7 +59,7 @@ namespace OCM.API.Common.Model
         [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
         public string EmailAddress { get; set; }
 
-        public bool IsCurrentSessionTokenValid {get;set;}
+        public bool? IsCurrentSessionTokenValid {get;set;}
 
         public string APIKey { get; set; }
 

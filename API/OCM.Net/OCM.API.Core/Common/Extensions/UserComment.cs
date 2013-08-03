@@ -8,11 +8,11 @@ namespace OCM.API.Common.Model.Extensions
     {
         public static Model.UserComment FromDataModel(Core.Data.UserComment source)
         {
-            return new Model.UserComment { 
+            var userComment =  new Model.UserComment { 
                 ID = source.ID,
                 Comment = source.Comment, 
                 Rating = source.Rating, 
-                UserName = source.UserName, 
+                
                 RelatedURL = source.RelatedURL, 
                 DateCreated = source.DateCreated ,
                 CommentType = UserCommentType.FromDataModel(source.UserCommentType),
@@ -20,6 +20,9 @@ namespace OCM.API.Common.Model.Extensions
                 User = User.BasicFromDataModel(source.User),
                 CheckinStatusType = CheckinStatusType.FromDataModel(source.CheckinStatusType)
             };
+
+            if (userComment.User != null) userComment.UserName = userComment.User.Username;
+            return userComment;
         }
     }
 }

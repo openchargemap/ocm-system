@@ -40,10 +40,10 @@ namespace OCM.API.Common
             if (userDetails != null)
             {
                 User user = Model.Extensions.User.FromDataModel(userDetails);
-                if (user.CurrentSessionToken != SessionToken) 
-                        user.IsCurrentSessionTokenValid = false;
-                else 
-                        user.IsCurrentSessionTokenValid = true;
+                if (user.CurrentSessionToken != SessionToken)
+                    user.IsCurrentSessionTokenValid = false;
+                else
+                    user.IsCurrentSessionTokenValid = true;
 
                 return user;
             }
@@ -106,10 +106,10 @@ namespace OCM.API.Common
                             userData.Profile = user.Profile;
                             userData.Username = user.Username;
                             userData.WebsiteURL = user.WebsiteURL;
-                            
-                            userData.IsProfilePublic = user.IsProfilePublic;
-                            userData.IsPublicChargingProvider = user.IsPublicChargingProvider;
-                            userData.IsEmergencyChargingProvider = user.IsEmergencyChargingProvider;
+
+                            userData.IsProfilePublic = (user.IsProfilePublic != null ? (bool)user.IsProfilePublic : false);
+                            userData.IsPublicChargingProvider = (user.IsPublicChargingProvider != null ? (bool)user.IsPublicChargingProvider : false);
+                            userData.IsEmergencyChargingProvider = (user.IsEmergencyChargingProvider != null ? (bool)user.IsEmergencyChargingProvider : false);
                             userData.EmailAddress = user.EmailAddress;
                             userData.Latitude = user.Latitude;
                             userData.Longitude = user.Longitude;
