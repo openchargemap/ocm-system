@@ -1,45 +1,49 @@
 ﻿@model OCM.API.Common.Model.EditQueueFilter
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
         <legend>Options</legend>
 
-      
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateFrom)
+        <div class="display-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateFrom)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.DateFrom)
+                @Html.ValidationMessageFor(model => model.DateFrom)
+            </div>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateFrom)
-            @Html.ValidationMessageFor(model => model.DateFrom)
+        <div class="display-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateTo)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.DateTo)
+                @Html.ValidationMessageFor(model => model.DateTo)
+            </div>
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateTo)
+        <div class="display-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.ShowEditsOnly)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.ShowEditsOnly)
+                @Html.ValidationMessageFor(model => model.ShowEditsOnly)
+            </div>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateTo)
-            @Html.ValidationMessageFor(model => model.DateTo)
+        <div class="display-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.ShowProcessed)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.ShowProcessed)
+                @Html.ValidationMessageFor(model => model.ShowProcessed)
+            </div>
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ShowEditsOnly)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ShowEditsOnly)
-            @Html.ValidationMessageFor(model => model.ShowEditsOnly)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ShowProcessed)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ShowProcessed)
-            @Html.ValidationMessageFor(model => model.ShowProcessed)
-        </div>
-
         <p>
             <input type="submit" value="Refresh" />
         </p>

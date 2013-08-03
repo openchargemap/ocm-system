@@ -166,7 +166,21 @@ namespace OCM.MVC.Controllers
         [HttpPost]
         public ActionResult AddMediaItem(int id, FormCollection collection)
         {
-            try
+            var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
+            var user = htmlInputProvider.GetUserFromAPICall(this.HttpContext.ApplicationInstance.Context);
+            if (user!=null)
+            {
+                var mediaItem = new MediaItem();
+                bool uploaded = htmlInputProvider.ProcessMediaItemSubmission(this.HttpContext.ApplicationInstance.Context, ref mediaItem, user.ID);
+                ViewBag.PoiId = id;
+                ViewBag.UploadCompleted = true;
+                return View();
+
+            }
+
+            return View();
+            
+           /* try
             {
                 int userId = (int)Session["UserID"];
 
@@ -207,7 +221,7 @@ namespace OCM.MVC.Controllers
             catch
             {
                 return View();
-            }
+            }*/
         }
 
         //
