@@ -27,9 +27,7 @@ function OCM_App() {
     this.isLocationEditMode = false;
 
     this.baseURL = "http://openchargemap.org/app/";
-    //this.baseURL = "http://localhost:81";
     this.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-    //this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
     this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     this.enableExperimental = false;
     this.searchInProgress = false;
@@ -40,7 +38,13 @@ function OCM_App() {
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
 
-    //this.ocm_data.serviceBaseURL = "http://localhost:81/API/v2";
+    this.isLocalDevMode = false;
+    if (this.isLocalDevMode == true) {
+        this.baseURL = "http://localhost:81";
+        this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+        this.ocm_data.serviceBaseURL = "http://localhost:81/API/v2";
+    }
+
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -163,9 +167,14 @@ OCM_App.prototype.initApp = function () {
     });
 
     $(document).delegate("#add-location", "vclick", function (event, ui) {
-        app.isLocationEditMode = false;
-        app.selectedPOI = null;
-        app.showLocationEditor();
+
+        if (app.isUserSignedIn()) {
+            app.isLocationEditMode = false;
+            app.selectedPOI = null;
+            app.showLocationEditor();
+        } else {
+            app.showMessage("Please Sign In before adding a location.");
+        }
         return false;
     });
 
@@ -803,6 +812,22 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
             $("#details-usercomments").listview("refresh");
             $("#details-general").trigger("create");
         } catch (exp) { }
+    }
+
+    //once displayed, try fetching a more accurate distance
+    if (this.ocm_app_searchPos != null) {
+        this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.lat(), this.ocm_app_searchPos.lng(), poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
+    }
+};
+
+OCM_App.prototype.updateDistanceDetails = function (response, status) {
+    if (response != null) {
+        var result = response.rows[0].elements[0];
+
+        if (result.status == "OK") {
+            var origin = response.originAddresses[0];
+            $("#addr_distance").after(" - driving distance: " + result.distance.text + " (" + result.duration.text + ") from " + origin);
+        }
     }
 };
 

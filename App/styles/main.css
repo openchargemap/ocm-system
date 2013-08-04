@@ -124,7 +124,7 @@ p {
     padding: 8px;
     background-color: #f3f3f3;
     overflow: hidden;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     width: 98%;
     margin-top: 0.5em;
 }
