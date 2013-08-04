@@ -13,5 +13,6 @@ namespace OCM.API.Common.Model
 
         public string Comments { get; set; }
         public DataProviderStatusType DataProviderStatusType { get; set; }
+        public bool IsRestrictedEdit { get; set; }
     }
 }

@@ -16,13 +16,15 @@ namespace OCM.API.Common.Model
         [StringLength(100)]
         public string UUID { get; set; }
 
+        public int? DataProviderID { get; set; }
         [DisplayName("Data Provider")]
         public DataProvider DataProvider { get; set; }
-
+        
         [DisplayName("Data Providers Reference")]
         [StringLength(100)]
         public string DataProvidersReference { get; set; }
 
+        public int? OperatorID { get; set; } 
         [DisplayName("Network/Operator")]
         public OperatorInfo OperatorInfo { get; set; }
 
@@ -30,6 +32,7 @@ namespace OCM.API.Common.Model
         [StringLength(100)]
         public string OperatorsReference { get; set; }
 
+        public int? UsageTypeID { get; set; }
         [DisplayName("Usage Type")]
         public UsageType UsageType { get; set; }
 
@@ -53,6 +56,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Date Last Confirmed")]
         public DateTime? DateLastConfirmed { get; set; }
 
+        public int? StatusTypeID { get; set; }
         [DisplayName("Operational Status")]
         public StatusType StatusType { get; set; }
 
@@ -69,6 +73,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Contributor")]
         public User Contributor { get; set; }
 
+        public int? SubmissionStatusTypeID { get; set; }
         [DisplayName("Submission Status")]
         public SubmissionStatusType SubmissionStatus { get; set; }
 

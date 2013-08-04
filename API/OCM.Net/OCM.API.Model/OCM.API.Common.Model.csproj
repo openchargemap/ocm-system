@@ -69,6 +69,8 @@
     <Compile Include="Base\ConnectionInfo.cs" />
     <Compile Include="Base\ConnectionType.cs" />
     <Compile Include="Base\CheckinStatusType.cs" />
+    <Compile Include="Base\MetadataFieldOption.cs" />
+    <Compile Include="Base\DataProviderUser.cs" />
     <Compile Include="Extended\ContactSubmission.cs" />
     <Compile Include="Base\MediaItem.cs" />
     <Compile Include="Base\DataType.cs" />

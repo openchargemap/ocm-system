@@ -9,14 +9,18 @@ namespace OCM.API.Common.Model
     public class ConnectionInfo
     {
         public int ID { get; set; }
+
+        public int? ConnectionTypeID { get; set; }
         public ConnectionType ConnectionType { get; set; }
 
         [DisplayName("Operators Own Ref"), StringLength(100)]
         public string Reference { get; set; }
 
+        public int? StatusTypeID { get; set; }
         [DisplayName("Operational Status")]
         public StatusType StatusType { get; set; }
 
+        public int? LevelID { get; set; }
         [DisplayName("Charging Level")]
         public ChargerType Level { get; set; }
 
@@ -29,6 +33,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Max. Power (kW)"), Range(0, 1000)]
         public double? PowerKW { get; set; }
 
+        public int? CurrentTypeID { get; set; }
         [DisplayName("Supply Type")]
         public CurrentType CurrentType { get; set; }
 

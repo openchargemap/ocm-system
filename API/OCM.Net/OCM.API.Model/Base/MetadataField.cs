@@ -10,7 +10,8 @@ namespace OCM.API.Common.Model
     {
         public int MetadataGroupID { get; set; }
         public int DataTypeID { get; set; }
-        public MetadataGroup MetadataGroup { get; set; }
+        
         public DataType DataType { get; set; }
+        public List<MetadataFieldOption> MetadataFieldOptions { get; set; }
     }
 }

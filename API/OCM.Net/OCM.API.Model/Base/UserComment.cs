@@ -11,10 +11,11 @@ namespace OCM.API.Common.Model
         public int ID { get; set; }
         public int ChargePointID { get; set; }
 
+        public int? CommentTypeID { get; set; }
         [DisplayName("Comment Type")]
         public UserCommentType CommentType { get; set; }
 
-        [DisplayName("Name"),StringLength(100)]
+        [DisplayName("Name"), StringLength(100)]
         public string UserName { get; set; }
 
         [DisplayName("Comment"), StringLength(2000), DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
@@ -32,6 +33,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Comment By")]
         public User User { get; set; }
 
+        public int? CheckinStatusTypeID { get; set; }
         [DisplayName("Check-In Status")]
         public CheckinStatusType CheckinStatusType { get; set; }
     }

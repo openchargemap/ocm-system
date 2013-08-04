@@ -68,7 +68,9 @@ namespace OCM.API.Common.Model
         public List<UserCommentType> UserCommentTypes { get; set; }
         public List<CheckinStatusType> CheckinStatusTypes { get; set; }
 
+        public List<DataType> DataTypes { get; set; }
         public List<MetadataGroup> MetadataGroups { get; set; }
+        
 
         /// <summary>
         /// Blank item used as template to populate/construct JSON object
