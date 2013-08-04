@@ -1,5 +1,5 @@
 //Open Charge Map App multi-platform build script
-//requires Nodejs and 'Jake' build system
+//requires NodeJS and 'Jake' build system
 //originally derived from jake build example at https://github.com/drichard/mindmaps
 
 /* Includes */
@@ -11,7 +11,7 @@ var moment = require("moment");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "3.2.0_"+ moment().format('YYYYMMDD');
+var releaseVersion = "3.3.0_"+ moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/webapp";
