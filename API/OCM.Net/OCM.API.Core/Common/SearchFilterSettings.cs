@@ -32,6 +32,7 @@ namespace OCM.API.Common
         public bool EnableCaching { get; set; }
         public bool IncludeComments { get; set; }
         public bool IsVerboseOutput { get; set; }
+        public bool IsCompactOutput { get; set; }
         public string Callback { get; set; }
         public double? MinPowerKW { get; set; }
 
@@ -55,6 +56,7 @@ namespace OCM.API.Common
             MaxResults = 100;
             APIVersion = null;
             IsVerboseOutput = true;
+            IsCompactOutput = false;
         }
 
         public bool IsLegacyAPICall
@@ -118,6 +120,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["enablecaching"])) settings.EnableCaching = ParseBool(context.Request["enablecaching"], true);
             if (!String.IsNullOrEmpty(context.Request["includecomments"])) settings.IncludeComments = ParseBool(context.Request["includecomments"], false);
             if (!String.IsNullOrEmpty(context.Request["verbose"])) settings.IsVerboseOutput = ParseBool(context.Request["verbose"], false);
+            if (!String.IsNullOrEmpty(context.Request["compact"])) settings.IsCompactOutput = ParseBool(context.Request["compact"], false);
             if (!String.IsNullOrEmpty(context.Request["callback"])) settings.Callback = ParseString(context.Request["callback"]);
            
             if (!String.IsNullOrEmpty(context.Request["maxresults"]))
@@ -173,6 +176,7 @@ namespace OCM.API.Common
                 if (SubmissionStatusTypeID != null) key += ":" + SubmissionStatusTypeID.ToString();
                 key += ":" + MaxResults.ToString();
                 key += ":" + IncludeComments.ToString();
+                key += ":" + this.IsCompactOutput.ToString();
                 if (CountryIDs != null) key += ":c_id:" + IntArrayToString(CountryIDs);
                 if (LevelIDs != null) key += ":l_id:" + IntArrayToString(LevelIDs);
                 if (ConnectionTypeIDs != null) key += ":ct_id:" + IntArrayToString(ConnectionTypeIDs);

@@ -8,10 +8,10 @@ namespace OCM.API.Common.Model.Extensions
     {
         public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source)
         {
-            return FromDataModel(source, false, false, false);
+            return FromDataModel(source, false, false, false, false);
         }
 
-        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments, bool loadMediaItems, bool loadMetadataValues)
+        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments, bool loadMediaItems, bool loadMetadataValues, bool isVerboseMode)
         {
             if (source == null) return null;
 
@@ -21,29 +21,43 @@ namespace OCM.API.Common.Model.Extensions
             poi.UUID = source.UUID;
 
             //populate data provider info
-            if (source.DataProvider != null)
+            if (source.DataProviderID != null)
             {
-                poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
+                poi.DataProviderID = source.DataProviderID;
+                if (isVerboseMode)
+                {
+                    poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
+                }
             }
+
             poi.DataProvidersReference = source.DataProvidersReference;
 
-            if (source.Operator != null)
+            if (source.OperatorID != null)
             {
-                //TODO: populate operator address info
-                poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
+                poi.OperatorID = source.OperatorID;
+                if (isVerboseMode)
+                {
+                    poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
+                }
             }
+
             poi.OperatorsReference = source.OperatorsReference;
 
-            if (source.UsageType != null)
+            if (source.UsageTypeID != null)
             {
-                poi.UsageType = UsageType.FromDataModel(source.UsageType);
+                poi.UsageTypeID = source.UsageTypeID;
+                if (isVerboseMode)
+                {
+                    poi.UsageType = UsageType.FromDataModel(source.UsageType);
+                }
             }
+
             poi.UsageCost = source.UsageCost;
 
             //populate address info
             if (source.AddressInfo != null)
             {
-                poi.AddressInfo = AddressInfo.FromDataModel(source.AddressInfo);
+                poi.AddressInfo = AddressInfo.FromDataModel(source.AddressInfo, isVerboseMode);
             }
 
             poi.NumberOfPoints = source.NumberOfPoints;
@@ -51,18 +65,38 @@ namespace OCM.API.Common.Model.Extensions
 
             poi.DatePlanned = source.DatePlanned;
             poi.DateLastConfirmed = source.DateLastConfirmed;
-            if (source.StatusType != null)
+
+
+            if (source.StatusTypeID != null)
             {
-                poi.StatusType = StatusType.FromDataModel(source.StatusType);
+                poi.StatusTypeID = source.StatusTypeID;
+                if (isVerboseMode)
+                {
+                    poi.StatusType = StatusType.FromDataModel(source.StatusType);
+                }
             }
+
             poi.DateLastStatusUpdate = source.DateLastStatusUpdate;
             poi.DataQualityLevel = source.DataQualityLevel;
             poi.DateCreated = source.DateCreated;
 
-            if (source.SubmissionStatusType != null) poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
+            if (source.SubmissionStatusTypeID != null)
+            {
+                poi.SubmissionStatusTypeID = source.SubmissionStatusTypeID;
+                if (isVerboseMode)
+                {
+                    poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
+                }
+            }
 
             //load contributor details (basic not sensitive info)
-            if (source.Contributor != null) poi.Contributor = User.BasicFromDataModel(source.Contributor);
+            if (source.Contributor != null)
+            {
+                if (isVerboseMode)
+                {
+                    poi.Contributor = User.BasicFromDataModel(source.Contributor);
+                }
+            }
 
             if (source.Connections != null)
             {
@@ -71,7 +105,7 @@ namespace OCM.API.Common.Model.Extensions
                     poi.Connections = new List<Model.ConnectionInfo>();
                     foreach (var conn in source.Connections)
                     {
-                        poi.Connections.Add(ConnectionInfo.FromDataModel(conn));
+                        poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode));
                     }
                 }
             }
@@ -79,10 +113,10 @@ namespace OCM.API.Common.Model.Extensions
             //optionally load user comments
             if (loadUserComments && source.UserComments != null)
             {
-                foreach (var comment in source.UserComments.OrderByDescending(cm=>cm.DateCreated))
+                foreach (var comment in source.UserComments.OrderByDescending(cm => cm.DateCreated))
                 {
                     if (poi.UserComments == null) poi.UserComments = new List<Model.UserComment>();
-                    Model.UserComment com = UserComment.FromDataModel(comment);
+                    Model.UserComment com = UserComment.FromDataModel(comment, isVerboseMode);
                     poi.UserComments.Add(com);
                 }
             }

@@ -10,14 +10,24 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (source == null) return null;
 
-            return new Model.MetadataField
+            var f = new Model.MetadataField
             {
                 ID = source.ID,
                 Title = source.Title,
                 MetadataGroupID = source.MetadataGroupID,
                 DataTypeID = source.DataTypeID
-                //DataType = DataType.FromDataModel(source.DataType)
             };
+
+            if (source.MetadataFieldOptions!=null)
+            {
+                
+                foreach (var o in source.MetadataFieldOptions)
+                {
+                    if (f.MetadataFieldOptions==null) f.MetadataFieldOptions = new List<Model.MetadataFieldOption>();
+                    f.MetadataFieldOptions.Add(Extensions.MetadataFieldOption.FromDataModel(o));
+                }
+            }
+            return f;
         }
     }
 }

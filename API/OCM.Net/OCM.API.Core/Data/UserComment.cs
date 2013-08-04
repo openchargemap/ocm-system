@@ -24,6 +24,7 @@ namespace OCM.Core.Data
         public System.DateTime DateCreated { get; set; }
         public Nullable<int> UserID { get; set; }
         public Nullable<byte> CheckinStatusTypeID { get; set; }
+        public Nullable<bool> IsActionedByEditor { get; set; }
     
         public virtual ChargePoint ChargePoint { get; set; }
         public virtual CheckinStatusType CheckinStatusType { get; set; }

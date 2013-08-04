@@ -17,6 +17,8 @@ namespace OCM.Core.Data
         public DataProvider()
         {
             this.ChargePoints = new HashSet<ChargePoint>();
+            this.DataProviderUsers = new HashSet<DataProviderUser>();
+            this.MetadataGroups = new HashSet<MetadataGroup>();
         }
     
         public int ID { get; set; }
@@ -24,8 +26,11 @@ namespace OCM.Core.Data
         public string WebsiteURL { get; set; }
         public string Comments { get; set; }
         public Nullable<int> DataProviderStatusTypeID { get; set; }
+        public bool IsRestrictedEdit { get; set; }
     
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
         public virtual DataProviderStatusType DataProviderStatusType { get; set; }
+        public virtual ICollection<DataProviderUser> DataProviderUsers { get; set; }
+        public virtual ICollection<MetadataGroup> MetadataGroups { get; set; }
     }
 }

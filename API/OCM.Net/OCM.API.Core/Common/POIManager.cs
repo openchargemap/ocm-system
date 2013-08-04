@@ -31,7 +31,7 @@ namespace OCM.API.Common
         {
             var dataModel = new OCMEntities();
             var item = dataModel.ChargePoints.FirstOrDefault(c => c.ID == id);
-            return Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo);
+            return Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
         }
 
         [EdmFunction("OCM.Core.Data.OCMEntities.Store", "udf_GetDistanceFromLatLonKM")]
@@ -188,7 +188,7 @@ namespace OCM.API.Common
                 foreach (var item in filteredList.Take(maxResults))
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
-                    Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments);
+                    Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput);
 
                     if (requiresDistance && c.AddressInfo != null)
                     {

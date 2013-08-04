@@ -94,6 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\EditQueueManager.cs" />
+    <Compile Include="Common\Extensions\MetadataFieldOption.cs" />
+    <Compile Include="Common\Extensions\DataProviderUser.cs" />
     <Compile Include="Common\Extensions\MediaItem.cs" />
     <Compile Include="Common\Extensions\MetadataValue.cs" />
     <Compile Include="Common\Extensions\MetadataField.cs" />
@@ -181,6 +183,9 @@
     <Compile Include="Data\DataProviderStatusType.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\DataProviderUser.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\DataType.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -194,6 +199,9 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\MetadataField.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MetadataFieldOption.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\MetadataGroup.cs">

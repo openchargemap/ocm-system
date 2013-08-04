@@ -99,6 +99,17 @@ namespace OCM.API.Common
                 data.SubmissionStatusTypes.Add(Model.Extensions.SubmissionStatusType.FromDataModel(s));
             }
 
+            data.MetadataGroups = new List<Model.MetadataGroup>();
+            foreach(var g in dataModel.MetadataGroups)
+            {
+                data.MetadataGroups.Add(Model.Extensions.MetadataGroup.FromDataModel(g));
+            }
+
+            data.DataTypes = new List<Model.DataType>();
+            foreach(var d in dataModel.DataTypes)
+            {
+                data.DataTypes.Add(Model.Extensions.DataType.FromDataModel(d));
+            }
             data.ChargePoint = new ChargePoint()
             {
                 AddressInfo = new Model.AddressInfo(),

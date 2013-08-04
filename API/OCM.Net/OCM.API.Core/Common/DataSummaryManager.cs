@@ -87,7 +87,7 @@ namespace OCM.API.Common.DataSummary
             summary.RecentComments = new List<UserComment>();
             foreach (var c in recentComments.OrderByDescending(c => c.DateCreated).Take(10))
             {
-                summary.RecentComments.Add(Model.Extensions.UserComment.FromDataModel(c));
+                summary.RecentComments.Add(Model.Extensions.UserComment.FromDataModel(c, true));
             }
 
             //populate recently modified charge points TODO: differentiate between updated since and created since?

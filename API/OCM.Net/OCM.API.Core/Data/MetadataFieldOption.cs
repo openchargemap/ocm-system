@@ -12,12 +12,18 @@ namespace OCM.Core.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class SystemConfig
+    public partial class MetadataFieldOption
     {
-        public string ConfigKeyName { get; set; }
-        public string ConfigValue { get; set; }
-        public Nullable<byte> DataTypeID { get; set; }
+        public MetadataFieldOption()
+        {
+            this.MetadataValues = new HashSet<MetadataValue>();
+        }
     
-        public virtual DataType DataType { get; set; }
+        public int ID { get; set; }
+        public int MetadataFieldID { get; set; }
+        public string Title { get; set; }
+    
+        public virtual MetadataField MetadataField { get; set; }
+        public virtual ICollection<MetadataValue> MetadataValues { get; set; }
     }
 }

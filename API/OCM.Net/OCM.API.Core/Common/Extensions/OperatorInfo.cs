@@ -22,7 +22,7 @@ namespace OCM.API.Common.Model.Extensions
                 PhoneSecondaryContact = source.PhoneSecondaryContact,
                 ContactEmail = source.ContactEmail,
                 FaultReportEmail = source.FaultReportEmail,
-                AddressInfo = (source!=null? AddressInfo.FromDataModel(source.AddressInfo): null),
+                AddressInfo = (source!=null? AddressInfo.FromDataModel(source.AddressInfo, true): null),
                 IsRestrictedEdit = source.IsRestrictedEdit
             };
         }

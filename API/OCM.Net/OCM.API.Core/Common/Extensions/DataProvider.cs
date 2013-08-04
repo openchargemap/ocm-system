@@ -16,7 +16,8 @@ namespace OCM.API.Common.Model.Extensions
                 Title = source.Title,
                 WebsiteURL = source.WebsiteURL,
                 Comments = source.Comments,
-                DataProviderStatusType = DataProviderStatusType.FromDataModel(source.DataProviderStatusType)
+                DataProviderStatusType = DataProviderStatusType.FromDataModel(source.DataProviderStatusType),
+                IsRestrictedEdit = source.IsRestrictedEdit
             };
         }
     }

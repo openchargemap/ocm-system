@@ -12,12 +12,14 @@ namespace OCM.Core.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class SystemConfig
+    public partial class DataProviderUser
     {
-        public string ConfigKeyName { get; set; }
-        public string ConfigValue { get; set; }
-        public Nullable<byte> DataTypeID { get; set; }
+        public int ID { get; set; }
+        public int DataProviderID { get; set; }
+        public int UserID { get; set; }
+        public bool IsDataProviderAdmin { get; set; }
     
-        public virtual DataType DataType { get; set; }
+        public virtual DataProvider DataProvider { get; set; }
+        public virtual User User { get; set; }
     }
 }

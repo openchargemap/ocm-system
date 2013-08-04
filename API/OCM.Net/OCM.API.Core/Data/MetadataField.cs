@@ -17,6 +17,7 @@ namespace OCM.Core.Data
         public MetadataField()
         {
             this.MetadataValues = new HashSet<MetadataValue>();
+            this.MetadataFieldOptions = new HashSet<MetadataFieldOption>();
         }
     
         public int ID { get; set; }
@@ -27,5 +28,6 @@ namespace OCM.Core.Data
         public virtual DataType DataType { get; set; }
         public virtual MetadataGroup MetadataGroup { get; set; }
         public virtual ICollection<MetadataValue> MetadataValues { get; set; }
+        public virtual ICollection<MetadataFieldOption> MetadataFieldOptions { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace OCM.Core.Data
             this.ChargePoints = new HashSet<ChargePoint>();
             this.EditQueueItems = new HashSet<EditQueueItem>();
             this.EditQueueItems1 = new HashSet<EditQueueItem>();
-            this.MetadataGroups = new HashSet<MetadataGroup>();
             this.UserComments = new HashSet<UserComment>();
             this.MediaItems = new HashSet<MediaItem>();
+            this.DataProviderUsers = new HashSet<DataProviderUser>();
         }
     
         public int ID { get; set; }
@@ -50,8 +50,8 @@ namespace OCM.Core.Data
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItems { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItems1 { get; set; }
-        public virtual ICollection<MetadataGroup> MetadataGroups { get; set; }
         public virtual ICollection<UserComment> UserComments { get; set; }
         public virtual ICollection<MediaItem> MediaItems { get; set; }
+        public virtual ICollection<DataProviderUser> DataProviderUsers { get; set; }
     }
 }

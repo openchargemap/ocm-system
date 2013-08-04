@@ -13,9 +13,8 @@ namespace OCM.API.Common.Model.Extensions
             return new Model.MetadataValue
             {
                 ID = source.ID,
-                ChargePointID = source.ChargePointID,
                 MetadataFieldID =source.MetadataFieldID,
-                MetadataField = MetadataField.FromDataModel(source.MetadataField),
+                MetadataFieldOption = MetadataFieldOption.FromDataModel(source.MetadataFieldOption),
                 ItemValue = source.ItemValue
             };
         }

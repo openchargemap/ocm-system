@@ -4,164 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="OCM.Core.Data.OCMEntities.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="OCMCoreDataOCMEntitiesStoreContainer">
-          <EntitySet Name="AddressInfo" EntityType="OCM.Core.Data.OCMEntities.Store.AddressInfo" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="AuditLog" EntityType="OCM.Core.Data.OCMEntities.Store.AuditLog" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ChargePoint" EntityType="OCM.Core.Data.OCMEntities.Store.ChargePoint" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ChargerType" EntityType="OCM.Core.Data.OCMEntities.Store.ChargerType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CheckinStatusType" EntityType="OCM.Core.Data.OCMEntities.Store.CheckinStatusType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ConnectionInfo" EntityType="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ConnectionType" EntityType="OCM.Core.Data.OCMEntities.Store.ConnectionType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Country" EntityType="OCM.Core.Data.OCMEntities.Store.Country" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CurrentType" EntityType="OCM.Core.Data.OCMEntities.Store.CurrentType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="DataProvider" EntityType="OCM.Core.Data.OCMEntities.Store.DataProvider" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="DataProviderStatusType" EntityType="OCM.Core.Data.OCMEntities.Store.DataProviderStatusType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="DataType" EntityType="OCM.Core.Data.OCMEntities.Store.DataType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="EditQueueItem" EntityType="OCM.Core.Data.OCMEntities.Store.EditQueueItem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="EntityType" EntityType="OCM.Core.Data.OCMEntities.Store.EntityType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MediaItem" EntityType="OCM.Core.Data.OCMEntities.Store.MediaItem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MetadataField" EntityType="OCM.Core.Data.OCMEntities.Store.MetadataField" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MetadataGroup" EntityType="OCM.Core.Data.OCMEntities.Store.MetadataGroup" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MetadataValue" EntityType="OCM.Core.Data.OCMEntities.Store.MetadataValue" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Operator" EntityType="OCM.Core.Data.OCMEntities.Store.Operator" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="StatusType" EntityType="OCM.Core.Data.OCMEntities.Store.StatusType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SubmissionStatusType" EntityType="OCM.Core.Data.OCMEntities.Store.SubmissionStatusType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SystemConfig" EntityType="OCM.Core.Data.OCMEntities.Store.SystemConfig" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UsageType" EntityType="OCM.Core.Data.OCMEntities.Store.UsageType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="User" EntityType="OCM.Core.Data.OCMEntities.Store.User" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UserComment" EntityType="OCM.Core.Data.OCMEntities.Store.UserComment" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UserCommentType" EntityType="OCM.Core.Data.OCMEntities.Store.UserCommentType" store:Type="Tables" Schema="dbo" />
-          <AssociationSet Name="FK_AddressInfo_Country" Association="OCM.Core.Data.OCMEntities.Store.FK_AddressInfo_Country">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="AddressInfo" EntitySet="AddressInfo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AuditLog_User" Association="OCM.Core.Data.OCMEntities.Store.FK_AuditLog_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="AuditLog" EntitySet="AuditLog" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_AddressInfo" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_AddressInfo">
-            <End Role="AddressInfo" EntitySet="AddressInfo" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_ChargePoint">
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-            <End Role="ChargePoint1" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_DataProvider" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_DataProvider">
-            <End Role="DataProvider" EntitySet="DataProvider" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_Operator" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_Operator">
-            <End Role="Operator" EntitySet="Operator" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_StatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_StatusType">
-            <End Role="StatusType" EntitySet="StatusType" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_SubmissionStatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_SubmissionStatusType">
-            <End Role="SubmissionStatusType" EntitySet="SubmissionStatusType" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_UsageType" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_UsageType">
-            <End Role="UsageType" EntitySet="UsageType" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_User" Association="OCM.Core.Data.OCMEntities.Store.FK_ChargePoint_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ConnectionInfo_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_ChargePoint">
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ConnectionInfo_ChargerType" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_ChargerType">
-            <End Role="ChargerType" EntitySet="ChargerType" />
-            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ConnectionInfo_CurrentType" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_CurrentType">
-            <End Role="CurrentType" EntitySet="CurrentType" />
-            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ConnectionInfo_StatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_ConnectionInfo_StatusType">
-            <End Role="StatusType" EntitySet="StatusType" />
-            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DataProvider_DataProviderStatus" Association="OCM.Core.Data.OCMEntities.Store.FK_DataProvider_DataProviderStatus">
-            <End Role="DataProviderStatusType" EntitySet="DataProviderStatusType" />
-            <End Role="DataProvider" EntitySet="DataProvider" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EditQueue_User" Association="OCM.Core.Data.OCMEntities.Store.FK_EditQueue_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EditQueue_User1" Association="OCM.Core.Data.OCMEntities.Store.FK_EditQueue_User1">
-            <End Role="User" EntitySet="User" />
-            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EditQueueItem_EntityType" Association="OCM.Core.Data.OCMEntities.Store.FK_EditQueueItem_EntityType">
-            <End Role="EntityType" EntitySet="EntityType" />
-            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MediaItem_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_MediaItem_ChargePoint">
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-            <End Role="MediaItem" EntitySet="MediaItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MediaItem_User" Association="OCM.Core.Data.OCMEntities.Store.FK_MediaItem_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="MediaItem" EntitySet="MediaItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetadataField_DataType" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataField_DataType">
-            <End Role="DataType" EntitySet="DataType" />
-            <End Role="MetadataField" EntitySet="MetadataField" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetadataField_MetadataGroup" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataField_MetadataGroup">
-            <End Role="MetadataGroup" EntitySet="MetadataGroup" />
-            <End Role="MetadataField" EntitySet="MetadataField" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetadataGroup_User" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataGroup_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="MetadataGroup" EntitySet="MetadataGroup" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetadataValue_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataValue_ChargePoint">
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-            <End Role="MetadataValue" EntitySet="MetadataValue" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetadataValue_MetadataField" Association="OCM.Core.Data.OCMEntities.Store.FK_MetadataValue_MetadataField">
-            <End Role="MetadataField" EntitySet="MetadataField" />
-            <End Role="MetadataValue" EntitySet="MetadataValue" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Operator_AddressInfo" Association="OCM.Core.Data.OCMEntities.Store.FK_Operator_AddressInfo">
-            <End Role="AddressInfo" EntitySet="AddressInfo" />
-            <End Role="Operator" EntitySet="Operator" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SystemConfig_DataType" Association="OCM.Core.Data.OCMEntities.Store.FK_SystemConfig_DataType">
-            <End Role="DataType" EntitySet="DataType" />
-            <End Role="SystemConfig" EntitySet="SystemConfig" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserComment_ChargePoint" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_ChargePoint">
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-            <End Role="UserComment" EntitySet="UserComment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserComment_CheckinStatusType" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_CheckinStatusType">
-            <End Role="CheckinStatusType" EntitySet="CheckinStatusType" />
-            <End Role="UserComment" EntitySet="UserComment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserComment_User" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="UserComment" EntitySet="UserComment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserComment_UserCommentType" Association="OCM.Core.Data.OCMEntities.Store.FK_UserComment_UserCommentType">
-            <End Role="UserCommentType" EntitySet="UserCommentType" />
-            <End Role="UserComment" EntitySet="UserComment" />
-          </AssociationSet>
-        </EntityContainer>
+    <Schema Namespace="OCM.Core.Data.OCMEntities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AddressInfo">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" />
           <Property Name="AddressLine1" Type="nvarchar" MaxLength="1000" />
           <Property Name="AddressLine2" Type="nvarchar" MaxLength="1000" />
@@ -182,7 +30,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EventDate" Type="datetime" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="EventDescription" Type="nvarchar(max)" />
@@ -192,8 +40,8 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="UUID" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UUID" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ParentChargePointID" Type="int" />
           <Property Name="DataProviderID" Type="int" Nullable="false" />
           <Property Name="DataProvidersReference" Type="nvarchar" MaxLength="100" />
@@ -218,7 +66,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Comments" Type="nvarchar(max)" />
           <Property Name="IsFastChargeCapable" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" />
@@ -228,7 +76,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="tinyint" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="IsPositive" Type="bit" />
           <Property Name="IsAutomatedCheckin" Type="bit" Nullable="false" />
         </EntityType>
@@ -236,7 +84,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ChargePointID" Type="int" Nullable="false" />
           <Property Name="ConnectionTypeID" Type="int" Nullable="false" />
           <Property Name="Reference" Type="nvarchar" MaxLength="100" />
@@ -253,8 +101,8 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="FormalName" Type="nvarchar" MaxLength="200" />
           <Property Name="IsDiscontinued" Type="bit" />
           <Property Name="IsObsolete" Type="bit" />
@@ -263,8 +111,8 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ISOCode" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="CurrentType">
@@ -272,26 +120,36 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="smallint" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="DataProvider">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="250" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="WebsiteURL" Type="nvarchar" MaxLength="500" />
           <Property Name="Comments" Type="nvarchar(max)" />
           <Property Name="DataProviderStatusTypeID" Type="int" />
+          <Property Name="IsRestrictedEdit" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="DataProviderStatusType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="IsProviderEnabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataProviderUser">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataProviderID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="IsDataProviderAdmin" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="DataType">
           <Key>
@@ -304,7 +162,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="int" />
           <Property Name="Comment" Type="nvarchar(max)" />
           <Property Name="IsProcessed" Type="bit" Nullable="false" />
@@ -321,14 +179,14 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="smallint" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="MediaItem">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="ItemURL" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemURL" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="ItemThumbnailURL" Type="nvarchar" MaxLength="500" />
           <Property Name="Comment" Type="nvarchar" MaxLength="1000" />
           <Property Name="ChargePointID" Type="int" Nullable="false" />
@@ -344,34 +202,44 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MetadataGroupID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="DataTypeID" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MetadataFieldOption">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MetadataFieldID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="MetadataGroup">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="GroupOwnerUserID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DataProviderID" Type="int" Nullable="false" />
           <Property Name="IsRestrictedEdit" Type="bit" Nullable="false" />
+          <Property Name="IsPublicInterest" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MetadataValue">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ChargePointID" Type="int" Nullable="false" />
           <Property Name="MetadataFieldID" Type="int" Nullable="false" />
+          <Property Name="MetadataFieldOptionID" Type="int" />
           <Property Name="ItemValue" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Operator">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="250" />
           <Property Name="WebsiteURL" Type="nvarchar" MaxLength="500" />
           <Property Name="Comments" Type="nvarchar(max)" />
@@ -389,7 +257,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="IsOperational" Type="bit" />
         </EntityType>
         <EntityType Name="SubmissionStatusType">
@@ -397,14 +265,14 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="IsLive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SystemConfig">
           <Key>
             <PropertyRef Name="ConfigKeyName" />
           </Key>
-          <Property Name="ConfigKeyName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ConfigKeyName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ConfigValue" Type="nvarchar" MaxLength="500" />
           <Property Name="DataTypeID" Type="tinyint" />
         </EntityType>
@@ -412,8 +280,8 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="IsPayAtLocation" Type="bit" />
           <Property Name="IsMembershipRequired" Type="bit" />
           <Property Name="IsAccessKeyRequired" Type="bit" />
@@ -422,15 +290,13 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="IdentityProvider" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="Identifier" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdentityProvider" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Identifier" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="100" />
           <Property Name="CurrentSessionToken" Type="nvarchar" MaxLength="100" />
           <Property Name="Profile" Type="nvarchar(max)" />
           <Property Name="Location" Type="nvarchar" MaxLength="500" />
-          <Property Name="Latitude" Type="float" />
-          <Property Name="Longitude" Type="float" />
           <Property Name="WebsiteURL" Type="nvarchar" MaxLength="500" />
           <Property Name="ReputationPoints" Type="int" />
           <Property Name="Permissions" Type="nvarchar(max)" />
@@ -438,16 +304,18 @@
           <Property Name="DateCreated" Type="smalldatetime" Nullable="false" />
           <Property Name="DateLastLogin" Type="smalldatetime" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="500" />
-          <Property Name="IsEmergencyChargingProvider" Type="bit" />
-          <Property Name="IsProfilePublic" Type="bit" />
-          <Property Name="IsPublicChargingProvider" Type="bit" />
+          <Property Name="IsEmergencyChargingProvider" Type="bit" Nullable="false" />
+          <Property Name="IsProfilePublic" Type="bit" Nullable="false" />
+          <Property Name="IsPublicChargingProvider" Type="bit" Nullable="false" />
           <Property Name="APIKey" Type="nvarchar" MaxLength="100" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="Longitude" Type="float" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ChargePointID" Type="int" Nullable="false" />
           <Property Name="UserCommentTypeID" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="100" />
@@ -457,17 +325,18 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CheckinStatusTypeID" Type="tinyint" />
           <Property Name="UserID" Type="int" />
+          <Property Name="IsActionedByEditor" Type="bit" />
         </EntityType>
         <EntityType Name="UserCommentType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <Association Name="FK_AddressInfo_Country">
-          <End Role="Country" Type="OCM.Core.Data.OCMEntities.Store.Country" Multiplicity="0..1" />
-          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.Store.AddressInfo" Multiplicity="*" />
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="AddressInfo" Type="Self.AddressInfo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Country">
               <PropertyRef Name="ID" />
@@ -478,8 +347,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_AuditLog_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="1" />
-          <End Role="AuditLog" Type="OCM.Core.Data.OCMEntities.Store.AuditLog" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="AuditLog" Type="Self.AuditLog" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -490,8 +359,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_AddressInfo">
-          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.Store.AddressInfo" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="AddressInfo" Type="Self.AddressInfo" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AddressInfo">
               <PropertyRef Name="ID" />
@@ -502,8 +371,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_ChargePoint">
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="0..1" />
-          <End Role="ChargePoint1" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="0..1" />
+          <End Role="ChargePoint1" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargePoint">
               <PropertyRef Name="ID" />
@@ -514,8 +383,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_DataProvider">
-          <End Role="DataProvider" Type="OCM.Core.Data.OCMEntities.Store.DataProvider" Multiplicity="1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="DataProvider" Type="Self.DataProvider" Multiplicity="1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DataProvider">
               <PropertyRef Name="ID" />
@@ -526,8 +395,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_Operator">
-          <End Role="Operator" Type="OCM.Core.Data.OCMEntities.Store.Operator" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="Operator" Type="Self.Operator" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Operator">
               <PropertyRef Name="ID" />
@@ -538,8 +407,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_StatusType">
-          <End Role="StatusType" Type="OCM.Core.Data.OCMEntities.Store.StatusType" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="StatusType" Type="Self.StatusType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="StatusType">
               <PropertyRef Name="ID" />
@@ -550,8 +419,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_SubmissionStatusType">
-          <End Role="SubmissionStatusType" Type="OCM.Core.Data.OCMEntities.Store.SubmissionStatusType" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="SubmissionStatusType" Type="Self.SubmissionStatusType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SubmissionStatusType">
               <PropertyRef Name="ID" />
@@ -562,8 +431,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_UsageType">
-          <End Role="UsageType" Type="OCM.Core.Data.OCMEntities.Store.UsageType" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="UsageType" Type="Self.UsageType" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UsageType">
               <PropertyRef Name="ID" />
@@ -574,8 +443,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChargePoint_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -586,8 +455,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ConnectionInfo_ChargePoint">
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
-          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="1" />
+          <End Role="ConnectionInfo" Type="Self.ConnectionInfo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargePoint">
               <PropertyRef Name="ID" />
@@ -598,8 +467,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ConnectionInfo_ChargerType">
-          <End Role="ChargerType" Type="OCM.Core.Data.OCMEntities.Store.ChargerType" Multiplicity="0..1" />
-          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <End Role="ChargerType" Type="Self.ChargerType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="Self.ConnectionInfo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargerType">
               <PropertyRef Name="ID" />
@@ -610,8 +479,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ConnectionInfo_CurrentType">
-          <End Role="CurrentType" Type="OCM.Core.Data.OCMEntities.Store.CurrentType" Multiplicity="0..1" />
-          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <End Role="CurrentType" Type="Self.CurrentType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="Self.ConnectionInfo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CurrentType">
               <PropertyRef Name="ID" />
@@ -622,8 +491,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ConnectionInfo_StatusType">
-          <End Role="StatusType" Type="OCM.Core.Data.OCMEntities.Store.StatusType" Multiplicity="0..1" />
-          <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.Store.ConnectionInfo" Multiplicity="*" />
+          <End Role="StatusType" Type="Self.StatusType" Multiplicity="0..1" />
+          <End Role="ConnectionInfo" Type="Self.ConnectionInfo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="StatusType">
               <PropertyRef Name="ID" />
@@ -634,8 +503,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DataProvider_DataProviderStatus">
-          <End Role="DataProviderStatusType" Type="OCM.Core.Data.OCMEntities.Store.DataProviderStatusType" Multiplicity="0..1" />
-          <End Role="DataProvider" Type="OCM.Core.Data.OCMEntities.Store.DataProvider" Multiplicity="*" />
+          <End Role="DataProviderStatusType" Type="Self.DataProviderStatusType" Multiplicity="0..1" />
+          <End Role="DataProvider" Type="Self.DataProvider" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DataProviderStatusType">
               <PropertyRef Name="ID" />
@@ -645,9 +514,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DataProviderUser_DataProvider">
+          <End Role="DataProvider" Type="Self.DataProvider" Multiplicity="1" />
+          <End Role="DataProviderUser" Type="Self.DataProviderUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProvider">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DataProviderUser">
+              <PropertyRef Name="DataProviderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataProviderUser_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="DataProviderUser" Type="Self.DataProviderUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DataProviderUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EditQueue_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
-          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.Store.EditQueueItem" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="Self.EditQueueItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -658,8 +551,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EditQueue_User1">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
-          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.Store.EditQueueItem" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="Self.EditQueueItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -670,8 +563,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EditQueueItem_EntityType">
-          <End Role="EntityType" Type="OCM.Core.Data.OCMEntities.Store.EntityType" Multiplicity="0..1" />
-          <End Role="EditQueueItem" Type="OCM.Core.Data.OCMEntities.Store.EditQueueItem" Multiplicity="*" />
+          <End Role="EntityType" Type="Self.EntityType" Multiplicity="0..1" />
+          <End Role="EditQueueItem" Type="Self.EditQueueItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="EntityType">
               <PropertyRef Name="ID" />
@@ -682,8 +575,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MediaItem_ChargePoint">
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
-          <End Role="MediaItem" Type="OCM.Core.Data.OCMEntities.Store.MediaItem" Multiplicity="*" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="1" />
+          <End Role="MediaItem" Type="Self.MediaItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargePoint">
               <PropertyRef Name="ID" />
@@ -694,8 +587,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MediaItem_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="1" />
-          <End Role="MediaItem" Type="OCM.Core.Data.OCMEntities.Store.MediaItem" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="MediaItem" Type="Self.MediaItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -706,8 +599,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MetadataField_DataType">
-          <End Role="DataType" Type="OCM.Core.Data.OCMEntities.Store.DataType" Multiplicity="1" />
-          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.Store.MetadataField" Multiplicity="*" />
+          <End Role="DataType" Type="Self.DataType" Multiplicity="1" />
+          <End Role="MetadataField" Type="Self.MetadataField" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DataType">
               <PropertyRef Name="ID" />
@@ -718,8 +611,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MetadataField_MetadataGroup">
-          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.Store.MetadataGroup" Multiplicity="1" />
-          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.Store.MetadataField" Multiplicity="*" />
+          <End Role="MetadataGroup" Type="Self.MetadataGroup" Multiplicity="1" />
+          <End Role="MetadataField" Type="Self.MetadataField" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MetadataGroup">
               <PropertyRef Name="ID" />
@@ -729,21 +622,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MetadataGroup_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="1" />
-          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.Store.MetadataGroup" Multiplicity="*" />
+        <Association Name="FK_MetadataFieldOption_MetadataField">
+          <End Role="MetadataField" Type="Self.MetadataField" Multiplicity="1" />
+          <End Role="MetadataFieldOption" Type="Self.MetadataFieldOption" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
+            <Principal Role="MetadataField">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataFieldOption">
+              <PropertyRef Name="MetadataFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataGroup_DataProvider">
+          <End Role="DataProvider" Type="Self.DataProvider" Multiplicity="1" />
+          <End Role="MetadataGroup" Type="Self.MetadataGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProvider">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="MetadataGroup">
-              <PropertyRef Name="GroupOwnerUserID" />
+              <PropertyRef Name="DataProviderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MetadataValue_ChargePoint">
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
-          <End Role="MetadataValue" Type="OCM.Core.Data.OCMEntities.Store.MetadataValue" Multiplicity="*" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="1" />
+          <End Role="MetadataValue" Type="Self.MetadataValue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargePoint">
               <PropertyRef Name="ID" />
@@ -754,8 +659,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MetadataValue_MetadataField">
-          <End Role="MetadataField" Type="OCM.Core.Data.OCMEntities.Store.MetadataField" Multiplicity="1" />
-          <End Role="MetadataValue" Type="OCM.Core.Data.OCMEntities.Store.MetadataValue" Multiplicity="*" />
+          <End Role="MetadataField" Type="Self.MetadataField" Multiplicity="1" />
+          <End Role="MetadataValue" Type="Self.MetadataValue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MetadataField">
               <PropertyRef Name="ID" />
@@ -765,9 +670,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MetadataValue_MetadataFieldOption">
+          <End Role="MetadataFieldOption" Type="Self.MetadataFieldOption" Multiplicity="0..1" />
+          <End Role="MetadataValue" Type="Self.MetadataValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataFieldOption">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataValue">
+              <PropertyRef Name="MetadataFieldOptionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Operator_AddressInfo">
-          <End Role="AddressInfo" Type="OCM.Core.Data.OCMEntities.Store.AddressInfo" Multiplicity="0..1" />
-          <End Role="Operator" Type="OCM.Core.Data.OCMEntities.Store.Operator" Multiplicity="*" />
+          <End Role="AddressInfo" Type="Self.AddressInfo" Multiplicity="0..1" />
+          <End Role="Operator" Type="Self.Operator" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AddressInfo">
               <PropertyRef Name="ID" />
@@ -778,8 +695,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SystemConfig_DataType">
-          <End Role="DataType" Type="OCM.Core.Data.OCMEntities.Store.DataType" Multiplicity="0..1" />
-          <End Role="SystemConfig" Type="OCM.Core.Data.OCMEntities.Store.SystemConfig" Multiplicity="*" />
+          <End Role="DataType" Type="Self.DataType" Multiplicity="0..1" />
+          <End Role="SystemConfig" Type="Self.SystemConfig" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DataType">
               <PropertyRef Name="ID" />
@@ -790,8 +707,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserComment_ChargePoint">
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.Store.ChargePoint" Multiplicity="1" />
-          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="1" />
+          <End Role="UserComment" Type="Self.UserComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargePoint">
               <PropertyRef Name="ID" />
@@ -802,8 +719,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserComment_CheckinStatusType">
-          <End Role="CheckinStatusType" Type="OCM.Core.Data.OCMEntities.Store.CheckinStatusType" Multiplicity="0..1" />
-          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <End Role="CheckinStatusType" Type="Self.CheckinStatusType" Multiplicity="0..1" />
+          <End Role="UserComment" Type="Self.UserComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CheckinStatusType">
               <PropertyRef Name="ID" />
@@ -814,8 +731,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserComment_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.Store.User" Multiplicity="0..1" />
-          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="UserComment" Type="Self.UserComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -826,8 +743,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserComment_UserCommentType">
-          <End Role="UserCommentType" Type="OCM.Core.Data.OCMEntities.Store.UserCommentType" Multiplicity="1" />
-          <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.Store.UserComment" Multiplicity="*" />
+          <End Role="UserCommentType" Type="Self.UserCommentType" Multiplicity="1" />
+          <End Role="UserComment" Type="Self.UserComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserCommentType">
               <PropertyRef Name="ID" />
@@ -837,12 +754,182 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="udf_GetDistanceFromLatLonKM" ReturnType="float" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="udf_GetDistanceFromLatLonKM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="float">
           <Parameter Name="Latitude1" Type="float" Mode="In" />
           <Parameter Name="Longitude1" Type="float" Mode="In" />
           <Parameter Name="Latitude2" Type="float" Mode="In" />
           <Parameter Name="Longitude2" Type="float" Mode="In" />
         </Function>
+        <EntityContainer Name="OCMCoreDataOCMEntitiesStoreContainer">
+          <EntitySet Name="AddressInfo" EntityType="Self.AddressInfo" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="ChargePoint" EntityType="Self.ChargePoint" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="ChargerType" EntityType="Self.ChargerType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="CheckinStatusType" EntityType="Self.CheckinStatusType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="ConnectionInfo" EntityType="Self.ConnectionInfo" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="ConnectionType" EntityType="Self.ConnectionType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="CurrentType" EntityType="Self.CurrentType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="DataProvider" EntityType="Self.DataProvider" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="DataProviderStatusType" EntityType="Self.DataProviderStatusType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="DataProviderUser" EntityType="Self.DataProviderUser" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="DataType" EntityType="Self.DataType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="EditQueueItem" EntityType="Self.EditQueueItem" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="EntityType" EntityType="Self.EntityType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MediaItem" EntityType="Self.MediaItem" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MetadataField" EntityType="Self.MetadataField" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MetadataFieldOption" EntityType="Self.MetadataFieldOption" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MetadataGroup" EntityType="Self.MetadataGroup" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MetadataValue" EntityType="Self.MetadataValue" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Operator" EntityType="Self.Operator" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="StatusType" EntityType="Self.StatusType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="SubmissionStatusType" EntityType="Self.SubmissionStatusType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="SystemConfig" EntityType="Self.SystemConfig" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="UsageType" EntityType="Self.UsageType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="UserComment" EntityType="Self.UserComment" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="UserCommentType" EntityType="Self.UserCommentType" Schema="dbo" p3:Type="Tables" xmlns:p3="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <AssociationSet Name="FK_AddressInfo_Country" Association="Self.FK_AddressInfo_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="AddressInfo" EntitySet="AddressInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AuditLog_User" Association="Self.FK_AuditLog_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AuditLog" EntitySet="AuditLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_AddressInfo" Association="Self.FK_ChargePoint_AddressInfo">
+            <End Role="AddressInfo" EntitySet="AddressInfo" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_ChargePoint" Association="Self.FK_ChargePoint_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="ChargePoint1" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_DataProvider" Association="Self.FK_ChargePoint_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProvider" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_Operator" Association="Self.FK_ChargePoint_Operator">
+            <End Role="Operator" EntitySet="Operator" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_StatusType" Association="Self.FK_ChargePoint_StatusType">
+            <End Role="StatusType" EntitySet="StatusType" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_SubmissionStatusType" Association="Self.FK_ChargePoint_SubmissionStatusType">
+            <End Role="SubmissionStatusType" EntitySet="SubmissionStatusType" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_UsageType" Association="Self.FK_ChargePoint_UsageType">
+            <End Role="UsageType" EntitySet="UsageType" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChargePoint_User" Association="Self.FK_ChargePoint_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_ChargePoint" Association="Self.FK_ConnectionInfo_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_ChargerType" Association="Self.FK_ConnectionInfo_ChargerType">
+            <End Role="ChargerType" EntitySet="ChargerType" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_CurrentType" Association="Self.FK_ConnectionInfo_CurrentType">
+            <End Role="CurrentType" EntitySet="CurrentType" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionInfo_StatusType" Association="Self.FK_ConnectionInfo_StatusType">
+            <End Role="StatusType" EntitySet="StatusType" />
+            <End Role="ConnectionInfo" EntitySet="ConnectionInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataProvider_DataProviderStatus" Association="Self.FK_DataProvider_DataProviderStatus">
+            <End Role="DataProviderStatusType" EntitySet="DataProviderStatusType" />
+            <End Role="DataProvider" EntitySet="DataProvider" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataProviderUser_DataProvider" Association="Self.FK_DataProviderUser_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProvider" />
+            <End Role="DataProviderUser" EntitySet="DataProviderUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataProviderUser_User" Association="Self.FK_DataProviderUser_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="DataProviderUser" EntitySet="DataProviderUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueue_User" Association="Self.FK_EditQueue_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueue_User1" Association="Self.FK_EditQueue_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EditQueueItem_EntityType" Association="Self.FK_EditQueueItem_EntityType">
+            <End Role="EntityType" EntitySet="EntityType" />
+            <End Role="EditQueueItem" EntitySet="EditQueueItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MediaItem_ChargePoint" Association="Self.FK_MediaItem_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="MediaItem" EntitySet="MediaItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MediaItem_User" Association="Self.FK_MediaItem_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="MediaItem" EntitySet="MediaItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataField_DataType" Association="Self.FK_MetadataField_DataType">
+            <End Role="DataType" EntitySet="DataType" />
+            <End Role="MetadataField" EntitySet="MetadataField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataField_MetadataGroup" Association="Self.FK_MetadataField_MetadataGroup">
+            <End Role="MetadataGroup" EntitySet="MetadataGroup" />
+            <End Role="MetadataField" EntitySet="MetadataField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataFieldOption_MetadataField" Association="Self.FK_MetadataFieldOption_MetadataField">
+            <End Role="MetadataField" EntitySet="MetadataField" />
+            <End Role="MetadataFieldOption" EntitySet="MetadataFieldOption" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataGroup_DataProvider" Association="Self.FK_MetadataGroup_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProvider" />
+            <End Role="MetadataGroup" EntitySet="MetadataGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_ChargePoint" Association="Self.FK_MetadataValue_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="MetadataValue" EntitySet="MetadataValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_MetadataField" Association="Self.FK_MetadataValue_MetadataField">
+            <End Role="MetadataField" EntitySet="MetadataField" />
+            <End Role="MetadataValue" EntitySet="MetadataValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_MetadataFieldOption" Association="Self.FK_MetadataValue_MetadataFieldOption">
+            <End Role="MetadataFieldOption" EntitySet="MetadataFieldOption" />
+            <End Role="MetadataValue" EntitySet="MetadataValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Operator_AddressInfo" Association="Self.FK_Operator_AddressInfo">
+            <End Role="AddressInfo" EntitySet="AddressInfo" />
+            <End Role="Operator" EntitySet="Operator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SystemConfig_DataType" Association="Self.FK_SystemConfig_DataType">
+            <End Role="DataType" EntitySet="DataType" />
+            <End Role="SystemConfig" EntitySet="SystemConfig" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_ChargePoint" Association="Self.FK_UserComment_ChargePoint">
+            <End Role="ChargePoint" EntitySet="ChargePoint" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_CheckinStatusType" Association="Self.FK_UserComment_CheckinStatusType">
+            <End Role="CheckinStatusType" EntitySet="CheckinStatusType" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_User" Association="Self.FK_UserComment_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserComment_UserCommentType" Association="Self.FK_UserComment_UserCommentType">
+            <End Role="UserCommentType" EntitySet="UserCommentType" />
+            <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -977,10 +1064,6 @@
             <End Role="MetadataField" EntitySet="MetadataFields" />
             <End Role="MetadataValue" EntitySet="MetadataValues" />
           </AssociationSet>
-          <AssociationSet Name="FK_MetadataGroup_User" Association="OCM.Core.Data.OCMEntities.FK_MetadataGroup_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="MetadataGroup" EntitySet="MetadataGroups" />
-          </AssociationSet>
           <AssociationSet Name="FK_UserComment_User" Association="OCM.Core.Data.OCMEntities.FK_UserComment_User">
             <End Role="User" EntitySet="Users" />
             <End Role="UserComment" EntitySet="UserComments" />
@@ -1001,6 +1084,28 @@
           <AssociationSet Name="FK_MediaItem_User" Association="OCM.Core.Data.OCMEntities.FK_MediaItem_User">
             <End Role="User" EntitySet="Users" />
             <End Role="MediaItem" EntitySet="MediaItems" />
+          </AssociationSet>
+          <EntitySet Name="DataProviderUsers" EntityType="OCM.Core.Data.OCMEntities.DataProviderUser" />
+          <AssociationSet Name="FK_DataProviderUser_DataProvider" Association="OCM.Core.Data.OCMEntities.FK_DataProviderUser_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProviders" />
+            <End Role="DataProviderUser" EntitySet="DataProviderUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataGroup_DataProvider" Association="OCM.Core.Data.OCMEntities.FK_MetadataGroup_DataProvider">
+            <End Role="DataProvider" EntitySet="DataProviders" />
+            <End Role="MetadataGroup" EntitySet="MetadataGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataProviderUser_User" Association="OCM.Core.Data.OCMEntities.FK_DataProviderUser_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DataProviderUser" EntitySet="DataProviderUsers" />
+          </AssociationSet>
+          <EntitySet Name="MetadataFieldOptions" EntityType="OCM.Core.Data.OCMEntities.MetadataFieldOption" />
+          <AssociationSet Name="FK_MetadataFieldOption_MetadataField" Association="OCM.Core.Data.OCMEntities.FK_MetadataFieldOption_MetadataField">
+            <End Role="MetadataField" EntitySet="MetadataFields" />
+            <End Role="MetadataFieldOption" EntitySet="MetadataFieldOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetadataValue_MetadataFieldOption" Association="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataFieldOption">
+            <End Role="MetadataFieldOption" EntitySet="MetadataFieldOptions" />
+            <End Role="MetadataValue" EntitySet="MetadataValues" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AddressInfo">
@@ -1158,6 +1263,9 @@
           <Property Name="DataProviderStatusTypeID" Type="Int32" />
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_DataProvider" FromRole="DataProvider" ToRole="ChargePoint" />
           <NavigationProperty Name="DataProviderStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_DataProvider_DataProviderStatus" FromRole="DataProvider" ToRole="DataProviderStatusType" />
+          <NavigationProperty Name="DataProviderUsers" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_DataProvider" FromRole="DataProvider" ToRole="DataProviderUser" />
+          <NavigationProperty Name="MetadataGroups" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_DataProvider" FromRole="DataProvider" ToRole="MetadataGroup" />
+          <Property Type="Boolean" Name="IsRestrictedEdit" Nullable="false" />
         </EntityType>
         <EntityType Name="DataProviderStatusType">
           <Key>
@@ -1215,6 +1323,7 @@
           <NavigationProperty Name="DataType" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_DataType" FromRole="MetadataField" ToRole="DataType" />
           <NavigationProperty Name="MetadataGroup" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_MetadataGroup" FromRole="MetadataField" ToRole="MetadataGroup" />
           <NavigationProperty Name="MetadataValues" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataField" FromRole="MetadataField" ToRole="MetadataValue" />
+          <NavigationProperty Name="MetadataFieldOptions" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataFieldOption_MetadataField" FromRole="MetadataField" ToRole="MetadataFieldOption" />
         </EntityType>
         <EntityType Name="MetadataGroup">
           <Key>
@@ -1222,10 +1331,11 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="GroupOwnerUserID" Type="Int32" Nullable="false" />
           <Property Name="IsRestrictedEdit" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="MetadataFields" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataField_MetadataGroup" FromRole="MetadataGroup" ToRole="MetadataField" />
-          <NavigationProperty Name="GroupOwner" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_User" FromRole="MetadataGroup" ToRole="User" />
+          <Property Type="Int32" Name="DataProviderID" Nullable="false" />
+          <Property Type="Boolean" Name="IsPublicInterest" Nullable="false" />
+          <NavigationProperty Name="DataProvider" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_DataProvider" FromRole="MetadataGroup" ToRole="DataProvider" />
         </EntityType>
         <EntityType Name="MetadataValue">
           <Key>
@@ -1237,6 +1347,8 @@
           <Property Name="ItemValue" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="ChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_ChargePoint" FromRole="MetadataValue" ToRole="ChargePoint" />
           <NavigationProperty Name="MetadataField" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataField" FromRole="MetadataValue" ToRole="MetadataField" />
+          <Property Type="Int32" Name="MetadataFieldOptionID" />
+          <NavigationProperty Name="MetadataFieldOption" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataFieldOption" FromRole="MetadataValue" ToRole="MetadataFieldOption" />
         </EntityType>
         <EntityType Name="Operator">
           <Key>
@@ -1321,12 +1433,12 @@
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_User" FromRole="User" ToRole="ChargePoint" />
           <NavigationProperty Name="EditQueueItems" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User" FromRole="User" ToRole="EditQueueItem" />
           <NavigationProperty Name="EditQueueItems1" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User1" FromRole="User" ToRole="EditQueueItem" />
-          <NavigationProperty Name="MetadataGroups" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_User" FromRole="User" ToRole="MetadataGroup" />
           <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_User" FromRole="User" ToRole="UserComment" />
           <Property Type="Double" Name="Latitude" />
           <Property Type="Double" Name="Longitude" />
           <Property Type="String" Name="APIKey" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MediaItems" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_User" FromRole="User" ToRole="MediaItem" />
+          <NavigationProperty Name="DataProviderUsers" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_User" FromRole="User" ToRole="DataProviderUser" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -1346,6 +1458,7 @@
           <NavigationProperty Name="CheckinStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_CheckinStatusType" FromRole="UserComment" ToRole="CheckinStatusType" />
           <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_User" FromRole="UserComment" ToRole="User" />
           <NavigationProperty Name="UserCommentType" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_UserCommentType" FromRole="UserComment" ToRole="UserCommentType" />
+          <Property Type="Boolean" Name="IsActionedByEditor" />
         </EntityType>
         <EntityType Name="UserCommentType">
           <Key>
@@ -1667,18 +1780,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MetadataGroup_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="1" />
-          <End Role="MetadataGroup" Type="OCM.Core.Data.OCMEntities.MetadataGroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="MetadataGroup">
-              <PropertyRef Name="GroupOwnerUserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_UserComment_User">
           <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="0..1" />
           <End Role="UserComment" Type="OCM.Core.Data.OCMEntities.UserComment" Multiplicity="*" />
@@ -1755,6 +1856,87 @@
             </Principal>
             <Dependent Role="MediaItem">
               <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DataProviderUser">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="DataProviderID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <NavigationProperty Name="DataProvider" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_DataProvider" FromRole="DataProviderUser" ToRole="DataProvider" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_User" FromRole="DataProviderUser" ToRole="User" />
+          <Property Type="Boolean" Name="IsDataProviderAdmin" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_DataProviderUser_DataProvider">
+          <End Type="OCM.Core.Data.OCMEntities.DataProvider" Role="DataProvider" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.DataProviderUser" Role="DataProviderUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProvider">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DataProviderUser">
+              <PropertyRef Name="DataProviderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataGroup_DataProvider">
+          <End Type="OCM.Core.Data.OCMEntities.DataProvider" Role="DataProvider" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.MetadataGroup" Role="MetadataGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataProvider">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataGroup">
+              <PropertyRef Name="DataProviderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataProviderUser_User">
+          <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.DataProviderUser" Role="DataProviderUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DataProviderUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MetadataFieldOption">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MetadataFieldID" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MetadataField" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataFieldOption_MetadataField" FromRole="MetadataFieldOption" ToRole="MetadataField" />
+          <NavigationProperty Name="MetadataValues" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataFieldOption" FromRole="MetadataFieldOption" ToRole="MetadataValue" />
+        </EntityType>
+        <Association Name="FK_MetadataFieldOption_MetadataField">
+          <End Type="OCM.Core.Data.OCMEntities.MetadataField" Role="MetadataField" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.MetadataFieldOption" Role="MetadataFieldOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataField">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataFieldOption">
+              <PropertyRef Name="MetadataFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetadataValue_MetadataFieldOption">
+          <End Type="OCM.Core.Data.OCMEntities.MetadataFieldOption" Role="MetadataFieldOption" Multiplicity="0..1" />
+          <End Type="OCM.Core.Data.OCMEntities.MetadataValue" Role="MetadataValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetadataFieldOption">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetadataValue">
+              <PropertyRef Name="MetadataFieldOptionID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1894,6 +2076,7 @@
           <EntitySetMapping Name="DataProviders">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProvider">
               <MappingFragment StoreEntitySet="DataProvider">
+                <ScalarProperty Name="IsRestrictedEdit" ColumnName="IsRestrictedEdit" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
@@ -1957,9 +2140,10 @@
           <EntitySetMapping Name="MetadataGroups">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataGroup">
               <MappingFragment StoreEntitySet="MetadataGroup">
+                <ScalarProperty Name="IsPublicInterest" ColumnName="IsPublicInterest" />
+                <ScalarProperty Name="DataProviderID" ColumnName="DataProviderID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="GroupOwnerUserID" ColumnName="GroupOwnerUserID" />
                 <ScalarProperty Name="IsRestrictedEdit" ColumnName="IsRestrictedEdit" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1967,6 +2151,7 @@
           <EntitySetMapping Name="MetadataValues">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataValue">
               <MappingFragment StoreEntitySet="MetadataValue">
+                <ScalarProperty Name="MetadataFieldOptionID" ColumnName="MetadataFieldOptionID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
                 <ScalarProperty Name="MetadataFieldID" ColumnName="MetadataFieldID" />
@@ -2059,6 +2244,7 @@
           <EntitySetMapping Name="UserComments">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.UserComment">
               <MappingFragment StoreEntitySet="UserComment">
+                <ScalarProperty Name="IsActionedByEditor" ColumnName="IsActionedByEditor" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
                 <ScalarProperty Name="UserCommentTypeID" ColumnName="UserCommentTypeID" />
@@ -2094,6 +2280,25 @@
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="ItemThumbnailURL" ColumnName="ItemThumbnailURL" />
                 <ScalarProperty Name="ItemURL" ColumnName="ItemURL" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataProviderUsers">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProviderUser">
+              <MappingFragment StoreEntitySet="DataProviderUser">
+                <ScalarProperty Name="IsDataProviderAdmin" ColumnName="IsDataProviderAdmin" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="DataProviderID" ColumnName="DataProviderID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetadataFieldOptions">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataFieldOption">
+              <MappingFragment StoreEntitySet="MetadataFieldOption">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="MetadataFieldID" ColumnName="MetadataFieldID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

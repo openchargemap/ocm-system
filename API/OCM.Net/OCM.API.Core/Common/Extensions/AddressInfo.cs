@@ -6,7 +6,7 @@ namespace OCM.API.Common.Model.Extensions
 {
     public class AddressInfo
     {
-        public static Model.AddressInfo FromDataModel(Core.Data.AddressInfo source)
+        public static Model.AddressInfo FromDataModel(Core.Data.AddressInfo source, bool isVerboseMode)
         {
             if (source == null) return null;
 
@@ -21,7 +21,11 @@ namespace OCM.API.Common.Model.Extensions
 
             if (source.Country != null)
             {
-                a.Country = Model.Extensions.Country.FromDataModel(source.Country);
+                a.CountryID = source.CountryID;
+                if (isVerboseMode)
+                {
+                    a.Country = Model.Extensions.Country.FromDataModel(source.Country);
+                }
             }
 
             a.Latitude = source.Latitude;

@@ -21,10 +21,11 @@ namespace OCM.Core.Data
     
         public int ID { get; set; }
         public string Title { get; set; }
-        public int GroupOwnerUserID { get; set; }
         public bool IsRestrictedEdit { get; set; }
+        public int DataProviderID { get; set; }
+        public bool IsPublicInterest { get; set; }
     
         public virtual ICollection<MetadataField> MetadataFields { get; set; }
-        public virtual User GroupOwner { get; set; }
+        public virtual DataProvider DataProvider { get; set; }
     }
 }
