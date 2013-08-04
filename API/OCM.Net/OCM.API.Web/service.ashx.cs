@@ -339,7 +339,7 @@ namespace OCM.API
                 data = refDataManager.GetCoreReferenceData();
                 HttpContext.Current.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
-            //TODO: cache gzipped stream
+            
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, data, filter);
         }

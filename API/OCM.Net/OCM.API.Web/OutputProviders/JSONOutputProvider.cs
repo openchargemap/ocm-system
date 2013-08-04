@@ -129,7 +129,15 @@ namespace OCM.API.OutputProviders
         {
             if (settings.APIVersion >= 2)
             {
-                PerformSerialisationV2(outputStream, data, settings.Callback);
+                JsonSerializerSettings jsonSettings = new JsonSerializerSettings();
+
+                if (!settings.IsVerboseOutput)
+                {
+                    jsonSettings.NullValueHandling = NullValueHandling.Ignore;
+                }
+
+                jsonSettings.Formatting = Formatting.Indented;
+                PerformSerialisationV2(outputStream, data, settings.Callback, jsonSettings);
             }
             else
             {
