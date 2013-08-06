@@ -572,7 +572,7 @@
         <div data-role="footer" data-position="fixed">
             <div data-role="controlgroup" data-type="horizontal">
                 <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
-                <a id="submitcomment-button" data-role="button" data-inline="true" data-icon="submit">Submit</a>
+                <a id="submitcomment-button" data-role="button" data-inline="true" data-icon="plus">Submit</a>
             </div>
         </div>
     </div>
@@ -590,9 +590,7 @@
                 </p>
                 <form id="mediaitem-form" action="#" enctype="multipart/form-data">                    
                     <div data-role="fieldcontain">
-                        <label for="fileupload">Choose Photo</label> <input name="fileupload" type="file" />
-
-                        <!--<input type="button" value="Upload" />-->
+                        <label class="ui-input-text" for="fileupload">Choose Photo</label> <input name="fileupload" type="file" />
                     </div>
                     <div data-role="fieldcontain">
                         <label for="comment">Comment</label>
@@ -600,13 +598,12 @@
                     </div>
                 </form>
                
-
             </div>
         </div>
         <div data-role="footer" data-position="fixed">
             <div data-role="controlgroup" data-type="horizontal">
                 <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
-                <a id="submitmediaitem-button" data-role="button" data-inline="true" data-icon="submit">Submit</a>
+                <a id="submitmediaitem-button" data-role="button" data-inline="true" data-icon="plus">Submit</a>
             </div>
         </div>
     </div>
@@ -824,8 +821,10 @@
     <!--End standard OCM app HTML block-->
 
     <!--Late bound scripts-->
+    
     <script src="js/ThirdParty/analytics.js"></script>
     <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    
     <script>
     	ocm_app.ocm_data.clientName="ocm.app.TARGETNAME";
     </script>

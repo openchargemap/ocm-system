@@ -43,6 +43,7 @@ function OCM_App() {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
         this.ocm_data.serviceBaseURL = "http://localhost:81/API/v2";
+        this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
 
 }
@@ -283,6 +284,10 @@ OCM_App.prototype.initDeferredUI = function () {
 };
 
 OCM_App.prototype.isUserSignedIn = function () {
+    if (this.ocm_data.hasAuthorizationError==true) {
+        return false;
+    }
+
     var userInfo = this.getLoggedInUserInfo();
 
     if (userInfo.Username !== null && userInfo.Username !== "") {
@@ -295,6 +300,9 @@ OCM_App.prototype.isUserSignedIn = function () {
 
 OCM_App.prototype.beginLogin = function () {
     this.showProgressIndicator();
+
+    //reset previous authorization warnings
+    this.ocm_data.isAuthorizationError = false;
 
     if (this.isRunningUnderCordova) {
         //do phonegapped login using InAppBrowser
@@ -415,21 +423,27 @@ OCM_App.prototype.performCommentSubmit = function () {
 OCM_App.prototype.performMediaItemSubmit = function () {
 
     var $fileupload = $(':file');
-    var file = $fileupload[0].files[0];
+    var mediafile = $fileupload[0].files[0];
 
-    name = file.name;
-    size = file.size;
-    type = file.type;
+    if (mediafile)
+    {
+        name = mediafile.name;
+        size = mediafile.size;
+        type = mediafile.type;
+    } 
+    
 
-    var formData = new FormData($('#mediaitem-form')[0]);
-    var id = this.selectedPOI.ID;
-    var comment = $("#comment").val();
+    var formData = new FormData();
+
+    formData.append("id", this.selectedPOI.ID);
+    formData.append("comment", $("#comment").val());
+    formData.append("mediafile", mediafile);
 
     //show progress
     this.showProgressIndicator();
 
     //submit
-    this.ocm_data.submitMediaItem(formData, id, comment, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), $.proxy(this.submissionFailed, this));
+    this.ocm_data.submitMediaItem(formData, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), $.proxy(this.submissionFailed, this));
 };
 
 OCM_App.prototype.submissionCompleted = function (jqXHR, textStatus) {

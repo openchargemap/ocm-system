@@ -19,11 +19,13 @@ function OCM_LocationSearchParams() {
     this.additionalParams = null;
     this.includeComments = false;
     this.enableCaching = true;
+
     this.clientName = "ocm.webapp";
 }
 
 function OCM_Data() {
     this.serviceBaseURL = "http://api.openchargemap.io/v2";
+    this.hasAuthorizationError = false;
 }
 
 OCM_Data.prototype.fetchLocationDataList = function (countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
@@ -95,8 +97,14 @@ OCM_Data.prototype.fetchLocationById = function (id, callbackname, errorcallback
 };
 
 OCM_Data.prototype.handleGeneralAjaxError = function (result, ajaxOptions, thrownError) {
+    this.hasAuthorizationError = false;
+
     if (result.status == 200) {
         //all ok
+    } else if (result.status == 401) {
+        //unauthorised, user session has probably expired
+        this.hasAuthorizationError = true;
+        alert("Your session has expired. Please sign in again.");
     }
     else {
         alert("There was a problem transferring data. Please check your internet connection.");
@@ -160,12 +168,12 @@ OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, complete
     });
 };
 
-OCM_Data.prototype.submitMediaItem = function (data, id, comment, authSessionInfo, completedCallback, failureCallback) {
+OCM_Data.prototype.submitMediaItem = function (data, authSessionInfo, completedCallback, failureCallback) {
 
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
     $.ajax({
-        url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams + "&id=" + id + "&comment=" + escape(comment),
+        url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams,
         type: 'POST',
         xhr: function () {  // custom xhr
             var myXhr = $.ajaxSettings.xhr();
