@@ -147,7 +147,10 @@ namespace OCM.API
                     if (p.ProcessMediaItemSubmission(context, ref m, user.ID))
                     {
                         submissionManager.PerformSubmission(m, user);
+                        context.Response.Write("OK");                    
                     }
+                } else {
+                        context.Response.Write("Error");
                 }
             }
         }
