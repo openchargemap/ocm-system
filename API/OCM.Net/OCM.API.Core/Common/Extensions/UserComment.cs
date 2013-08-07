@@ -19,25 +19,37 @@ namespace OCM.API.Common.Model.Extensions
                 User = User.BasicFromDataModel(source.User)
             };
 
-            if (source.UserCommentTypeID != null)
+            if (isVerboseMode && source.UserCommentType != null)
+            {
+                userComment.CommentType = UserCommentType.FromDataModel(source.UserCommentType);
+                userComment.CommentTypeID = source.UserCommentTypeID;
+            }
+            else
             {
                 userComment.CommentTypeID = source.UserCommentTypeID;
-                if (isVerboseMode)
-                {
-                    userComment.CommentType = UserCommentType.FromDataModel(source.UserCommentType);
-                }
             }
 
-            if (source.CheckinStatusTypeID != null)
+
+            if (isVerboseMode && source.CheckinStatusType!=null)
+            {
+                userComment.CheckinStatusType = CheckinStatusType.FromDataModel(source.CheckinStatusType);
+                userComment.CheckinStatusTypeID = source.CheckinStatusTypeID;
+            }
+            else
             {
                 userComment.CheckinStatusTypeID = source.CheckinStatusTypeID;
-                if (isVerboseMode)
-                {
-                    userComment.CheckinStatusType = CheckinStatusType.FromDataModel(source.CheckinStatusType);
-                }
             }
 
-            if (userComment.User != null) userComment.UserName = userComment.User.Username;
+
+            if (userComment.User != null)
+            {
+                userComment.UserName = userComment.User.Username;
+            }
+            else
+            {
+                userComment.UserName = source.UserName;
+            }
+
             return userComment;
         }
     }

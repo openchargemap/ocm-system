@@ -21,41 +21,49 @@ namespace OCM.API.Common.Model.Extensions
                 Comments = s.Comments
             };
 
-            if (s.ConnectionTypeID != null)
+            //connection type (full object or id only)
+            if (isVerboseMode && s.ConnectionType != null)
+            {
+                connectionInfo.ConnectionType = ConnectionType.FromDataModel(s.ConnectionType);
+                connectionInfo.ConnectionTypeID = s.ConnectionType.ID;
+            }
+            else
             {
                 connectionInfo.ConnectionTypeID = s.ConnectionTypeID;
-                if (isVerboseMode)
-                {
-                    connectionInfo.ConnectionType = ConnectionType.FromDataModel(s.ConnectionType);
-                }
             }
 
-            if (s.StatusTypeID != null)
+            //status type (full object or id only)
+            if (isVerboseMode && s.StatusType != null)
             {
+                connectionInfo.StatusType = StatusType.FromDataModel(s.StatusType);
                 connectionInfo.StatusTypeID = s.StatusTypeID;
-                if (isVerboseMode)
-                {
-                    connectionInfo.StatusType = StatusType.FromDataModel(s.StatusType);
-                }
+            }
+            else
+            {
+                if (s.StatusTypeID != null) connectionInfo.StatusTypeID = s.StatusTypeID;
             }
 
-            if (s.LevelTypeID != null)
+            //charging level type (full object or id only)
+            if (isVerboseMode && s.ChargerType != null)
             {
-                connectionInfo.LevelID = s.LevelTypeID;
-                if (isVerboseMode)
-                {
-                    connectionInfo.Level = ChargerType.FromDataModel(s.ChargerType);
-                }
+                connectionInfo.Level = ChargerType.FromDataModel(s.ChargerType);
+                connectionInfo.LevelID = s.ChargerType.ID;
+            }
+            else
+            {
+                if (s.LevelTypeID != null) connectionInfo.LevelID = s.LevelTypeID;
             }
 
-            if (s.CurrentTypeID != null)
+            if (isVerboseMode && s.CurrentType != null)
             {
-                connectionInfo.CurrentTypeID = s.CurrentTypeID;
-                if (isVerboseMode)
-                {
-                    connectionInfo.CurrentType = CurrentType.FromDataModel(s.CurrentType);
-                }
+                connectionInfo.CurrentType = CurrentType.FromDataModel(s.CurrentType);
+                connectionInfo.CurrentTypeID = s.CurrentType.ID;
             }
+            else
+            {
+                if (s.CurrentTypeID != null) connectionInfo.CurrentTypeID = s.CurrentTypeID;
+            }
+
             return connectionInfo;
         }
     }

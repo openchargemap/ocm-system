@@ -8,7 +8,7 @@ namespace OCM.API.Common.Model.Extensions
     {
         public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source)
         {
-            return FromDataModel(source, false, false, false, false);
+            return FromDataModel(source, false, false, false, true);
         }
 
         public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments, bool loadMediaItems, bool loadMetadataValues, bool isVerboseMode)
@@ -20,38 +20,45 @@ namespace OCM.API.Common.Model.Extensions
             poi.ID = source.ID;
             poi.UUID = source.UUID;
 
-            //populate data provider info
-            if (source.DataProviderID != null)
+            //populate data provider info (full object or id only)
+            if (isVerboseMode && source.DataProvider!=null)
+            {
+                poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
+                poi.DataProviderID = source.DataProvider.ID;
+            }
+            else
             {
                 poi.DataProviderID = source.DataProviderID;
-                if (isVerboseMode)
-                {
-                    poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
-                }
             }
+            
 
             poi.DataProvidersReference = source.DataProvidersReference;
 
-            if (source.OperatorID != null)
+            //populate Operator (full object or id only)
+            if (isVerboseMode && source.Operator!=null)
+            {
+                poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
+                poi.OperatorID = source.Operator.ID;
+            }
+            else
             {
                 poi.OperatorID = source.OperatorID;
-                if (isVerboseMode)
-                {
-                    poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
-                }
             }
+      
 
             poi.OperatorsReference = source.OperatorsReference;
 
-            if (source.UsageTypeID != null)
+            //populate usage type (full object or id only)
+            if (isVerboseMode && source.UsageType!=null)
+            {
+                poi.UsageType = UsageType.FromDataModel(source.UsageType);
+                poi.UsageTypeID = source.UsageType.ID;
+            } 
+            else
             {
                 poi.UsageTypeID = source.UsageTypeID;
-                if (isVerboseMode)
-                {
-                    poi.UsageType = UsageType.FromDataModel(source.UsageType);
-                }
             }
-
+            
             poi.UsageCost = source.UsageCost;
 
             //populate address info
@@ -66,41 +73,41 @@ namespace OCM.API.Common.Model.Extensions
             poi.DatePlanned = source.DatePlanned;
             poi.DateLastConfirmed = source.DateLastConfirmed;
 
-
-            if (source.StatusTypeID != null)
+            //populate status type (full object or id only)
+            if (isVerboseMode && source.StatusType!=null)
+            {
+                poi.StatusType = StatusType.FromDataModel(source.StatusType);
+                poi.StatusTypeID = source.StatusType.ID;
+            }
+            else
             {
                 poi.StatusTypeID = source.StatusTypeID;
-                if (isVerboseMode)
-                {
-                    poi.StatusType = StatusType.FromDataModel(source.StatusType);
-                }
             }
-
+            
             poi.DateLastStatusUpdate = source.DateLastStatusUpdate;
             poi.DataQualityLevel = source.DataQualityLevel;
             poi.DateCreated = source.DateCreated;
 
-            if (source.SubmissionStatusTypeID != null)
+            //populate submission status type (full object or id only)
+            if (isVerboseMode && source.SubmissionStatusType!=null)
+            {
+                poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
+                poi.SubmissionStatusTypeID = source.SubmissionStatusType.ID;
+            }
+            else
             {
                 poi.SubmissionStatusTypeID = source.SubmissionStatusTypeID;
-                if (isVerboseMode)
-                {
-                    poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
-                }
             }
-
+            
             //load contributor details (basic not sensitive info)
-            if (source.Contributor != null)
+            if (isVerboseMode && source.Contributor!=null)
             {
-                if (isVerboseMode)
-                {
-                    poi.Contributor = User.BasicFromDataModel(source.Contributor);
-                }
+                poi.Contributor = User.BasicFromDataModel(source.Contributor);
             }
-
+            
             if (source.Connections != null)
             {
-                if (source.Connections.Count > 0)
+                if (source.Connections.Any())
                 {
                     poi.Connections = new List<Model.ConnectionInfo>();
                     foreach (var conn in source.Connections)

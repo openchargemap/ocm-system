@@ -94,6 +94,12 @@ namespace OCM.API.Common
                         //update does not correctly identify an existing poi
                         return false;
                     }
+
+                    //validate if minimal required data is present
+                    if (poi.AddressInfo.Title==null || poi.AddressInfo.Country == null || poi.AddressInfo.Latitude == null || poi.AddressInfo.Longitude == null)
+                    {
+                        return false;
+                    }
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated

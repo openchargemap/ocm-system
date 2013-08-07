@@ -19,15 +19,17 @@ namespace OCM.API.Common.Model.Extensions
             a.StateOrProvince = source.StateOrProvince;
             a.Postcode = source.Postcode;
 
-            if (source.Country != null)
+            //populate country (full object or id only)
+            if (isVerboseMode && source.Country!=null)
+            {
+                a.Country = Model.Extensions.Country.FromDataModel(source.Country);
+                a.CountryID = source.Country.ID;
+            }
+            else
             {
                 a.CountryID = source.CountryID;
-                if (isVerboseMode)
-                {
-                    a.Country = Model.Extensions.Country.FromDataModel(source.Country);
-                }
             }
-
+            
             a.Latitude = source.Latitude;
             a.Longitude = source.Longitude;
             a.ContactTelephone1 = source.ContactTelephone1;
@@ -36,6 +38,7 @@ namespace OCM.API.Common.Model.Extensions
             a.AccessComments = source.AccessComments;
             a.GeneralComments = source.GeneralComments;
             a.RelatedURL = source.RelatedURL;
+            
             return a;
         }
     }

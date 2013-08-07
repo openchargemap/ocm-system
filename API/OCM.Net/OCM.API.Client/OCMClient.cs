@@ -37,7 +37,7 @@ namespace OCM.API.Client
 
     public class OCMClient
     {
-        public string ServiceBaseURL = "http://openchargemap.org/api/service.ashx";
+        public string ServiceBaseURL = "http://api.openchargemap.io/v2/";
         /// <summary>
         /// Get core reference data such as lookup lists
         /// </summary>
@@ -45,7 +45,7 @@ namespace OCM.API.Client
         public CoreReferenceData GetCoreReferenceData()
         {
             //get core reference data
-            string url = ServiceBaseURL + "?output=json&action=getcorereferencedata";
+            string url = ServiceBaseURL + "/referencedata/?output=json";
             try
             {
                 string data = FetchDataStringFromURL(url);
@@ -70,7 +70,7 @@ namespace OCM.API.Client
         public List<ChargePoint> GetLocations(SearchFilters filters)
         {
             //TODO: implement proper call to server side
-            string url = ServiceBaseURL + "?output=json&action=getchargepoints";
+            string url = ServiceBaseURL + "/poi/?output=json&verbose=false";
 
             if (filters.Latitude != null && filters.Longitude != null)
             {
