@@ -249,6 +249,10 @@ namespace OCM.Import
                                 existingConnection.StatusType = conn.StatusType;
                                 existingConnection.Voltage = conn.Voltage;
                                 existingConnection.Amps = conn.Amps;
+                                existingConnection.PowerKW = conn.PowerKW;
+                                existingConnection.Comments = conn.Comments;
+                                if (conn.CurrentType != null) existingConnection.CurrentType = conn.CurrentType;
+
                             }
                             else
                             {
@@ -281,6 +285,8 @@ namespace OCM.Import
 
             string inputDataPathPrefix = defaultDataPath;
 
+            providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
+
             //Working - Auto refreshed
             /* providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
              providers.Add(new ImportProvider_CarStations() { InputPath = inputDataPathPrefix + "carstations.com\\jsonresults.txt" });
@@ -295,7 +301,7 @@ namespace OCM.Import
 
             //Dev
             //providers.Add(new ImportProvider_CoulombChargepoint() { InputPath = inputDataPathPrefix + "coulomb\\data.json.txt" });
-            providers.Add(new ImportProvider_ChademoGroup() { InputPath = inputDataPathPrefix + "chademo\\chademo_jp.kml", ImportType= ChademoImportType.Japan, DefaultCountryID=114});
+            //providers.Add(new ImportProvider_ChademoGroup() { InputPath = inputDataPathPrefix + "chademo\\chademo_jp.kml", ImportType= ChademoImportType.Japan, DefaultCountryID=114});
            
             //obsolete
             //providers.Add(new ImportProvider_PODPoint() { InputPath = inputDataPathPrefix + "pod-point.com\\export.htm" });

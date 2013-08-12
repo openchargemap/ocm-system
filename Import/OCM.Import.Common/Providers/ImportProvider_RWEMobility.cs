@@ -27,9 +27,9 @@ namespace OCM.Import.Providers
             JavaScriptSerializer jss = new JavaScriptSerializer();
             jss.RegisterConverters(new JavaScriptConverter[] { new DynamicJsonConverter() });
             dynamic parsedList = jss.Deserialize(jsString, typeof(object)) as dynamic;
-          
+
             var dataList = parsedList.chargingstations;
-          
+
             int itemCount = 0;
             foreach (var item in dataList)
             {
@@ -67,19 +67,19 @@ namespace OCM.Import.Providers
 
                 try
                 {
-                    
-                    cp.AddressInfo.Title = item["location_name"] != null ? item["location_name"].ToString() : item["brand"].ToString();
+
+                    cp.AddressInfo.Title = item["location_name"] != null ? item["location_name"].ToString() : (item["brand"] != null ? item["brand"].ToString() : item["street"]);
                     cp.AddressInfo.Title = cp.AddressInfo.Title.Trim().Replace("&amp;", "&");
                 }
                 catch (Exception)
                 {
                     //could not get a location title
-                    System.Diagnostics.Debug.WriteLine("No title for item: "+cp.DataProvidersReference);
+                    System.Diagnostics.Debug.WriteLine("No title for item: " + cp.DataProvidersReference);
                 }
                 //cp.AddressInfo.RelatedURL = item["url"].ToString();
 
                 cp.DateLastStatusUpdate = DateTime.Now;
-                cp.AddressInfo.AddressLine1 = item["house_number"] != null ? item["house_number"]+" " +item["street"].ToString():item["street"].ToString().Trim();
+                cp.AddressInfo.AddressLine1 = item["house_number"] != null ? item["house_number"] + " " + item["street"].ToString() : item["street"].ToString().Trim();
                 cp.AddressInfo.Town = item["city"].ToString().Trim();
                 cp.AddressInfo.Postcode = item["postal_code"].ToString().Trim();
                 if (String.IsNullOrEmpty(cp.AddressInfo.Title)) cp.AddressInfo.Title = cp.AddressInfo.Town;
@@ -87,12 +87,12 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Latitude = double.Parse(item["latitude"].ToString());
                 cp.AddressInfo.Longitude = double.Parse(item["longitude"].ToString());
 
-                //default to norway
                 if (item["phone"] != null)
                 {
                     cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
                 }
 
+                //default to norway
                 if (!String.IsNullOrEmpty(item["country"].ToString()))
                 {
                     string country = item["country"].ToString();
@@ -145,6 +145,6 @@ namespace OCM.Import.Providers
 
             return outputList;
         }
-  
+
     }
 }
