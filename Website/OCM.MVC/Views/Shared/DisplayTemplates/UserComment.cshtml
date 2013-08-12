@@ -12,12 +12,12 @@
         [
          @if (Model.CommentType != null)
         {
-            <strong>@Model.CommentType.Title</strong>
+            <strong>@Model.CommentType.Title</strong> 
         }
-        ,
+        
         @if (Model.CheckinStatusType != null)
         {
-            <strong>@Model.CheckinStatusType.Title</strong>
+            <strong>, @Model.CheckinStatusType.Title</strong>
         }
        
         ]

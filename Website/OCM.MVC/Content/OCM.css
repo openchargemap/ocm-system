@@ -197,11 +197,8 @@ div.result {
   border-radius: 8px;
 }
 #locationdetails-container {
-  float: left;
   padding: 1em;
   min-height: 400px;
-  max-width: 400px;
-  border-radius: 1em;
   color: white;
 }
 #map-container {

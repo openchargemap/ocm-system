@@ -36,7 +36,7 @@ namespace OCM.MVC
             // Handle HTTP errors
             if (exc.GetType() == typeof(HttpException) || exc.GetType() == typeof(System.Runtime.Serialization.SerializationException))
             {
-                if (exc.Message.Contains("NoCatch") || exc.Message.Contains("maxUrlLength") || exc.Message.Contains("InMemoryTokenManager") || exc.Message.Contains("non-serializable")) return;
+                if (exc.Message.Contains("NoCatch") || exc.Message.Contains("maxUrlLength") || exc.Message.Contains("InMemoryTokenManager") || exc.Message.Contains("non-serializable") || exc.Message.Contains("The controller for path")) return;
             }
 
             AuditLogManager.ReportWebException(Server, AuditEventType.SystemErrorWeb);

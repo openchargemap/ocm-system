@@ -163,11 +163,12 @@ namespace OCM.MVC.Controllers
         //
         // POST: /POI/AddMediaItem
 
-        [HttpPost]
+        [HttpPost, AuthSignedInOnly]
         public ActionResult AddMediaItem(int id, FormCollection collection)
         {
+            var user = new UserManager().GetUser((int)Session["UserID"]);
             var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
-            var user = htmlInputProvider.GetUserFromAPICall(this.HttpContext.ApplicationInstance.Context);
+
             if (user!=null)
             {
                 var mediaItem = new MediaItem();
