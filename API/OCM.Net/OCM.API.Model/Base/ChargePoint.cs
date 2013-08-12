@@ -40,10 +40,10 @@ namespace OCM.API.Common.Model
         [StringLength(200)]
         public string UsageCost { get; set; }
 
-        [DisplayName("Address")]
+        [DisplayName("Nearest Address")]
         public AddressInfo AddressInfo { get; set; }
 
-        [DisplayName("Number Of Points/Bays")]
+        [DisplayName("Number Of Stations/Bays")]
         [Range(0, 100)]
         public int? NumberOfPoints { get; set; }
 

@@ -64,5 +64,18 @@ namespace OCM.API.Common.Model
         [Obsolete, JsonIgnore]
         public string GeneralComments { get; set; }
         #endregion
+
+        public string ToString()
+        {
+            string output = "";
+
+            if (!String.IsNullOrWhiteSpace(this.AddressLine1)) output += this.AddressLine1+",";
+            if (!String.IsNullOrWhiteSpace(this.AddressLine2)) output += this.AddressLine2 + ",";
+            if (!String.IsNullOrWhiteSpace(this.Town)) output += this.Town + ",";
+            if (!String.IsNullOrWhiteSpace(this.StateOrProvince)) output += this.StateOrProvince + ",";
+            if (!String.IsNullOrWhiteSpace(this.Postcode)) output += this.Postcode + ",";
+            if (this.Country!=null) output += this.Country.Title;
+            return output;
+        }
     }
 }
