@@ -33,6 +33,7 @@ function OCM_Map() {
     this.ocm_markerClusterer = null;
 
     this.searchNearMePrompt = "(My Location)";
+    this.ocm_data.clientName = "ocm.mapWidget";
 
     //optionally enable clustering
     try {
@@ -76,7 +77,7 @@ OCM_Map.prototype.applyLocalisation = function (isTestMode) {
     return this.ocm_ui.applyLocalisation(isTestMode);
 };
 
-OCM_Map.prototype.showDetailsView = function(element, poi) {
+OCM_Map.prototype.showDetailsView = function (element, poi) {
     var $element = $(element);
     var $detailsView = $("#details-content");
 
@@ -100,7 +101,9 @@ OCM_Map.prototype.showDetailsView = function(element, poi) {
 
     this.applyLocalisation(ocm_map.mapOptions.isTestLocalisationMode);
 
-    $("#details-content").dialog({ autoOpen: true, width: 510, height: maxDialogHeight, title: this.getLocalisation("ocm.details.locationDetails", "Location Details", ocm_map.mapOptions.isTestLocalisationMode) });
+    var dialogWidth = $(window).width() * 0.66;
+    if (dialogWidth < 300) dialogWidth = 300;
+    $("#details-content").dialog({ autoOpen: true, width: dialogWidth, height: maxDialogHeight, title: this.getLocalisation("ocm.details.locationDetails", "Location Details", ocm_map.mapOptions.isTestLocalisationMode) });
 };
 
 //TODO: deduplicate
@@ -145,7 +148,7 @@ OCM_Map.prototype.showDetailsViewOld = function (element, poi) {
     var leftPos = $element.position().left;
     var topPos = $element.position().top;
     var maxDialogHeight = $(window).height() - 64;
-    if (maxDialogHeight<300) maxDialogHeight=300; //workaround firefox differences
+    if (maxDialogHeight < 300) maxDialogHeight = 300; //workaround firefox differences
     $detailsView.css("left", leftPos);
     $detailsView.css("top", topPos);
 
