@@ -139,7 +139,7 @@ OCM_Map.prototype.showDetailsViewOld = function (element, poi) {
         commentoutput += "";
         $("#details-usercomments").html(commentoutput).trigger("create");
     } else {
-        $("#details-usercomments").html("<span data-localize='ocm.details.noComments'>No comments submitted.</span>").trigger("create");
+        $("#details-usercomments").html("<span data-localize='ocm.details.commentsAndRatings.zeroComments'>No comments submitted.</span>").trigger("create");
     }
 
     var leftPos = $element.position().left;

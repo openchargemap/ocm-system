@@ -1,40 +1,74 @@
 var localisation_dictionary =
 {
-    "_langTitle":"Dutch/Nederlands",
-  	"_langCode":"nl",
-   	"ocm":{
-      "details":{
-           "locationDetails":"Locatiegegevens",
-            "equipmentDetails":"Apparatuurgegevens",
-            "commentsAndRatings":"Commentaar en Waardering",
-            "advancedDetails":"Gegevensbron",
-            "addressRelatedURL": "Website",
+    "_langTitle": "Dutch/Nederlands",
+    "_langCode": "nl",
+    "ocm": {
+        "details": {
+            "sectionTitle": null,
+            "location": {
+                "sectionTitle": "Locatiegegevens",
+                "address": null,
+                "map": null,
+                "streetView": null,
+                "addressRelatedURL": "Website"
+            },
+            "generalComments": null,
+            "accessComments": null,
+            "advancedDetails": null,
             "numberOfPoints": "Aantal Punten",
             "usageType": "Gebruik",
-            "operatorTitle": "Netwerk/Operator",
             "operationalStatus": "Operationele Status",
             "lastUpdated": "Laatst Aangepast",
-            "connectionType": "Connector",
-            "powerLevel": "Vermogensniveau",
-            "connectionQuantity": "Aantal",
-            "noComments": "Geen gebruikersopmerkingen ingediend",
             "refNumber": "OpenChargeMap Ref",
-            "dataProviderTitle": "Data Provider",
-            "dataProviderWebsite": "Website"
-      },
-      "search":{
-         "locationInput":"Locatie",
-         "useMyLocation": "Zoek in mijn buurt",
-         "distance":"Afstand",
-         "chargingLevels":"Laadsnelheid",
-         "connectionTypes":"Connector Types",
-         "networkOperators":"Netwerk/Operator",
-         "countries":"Land",
-         "submissionStatus":"Status van Indiening",
-         "usageTypes":"Gebruik",
-         "operationalStatusTypes":"Status",
-         "performSearch": "Zoek",
-         "progress":"Opzoeken.."
-      }
-   }
+            "importedDataNotice": null,
+            "placesNearby": {
+                "sectionTitle": null
+            },
+            "mediaItems": {
+                "sectionTitle": null,
+                "addPrompt": null
+            },
+            "metadataValues": {
+                "sectionTitle": null
+            },
+            "commentsAndRatings": {
+                "sectionTitle": "Commentaar en Waardering",
+                "zeroComments": "Geen gebruikersopmerkingen ingediend",
+                "addPrompt": null
+            },
+            "equipment": {
+                "sectionTitle": "Apparatuurgegevens",
+                "connectionType": "Connector",
+                "powerKW": null,
+                "powerLevel": "Vermogensniveau",
+                "quantity": "Aantal",
+                "supplyType": null,
+                "voltage": null,
+                "current": null,
+                "comment": null,
+                "reference": null
+            },
+            "dataProvider": {
+                "sectionTitle": "Gegevensbron",
+                "website": "Website"
+            },
+            "operator": {
+                "sectionTitle": "Netwerk/Operator"
+            }
+        },
+        "search": {
+            "locationInput": "Locatie",
+            "useMyLocation": "Zoek in mijn buurt",
+            "distance": "Afstand",
+            "chargingLevels": "Laadsnelheid",
+            "connectionTypes": "Connector Types",
+            "networkOperators": "Netwerk/Operator",
+            "countries": "Land",
+            "submissionStatus": "Status van Indiening",
+            "usageTypes": "Gebruik",
+            "operationalStatusTypes": "Status",
+            "performSearch": "Zoek",
+            "progress": "Opzoeken.."
+        }
+    }
 };

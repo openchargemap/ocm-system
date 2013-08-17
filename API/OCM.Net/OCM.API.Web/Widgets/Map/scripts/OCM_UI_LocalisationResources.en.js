@@ -4,23 +4,57 @@ var localisation_dictionary =
     "_langCode": "en",
     "ocm": {
         "details": {
-            "locationDetails": "Location Details",
-            "equipmentDetails": "Equipment Details",
-            "commentsAndRatings": "Comments and Ratings",
-            "advancedDetails": "Data Source",
-            "addressRelatedURL": "Website",
-            "numberOfPoints": "Number Of Points",
+            "sectionTitle": "Charging Location",
+            "location": {
+                "sectionTitle": "Location Details",
+                "address": "Nearest Address",
+                "map": "Map",
+                "streetView": "Street View",
+                "addressRelatedURL": "Website"
+            },
+            "generalComments": "General Information",
+            "accessComments": "Access Information",
+            "advancedDetails": "Additional Information",
+            "numberOfPoints": "Number Of Stations/Bays",
             "usageType": "Usage",
-            "operatorTitle": "Network/Operator",
             "operationalStatus": "Operational Status",
             "lastUpdated": "Last Updated",
-            "connectionType": "Connection",
-            "powerLevel": "Power Level",
-            "connectionQuantity": "Qty",
-            "noComments": "No user comments submitted",
             "refNumber": "OpenChargeMap Ref",
-            "dataProviderTitle": "Data Provider",
-            "dataProviderWebsite": "Website"
+            "importedDataNotice": "Note: This data is sourced automatically, changes should be submitted to the data provider directly.",
+            "placesNearby": {
+                "sectionTitle": "Places Nearby"
+            },
+            "mediaItems": {
+                "sectionTitle": "Photos",
+                "addPrompt": "Upload your own photos for this location"
+            },
+            "metadataValues": {
+                "sectionTitle": "Additional Tags"
+            },
+            "commentsAndRatings": {
+                "sectionTitle": "Comments and Ratings",
+                "zeroComments": "No user comments submitted",
+                "addPrompt": "Add your own comment/check-in for this location"
+            },
+            "equipment": {
+                "sectionTitle": "Equipment Details",
+                "connectionType": "Connection Type",
+                "powerKW": "Max Power (KW)",
+                "powerLevel": "Level",
+                "quantity": "Quantity",
+                "supplyType": "Supply Type",
+                "voltage": "Voltage",
+                "current": "Max Current",
+                "comment": "Comments",
+                "reference": "Reference"
+            },
+            "dataProvider": {
+                "sectionTitle": "Data Provider",
+                "website": "Website"
+            },
+            "operator": {
+                "sectionTitle": "Network/Operator"
+            }
         },
         "search": {
             "locationInput": "Location",

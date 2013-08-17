@@ -2,26 +2,59 @@ var localisation_dictionary =
 {
     "_langTitle": "German/Deutsch",
     "_langCode": "de",
-    "_comments":"Save as UTF-8 using text editor",
     "ocm": {
         "details": {
-            "locationDetails": "Standort Details",
-            "equipmentDetails": "Anschluss Details",
-            "commentsAndRatings": "Kommentare und Bewertung",
+            "sectionTitle": null,
+            "location": {
+                "sectionTitle": "Standort Details",
+                "address": null,
+                "map": null,
+                "streetView": null,
+                "addressRelatedURL": "Webseite"
+            },
+            "generalComments": null,
+            "accessComments": null,
             "advancedDetails": "Daten Quelle",
-            "addressRelatedURL": "Webseite",
             "numberOfPoints": "Anzahl Anschlüsse",
             "usageType": "Verwendung",
-            "networkOperator": "Anbieter/Betreiber",
             "operationalStatus": "Betriebs Status",
             "lastUpdated": "Letzte Änderung",
-            "connectionType": "Adapter",
-            "powerLevel": "Strom",
-            "connectionQuantity": "Anzahl",
-            "noComments": "Los Du bist der erste der was schreibt",
             "refNumber": "OpenChargeMap Ref",
-            "dataProvider": "Daten Übermittler",
-            "dataProviderWebsite": "Webseite"
+            "importedDataNotice": null,
+            "placesNearby": {
+                "sectionTitle": null
+            },
+            "mediaItems": {
+                "sectionTitle": null,
+                "addPrompt": null
+            },
+            "metadataValues": {
+                "sectionTitle": null
+            },
+            "commentsAndRatings": {
+                "sectionTitle": "Kommentare und Bewertung",
+                "zeroComments": "Los Du bist der erste der was schreibt",
+                "addPrompt": null
+            },
+            "equipment": {
+                "sectionTitle": "Anschluss Details",
+                "connectionType": "Adapter",
+                "powerKW": null,
+                "powerLevel": "Strom",
+                "quantity": "Anzahl",
+                "supplyType": null,
+                "voltage": null,
+                "current": null,
+                "comment": null,
+                "reference": null
+            },
+            "dataProvider": {
+                "sectionTitle": "Daten Übermittler",
+                "website": "Webseite"
+            },
+            "operator": {
+                "sectionTitle": "Anbieter/Betreiber"
+            }
         },
         "search": {
             "locationInput": "Standort",

@@ -37,7 +37,7 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
 
                     if (isTestMode == true) {
                         //in test mode the resource key is displayed as the localised text 
-                        localisedText = "[" + resourceKey + "]";
+                        localisedText = "[" + resourceKey + "] " + eval("localisation_dictionary." + resourceKey);
 
                         /*if (eval("localisation_dictionary." + resourceKey) != undefined)
 		                {
@@ -497,7 +497,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
         if (poi.Connections.length > 0) {
             
             equipmentInfo += "<table class='datatable'>";
-            equipmentInfo += "<tr><th data-localize='ocm.details.connectionType'>Connection</th><th data-localize='ocm.details.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th><th data-localize='ocm.details.connectionQuantity'>Qty</th></tr>";
+            equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th><th data-localize='ocm.details.equipment.quantity'>Qty</th></tr>";
 
             for (var c = 0; c < poi.Connections.length; c++) {
                 var con = poi.Connections[c];
