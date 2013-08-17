@@ -7,6 +7,8 @@ var supported_languages = [
 			{ "Title": "Dutch/Nederlands", "LanguageCode": "nl" },
             { "Title": "German/Deutsch", "LanguageCode": "de" },
 			{ "Title": "Japanese", "LanguageCode": "ja" },
+            { "Title": "Chinese", "LanguageCode": "zh" },
+            { "Title": "Russian", "LanguageCode": "ru" },
 			{ "Title": "Test Mode (for use by translators)", "LanguageCode": "test" },
 		];
 

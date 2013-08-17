@@ -144,6 +144,8 @@
     <Content Include="Widgets\Map\mapembed.css" />
     <Content Include="Widgets\Map\mapembed.htm" />
     <Content Include="Widgets\Map\mapwizard.htm" />
+    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.ru.js" />
+    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.zh.js" />
     <Content Include="Widgets\Map\scripts\localisation-resource-keys.txt" />
     <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.de.js" />
     <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.en.js" />

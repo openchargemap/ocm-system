@@ -211,6 +211,8 @@
     <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.fr.js" />
     <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.ja.js" />
     <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.nl.js" />
+    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.ru.js" />
+    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.zh.js" />
     <Content Include="Scripts\OCM\OCM_CommonUI.js" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />

@@ -7,20 +7,35 @@ var localisation_dictionary =
             "sectionTitle": "Oplaad Locatie",
             "location": {
                 "sectionTitle": "Locatiegegevens",
+                "title": "Locatie titel",
                 "address": "Dichtstbijzijnde Adres",
+                "addressLine1": "Adres, regel 1:",
+                "addressLine2": "Adres, regel 2:",
+                "town": "Plaats/Stad",
+                "stateOrProvince": "Staat/Provincie",
+                "postcode": "Postcode/Zip Code",
+                "country": "Land",
+                "contactTelephone1": "Primaire Telefoonnummer",
+                "contactTelephone2": "Secondaire Telefoonnummer",
+                "contactEmail": "Contact E-mail",
                 "map": "Kaart",
                 "streetView": "Street View",
                 "addressRelatedURL": "Website"
             },
             "generalComments": "Algemene Informatie",
-            "accessComments": "Toegang tot informatie",
+            "accessComments": "Toegangsinformatie",
             "advancedDetails": "Extra informatie",
             "numberOfPoints": "Aantal Punten/Plaatsen",
             "usageType": "Gebruik",
+            "usageCost": "Gebruikskost",
             "operationalStatus": "Operationele Status",
+            "datePlanned": "Geplande Datum",
+            "dateLastConfirmed": "Laatst Bevestigde Datum",
             "lastUpdated": "Laatst Aangepast",
             "refNumber": "OpenChargeMap Ref",
+            "dataQualityLevel": "Niveau Kwaliteit van Gegevens",
             "importedDataNotice": "Opmerking: Deze gegevens worden automatisch geproduceerd, wijzigingen moeten rechtstreeks worden ingediend bij de gegevensprovider.",
+            "submissionStatus": "Status van Indiening",
             "placesNearby": {
                 "sectionTitle": "Plaatsen Dichtbij"
             },
@@ -34,7 +49,7 @@ var localisation_dictionary =
             "commentsAndRatings": {
                 "sectionTitle": "Commentaar en Waardering",
                 "zeroComments": "Geen gebruikersopmerkingen ingediend",
-                "addPrompt": "Voeg uw eigen commentaartoe / inchecken voor deze locatie"
+                "addPrompt": "Voeg uw eigen commentaar toe / inchecken voor deze locatie"
             },
             "equipment": {
                 "sectionTitle": "Apparatuurgegevens",
@@ -50,13 +65,16 @@ var localisation_dictionary =
             },
             "dataProvider": {
                 "sectionTitle": "Gegevensbron",
-                "website": "Website"
+                "website": "Website",
+                "providersReference": "Providers Ref"
             },
             "operator": {
-                "sectionTitle": "Netwerk/Operator"
+                "sectionTitle": "Netwerk/Operator",
+                "operatorsReference": "Operators Ref"
             }
         },
         "search": {
+            "sectionTitle": null,
             "locationInput": "Locatie",
             "useMyLocation": "Zoek in mijn buurt",
             "distance": "Afstand",

@@ -7,7 +7,17 @@
             "sectionTitle": null,
             "location": {
                 "sectionTitle": "場所の詳細",
+                "title": null,
                 "address": null,
+                "addressLine1": null,
+                "addressLine2": null,
+                "town": null,
+                "stateOrProvince": null,
+                "postcode": null,
+                "country": null,
+                "contactTelephone1": null,
+                "contactTelephone2": null,
+                "contactEmail": null,
                 "map": null,
                 "streetView": null,
                 "addressRelatedURL": "ウェブサイト"
@@ -17,10 +27,15 @@
             "advancedDetails": "データ·ソース情報",
             "numberOfPoints": "項目数",
             "usageType": "使用制限",
+            "usageCost": null,
             "operationalStatus": "オペレーショナル",
+            "datePlanned": null,
+            "dateLastConfirmed": null,
             "lastUpdated": "更新した",
             "refNumber": "OpenChargeMap番号",
+            "dataQualityLevel": null,
             "importedDataNotice": null,
+            "submissionStatus": null,
             "placesNearby": {
                 "sectionTitle": null
             },
@@ -50,13 +65,16 @@
             },
             "dataProvider": {
                 "sectionTitle": "データプロバイダ",
-                "website": "ウェブサイト"
+                "website": "ウェブサイト",
+                "providersReference": null
             },
             "operator": {
-                "sectionTitle": "ネットワークオペレータ"
+                "sectionTitle": "ネットワークオペレータ",
+                "operatorsReference": null
             }
         },
         "search": {
+            "sectionTitle": null,
             "locationInput": "場所",
             "useMyLocation": "私の近くに検索",
             "distance": "距離",

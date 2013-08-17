@@ -4,59 +4,77 @@ var localisation_dictionary =
     "_langCode": "nl",
     "ocm": {
         "details": {
-            "sectionTitle": null,
+            "sectionTitle": "Oplaad Locatie",
             "location": {
                 "sectionTitle": "Locatiegegevens",
-                "address": null,
-                "map": null,
-                "streetView": null,
+                "title": "Locatie titel",
+                "address": "Dichtstbijzijnde Adres",
+                "addressLine1": "Adres, regel 1:",
+                "addressLine2": "Adres, regel 2:",
+                "town": "Plaats/Stad",
+                "stateOrProvince": "Staat/Provincie",
+                "postcode": "Postcode/Zip Code",
+                "country": "Land",
+                "contactTelephone1": "Primaire Telefoonnummer",
+                "contactTelephone2": "Secondaire Telefoonnummer",
+                "contactEmail": "Contact E-mail",
+                "map": "Kaart",
+                "streetView": "Street View",
                 "addressRelatedURL": "Website"
             },
-            "generalComments": null,
-            "accessComments": null,
-            "advancedDetails": null,
-            "numberOfPoints": "Aantal Punten",
+            "generalComments": "Algemene Informatie",
+            "accessComments": "Toegangsinformatie",
+            "advancedDetails": "Extra informatie",
+            "numberOfPoints": "Aantal Punten/Plaatsen",
             "usageType": "Gebruik",
+            "usageCost": "Gebruikskost",
             "operationalStatus": "Operationele Status",
+            "datePlanned": "Geplande Datum",
+            "dateLastConfirmed": "Laatst Bevestigde Datum",
             "lastUpdated": "Laatst Aangepast",
             "refNumber": "OpenChargeMap Ref",
-            "importedDataNotice": null,
+            "dataQualityLevel": "Niveau Kwaliteit van Gegevens",
+            "importedDataNotice": "Opmerking: Deze gegevens worden automatisch geproduceerd, wijzigingen moeten rechtstreeks worden ingediend bij de gegevensprovider.",
+            "submissionStatus": "Status van Indiening",
             "placesNearby": {
-                "sectionTitle": null
+                "sectionTitle": "Plaatsen Dichtbij"
             },
             "mediaItems": {
-                "sectionTitle": null,
-                "addPrompt": null
+                "sectionTitle": "Foto's",
+                "addPrompt": "Uw eigen foto's voor deze locatie uploaden"
             },
             "metadataValues": {
-                "sectionTitle": null
+                "sectionTitle": "Aanvullende Tags"
             },
             "commentsAndRatings": {
                 "sectionTitle": "Commentaar en Waardering",
                 "zeroComments": "Geen gebruikersopmerkingen ingediend",
-                "addPrompt": null
+                "addPrompt": "Voeg uw eigen commentaar toe / inchecken voor deze locatie"
             },
             "equipment": {
                 "sectionTitle": "Apparatuurgegevens",
-                "connectionType": "Connector",
-                "powerKW": null,
+                "connectionType": "Connector Type",
+                "powerKW": "Max Vermogen (KW)",
                 "powerLevel": "Vermogensniveau",
                 "quantity": "Aantal",
-                "supplyType": null,
-                "voltage": null,
-                "current": null,
-                "comment": null,
-                "reference": null
+                "supplyType": "Toevoer Type",
+                "voltage": "Voltage",
+                "current": "Max Stroom",
+                "comment": "Reacties",
+                "reference": "Referentie"
             },
             "dataProvider": {
                 "sectionTitle": "Gegevensbron",
-                "website": "Website"
+                "website": "Website",
+                "providersReference": "Providers Ref"
             },
             "operator": {
-                "sectionTitle": "Netwerk/Operator"
+                "sectionTitle": "Netwerk/Operator",
+                "operatorsReference": "Operators Ref"
             }
         },
         "search": {
+            "sectionTitle": null,
             "locationInput": "Locatie",
             "useMyLocation": "Zoek in mijn buurt",
             "distance": "Afstand",

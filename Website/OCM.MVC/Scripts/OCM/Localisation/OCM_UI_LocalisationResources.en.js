@@ -7,7 +7,17 @@ var localisation_dictionary =
             "sectionTitle": "Charging Location",
             "location": {
                 "sectionTitle": "Location Details",
+                "title": "Location Title",
                 "address": "Nearest Address",
+                "addressLine1": "Address Line 1",
+                "addressLine2": "Address Line 2",
+                "town": "Town/City",
+                "stateOrProvince": "State/Province",
+                "postcode": "Postal/Zip Code",
+                "country": "Country",
+                "contactTelephone1": "Primary Contact Phone",
+                "contactTelephone2": "Secondary Contact Phone",
+                "contactEmail": "Contact Email",
                 "map": "Map",
                 "streetView": "Street View",
                 "addressRelatedURL": "Website"
@@ -17,10 +27,15 @@ var localisation_dictionary =
             "advancedDetails": "Additional Information",
             "numberOfPoints": "Number Of Stations/Bays",
             "usageType": "Usage",
+            "usageCost": "Usage Cost",
             "operationalStatus": "Operational Status",
+            "datePlanned": "Date Planned",
+            "dateLastConfirmed": "Date Last Confirmed",
             "lastUpdated": "Last Updated",
             "refNumber": "OpenChargeMap Ref",
+            "dataQualityLevel": "Data Quality Level",
             "importedDataNotice": "Note: This data is sourced automatically, changes should be submitted to the data provider directly.",
+            "submissionStatus": "Submission Status",
             "placesNearby": {
                 "sectionTitle": "Places Nearby"
             },
@@ -50,13 +65,16 @@ var localisation_dictionary =
             },
             "dataProvider": {
                 "sectionTitle": "Data Provider",
-                "website": "Website"
+                "website": "Website",
+                "providersReference": "Providers Ref"
             },
             "operator": {
-                "sectionTitle": "Network/Operator"
+                "sectionTitle": "Network/Operator",
+                "operatorsReference": "Operators Ref"
             }
         },
         "search": {
+            "sectionTitle": "Search",
             "locationInput": "Location",
             "useMyLocation": "Search Near Me",
             "distance": "Distance",
