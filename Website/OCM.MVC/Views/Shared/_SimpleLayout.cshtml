@@ -76,6 +76,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
-    @Html.Raw(CommonUtil.GetLocalizationScriptBlock())
+    @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts")))
 </body>
 </html>

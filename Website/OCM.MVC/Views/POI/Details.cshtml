@@ -26,33 +26,37 @@
 }
 <div id="details-imageblock"></div>
 <div id="details-container" class="details-container">
-    <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.title">charging location</small></h1>
+    <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.sectionTitle">charging location</small></h1>
 
     <div class="tabbable">
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#tab-general" data-toggle="tab" data-localize="ocm.details.locationDetails">Details</a>
+                <a href="#tab-general" data-toggle="tab" data-localize="ocm.details.location.sectionTitle">Details</a>
             </li>
             <li>
-                <a href="#tab-map" data-toggle="tab" data-localize="ocm.details.map">Map</a>
+                <a href="#tab-map" data-toggle="tab" data-localize="ocm.details.location.map">Map</a>
             </li>
             <li>
-                <a href="#tab-equipment" data-toggle="tab" data-localize="ocm.details.equipmentDetails">Equipment Info</a>
+                <a href="#tab-equipment" data-toggle="tab" data-localize="ocm.details.equipment.sectionTitle">Equipment Info</a>
             </li>
             <li>
-                <a href="#tab-comments" data-toggle="tab" data-localize="ocm.details.commentsAndRatings">
-                    Comments (@if (Model.POI.UserComments != null)
-                    { @Model.POI.UserComments.Count }
+                <a href="#tab-comments" data-toggle="tab">
+                    <span data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments</span>
+                    (@if (Model.POI.UserComments != null){
+                        @Model.POI.UserComments.Count
+                    }
                     else
-                    { @Html.Raw(0) })
+                    { 
+                        @Html.Raw(0) 
+                    })
                 </a>
             </li>
             <li>
-                <a href="#tab-nearby" data-toggle="tab" data-localize="ocm.details.placesNearby">Places Nearby</a>
+                <a href="#tab-nearby" data-toggle="tab" data-localize="ocm.details.placesNearby.sectionTitle">Places Nearby</a>
             </li>
             <li>
-                <a href="#tab-media" data-toggle="tab" data-localize="ocm.details.mediaItems">
-                    Photos (@if (Model.POI.MediaItems != null)
+                <a href="#tab-media" data-toggle="tab">
+                    <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> (@if (Model.POI.MediaItems != null)
                     { @Model.POI.MediaItems.Count }
                     else
                     { @Html.Raw(0) })
@@ -67,7 +71,7 @@
                     <div id="location-details">
                         <div class="row-fluid">
                             <div class="span4">
-                                <strong class="ocm-label" data-localize="ocm.details.address">Nearest Address</strong>:
+                                <strong class="ocm-label" data-localize="ocm.details.location.address">Nearest Address</strong>:
                                 <address>
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.AddressLine1)</div>
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.AddressLine2)</div>
@@ -75,12 +79,10 @@
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.StateOrProvince)</div>
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.Postcode)</div>
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.Country.Title)</div>
-
-                                    
                                 </address>
                             </div>
                             <div class="span4">
-                                <strong class="ocm-label" data-localize="ocm.details.streetView">Street View</strong>:
+                                <strong class="ocm-label" data-localize="ocm.details.location.streetView">Street View</strong>:
                                 <div>
                                     <a target="_blank" href="http://maps.google.com/?q=@Model.POI.AddressInfo.ToString()"><img class="img-thumbnail img-polaroid" src="http://maps.googleapis.com/maps/api/streetview?size=300x160&location=@Model.POI.AddressInfo.Latitude,@Model.POI.AddressInfo.Longitude&heading=235&sensor=false" /></a>
                                 </div>
@@ -131,10 +133,10 @@
 
                                 @if (!String.IsNullOrEmpty(Model.POI.AddressInfo.AccessComments))
                                 {
-                                <div>
-                                    <strong class="ocm-label" data-localize="ocm.details.accessComments">Access Information</strong>:
-                                    <p>@Html.DisplayFor(m => m.POI.AddressInfo.AccessComments)</p>
-                                </div>
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.accessComments">Access Information</strong>:
+                                        <p>@Html.DisplayFor(m => m.POI.AddressInfo.AccessComments)</p>
+                                    </div>
                                 }
 
                             </div>
@@ -142,35 +144,35 @@
                             <div class="span4">
                                 @if (Model.POI.OperatorInfo != null)
                                 {
-                                <div>
-                                    <strong class="ocm-label" data-localize="ocm.details.networkOperator">Network/Operator</strong>
-                                    <p>
-                                        @Html.DisplayFor(m => m.POI.OperatorInfo.Title)
-                                        @Html.DisplayFor(m => m.POI.OperatorInfo.WebsiteURL)
-                                        @Html.DisplayFor(m => m.POI.OperatorInfo.PhonePrimaryContact)
-                                    </p>
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.operator.sectionTitle">Network/Operator</strong>
+                                        <p>
+                                            @Html.DisplayFor(m => m.POI.OperatorInfo.Title)
+                                            @Html.DisplayFor(m => m.POI.OperatorInfo.WebsiteURL)
+                                            @Html.DisplayFor(m => m.POI.OperatorInfo.PhonePrimaryContact)
+                                        </p>
 
-                                </div>
+                                    </div>
 
                                 }
 
 
                                 @if (Model.POI.DataProvider != null)
                                 {
-                                <div>
-                                    <strong class="ocm-label" data-localize="ocm.details.dataProvider">Data Provider</strong>:
-                                    <p>
-                                        @Html.DisplayFor(m => m.POI.DataProvider.Title)
-                                        @Html.DisplayFor(m => m.POI.DataProvider.WebsiteURL)
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</strong>:
+                                        <p>
+                                            @Html.DisplayFor(m => m.POI.DataProvider.Title)
+                                            @Html.DisplayFor(m => m.POI.DataProvider.WebsiteURL)
 
-                                    </p>
-                                    @if (Model.POI.DataProvider.DataProviderStatusType.ID == 20)
+                                        </p>
+                                        @if (Model.POI.DataProvider.DataProviderStatusType.ID == 20)
                                         {
-                                        <div class="alert alert-info" data-localize="ocm.details.importedNotice">Note: This data is sourced automatically, changes should be submitted to the data provider directly.</div>
+                                            <div class="alert alert-info" data-localize="ocm.details.importedDataNotice">Note: This data is sourced automatically, changes should be submitted to the data provider directly.</div>
                                         }
 
 
-                                </div>
+                                    </div>
                                 }
 
                             </div>
@@ -179,12 +181,12 @@
 
                         </div>
 
-                        @if (Model.POI.MetadataValues!=null && Model.POI.MetadataValues.Any())
+                        @if (Model.POI.MetadataValues != null && Model.POI.MetadataValues.Any())
                         {
-                    
+
                             <div>
-                            <strong class="ocm-label" data-localize="ocm.details.metadataValues">Additional Tags</strong>:
-                            <p>@Html.DisplayFor(m => m.POI.MetadataValues)</p>
+                                <strong class="ocm-label" data-localize="ocm.details.metadataValues.sectionTitle">Additional Tags</strong>:
+                                <p>@Html.DisplayFor(m => m.POI.MetadataValues)</p>
                             </div>
                         }
                     </div>
@@ -205,7 +207,7 @@
 
                 <div class="row-fluid">
                     <div class="span6">
-                        <p>Add your own comment/check-in for this location:</p>
+                        <p><span data-localize="ocm.details.commentsAndRatings.addPrompt">Add your own comment/check-in for this location</span>:</p>
 
                         @if (Session["UserID"] != null)
                         {
@@ -226,7 +228,7 @@
             </div>
             <div id="tab-media" class="tab-pane">
                 <p>
-                    Upload your own photos for this location:
+                    <span data-localize="ocm.details.mediaItems.addPrompt">Upload your own photos for this location</span>:
                     @if (Session["UserID"] != null)
                     {
                         @Html.ActionLink("Upload", "AddMediaItem", "POI", new { id = Model.POI.ID }, new { @class = "btn btn-primary" })

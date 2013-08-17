@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web;
 
 namespace OCM.MVC
@@ -88,18 +89,18 @@ namespace OCM.MVC
         /// If user supplies a language code preference we provide a script block to dynamically apply localization
         /// </summary>
         /// <returns></returns>
-        public static string GetLocalizationScriptBlock()
+        public static string GetLocalizationScriptBlock(string urlPrefix)
         {
             string ocm_language_code = DetermineLanguageCode(allowTestMode: true);
 
             if (ocm_language_code != "en")
             {
-                string output = "<script src=\"//openchargemap.org/app/js/OCM_CommonUI.js?v=3.0\"></script>";
+                string output = "<script src=\""+urlPrefix+"/OCM/OCM_CommonUI.js?v=3.1\"></script>";
 
                 if (ocm_language_code != "test")
                 {
                     output +=
-                        "<script charset=\"UTF-8\" src=\"http://openchargemap.org/api/widgets/map/scripts/OCM_UI_LocalisationResources." +
+                        "<script charset=\"UTF-8\" src=\""+urlPrefix+"/OCM/Localisation/OCM_UI_LocalisationResources." +
                         ocm_language_code +
                         ".js\"></script> <script>new OCM_CommonUI().applyLocalisation(false);</script>";
                 }
