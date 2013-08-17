@@ -88,6 +88,9 @@
     <script src="js/OCM_App_LocationEditor.js"></script>
     <script src="js/OCM_AppBootstrap.js"></script>
     <!-- JS:LIB:END -->
+
+    
+    <script charset="UTF-8" src="js/Localisation/OCM_UI_LocalisationResources.ru.js"></script>
 </head>
 <body>
 
@@ -108,12 +111,12 @@
                     <div class="ui-block-a">
                         <a href="#search-page"><i class="icon-search icon-2x"></i>
                             <br>
-                            Search</a>
+                            <span data-localize="ocm.search.sectionTitle">Search</span></a>
                     </div>
                     <div class="ui-block-b">
                         <a href="#map-page"><i class="icon-map-marker icon-2x"></i>
                             <br>
-                            Map</a>
+                            <span data-localize="ocm.details.location.map">Map</span></a>
                     </div>
                     <div class="ui-block-c">
                         <a href="#favourites-page"><i class="icon-heart icon-2x"></i>
@@ -162,7 +165,7 @@
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
-                <div style="float: right"><i class="icon-search"></i>&nbsp;Search</div>
+                <div style="float: right"><i class="icon-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></div>
             </div>
         </div>
 
@@ -182,7 +185,7 @@
                 </p>
             </div>
 
-            <div id="progress-indicator">Loading...</div>
+            <div id="progress-indicator"><span data-localize="ocm.search.progress">Loading...</span></div>
             <div id="results-list">
                 <div class="result" style="display: none;" id="results-item-template">
                     <a href="#locationdetails-page" style="overflow: auto;">
@@ -214,7 +217,7 @@
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
-                <div style="float: right"><i class="icon-search"></i>&nbsp;Location Details</div>
+                <div style="float: right"><i class="icon-search"></i>&nbsp;<span data-localize="ocm.details.sectionTitle">Location Details</span></div>
             </div>
         </div>
         <div data-role="content" data-theme="d">
@@ -243,29 +246,29 @@
                 </div>
 
                 <div id="details-additional-container" class="content-subsection">
-                    <div class="section-heading">Equipment Details</div>
+                    <div class="section-heading" data-localize="ocm.details.equipment.sectionTitle">Equipment Details</div>
                     <div id="details-additional"></div>
                 </div>
 
                 <div id="details-usercomments-container" class="content-subsection">
-                    <div class="section-heading">Comments and Ratings</div>
+                    <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
 
                     <a id="btn-checkin" href="javascript:void();" data-role="button" data-inline="true" data-mini="true" data-icon="plus">Checkin or Add Comment</a>
                     <!--<a href="#submitcomment-page" data-role="button" data-inline="true" data-icon="alert">Report Fault</a>-->
 
                     <div id="details-usercomments">
-                        No comments submitted.
+                        <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
                     </div>
                 </div>
 
                 <div id="details-mediaitems-container" class="content-subsection">
-                    <div class="section-heading" data-localize="ocm.details.mediaItems">Photos</div>
+                    <div class="section-heading" data-localize="ocm.details.mediaItems.sectionTitle">Photos</div>
                     <div id="details-mediaitems">
                         No photos submitted.
                     </div>
                 </div>
                 <div id="details-advanced-container" class="content-subsection">
-                    <div class="section-heading">Additional Information</div>
+                    <div class="section-heading" data-localize="ocm.details.advancedDetails">Additional Information</div>
                     <div id="details-advanced" style="font-size:smaller;">
                         None.
                     </div>
@@ -283,7 +286,7 @@
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
-                <div style="float: right"><i class="icon-map-marker"></i>&nbsp;Map</div>
+                <div style="float: right"><i class="icon-map-marker"></i>&nbsp;<span data-localize="ocm.details.location.map">Map</span></div>
             </div>
         </div>
 
@@ -350,33 +353,33 @@
             </div>
             <form id="editlocation-form" action="#">
                 <div id="edit-location-container" data-role="collapsible" data-collapsed="false" data-content-theme="d">
-                    <h3>Location Details</h3>
+                    <h3 data-localize="ocm.details.location.sectionTitle">Location Details</h3>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_title">Location Title</label>
+                        <label for="edit_addressinfo_title" data-localize="ocm.details.location.title">Location Title</label>
                         <input id="edit_addressinfo_title" required="required" placeholder="General Location Name" minlength="2" type="text" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_addressline1">Address Line 1</label>
+                        <label for="edit_addressinfo_addressline1" data-localize="ocm.details.location.addressLine1">Address Line 1</label>
                         <input type="text" id="edit_addressinfo_addressline1" name="edit_addressinfo_addressline1" placeholder="First line of Address" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_addressline2">Address Line 2</label>
+                        <label for="edit_addressinfo_addressline2" data-localize="ocm.details.location.addressLine1">Address Line 2</label>
                         <input type="text" id="edit_addressinfo_addressline2" name="edit_addressinfo_addressline2" placeholder="Second line of Address (if applicable)" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_town">Town/City</label>
+                        <label for="edit_addressinfo_town" data-localize="ocm.details.location.town">Town/City</label>
                         <input type="text" id="edit_addressinfo_town" name="edit_addressinfo_town" placeholder="City or Town Name" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_stateorprovince">State/Province</label>
+                        <label for="edit_addressinfo_stateorprovince" data-localize="ocm.details.location.stateOrProvince">State/Province</label>
                         <input type="text" id="edit_addressinfo_stateorprovince" name="edit_addressinfo_stateorprovince" placeholder="State, Province or Region" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_postcode">Zip/Postcode</label>
+                        <label for="edit_addressinfo_postcode" data-localize="ocm.details.location.postcode">Zip/Postcode</label>
                         <input type="text" id="edit_addressinfo_postcode" name="edit_addressinfo_postcode" placeholder="Zip/Postal Code if applicable" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_countryid">Country</label>
+                        <label for="edit_addressinfo_countryid" data-localize="ocm.details.location.country">Country</label>
                         <select id="edit_addressinfo_countryid" name="edit_addressinfo_countryid" data-inline="true">
                             <option value="">(Not Listed)</option>
                         </select>
@@ -395,45 +398,45 @@
                     </div>
                     <div id="editor_map_canvas" style="width: 600px; height: 300px; display: none; margin: 0; padding: 0; background-color: gainsboro;"></div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_accesscomments">Comment for Access/Directions</label>
+                        <label for="edit_addressinfo_accesscomments" data-localize="ocm.details.accessComments">Comment for Access/Directions</label>
                         <input type="text" id="edit_addressinfo_accesscomments" name="ocm_loc_accesscomments" placeholder="How to find, special instructions etc." value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_contacttelephone1">Contact telephone for enquiries</label>
+                        <label for="edit_addressinfo_contacttelephone1" data-localize="ocm.details.location.contactTelephone1">Contact telephone for enquiries</label>
                         <input id="edit_addressinfo_contacttelephone1" name="edit_addressinfo_contacttelephone1" type="tel" placeholder="Contact number for more info/access." value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_contacttelephone2">Additional Contact telephone</label>
+                        <label for="edit_addressinfo_contacttelephone2" data-localize="ocm.details.location.contactTelephone2">Additional Contact telephone</label>
                         <input id="edit_addressinfo_contacttelephone2" name="edit_addressinfo_contacttelephone2" type="tel" placeholder="Additional contact number (if required)" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_contactemail">Public email for enquiries</label>
+                        <label for="edit_addressinfo_contactemail" data-localize="ocm.details.location.contactEmail">Public email for enquiries</label>
                         <input id="edit_addressinfo_contactemail" name="edit_addressinfo_contactemail" type="email" placeholder="Public email address for enquiries" value="" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_addressinfo_relatedurl">Related Website</label>
+                        <label for="edit_addressinfo_relatedurl" data-localize="ocm.details.location.addressRelatedURL">Related Website</label>
                         <input id="edit_addressinfo_relatedurl" name="edit_addressinfo_relatedurl" type="url" placeholder="Related Website" value="" />
                     </div>
                 </div>
 
                 <div id="edit-equipmentgeneral" data-role="collapsible" data-collapsed="false" data-content-theme="d">
-                    <h3>General Equipment/Service Info</h3>
+                    <h3 data-localize="ocm.details.equipment.sectionTitle">General Equipment/Service Info</h3>
                     <div data-role="fieldcontain">
-                        <label for="edit_numberofpoints">Number of points available</label>
+                        <label for="edit_numberofpoints" data-localize="ocm.details.numberOfPoints">Number of points available</label>
                         <input id="edit_numberofpoints" name="edit_numberofpoints" type="number" value="1" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_usagetype">Usage Restrictions</label>
+                        <label for="edit_usagetype" data-localize="ocm.details.usageType">Usage Restrictions</label>
                         <select id="edit_usagetype" name="edit_usagetype" data-inline="true">
                             <option value="">Unknown</option>
                         </select>
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_usagecost">Usage Cost (if any)</label>
+                        <label for="edit_usagecost" data-localize="ocm.details.usageType">Usage Cost (if any)</label>
                         <input type="text" id="edit_usagecost" name="edit_usagecost" value="Free" />
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_statustype">Status (if known)</label>
+                        <label for="edit_statustype" data-localize="ocm.details.operationalStatus">Status (if known)</label>
                         <select id="edit_statustype" name="edit_statustype" data-inline="true">
                             <option value="0">Unknown</option>
                             <option value="50">Operational</option>
@@ -441,23 +444,23 @@
                         </select>
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="edit_generalcomments">Comments or Additional Info</label>
+                        <label for="edit_generalcomments" data-localize="ocm.details.generalComments">Comments or Additional Info</label>
                         <input type="text" id="edit_generalcomments" name="edit_generalcomments" value="" />
                     </div>
                     <div id="edit-operator-container" data-role="fieldcontain">
-                        <label for="edit_operator">Network/Operator</label>
+                        <label for="edit_operator" data-localize="ocm.details.operator.sectionTitle">Network/Operator</label>
                         <select id="edit_operator" name="edit_operator" data-inline="true">
                             <option value="1">Unknown</option>
                         </select>
                     </div>
                     <div id="edit-dataprovider-container" data-role="fieldcontain">
-                        <label for="edit_dataprovider">Data Provider</label>
+                        <label for="edit_dataprovider" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</label>
                         <select id="edit_dataprovider" name="edit_dataprovider" data-inline="true">
                             <option value="1">OpenChargeMap Contributor</option>
                         </select>
                     </div>
                     <div id="edit-submissionstatus-container" data-role="fieldcontain">
-                        <label for="edit_submissionstatus">Submission Status</label>
+                        <label for="edit_submissionstatus" data-localize="ocm.details.submissionStatus">Submission Status</label>
                         <select id="edit_submissionstatus" name="edit_submissionstatus" data-inline="true">
                             <option value="1">Submission Under Review</option>
                         </select>
@@ -468,42 +471,42 @@
                     <div id="edit_connection1" data-role="collapsible" data-collapsed="false" data-content-theme="d">
                         <h3>Connection 1  - Equipment/Charging Level Info</h3>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_connectiontype">Connection Type</label>
+                            <label for="edit_connection1_connectiontype" data-localize="ocm.details.equipment.connectionType">Connection Type</label>
                             <select id="edit_connection1_connectiontype" name="edit_connection1_connectiontype" data-inline="true">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_powerkw">Power (KW)</label>
+                            <label for="edit_connection1_powerkw" data-localize="ocm.details.equipment.powerKW">Power (KW)</label>
                             <input type="number" id="edit_connection1_powerkw" name="edit_connection1_powerkw" value="" />
                         </div>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_currenttype">Supply Type</label>
+                            <label for="edit_connection1_currenttype" data-localize="ocm.details.equipment.supplyType">Supply Type</label>
                             <select id="edit_connection1_currenttype" name="edit_connection1_currenttype" data-inline="true">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_level">Charger Type/Level</label>
+                            <label for="edit_connection1_level" data-localize="ocm.details.equipment.powerLevel">Charger Type/Level</label>
                             <select id="edit_connection1_level" name="edit_connection1_level" data-inline="true">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_amps">Max Current (Amps)</label>
+                            <label for="edit_connection1_amps" data-localize="ocm.details.equipment.current">Max Current (Amps)</label>
                             <input type="number" id="edit_connection1_amps" name="edit_connection1_amps" value="" />
                         </div>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_volts">Max Voltage</label>
+                            <label for="edit_connection1_volts" data-localize="ocm.details.equipment.voltage">Max Voltage</label>
                             <input type="number" id="edit_connection1_volts" name="edit_connection1_volts" value="" />
                         </div>
 
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_quantity">Quantity of this type</label>
+                            <label for="edit_connection1_quantity" data-localize="ocm.details.equipment.quantity">Quantity of this type</label>
                             <input type="number" id="edit_connection1_quantity" name="edit_connection1_quantity" value="" />
                         </div>
                         <div data-role="fieldcontain">
-                            <label for="edit_connection1_status">Status</label>
+                            <label for="edit_connection1_status" data-localize="ocm.details.operationalStatus">Status</label>
                             <select id="edit_connection1_status" name="edit_connection1_status" data-inline="true">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>

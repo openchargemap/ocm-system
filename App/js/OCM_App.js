@@ -38,7 +38,7 @@ function OCM_App() {
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
 
-    this.isLocalDevMode = false;
+    this.isLocalDevMode = true;
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
@@ -281,6 +281,8 @@ OCM_App.prototype.initDeferredUI = function () {
             app.showDetailsViewById(poiId);
         }, 100);
     }
+
+    this.ocm_ui.applyLocalisation(false);
 };
 
 OCM_App.prototype.isUserSignedIn = function () {
