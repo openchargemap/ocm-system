@@ -1,0 +1,205 @@
+﻿<html>
+<head>
+    <title>OCM Localisation Preview</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-wip/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-wip/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            padding: 2em;
+        }
+
+        .text-muted {
+            color: #d4d2d2;
+        }
+
+        small {
+            color: #d4d2d2 !important;
+            font-weight: normal !important;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="panel">
+        <div class="panel-heading">OCM Localisation Preview <select id="languageSelection"></select></div>
+        <div class="panel-body">
+            <p class="alert alert-info">This is a preview translation of OCM. You can contribute to the translation effort at <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map">https://webtranslateit.com/en/projects/6978-Open-Charge-Map</a></p>
+            <div id="output"></div>
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+        var langCode = "fr";
+        var $o = null;
+        var l = null;
+
+        var languageList = [
+            {
+                "_langTitle": "English",
+                "_langCode": "en"
+            },
+            {
+                "_langTitle": "French/Français",
+                "_langCode": "fr"
+            },
+            {
+                "_langTitle": "Dutch/Nederlands",
+                "_langCode": "nl"
+            },
+            {
+                "_langTitle": "German/Deutsch",
+                "_langCode": "de"
+            },
+            {
+                "_langTitle": "Japanese/日本語",
+                "_langCode": "ja"
+            },
+            {
+                "_langTitle": "Chinese/中国的",
+                "_langCode": "zh"
+            }, {
+                "_langTitle": "Russian/Pусский",
+                "_langCode": "ru"
+            }
+        ];
+
+        function init() {
+            //populate language dropdown
+            var $languageSelection = $("#languageSelection");
+            $.each(languageList, function () {
+                $languageSelection.append($("<option />").val(this._langCode).text(this._langTitle));
+            });
+
+            $languageSelection.change(function () {
+                updateLanguageSelection();
+            })
+            $languageSelection.val("en");
+
+            updateLanguageSelection();
+        }
+
+        function updateLanguageSelection() {
+            langCode = $("#languageSelection").val();
+
+            //https://webtranslateit.com/api/projects/Su3Ue1_wfMgWfR292V9Bsw/files/270868/locales/en
+            $.getJSON("OCM_UI_LocalisationResources." + langCode + ".json", function (data) {
+                l = data;
+
+                console.log(l); // this will show the info it in firebug console
+
+                $o = $("#output");
+                $o.empty();
+                previewSampleData();
+            });
+
+        }
+
+        function previewSampleData() {
+            $o.append("<p class='lead'>Preview for: " + l._langTitle + " [" + l._langCode + "]</p>");
+            preview("ocm.details.sectionTitle", "", true, 2);
+
+            preview("ocm.details.location.sectionTitle", "", true, 3);
+            preview("ocm.details.location.title", "West Addison Super Charger", false);
+            preview("ocm.details.location.address", "", true, 4);
+            preview("ocm.details.location.addressLine1", "1060 West Addison Street");
+            preview("ocm.details.location.addressLine2", "");
+            preview("ocm.details.location.town", "Chicago");
+            preview("ocm.details.location.stateOrProvince", "IL");
+            preview("ocm.details.location.postcode", "90210");
+            preview("ocm.details.location.country", "United States");
+            preview("ocm.details.location.contactTelephone1", "555 123 456");
+            preview("ocm.details.location.contactTelephone2", "555 234 777");
+            preview("ocm.details.location.contactEmail", "chargerinfo@bluebros.com");
+            preview("ocm.details.location.map", "http://maps.google.com");
+            preview("ocm.details.location.streetView", "http://maps.google.com");
+            preview("ocm.details.location.addressRelatedURL", "http://www.bluesbros.com/charging");
+
+            preview("ocm.details.generalComments", "J1772 available via adaptor from reception");
+            preview("ocm.details.accessComments", "Open 7 Days. Charging located behind building, last bay on right. RFID card available from reception.");
+            preview("ocm.details.numberOfPoints", "2");
+            preview("ocm.details.usageType", "Private For Staff and Visitors");
+            preview("ocm.details.usageCost", "Free for customers");
+            preview("ocm.details.operationalStatus", "Operational");
+            preview("ocm.details.datePlanned", "23/May/2013");
+            preview("ocm.details.dateLastConfirmed", "23/June/2013");
+            preview("ocm.details.lastUpdated", "19/April/2014");
+            preview("ocm.details.advancedDetails", "", true, 3);
+            preview("ocm.details.refNumber", "OCM-0000");
+            preview("ocm.details.dataQualityLevel", "3 - Average");
+            previewBlock("ocm.details.importedDataNotice");
+            preview("ocm.details.submissionStatus", "Published");
+
+            preview("ocm.details.placesNearby.sectionTitle", " (0)", true, 3);
+            preview("ocm.details.mediaItems.sectionTitle", " (0)", true, 3);
+            previewBlock("ocm.details.mediaItems.addPrompt");
+
+            preview("ocm.details.metadataValues.sectionTitle", "Hotel, Restaurant, Shopping");
+
+            preview("ocm.details.commentsAndRatings.sectionTitle", " (0)", true, 3);
+            previewBlock("ocm.details.commentsAndRatings.zeroComments");
+            previewBlock("ocm.details.commentsAndRatings.addPrompt");
+
+            preview("ocm.details.equipment.sectionTitle", "", true, 3);
+
+            preview("ocm.details.equipment.connectionType", "J1772");
+            preview("ocm.details.equipment.powerKW", "7");
+            preview("ocm.details.equipment.powerLevel", "Level 2");
+            preview("ocm.details.equipment.quantity", "1");
+            preview("ocm.details.equipment.supplyType", "AC (Single Phase)");
+            preview("ocm.details.equipment.voltage", "230");
+            preview("ocm.details.equipment.current", "13");
+            preview("ocm.details.equipment.current", "13 (Amps)");
+            preview("ocm.details.equipment.comment", "Isolation switch at base of unit");
+            preview("ocm.details.equipment.reference", "OCM-CN-0000");
+
+            preview("ocm.details.dataProvider.sectionTitle", "", true, 3);
+            preview("ocm.details.dataProvider.website", "http://openchargemap.org");
+            preview("ocm.details.dataProvider.providersReference", "00000");
+            preview("ocm.details.operator.sectionTitle", "", true, 3);
+            preview("ocm.details.operator.operatorsReference", "XYZ-123");
+
+            preview("ocm.search.sectionTitle","",true,3);
+            preview("ocm.search.locationInput","London, UK");
+            preview("ocm.search.useMyLocation","Yes/No");
+            preview("ocm.search.distance","1 KM");
+            preview("ocm.search.chargingLevels","Level 1, Level 2");
+            preview("ocm.search.connectionTypes","J1772, CHadeMO");
+            preview("ocm.search.networkOperators","Charge Net");
+            preview("ocm.search.countries","United States, France");
+            preview("ocm.search.submissionStatus","Published, Awaiting Review");
+            preview("ocm.search.usageTypes","Public, Private");
+            preview("ocm.search.operationalStatusTypes","Operational, Non-Operational");
+            preview("ocm.search.performSearch","",true,3);
+            previewBlock("ocm.search.progress");
+            
+        }
+
+        function preview(resourceKey, sampleData, isHeading, headingLevel) {
+            var resourceValue = eval("l." + resourceKey);
+
+            if (resourceValue == null) resourceValue = "[awaiting translation]";
+            if (isHeading) {
+                $o.append("<h" + headingLevel + ">" + resourceValue + sampleData + " <small>" + resourceKey + "</small></h" + headingLevel + ">");
+            } else {
+
+                $o.append("<div class='row'><div class='col-md-3 text-info'><strong>" + resourceValue + "</strong>:</div><div class='col-md-4'>" + sampleData + "</div><div class='col-md-3 text-muted'>" + resourceKey + "</div></div>");
+            }
+        }
+
+        function previewBlock(resourceKey) {
+            var resourceValue = eval("l." + resourceKey);
+            if (resourceValue == null) resourceValue = "[awaiting translation]";
+            $o.append("<div class='row'><div class='col-md-3'></div><div class='col-md-4'><p class='alert alert-info'>" + resourceValue + "</p></div><div class='col-md-3 text-muted'>" + resourceKey + "</div></div>");
+        }
+
+        init();
+
+</script>
+
+</html>

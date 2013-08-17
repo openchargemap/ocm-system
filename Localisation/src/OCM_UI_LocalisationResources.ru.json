@@ -1,73 +1,91 @@
 {
-  "_langTitle": null,
-  "_langCode": null,
+  "_langTitle": "Russian/Pусский",
+  "_langCode": "ru",
   "ocm": {
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "Зарядка местоположение",
       "location": {
-        "sectionTitle": null,
-        "address": null,
-        "map": null,
-        "streetView": null,
-        "addressRelatedURL": null
+        "sectionTitle": "Детали местонахождения",
+        "title": "Название местоположения",
+        "address": "Ближайший адрес",
+        "addressLine1": "Адрес, строка 1",
+        "addressLine2": "Адрес, строка 2",
+        "town": "Город",
+        "stateOrProvince": "Штат/провинция",
+        "postcode": "Почтовый индекс",
+        "country": "Страна",
+        "contactTelephone1": "Первичный контактный телефон",
+        "contactTelephone2": "Вторичные контактный телефон",
+        "contactEmail": "Контактный адрес электронной почты",
+        "map": "Карта",
+        "streetView": "Просмотр улиц",
+        "addressRelatedURL": "Веб-сайт"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": null,
-      "numberOfPoints": null,
-      "usageType": null,
-      "operationalStatus": null,
-      "lastUpdated": null,
-      "refNumber": null,
-      "importedDataNotice": null,
+      "generalComments": "Общая информация",
+      "accessComments": "Доступ к информации",
+      "advancedDetails": "Дополнительная информация",
+      "numberOfPoints": "Количество отсеков станции",
+      "usageType": "Использование",
+      "usageCost": "Чистая стоимость",
+      "operationalStatus": "Рабочее состояние",
+      "datePlanned": "Дата планируемые",
+      "dateLastConfirmed": "Дата последнего подтвердил",
+      "lastUpdated": "Последнее обновление",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Уровень качества данных",
+      "importedDataNotice": "Примечание: Эти данные получены автоматически, изменения должны быть представлены к поставщику данных напрямую.",
+      "submissionStatus": "Состояние отправки",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "Места поблизости"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "Фотографии",
+        "addPrompt": "Загрузка фотографий для этого расположения"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "Дополнительные Теги"
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
-        "addPrompt": null
+        "sectionTitle": "Комментарии и рейтинги",
+        "zeroComments": "Не представленные комментарии пользователей",
+        "addPrompt": "Добавьте свой комментарий/регистрация для этого расположения"
       },
       "equipment": {
-        "sectionTitle": null,
-        "connectionType": null,
-        "powerKW": null,
-        "powerLevel": null,
-        "quantity": null,
-        "supplyType": null,
-        "voltage": null,
-        "current": null,
-        "comment": null,
-        "reference": null
+        "sectionTitle": "Детали оборудования",
+        "connectionType": "Тип подключения",
+        "powerKW": "Максимальная мощность (кВт)",
+        "powerLevel": "Уровень",
+        "quantity": "Количество",
+        "supplyType": "Тип питания",
+        "voltage": "Напряжения",
+        "current": "Максимальный ток",
+        "comment": "Комментарии",
+        "reference": "Ссылка"
       },
       "dataProvider": {
-        "sectionTitle": null,
-        "website": null
+        "sectionTitle": "Поставщик данных",
+        "website": "Веб-сайт",
+        "providersReference": "Провайдеры Ref"
       },
       "operator": {
-        "sectionTitle": null
+        "sectionTitle": "Оператор сети",
+        "operatorsReference": "Операторы Ref"
       }
     },
     "search": {
-      "locationInput": null,
-      "useMyLocation": null,
-      "distance": null,
-      "chargingLevels": null,
-      "connectionTypes": null,
-      "networkOperators": null,
-      "countries": null,
-      "submissionStatus": null,
-      "usageTypes": null,
-      "operationalStatusTypes": null,
-      "performSearch": null,
-      "progress": null
+      "sectionTitle": null,
+      "locationInput": "Местоположение",
+      "useMyLocation": "Поиск рядом со мной",
+      "distance": "Расстояние",
+      "chargingLevels": "Зарядка уровень",
+      "connectionTypes": "Типы подключения",
+      "networkOperators": "Оператор сети",
+      "countries": "Страна",
+      "submissionStatus": "Состояние отправки",
+      "usageTypes": "Использование",
+      "operationalStatusTypes": "Статус",
+      "performSearch": "Поиск",
+      "progress": "Поиск..."
     }
   }
 }
