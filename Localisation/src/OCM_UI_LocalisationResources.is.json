@@ -1,0 +1,73 @@
+{
+  "_langTitle": null,
+  "_langCode": null,
+  "ocm": {
+    "details": {
+      "sectionTitle": null,
+      "location": {
+        "sectionTitle": null,
+        "address": null,
+        "map": null,
+        "streetView": null,
+        "addressRelatedURL": null
+      },
+      "generalComments": null,
+      "accessComments": null,
+      "advancedDetails": null,
+      "numberOfPoints": null,
+      "usageType": null,
+      "operationalStatus": null,
+      "lastUpdated": null,
+      "refNumber": null,
+      "importedDataNotice": null,
+      "placesNearby": {
+        "sectionTitle": null
+      },
+      "mediaItems": {
+        "sectionTitle": null,
+        "addPrompt": null
+      },
+      "metadataValues": {
+        "sectionTitle": null
+      },
+      "commentsAndRatings": {
+        "sectionTitle": null,
+        "zeroComments": null,
+        "addPrompt": null
+      },
+      "equipment": {
+        "sectionTitle": null,
+        "connectionType": null,
+        "powerKW": null,
+        "powerLevel": null,
+        "quantity": null,
+        "supplyType": null,
+        "voltage": null,
+        "current": null,
+        "comment": null,
+        "reference": null
+      },
+      "dataProvider": {
+        "sectionTitle": null,
+        "website": null
+      },
+      "operator": {
+        "sectionTitle": null
+      }
+    },
+    "search": {
+      "locationInput": null,
+      "useMyLocation": null,
+      "distance": null,
+      "chargingLevels": null,
+      "connectionTypes": null,
+      "networkOperators": null,
+      "countries": null,
+      "submissionStatus": null,
+      "usageTypes": null,
+      "operationalStatusTypes": null,
+      "performSearch": null,
+      "progress": null
+    }
+  }
+}
