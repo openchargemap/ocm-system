@@ -1,11 +1,11 @@
-{
-  "_langTitle": null,
-  "_langCode": null,
+var localisation_dictionary_de ={
+  "_langTitle": "German/Deutsch",
+  "_langCode": "de",
   "ocm": {
     "details": {
       "sectionTitle": null,
       "location": {
-        "sectionTitle": null,
+        "sectionTitle": "Standort Details",
         "title": null,
         "address": null,
         "addressLine1": null,
@@ -19,19 +19,19 @@
         "contactEmail": null,
         "map": null,
         "streetView": null,
-        "addressRelatedURL": null
+        "addressRelatedURL": "Webseite"
       },
       "generalComments": null,
       "accessComments": null,
-      "advancedDetails": null,
-      "numberOfPoints": null,
-      "usageType": null,
+      "advancedDetails": "Daten Quelle",
+      "numberOfPoints": "Anzahl Anschlüsse",
+      "usageType": "Verwendung",
       "usageCost": null,
-      "operationalStatus": null,
+      "operationalStatus": "Betriebs Status",
       "datePlanned": null,
       "dateLastConfirmed": null,
-      "lastUpdated": null,
-      "refNumber": null,
+      "lastUpdated": "Letzte Änderung",
+      "refNumber": "OpenChargeMap Ref",
       "dataQualityLevel": null,
       "importedDataNotice": null,
       "submissionStatus": null,
@@ -46,16 +46,16 @@
         "sectionTitle": null
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
+        "sectionTitle": "Kommentare und Bewertung",
+        "zeroComments": "Los Du bist der erste der was schreibt",
         "addPrompt": null
       },
       "equipment": {
-        "sectionTitle": null,
-        "connectionType": null,
+        "sectionTitle": "Anschluss Details",
+        "connectionType": "Adapter",
         "powerKW": null,
-        "powerLevel": null,
-        "quantity": null,
+        "powerLevel": "Strom",
+        "quantity": "Anzahl",
         "supplyType": null,
         "voltage": null,
         "current": null,
@@ -63,29 +63,29 @@
         "reference": null
       },
       "dataProvider": {
-        "sectionTitle": null,
-        "website": null,
+        "sectionTitle": "Daten Übermittler",
+        "website": "Webseite",
         "providersReference": null
       },
       "operator": {
-        "sectionTitle": null,
+        "sectionTitle": "Anbieter/Betreiber",
         "operatorsReference": null
       }
     },
     "search": {
       "sectionTitle": null,
-      "locationInput": null,
-      "useMyLocation": null,
-      "distance": null,
-      "chargingLevels": null,
-      "connectionTypes": null,
-      "networkOperators": null,
-      "countries": null,
-      "submissionStatus": null,
-      "usageTypes": null,
-      "operationalStatusTypes": null,
-      "performSearch": null,
-      "progress": null
+      "locationInput": "Standort",
+      "useMyLocation": "Suche in der Nähe",
+      "distance": "Distanz",
+      "chargingLevels": "Lademöglichkeiten",
+      "connectionTypes": "Adapter",
+      "networkOperators": "Anbieter/Betreiber",
+      "countries": "Land",
+      "submissionStatus": "Übermitlungs Status",
+      "usageTypes": "Verwendung",
+      "operationalStatusTypes": "Betriebs Status",
+      "performSearch": "Suche",
+      "progress": "Bitte warten.."
     }
   }
-}
+};
