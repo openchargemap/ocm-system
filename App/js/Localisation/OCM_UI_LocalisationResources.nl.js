@@ -1,4 +1,4 @@
-var localisation_dictionary =
+var localisation_dictionary_nl =
 {
     "_langTitle": "Dutch/Nederlands",
     "_langCode": "nl",
@@ -55,7 +55,7 @@ var localisation_dictionary =
                 "sectionTitle": "Apparatuurgegevens",
                 "connectionType": "Connector Type",
                 "powerKW": "Max Vermogen (KW)",
-                "powerLevel": "Vermogensniveau",
+                "powerLevel": "Niveau",
                 "quantity": "Aantal",
                 "supplyType": "Toevoer Type",
                 "voltage": "Voltage",
@@ -74,7 +74,7 @@ var localisation_dictionary =
             }
         },
         "search": {
-            "sectionTitle": null,
+            "sectionTitle": "Zoek",
             "locationInput": "Locatie",
             "useMyLocation": "Zoek in mijn buurt",
             "distance": "Afstand",

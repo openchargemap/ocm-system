@@ -1,4 +1,4 @@
-﻿var localisation_dictionary =
+﻿var localisation_dictionary_ru =
 {
     "_langTitle": "Russian/Pусский",
     "_langCode": "ru",
@@ -74,7 +74,7 @@
             }
         },
         "search": {
-            "sectionTitle": "Поиск",
+            "sectionTitle": null,
             "locationInput": "Местоположение",
             "useMyLocation": "Поиск рядом со мной",
             "distance": "Расстояние",

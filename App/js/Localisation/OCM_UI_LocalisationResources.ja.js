@@ -1,4 +1,4 @@
-﻿var localisation_dictionary =
+﻿var localisation_dictionary_ja =
 {
     "_langTitle": "Japanese/日本語",
     "_langCode": "ja",

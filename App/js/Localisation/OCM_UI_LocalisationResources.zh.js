@@ -1,4 +1,4 @@
-﻿var localisation_dictionary =
+﻿var localisation_dictionary_zu =
 {
     "_langTitle": "Chinese/中国的",
     "_langCode": "zh",

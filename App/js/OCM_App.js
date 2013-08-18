@@ -37,6 +37,7 @@ function OCM_App() {
     this.isRunningUnderCordova = false;
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
+    this.languageCode = null;
 
     this.isLocalDevMode = true;
     if (this.isLocalDevMode == true) {
@@ -200,6 +201,10 @@ OCM_App.prototype.initApp = function () {
 
     this.initEditors();
 
+    //populate language options
+
+    this.populateDropdown("option-language", this.ocm_data.languageList);
+
     //load options settings from storage/cookies
     this.loadSettings();
 
@@ -207,7 +212,9 @@ OCM_App.prototype.initApp = function () {
     $('#search-distance').change(function () { app.storeSettings(); });
     $('#search-distance-unit').change(function () { app.storeSettings(); });
     $('#option-enable-experiments').change(function () { app.storeSettings(); });
-
+    $('#option-language').change(function () {
+        app.switchLanguage($("#option-language").val());
+    });
     //setTimeout(function(){
     app.initDeferredUI();
     //},50);
@@ -282,11 +289,11 @@ OCM_App.prototype.initDeferredUI = function () {
         }, 100);
     }
 
-    this.ocm_ui.applyLocalisation(false);
+    this.switchLanguage($("#option-language").val());
 };
 
 OCM_App.prototype.isUserSignedIn = function () {
-    if (this.ocm_data.hasAuthorizationError==true) {
+    if (this.ocm_data.hasAuthorizationError == true) {
         return false;
     }
 
@@ -394,12 +401,16 @@ OCM_App.prototype.storeSettings = function () {
     this.setCookie("optsearchdist", $('#search-distance').val());
     this.setCookie("optsearchdistunit", $('#search-distance-unit').val());
     this.setCookie("optenableexperiments", $('#option-enable-experiments').val());
+
+    //console.log("Saving language code:" + $('#option-language').val());
+    this.setCookie("optlanguagecode", $('#option-language').val());
 };
 
 OCM_App.prototype.loadSettings = function () {
     if (this.getCookie("optsearchdist") != null) $('#search-distance').val(this.getCookie("optsearchdist"));
     if (this.getCookie("optsearchdistunit") != null) $('#search-distance-unit').val(this.getCookie("optsearchdistunit"));
     if (this.getCookie("optenableexperiments") != null) $('#option-enable-experiments').val(this.getCookie("optenableexperiments"));
+    if (this.getCookie("optlanguagecode") != null) $('#option-language').val(this.getCookie("optlanguagecode"));
 };
 
 OCM_App.prototype.performCommentSubmit = function () {
@@ -427,13 +438,12 @@ OCM_App.prototype.performMediaItemSubmit = function () {
     var $fileupload = $(':file');
     var mediafile = $fileupload[0].files[0];
 
-    if (mediafile)
-    {
+    if (mediafile) {
         name = mediafile.name;
         size = mediafile.size;
         type = mediafile.type;
-    } 
-    
+    }
+
 
     var formData = new FormData();
 
@@ -803,6 +813,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
 				"</blockquote>";
             }
         }
+        
         mediaItemOutput += "</div>";
 
         $("#details-mediaitems").html(mediaItemOutput);
@@ -833,6 +844,11 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     //once displayed, try fetching a more accurate distance
     if (this.ocm_app_searchPos != null) {
         this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.lat(), this.ocm_app_searchPos.lng(), poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
+    }
+
+    //apply translations (if required)
+    if (this.languageCode != null) {
+        this.ocm_ui.applyLocalisation(false);
     }
 };
 
@@ -988,6 +1004,21 @@ OCM_App.prototype.initExperimentalContent = function () {
     }
     $("#experiment-output").html(output).trigger("create");
 
+};
+
+OCM_App.prototype.switchLanguage = function (languageCode) {
+
+    this.logEvent("Switching UI language: " + languageCode);
+
+    this.languageCode = languageCode;
+
+    localisation_dictionary = eval("localisation_dictionary_" + languageCode);
+
+    //apply translations
+    this.ocm_ui.applyLocalisation(false);
+
+    //store language preference
+    this.storeSettings();
 };
 
 //methods for use by native build of app to enable navigation via native UI/phonegap

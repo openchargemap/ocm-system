@@ -1,50 +1,47 @@
 OCM_App.prototype.getCookie = function (c_name) {
-	if (this.isRunningUnderCordova)
-	{
-		console.log("getting cookie:"+c_name+"::"+this.ocm_data.getCachedDataObject("_pref_"+c_name));
-		return this.ocm_data.getCachedDataObject("_pref_"+c_name);
-	} else {
-    //http://www.w3schools.com/js/js_cookies.asp
-    var i, x, y, ARRcookies = document.cookie.split(";");
-    for (i = 0; i < ARRcookies.length; i++) {
-        x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
-        y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
-        x = x.replace(/^\s+|\s+$/g, "");
-        if (x == c_name) {
-            var val = unescape(y);
-            if (val == "null") val = null;
-            return val;
+    if (this.isRunningUnderCordova) {
+        //console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
+        return this.ocm_data.getCachedDataObject("_pref_" + c_name);
+    } else {
+        //http://www.w3schools.com/js/js_cookies.asp
+        var i, x, y, ARRcookies = document.cookie.split(";");
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+            x = x.replace(/^\s+|\s+$/g, "");
+            if (x == c_name) {
+                var val = unescape(y);
+                if (val == "null") val = null;
+                return val;
+            }
         }
+        return null;
     }
-    return null;
-	}
 };
 
 OCM_App.prototype.setCookie = function (c_name, value, exdays) {
-	if (this.isRunningUnderCordova)
-	{
-		this.ocm_data.setCachedDataObject("_pref_"+c_name, value);
-	} else {
+    if (this.isRunningUnderCordova) {
+        this.ocm_data.setCachedDataObject("_pref_" + c_name, value);
+    } else {
 
-    if (exdays == null) exdays = 1;
+        if (exdays == null) exdays = 1;
 
-    //http://www.w3schools.com/js/js_cookies.asp
-    var exdate = new Date();
-    exdate.setDate(exdate.getDate() + exdays);
-    var c_value = escape(value) + "; expires=" + exdate.toUTCString();
-    document.cookie = c_name + "=" + c_value;
-	}
+        //http://www.w3schools.com/js/js_cookies.asp
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value = escape(value) + "; expires=" + exdate.toUTCString();
+        document.cookie = c_name + "=" + c_value;
+    }
 };
 
 OCM_App.prototype.clearCookie = function (c_name) {
-	if (this.isRunningUnderCordova)
-	{
-		this.ocm_data.setCachedDataObject("_pref_"+c_name, null);
-	} else {
-    var expires = new Date();
-    expires.setUTCFullYear(expires.getUTCFullYear() - 1);
-    document.cookie = c_name + '=; expires=' + expires.toUTCString() + '; path=/';
-	}
+    if (this.isRunningUnderCordova) {
+        this.ocm_data.setCachedDataObject("_pref_" + c_name, null);
+    } else {
+        var expires = new Date();
+        expires.setUTCFullYear(expires.getUTCFullYear() - 1);
+        document.cookie = c_name + '=; expires=' + expires.toUTCString() + '; path=/';
+    }
 };
 
 OCM_App.prototype.getParameter = function (name) {

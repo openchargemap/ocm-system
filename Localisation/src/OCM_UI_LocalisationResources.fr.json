@@ -54,7 +54,7 @@
         "sectionTitle": "Détails d'équipement",
         "connectionType": "Type de Connection",
         "powerKW": "Puisance Max (KW)",
-        "powerLevel": "Niveau de Puissance",
+        "powerLevel": "Niveau",
         "quantity": "Quantité",
         "supplyType": "Type d'Alimentation",
         "voltage": "Voltage",
@@ -73,7 +73,7 @@
       }
     },
     "search": {
-      "sectionTitle": null,
+      "sectionTitle": "Cherche",
       "locationInput": "Endroit",
       "useMyLocation": "Cherche Près de Moi",
       "distance": "Distance",

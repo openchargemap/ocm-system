@@ -137,6 +137,7 @@ OCM_App.prototype.populateEditor = function (refData) {
     this.populateDropdown("filter-usagetype", refData.UsageTypes, "", true, false, "(All)");
     this.populateDropdown("filter-statustype", refData.StatusTypes, "", true, false, "(All)");
 
+   
     this.resetEditorForm();
 };
 

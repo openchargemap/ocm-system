@@ -1,4 +1,4 @@
-var localisation_dictionary =
+var localisation_dictionary_en =
 {
     "_langTitle": "English",
     "_langCode": "en",
