@@ -1,4 +1,4 @@
-{
+var localisation_dictionary_hu ={
   "_langTitle": "Hungarian/Magyar Nyelv",
   "_langCode": "hu",
   "ocm": {
@@ -88,4 +88,4 @@
       "progress": null
     }
   }
-}
+};
