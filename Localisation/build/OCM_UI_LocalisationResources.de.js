@@ -3,7 +3,7 @@ var localisation_dictionary_de ={
   "_langCode": "de",
   "ocm": {
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "Lade Möglichkeit",
       "location": {
         "sectionTitle": "Standort Details",
         "title": null,
@@ -17,14 +17,14 @@ var localisation_dictionary_de ={
         "contactTelephone1": null,
         "contactTelephone2": null,
         "contactEmail": null,
-        "map": null,
+        "map": "Karte",
         "streetView": null,
         "addressRelatedURL": "Webseite"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": "Daten Quelle",
-      "numberOfPoints": "Anzahl Anschlüsse",
+      "generalComments": "Allgemeine Information",
+      "accessComments": "Zugangs Informationen",
+      "advancedDetails": "zusätzliche Bemerkung",
+      "numberOfPoints": "Anzahl Lademöglichkeit",
       "usageType": "Verwendung",
       "usageCost": null,
       "operationalStatus": "Betriebs Status",
@@ -54,7 +54,7 @@ var localisation_dictionary_de ={
         "sectionTitle": "Anschluss Details",
         "connectionType": "Adapter",
         "powerKW": null,
-        "powerLevel": "Strom",
+        "powerLevel": "Stromstärke",
         "quantity": "Anzahl",
         "supplyType": null,
         "voltage": null,
