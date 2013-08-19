@@ -25,7 +25,7 @@
     </div>
 }
 <div id="details-imageblock"></div>
-<div id="details-container" class="details-container">
+    <div id="details-container" @{if (ViewBag.EnableSimpleView==true) { <text> class="details-container details-plain" </text>  } else { <text> class="details-container"</text> }}>
     <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.sectionTitle">charging location</small></h1>
 
     <div class="tabbable">
@@ -46,8 +46,8 @@
                         @Model.POI.UserComments.Count
                     }
                     else
-                    { 
-                        @Html.Raw(0) 
+                    {
+                        @Html.Raw(0)
                     })
                 </a>
             </li>
@@ -249,132 +249,132 @@
     </div>
 </div>
 
-<script>
+    <script>
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        //setup tabs
-        $('a#tab-general').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+            //setup tabs
+            $('a#tab-general').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
 
-        $('a#tab-map').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
+            $('a#tab-map').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
 
-        });
+            });
 
-        //fix map after tab shown
-        //('a[data-toggle="tab"]').on('shown', function (e) {
-        $('a[data-toggle="tab"]').on('shown', function (e) {
-            if (e.target.hash == "#tab-map") {
-                map.invalidateSize(false);
-            }
+            //fix map after tab shown
+            //('a[data-toggle="tab"]').on('shown', function (e) {
+            $('a[data-toggle="tab"]').on('shown', function (e) {
+                if (e.target.hash == "#tab-map") {
+                    map.invalidateSize(false);
+                }
 
-        });
+            });
 
-        $('a#tab-comments').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+            $('a#tab-comments').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
 
-        $('a#tab-equipment').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+            $('a#tab-equipment').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
 
-        $('a#tab-nearby').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+            $('a#tab-nearby').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
 
-        $('a#tab-media').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+            $('a#tab-media').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
 
-        //setup map
+            //setup map
 
-        @{
+            @{
             var scriptContent = "var lat = " + Model.POI.AddressInfo.Latitude + "; var lng = " + Model.POI.AddressInfo.Longitude + ";";
         }
 
-        @Html.Raw(scriptContent)
+            @Html.Raw(scriptContent)
 
-        var itemPos = [lat, lng];
+            var itemPos = [lat, lng];
 
-        //setup map
-        var map = new L.Map('map');
+            //setup map
+            var map = new L.Map('map');
 
-        // create the tile layer with correct attribution
-        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib = 'Map data © OpenStreetMap contributors';
-        var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
+            // create the tile layer with correct attribution
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            var osmAttrib = 'Map data © OpenStreetMap contributors';
+            var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
 
-        // start the map centred on location
-        map.setView(new L.LatLng(itemPos[0], itemPos[1]), 15);
-        map.addLayer(osm);
+            // start the map centred on location
+            map.setView(new L.LatLng(itemPos[0], itemPos[1]), 15);
+            map.addLayer(osm);
 
-        L.marker(itemPos).addTo(map);
+            L.marker(itemPos).addTo(map);
 
-        //setup background image
-        getLocationImage(itemPos);
+            //setup background image
+            getLocationImage(itemPos);
 
-        //fetch nearby places
-        getNearbyPlaces(itemPos[0], itemPos[1], 2);
-    });
+            //fetch nearby places
+            getNearbyPlaces(itemPos[0], itemPos[1], 2);
+        });
 
-    function getLocationImage(pos) {
-        @if (ViewBag.ImageList != null && ViewBag.ImageList.Count > 0)
+        function getLocationImage(pos) {
+            @if (ViewBag.ImageList != null && ViewBag.ImageList.Count > 0)
         {
             var locationImage = ViewBag.ImageList[0];
             <text>
-        $('#details-imageblock').html("<img src='@locationImage.ImageURL'/><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
-        </text>
+            $('#details-imageblock').html("<img src='@locationImage.ImageURL'/><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
+            </text>
         }
-    }
+        }
 
 
-    /*
-     * Construct the URL to call for the API request
-     */
-    function constructYelpURL(lat, lng, radius) {
+        /*
+         * Construct the URL to call for the API request
+         */
+        function constructYelpURL(lat, lng, radius) {
 
-        var URL = "http://api.yelp.com/" +
-            "business_review_search?" +
-            "callback=?&limit=10" +
-            "&lat=" + lat +
-            "&long=" + lng +
-            "&radius=" + radius +
-            "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
-        return encodeURI(URL);
+            var URL = "http://api.yelp.com/" +
+                "business_review_search?" +
+                "callback=?&limit=10" +
+                "&lat=" + lat +
+                "&long=" + lng +
+                "&radius=" + radius +
+                "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
+            return encodeURI(URL);
 
-        //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
-    }
+            //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
+        }
 
-    function getNearbyPlaces(lat, lng, radius) {
+        function getNearbyPlaces(lat, lng, radius) {
 
-        var yelpRequestURL = constructYelpURL(lat, lng, radius);
+            var yelpRequestURL = constructYelpURL(lat, lng, radius);
 
-        $.getJSON(yelpRequestURL, function (data) {
+            $.getJSON(yelpRequestURL, function (data) {
 
-            if (data != null) {
-                var output = "";
-                var poiList = data.businesses;
+                if (data != null) {
+                    var output = "";
+                    var poiList = data.businesses;
 
-                for (var i = 0; i < poiList.length; i++) {
-                    var poi = poiList[i];
-                    output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
-                                    "&nbsp;<img src='" + poi.rating_img_url_small + "'/>" +
-                                    (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
-                                    "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
-                                    "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
-                                    "</div>";
+                    for (var i = 0; i < poiList.length; i++) {
+                        var poi = poiList[i];
+                        output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
+                                        "&nbsp;<img src='" + poi.rating_img_url_small + "'/>" +
+                                        (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
+                                        "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
+                                        "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
+                                        "</div>";
+                    }
+
+                    $("#tab-nearby").html(output);
                 }
-
-                $("#tab-nearby").html(output);
-            }
-        });
-    }
-</script>
+            });
+        }
+    </script>

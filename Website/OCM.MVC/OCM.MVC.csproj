@@ -206,13 +206,7 @@
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.de.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.en.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.fr.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.ja.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.nl.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.ru.js" />
-    <Content Include="Scripts\OCM\Localisation\OCM_UI_LocalisationResources.zh.js" />
+    <Content Include="Scripts\OCM\Localisation\languagePack.min.js" />
     <Content Include="Scripts\OCM\OCM_CommonUI.js" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />

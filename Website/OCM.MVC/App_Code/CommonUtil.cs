@@ -97,14 +97,12 @@ namespace OCM.MVC
 
             if (ocm_language_code != "en")
             {
-                string output = "<script src=\""+urlPrefix+"/OCM/OCM_CommonUI.js?v=3.1\"></script>";
+                string output = "<script charset=\"UTF-8\" src=\"" + urlPrefix + "/OCM/Localisation/languagePack.min.js\"></script>";
+                output += "<script charset=\"UTF-8\" src=\"http://openchargemap.org/app/js/OCM_CommonUI.js?v=3.0\"></script>";
 
                 if (ocm_language_code != "test")
                 {
-                    output +=
-                        "<script charset=\"UTF-8\" src=\""+urlPrefix+"/OCM/Localisation/OCM_UI_LocalisationResources." +
-                        ocm_language_code +
-                        ".js\"></script> <script>new OCM_CommonUI().applyLocalisation(false);</script>";
+                    output += "<script>localisation_dictionary = localisation_dictionary_"+ocm_language_code+"; new OCM_CommonUI().applyLocalisation(false);</script>";
                 }
                 else
                 {
