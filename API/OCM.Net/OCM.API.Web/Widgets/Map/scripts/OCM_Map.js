@@ -106,65 +106,6 @@ OCM_Map.prototype.showDetailsView = function (element, poi) {
     $("#details-content").dialog({ autoOpen: true, width: dialogWidth, height: maxDialogHeight, title: this.getLocalisation("ocm.details.locationDetails", "Location Details", ocm_map.mapOptions.isTestLocalisationMode) });
 };
 
-//TODO: deduplicate
-OCM_Map.prototype.showDetailsViewOld = function (element, poi) {
-
-    this.selectedPOI = poi;
-
-    var $element = $(element);
-    var $detailsView = $("#details-content");
-
-    //populate details view
-    $("#details-locationtitle").html(poi.AddressInfo.Title);
-    $("#details-title").html(poi.AddressInfo.Title);
-    var poiDetails = this.ocm_ui.formatPOIDetails(poi);
-
-    $("#details-address").html(poiDetails.address);
-    $("#details-additional").html(poiDetails.additionalInfo);
-    $("#details-advanced").html(poiDetails.advancedInfo);
-
-    var streetviewUrl = "http://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
-    $("#details-streetview").html("<img src=\"" + streetviewUrl + "\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" style=\"margin-left:8px;border-radius:3px;\" />");
-
-
-    if (poi.UserComments != null) {
-        var commentoutput = "";
-
-        for (var c = 0; c < poi.UserComments.length; c++) {
-            var comment = poi.UserComments[c];
-
-            commentoutput += "<div style='padding-left:16px;font-size:90%;'> " +
-				"<h3>" + (comment.UserName != null ? comment.UserName : "(Anonymous)") + "</h3> " +
-				"<p title=\"" + (comment.Comment != null ? comment.Comment : "") + "\"><i>" + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</i></p> " +
-				"<p><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") + "</strong></p> " +
-				"</div>";
-        }
-        commentoutput += "";
-        $("#details-usercomments").html(commentoutput).trigger("create");
-    } else {
-        $("#details-usercomments").html("<span data-localize='ocm.details.commentsAndRatings.zeroComments'>No comments submitted.</span>").trigger("create");
-    }
-
-    var leftPos = $element.position().left;
-    var topPos = $element.position().top;
-    var maxDialogHeight = $(window).height() - 64;
-    if (maxDialogHeight < 300) maxDialogHeight = 300; //workaround firefox differences
-    $detailsView.css("left", leftPos);
-    $detailsView.css("top", topPos);
-
-    //if edit optional available, enable edit controls
-    var $editControl = $("#details-edit");
-    if (!this.hasUserPermissionForPOI(poi, "Edit")) {
-        $editControl.hide();
-    } else {
-        $editControl.show();
-    }
-
-    this.applyLocalisation(ocm_map.mapOptions.isTestLocalisationMode);
-
-    $("#details-content").dialog({ autoOpen: true, width: 480, height: maxDialogHeight, title: this.getLocalisation("ocm.details.locationDetails", "Location Details", ocm_map.mapOptions.isTestLocalisationMode) });
-};
-
 OCM_Map.prototype.toggleFilter = function (filterID, filterEnabled) {
     if (filterEnabled == true) {
         $(filterID).show();
@@ -328,7 +269,7 @@ OCM_Map.prototype.sortListByTitle = function (a, b) {
     if (a.Title == b.Title) return 0;
 };
 
-//TODO: dedupe 
+//TODO: dedupe
 OCM_Map.prototype.populateDropdown = function (id, refDataList, selectedValue, defaultToUnspecified, useTitleAsValue, unspecifiedText) {
     var $dropdown = $("#" + id);
     $('option', $dropdown).remove();
@@ -383,8 +324,11 @@ OCM_Map.prototype.getReferenceData_Completed = function (refData) {
     var language_code = ocm_map.getParameter("languagecode");
     if (language_code == "" || language_code == null) language_code = "en";
     ocm_map.language_code = language_code;
+    localisation_dictionary=null;
+
     if (language_code != "test") {
-        $LAB.script("scripts/OCM_UI_LocalisationResources." + language_code + ".js").wait(function () {
+        $LAB.script("scripts/Localisation/languagePack.min.js").wait(function () {
+			localisation_dictionary = eval("localisation_dictionary_"+language_code);
             ocm_map.initMap();
         });
     } else {

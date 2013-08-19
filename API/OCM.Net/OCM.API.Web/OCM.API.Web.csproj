@@ -144,18 +144,12 @@
     <Content Include="Widgets\Map\mapembed.css" />
     <Content Include="Widgets\Map\mapembed.htm" />
     <Content Include="Widgets\Map\mapwizard.htm" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.ru.js" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.zh.js" />
+    <Content Include="Widgets\Map\scripts\Localisation\languagePack.min.js" />
     <Content Include="Widgets\Map\scripts\localisation-resource-keys.txt" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.de.js" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.en.js" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.fr.js" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.ja.js" />
     <Content Include="Widgets\Map\scripts\markerclusterer_packed.js" />
     <Content Include="Widgets\Map\scripts\OCM_Map_Wizard.js" />
     <Content Include="Widgets\Map\scripts\LAB.min.js" />
     <Content Include="Widgets\Map\scripts\OCM_Map.js" />
-    <Content Include="Widgets\Map\scripts\OCM_UI_LocalisationResources.nl.js" />
     <Content Include="Widgets\Map\TestPage.htm" />
     <Content Include="Widgets\Submission\Submission.js" />
     <Content Include="Widgets\Submission\TestPage.htm" />
@@ -272,9 +266,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Widgets\Map\scripts\Localisation\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
