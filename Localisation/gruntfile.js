@@ -26,6 +26,16 @@ module.exports = function (grunt) {
                 files: [
                   { expand: true, flatten: true, src: 'build/languagePack.min.js', dest: '../App/js/Localisation/', filter: 'isFile' }, // includes files in path                  
                 ]
+            },
+            web: {
+                files: [
+                  { expand: true, flatten: true, src: 'build/languagePack.min.js', dest: '../Website/OCM.MVC/Scripts/OCM/Localisation/', filter: 'isFile' }, // includes files in path                  
+                ]    
+            },
+            map: {
+                files: [
+                  { expand: true, flatten: true, src: 'build/languagePack.min.js', dest: '../API/OCM.Net/OCM.API.Web/Widgets/Map/scripts/Localisation/', filter: 'isFile' }, // includes files in path                  
+                ]
             }
         }
     });
@@ -57,7 +67,7 @@ module.exports = function (grunt) {
                 languageIndex++;
 
             } else {
-                grunt.log.ok('Skipping  ' + filepath + '');
+               // grunt.log.ok('Skipping  ' + filepath + '');
             }
 
         });
@@ -78,6 +88,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Default task(s).
-    grunt.registerTask('default', ['clean', 'transformJsonResourceFiles', 'uglify:dist', 'copy:app']); //'concat:dist',
+    grunt.registerTask('default', [
+        'clean',
+        'transformJsonResourceFiles',
+        'uglify:dist',
+        'copy:app',
+        'copy:web',
+        'copy:map'
+    ]); //'concat:dist',
 
 };

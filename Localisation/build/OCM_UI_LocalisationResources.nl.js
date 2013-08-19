@@ -48,7 +48,7 @@ var localisation_dictionary_nl ={
       "commentsAndRatings": {
         "sectionTitle": "Commentaar en Waardering",
         "zeroComments": "Geen gebruikersopmerkingen ingediend",
-        "addPrompt": "Voeg uw eigen commentaar toe / inchecken voor deze locatie"
+        "addPrompt": "Voeg een commentaar of snelle status update toe"
       },
       "equipment": {
         "sectionTitle": "Apparatuurgegevens",

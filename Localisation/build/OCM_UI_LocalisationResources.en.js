@@ -48,7 +48,7 @@ var localisation_dictionary_en ={
       "commentsAndRatings": {
         "sectionTitle": "Comments and Ratings",
         "zeroComments": "No user comments submitted",
-        "addPrompt": "Add your own comment/check-in for this location"
+        "addPrompt": "Add a comment or quick status update"
       },
       "equipment": {
         "sectionTitle": "Equipment Details",
@@ -73,7 +73,7 @@ var localisation_dictionary_en ={
       }
     },
     "search": {
-	  "sectionTitle":"Search",
+      "sectionTitle": "Search",
       "locationInput": "Location",
       "useMyLocation": "Search Near Me",
       "distance": "Distance",

@@ -48,7 +48,7 @@ var localisation_dictionary_fr ={
       "commentsAndRatings": {
         "sectionTitle": "Commentaires et évaluations",
         "zeroComments": "Pas de commentaires soumis par des utilisateurs",
-        "addPrompt": "Ajouter votre propre commentaire / check-in pour cet emplacement"
+        "addPrompt": "Ajoutez un commentaire ou une rapide mise à jour du statut"
       },
       "equipment": {
         "sectionTitle": "Détails d'équipement",
