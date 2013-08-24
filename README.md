@@ -18,6 +18,7 @@ Please feel free to contribute in any way you can:
     - Submit comments, checkins and photos via the web site
     - Submit new data, become an editor for your country
   - Improve the system:
+    - Help translate the system into other languages using the [webtranslateit](https://webtranslateit.com/en/projects/6978-Open-Charge-Map) project 
     - Help write documentation
     - Web App (HTML/CSS/JavaScript)
     - Website development (MVC4)
