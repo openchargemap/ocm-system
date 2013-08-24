@@ -7,7 +7,7 @@
 
 <div class="well ocm-backdrop">
 
-    <div style="float: left; display: inline; margin-right: 1em;">
+    <div style="float: left; display: inline; margin-right: 2em;">
         <a href="@Url.Action("Index", "POI")">
             <div class="stat">
                 <h2><span id="summary-locationcount">-----</span></h2>
@@ -27,15 +27,15 @@
         </p>
     </div>
     
-    <div class="pull-right attribution"><a href="http://www.flickr.com/photos/wwworks/2712985992">image credits</a></div>
+   <!-- <div class="pull-right attribution"><a href="http://www.flickr.com/photos/wwworks/2712985992">image credits</a></div>-->
 </div>
 
 <div style="text-align: center; padding: 1em;" class="map-box">
     <iframe id="countrymap" style="width: 98%; height: 400px; border: none; overflow: hidden;" src="http://openchargemap.org/api/widgets/map/?maptitle=Browse%20Charging%20Locations&countryid=1&maxresults=10000&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage@(Session["languageCode"]!=null?"&languagecode="+Session["languagecode"]:"")"></iframe>
 </div>
 <!--end example-->
-<div class="row-fluid show-grid">
-    <div class="span4">
+<div class="row">
+    <div class="col-md-4">
         <h2>Get Involved</h2>
         <p>If you own a website and would like to include a charging location map, you can embed a customised version of the above map <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">on your own website</a></p>
         <p>
@@ -43,27 +43,27 @@
         </p>
         <a class="highlight" href="http://openchargemap.org/app">Submit A Charging Location&gt;</a>
     </div>
-    <div class="span4">
+    <div class="col-md-4">
         <h2>Get Charging Station Data</h2>
         <p>
             <em>Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> You can access and download
-        our latest charging locations using our <a href="@Url.Action("Index", "Develop")">API</a>.
+            our latest charging locations using our <a href="@Url.Action("Index", "Develop")">API</a>.
         </p>
         <p>
             You can use this data in your own apps, databases, websites etc. and we even provide
-        some helpful <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">widgets</a> you can include on your own pages to provide maps and to
-        gather data submissions from your users.
+            some helpful <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">widgets</a> you can include on your own pages to provide maps and to
+            gather data submissions from your users.
         </p>
     </div>
-    <div class="span4">
+    <div class="col-md-4">
         <h2>Operators and Data Providers</h2>
         <p>
             <em>EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
         </p>
         <p>
             <strong>We need your data.</strong> You can supply us with your latest charging location
-        information regardless of whether your organisation owns, operates or simply catalogs
-        the available charging locations. Please <a href="@Url.Action("Contact", "About")">contact us</a> to get started.
+            information regardless of whether your organisation owns, operates or simply catalogs
+            the available charging locations. Please <a href="@Url.Action("Contact", "About")">contact us</a> to get started.
         </p>
     </div>
 </div>

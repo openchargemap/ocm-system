@@ -143,6 +143,7 @@ namespace OCM.MVC.Controllers
 
             if (layout == "simple")
             {
+                ViewBag.EnableSimpleView = true;
                 return View("Details", "_SimpleLayout", viewModel);
             }
             else

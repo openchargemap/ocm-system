@@ -7,13 +7,16 @@
         @Html.HiddenFor(model => model.ID)
         @Html.HiddenFor(model => model.ChargePointID)
 
-         <div class="editor-label">
-            @Html.LabelFor(model => model.CommentType)
-        </div>
-        <div class="editor-field">
-            @Html.DropDownListFor(model => model.CommentType.ID, (SelectList)ViewBag.ReferenceData.UserCommentTypeList)
-            @Html.ValidationMessageFor(model => model.CommentType)
-        </div>
+    <div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CommentType)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.CommentType.ID, (SelectList)ViewBag.ReferenceData.UserCommentTypeList)
+        @Html.ValidationMessageFor(model => model.CommentType)
+    </div>
+</div>
+    <div class="form-group">
          <div class="editor-label">
             @Html.LabelFor(model => model.CheckinStatusType)
         </div>
@@ -21,7 +24,8 @@
             @Html.DropDownListFor(model => model.CheckinStatusType.ID, (SelectList)ViewBag.ReferenceData.CheckinStatusTypeList)
             @Html.ValidationMessageFor(model => model.CheckinStatusType)
         </div>
-
+        </div>
+    <div class="form-group">
         <div class="editor-label">
             @Html.LabelFor(model => model.Comment)
         </div>
@@ -29,7 +33,8 @@
             @Html.EditorFor(model => model.Comment)
             @Html.ValidationMessageFor(model => model.Comment)
         </div>
-
+        </div>
+    <div class="form-group">
         <div class="editor-label">
             @Html.LabelFor(model => model.Rating)
         </div>
@@ -37,7 +42,8 @@
              @Html.DropDownListFor(model => model.Rating, (SelectList)ViewBag.ReferenceData.RatingTypeList)
             @Html.ValidationMessageFor(model => model.Rating)
         </div>
-
+        </div>
+    <div class="form-group">
         <div class="editor-label">
             @Html.LabelFor(model => model.RelatedURL)
         </div>
@@ -45,7 +51,7 @@
             @Html.EditorFor(model => model.RelatedURL)
             @Html.ValidationMessageFor(model => model.RelatedURL)
         </div>
-
+        </div>
         <p>
             <input type="submit" class="btn btn-primary" value="Submit Comment" />
         </p>

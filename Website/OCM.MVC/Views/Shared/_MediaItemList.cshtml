@@ -1,22 +1,25 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.MediaItem>
 
-<ul class="thumbnails">
-    @foreach (var item in Model.Where(i => i.IsEnabled))
-    {
-        <li class="span4">
+<div class="row">
+    
+        @foreach (var item in Model.Where(i => i.IsEnabled))
+        {
+<div class="col-sm-6 col-md-3">
+    <div class="img-thumbnail">
+       
+        <a href="@item.ItemURL">
+            <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" />
 
-            <div class="thumbnail">
-                <a href="@item.ItemURL">
-                    <img src="@item.ItemThumbnailURL.Replace("thmb", "medi")"/>
-                </a>
-                
-                <blockquote>
-                    <p>@Html.DisplayFor(modelItem => item.Comment)</p>
-                    <small>Uploaded by <cite>@item.User.Username</cite> on @item.DateCreated.ToString("yyyy-MM-dd")</small>
-                </blockquote>
-                 
-            </div>
-         
-        </li>    
-    }
-</ul>
+        </a>
+
+        <blockquote>
+            <p>@Html.DisplayFor(modelItem => item.Comment)</p>
+            <small>Uploaded by <cite>@item.User.Username</cite> on @item.DateCreated.ToString("yyyy-MM-dd")</small>
+        </blockquote>
+
+    </div>
+
+</div>
+        }
+    
+</div>

@@ -8,8 +8,8 @@
 
 @if (Model.IsProfilePublic==true)
 {
-    <div class="row-fluid">
-        <div class="span8">
+    <div class="row">
+        <div class="col-md-8">
             <fieldset>
                 <legend>Profile</legend>
 
@@ -67,7 +67,7 @@
             </fieldset>
 
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <fieldset>
                 <legend>Community Stats</legend>
                 <div class="stat">
@@ -81,5 +81,5 @@
 }
 else
 {
-    <p>The user profile is not public.</p>
+    <p>This uaer profile is not public.</p>
 }

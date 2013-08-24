@@ -12,11 +12,22 @@
 
 <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
 
-<ul class="breadcrumb">
-    <li>@Html.ActionLink("Home", "Index", "Home") <span class="divider">/</span></li>
-    <li>@Html.ActionLink("Browse", "Index", "POI") <span class="divider">/</span></li>
-    <li class="active">@Model.POI.AddressInfo.Title, @Model.POI.AddressInfo.Country.Title <small>OCM-@Model.POI.ID</small></li>
-</ul>
+@{
+    var detailsCss = "details-container";
+    if (ViewBag.EnableSimpleView == true)
+    {
+        detailsCss += " details-plain";
+    }
+    else
+    {
+        <ol class="breadcrumb">
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink("Browse", "Index", "POI")</li>
+            <li class="active">@Model.POI.AddressInfo.Title, @Model.POI.AddressInfo.Country.Title <small>OCM-@Model.POI.ID</small></li>
+        </ol>
+
+    }
+}
 
 @if (Session["UserID"] != null)
 {
@@ -24,10 +35,18 @@
         <a href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
     </div>
 }
-<div id="details-imageblock"></div>
-    <div id="details-container" @{if (ViewBag.EnableSimpleView==true) { <text> class="details-container details-plain" </text>  } else { <text> class="details-container"</text> }}>
-    <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.sectionTitle">charging location</small></h1>
 
+
+@if (ViewBag.EnableSimpleView != true)
+{
+    <div id="details-imageblock"></div>
+}
+else
+{
+}
+<div id="details-container" class="@detailsCss">
+
+    <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.sectionTitle">charging location</small></h1>
     <div class="tabbable">
         <ul class="nav nav-tabs">
             <li class="active">
@@ -42,7 +61,8 @@
             <li>
                 <a href="#tab-comments" data-toggle="tab">
                     <span data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments</span>
-                    (@if (Model.POI.UserComments != null){
+                    (@if (Model.POI.UserComments != null)
+                    {
                         @Model.POI.UserComments.Count
                     }
                     else
@@ -63,14 +83,12 @@
                 </a>
             </li>
         </ul>
-
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
                 <div id="locationdetails-container">
-
                     <div id="location-details">
-                        <div class="row-fluid">
-                            <div class="span4">
+                        <div class="row">
+                            <div class="col-md-4">
                                 <strong class="ocm-label" data-localize="ocm.details.location.address">Nearest Address</strong>:
                                 <address>
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.AddressLine1)</div>
@@ -81,13 +99,13 @@
                                     <div>@Html.DisplayFor(m => m.POI.AddressInfo.Country.Title)</div>
                                 </address>
                             </div>
-                            <div class="span4">
+                            <div class="col-md-4">
                                 <strong class="ocm-label" data-localize="ocm.details.location.streetView">Street View</strong>:
                                 <div>
                                     <a target="_blank" href="http://maps.google.com/?q=@Model.POI.AddressInfo.ToString()"><img class="img-thumbnail img-polaroid" src="http://maps.googleapis.com/maps/api/streetview?size=300x160&location=@Model.POI.AddressInfo.Latitude,@Model.POI.AddressInfo.Longitude&heading=235&sensor=false" /></a>
                                 </div>
                             </div>
-                            <div class="span4">
+                            <div class="col-md-4">
                                 @if (!String.IsNullOrEmpty(Model.POI.GeneralComments))
                                 {
 
@@ -97,11 +115,9 @@
                                     </div>
                                 }
                             </div>
-
                         </div>
-
-                        <div class="row-fluid">
-                            <div class="span4">
+                        <div class="row">
+                            <div class="col-md-4">
                                 @if (Model.POI.NumberOfPoints != null)
                                 {
                                     <div>
@@ -126,11 +142,8 @@
                                 <div>
                                     <strong class="ocm-label" data-localize="ocm.details.refNumber">OCM Ref</strong>: OCM-@Model.POI.ID
                                 </div>
-
                             </div>
-
-                            <div class="span4">
-
+                            <div class="col-md-4">
                                 @if (!String.IsNullOrEmpty(Model.POI.AddressInfo.AccessComments))
                                 {
                                     <div>
@@ -140,8 +153,7 @@
                                 }
 
                             </div>
-
-                            <div class="span4">
+                            <div class="col-md-4">
                                 @if (Model.POI.OperatorInfo != null)
                                 {
                                     <div>
@@ -151,7 +163,6 @@
                                             @Html.DisplayFor(m => m.POI.OperatorInfo.WebsiteURL)
                                             @Html.DisplayFor(m => m.POI.OperatorInfo.PhonePrimaryContact)
                                         </p>
-
                                     </div>
 
                                 }
@@ -176,17 +187,13 @@
                                 }
 
                             </div>
-
-
-
                         </div>
-
                         @if (Model.POI.MetadataValues != null && Model.POI.MetadataValues.Any())
                         {
 
                             <div>
                                 <strong class="ocm-label" data-localize="ocm.details.metadataValues.sectionTitle">Additional Tags</strong>:
-                                <p>@Html.DisplayFor(m => m.POI.MetadataValues)</p>
+                                @Html.DisplayFor(m => m.POI.MetadataValues)
                             </div>
                         }
                     </div>
@@ -204,11 +211,9 @@
                 }
             </div>
             <div id="tab-comments" class="tab-pane">
-
-                <div class="row-fluid">
-                    <div class="span6">
+                <div class="row">
+                    <div class="col-md-6">
                         <p><span data-localize="ocm.details.commentsAndRatings.addPrompt">Add your own comment/check-in for this location</span>:</p>
-
                         @if (Session["UserID"] != null)
                         {
                             @Html.EditorFor(m => m.NewComment)
@@ -218,11 +223,10 @@
                             @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
                         }
                     </div>
-                    <div class="span6">
+                    <div class="col-md-6">
                         @Html.DisplayFor(m => m.POI.UserComments)
                     </div>
                 </div>
-
             </div>
             <div id="tab-nearby" class="tab-pane">
             </div>
@@ -249,132 +253,137 @@
     </div>
 </div>
 
-    <script>
+<script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            //setup tabs
-            $('a#tab-general').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-
-            $('a#tab-map').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-
-            });
-
-            //fix map after tab shown
-            //('a[data-toggle="tab"]').on('shown', function (e) {
-            $('a[data-toggle="tab"]').on('shown', function (e) {
-                if (e.target.hash == "#tab-map") {
-                    map.invalidateSize(false);
-                }
-
-            });
-
-            $('a#tab-comments').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-
-            $('a#tab-equipment').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-
-            $('a#tab-nearby').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-
-            $('a#tab-media').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-
-            //setup map
-
-            @{
-            var scriptContent = "var lat = " + Model.POI.AddressInfo.Latitude + "; var lng = " + Model.POI.AddressInfo.Longitude + ";";
-        }
-
-            @Html.Raw(scriptContent)
-
-            var itemPos = [lat, lng];
-
-            //setup map
-            var map = new L.Map('map');
-
-            // create the tile layer with correct attribution
-            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-            var osmAttrib = 'Map data © OpenStreetMap contributors';
-            var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
-
-            // start the map centred on location
-            map.setView(new L.LatLng(itemPos[0], itemPos[1]), 15);
-            map.addLayer(osm);
-
-            L.marker(itemPos).addTo(map);
-
-            //setup background image
-            getLocationImage(itemPos);
-
-            //fetch nearby places
-            getNearbyPlaces(itemPos[0], itemPos[1], 2);
+        //setup tabs
+        $('a#tab-general').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
         });
 
-        function getLocationImage(pos) {
-            @if (ViewBag.ImageList != null && ViewBag.ImageList.Count > 0)
-        {
-            var locationImage = ViewBag.ImageList[0];
-            <text>
-            $('#details-imageblock').html("<img src='@locationImage.ImageURL'/><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
-            </text>
-        }
-        }
+        $('a#tab-map').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
 
+        });
 
-        /*
-         * Construct the URL to call for the API request
-         */
-        function constructYelpURL(lat, lng, radius) {
+        //fix map after tab shown
+        //('a[data-toggle="tab"]').on('shown', function (e) {
+        $('a[data-toggle="tab"]').on('shown', function (e) {
+            if (e.target.hash == "#tab-map") {
+                map.invalidateSize(false);
+            }
 
-            var URL = "http://api.yelp.com/" +
-                "business_review_search?" +
-                "callback=?&limit=10" +
-                "&lat=" + lat +
-                "&long=" + lng +
-                "&radius=" + radius +
-                "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
-            return encodeURI(URL);
+        });
 
-            //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
-        }
+        $('a#tab-comments').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-        function getNearbyPlaces(lat, lng, radius) {
+        $('a#tab-equipment').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-            var yelpRequestURL = constructYelpURL(lat, lng, radius);
+        $('a#tab-nearby').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-            $.getJSON(yelpRequestURL, function (data) {
+        $('a#tab-media').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-                if (data != null) {
-                    var output = "";
-                    var poiList = data.businesses;
+        //setup map
 
-                    for (var i = 0; i < poiList.length; i++) {
-                        var poi = poiList[i];
-                        output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
-                                        "&nbsp;<img src='" + poi.rating_img_url_small + "'/>" +
-                                        (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
-                                        "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
-                                        "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
-                                        "</div>";
+        @{
+            var scriptContent = "var lat = " + Model.POI.AddressInfo.Latitude + "; var lng = " + Model.POI.AddressInfo.Longitude + ";";
+                }
+
+        @Html.Raw(scriptContent)
+
+        var itemPos = [lat, lng];
+
+        //setup map
+        var map = new L.Map('map');
+
+        // create the tile layer with correct attribution
+        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © OpenStreetMap contributors';
+        var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
+
+        // start the map centred on location
+        map.setView(new L.LatLng(itemPos[0], itemPos[1]), 15);
+        map.addLayer(osm);
+
+        L.marker(itemPos).addTo(map);
+
+        @if (ViewBag.EnableSimpleView!=true) {
+                         <text >
+        //setup background image
+        getLocationImage(itemPos);
+        </text>
                     }
 
-                    $("#tab-nearby").html(output);
+
+        //fetch nearby places
+        getNearbyPlaces(itemPos[0], itemPos[1], 2);
+    });
+
+    function getLocationImage(pos) {
+        @if (ViewBag.ImageList != null && ViewBag.ImageList.Count > 0)
+                {
+                    var locationImage = ViewBag.ImageList[0];
+                    <text>
+        $('#details-imageblock').html("<img src='@locationImage.ImageURL'/><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
+        </text>
                 }
-            });
-        }
-    </script>
+    }
+
+
+    /*
+     * Construct the URL to call for the API request
+     */
+    function constructYelpURL(lat, lng, radius) {
+
+        var URL = "http://api.yelp.com/" +
+            "business_review_search?" +
+            "callback=?&limit=10" +
+            "&lat=" + lat +
+            "&long=" + lng +
+            "&radius=" + radius +
+            "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
+        return encodeURI(URL);
+
+        //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
+    }
+
+    function getNearbyPlaces(lat, lng, radius) {
+
+        var yelpRequestURL = constructYelpURL(lat, lng, radius);
+
+        $.getJSON(yelpRequestURL, function (data) {
+
+            if (data != null) {
+                var output = "";
+                var poiList = data.businesses;
+
+                for (var i = 0; i < poiList.length; i++) {
+                    var poi = poiList[i];
+                    output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "'/> <h3>" + poi.name +
+                                    "&nbsp;<img src='" + poi.rating_img_url_small + "'/>" +
+                                    (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
+                                    "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
+                                    "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
+                                    "</div>";
+                }
+
+                $("#tab-nearby").html(output);
+            }
+        });
+    }
+</script>

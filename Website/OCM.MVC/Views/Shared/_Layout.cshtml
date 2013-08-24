@@ -5,13 +5,13 @@
 <head>
     <meta charset="utf-8" />
     <title>Open Charge Map - @ViewBag.Title</title>
-    <meta name="viewport" content="height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="@ViewBag.Description" />
     <meta name="author" content="Openchargemap.org" />
     @if (ViewBag.EnableAppMarkeplaceLinks == true)
     {
-    <meta name="apple-itunes-app" content="app-id=528951115">
+        <meta name="apple-itunes-app" content="app-id=528951115">
     }
 
     @Styles.Render("~/Content/bootstrap")
@@ -42,85 +42,98 @@
     <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <header>
-        <div class="navbar navbar-inverse navbar-static-top ">
-            <div class="navbar-inner">
-                <div class="container">
-                    <div class="nav">
-                        <ul class="nav">
-                            <li><a id="nav_home" href="@Url.Action("Index", "Home")">home</a></li>
 
-                            <li class="dropdown">
-                                <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown">browse <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
-                                    <li><a href="http://openchargemap.org/app">add a location</a></li>
-                                    <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
-                                    <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
-                                </ul>
-                            </li>
+    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
 
-                            <li class="dropdown">
-                                <a href="@Url.Action("Index", "Develop")" class="dropdown-toggle" data-toggle="dropdown">develop <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="@Url.Action("Index", "Develop")#api">API</a></li>
-                                    <li><a href="@Url.Action("Index", "Develop")#widgets">HTML widgets</a></li>
-                                    <li><a href="@Url.Action("Apps", "Develop")">examples</a></li>
-                                    <li><a href="http://openchargemap.org/forum/">get involved</a></li>
-                                    <li><a href="https://github.com/openchargemap">see the code (on github)</a></li>
-                                </ul>
-                            </li>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 
-                            <li><a href="http://openchargemap.org/forum/">discuss</a></li>
+                <a class="navbar-brand" href="#">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="collapse navbar-collapse">
 
-                            <li class="dropdown">
-                                <a href="@Url.Action("Index", "About")" class="dropdown-toggle" data-toggle="dropdown">about <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="@Url.Action("Index", "About")">about</a></li>
-                                    <li><a href="@Url.Action("Contact", "About")">contact</a></li>
-                                </ul>
-                            </li>
+                <ul class="nav navbar-nav">
+                    <li><a id="nav_home" href="@Url.Action("Index", "Home")">home</a></li>
 
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">my profile<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    @if (Session["Username"] != null)
-                                    {
-                                        <li class="nav-header">@Html.Encode(Session["Username"])</li>
-                                        <li>@Html.ActionLink("my profile", "Index", "Profile")</li>
-                                        <li><a href="@Url.Action("SignOut", "Profile")">sign out</a></li>
-                                
-                                    }
-                                    else
-                                    {
-                                        <li><a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Request.Url.AbsoluteUri })">sign in</a></li>
-                                    }
-                                    <li class="divider"></li>
-                                    <li class="nav-header">Languages</li>
-                                    @foreach (var language in CommonUtil.SupportedLanguages)
-                                    {
-                                        <li><a href="?languagecode=@language.Key">@language.Value</a></li>
-                                    }
-                                </ul>
-                            </li>
+                    <li class="dropdown">
+                        <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown">browse <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
+                            <li><a href="http://openchargemap.org/app">add a location</a></li>
+                            <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
+                            <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
+                        </ul>
+                    </li>
 
-                            @if (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true)
+                    <li class="dropdown">
+                        <a href="@Url.Action("Index", "Develop")" class="dropdown-toggle" data-toggle="dropdown">develop <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("Index", "Develop")#api">API</a></li>
+                            <li><a href="@Url.Action("Index", "Develop")#widgets">HTML widgets</a></li>
+                            <li><a href="@Url.Action("Apps", "Develop")">examples</a></li>
+                            <li><a href="http://openchargemap.org/forum/">get involved</a></li>
+                            <li><a href="https://github.com/openchargemap">see the code (on github)</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="http://openchargemap.org/forum/">discuss</a></li>
+
+                    <li class="dropdown">
+                        <a href="@Url.Action("Index", "About")" class="dropdown-toggle" data-toggle="dropdown">about <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("Index", "About")">about</a></li>
+                            <li><a href="@Url.Action("Contact", "About")">contact</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">my profile<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @if (Session["Username"] != null)
                             {
-                                <li class="dropdown">
-                                    <a href="@Url.Action("Index", "Admin")" class="dropdown-toggle" data-toggle="dropdown">admin <b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="@Url.Action("Index", "Admin")">dashboard</a></li>
-                                        <li><a href="@Url.Action("Index", "EditQueue")">edit queue</a></li>
-                                        <li><a href="@Url.Action("Users", "Admin")">users</a></li>
-                                    </ul>
-                                </li>
+                                <li class="nav-header">@Html.Encode(Session["Username"])</li>
+                                <li>@Html.ActionLink("my profile", "Index", "Profile")</li>
+                                <li><a href="@Url.Action("SignOut", "Profile")">sign out</a></li>
+
+                            }
+                            else
+                            {
+                                <li><a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Request.Url.AbsoluteUri })">sign in</a></li>
+                            }
+                            <li class="divider"></li>
+                            <li class="nav-header">Languages</li>
+                            @foreach (var language in CommonUtil.SupportedLanguages)
+                            {
+                                <li><a href="?languagecode=@language.Key">@language.Value</a></li>
                             }
                         </ul>
-                    </div>
-                </div>
+                    </li>
+
+                    @if (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true)
+                    {
+                        <li class="dropdown">
+                            <a href="@Url.Action("Index", "Admin")" class="dropdown-toggle" data-toggle="dropdown">admin <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Index", "Admin")">dashboard</a></li>
+                                <li><a href="@Url.Action("Index", "EditQueue")">edit queue</a></li>
+                                <li><a href="@Url.Action("Users", "Admin")">users</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                </ul>
             </div>
         </div>
-    </header>
+
+    </div>
+
+
+
     <div class="container">
         <div class="content">
             @RenderBody()

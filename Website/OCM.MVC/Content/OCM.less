@@ -62,6 +62,7 @@ div.content {
     margin-left: 1em;
     padding: 0;
     width: auto;
+    max-width: none;
 }
 
 .info {
@@ -111,12 +112,12 @@ label, .display-label, .editor-label {
 
 h1, h2, h3, h4, legend, .nav a, .nav a:visited, .nav a:link {
     font-family: @font-headings;
-    font-weight:300;
+    font-weight: 300;
 }
 
-h1 small, h2 small, h3 small {
-    font-weight:300;
-}
+    h1 small, h2 small, h3 small {
+        font-weight: 300;
+    }
 
     .nav a, .nav a:visited, .nav a:link {
         font-size: 1.2em;
@@ -223,8 +224,6 @@ div.result {
     padding: 1em;
     width: 90%;
     height: 100%;
-    border-radius: 1em;
-    background-color: @color-black-semitrans;
     color: white;
 }
 
@@ -261,26 +260,20 @@ div.details-container {
             color: white;
         }
 
-    .tabbable {
-        margin: 0.3em;
-        background-color: @color-black-semitrans;
+    .tab-content {
+      
     }
 
-    .tab-pane {
-        overflow: auto;
-        max-height: 550px;
-    }
-
-    .tab-content > .active {
-        padding: 0.3em;
-        background-color: @color-black-semitrans;
-    }
+        .tab-content > .active {
+            padding: 0.3em;
+            background-color: @color-black-semitrans;
+        }
 
     .nav-tabs > .active > a:focus {
         color: black;
     }
 
-    .ocm-label, .table th, blockquote strong {
+    .ocm-label, .table-responsive > .table > tbody > tr > th, .table th, blockquote strong {
         color: @color-a-light;
     }
 
@@ -301,8 +294,8 @@ div.stat {
     h2 {
         margin: 0px;
         padding: 32px;
-        width: 64px;
-        height: 64px;
+        width: 128px;
+        height: 128px;
         border: none;
         border-radius: 64px;
         background-color: @color-c;
@@ -340,34 +333,45 @@ div.stat {
 
 .thumbnail {
     background-color: @color-a-pale;
-    color:#333;
+    color: #333;
 }
 
-.navbar-inverse .navbar-inner {
+.navbar {
+    margin-bottom: 0;
+    border: none;
+}
+
+.navbar-brand {
+    background-image: url('/content/images/AppIcon_36x36.png');
+    background-repeat: no-repeat;
+    background-position: 6px 6px;
+}
+
+    .navbar-brand a {
+        width: 80px;
+        display: inline-block;
+        border: 1px solid red;
+    }
+
+.navbar-inverse {
     background-color: @color-b;
     background-image: none;
 }
 
-.navbar-inverse .brand, .navbar-inverse .nav > li > a {
-    color: #fff;
-}
+    .navbar-inverse .nav > li > a {
+        color: #fff;
+    }
 
 .navbar .nav li.dropdown.open > .dropdown-toggle {
     background-color: (@color-b + #111);
 }
 
-.navbar-inner {
-    border: none;
-    border-radius: 0;
-}
-
 .ocm-backdrop {
     margin: 0 -1em 1em -1em;
     border-radius: 0;
-    background-color: @color-b;
-    background-image: url('images/world.jpg');
+    background-color: @color-b-light;
+    /*background-image: url('images/world.jpg');*/
     color: white;
-    
 }
 
     .ocm-backdrop a, .ocm-backdrop a:visited {
@@ -403,8 +407,8 @@ div.stat {
 div.details-plain {
     padding: 0;
     background-color: white;
+    top: 0;
 }
-
 
 .details-plain {
     h1, h2, h3 {
@@ -420,7 +424,7 @@ div.details-plain {
         color: rgb(103, 103, 103);
     }
 
-    .ocm-label, .table th, blockquote strong {
+    .ocm-label, .table-responsive > .table > tbody > tr > th, .table th, blockquote strong {
         color: rgb(103, 103, 103);
     }
 
@@ -434,4 +438,20 @@ div.details-plain {
         float: left;
         padding: 1em 1em 0em 0em;
     }
+}
+
+
+.table-responsive > .table {
+    background-color: transparent;
+}
+
+    .tab-pane {
+     
+        min-height: 300px;
+        padding:0.3em;
+    }
+
+.form-actions {
+    padding:1em;
+    background-color: #f8f8f8
 }

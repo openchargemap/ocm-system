@@ -1,37 +1,39 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.ConnectionInfo>
-
-<table class="table">
-    <tr>
-        <th data-localize="ocm.details.equipment.connectionType">Connection Type</th>
-        <th data-localize="ocm.details.equipment.powerKW">Max Power (KW)</th>
-        <th data-localize="ocm.details.equipment.powerLevel">Level</th>
-        <th data-localize="ocm.details.equipment.supplyType">Supply Type</th>
-        <th data-localize="ocm.details.equipment.voltage">Voltage</th>
-        <th data-localize="ocm.details.equipment.current">Max Current</th>
-        <th data-localize="ocm.details.equipment.quantity">Quantity</th>
-        <th data-localize="ocm.details.equipment.comment">Comments</th>
-        <th data-localize="ocm.details.equipment.reference">Reference</th>
-    </tr>
-    @foreach (var item in Model)
-    {
+<div class="table-responsive">
+    <table class="table">
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.ConnectionType.Title)</td>
-            <td>@Html.DisplayFor(modelItem => item.PowerKW)</td>
-            <td>@Html.DisplayFor(modelItem => item.Level.Title)</td>
-            <td>@Html.DisplayFor(modelItem => item.CurrentType.Title)</td>
-            <td>@Html.DisplayFor(modelItem => item.Voltage)</td>
-            <td>@Html.DisplayFor(modelItem => item.Amps)</td>
-            <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-            <td>@Html.DisplayFor(modelItem => item.Comments)</td>
-            <td style="white-space: nowrap"><small>
-                @if (item.Reference == null)
-                {
-                    @:OCM-CN-@item.ID
-            }
-                else
-                {@Html.DisplayFor(modelItem => item.Reference)}
-            </small>
-            </td>
+            <th data-localize="ocm.details.equipment.connectionType">Connection Type</th>
+            <th data-localize="ocm.details.equipment.powerKW">Max Power (KW)</th>
+            <th data-localize="ocm.details.equipment.powerLevel">Level</th>
+            <th data-localize="ocm.details.equipment.supplyType">Supply Type</th>
+            <th data-localize="ocm.details.equipment.voltage">Voltage</th>
+            <th data-localize="ocm.details.equipment.current">Max Current</th>
+            <th data-localize="ocm.details.equipment.quantity">Quantity</th>
+            <th data-localize="ocm.details.equipment.comment">Comments</th>
+            <th data-localize="ocm.details.equipment.reference">Reference</th>
         </tr>
-    }
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ConnectionType.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.PowerKW)</td>
+                <td>@Html.DisplayFor(modelItem => item.Level.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.CurrentType.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Voltage)</td>
+                <td>@Html.DisplayFor(modelItem => item.Amps)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.Comments)</td>
+                <td style="white-space: nowrap">
+                    <small>
+                        @if (item.Reference == null)
+                        {
+                            @:OCM-CN-@item.ID
+            }
+                        else
+                        {@Html.DisplayFor(modelItem => item.Reference)}
+                    </small>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

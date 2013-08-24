@@ -7,7 +7,7 @@
 
 <h1>Edit Charging Location <small>OCM-@Model.ID : @Model.AddressInfo.Title</small></h1>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "POI", FormMethod.Post, new { @class="form"}))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -20,7 +20,7 @@
         <input type="submit" value="Save" class="btn btn-primary" />
     </div>
     
-    <div class="tabbable">
+    
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-location" data-toggle="tab" data-localize="ocm.details.location.sectionTitle">Location</a></li>
             <li><a href="#tab-general" data-toggle="tab" data-localize="ocm.details.generalDetails">Details</a></li>
@@ -60,8 +60,6 @@
             </div>
         </div>
 
-    </div>
-        
 }
 
 @section Scripts {

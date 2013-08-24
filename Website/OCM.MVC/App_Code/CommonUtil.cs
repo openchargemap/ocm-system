@@ -26,6 +26,7 @@ namespace OCM.MVC
                 languages.Add(new KeyValuePair<string, string>("de", "German/Deutsch"));
                 languages.Add(new KeyValuePair<string, string>("zh", "Chinese/中国的"));
                 languages.Add(new KeyValuePair<string, string>("ru", "Russian/Pусский"));
+                languages.Add(new KeyValuePair<string, string>("el", "Greek/Ελληνική"));
                 languages.Add(new KeyValuePair<string, string>("test", "Test (For Translators)"));
 
                 return languages;
