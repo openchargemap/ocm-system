@@ -16,6 +16,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://carstations.com/jsonresults.txt";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            SourceEncoding = Encoding.GetEncoding("UTF-8");
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)

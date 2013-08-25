@@ -14,6 +14,7 @@ namespace OCM.Import.Providers
         {
             this.ProviderName = "e-laad.nl";
             OutputNamePrefix = "elaad";
+            SourceEncoding = Encoding.GetEncoding("UTF-8");
         }
 
         private string GetAttributeValue(string attribName, string source)

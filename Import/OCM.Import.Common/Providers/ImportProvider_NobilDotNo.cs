@@ -17,6 +17,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://nobil.no/api/server/search.php";
             IsAutoRefreshed = false;
             IsProductionReady = true;
+            SourceEncoding = Encoding.GetEncoding("UTF-8");
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)

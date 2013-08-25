@@ -30,7 +30,7 @@ namespace OCM.Import.Providers
         public override void ParseBasicDetails(ChargePoint cp, XmlNode item)
         {
             //parse address info
-            string[] loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace(" - ","~").Split('~');
+            string[] loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace(" - ","~").Replace(",","~").Split('~');
             cp.AddressInfo.Town = loctitle[0].Trim();
 
             if (loctitle[1].Contains(","))
@@ -43,7 +43,20 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Title = loctitle[1].Trim();
             }
 
-            cp.AddressInfo.AddressLine1 = loctitle[1].Trim();
+            if (loctitle.Length > 2)
+            {
+                cp.AddressInfo.AddressLine1 = loctitle[2].Trim();
+                if (loctitle.Length > 4)
+                {
+                    cp.AddressInfo.StateOrProvince = loctitle[4].Trim();
+                    cp.AddressInfo.AddressLine2 = loctitle[3].Trim();
+                }
+                else if (loctitle.Length > 3)
+                {
+                    cp.AddressInfo.StateOrProvince = loctitle[3].Trim();
+                }
+            }
+          
 
             //parse description
             string descriptionText = item["description"].InnerText;

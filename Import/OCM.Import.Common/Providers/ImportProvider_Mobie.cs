@@ -15,9 +15,10 @@ namespace OCM.Import.Providers
             ProviderName = "mobie.pt";
             OutputNamePrefix = "mobie";
             AutoRefreshURL = "http://www.mobie.pt/en/postos-de-carregamento?p_p_id=googlemaps_WAR_mobiebusinessportlet_INSTANCE_SsJ4&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=searchPoles&p_p_cacheability=cacheLevelPage&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&searchString=";
-
+                      
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            SourceEncoding = Encoding.GetEncoding("UTF-8");
         }
 
         List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)

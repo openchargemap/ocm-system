@@ -16,6 +16,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "https://www.rwe-mobility.com/emobilityfrontend/rs/chargingstations/";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            SourceEncoding = Encoding.GetEncoding("UTF-8");
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -81,7 +82,7 @@ namespace OCM.Import.Providers
                 cp.DateLastStatusUpdate = DateTime.Now;
                 cp.AddressInfo.AddressLine1 = item["house_number"] != null ? item["house_number"] + " " + item["street"].ToString() : item["street"].ToString().Trim();
                 cp.AddressInfo.Town = item["city"].ToString().Trim();
-                cp.AddressInfo.Postcode = item["postal_code"].ToString().Trim();
+                if (!String.IsNullOrEmpty(item["postal_code"])) cp.AddressInfo.Postcode = item["postal_code"].ToString().Trim();
                 if (String.IsNullOrEmpty(cp.AddressInfo.Title)) cp.AddressInfo.Title = cp.AddressInfo.Town;
 
                 cp.AddressInfo.Latitude = double.Parse(item["latitude"].ToString());
