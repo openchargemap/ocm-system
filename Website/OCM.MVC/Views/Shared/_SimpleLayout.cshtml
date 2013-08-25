@@ -8,10 +8,10 @@
     <title>Open Charge Map - @ViewBag.Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="description" content="@ViewBag.Description">
-    <meta name="author" content="Openchargemap.org">
+    <meta name="author" content="openchargemap.org">
 
     @Scripts.Render("~/bundles/modernizr")
-    @Styles.Render("~/Content/bootstrap")
+    <link href="~/content/bootstrap/bootstrap.min.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/css")
 
@@ -76,7 +76,8 @@
         </div>
     </div>
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/scripts/bootstrap.min.js"></script>
+
     @RenderSection("scripts", required: false)
 
     @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts")))
