@@ -65,7 +65,7 @@ namespace OCM.API.Common.Model
         public string GeneralComments { get; set; }
         #endregion
 
-        public string ToString()
+        public override string ToString()
         {
             string output = "";
 

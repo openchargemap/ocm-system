@@ -1,91 +1,91 @@
 {
-  "_langTitle": null,
-  "_langCode": null,
+  "_langTitle": "Greek/Ελληνική",
+  "_langCode": "el",
   "ocm": {
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "Φόρτιση τοποθεσία",
       "location": {
-        "sectionTitle": null,
-        "title": null,
-        "address": null,
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
-        "postcode": null,
-        "country": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
-        "contactEmail": null,
-        "map": null,
-        "streetView": null,
-        "addressRelatedURL": null
+        "sectionTitle": "Λεπτομερειακή τοποθεσία",
+        "title": "Θέση τίτλος",
+        "address": "Πλησιέστερο διεύθυνση",
+        "addressLine1": "Διεύθυνση ΓΡΑΜΜΗ 1",
+        "addressLine2": "Διεύθυνση, γραμμή 2",
+        "town": "Πόλη/Κοινότητα",
+        "stateOrProvince": "Νομός/επαρχία",
+        "postcode": "Ταχυδρομικος Κωδικας",
+        "country": "Χώρα",
+        "contactTelephone1": "Κύριο τηλέφωνο επικοινωνίας",
+        "contactTelephone2": "Δευτεροβάθμια τηλέφωνο επικοινωνίας",
+        "contactEmail": "Επικοινωνήστε με Email",
+        "map": "Χάρτης",
+        "streetView": "Θέα στο δρόμο",
+        "addressRelatedURL": "Ιστοσελίδα"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": null,
-      "numberOfPoints": null,
-      "usageType": null,
-      "usageCost": null,
-      "operationalStatus": null,
-      "datePlanned": null,
-      "dateLastConfirmed": null,
-      "lastUpdated": null,
-      "refNumber": null,
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
-      "submissionStatus": null,
+      "generalComments": "Γενικές πληροφορίες",
+      "accessComments": "Πρόσβαση σε πληροφορίες",
+      "advancedDetails": "Πρόσθετες πληροφορίες",
+      "numberOfPoints": "Αριθμός των σταθμών/κόλπων",
+      "usageType": "Χρήση",
+      "usageCost": "Κόστος χρήσης",
+      "operationalStatus": "Κατάσταση λειτουργίας",
+      "datePlanned": "Ημερομηνία που προβλέπεται",
+      "dateLastConfirmed": "Ημερομηνία τελευταία επιβεβαιώθηκε",
+      "lastUpdated": "Τελευταία ενημέρωση",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Δεδομένα επίπεδο ποιότητας",
+      "importedDataNotice": "Σημείωση: Αυτά τα δεδομένα είναι προέρχονται αυτόματα, αλλαγές θα πρέπει να υποβάλλονται απευθείας στην υπηρεσία παροχής δεδομένων.",
+      "submissionStatus": "Υποβολή κατάστασης",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "Κοντινά μέρη"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "Φωτογραφίες",
+        "addPrompt": "Ανεβάστε τις φωτογραφίες σας για αυτή την τοποθεσία"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "Πρόσθετες Ετικέτες"
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
-        "addPrompt": null
+        "sectionTitle": "Σχόλια και οι αξιολογήσεις",
+        "zeroComments": "Δεν σχόλια χρήστη που υποβάλλονται",
+        "addPrompt": "Προσθέστε ένα σχόλιο ή γρήγορης κατάστασης ενημερωμένη έκδοση"
       },
       "equipment": {
-        "sectionTitle": null,
-        "connectionType": null,
-        "powerKW": null,
-        "powerLevel": null,
-        "quantity": null,
-        "supplyType": null,
-        "voltage": null,
-        "current": null,
-        "comment": null,
-        "reference": null
+        "sectionTitle": "Λεπτομέρειες εξοπλισμού",
+        "connectionType": "Τύπος σύνδεσης",
+        "powerKW": "Μέγιστη ισχύς (KW)",
+        "powerLevel": "Επίπεδο",
+        "quantity": "Ποσότητα",
+        "supplyType": "Τύπος προσφοράς",
+        "voltage": "Τάση",
+        "current": "ΑΝΩΤΑΤΟ ρεύμα",
+        "comment": "Σχόλια",
+        "reference": "Αναφοράς"
       },
       "dataProvider": {
-        "sectionTitle": null,
-        "website": null,
-        "providersReference": null
+        "sectionTitle": "Υπηρεσία παροχής δεδομένων",
+        "website": "Ιστοσελίδα",
+        "providersReference": "Οι πάροχοι Ref"
       },
       "operator": {
-        "sectionTitle": null,
-        "operatorsReference": null
+        "sectionTitle": "Δίκτυο/φορέα",
+        "operatorsReference": "Φορείς Ref"
       }
     },
     "search": {
-      "sectionTitle": null,
-      "locationInput": null,
-      "useMyLocation": null,
-      "distance": null,
-      "chargingLevels": null,
-      "connectionTypes": null,
-      "networkOperators": null,
-      "countries": null,
-      "submissionStatus": null,
-      "usageTypes": null,
-      "operationalStatusTypes": null,
-      "performSearch": null,
-      "progress": null
+      "sectionTitle": "Αναζήτηση",
+      "locationInput": "Τοποθεσία",
+      "useMyLocation": "Αναζήτηση κοντά μου",
+      "distance": "Απόσταση",
+      "chargingLevels": "Φόρτιση επίπεδο",
+      "connectionTypes": "Τύπους σύνδεσης",
+      "networkOperators": "Δίκτυο/φορέα",
+      "countries": "Χώρα",
+      "submissionStatus": "Υποβολή κατάστασης",
+      "usageTypes": "Χρήση",
+      "operationalStatusTypes": "Κατάσταση",
+      "performSearch": "Αναζήτηση",
+      "progress": "Αναζήτηση..."
     }
   }
 }

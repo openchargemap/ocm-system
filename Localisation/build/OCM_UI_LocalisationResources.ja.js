@@ -3,89 +3,89 @@ var localisation_dictionary_ja ={
   "_langCode": "ja",
   "ocm": {
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "場所を充電",
       "location": {
         "sectionTitle": "場所の詳細",
-        "title": null,
-        "address": null,
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
-        "postcode": null,
-        "country": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
-        "contactEmail": null,
-        "map": null,
-        "streetView": null,
+        "title": "場所のタイトル",
+        "address": "最も近い住所",
+        "addressLine1": "住所行 1",
+        "addressLine2": "住所 2",
+        "town": "市/町",
+        "stateOrProvince": "都道府県/州",
+        "postcode": "郵便/郵便番号",
+        "country": "国",
+        "contactTelephone1": "第 1 連絡先電話",
+        "contactTelephone2": "セカンダリ連絡先電話番号",
+        "contactEmail": "連絡先メール アドレス",
+        "map": "地図",
+        "streetView": "ストリート ビュー",
         "addressRelatedURL": "ウェブサイト"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": "データ·ソース情報",
-      "numberOfPoints": "項目数",
-      "usageType": "使用制限",
-      "usageCost": null,
-      "operationalStatus": "オペレーショナル",
-      "datePlanned": null,
-      "dateLastConfirmed": null,
-      "lastUpdated": "更新した",
-      "refNumber": "OpenChargeMap番号",
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
-      "submissionStatus": null,
+      "generalComments": "一般的な情報",
+      "accessComments": "アクセス情報",
+      "advancedDetails": "追加情報",
+      "numberOfPoints": "駅/ベイ数",
+      "usageType": "使い方",
+      "usageCost": "利用コスト",
+      "operationalStatus": "動作状態",
+      "datePlanned": "予定の日付",
+      "dateLastConfirmed": "最終確認日",
+      "lastUpdated": "最後に更新されました。",
+      "refNumber": "Ref OpenChargeMap",
+      "dataQualityLevel": "データ品質レベル",
+      "importedDataNotice": "注: このデータは、自動的に供給されている、変更はデータ プロバイダーに直接提出する必要があります。",
+      "submissionStatus": "送信ステータス",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "近くの場所"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "写真",
+        "addPrompt": "この場所の写真をアップロードします。"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "その他のタグ"
       },
       "commentsAndRatings": {
-        "sectionTitle": "コメントと評価",
-        "zeroComments": "まだコメントは投稿されていません",
-        "addPrompt": null
+        "sectionTitle": "コメントや評価",
+        "zeroComments": "ユーザー コメントはありません。",
+        "addPrompt": "クイック ステータスの更新、コメントを追加します。"
       },
       "equipment": {
-        "sectionTitle": "場所の詳細",
-        "connectionType": "接続タイプ",
-        "powerKW": null,
-        "powerLevel": "電力レベル",
-        "quantity": "量",
-        "supplyType": null,
+        "sectionTitle": "機器の詳細",
+        "connectionType": "接続の種類",
+        "powerKW": "最大電力 （KW）",
+        "powerLevel": "レベル",
+        "quantity": "数量",
+        "supplyType": "電源タイプ",
         "voltage": "電圧",
-        "current": null,
+        "current": "最大電流",
         "comment": "コメント",
-        "reference": null
+        "reference": "参照"
       },
       "dataProvider": {
-        "sectionTitle": "データプロバイダ",
+        "sectionTitle": "データ プロバイダー",
         "website": "ウェブサイト",
-        "providersReference": null
+        "providersReference": "プロバイダーの参照"
       },
       "operator": {
-        "sectionTitle": "ネットワークオペレータ",
-        "operatorsReference": null
+        "sectionTitle": "ネットワーク ・ オペレーター",
+        "operatorsReference": "Ref 演算子"
       }
     },
     "search": {
-      "sectionTitle": null,
+      "sectionTitle": "検索",
       "locationInput": "場所",
-      "useMyLocation": "私の近くに検索",
+      "useMyLocation": "私の近くの検索",
       "distance": "距離",
-      "chargingLevels": "電力レベル",
-      "connectionTypes": "接続タイプ",
-      "networkOperators": "ネットワークオペレータ",
-      "countries": "カントリー",
-      "submissionStatus": "提出状況",
-      "usageTypes": "使用制限",
-      "operationalStatusTypes": "オペレーショナル",
-      "performSearch": "探す",
-      "progress": "情報のロード"
+      "chargingLevels": "充電レベル",
+      "connectionTypes": "接続の種類",
+      "networkOperators": "ネットワーク ・ オペレーター",
+      "countries": "国",
+      "submissionStatus": "送信ステータス",
+      "usageTypes": "使い方",
+      "operationalStatusTypes": "ステータス",
+      "performSearch": "検索",
+      "progress": "検索."
     }
   }
 };

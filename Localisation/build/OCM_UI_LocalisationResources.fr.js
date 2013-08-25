@@ -60,7 +60,7 @@ var localisation_dictionary_fr ={
         "voltage": "Voltage",
         "current": "Courant Max",
         "comment": "Commentaires",
-        "reference": "Ref"
+        "reference": "Référence"
       },
       "dataProvider": {
         "sectionTitle": "Fournisseur de Données",
