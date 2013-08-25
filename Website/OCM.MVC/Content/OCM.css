@@ -317,6 +317,7 @@ div.stat {
 }
 .navbar-inverse .nav > li > a {
   color: #fff;
+  text-transform: lowercase;
 }
 .navbar .nav li.dropdown.open > .dropdown-toggle {
   background-color: #3d4f61;

@@ -2,6 +2,11 @@
   "_langTitle": "Japanese/日本語",
   "_langCode": "ja",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": "場所を充電",
       "location": {

@@ -230,8 +230,11 @@ namespace OCM.API.Common
                     }
                 }
 
-                //cache results
-                HttpContext.Current.Cache.Add(cacheKey, dataList, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 30, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
+                //cache results (if caching enabled)
+                if (settings.EnableCaching == true)
+                {
+                    HttpContext.Current.Cache.Add(cacheKey, dataList, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 30, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
+                }
 
             }
             else

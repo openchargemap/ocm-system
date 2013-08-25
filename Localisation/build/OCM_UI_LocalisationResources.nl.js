@@ -2,6 +2,11 @@ var localisation_dictionary_nl ={
   "_langTitle": "Dutch/Nederlands",
   "_langCode": "nl",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": "Oplaad Locatie",
       "location": {

@@ -2,6 +2,11 @@ var localisation_dictionary_de ={
   "_langTitle": "German/Deutsch",
   "_langCode": "de",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": "Lade Möglichkeit",
       "location": {

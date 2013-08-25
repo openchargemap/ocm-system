@@ -2,6 +2,11 @@
   "_langTitle": "Greek/Ελληνική",
   "_langCode": "el",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": "Φόρτιση τοποθεσία",
       "location": {

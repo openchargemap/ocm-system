@@ -2,6 +2,11 @@ var localisation_dictionary_en ={
   "_langTitle": "English",
   "_langCode": "en",
   "ocm": {
+    "general": {
+      "shortDescription": "the global public registry of electric vehicle charging locations",
+      "linkWebApp": "Search Locations using our Web App",
+      "linkBrowsePOI": "Browse All Locations"
+    },
     "details": {
       "sectionTitle": "Charging Location",
       "location": {

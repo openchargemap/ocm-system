@@ -2,6 +2,11 @@ var localisation_dictionary_fr ={
   "_langTitle": "French/Français",
   "_langCode": "fr",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": "Emplacement de Chargement",
       "location": {

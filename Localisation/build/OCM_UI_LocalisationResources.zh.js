@@ -2,6 +2,11 @@ var localisation_dictionary_zh ={
   "_langTitle": "Chinese/中国的",
   "_langCode": "zh",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": "充电位置",
       "location": {

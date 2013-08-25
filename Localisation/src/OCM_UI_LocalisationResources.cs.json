@@ -2,6 +2,11 @@
   "_langTitle": null,
   "_langCode": null,
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": null,
       "location": {

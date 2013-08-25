@@ -2,6 +2,11 @@ var localisation_dictionary_ru ={
   "_langTitle": "Russian/Pусский",
   "_langCode": "ru",
   "ocm": {
+    "general": {
+      "shortDescription": "мировой общественности реестр зарядки электрических транспортных средств местах",
+      "linkWebApp": "Поиск места с помощью нашего Web App",
+      "linkBrowsePOI": "Просмотр всех местах"
+    },
     "details": {
       "sectionTitle": "Зарядка местоположение",
       "location": {

@@ -2,6 +2,11 @@ var localisation_dictionary_hu ={
   "_langTitle": "Hungarian/Magyar Nyelv",
   "_langCode": "hu",
   "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null
+    },
     "details": {
       "sectionTitle": null,
       "location": {

@@ -1,91 +1,96 @@
 {
-  "_langTitle": null,
-  "_langCode": null,
+  "_langTitle": "العربية / Arabic",
+  "_langCode": "ar",
   "ocm": {
+    "general": {
+      "shortDescription": "التسجيل العامة العالمية للمركبات الكهربائية تقاضي المواقع",
+      "linkWebApp": "مواقع البحث باستخدام \"التطبيق ويب\" لدينا",
+      "linkBrowsePOI": "تصفح جميع المواقع"
+    },
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "شحن الموقع",
       "location": {
-        "sectionTitle": null,
-        "title": null,
-        "address": null,
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
-        "postcode": null,
-        "country": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
-        "contactEmail": null,
-        "map": null,
-        "streetView": null,
-        "addressRelatedURL": null
+        "sectionTitle": "تفاصيل الموقع",
+        "title": "عنوان الموقع",
+        "address": "عنوان أقرب",
+        "addressLine1": "سطر العنوان 1",
+        "addressLine2": "سطر العنوان 2",
+        "town": "بلده/مدينة",
+        "stateOrProvince": "الولاية/المقاطعة",
+        "postcode": "الرمز البريدي/الرمز البريدي",
+        "country": "البلد",
+        "contactTelephone1": "هاتف جهة الاتصال الأساسية",
+        "contactTelephone2": "هاتف جهة الاتصال الثانوية",
+        "contactEmail": "الاتصال بالبريد الإلكتروني",
+        "map": "خريطة",
+        "streetView": "إطلالة على الشارع.",
+        "addressRelatedURL": "موقع على شبكة الإنترنت"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": null,
-      "numberOfPoints": null,
-      "usageType": null,
-      "usageCost": null,
-      "operationalStatus": null,
-      "datePlanned": null,
-      "dateLastConfirmed": null,
-      "lastUpdated": null,
-      "refNumber": null,
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
-      "submissionStatus": null,
+      "generalComments": "معلومات عامة",
+      "accessComments": "معلومات الوصول",
+      "advancedDetails": "معلومات إضافية",
+      "numberOfPoints": "عدد من محطات/الخلجان",
+      "usageType": "الاستخدام",
+      "usageCost": "تكلفة الاستخدام",
+      "operationalStatus": "حالة التشغيل",
+      "datePlanned": "التاريخ المقرر",
+      "dateLastConfirmed": "تاريخ آخر أكد",
+      "lastUpdated": "آخر تحديث",
+      "refNumber": "المرجع أوبينتشارجيماب",
+      "dataQualityLevel": "مستوى جودة البيانات",
+      "importedDataNotice": "ملاحظة: هذه البيانات المصدر تلقائياً، وينبغي أن تقدم التغييرات إلى موفر البيانات مباشرة.",
+      "submissionStatus": "مركز تقديم",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "الأماكن القريبة"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "صور",
+        "addPrompt": "تحميل الصور الخاصة بك لهذا الموقع"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "علامات إضافية"
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
-        "addPrompt": null
+        "sectionTitle": "تعليقات وتقييمات",
+        "zeroComments": "لا توجد تعليقات المستخدم المقدمة",
+        "addPrompt": "إضافة تعليق أو تحديث حالة سريعة"
       },
       "equipment": {
-        "sectionTitle": null,
-        "connectionType": null,
-        "powerKW": null,
-        "powerLevel": null,
-        "quantity": null,
-        "supplyType": null,
-        "voltage": null,
-        "current": null,
-        "comment": null,
-        "reference": null
+        "sectionTitle": "تفاصيل المعدات",
+        "connectionType": "نوع الاتصال",
+        "powerKW": "ماكس السلطة (كيلوواط)",
+        "powerLevel": "مستوى",
+        "quantity": "الكمية",
+        "supplyType": "نوع العرض",
+        "voltage": "الجهد الكهربي",
+        "current": "الحالي ماكس",
+        "comment": "تعليقات",
+        "reference": "مرجع"
       },
       "dataProvider": {
-        "sectionTitle": null,
-        "website": null,
-        "providersReference": null
+        "sectionTitle": "موفر البيانات",
+        "website": "موقع على شبكة الإنترنت",
+        "providersReference": "Ref مقدمي الخدمات"
       },
       "operator": {
-        "sectionTitle": null,
-        "operatorsReference": null
+        "sectionTitle": "مشغل الشبكة/",
+        "operatorsReference": "Ref المشغلين"
       }
     },
     "search": {
-      "sectionTitle": null,
-      "locationInput": null,
-      "useMyLocation": null,
-      "distance": null,
-      "chargingLevels": null,
-      "connectionTypes": null,
-      "networkOperators": null,
-      "countries": null,
-      "submissionStatus": null,
-      "usageTypes": null,
-      "operationalStatusTypes": null,
-      "performSearch": null,
-      "progress": null
+      "sectionTitle": "البحث",
+      "locationInput": "موقع",
+      "useMyLocation": "البحث بالقرب مني",
+      "distance": "المسافة",
+      "chargingLevels": "شحن الصعيد",
+      "connectionTypes": "أنواع الاتصال",
+      "networkOperators": "مشغل الشبكة/",
+      "countries": "البلد",
+      "submissionStatus": "مركز تقديم",
+      "usageTypes": "الاستخدام",
+      "operationalStatusTypes": "مركز",
+      "performSearch": "البحث",
+      "progress": "البحث..."
     }
   }
 }
