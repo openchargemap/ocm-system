@@ -35,20 +35,25 @@ namespace OCM.MVC
             }
         }
 
-        private static string DetermineLanguageCode(bool allowTestMode = false)
+        private static string DetermineLanguageCode(bool allowTestMode = false, string routeLanguageCode = null)
         {
             var Request = HttpContext.Current.Request;
             var Session = HttpContext.Current.Session;
 
-            if (!String.IsNullOrEmpty(Request["languagecode"]))
+            string selectedLanguageCode = null;
+
+            if (!String.IsNullOrEmpty(routeLanguageCode)) selectedLanguageCode = routeLanguageCode;
+            if (!String.IsNullOrEmpty(Request["languagecode"])) selectedLanguageCode = Request["languagecode"];
+
+            if (!String.IsNullOrEmpty(selectedLanguageCode))
             {
-                Session["languageCode"] = Request["languagecode"];
+                Session["languageCode"] = selectedLanguageCode;
             }
             else
             {
                 if (Session["languageCode"]==null)
                 {
-                    //attempt to automatically determine users language
+                    //attempt to automatically determine users language from info passed in request
                     var languages = Request.UserLanguages;
                     var supportedLanguages = SupportedLanguages;
 
@@ -94,9 +99,9 @@ namespace OCM.MVC
         /// If user supplies a language code preference we provide a script block to dynamically apply localization
         /// </summary>
         /// <returns></returns>
-        public static string GetLocalizationScriptBlock(string urlPrefix)
+        public static string GetLocalizationScriptBlock(string urlPrefix, string routeLanguageCode = null)
         {
-            string ocm_language_code = DetermineLanguageCode(allowTestMode: true);
+            string ocm_language_code = DetermineLanguageCode(allowTestMode: true, routeLanguageCode:routeLanguageCode);
 
             if (ocm_language_code != "en")
             {

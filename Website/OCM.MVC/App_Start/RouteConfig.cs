@@ -47,6 +47,12 @@ namespace OCM.MVC
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+                name: "DefaultWithLanguage",
+                url: "{languagecode}/{controller}/{action}/{id}",
+                defaults: new { languagecode="en", controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+
            /* routes.MapRoute(
                name: "Browse",
                url: "browse/item/{id}",

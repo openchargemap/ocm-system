@@ -157,6 +157,6 @@
     
     @RenderSection("scripts", required: false)
 
-    @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts")))
+    @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"), this.ViewContext.RouteData.Values["languagecode"] as string))
 </body>
 </html>
