@@ -300,15 +300,16 @@ div.stat {
   margin-bottom: 0;
   border: none;
 }
-.navbar-brand {
+.navbar-brand,
+.navbar-inverse .navbar-brand {
   background-image: url('/content/images/AppIcon_36x36.png');
   background-repeat: no-repeat;
   background-position: 6px 6px;
-}
-.navbar-brand a {
-  width: 80px;
-  display: inline-block;
-  border: 1px solid red;
+  padding-left: 46px;
+  color: white;
+  font-family: 'Oswald', Arial, sans-serif;
+  font-weight: 300;
+  padding-top: 14px;
 }
 .navbar-inverse {
   background-color: #2c3e50;
