@@ -37,9 +37,9 @@ function OCM_App() {
     this.isRunningUnderCordova = false;
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
-    this.languageCode = null;
+    this.languageCode = "en";
 
-    this.isLocalDevMode = true;
+    this.isLocalDevMode = false;
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
@@ -203,7 +203,7 @@ OCM_App.prototype.initApp = function () {
 
     //populate language options
 
-    this.populateDropdown("option-language", this.ocm_data.languageList);
+    this.populateDropdown("option-language", this.ocm_data.languageList, this.languageCode);
 
     //load options settings from storage/cookies
     this.loadSettings();
