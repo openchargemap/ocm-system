@@ -1,5 +1,7 @@
 function OCM_MapOptions() {
     this.enableClustering = true;
+    this.pauseOnLoad = false;
+    this.pausedMessage = "tap or click to view map";
     this.showFilter_NearLocation = true;
     this.showFilter_Distance = true;
     this.showFilter_DistanceUnit = true;
@@ -577,6 +579,13 @@ OCM_Map.prototype.showUserMessage = function (msg) {
 
 
 var ocm_map = new OCM_Map();
+if (ocm_map.getParameter("paused") == "true") {
+    ocm_map.mapOptions.pauseOnLoad = true;
+
+    if (ocm_map.getParameter("pausedmessage") != "") {
+        ocm_map.mapOptions.pausedMessage = ocm_map.getParameter("pausedmessage");
+    }
+}
 
 $(document).ready(function () {
 
@@ -585,6 +594,25 @@ $(document).ready(function () {
         $.mobile = new Object();
         $.mobile.changePage = function () { };
     }
-    ocm_map.ocm_data.fetchCoreReferenceData("ocm_map.getReferenceData_Completed");
+
+    if (ocm_map.mapOptions.pauseOnLoad)
+    {
+        //wait for user to activate map
+        
+        var $pausedMap = $("#map-paused");
+        $pausedMap.html("<div class='map-branding'>&nbsp;</div>");
+        $pausedMap.append(ocm_map.mapOptions.pausedMessage);
+        $pausedMap.fadeIn();
+
+        $pausedMap.click(function () {
+            $(this).fadeOut();
+            ocm_map.ocm_data.fetchCoreReferenceData("ocm_map.getReferenceData_Completed");
+        });
+    } else {
+        setTimeout(function () {
+            ocm_map.ocm_data.fetchCoreReferenceData("ocm_map.getReferenceData_Completed");
+        }, 500);
+    }
+
 
 });
