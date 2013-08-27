@@ -2,52 +2,40 @@
     ViewBag.Title = "GeoChart";
     Layout = "~/Views/Shared/_SimpleLayout.cshtml";
 }
-
+<script type="text/javascript" src="~/scripts/require.js"></script>
 <script type="text/javascript" src="http://www.openchargemap.org/api/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+
+<div class="geochart" id="geochart" style="display:none;">
+    <div class="well well-sm">
+        <div id="datasummary"></div>
+    </div>
+    <div id="visualization"></div>
+</div>
+
 <script type="text/javascript">
-    google.load('visualization', '1', { packages: ['geochart'] });
+   
+    var ocmSummary = null;
+    require.config({ baseUrl: '@Url.Content("~/scripts/")' });
 
-    function drawVisualization() {
-
-        var ocm_summary = ocm_getdatasummary();
-        var totalLocations = 0;
-
-        var data = new google.visualization.DataTable();
-        data.addRows(ocm_summary.length);
-        data.addColumn('string', 'Country');
-        data.addColumn('number', 'Charging Locations');
-
-        for (i = 0; i < ocm_summary.length; i++) {
-            data.setValue(i, 0, ocm_summary[i].country);
-            data.setValue(i, 1, ocm_summary[i].itemcount);
-
-            totalLocations += ocm_summary[i].itemcount;
+    require(['ocm/geosummary'], function (app) {
+        var OCM = app.OCM;
+        ocmSummary = new OCM.Widgets.GeoSummary("geochart", "datasummary");
+    });
+   
+    function initChart() {
+        if (ocmSummary != null) {
+            ocmSummary.show();
+        } else {
+            setTimeout(function () {
+                //TODO: hack
+                ocmSummary.show();
+            }, 2000);
         }
-
-        var options = {
-            width: 840,
-            height: 380,
-            backgroundColor: "#A5BFDD",
-            displayMode: 'regions',
-            colorAxis: { colors: [ '#2ecc71', '#27ae60'] }
-        };
-
-        var geochart = new google.visualization.GeoChart(
-            document.getElementById('visualization')
-        );
-        google.visualization.events.addListener(geochart, "regionClick", function (eventData) {
-            var countryISO = eventData["region"];
-            if (top != null && top.loadCountryMap) {
-                top.loadCountryMap(countryISO, countryISO);
-            }
-        });
-        geochart.draw(data, options);
     }
 
-    google.setOnLoadCallback(drawVisualization);
+    google.load('visualization', '1', { packages: ['geochart'] });
+    google.setOnLoadCallback(initChart);
+  
 </script>
-
-<div style="text-align: center;background-color: #A5BFDD;height: 100%;padding-left:10%;padding-right:10%;">
-<div id="visualization"></div>
-</div>

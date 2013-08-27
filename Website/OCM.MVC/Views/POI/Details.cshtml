@@ -13,10 +13,10 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
 
 @{
-    var detailsCss = "details-container";
+    var detailsCss = "details-container details-plain";
     if (ViewBag.EnableSimpleView == true)
     {
-        detailsCss += " details-plain";
+        //detailsCss += " details-plain";
     }
     else
     {
@@ -39,7 +39,7 @@
 
 @if (ViewBag.EnableSimpleView != true)
 {
-    <div id="details-imageblock"></div>
+    <!--<div id="details-imageblock"></div>-->
 }
 else
 {
@@ -325,7 +325,7 @@ else
         @if (ViewBag.EnableSimpleView!=true) {
                          <text >
         //setup background image
-        getLocationImage(itemPos);
+        //getLocationImage(itemPos);
         </text>
                     }
 
