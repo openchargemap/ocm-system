@@ -1,94 +1,94 @@
 {
-  "_langTitle": "German/Deutsch",
+  "_langTitle": "Deutsch",
   "_langCode": "de",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
-      "linkBrowsePOI": null
+      "shortDescription": "Das weltweite und öffentliche Verzeichnis für Ladestationen für elektrische Fahrzeuge",
+      "linkWebApp": "Suche nach Ladestationen mit unserer Web App",
+      "linkBrowsePOI": "Browsen in der ganzen Datenbank"
     },
     "details": {
-      "sectionTitle": "Lade Möglichkeit",
+      "sectionTitle": "Standort der Ladestation",
       "location": {
-        "sectionTitle": "Standort Details",
-        "title": null,
-        "address": null,
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
-        "postcode": null,
-        "country": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
-        "contactEmail": null,
+        "sectionTitle": "Details zum Standort der Ladestation",
+        "title": "Bezeichnung/Name der Ladestation",
+        "address": "Adresse, die am nächsten zur Ladestation liegt",
+        "addressLine1": "Adresszeile 1",
+        "addressLine2": "Adresszeile 2",
+        "town": "Stadt",
+        "stateOrProvince": "Bundesland/Kanton",
+        "postcode": "Postleitzahl",
+        "country": "Land",
+        "contactTelephone1": "Kontakt Telefonnummer",
+        "contactTelephone2": "Weitere Kontakt Telefonnummer",
+        "contactEmail": "Kontakt Emailadresse",
         "map": "Karte",
-        "streetView": null,
+        "streetView": "Ansicht Google Street View",
         "addressRelatedURL": "Webseite"
       },
       "generalComments": "Allgemeine Information",
-      "accessComments": "Zugangs Informationen",
-      "advancedDetails": "zusätzliche Bemerkung",
-      "numberOfPoints": "Anzahl Lademöglichkeit",
-      "usageType": "Verwendung",
-      "usageCost": null,
-      "operationalStatus": "Betriebs Status",
-      "datePlanned": null,
-      "dateLastConfirmed": null,
+      "accessComments": "Detaillierte Informationen zum Zugang und zum Betrieb der Ladestation",
+      "advancedDetails": "zusätzliche Informationen",
+      "numberOfPoints": "Anzahl der Ladesäulen / Lademöglichkeiten",
+      "usageType": "Zugang/Benutzung (privat, öffentlich, nur bestimmte Nutzgruppen etc.)",
+      "usageCost": "Stromkosten",
+      "operationalStatus": "Verfügbarkeit",
+      "datePlanned": "Planungsstand",
+      "dateLastConfirmed": "Letzte Bestätigung der Daten",
       "lastUpdated": "Letzte Änderung",
       "refNumber": "OpenChargeMap Ref",
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
-      "submissionStatus": null,
+      "dataQualityLevel": "Daten Qualitätslevel",
+      "importedDataNotice": "Hinweis : Diese Daten werden automatisch erzeugt, Änderungen sollten direkt an den Datenprovider übermittelt werden",
+      "submissionStatus": "Übermittlungsstatus",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "Orte in der Nähe"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "Fotos",
+        "addPrompt": "Lade Deine Fotos für diesen Ort hoch"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "Zusätzliche Tags"
       },
       "commentsAndRatings": {
-        "sectionTitle": "Kommentare und Bewertung",
-        "zeroComments": "Los Du bist der erste der was schreibt",
-        "addPrompt": null
+        "sectionTitle": "Kommentare und Bewertungen",
+        "zeroComments": "Du bist der Erste, der einen Kommentar schreibt",
+        "addPrompt": "Schreibe einen Kommentar oder ein Status Update"
       },
       "equipment": {
-        "sectionTitle": "Anschluss Details",
-        "connectionType": "Adapter",
-        "powerKW": null,
-        "powerLevel": "Stromstärke",
+        "sectionTitle": "Technische Details zur Ladestation",
+        "connectionType": "Steckertyp",
+        "powerKW": "maximale Leistung (kW)",
+        "powerLevel": "Ladeleistungslevel",
         "quantity": "Anzahl",
-        "supplyType": null,
-        "voltage": null,
-        "current": null,
-        "comment": null,
-        "reference": null
+        "supplyType": "Versorgungsart ( einphasige/dreipasig, AC/DC)",
+        "voltage": "Spannung",
+        "current": "maximale Stromstärke",
+        "comment": "Hinweise",
+        "reference": "Referenz"
       },
       "dataProvider": {
-        "sectionTitle": "Daten Übermittler",
+        "sectionTitle": "Datenprovider",
         "website": "Webseite",
-        "providersReference": null
+        "providersReference": "Referenz des Providers"
       },
       "operator": {
-        "sectionTitle": "Anbieter/Betreiber",
-        "operatorsReference": null
+        "sectionTitle": "Anbieter/Betreiber der Ladestation",
+        "operatorsReference": "Referenz des Betreibers"
       }
     },
     "search": {
-      "sectionTitle": null,
+      "sectionTitle": "Suche",
       "locationInput": "Standort",
-      "useMyLocation": "Suche in der Nähe",
+      "useMyLocation": "Suche in der Nähe meines Standortes",
       "distance": "Distanz",
-      "chargingLevels": "Lademöglichkeiten",
-      "connectionTypes": "Adapter",
-      "networkOperators": "Anbieter/Betreiber",
+      "chargingLevels": "Ladeleistungslevel",
+      "connectionTypes": "Steckertyp",
+      "networkOperators": "Anbieter/Betreiber der Ladestation",
       "countries": "Land",
-      "submissionStatus": "Übermitlungs Status",
-      "usageTypes": "Verwendung",
-      "operationalStatusTypes": "Betriebs Status",
+      "submissionStatus": "Übermitlungsstatus",
+      "usageTypes": "Zugang/Benutzung  (privat, öffentlich, nur bestimmte Nutzergruppen etc.)",
+      "operationalStatusTypes": "Status",
       "performSearch": "Suche",
       "progress": "Bitte warten.."
     }

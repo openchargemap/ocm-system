@@ -3,9 +3,9 @@
   "_langCode": "nl",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
-      "linkBrowsePOI": null
+      "shortDescription": "Het globale openbare register van oplaadlocaties voor elektrisch voertuig",
+      "linkWebApp": "Zoek Locaties met behulp van onze Web App",
+      "linkBrowsePOI": "Blader door alle Locaties"
     },
     "details": {
       "sectionTitle": "Oplaad Locatie",
