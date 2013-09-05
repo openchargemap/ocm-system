@@ -1,96 +1,96 @@
 {
-  "_langTitle": null,
-  "_langCode": null,
+  "_langTitle": "Lithuanian/Lietuvių",
+  "_langCode": "lt",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
-      "linkBrowsePOI": null
+      "shortDescription": "pasaulinis elektromobilių įkrovimo stotelių registras",
+      "linkWebApp": "Ieškoti įkrovimo stoteles naudojant mūsų web aplikaciją",
+      "linkBrowsePOI": "Peržiūrėti visas įkrovimo stoteles"
     },
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "Įkrovimo vieta",
       "location": {
-        "sectionTitle": null,
-        "title": null,
-        "address": null,
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
-        "postcode": null,
-        "country": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
-        "contactEmail": null,
-        "map": null,
-        "streetView": null,
-        "addressRelatedURL": null
+        "sectionTitle": "Vietos aprašymas",
+        "title": "Įkrovimo stotelės pavadinimas",
+        "address": "Artimiausias adresas",
+        "addressLine1": "Adresas (pirma eilutė)",
+        "addressLine2": "Adresas (antra eilutė)",
+        "town": "Miestas",
+        "stateOrProvince": "Rajonas/apskritis",
+        "postcode": "Pašto kodas",
+        "country": "Šalis",
+        "contactTelephone1": "Pagrindinio kontaktinio telefono numeris",
+        "contactTelephone2": "Atsarginio kontaktinio telefono numeris",
+        "contactEmail": "El. pašto adresas",
+        "map": "Žemėlapis",
+        "streetView": "Gatvės vaizdas",
+        "addressRelatedURL": "Svetainė"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": null,
-      "numberOfPoints": null,
-      "usageType": null,
-      "usageCost": null,
-      "operationalStatus": null,
-      "datePlanned": null,
-      "dateLastConfirmed": null,
-      "lastUpdated": null,
-      "refNumber": null,
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
-      "submissionStatus": null,
+      "generalComments": "Bendra informacija",
+      "accessComments": "Detalus vietos aprašymas",
+      "advancedDetails": "Papildoma informacija",
+      "numberOfPoints": "Įkrovimo stotelių skaičius",
+      "usageType": "Naudojimas",
+      "usageCost": "Naudojimo kaina",
+      "operationalStatus": "Būsena",
+      "datePlanned": "Planuojama data",
+      "dateLastConfirmed": "Duomenys paskutinį kartą patvirtinti",
+      "lastUpdated": "Paskutinį kartą atnaujinta",
+      "refNumber": "OpenChargeMap identifikatorius",
+      "dataQualityLevel": "Duomenų kokybės lygis",
+      "importedDataNotice": "Pastaba: Šie duomenys yra gaunami automatiškai, pakeitimai turėtų būti pateikti tiesiogiai duomenų teikėjui.",
+      "submissionStatus": "Būsena",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "Artimiausios įkrovimo stotelės"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "Nuotraukos",
+        "addPrompt": "Įkelkit šios įkrovimo stotelės nuotraukas"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "Papildomos žymės"
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
-        "addPrompt": null
+        "sectionTitle": "Atsiliepimai",
+        "zeroComments": "Vartotojų atsiliepimų nėra",
+        "addPrompt": "Parašykite atsiliepimą arba atnaujinkite būseną"
       },
       "equipment": {
-        "sectionTitle": null,
-        "connectionType": null,
-        "powerKW": null,
-        "powerLevel": null,
-        "quantity": null,
-        "supplyType": null,
-        "voltage": null,
-        "current": null,
-        "comment": null,
-        "reference": null
+        "sectionTitle": "Įrangos duomenys",
+        "connectionType": "Jungties tipas",
+        "powerKW": "Maksimali galia (kW)",
+        "powerLevel": "Lygis",
+        "quantity": "Kiekis",
+        "supplyType": "Elektros tiekimo būdas",
+        "voltage": "Įtampa",
+        "current": "Maksimali srovė",
+        "comment": "Atsiliepimai",
+        "reference": "Nuoroda"
       },
       "dataProvider": {
-        "sectionTitle": null,
-        "website": null,
-        "providersReference": null
+        "sectionTitle": "Duomenų tiekėjas",
+        "website": "Svetainė",
+        "providersReference": "Duomenų tiekėjo identifikatorius"
       },
       "operator": {
-        "sectionTitle": null,
-        "operatorsReference": null
+        "sectionTitle": "Tinklas/operatorius",
+        "operatorsReference": "Operatoriaus identifikatorius"
       }
     },
     "search": {
-      "sectionTitle": null,
-      "locationInput": null,
-      "useMyLocation": null,
-      "distance": null,
-      "chargingLevels": null,
-      "connectionTypes": null,
-      "networkOperators": null,
-      "countries": null,
-      "submissionStatus": null,
-      "usageTypes": null,
-      "operationalStatusTypes": null,
-      "performSearch": null,
-      "progress": null
+      "sectionTitle": "Paieška",
+      "locationInput": "Vieta",
+      "useMyLocation": "Ieškoti šalia",
+      "distance": "Atstumas",
+      "chargingLevels": "Įkrovimo lygis",
+      "connectionTypes": "Jungčių tipai",
+      "networkOperators": "Tinklas/operatorius",
+      "countries": "Šalis",
+      "submissionStatus": "Būsena",
+      "usageTypes": "Naudojimas",
+      "operationalStatusTypes": "Būsena",
+      "performSearch": "Ieškoti",
+      "progress": "Ieškoma..."
     }
   }
 }
