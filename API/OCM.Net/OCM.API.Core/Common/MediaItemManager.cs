@@ -57,7 +57,7 @@ namespace OCM.API.Common
 
                 var metadataTags = new List<KeyValuePair<string, string>>();
                 metadataTags.Add(new KeyValuePair<string, string>("OCM", poi.ID.ToString()));
-                metadataTags.Add(new KeyValuePair<string, string>("Title", poi.AddressInfo.Title));
+                //metadataTags.Add(new KeyValuePair<string, string>("Title", poi.AddressInfo.Title));
                 metadataTags.Add(new KeyValuePair<string, string>("Latitude", poi.AddressInfo.Latitude.ToString()));
                 metadataTags.Add(new KeyValuePair<string, string>("Longitude", poi.AddressInfo.Longitude.ToString()));
 
