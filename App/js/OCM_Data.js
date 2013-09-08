@@ -104,10 +104,18 @@ OCM_Data.prototype.handleGeneralAjaxError = function (result, ajaxOptions, throw
     } else if (result.status == 401) {
         //unauthorised, user session has probably expired
         this.hasAuthorizationError = true;
-        alert("Your session has expired. Please sign in again.");
+        if (this.authorizationErrorCallback) {
+            this.authorizationErrorCallback();
+        } else {
+            alert("Your session has expired. Please sign in again.");
+        }
     }
     else {
-        alert("There was a problem transferring data. Please check your internet connection.");
+        if (this.generalErrorCallback) {
+            this.generalErrorCallback();
+        } else {
+            alert("There was a problem transferring data. Please check your internet connection.");
+        }
     }
 };
 

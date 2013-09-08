@@ -38,12 +38,6 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
                     if (isTestMode == true) {
                         //in test mode the resource key is displayed as the localised text 
                         localisedText = "[" + resourceKey + "] " + eval("localisation_dictionary." + resourceKey);
-
-                        /*if (eval("localisation_dictionary." + resourceKey) != undefined)
-		                {
-		                	//item translated, use translation
-		                	localisedText = eval("localisation_dictionary." + resourceKey);
-		                }*/
                     } else {
                         localisedText = eval("localisation_dictionary." + resourceKey);
                     }
@@ -79,7 +73,7 @@ OCM_CommonUI.prototype.fixJSONDate = function (val) {
         var results = pattern.exec(val);
         val = new Date(parseFloat(results[1]));
     } else {
-    	val = new Date(val);
+        val = new Date(val);
     }
     return val;
 };
@@ -231,6 +225,8 @@ OCM_CommonUI.prototype.showPOIListOnMap2 = function (mapcanvasID, poiList, appco
                             appcontext.showDetailsView(anchorElement, this.poi);
                             if ($.mobile) {
                                 $.mobile.changePage("#locationdetails-page");
+                            } else {
+                                appcontext.showPage("locationdetails-page");
                             }
                         });
 
@@ -256,6 +252,8 @@ OCM_CommonUI.prototype.initMap = function (mapcanvasID) {
 
         var mapCanvas = document.getElementById(mapcanvasID);
         if (mapCanvas != null) {
+
+            google.maps.visualRefresh = true;
 
             mapCanvas.style.width = '99.5%';
             mapCanvas.style.height = $(document).height();
@@ -428,7 +426,7 @@ OCM_CommonUI.prototype.formatPhone = function (phone, labeltitle) {
 };
 
 OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
-    
+
     var dayInMilliseconds = 86400000;
     var currentDate = new Date();
 
@@ -495,7 +493,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     //output table of connection info
     if (poi.Connections != null) {
         if (poi.Connections.length > 0) {
-            
+
             equipmentInfo += "<table class='datatable'>";
             equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th><th data-localize='ocm.details.equipment.quantity'>Qty</th></tr>";
 
@@ -505,7 +503,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
                 if (con.Voltage == "") con.Voltage = null;
                 if (con.Quantity == "") con.Quantity = null;
                 if (con.PowerKW == "") con.PowerKW = null;
-                
+
                 equipmentInfo += "<tr>" +
 					"<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" +
 					"<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") +

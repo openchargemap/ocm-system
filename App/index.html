@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="cache-control" content="no-cache">
 
@@ -29,53 +29,34 @@
     <link rel="icon" type="image/png" href="images/icons/AppIcon_57x57.png" />
 
     <!-- Reset CSS Styles -->
-    <link rel="stylesheet" href="styles/reset.css" />
-
+    <!--<link rel="stylesheet" href="styles/reset.css" />-->
     <!--JS:Cordova:Begin-->
     <script src="cordova.js"></script>
     <!--JS:Cordova:End-->
-
-    <!-- jQuery Mobile -->
-    <script src="js/ThirdParty/jquery-1.10.2.min.js"></script>
-    <link type="text/css" href="js/ThirdParty/jquery.mobile-1.3.2/jquery.mobile.structure-1.3.2.min.css" rel="stylesheet" />
-    <link type="text/css" href="js/ThirdParty/jquery.mobile-1.3.2/OCM.min.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <!-- <script src="js/ThirdParty/jquery-1.10.2.min.js"></script>
+     -->
+    <script src="js/ThirdParty/jquery-2.0.3.min.js"></script>
+    <script src="js/ThirdParty/jQuery.fastClick.js"></script>
     <script src="js/ThirdParty/jquery.validate.min.js"></script>
     <script src="js/ThirdParty/json3.min.js"></script>
 
-    <script>
-        /*jslint vars: true, plusplus: true, devel: true, browser: true, nomen: true, indent: 4, white:true, maxerr: 50 */
-        /*global define: false, $: false */
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="js/ThirdParty/bootstrap/css/bootstrap.min.css">
 
-        $(document).bind('mobileinit', function () {
-            'use strict';
-            $.mobile.defaultPageTransition = "none";
-
-            //phonegap related
-            if (window.PhoneGap) {
-
-                /*if (navigator.userAgent.indexOf("AppleWebKit") >= 0) {
-					$.mobile.defaultPageTransition = "none";
-				} else {
-					$.mobile.defaultPageTransition = "slide";
-				}*/
-
-                //$.mobile.buttonMarkup.hoverDelay = 30;
-                $.mobile.allowCrossDomainPages = true;
-                $.mobile.pushStateEnabled = false;
-                $.support.cors = true;
-            }
-        });
-    </script>
-    <script src="js/ThirdParty/jquery.mobile-1.3.2/jquery.mobile-1.3.2.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="js/ThirdParty/bootstrap/js/bootstrap.min.js"></script>
 
     <!--fonts-->
-    <link rel="stylesheet" href="fonts/FontAwesome/jqm/jqm-icon-pack-fa.css" />
     <link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css">
+
     <!--[if IE 7]>
     <link href="fonts/FontAwesome/css/font-awesome-ie7.min.css" rel="stylesheet">
     <![endif]-->
     <!-- Apply App Styles -->
+    <link rel="stylesheet" href="js/ThirdParty/pocketgrid.min.css" />
     <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/extended.css" />
 
     <!-- JS:LIB:BEGIN -->
     <!-- App JS -->
@@ -88,10 +69,7 @@
     <script src="js/OCM_App_LocationEditor.js"></script>
     <script src="js/OCM_AppBootstrap.js"></script>
     <!-- JS:LIB:END -->
-
-
-<!-- Localisation:Begin -->
-
+    <!-- Localisation:Begin -->
     <script charset="UTF-8" src="js/Localisation/languagePack.min.js"></script>
     <script>
         ocm_app.ocm_data.languageList = languageList;
@@ -100,61 +78,74 @@
 </head>
 <body>
 
+    <div id="progress-indicator"><span data-localize="ocm.general.loadingProgress">Loading...</span></div>
     <!--Begin standard OCM app html block -->
     <!--Begin App Page Definitions-->
-
     <!---- Page:Home:Start ---->
-    <div data-role="page" id="home-page">
+    <div data-role="page" id="home-page" class="ui-page">
         <div data-role="content">
 
             <div id="home-intro" style="">
                 <img alt="OCM Logo" src="images/icons/AppIcon_64x64.png" style="float: left; padding-right: 1em;" />
-                <span class="accent">Open Charge Map</span> <span data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</span></div>
+                <span class="accent">Open Charge Map</span> <span data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</span>
+            </div>
 
             <div class="home-menu-container">
-                <div class="ui-grid-b">
-                    <div class="ui-block-a">
-                        <a href="#search-page"><i class="icon-search icon-2x"></i>
+
+                <div class="main block-group ui-grid-b">
+                    <div class="item block">
+                        <a href="#search-page" class="ui-link">
+                            <i class="icon-search icon-2x"></i>
                             <br>
-                            <span data-localize="ocm.search.sectionTitle">Search</span></a>
+                            <span data-localize="ocm.search.sectionTitle">Search</span>
+                        </a>
                     </div>
-                    <div class="ui-block-b">
-                        <a href="#map-page"><i class="icon-map-marker icon-2x"></i>
+                    <div class="item block">
+                        <a href="#map-page" class="ui-link">
+                            <i class="icon-map-marker icon-2x"></i>
                             <br>
-                            <span data-localize="ocm.details.location.map">Map</span></a>
+                            <span data-localize="ocm.details.location.map">Map</span>
+                        </a>
                     </div>
-                    <div class="ui-block-c">
-                        <a href="#favourites-page"><i class="icon-heart icon-2x"></i>
+                    <div class="item block">
+                        <a href="#favourites-page" class="ui-link">
+                            <i class="icon-heart icon-2x"></i>
                             <br>
-                            Favourites</a>
+                            Favourites
+                        </a>
+                    </div>
+                    <div class="item block">
+                        <a href="#addlocation-page" class="ui-link">
+                            <i class="icon-plus icon-2x"></i>
+                            <br>
+                            Add Location
+                        </a>
+                    </div>
+
+
+                    <div class="item block">
+                        <a href="#settings-page" class="ui-link">
+                            <i class="icon-cog icon-2x"></i>
+                            <br>
+                            Settings
+                        </a>
+                    </div>
+                    <div class="item block">
+                        <a href="#about-page" class="ui-link">
+                            <i class="icon-question-sign icon-2x"></i>
+                            <br>
+                            About
+                        </a>
+                    </div>
+                    <div class="item block">
+                        <a href="#login-page" id="login-button" class="ui-link">
+                            <i class="icon-signin icon-2x"></i>
+                            <br>
+                            Sign In
+                        </a>
                     </div>
                 </div>
-                <div class="ui-grid-b">
-                    <div class="ui-block-a">
-                        <a id="add-location"><i class="icon-plus icon-2x"></i>
-                            <br>
-                            Add Location</a>
-                    </div>
-                    <div class="ui-block-b">
-                        <a href="#settings-page"><i class="icon-cog icon-2x"></i>
-                            <br>
-                            Settings</a>
-                    </div>
-                    <div class="ui-block-c">
-                        <a href="#about-page"><i class="icon-question-sign icon-2x"></i>
-                            <br>
-                            About</a>
-                    </div>
-                </div>
-                <div class="ui-grid-b">
-                    <div class="ui-block-a"></div>
-                    <div class="ui-block-b"></div>
-                    <div class="ui-block-c">
-                        <a id="login-button" href="#login-page"><i class="icon-signin icon-2x"></i>
-                            <br>
-                            Sign In</a>
-                    </div>
-                </div>
+
             </div>
 
             <div id="user-profile-info">
@@ -163,9 +154,8 @@
         </div>
     </div>
     <!---- Page:Home:End ---->
-
     <!---- Page:Search:Start ---->
-    <div data-role="page" id="search-page">
+    <div data-role="page" id="search-page" class="ui-page">
 
         <div data-role="header" data-position="fixed">
             <div>
@@ -176,21 +166,22 @@
 
         <div data-role="content">
             <div id="content-placeholder"></div>
-            <div class="ui-body ui-body-d">
+            <div class="well well-sm">
                 <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
-                    <input type="search" id="search-location" data-mini="true" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
-                    <input type="button" id="search-button" data-inline="true" data-mini="true" data-icon="search" data-localize="ocm.search.sectionTitle" value="Search" />
-                    <input type="button" id="search-nearby" data-inline="true" data-mini="true" data-icon="screenshot" data-localize="ocm.search.useMyLocation" value="Find Near Me" />
 
-                    <a href="#settings-page" data-inline="true" data-mini="true" data-role="button" data-icon="cog">Settings</a>
+                    <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
+                    <button id="search-button" class="btn btn-primary"><i class="icon-search"></i> <span data-localize="ocm.search.sectionTitle">Search</span></button>
+                    <button id="search-nearby" class="btn btn-default"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
+                    <button id="search-settings" class="btn btn-default"><i class="icon-cog"></i> Settings</button>
 
                 </form>
-                <p id="network-error" style="display: none;">
+                <div id="network-error" class="alert alert-danger" style="display:none;">
                     <strong>There is no data connection available. Application features will be unavailable.</strong>
-                </p>
+                </div>
             </div>
 
-            <div id="progress-indicator"><span data-localize="ocm.search.progress">Loading...</span></div>
+            <div id="search-no-data" class="info-section">Use this search to find charging locations near you or to search near a particular location. To filter by specific criteria go to Settings.</div>
+
             <div id="results-list">
                 <div class="result" style="display: none;" id="results-item-template">
                     <a href="#locationdetails-page" style="overflow: auto;">
@@ -205,7 +196,7 @@
 
                                     <em>{distance} {distanceunit}</em>
                                     <p>
-                                    {status}
+                                        {status}
                                     </p>
                                 </div>
                             </div>
@@ -216,9 +207,8 @@
         </div>
     </div>
     <!---- Page:Search:End ---->
-
     <!---- Page:LocationDetails:Start ---->
-    <div data-role="page" id="locationdetails-page" data-theme="c" style="width: 100%; height: 100%;">
+    <div data-role="page" id="locationdetails-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
@@ -232,13 +222,13 @@
                         <div class="section-heading">
 
                             <div id="details-options">
-	                            <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="icon-heart-empty"></i></div>
-	                            <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="icon-comment-alt"></i></div>
+                                <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="icon-heart-empty"></i></div>
+                                <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="icon-comment-alt"></i></div>
                                 <div class="option-item"><i id="option-uploadphoto" title="Upload Photo" class="icon-camera"></i></div>
                                 <div class="option-item"><i id="option-edit" title="Edit" class="icon-edit"></i></div>
 
-                        	</div>
-                        	 <div id="details-locationtitle"></div>
+                            </div>
+                            <div id="details-locationtitle"></div>
                         </div>
 
                         <div id="details-address"></div>
@@ -258,9 +248,9 @@
                 <div id="details-usercomments-container" class="content-subsection">
                     <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
 
-                    <a id="btn-checkin" href="javascript:void();" data-role="button" data-inline="true" data-mini="true" data-icon="plus">Checkin or Add Comment</a>
-                    <!--<a href="#submitcomment-page" data-role="button" data-inline="true" data-icon="alert">Report Fault</a>-->
-
+                    <p>
+                        <a id="btn-checkin" class="btn btn-primary" href="javascript:void();" data-localize="ocm.details.commentsAndRatings.addPrompt">Checkin or Add Comment</a>
+                    </p>
                     <div id="details-usercomments">
                         <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
                     </div>
@@ -281,13 +271,12 @@
             </div>
         </div>
         <div data-role="footer" data-position="fixed">
-            <a id="details-edit" data-role="button" data-inline="true" data-icon="edit">Edit</a>
+            <a id="details-edit" class="btn btn-primary" data-role="button" data-icon="edit">Edit</a>
         </div>
     </div>
     <!---- Page:LocationDetails:End ---->
-
     <!---- Page:Map:Start ---->
-    <div data-role="page" id="map-page">
+    <div data-role="page" id="map-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
@@ -304,9 +293,8 @@
         </div>
     </div>
     <!---- Page:Map:End ---->
-
     <!---- Page:Favourites:Start ---->
-    <div data-role="page" id="favourites-page">
+    <div data-role="page" id="favourites-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
@@ -315,14 +303,13 @@
         </div>
         <div data-role="content" data-theme="d">
             <div id="favourites-list">
-                <p>You have no favourite locations set. To add or remove a favourite, tap the <i id="I1" title="Toggle Favourite" class="icon-heart-empty"></i>icon when viewing a location.</p>
+                <p>You have no favourite locations set. To add or remove a favourite, tap the <i title="Toggle Favourite" class="icon-heart-empty"></i> icon when viewing a location.</p>
             </div>
         </div>
     </div>
     <!---- Page:Favourites:End ---->
-
     <!---- Page:Login:Start ---->
-    <div data-role="page" id="login-page">
+    <div data-role="page" id="login-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
@@ -343,130 +330,129 @@
         </div>
     </div>
     <!---- Page:Login:End ---->
-
     <!---- Page:EditLocation:Start ---->
-    <div data-role="page" id="editlocation-page">
+    <div data-role="page" id="editlocation-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
                 <div style="float: right"><i class="icon-plus"></i>&nbsp;Add Location</div>
             </div>
         </div>
-        <div data-role="content">
-            <div class="ui-body ui-body-e">
+        <div data-role="content" class="container">
+            <p>
                 Please provide as much detail as you can about the charging location. Please do not submit private residences:
-            </div>
+            </p>
             <form id="editlocation-form" action="#">
-                <div id="edit-location-container" data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                <div id="edit-location-container" data-role="collapsible" data-collapsed="false">
                     <h3 data-localize="ocm.details.location.sectionTitle">Location Details</h3>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_title" data-localize="ocm.details.location.title">Location Title</label>
-                        <input id="edit_addressinfo_title" required="required" placeholder="General Location Name" minlength="2" type="text" />
+                        <input id="edit_addressinfo_title" class="form-control" required="required" placeholder="General Location Name" minlength="2" type="text" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_addressline1" data-localize="ocm.details.location.addressLine1">Address Line 1</label>
-                        <input type="text" id="edit_addressinfo_addressline1" name="edit_addressinfo_addressline1" placeholder="First line of Address" value="" />
+                        <input type="text" id="edit_addressinfo_addressline1" class="form-control" name="edit_addressinfo_addressline1" placeholder="First line of Address" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_addressline2" data-localize="ocm.details.location.addressLine1">Address Line 2</label>
-                        <input type="text" id="edit_addressinfo_addressline2" name="edit_addressinfo_addressline2" placeholder="Second line of Address (if applicable)" value="" />
+                        <input type="text" id="edit_addressinfo_addressline2" class="form-control" name="edit_addressinfo_addressline2" placeholder="Second line of Address (if applicable)" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_town" data-localize="ocm.details.location.town">Town/City</label>
-                        <input type="text" id="edit_addressinfo_town" name="edit_addressinfo_town" placeholder="City or Town Name" value="" />
+                        <input type="text" id="edit_addressinfo_town" class="form-control" name="edit_addressinfo_town" placeholder="City or Town Name" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_stateorprovince" data-localize="ocm.details.location.stateOrProvince">State/Province</label>
-                        <input type="text" id="edit_addressinfo_stateorprovince" name="edit_addressinfo_stateorprovince" placeholder="State, Province or Region" value="" />
+                        <input type="text" id="edit_addressinfo_stateorprovince" class="form-control" name="edit_addressinfo_stateorprovince" placeholder="State, Province or Region" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_postcode" data-localize="ocm.details.location.postcode">Zip/Postcode</label>
-                        <input type="text" id="edit_addressinfo_postcode" name="edit_addressinfo_postcode" placeholder="Zip/Postal Code if applicable" value="" />
+                        <input type="text" id="edit_addressinfo_postcode" class="form-control" name="edit_addressinfo_postcode" placeholder="Zip/Postal Code if applicable" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_countryid" data-localize="ocm.details.location.country">Country</label>
-                        <select id="edit_addressinfo_countryid" name="edit_addressinfo_countryid" data-inline="true">
+                        <select id="edit_addressinfo_countryid" class="form-control" name="edit_addressinfo_countryid">
                             <option value="">(Not Listed)</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <p>
                             If you know the Latitude and Longitude of this location please provide it here, otherwise we can try to look it up for you:
-                        <input id="edit-location-lookup" data-inline="true" type="button" value="Lookup" />
+                            <button id="edit-location-lookup" class="btn btn-primary">Lookup</button>
                         </p>
                         <label for="edit_addressinfo_latitude">Latitude</label>
-                        <input id="edit_addressinfo_latitude" name="edit_addressinfo_latitude" type="number" placeholder="Latitude (if known)" value="" />
+                        <input id="edit_addressinfo_latitude" class="form-control" name="edit_addressinfo_latitude" type="number" placeholder="Latitude (if known)" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_longitude">Longitude</label>
-                        <input id="edit_addressinfo_longitude" name="edit_addressinfo_longitude" type="number" placeholder="Longitude (if known)" value="" />
+                        <input id="edit_addressinfo_longitude" class="form-control" name="edit_addressinfo_longitude" type="number" placeholder="Longitude (if known)" value="" />
                     </div>
                     <div id="editor_map_canvas" style="width: 600px; height: 300px; display: none; margin: 0; padding: 0; background-color: gainsboro;"></div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_accesscomments" data-localize="ocm.details.accessComments">Comment for Access/Directions</label>
-                        <input type="text" id="edit_addressinfo_accesscomments" name="ocm_loc_accesscomments" placeholder="How to find, special instructions etc." value="" />
+                        <input type="text" id="edit_addressinfo_accesscomments" class="form-control" name="ocm_loc_accesscomments" placeholder="How to find, special instructions etc." value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_contacttelephone1" data-localize="ocm.details.location.contactTelephone1">Contact telephone for enquiries</label>
-                        <input id="edit_addressinfo_contacttelephone1" name="edit_addressinfo_contacttelephone1" type="tel" placeholder="Contact number for more info/access." value="" />
+                        <input id="edit_addressinfo_contacttelephone1" class="form-control" name="edit_addressinfo_contacttelephone1" type="tel" placeholder="Contact number for more info/access." value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_contacttelephone2" data-localize="ocm.details.location.contactTelephone2">Additional Contact telephone</label>
-                        <input id="edit_addressinfo_contacttelephone2" name="edit_addressinfo_contacttelephone2" type="tel" placeholder="Additional contact number (if required)" value="" />
+                        <input id="edit_addressinfo_contacttelephone2" class="form-control" name="edit_addressinfo_contacttelephone2" type="tel" placeholder="Additional contact number (if required)" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_contactemail" data-localize="ocm.details.location.contactEmail">Public email for enquiries</label>
-                        <input id="edit_addressinfo_contactemail" name="edit_addressinfo_contactemail" type="email" placeholder="Public email address for enquiries" value="" />
+                        <input id="edit_addressinfo_contactemail" class="form-control" name="edit_addressinfo_contactemail" type="email" placeholder="Public email address for enquiries" value="" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_addressinfo_relatedurl" data-localize="ocm.details.location.addressRelatedURL">Related Website</label>
-                        <input id="edit_addressinfo_relatedurl" name="edit_addressinfo_relatedurl" type="url" placeholder="Related Website" value="" />
+                        <input id="edit_addressinfo_relatedurl" class="form-control" name="edit_addressinfo_relatedurl" type="url" placeholder="Related Website" value="" />
                     </div>
                 </div>
 
                 <div id="edit-equipmentgeneral" data-role="collapsible" data-collapsed="false" data-content-theme="d">
                     <h3 data-localize="ocm.details.equipment.sectionTitle">General Equipment/Service Info</h3>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_numberofpoints" data-localize="ocm.details.numberOfPoints">Number of points available</label>
-                        <input id="edit_numberofpoints" name="edit_numberofpoints" type="number" value="1" />
+                        <input id="edit_numberofpoints" class="form-control" name="edit_numberofpoints" type="number" value="1" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_usagetype" data-localize="ocm.details.usageType">Usage Restrictions</label>
-                        <select id="edit_usagetype" name="edit_usagetype" data-inline="true">
+                        <select id="edit_usagetype" class="form-control" name="edit_usagetype">
                             <option value="">Unknown</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_usagecost" data-localize="ocm.details.usageType">Usage Cost (if any)</label>
-                        <input type="text" id="edit_usagecost" name="edit_usagecost" value="Free" />
+                        <input type="text" id="edit_usagecost" class="form-control" name="edit_usagecost" value="Free" />
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_statustype" data-localize="ocm.details.operationalStatus">Status (if known)</label>
-                        <select id="edit_statustype" name="edit_statustype" data-inline="true">
+                        <select id="edit_statustype" class="form-control" name="edit_statustype">
                             <option value="0">Unknown</option>
                             <option value="50">Operational</option>
                             <option value="100">Not Operational</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="edit_generalcomments" data-localize="ocm.details.generalComments">Comments or Additional Info</label>
-                        <input type="text" id="edit_generalcomments" name="edit_generalcomments" value="" />
+                        <input type="text" id="edit_generalcomments" class="form-control" name="edit_generalcomments" value="" />
                     </div>
                     <div id="edit-operator-container" data-role="fieldcontain">
                         <label for="edit_operator" data-localize="ocm.details.operator.sectionTitle">Network/Operator</label>
-                        <select id="edit_operator" name="edit_operator" data-inline="true">
+                        <select id="edit_operator" name="edit_operator" class="form-control">
                             <option value="1">Unknown</option>
                         </select>
                     </div>
                     <div id="edit-dataprovider-container" data-role="fieldcontain">
                         <label for="edit_dataprovider" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</label>
-                        <select id="edit_dataprovider" name="edit_dataprovider" data-inline="true">
+                        <select id="edit_dataprovider" name="edit_dataprovider" class="form-control">
                             <option value="1">OpenChargeMap Contributor</option>
                         </select>
                     </div>
                     <div id="edit-submissionstatus-container" data-role="fieldcontain">
                         <label for="edit_submissionstatus" data-localize="ocm.details.submissionStatus">Submission Status</label>
-                        <select id="edit_submissionstatus" name="edit_submissionstatus" data-inline="true">
+                        <select id="edit_submissionstatus" name="edit_submissionstatus" class="form-control">
                             <option value="1">Submission Under Review</option>
                         </select>
                     </div>
@@ -475,157 +461,159 @@
                 <div id="edit-connectioneditors">
                     <div id="edit_connection1" data-role="collapsible" data-collapsed="false" data-content-theme="d">
                         <h3>Connection 1  - Equipment/Charging Level Info</h3>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_connectiontype" data-localize="ocm.details.equipment.connectionType">Connection Type</label>
-                            <select id="edit_connection1_connectiontype" name="edit_connection1_connectiontype" data-inline="true">
+                            <select id="edit_connection1_connectiontype" class="form-control" name="edit_connection1_connectiontype">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_powerkw" data-localize="ocm.details.equipment.powerKW">Power (KW)</label>
-                            <input type="number" id="edit_connection1_powerkw" name="edit_connection1_powerkw" value="" />
+                            <input type="number" id="edit_connection1_powerkw" class="form-control" name="edit_connection1_powerkw" value="" />
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_currenttype" data-localize="ocm.details.equipment.supplyType">Supply Type</label>
-                            <select id="edit_connection1_currenttype" name="edit_connection1_currenttype" data-inline="true">
+                            <select id="edit_connection1_currenttype" class="form-control" name="edit_connection1_currenttype">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_level" data-localize="ocm.details.equipment.powerLevel">Charger Type/Level</label>
-                            <select id="edit_connection1_level" name="edit_connection1_level" data-inline="true">
+                            <select id="edit_connection1_level" class="form-control" name="edit_connection1_level">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_amps" data-localize="ocm.details.equipment.current">Max Current (Amps)</label>
-                            <input type="number" id="edit_connection1_amps" name="edit_connection1_amps" value="" />
+                            <input type="number" id="edit_connection1_amps" class="form-control" name="edit_connection1_amps" value="" />
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_volts" data-localize="ocm.details.equipment.voltage">Max Voltage</label>
-                            <input type="number" id="edit_connection1_volts" name="edit_connection1_volts" value="" />
+                            <input type="number" id="edit_connection1_volts" class="form-control" name="edit_connection1_volts" value="" />
                         </div>
 
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_quantity" data-localize="ocm.details.equipment.quantity">Quantity of this type</label>
-                            <input type="number" id="edit_connection1_quantity" name="edit_connection1_quantity" value="" />
+                            <input type="number" id="edit_connection1_quantity" class="form-control" name="edit_connection1_quantity" value="" />
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="edit_connection1_status" data-localize="ocm.details.operationalStatus">Status</label>
-                            <select id="edit_connection1_status" name="edit_connection1_status" data-inline="true">
+                            <select id="edit_connection1_status" class="form-control" name="edit_connection1_status">
                                 <option value="" data-placeholder="false">Unknown</option>
                             </select>
                         </div>
                     </div>
 
                 </div>
+
+                <div class="form-group">
+                    <a href="#search-page" class="btn btn-default">Cancel</a>
+                    <a id="editlocation-submit" class="btn btn-primary">Submit</a>
+                </div>
             </form>
         </div>
 
         <div data-role="footer" data-position="fixed">
-            <div data-role="controlgroup" data-type="horizontal">
-                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
-                <a id="editlocation-submit" data-role="button" data-inline="true" data-icon="plus">Submit</a>
-            </div>
+
         </div>
     </div>
     <!---- Page:EditLocation:End ---->
-
     <!---- Page:Comments:Start ---->
-    <div data-role="page" id="submitcomment-page">
+    <div data-role="page" id="submitcomment-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <h1>Submit Comment</h1>
         </div>
-        <div data-role="content">
-            <div class="ui-body ui-body-d">
-                <p style="font-size: 0.8em;">
-                    Submit your comment about this location below. <em>This information <strong>will</strong> be shared publically</em>. If your comment requires action from an editor, please select <em>Suggested Change</em> as the Comment Type.
-                </p>
-                <form id="comment-form" action="#">
-                    <div data-role="fieldcontain">
-                        <label for="checkin-type">Check-In Status</label>
-                        <select id="checkin-type" data-inline="true">
-                            <option value="0">Did Not Visit Location</option>
-                        </select>
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="comment-type">Comment Type</label>
-                        <select id="comment-type" data-inline="true">
-                            <option value="10">General Comment</option>
-                        </select>
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="comment-rating">Your Rating</label>
-                        <select id="comment-rating" data-inline="true">
-                            <option value="5">5 - Excellent</option>
-                            <option value="4">4 - Good</option>
-                            <option value="3">3 - Average</option>
-                            <option value="2">2 - Not Good</option>
-                            <option value="1">1 - Bad</option>
-                            <option value="" selected="selected">Not Rated</option>
-                        </select>
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="comment-username">Your Name (will be shown)</label>
-                        <input id="comment-username" type="text" />
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="comment-text">Your Comment</label>
-                        <textarea id="comment-text"></textarea>
-                    </div>
+        <div data-role="content" class="container">
+            <p style="font-size: 0.8em;">
+                Submit your comment about this location below. <em>This information <strong>will</strong> be shared publically</em>. If your comment requires action from an editor, please select <em>Suggested Change</em> as the Comment Type.
+            </p>
+            <form id="comment-form" role="form" action="#">
 
-                </form>
-            </div>
+                <div class="form-group">
+                    <label for="checkin-type">Check-In Status</label>
+                    <select id="checkin-type" class="form-control">
+                        <option value="0">Did Not Visit Location</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment-type">Comment Type</label>
+                    <select id="comment-type" class="form-control">
+                        <option value="10">General Comment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment-rating">Your Rating</label>
+                    <select id="comment-rating" class="form-control">
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Good</option>
+                        <option value="3">3 - Average</option>
+                        <option value="2">2 - Not Good</option>
+                        <option value="1">1 - Bad</option>
+                        <option value="" selected="selected">Not Rated</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment-username">Your Name (will be shown)</label>
+                    <input id="comment-username" class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label for="comment-text">Your Comment</label>
+                    <textarea id="comment-text" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <a href="#search-page" class="btn btn-default">Cancel</a>
+                    <a id="submitcomment-button" class="btn btn-primary">Submit</a>
+                </div>
+
+            </form>
+
+
         </div>
-        <div data-role="footer" data-position="fixed">
-            <div data-role="controlgroup" data-type="horizontal">
-                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
-                <a id="submitcomment-button" data-role="button" data-inline="true" data-icon="plus">Submit</a>
-            </div>
-        </div>
+
     </div>
     <!---- Page:Comments:End ---->
-
     <!---- Page:UploadMediaItem:Start ---->
-    <div data-role="page" id="submitmediaitem-page">
+    <div data-role="page" id="submitmediaitem-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <h1>Submit Photo</h1>
         </div>
-        <div data-role="content">
-            <div class="ui-body ui-body-d">
-                <p style="font-size: 0.8em;">
-                    Submit your photo for this location below. <em>This information <strong>will</strong> be shared publically</em>.
-                </p>
-                <form id="mediaitem-form" action="#" enctype="multipart/form-data">
-                    <div data-role="fieldcontain">
-                        <label class="ui-input-text" for="fileupload">Choose Photo</label> <input name="fileupload" type="file" />
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="comment">Comment</label>
-                        <textarea id="comment"></textarea>
-                    </div>
-                </form>
+        <div data-role="content" class="container">
 
-            </div>
+            <p style="font-size: 0.8em;">
+                Submit your photo for this location below. <em>This information <strong>will</strong> be shared publically</em>.
+            </p>
+            <form id="mediaitem-form" action="#" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="ui-input-text" for="fileupload">Choose Photo</label> <input class="form-control" name="fileupload" type="file" />
+                </div>
+                <div class="form-group">
+                    <label for="comment">Comment</label>
+                    <textarea id="comment" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <a href="#search-page" class="btn btn-default">Cancel</a>
+                    <a id="submitmediaitem-button" class="btn btn-primary">Submit</a>
+                </div>
+            </form>
+
+
         </div>
         <div data-role="footer" data-position="fixed">
-            <div data-role="controlgroup" data-type="horizontal">
-                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Cancel</a>
-                <a id="submitmediaitem-button" data-role="button" data-inline="true" data-icon="plus">Submit</a>
-            </div>
+
         </div>
     </div>
     <!---- Page:UploadMediaItem:End ---->
-
     <!---- Page:Settings:Start ---->
-    <div data-role="page" id="settings-page">
+    <div data-role="page" id="settings-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
                 <div style="float: right"><i class="icon-cog"></i>&nbsp;Settings</div>
             </div>
         </div>
-        <div data-role="content">
+        <div data-role="content" class="container">
 
 
             <form id="options-form" action="#">
@@ -633,9 +621,9 @@
                     <h3>Preferences</h3>
 
                     <div id="search-advanced">
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="search-distance">Max Distance</label>
-                            <select id="search-distance" data-inline="true">
+                            <select id="search-distance" class="form-control">
                                 <option value="">(Any Distance)</option>
                                 <option value="5">Up to 5</option>
                                 <option value="10">Up to 10</option>
@@ -651,22 +639,22 @@
                                 <option value="20000">Up to 20000</option>
                             </select>
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="search-distance-unit">Distance Units</label>
-                            <select name="search-distance-unit" id="search-distance-unit" data-role="slider" data-inline="true">
+                            <select name="search-distance-unit" id="search-distance-unit" class="form-control">
                                 <option selected="selected">Miles</option>
                                 <option>KM</option>
                             </select>
                         </div>
-                        <div data-role="fieldcontain">
+                        <div class="form-group">
                             <label for="option-language">Language</label>
-                            <select name="option-language" id="option-language" data-inline="true">
+                            <select name="option-language" id="option-language" class="form-control">
                                 <option value="en" selected="selected">English</option>
                             </select>
                         </div>
-                        <div data-role="fieldcontain" style="display: none;">
+                        <div class="form-group" style="display:none;">
                             <label for="option-enable-experiments">Experimental Features</label>
-                            <select name="option-enable-experiments" id="option-enable-experiments" data-role="slider">
+                            <select name="option-enable-experiments" id="option-enable-experiments" class="form-control">
                                 <option value="off" selected="selected">Off</option>
                                 <option value="on">On</option>
                             </select>
@@ -675,30 +663,30 @@
                 </div>
                 <div data-role="collapsible" data-collapsed="false" data-content-theme="d">
                     <h3>Filters</h3>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="filter-submissionstatus">Submission Status</label>
-                        <select id="filter-submissionstatus" data-inline="true">
+                        <select id="filter-submissionstatus" class="form-control">
                             <option value="200" selected="selected">Published</option>
                             <option value="1">Awaiting Approval</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="filter-operator">Operator</label>
-                        <select name="filter-operator" id="filter-operator" multiple="multiple" data-native-menu="false" data-inline="true">
+                        <select name="filter-operator" id="filter-operator" multiple="multiple" class="form-control">
                             <option>Choose options</option>
                             <option value="" selected="selected">(All)</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="filter-connectiontype">Connection Type</label>
-                        <select name="filter-connectiontype" id="filter-connectiontype" multiple="multiple" data-native-menu="false" data-inline="true">
+                        <select name="filter-connectiontype" id="filter-connectiontype" multiple="multiple" class="form-control">
                             <option>Choose options</option>
                             <option value="" selected="selected">(All)</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="filter-connectionlevel">Charging Levels</label>
-                        <select name="filter-connectionlevel" id="filter-connectionlevel" multiple="multiple" data-native-menu="false" data-inline="true">
+                        <select name="filter-connectionlevel" id="filter-connectionlevel" multiple="multiple" class="form-control">
                             <option>Choose options</option>
                             <option value="" selected="selected">(All)</option>
                             <option value="1">Level 1 (Low Power)</option>
@@ -706,16 +694,16 @@
                             <option value="3">Level 3 (High Power)</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="filter-usagetype">Usage Type</label>
-                        <select name="filter-usagetype" id="filter-usagetype" multiple="multiple" data-native-menu="false" data-inline="true">
+                        <select name="filter-usagetype" id="filter-usagetype" multiple="multiple" class="form-control">
                             <option>Choose options</option>
                             <option value="" selected="selected">(All)</option>
                         </select>
                     </div>
-                    <div data-role="fieldcontain">
+                    <div class="form-group">
                         <label for="filter-statustype">Status Type</label>
-                        <select name="filter-statustype" id="filter-statustype" multiple="multiple" data-native-menu="false" data-inline="true">
+                        <select name="filter-statustype" id="filter-statustype" multiple="multiple" class="form-control">
                             <option>Choose options</option>
                             <option value="" selected="selected">(All)</option>
                         </select>
@@ -726,16 +714,15 @@
         </div>
     </div>
     <!---- Page:Settings:End ---->
-
     <!---- Page:About:Start ---->
-    <div data-role="page" id="about-page">
+    <div data-role="page" id="about-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
                 <div style="float: right"><i class="icon-question-sign"></i>&nbsp;About</div>
             </div>
         </div>
-        <div data-role="content">
+        <div data-role="content" class="container">
             <div class="ui-body ui-body-a">
                 <div data-role="collapsible" data-collapsed="false">
                     <h2>About This App</h2>
@@ -743,7 +730,7 @@
                     <p>
                         <img alt="OCM Logo" src="images/icons/AppIcon_72x72.png" style="float: right; padding: 4px;" />
                         <strong>Open Charge Map</strong> is the world's largest
-                    <abbr title="Our data is accessible in full, globally. Our development is also open source.">open</abbr>
+                        <abbr title="Our data is accessible in full, globally. Our development is also open source.">open</abbr>
                         global registry of electric vehicle charging locations, dedicated to providing the most complete information possible.
                     </p>
                     <p>
@@ -758,8 +745,8 @@
                     </p>
                     <p style="font-size: smaller;"><strong>Privacy Notice:</strong> This application may need to use and process your location as provided by you or your device, this information may be temporarily logged in some instances. To prevent sharing your location you may disable Location Services on your device. In addition, as this application is based around open sharing of information, comments or information submitted by you will be made public, however your own location is not shared publically.  If you have questions, <a target="_blank" href="http://openchargemap.org/about/contact">contact us</a>. </p>
                     <!--<p>
-					<em>If using a mobile device, bookmarking this application to your home screen is highly recommended.</em>
-				</p>-->
+                        <em>If using a mobile device, bookmarking this application to your home screen is highly recommended.</em>
+                    </p>-->
                 </div>
 
                 <div data-role="collapsible" data-collapsed="false">
@@ -781,9 +768,8 @@
         </div>
     </div>
     <!---- Page:About:End ---->
-
     <!---- Page:Feedback:Start ---->
-    <div data-role="page" id="feedback-page">
+    <div data-role="page" id="feedback-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <h1>Send Feedback</h1>
         </div>
@@ -794,14 +780,13 @@
         </div>
         <div data-role="footer" data-position="fixed">
             <div data-role="controlgroup" data-type="horizontal">
-                <a href="#search-page" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a>
+                <a href="#search-page" data-rel="back" data-role="button" data-icon="back">Back</a>
             </div>
         </div>
     </div>
     <!---- Page:Feedback:End ---->
-
     <!---- Page:Debug:Start ---->
-    <div data-role="page" id="debug-page">
+    <div data-role="page" id="debug-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <h1>Debug Info</h1>
         </div>
@@ -815,9 +800,8 @@
         </div>
     </div>
     <!---- Page:Debug:End ---->
-
     <!---- Page:Experiment:Start ---->
-    <div data-role="page" id="experiment-page">
+    <div data-role="page" id="experiment-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <h1>Experiments</h1>
         </div>
@@ -826,21 +810,18 @@
             </div>
         </div>
         <div data-role="footer" data-position="fixed">
-            <a href="#search-page" data-role="button" data-inline="true" data-icon="back">Back</a>
+            <a href="#search-page" data-role="button" data-icon="back">Back</a>
         </div>
     </div>
     <!---- Page:Experiment:End ---->
-
     <!--End Page Definitions -->
     <!--End standard OCM app HTML block-->
-
     <!--Late bound scripts-->
-
-    <script src="js/ThirdParty/analytics.js"></script>
-    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <!-- <script src="js/ThirdParty/analytics.js"></script> -->
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
     <script>
-    	ocm_app.ocm_data.clientName="ocm.app.TARGETNAME";
+        ocm_app.ocm_data.clientName = "ocm.app.TARGETNAME";
     </script>
 </body>
 </html>

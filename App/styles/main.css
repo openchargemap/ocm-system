@@ -3,32 +3,17 @@
 @font-face {
     font-family: 'Oxygen';
     src: url('../fonts/Oxygen/oxygen-light-webfont.eot');
-    src: url('../fonts/Oxygen/oxygen-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Oxygen/oxygen-light-webfont.woff') format('woff'),
-         url('../fonts/Oxygen/oxygen-light-webfont.ttf') format('truetype'),
-         url('../fonts/Oxygen/oxygen-light-webfont.svg#oxygenlight') format('svg');
+    src: url('../fonts/Oxygen/oxygen-light-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/Oxygen/oxygen-light-webfont.woff') format('woff'), url('../fonts/Oxygen/oxygen-light-webfont.ttf') format('truetype'), url('../fonts/Oxygen/oxygen-light-webfont.svg#oxygenlight') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
 
 @font-face {
     font-family: 'Oswald';
     src: url('../fonts/Oswald/oswald-light-webfont.eot');
-    src: url('../fonts/Oswald/oswald-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Oswald/oswald-light-webfont.woff') format('woff'),
-         url('../fonts/Oswald/oswald-light-webfont.ttf') format('truetype'),
-         url('../fonts/Oswald/oswald-light-webfont.svg#oswaldlight') format('svg');
+    src: url('../fonts/Oswald/oswald-light-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/Oswald/oswald-light-webfont.woff') format('woff'), url('../fonts/Oswald/oswald-light-webfont.ttf') format('truetype'), url('../fonts/Oswald/oswald-light-webfont.svg#oswaldlight') format('svg');
     font-weight: 300;
     font-style: normal;
-
-}
-
-* {
-    text-shadow: none;
-    box-shadow: none;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
 }
 
 body {
@@ -37,7 +22,6 @@ body {
     background-color: black;
     line-height: normal;
     color: white;
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -51,23 +35,11 @@ body {
     vertical-align: middle;
 }
 
-.low-res {
-    display: inherit;
-}
-
-.medium-res {
-    display: none;
-}
-
-.high-res {
-    display: none;
-}
-
-#branding h1 {
-    padding: 6px;
-    color: white;
-    font-size: 9pt;
-}
+    #branding h1 {
+        padding: 6px;
+        color: white;
+        font-size: 9pt;
+    }
 
 #search-advanced {
     display: inline;
@@ -148,30 +120,31 @@ p {
 }
 
 #progress-indicator {
-    background-position: left center;
     display: none;
+    border-radius: 6px;
     position: absolute;
-    border: 1px solid gainsboro;
-    box-shadow: 10px 10px 5px #888;
-    background-color: white;
-    padding: 6px;
-    padding-left: 40px;
-    margin: 6px;
-    background-image: url('../images/ajax-loader.gif');
+    box-shadow: 1px 1px 5px rgba(128,128,128,0.5);
+    background-color: rgba(255,255,255,0.9);
+    background-position: 10px 10px;
+    background-image: url('../images/ajax-loader2.gif');
     background-repeat: no-repeat;
     vertical-align: middle;
-    width: 90%;
-    height: 60px;
-    border-radius: 6px;
+    padding-top: 6px;
+    padding-left: 60px;
+    top: 30%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 80px;
+    width: 70%;
+    color: black;
 }
 
 .info-section {
     border: 1px solid gainsboro;
-    padding: 16px;
+    padding: 1em;
     background-color: whitesmoke;
-    font-size: 9pt;
     display: block;
-    line-height: 1.5;
+    color: black;
 }
 
 #details-content {
@@ -255,9 +228,9 @@ p {
 }
 
 .result {
-    box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
+    /*box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
+    border-radius: 4px;*/
     margin: 1em;
-    border-radius: 4px;
 }
 
 .results-list {
@@ -272,17 +245,16 @@ p {
 }
 
 .result-item-a, .result-item-b {
-   
     width: 40%;
     font-weight: 300;
-    font-family:'Oxygen',Arial;
+    font-family: 'Oxygen',Arial;
     padding: 8px;
     font-size: 0.8em;
 }
 
 .result-item-a {
     float: left;
-    border-right:1px dotted rgb(230,230,230);
+    border-right: 1px dotted rgb(230,230,230);
 }
 
 .result-item-b {
@@ -290,10 +262,10 @@ p {
     text-align: left;
 }
 
-.result-item-a p, .result-item-b p
-{
-	padding:1em 0 0 0;
-}
+    .result-item-a p, .result-item-b p {
+        padding: 1em 0 0 0;
+    }
+
 @media only screen and (min-width: 800px) {
     .result-item-b {
         float: right;
@@ -303,11 +275,6 @@ p {
 
 .alternate {
 }
-
-#network-error {
-    color: Red;
-}
-
 
 #popupPanel-popup {
     right: 0 !important;
@@ -334,7 +301,7 @@ p {
     width: 16px;
     max-height: 16px;
     max-width: 16px;
-    margin-left:20px;
+    margin-left: 20px;
 }
 
 .direction-N {
@@ -406,10 +373,10 @@ p {
             text-shadow: 1px 1px 8px rgba(32,32,32, 0.7);
         }
 
-#home-page * .ui-grid-b * a:hover {
-    text-decoration: none;
-    color: greenyellow;
-}
+            #home-page * .ui-grid-b * a:hover {
+                text-decoration: none;
+                color: greenyellow;
+            }
 
 .accent {
     color: greenyellow;
@@ -435,7 +402,7 @@ p {
 
 @media screen and (min-width: 801px) {
     #home-page * .ui-grid-b * a {
-        font-size: 120%;
+        font-size: 110%;
         margin-bottom: 2em;
     }
 }
@@ -487,17 +454,17 @@ p {
 
 .section-heading {
     margin-bottom: 0.5em;
-    border-radius:0.2em;
+    border-radius: 0.2em;
 }
 
 #details-options {
     padding: 0.2em;
     display: inline;
     margin: 0.1em;
-    float:right;
-    background-color:#8cc63f;
-    font-size:1.5em;
-    border-radius:0.2em;
+    float: right;
+    background-color: #8cc63f;
+    font-size: 1.5em;
+    border-radius: 0.2em;
 }
 
     #details-options .option-item {
@@ -507,14 +474,13 @@ p {
 
 body, h1, h2, h3, .ui-body-b, .ui-body-d, a, a:visited {
     font-family: 'Oxygen', sans-serif;
-    
 }
 
-.result h3, #home-page .ui-link,a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 300 !important;
-    font-size: 1.1em;
-}
+    .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header {
+        font-family: 'Oswald', sans-serif;
+        font-weight: 300 !important;
+        font-size: 1.1em;
+    }
 
 /*page heading bar*/
 div[data-role=header] > div {
@@ -555,8 +521,7 @@ blockquote {
     }
 
 
-    /*font awesome/jqm icon pack fixes*/
+/*font awesome/jqm icon pack fixes*/
 .ui-icon-cog:before {
-    margin-top:0;
+    margin-top: 0;
 }
-    

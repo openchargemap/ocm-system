@@ -37,24 +37,38 @@ function onDeviceReady() {
 }
 
 function bootStrap() {
-    if (window.cordova) {
-        ocm_app.isRunningUnderCordova = true;
-        ocm_app.logEvent("Phonegap enabled. Operating as mobile app.");
-		document.addEventListener("deviceready", onDeviceReady, false);
+	if (_appBootStrapped == false) {
+	    ocm_app.logEvent("There can be only one.");
+		
+	    if ($.mobile){
+	    	ocm_app.logEvent("Running under JQM");
+	    } else {
+	    	ocm_app.logEvent("No JQM Running");
+	    }
+	    
+	    if (window.cordova) {
+	        ocm_app.isRunningUnderCordova = true;
+	        ocm_app.logEvent("Phonegap enabled. Operating as mobile app.");
+			document.addEventListener("deviceready", onDeviceReady, false);
+		} else {
+			ocm_app.logEvent("Phonegap not enabled. Operating as desktop browser.");
+			startApp();
+		}
+    
 	} else {
-		ocm_app.logEvent("Phonegap not enabled. Operating as desktop browser.");
-		startApp();
+		ocm_app.logEvent("Ignoring additional bootstrap call.");
 	}
 }
 
-
+//startup for jquery mobile version
 $(document).bind('pageinit', function () {
-	if (_appBootStrapped == false) {
-	    ocm_app.logEvent("There can be only one.");
-		bootStrap();
-	}
+	bootStrap();
 });
 
-$(document).bind('pagebeforeshow', function () {
-
+//startup for non-jquerymobile version
+$(function() {
+	 //experimental removal of jqm
+    if (!$.mobile){
+    	bootStrap();
+    }
 });

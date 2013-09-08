@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-    <widget xmlns = "http://www.w3.org/ns/widgets"
-        xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "org.openchargemap.app"
-        versionCode="3.3.0"
-        version   = "3.3.0">
+<widget xmlns = "http://www.w3.org/ns/widgets"
+    xmlns:gap = "http://phonegap.com/ns/1.0"
+    id        = "org.openchargemap.app"
+    versionCode="3.3.0"
+    version   = "3.3.0">
 
-    <!-- versionCode is optional and Android only -->
+  <!-- versionCode is optional and Android only -->
 
-    <name>Open Charge Map</name>
+  <name>Open Charge Map</name>
 
-    <description>
-        Open Charge Map is the world's largest open global registry of electric vehicle charging locations.
-    </description>
+  <description>
+    Open Charge Map is the world's largest open global registry of electric vehicle charging locations.
+  </description>
 
-    <author href="http://openchargemap.org" email="apps@webprofusion.com">
-        Christopher Cook
-    </author>
-    
-    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser" />
-    
-    <preference name="webviewbounce" value="false" />
-    <preference name="phonegap-version" value="2.7.0" />
-    <preference name="android-minSdkVersion" value="8" />
-	<icon src="images/icons/AppIcon114x114.png" />
-	<gap:splash src="images/AppSplashscreen480x800.png" />
-	<gap:plugin name="ChildBrowser" />
-	<gap:plugin name="GAPlugin" />
+  <author href="http://openchargemap.org" email="apps@webprofusion.com">
+    Christopher Cook
+  </author>
 
-	<!--permissions-->
-	<access origin="*" />
-	<feature name="http://api.phonegap.com/1.0/geolocation"/>
-	<feature name="http://api.phonegap.com/1.0/network"/>
+  <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser" />
+
+  <preference name="webviewbounce" value="false" />
+  <preference name="phonegap-version" value="2.7.0" />
+  <preference name="android-minSdkVersion" value="8" />
+  <icon src="images/icons/AppIcon_114x114.png" />
+  <gap:splash src="images/AppSplashscreen_480x800.png" />
+  <gap:plugin name="ChildBrowser" />
+  <gap:plugin name="GAPlugin" />
+
+  <!--permissions-->
+  <access origin="*" />
+  <feature name="http://api.phonegap.com/1.0/geolocation"/>
+  <feature name="http://api.phonegap.com/1.0/network"/>
 </widget>

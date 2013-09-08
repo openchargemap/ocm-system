@@ -87,12 +87,15 @@ OCM_App.prototype.populateEditor = function (refData) {
         if (!$connection.length > 0) {
             //create new section using section 1 as template
             var templateHTML = $("#edit_connection1").html();
-            templateHTML = templateHTML.replace("Connection 1", "Connection " + n);
-            templateHTML = templateHTML.replace(/connection1/gi, "connection" + n);
-            $connection = $("<div id=\"edit_connection" + n + "\" data-role=\"collapsible\" data-collapsed=\"true\" data-content-theme=\"d\">" +
+            if (templateHTML != null)
+            {
+                templateHTML = templateHTML.replace("Connection 1", "Connection " + n);
+                templateHTML = templateHTML.replace(/connection1/gi, "connection" + n);
+                $connection = $("<div id=\"edit_connection" + n + "\" data-role=\"collapsible\" data-collapsed=\"true\" data-content-theme=\"d\">" +
 					templateHTML +
-				"</div>");
-            $("#edit-connectioneditors").append($connection);
+				    "</div>");
+                $("#edit-connectioneditors").append($connection);
+            }
         }
 
         //populate dropdowns
@@ -109,7 +112,7 @@ OCM_App.prototype.populateEditor = function (refData) {
 
     //setup geocoding lookup of address in editor
     var appContext = this;
-    $("#edit-location-lookup").on('click', function (event, ui) {
+    $("#edit-location-lookup").fastClick(function (event, ui) {
         var lookupString =
 			$("#edit_addressinfo_addressline1").val() + ", " +
 			$("#edit_addressinfo_addressline2").val() + "," +
@@ -358,9 +361,7 @@ OCM_App.prototype.showLocationEditor = function () {
             }
         }
     }
-
-    //change to editor page
-    $.mobile.changePage("#editlocation-page");
+  
 };
 
 OCM_App.prototype.refreshEditorMap = function(currentLat, currentLng) {
@@ -369,7 +370,6 @@ OCM_App.prototype.refreshEditorMap = function(currentLat, currentLng) {
 
 OCM_App.prototype.initEditorMap = function(currentLat, currentLng) {
 
-    
     if (this.editorMapInitialised === false) {
         
         this.editorMapInitialised = true;

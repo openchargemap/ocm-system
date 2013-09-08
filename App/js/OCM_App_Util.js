@@ -101,11 +101,16 @@ OCM_App.prototype.populateDropdown = function (id, refDataList, selectedValue, d
 OCM_App.prototype.showProgressIndicator = function () {
     if ($.mobile) {
         $.mobile.showPageLoadingMsg();
+    } else {
+    	$("#progress-indicator").fadeIn('slow');
+    	
     }
 };
 
 OCM_App.prototype.hideProgressIndicator = function () {
     if ($.mobile) {
         $.mobile.hidePageLoadingMsg();
+    } else {
+    	$("#progress-indicator").fadeOut();
     }
 };
