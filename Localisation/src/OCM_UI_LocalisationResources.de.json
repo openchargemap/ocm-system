@@ -5,7 +5,8 @@
     "general": {
       "shortDescription": "Das weltweite und öffentliche Verzeichnis für Ladestationen für elektrische Fahrzeuge",
       "linkWebApp": "Suche nach Ladestationen mit unserer Web App",
-      "linkBrowsePOI": "Browsen in der ganzen Datenbank"
+      "linkBrowsePOI": "Browsen in der ganzen Datenbank",
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": "Standort der Ladestation",

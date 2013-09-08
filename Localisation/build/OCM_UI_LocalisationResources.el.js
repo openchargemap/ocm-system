@@ -1,4 +1,4 @@
-{
+var localisation_dictionary_el ={
   "_langTitle": "Greek/Ελληνική",
   "_langCode": "el",
   "ocm": {
@@ -94,4 +94,4 @@
       "progress": "Αναζήτηση..."
     }
   }
-}
+};

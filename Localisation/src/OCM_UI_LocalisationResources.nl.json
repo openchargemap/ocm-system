@@ -5,7 +5,8 @@
     "general": {
       "shortDescription": "Het globale openbare register van oplaadlocaties voor elektrische voertuigen",
       "linkWebApp": "Zoek Locaties met behulp van onze Web App",
-      "linkBrowsePOI": "Blader door alle Locaties"
+      "linkBrowsePOI": "Blader door alle Locaties",
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": "Oplaad Locatie",

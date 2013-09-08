@@ -5,7 +5,8 @@ var localisation_dictionary_ja ={
     "general": {
       "shortDescription": null,
       "linkWebApp": null,
-      "linkBrowsePOI": null
+      "linkBrowsePOI": null,
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": "場所を充電",

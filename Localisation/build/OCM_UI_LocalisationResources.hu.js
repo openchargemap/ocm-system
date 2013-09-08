@@ -5,7 +5,8 @@ var localisation_dictionary_hu ={
     "general": {
       "shortDescription": null,
       "linkWebApp": null,
-      "linkBrowsePOI": null
+      "linkBrowsePOI": null,
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": null,

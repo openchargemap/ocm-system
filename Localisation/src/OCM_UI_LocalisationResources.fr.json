@@ -5,7 +5,8 @@
     "general": {
       "shortDescription": "le registre public mondial d'emplacements de recharge pour véhicules électriques",
       "linkWebApp": "Recherchez des Emplacements à l'aide de notre application Web",
-      "linkBrowsePOI": "Feuilletez Tout les Emplacements"
+      "linkBrowsePOI": "Feuilletez Tout les Emplacements",
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": "Emplacement de Chargement",

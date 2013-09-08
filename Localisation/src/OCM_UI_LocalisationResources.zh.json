@@ -5,7 +5,8 @@
     "general": {
       "shortDescription": null,
       "linkWebApp": null,
-      "linkBrowsePOI": null
+      "linkBrowsePOI": null,
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": "充电位置",

@@ -5,7 +5,8 @@
     "general": {
       "shortDescription": "мировой общественности реестр зарядки электрических транспортных средств местах",
       "linkWebApp": "Поиск места с помощью нашего Web App",
-      "linkBrowsePOI": "Просмотр всех местах"
+      "linkBrowsePOI": "Просмотр всех местах",
+      "loadingProgress": null
     },
     "details": {
       "sectionTitle": "Зарядка местоположение",

@@ -1,4 +1,4 @@
-{
+var localisation_dictionary_ar ={
   "_langTitle": "العربية / Arabic",
   "_langCode": "ar",
   "ocm": {
@@ -94,4 +94,4 @@
       "progress": "البحث..."
     }
   }
-}
+};

@@ -1,4 +1,4 @@
-{
+var localisation_dictionary_lt ={
   "_langTitle": "Lithuanian/Lietuvių",
   "_langCode": "lt",
   "ocm": {
@@ -94,4 +94,4 @@
       "progress": "Ieškoma..."
     }
   }
-}
+};
