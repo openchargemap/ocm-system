@@ -18,7 +18,7 @@ OCM_Geolocation.prototype.determineUserLocation = function (successCallback, fai
 
         navigator.geolocation.getCurrentPosition(
 	        function (position) {
-	            this.clientGeolocationPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	            this.clientGeolocationPos = position; //new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 	            successCallback(this.clientGeolocationPos);
 	        },
 	        function () {
@@ -26,20 +26,6 @@ OCM_Geolocation.prototype.determineUserLocation = function (successCallback, fai
 	            appContext.determineUserLocationFailed(failureCallback);
 	        }
 	    );
-
-    } else if (google.gears) {
-
-        var geo = google.gears.factory.create('beta.geolocation');
-        geo.getCurrentPosition(
-	            function (position) {
-	                this.clientGeolocationPos = new google.maps.LatLng(position.latitude, position.longitude);
-	                successCallback(this.clientGeolocationPos);
-	            },
-	            function () {
-	                //could not geolocate
-	                appContext.determineUserLocationFailed(failureCallback);
-	            }
-	        );
 
     } else {
         appContext.determineUserLocationFailed(failureCallback);
@@ -70,6 +56,7 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
     geocoder.geocode({ 'address': locationText }, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             var locationPos = results[0].geometry.location;
+           
             appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
         } else {
             alert("Sorry, we could not identify this location: " + status);
@@ -80,8 +67,16 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
 };
 
 OCM_Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, successCallback) {
-    this.geocodingResultPos = pos;
-    successCallback(pos);
+
+    //cinvert google lt/lng result into browser coords
+    var geoPosition = {
+        coords: {
+            latitude: pos.lat(),
+            longitude:pos.lng()
+        }
+    }
+    this.geocodingResultPos = geoPosition;
+    successCallback(geoPosition);
 };
 
 OCM_Geolocation.prototype.getBearing = function (lat1, lon1, lat2, lon2) {

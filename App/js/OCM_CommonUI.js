@@ -3,6 +3,8 @@
 function OCM_CommonUI() {
     this.enablePOIMap = true;
     this.map = null;
+    this.ocm_markers = [];
+    this.ocm_markerClusterer = null;
     this.mapOptions = new Object();
     this.mapOptions.enableClustering = false;
     this.mapOptions.resultBatchID = 0;
@@ -162,6 +164,10 @@ OCM_CommonUI.prototype.showPOIListOnMap2 = function (mapcanvasID, poiList, appco
         var map = this.map;
         var bounds = new google.maps.LatLngBounds();
 
+        if (this.mapOptions.enableClustering && this.ocm_markerClusterer) {
+            this.ocm_markerClusterer.clearMarkers();
+        }
+
         //clear existing markers
         if (this.ocm_markers != null) {
             for (var i = 0; i < this.ocm_markers.length; i++) {
@@ -237,6 +243,10 @@ OCM_CommonUI.prototype.showPOIListOnMap2 = function (mapcanvasID, poiList, appco
             }
         }
 
+        if (this.mapOptions.enableClustering && this.ocm_markerClusterer) {
+            this.ocm_markerClusterer.addMarkers(this.ocm_markers);
+        }
+
         //include centre search location in bounds of map zoom
         if (this.ocm_searchmarker != null) bounds.extend(this.ocm_searchmarker.position);
         map.fitBounds(bounds);
@@ -293,7 +303,7 @@ OCM_CommonUI.prototype.initMap = function (mapcanvasID) {
             this.map = new google.maps.Map(mapCanvas, mapOptions);
 
             if (this.mapOptions.enableClustering) {
-                this.ocm_markerClusterer = new MarkerClusterer(map, this.ocm_markers);
+                this.ocm_markerClusterer = new MarkerClusterer(this.map, this.ocm_markers);
             }
         }
     }

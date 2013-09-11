@@ -51,7 +51,7 @@ function OCM_App() {
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-        this.ocm_data.serviceBaseURL = "http://localhost:81/API/v2";
+        this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
 
@@ -76,6 +76,9 @@ OCM_App.prototype.initApp = function () {
 
     this.showProgressIndicator();
     this.appInitialised = true;
+
+    //wire up state tracking
+    this.initStateTracking();
 
     //wire up button events
 
@@ -115,11 +118,11 @@ OCM_App.prototype.setupUIActions = function () {
     $("[data-role='header']").addClass("ui-header");
 
     //set home page ui link actions
-    app.setElementAction("a[href='#search-page']", function () {
+    app.setElementAction("a[href='#search-page'],#map-listview", function () {
         app.navigateToSearch();
     });
 
-    app.setElementAction("a[href='#map-page']", function () {
+    app.setElementAction("a[href='#map-page'],#search-map", function () {
         app.navigateToMap();
     });
 
@@ -127,7 +130,7 @@ OCM_App.prototype.setupUIActions = function () {
         app.navigateToAddLocation();
     });
 
-    app.setElementAction("a[href='#favourites-page']", function () {
+    app.setElementAction("a[href='#favourites-page'],#search-favourites", function () {
         app.navigateToFavourites();
     });
 
@@ -143,7 +146,7 @@ OCM_App.prototype.setupUIActions = function () {
         app.navigateToLogin();
     });
 
-    //set all back/home button ui actions 
+    //set all back/home button ui actions
     app.setElementAction("a[href='#home-page']", function () {
         app.navigateToHome();
     });
@@ -208,7 +211,7 @@ OCM_App.prototype.postLoginInit = function () {
         $("#login-button ").show();
     } else {
         //user is signed in
-        $("#user-profile-info").html("You are signed in as: " + userInfo.Username + " <input type=\"button\" data-mini=\"true\" class='btn btn-primary' value=\"Sign Out\" onclick='ocm_app.logout();' />").trigger("create");
+        $("#user-profile-info").html("You are signed in as: " + userInfo.Username + " <input type=\"button\" data-mini=\"true\" class='btn btn-primary' value=\"Sign Out\" onclick='ocm_app.logout(true);' />").trigger("create");
         $("#login-button").hide();
 
     }
@@ -334,19 +337,24 @@ OCM_App.prototype.beginLogin = function () {
     }
 };
 
-OCM_App.prototype.logout = function () {
+OCM_App.prototype.logout = function (navigateToHome) {
+    var app = this;
+
     this.clearCookie("Identifier");
     this.clearCookie("Username");
     this.clearCookie("OCMSessionToken");
     this.clearCookie("AccessToken");
     this.clearCookie("AccessPermissions");
 
-    if (this.isRunningUnderCordova) {
-        app.navigateToHome();
-    }
-    else {
-        var app = this.ocm_app_context;
-        setTimeout(function () { window.location = app.baseURL; }, 100);
+    if (navigateToHome == true)
+    {
+        app.postLoginInit(); //refresh signed in/out ui
+        if (this.isRunningUnderCordova) {
+            app.navigateToHome();
+        }
+        else {
+            setTimeout(function () { window.location = app.baseURL; }, 100);
+        }
     }
 
 };
@@ -504,8 +512,8 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
             this.searchInProgress = true;
 
             var params = new OCM_LocationSearchParams();
-            params.latitude = this.ocm_app_searchPos.lat();
-            params.longitude = this.ocm_app_searchPos.lng();
+            params.latitude = this.ocm_app_searchPos.coords.latitude;
+            params.longitude = this.ocm_app_searchPos.coords.longitude;
             params.distance = distance;
             params.distanceUnit = distance_unit;
             params.maxResults = this.maxResults;
@@ -626,7 +634,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
 
             var direction = "";
 
-            if (this.ocm_app_searchPos != null) direction = this.ocm_geo.getCardinalDirectionFromBearing(this.ocm_geo.getBearing(this.ocm_app_searchPos.lat(), this.ocm_app_searchPos.lng(), poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+            if (this.ocm_app_searchPos != null) direction = this.ocm_geo.getCardinalDirectionFromBearing(this.ocm_geo.getBearing(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
 
             itemTemplate = itemTemplate.replace("{distance}", distance.toFixed(1));
             itemTemplate = itemTemplate.replace("{distanceunit}", distance_unit + (direction != "" ? " <span title='" + direction + "' class='direction-" + direction + "'>&nbsp;&nbsp;</span>" : ""));
@@ -828,7 +836,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
 
     //once displayed, try fetching a more accurate distance
     if (this.ocm_app_searchPos != null) {
-        this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.lat(), this.ocm_app_searchPos.lng(), poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
+        this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
     }
 
     //apply translations (if required)
@@ -943,6 +951,9 @@ OCM_App.prototype.refreshMapView = function () {
         $("#map-view").html("Google maps cannot be loaded. Please check your data connection.");
         return;
     }
+
+    this.ocm_ui.mapOptions.enableClustering = false;
+
     //setup map view if not already initialised
     this.ocm_ui.initMap("map-view");
 
@@ -1019,7 +1030,9 @@ OCM_App.prototype.hidePage = function (pageId) {
     }
 }
 
-OCM_App.prototype.showPage = function (pageId) {
+OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
+    if (!pageTitle) pageTitle = pageId;
+
     //show new page
     if ($.mobile) {
         $.mobile.changePage("#" + pageId, { transition: "slideup" });
@@ -1036,24 +1049,63 @@ OCM_App.prototype.showPage = function (pageId) {
     }
 
     this._lastPageId = pageId;
+
+    if (skipState) {
+        //skip storage of current state
+    } else {
+        this.History.pushState({ view: pageId, title:pageTitle }, pageTitle, "?view=" + pageId);
+    }
+
 }
+
+OCM_App.prototype.initStateTracking = function () {
+    var app = this;
+    // Check Location
+    if (document.location.protocol === 'file:') {
+        //state not supported
+    }
+
+    // Establish Variables
+    this.History = window.History; // Note: We are using a capital H instead of a lower h
+
+    var History = this.History;
+    var State = History.getState();
+
+    // Log Initial State
+    State.data.view = "home-page";
+    History.log('initial:', State.data, State.title, State.url);
+
+    // Bind to State Change
+    History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
+        // Log the State
+        var State = History.getState(); // Note: We are using History.getState() instead of event.state
+        History.log('statechange:', State.data, State.title, State.url);
+
+        // app.logEvent("state switch to :" + State.data.view);
+        if (State.data.view) {
+            app.showPage(State.data.view, State.Title, true);
+        } else {
+            app.showPage("home-page", "Home");
+        }
+    });
+};
 
 //methods for use by native build of app to enable navigation via native UI/phonegap
 OCM_App.prototype.navigateToSearch = function () {
     this.logEvent("Navigate To: Search Page");
     this.hidePage("home-page");
-    this.showPage("search-page");
+    this.showPage("search-page", "Search");
 };
 
 OCM_App.prototype.navigateToHome = function () {
     this.logEvent("Navigate To: Home Page");
-    this.showPage("home-page");
+    this.showPage("home-page", "Home");
 };
 
 OCM_App.prototype.navigateToMap = function () {
     this.logEvent("Navigate To: Map Page");
 
-    this.showPage("map-page");
+    this.showPage("map-page", "Map");
     this.refreshMapView();
 };
 
@@ -1064,7 +1116,7 @@ OCM_App.prototype.navigateToFavourites = function () {
     var favouritesList = app.getFavouritePOIList();
     if (favouritesList === null || favouritesList.length === 0) {
         $("#favourites-list").html("<p>You have no favourite locations set. To add or remove a favourite, tap the <i title=\"Toggle Favourite\" class=\"icon-heart-empty\"></i> icon when viewing a location.</p>");
-        this.showPage("favourites-page");
+        this.showPage("favourites-page", "Favourites");
     } else {
         if ($.mobile) {
             $.mobile.changePage("#search-page");
@@ -1077,8 +1129,6 @@ OCM_App.prototype.navigateToFavourites = function () {
         //show favourites on search page
         this.navigateToSearch();
     }
-
-
 };
 
 OCM_App.prototype.navigateToAddLocation = function () {
@@ -1088,7 +1138,7 @@ OCM_App.prototype.navigateToAddLocation = function () {
         app.isLocationEditMode = false;
         app.selectedPOI = null;
         app.showLocationEditor();
-        this.showPage("editlocation-page");
+        this.showPage("editlocation-page", "Add Location");
 
     } else {
         app.showMessage("Please Sign In before adding a location.");
@@ -1102,7 +1152,7 @@ OCM_App.prototype.navigateToEditLocation = function () {
     if (app.isUserSignedIn()) {
         //show editor
         app.showLocationEditor();
-        app.showPage("editlocation-page");
+        app.showPage("editlocation-page", "Edit Location");
     } else {
         app.showMessage("Please Sign In before editing.");
     }
@@ -1110,17 +1160,17 @@ OCM_App.prototype.navigateToEditLocation = function () {
 
 OCM_App.prototype.navigateToLogin = function () {
     this.logEvent("Navigate To: Login");
-    this.showPage("login-page");
+    this.showPage("login-page", "Sign In");
 };
 
 OCM_App.prototype.navigateToSettings = function () {
     this.logEvent("Navigate To: Settings");
-    this.showPage("settings-page");
+    this.showPage("settings-page", "Settings");
 };
 
 OCM_App.prototype.navigateToAbout = function () {
     this.logEvent("Navigate To: About");
-    this.showPage("about-page");
+    this.showPage("about-page","About");
 };
 
 OCM_App.prototype.navigateToAddComment = function () {
@@ -1134,7 +1184,7 @@ OCM_App.prototype.navigateToAddComment = function () {
 
     if (app.isUserSignedIn()) {
         //show checkin/comment page
-        this.showPage("submitcomment-page");
+        this.showPage("submitcomment-page", "Add Comment");
     } else {
         app.showMessage("Please Sign In");
     }
@@ -1147,7 +1197,7 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
 
     if (app.isUserSignedIn()) {
         //show upload page
-        this.showPage("submitmediaitem-page");
+        this.showPage("submitmediaitem-page", "Add Media");
     } else {
         app.showMessage("Please Sign In");
     }

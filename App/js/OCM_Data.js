@@ -119,11 +119,14 @@ OCM_Data.prototype.handleGeneralAjaxError = function (result, ajaxOptions, throw
     }
 };
 
-OCM_Data.prototype.fetchCoreReferenceData = function (callbackname) {
+OCM_Data.prototype.fetchCoreReferenceData = function (callbackname, authSessionInfo) {
+
+
+    var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
     $.ajax({
         type: "GET",
-        url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json&verbose=false&callback=" + callbackname,
+        url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json&verbose=false&callback=" + callbackname+"&"+authInfoParams,
         jsonp: false,
         contentType: "application/json;",
         dataType: "jsonp",

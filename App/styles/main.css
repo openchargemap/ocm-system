@@ -45,9 +45,6 @@ body {
     display: inline;
 }
 
-p {
-    padding: 1em;
-}
 
 #locationdetails-view {
     position: absolute;
@@ -121,22 +118,24 @@ p {
 
 #progress-indicator {
     display: none;
-    border-radius: 6px;
-    position: absolute;
-    box-shadow: 1px 1px 5px rgba(128,128,128,0.5);
-    background-color: rgba(255,255,255,0.9);
+    border-radius: 4px;
+    position: fixed;
+    background-color: rgba(139, 139, 139, 0.79);
     background-position: 10px 10px;
     background-image: url('../images/ajax-loader2.gif');
     background-repeat: no-repeat;
     vertical-align: middle;
     padding-top: 6px;
     padding-left: 60px;
-    top: 30%;
-    margin-left: 10%;
-    margin-right: 10%;
-    height: 80px;
-    width: 70%;
-    color: black;
+    padding-right: 60px;
+    top: 64px;
+    margin-left: 32px;
+    margin-right: 32px;
+    height: 4em;
+    width: 90%;
+    color: white;
+    font-size: 1.5em;
+    z-index: 1100;
 }
 
 .info-section {
@@ -164,9 +163,7 @@ p {
     border: 2px solid gainsboro;
 }
 
-
 .ocm-label {
-    width: 8em;
     display: inline-block;
 }
 
@@ -228,10 +225,18 @@ p {
 }
 
 .result {
-    /*box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
-    border-radius: 4px;*/
-    margin: 1em;
+    box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
+    border-radius: 4px;
+    margin: 0 0.3em 1em 0.3em;
 }
+
+    .result:hover {
+        background-color: rgba(140, 198, 63, 0.25);
+        -webkit-transition: background-color 1000ms linear;
+        -moz-transition: background-color 1000ms linear;
+        -ms-transition: background-color 1000ms linear;
+        transition: background-color 1000ms linear;
+    }
 
 .results-list {
     margin: 20px 0px 40px 0px;
@@ -452,6 +457,10 @@ p {
     font-family: 'Oswald',Arial;
 }
 
+.result h3 {
+    margin-top: 0;
+}
+
 .section-heading {
     margin-bottom: 0.5em;
     border-radius: 0.2em;
@@ -476,7 +485,7 @@ body, h1, h2, h3, .ui-body-b, .ui-body-d, a, a:visited {
     font-family: 'Oxygen', sans-serif;
 }
 
-    .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header {
+    .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, #progress-indicator {
         font-family: 'Oswald', sans-serif;
         font-weight: 300 !important;
         font-size: 1.1em;

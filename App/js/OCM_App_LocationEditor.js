@@ -20,7 +20,7 @@ OCM_App.prototype.initEditors = function () {
     this.ocm_data.referenceData = this.ocm_data.getCachedDataObject("CoreReferenceData");
     if (this.ocm_data.referenceData == null) {
         //no cached reference data, fetch from service
-        this.ocm_data.fetchCoreReferenceData("ocm_app.populateEditor");
+        this.ocm_data.fetchCoreReferenceData("ocm_app.populateEditor", this.getLoggedInUserInfo());
     } else {
         //cached ref data exists, use that
         this.logEvent("Using cached reference data..");
@@ -28,7 +28,7 @@ OCM_App.prototype.initEditors = function () {
         setTimeout(function () { _app.populateEditor(); }, 50);
 
         //attempt to fetch fresh data later (wait 1 second)
-        setTimeout(function () { _app.ocm_data.fetchCoreReferenceData("ocm_app.populateEditor"); }, 1000);
+        setTimeout(function () { _app.ocm_data.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo()); }, 1000);
     }
 };
 
@@ -142,6 +142,15 @@ OCM_App.prototype.populateEditor = function (refData) {
 
    
     this.resetEditorForm();
+
+    if (refData.UserProfile && refData.UserProfile != null & refData.UserProfile.IsCurrentSessionTokenValid == false) {
+        //login info is stale, logout user
+        if (this.isUserSignedIn())
+        {
+            this.logEvent("Login info is stale, logging out user.");
+            this.logout(false);
+        }
+    }
 };
 
 OCM_App.prototype.populateEditorLatLon = function (result) {

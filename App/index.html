@@ -40,6 +40,7 @@
     <script src="js/ThirdParty/jQuery.fastClick.js"></script>
     <script src="js/ThirdParty/jquery.validate.min.js"></script>
     <script src="js/ThirdParty/json3.min.js"></script>
+    <script src="js/ThirdParty/jquery.history.js"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="js/ThirdParty/bootstrap/css/bootstrap.min.css">
@@ -111,37 +112,36 @@
                         <a href="#favourites-page" class="ui-link">
                             <i class="icon-heart icon-2x"></i>
                             <br>
-                            Favourites
+                            <span data-localize="ocm.general.favourites">Favourites</span>
                         </a>
                     </div>
                     <div class="item block">
                         <a href="#addlocation-page" class="ui-link">
                             <i class="icon-plus icon-2x"></i>
                             <br>
-                            Add Location
+                            <span data-localize="ocm.general.addLocation">Add Location</span>
                         </a>
                     </div>
-
 
                     <div class="item block">
                         <a href="#settings-page" class="ui-link">
                             <i class="icon-cog icon-2x"></i>
                             <br>
-                            Settings
+                            <span data-localize="ocm.general.settings">Settings</span>
                         </a>
                     </div>
                     <div class="item block">
                         <a href="#about-page" class="ui-link">
                             <i class="icon-question-sign icon-2x"></i>
                             <br>
-                            About
+                            <span data-localize="ocm.general.about">About</span>
                         </a>
                     </div>
                     <div class="item block">
                         <a href="#login-page" id="login-button" class="ui-link">
                             <i class="icon-signin icon-2x"></i>
                             <br>
-                            Sign In
+                            <span data-localize="ocm.general.signIn">Sign In</span>
                         </a>
                     </div>
                 </div>
@@ -169,10 +169,34 @@
             <div class="well well-sm">
                 <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
 
-                    <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
-                    <button id="search-button" class="btn btn-primary"><i class="icon-search"></i> <span data-localize="ocm.search.sectionTitle">Search</span></button>
-                    <button id="search-nearby" class="btn btn-default"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
-                    <button id="search-settings" class="btn btn-default"><i class="icon-cog"></i> Settings</button>
+                    <div class="form-group">
+                        <label for="search-location" class="sr-only">Location</label>
+
+                        <div class="input-group">
+                            <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
+                            <span class="input-group-btn">
+                                <button id="search-button" class="btn btn-primary"><i class="icon-search"></i></button>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="btn-group">
+                                <button id="search-nearby" class="btn btn-default"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
+                                <button id="search-settings" class="btn btn-default"><i class="icon-cog"></i> <span data-localize="ocm.general.settings">Settings</span></button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn-group">
+                                <button id="search-map" class="btn btn-default"><i class="icon-map-marker"></i> <span data-localize="ocm.details.location.map">Map</span></button>
+                                <button id="search-favourites" class="btn btn-default"><i class="icon-heart"></i> <span data-localize="ocm.general.favourites">Favourites</span></button>
+                            </div>
+                        </div>
+
+
+
+                    </div>
 
                 </form>
                 <div id="network-error" class="alert alert-danger" style="display:none;">
@@ -249,7 +273,10 @@
                     <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
 
                     <p>
-                        <a id="btn-checkin" class="btn btn-primary" href="javascript:void();" data-localize="ocm.details.commentsAndRatings.addPrompt">Checkin or Add Comment</a>
+                        <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span>
+                    </p>
+                    <p>
+                        <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="icon-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a>
                     </p>
                     <div id="details-usercomments">
                         <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
@@ -284,8 +311,10 @@
             </div>
         </div>
 
-        <div data-role="content" data-theme="d" style="padding: 0;">
+        <div data-role="content" style="padding: 0;">
             <div>
+                <button id="map-listview" class="btn btn-default"><i class="icon-list"></i> List View</button>
+
                 <div class="section-heading" id="map-view-resultcount">No Results. Perform a search to see results on this map.</div>
                 <div id="map-view" style="margin-top: 0.5em; position: absolute; width: 99%; min-height: 70%;"></div>
             </div>
@@ -340,7 +369,7 @@
         </div>
         <div data-role="content" class="container">
             <p>
-                Please provide as much detail as you can about the charging location. Please do not submit private residences:
+                Please provide as much detail as you can about the charging location.<em>Please do not submit private residences</em>:
             </p>
             <form id="editlocation-form" action="#">
                 <div id="edit-location-container" data-role="collapsible" data-collapsed="false">
@@ -719,13 +748,13 @@
         <div data-role="header" data-position="fixed">
             <div>
                 <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
-                <div style="float: right"><i class="icon-question-sign"></i>&nbsp;About</div>
+                <div style="float: right"><i class="icon-question-sign"></i>&nbsp;<span data-localize="ocm.general.about">About</span></div>
             </div>
         </div>
         <div data-role="content" class="container">
             <div class="ui-body ui-body-a">
                 <div data-role="collapsible" data-collapsed="false">
-                    <h2>About This App</h2>
+                    <h2 data-localize="ocm.general.about">About</h2>
                     <h3>Open Charge Map App APPVERSION</h3>
                     <p>
                         <img alt="OCM Logo" src="images/icons/AppIcon_72x72.png" style="float: right; padding: 4px;" />
@@ -738,15 +767,10 @@
                     </p>
 
                     <p>
-                        <strong>To change search options or to Sign In as an editor or approver see <a href="#settings-page" data-icon="info">Settings</a>.</strong>
-                    </p>
-                    <p>
-                        Please send us your <a target="_blank" href="http://openchargemap.org/about/contact">feedback &amp; comments</a>. You can read more about the project at <a target="_blank" href="http://openchargemap.org">http://openchargemap.org</a>.
+                        Please send us your <a target="_blank" href="http://openchargemap.org/site/about/contact">feedback &amp; comments</a>. You can read more about the project at <a target="_blank" href="http://openchargemap.org">http://openchargemap.org</a>.
                     </p>
                     <p style="font-size: smaller;"><strong>Privacy Notice:</strong> This application may need to use and process your location as provided by you or your device, this information may be temporarily logged in some instances. To prevent sharing your location you may disable Location Services on your device. In addition, as this application is based around open sharing of information, comments or information submitted by you will be made public, however your own location is not shared publically.  If you have questions, <a target="_blank" href="http://openchargemap.org/about/contact">contact us</a>. </p>
-                    <!--<p>
-                        <em>If using a mobile device, bookmarking this application to your home screen is highly recommended.</em>
-                    </p>-->
+
                 </div>
 
                 <div data-role="collapsible" data-collapsed="false">
@@ -762,7 +786,8 @@
                     <h3>Credits</h3>
                     <p><em>OpenChargeMap Concept, Marketing &amp; Hosting:</em> <a target="_blank" href="http://zerocarbonworld.org">Zero Carbon World</a></p>
                     <p><em>Data Contributions:</em> OpenChargeMap.org contributors, including: <a target="_blank" href="http://www.carstations.com">Carstations.com</a>, <a target="_blank" href="http://zerocarbonworld.org">Zero Carbon World</a>, <a href="http://www.afdc.energy.gov/afdc/">Alternative Fuels and Advanced Vehicles Data Center (AFDC)</a></p>
-                    <p><em>Development:</em> Database, Web Services and Web/Mobile App development led by <a target="_blank" href="http://twitter.com/#!/electriccarbuyr">Christopher Cook</a> of <a target="_blank" href="http://www.webprofusion.com">Webprofusion Ltd</a>, operator of <a target="_blank" href="http://electriccarbuyer.com">electriccarbuyer.com</a></p>
+                    <p><em>Development:</em> Database, Web Services and Web/Mobile App development led by <a target="_blank" href="http://twitter.com/#!/electriccarbuyr">Christopher Cook</a> of <a target="_blank" href="http://www.webprofusion.com">Webprofusion Ltd</a>, operator of <a target="_blank" href="http://electriccarbuyer.com">electriccarbuyer.com</a>. source code for this app and all system components is available on <a href="https://github.com/openchargemap/">GitHub</a>.</p>
+                    <p><em>Translations:</em> User interface translations supplied by the OCM community, please contribute your own translations using our <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map">webtranslateit</a> project.</p>
                 </div>
             </div>
         </div>
@@ -817,8 +842,22 @@
     <!--End Page Definitions -->
     <!--End standard OCM app HTML block-->
     <!--Late bound scripts-->
-    <!-- <script src="js/ThirdParty/analytics.js"></script> -->
-    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+    <script>
+        function initGoogleMaps() {
+            ocm_app.mapsInitialised = true;
+        };
+
+        function loadGoogleMapsScript() {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMaps';
+            document.body.appendChild(script);
+        }
+
+        window.onload = loadGoogleMapsScript;
+    </script>
+    <script src="js/ThirdParty/markerclusterer_compiled.js"></script>
 
     <script>
         ocm_app.ocm_data.clientName = "ocm.app.TARGETNAME";
