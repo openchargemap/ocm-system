@@ -70,7 +70,8 @@ namespace OCM.API.Common.Model
 
         public List<DataType> DataTypes { get; set; }
         public List<MetadataGroup> MetadataGroups { get; set; }
-        
+
+        public User UserProfile { get; set; }
 
         /// <summary>
         /// Blank item used as template to populate/construct JSON object

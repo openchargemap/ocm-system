@@ -9,6 +9,7 @@ using System.Text;
 using System.IO.Compression;
 using System.Web.Caching;
 using System.Configuration;
+using OCM.API.InputProviders;
 
 namespace OCM.API
 {
@@ -342,6 +343,8 @@ namespace OCM.API
                 data = refDataManager.GetCoreReferenceData();
                 HttpContext.Current.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
+
+            data.UserProfile= new InputProviderBase().GetUserFromAPICall(context);
             
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, data, filter);
