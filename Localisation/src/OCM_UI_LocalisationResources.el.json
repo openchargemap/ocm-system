@@ -3,10 +3,17 @@
   "_langCode": "el",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
-      "linkBrowsePOI": null,
-      "loadingProgress": null
+      "shortDescription": "Παγκόσμιο δημόσιο μητρώο των ηλεκτρικό όχημα χρέωσης θέσεις",
+      "linkWebApp": "Θέσεις αναζήτηση, χρησιμοποιώντας Web App μας",
+      "linkBrowsePOI": "Αναζητήστε όλες τις θέσεις",
+      "loadingProgress": "Φόρτωση...",
+      "addLocation": "Προσθέστε την τοποθεσία",
+      "addItem": null,
+      "favourites": "Αγαπημένα",
+      "settings": "Ρυθμίσεις",
+      "about": "Σχετικά με",
+      "signIn": "Είσοδος",
+      "signOut": "Εξέλθετε"
     },
     "details": {
       "sectionTitle": "Φόρτιση τοποθεσία",

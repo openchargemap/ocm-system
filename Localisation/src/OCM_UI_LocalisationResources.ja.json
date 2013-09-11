@@ -3,10 +3,17 @@
   "_langCode": "ja",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
-      "linkBrowsePOI": null,
-      "loadingProgress": null
+      "shortDescription": "電気自動車の充電の場所グローバル公共のレジストリ",
+      "linkWebApp": "Web アプリを使用して検索場所",
+      "linkBrowsePOI": "すべての場所を参照します。",
+      "loadingProgress": "読み込んでいます.",
+      "addLocation": "場所を追加します。",
+      "addItem": null,
+      "favourites": "お気に入り",
+      "settings": "設定",
+      "about": "について",
+      "signIn": "サインイン",
+      "signOut": "サインアウトします。"
     },
     "details": {
       "sectionTitle": "場所を充電",

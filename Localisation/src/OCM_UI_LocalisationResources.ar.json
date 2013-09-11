@@ -6,7 +6,14 @@
       "shortDescription": "التسجيل العامة العالمية للمركبات الكهربائية تقاضي المواقع",
       "linkWebApp": "مواقع البحث باستخدام \"التطبيق ويب\" لدينا",
       "linkBrowsePOI": "تصفح جميع المواقع",
-      "loadingProgress": null
+      "loadingProgress": null,
+      "addLocation": null,
+      "addItem": null,
+      "favourites": null,
+      "settings": null,
+      "about": null,
+      "signIn": null,
+      "signOut": null
     },
     "details": {
       "sectionTitle": "شحن الموقع",

@@ -6,7 +6,14 @@ var localisation_dictionary_zh ={
       "shortDescription": null,
       "linkWebApp": null,
       "linkBrowsePOI": null,
-      "loadingProgress": null
+      "loadingProgress": null,
+      "addLocation": null,
+      "addItem": null,
+      "favourites": null,
+      "settings": null,
+      "about": null,
+      "signIn": null,
+      "signOut": null
     },
     "details": {
       "sectionTitle": "充电位置",

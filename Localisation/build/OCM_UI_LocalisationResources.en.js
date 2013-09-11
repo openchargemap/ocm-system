@@ -6,7 +6,14 @@ var localisation_dictionary_en ={
       "shortDescription": "the global public registry of electric vehicle charging locations",
       "linkWebApp": "Search Locations using our Web App",
       "linkBrowsePOI": "Browse All Locations",
-	  "loadingProgress": "Loading..."
+      "loadingProgress": "Loading...",
+      "addLocation": "Add Location",
+	"addItem": "Add",
+      "favourites": "Favourites",
+      "settings": "Settings",
+      "about": "About",
+      "signIn": "Sign In",
+      "signOut": "Sign Out"
     },
     "details": {
       "sectionTitle": "Charging Location",

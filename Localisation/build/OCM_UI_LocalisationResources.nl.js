@@ -6,7 +6,14 @@ var localisation_dictionary_nl ={
       "shortDescription": "Het globale openbare register van oplaadlocaties voor elektrische voertuigen",
       "linkWebApp": "Zoek Locaties met behulp van onze Web App",
       "linkBrowsePOI": "Blader door alle Locaties",
-      "loadingProgress": null
+      "loadingProgress": "Laden...",
+      "addLocation": "Locatie Toevoegen",
+      "addItem": "Toevoegen",
+      "favourites": "Favorieten",
+      "settings": "Instellingen",
+      "about": "Over",
+      "signIn": "Aanmelden",
+      "signOut": "Afmelden"
     },
     "details": {
       "sectionTitle": "Oplaad Locatie",

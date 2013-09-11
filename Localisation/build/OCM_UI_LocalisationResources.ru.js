@@ -6,7 +6,14 @@ var localisation_dictionary_ru ={
       "shortDescription": "мировой общественности реестр зарядки электрических транспортных средств местах",
       "linkWebApp": "Поиск места с помощью нашего Web App",
       "linkBrowsePOI": "Просмотр всех местах",
-      "loadingProgress": null
+      "loadingProgress": "Загрузка...",
+      "addLocation": "Добавить расположение",
+      "addItem": null,
+      "favourites": "Избранное",
+      "settings": "Параметры",
+      "about": "О",
+      "signIn": "Войти",
+      "signOut": "Выход"
     },
     "details": {
       "sectionTitle": "Зарядка местоположение",
@@ -79,7 +86,7 @@ var localisation_dictionary_ru ={
       }
     },
     "search": {
-      "sectionTitle": null,
+      "sectionTitle": "Поиск",
       "locationInput": "Местоположение",
       "useMyLocation": "Поиск рядом со мной",
       "distance": "Расстояние",

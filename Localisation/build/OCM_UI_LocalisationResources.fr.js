@@ -6,7 +6,14 @@ var localisation_dictionary_fr ={
       "shortDescription": "le registre public mondial d'emplacements de recharge pour véhicules électriques",
       "linkWebApp": "Recherchez des Emplacements à l'aide de notre application Web",
       "linkBrowsePOI": "Feuilletez Tout les Emplacements",
-      "loadingProgress": null
+      "loadingProgress": "Chargement...",
+      "addLocation": "Ajouter un lieu",
+      "addItem": "Ajouter",
+      "favourites": "Favoris",
+      "settings": "Paramètres",
+      "about": "A propos",
+      "signIn": "Connexion",
+      "signOut": "Déconnexion"
     },
     "details": {
       "sectionTitle": "Emplacement de Chargement",

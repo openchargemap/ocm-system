@@ -6,7 +6,14 @@ var localisation_dictionary_lt ={
       "shortDescription": "pasaulinis elektromobilių įkrovimo stotelių registras",
       "linkWebApp": "Ieškoti įkrovimo stoteles naudojant mūsų web aplikaciją",
       "linkBrowsePOI": "Peržiūrėti visas įkrovimo stoteles",
-      "loadingProgress": null
+      "loadingProgress": null,
+      "addLocation": null,
+      "addItem": null,
+      "favourites": null,
+      "settings": null,
+      "about": null,
+      "signIn": null,
+      "signOut": null
     },
     "details": {
       "sectionTitle": "Įkrovimo vieta",
