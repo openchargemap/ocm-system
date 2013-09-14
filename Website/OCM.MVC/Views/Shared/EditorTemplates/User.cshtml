@@ -1,180 +1,152 @@
 ﻿@model OCM.API.Common.Model.User
 
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>User</legend>
+@Html.HiddenFor(model => model.ID)
 
-        @Html.HiddenFor(model => model.ID)
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.IdentityProvider)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.IdentityProvider)
+        @Html.ValidationMessageFor(model => model.IdentityProvider)
+    </div>
+</div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Identifier)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Identifier)
+        @Html.ValidationMessageFor(model => model.Identifier)
+    </div>
+</div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CurrentSessionToken)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CurrentSessionToken)
+        @Html.ValidationMessageFor(model => model.CurrentSessionToken)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IdentityProvider)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IdentityProvider)
-            @Html.ValidationMessageFor(model => model.IdentityProvider)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Username)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Username)
+        @Html.ValidationMessageFor(model => model.Username)
+    </div>
+</div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Profile)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Profile)
+        @Html.ValidationMessageFor(model => model.Profile)
+    </div>
+</div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Location)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Location)
+        @Html.ValidationMessageFor(model => model.Location)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Identifier)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Identifier)
-            @Html.ValidationMessageFor(model => model.Identifier)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.WebsiteURL)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.WebsiteURL)
+        @Html.ValidationMessageFor(model => model.WebsiteURL)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CurrentSessionToken)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CurrentSessionToken)
-            @Html.ValidationMessageFor(model => model.CurrentSessionToken)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ReputationPoints)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.ReputationPoints)
+        @Html.ValidationMessageFor(model => model.ReputationPoints)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Username)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Username)
-            @Html.ValidationMessageFor(model => model.Username)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Permissions)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Permissions)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Profile)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Profile)
-            @Html.ValidationMessageFor(model => model.Profile)
-        </div>
+        (e.g. for uk editor: [CountryLevel_Editor=1];
+        @Html.ValidationMessageFor(model => model.Permissions)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Location)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Location)
-            @Html.ValidationMessageFor(model => model.Location)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.IsProfilePublic)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.IsProfilePublic)
+        @Html.ValidationMessageFor(model => model.IsProfilePublic)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.WebsiteURL)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.WebsiteURL)
-            @Html.ValidationMessageFor(model => model.WebsiteURL)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.IsEmergencyChargingProvider)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.IsEmergencyChargingProvider)
+        @Html.ValidationMessageFor(model => model.IsEmergencyChargingProvider)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ReputationPoints)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ReputationPoints)
-            @Html.ValidationMessageFor(model => model.ReputationPoints)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.IsPublicChargingProvider)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.IsPublicChargingProvider)
+        @Html.ValidationMessageFor(model => model.IsPublicChargingProvider)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Permissions)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Permissions)
-            @Html.ValidationMessageFor(model => model.Permissions)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Latitude)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Latitude)
+        @Html.ValidationMessageFor(model => model.Latitude)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.PermissionsRequested)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.PermissionsRequested)
-            @Html.ValidationMessageFor(model => model.PermissionsRequested)
-        </div>
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Longitude)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Longitude)
+        @Html.ValidationMessageFor(model => model.Longitude)
+    </div>
+</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateCreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateCreated)
-            @Html.ValidationMessageFor(model => model.DateCreated)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DateLastLogin)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DateLastLogin)
-            @Html.ValidationMessageFor(model => model.DateLastLogin)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IsProfilePublic)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IsProfilePublic)
-            @Html.ValidationMessageFor(model => model.IsProfilePublic)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IsEmergencyChargingProvider)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IsEmergencyChargingProvider)
-            @Html.ValidationMessageFor(model => model.IsEmergencyChargingProvider)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IsPublicChargingProvider)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IsPublicChargingProvider)
-            @Html.ValidationMessageFor(model => model.IsPublicChargingProvider)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Latitude)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Latitude)
-            @Html.ValidationMessageFor(model => model.Latitude)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Longitude)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Longitude)
-            @Html.ValidationMessageFor(model => model.Longitude)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.EmailAddress)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.EmailAddress)
-            @Html.ValidationMessageFor(model => model.EmailAddress)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IsCurrentSessionTokenValid)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IsCurrentSessionTokenValid)
-            @Html.ValidationMessageFor(model => model.IsCurrentSessionTokenValid)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.APIKey)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.APIKey)
-            @Html.ValidationMessageFor(model => model.APIKey)
-        </div>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<div class="form-group">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.EmailAddress)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.EmailAddress)
+        @Html.ValidationMessageFor(model => model.EmailAddress)
+    </div>
 </div>

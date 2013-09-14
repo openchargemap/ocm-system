@@ -73,18 +73,11 @@ namespace OCM.MVC.Controllers
                         // TODO: Add update logic here
                         var userManager = new UserManager();
                         var user = userManager.GetUser((int)Session["UserID"]);
-                        user.Username = updateProfile.Username;
-                        user.Profile = updateProfile.Profile;
-                        user.Location = updateProfile.Location;
-                        user.WebsiteURL = updateProfile.WebsiteURL;
-                        user.IsProfilePublic = updateProfile.IsProfilePublic;
-                        user.IsPublicChargingProvider = updateProfile.IsPublicChargingProvider;
-                        user.IsEmergencyChargingProvider = updateProfile.IsEmergencyChargingProvider;
-                        user.EmailAddress = updateProfile.EmailAddress;
-                        user.Latitude = updateProfile.Latitude;
-                        user.Longitude = updateProfile.Longitude;
-
-                        userManager.UpdateUserProfile(user);
+                      
+                        if (user.ID==updateProfile.ID)
+                        { 
+                            userManager.UpdateUserProfile(updateProfile, false);
+                        }
                         return RedirectToAction("Index");
                     }
                     else return View();

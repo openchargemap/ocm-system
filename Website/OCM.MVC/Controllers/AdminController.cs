@@ -35,7 +35,10 @@ namespace OCM.MVC.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditUser(User userDetails )
         {
-            var user = new UserManager().GetUser(userDetails.ID);
+            var userManager = new UserManager();
+
+            //var user = userManager.GetUser(userDetails.ID);
+            userManager.UpdateUserProfile(userDetails, true);
             //TODO: save
             return View(userDetails);
         }

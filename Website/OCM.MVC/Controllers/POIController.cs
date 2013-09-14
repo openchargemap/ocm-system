@@ -76,7 +76,7 @@ namespace OCM.MVC.Controllers
                         searchCountryName = searchCountry.Title;
                     }
 
-                    var position = geocode.GeoCodeFromString(filter.SearchLocation.Trim() + (searchCountryName != null ? ", " + searchCountryName : ""));
+                    var position = geocode.GeolocateAddressInfo_Google(filter.SearchLocation.Trim() + (searchCountryName != null ? ", " + searchCountryName : ""));
 
                     if (position != null)
                     {
@@ -92,7 +92,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-            filter.POIList = cpManager.GetChargePoints((OCM.API.Common.SearchFilterSettings)filter);
+            filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestSettings)filter);
             return View(filter);
 
         }
@@ -304,7 +304,7 @@ namespace OCM.MVC.Controllers
         public ActionResult Activity()
         {
             var summaryManager = new DataSummaryManager();
-            var summary = summaryManager.GetActivitySummary(new SearchFilterSettings());
+            var summary = summaryManager.GetActivitySummary(new APIRequestSettings());
             ViewBag.ShowPOILink = true;
             return View(summary);
         }
