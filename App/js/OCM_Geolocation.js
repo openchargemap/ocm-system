@@ -7,6 +7,7 @@ function OCM_Geolocation() {
     //input/results for latest text geocoding attempt
     this.geocodingTextInput = null;
     this.geocodingResultPos = null;
+    this.ocm_data = null;
 }
 
 OCM_Geolocation.prototype.determineUserLocation = function (successCallback, failureCallback) {
@@ -18,7 +19,7 @@ OCM_Geolocation.prototype.determineUserLocation = function (successCallback, fai
 
         navigator.geolocation.getCurrentPosition(
 	        function (position) {
-	            this.clientGeolocationPos = position; //new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	            this.clientGeolocationPos = position;
 	            successCallback(this.clientGeolocationPos);
 	        },
 	        function () {
@@ -50,9 +51,20 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
     this.geocodingTextInput = locationText;
     this.geocodingResultPos = null;
 
-    var geocoder = new google.maps.Geocoder();
+    var geocoder = this.ocm_data;
     var appContext = this;
 
+    geocoder.fetchGeocodeResult(locationText, 
+        function (results) {
+            var locationPos = {
+                'lat': results.latitude,
+                'lng': results.longitude
+            };
+            appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
+        }
+        , null);
+
+    /*
     geocoder.geocode({ 'address': locationText }, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             var locationPos = results[0].geometry.location;
@@ -62,7 +74,7 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
             alert("Sorry, we could not identify this location: " + status);
         }
     });
-
+    */
     return true;
 };
 
@@ -71,10 +83,11 @@ OCM_Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, su
     //cinvert google lt/lng result into browser coords
     var geoPosition = {
         coords: {
-            latitude: pos.lat(),
-            longitude:pos.lng()
+            latitude: pos.lat,
+            longitude: pos.lng
         }
-    }
+    };
+
     this.geocodingResultPos = geoPosition;
     successCallback(geoPosition);
 };

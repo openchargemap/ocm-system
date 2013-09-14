@@ -51,9 +51,10 @@ function OCM_App() {
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-        this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
+        this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
+    this.ocm_geo.ocm_data = this.ocm_data;
 
 }
 
@@ -452,7 +453,7 @@ OCM_App.prototype.submissionCompleted = function (jqXHR, textStatus) {
     if (textStatus != "error") {
         this.showMessage("Thank you for your contribution, you may need to refresh your browser page for changes to appear. If approval is required your change may take 24hrs or more to show up. (Status Code: " + textStatus + ")");
         //navigate back to search page
-        $.mobile.changePage("#search-page");
+        this.navigateToHome();
 
     } else {
         this.showMessage("Sorry, there was a problem accepting your submission. Please try again later. (Status Code: " + textStatus + "). If the problem persists try clearing your web browser cookies/cache.");
@@ -778,13 +779,14 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         for (var c = 0; c < poi.UserComments.length; c++) {
             var comment = poi.UserComments[c];
             var commentDate = this.ocm_ui.fixJSONDate(comment.DateCreated);
-            commentOutput += "<blockquote><strong>" + (comment.Rating != null ? comment.Rating + " out of 5" : "(Not Rated)") + " [" +
-                (comment.CommentType != null ? " : " + comment.CommentType.Title : "") +
-                (comment.CheckinStatusType != null ? " - " + comment.CheckinStatusType.Title : "") +
-                "]</strong>" +
-                "<p>" + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
-				"<small><cite>" + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() + "</cite></small>" +
-				"</blockquote>";
+            commentOutput +=
+                "<blockquote>" +
+                    "<p>" + (comment.Rating != null ? "<strong>Rating: "+ comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
+				    "<small><cite>"+(comment.CommentType != null ? "[" + comment.CommentType.Title + "] ":"") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() +
+                    "<em>" +
+                        
+                        (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
+                    "</em> </cite></small></blockquote>";
         }
         commentOutput += "</div>";
 
@@ -834,7 +836,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         } catch (exp) { }
     }
 
-    //once displayed, try fetching a more accurate distance
+    //once displayed, try fetching a more accurate distance estimate
     if (this.ocm_app_searchPos != null) {
         this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
     }
@@ -1046,6 +1048,10 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 
         //show new page
         $("#" + pageId).show();
+
+        //hack: reset scroll position for new page once page has had a chance to render
+        setTimeout(function () { document.documentElement.scrollIntoView(); }, 100);
+        
     }
 
     this._lastPageId = pageId;
@@ -1079,7 +1085,7 @@ OCM_App.prototype.initStateTracking = function () {
     History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
         // Log the State
         var State = History.getState(); // Note: We are using History.getState() instead of event.state
-        History.log('statechange:', State.data, State.title, State.url);
+        //History.log('statechange:', State.data, State.title, State.url);
 
         // app.logEvent("state switch to :" + State.data.view);
         if (State.data.view) {

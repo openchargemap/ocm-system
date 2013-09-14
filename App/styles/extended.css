@@ -1,0 +1,83 @@
+.ui-page {
+    display: none;
+    margin-top:54px;
+}
+
+.ui-header {
+    position: fixed;
+    background-color:black;
+    width:100%;
+    z-index:1000;
+    top:0px;
+}
+
+.ui-collapsed {
+}
+
+.form-options {
+    padding:8px;
+}
+
+.panel {
+    background-color:transparent;
+}
+/*non-jqm special case*/
+a:focus {
+    outline: 0;
+    -webkit-tap-highlight-color: #111111;
+}
+
+/*
+.btn-default{
+     background-color: #8cc63f;
+     color:white;
+     border: none;
+}
+    */
+
+.ui-link:hover {
+      transition: color 500ms linear;
+}
+
+.btn-default:hover{
+    background-color:#d7e8c1;
+    transition: background-color 500ms linear;
+}
+
+#details-content {
+    background-color: white;
+    color: black;
+}
+
+.ui-body {
+    border: none;
+    padding: 6px;
+    background-color: white;
+}
+
+.ui-body-a {
+    background-color: #111111;
+}
+
+
+/*basic responsive grid styles : 2 columns*/
+.item {
+    width: 50%;
+    padding: 8px;
+}
+
+/* Tablet version:   3 columns */
+@media (min-width: 40em) {
+    .item {
+        width: 33%;
+    }
+    /* 3 columns */
+}
+
+/* Desktop version:  4 columns */
+@media (min-width: 60em) {
+    .item {
+        width: 25%;
+    }
+    /* 4 columns */
+}

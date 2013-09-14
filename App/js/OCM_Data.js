@@ -121,7 +121,6 @@ OCM_Data.prototype.handleGeneralAjaxError = function (result, ajaxOptions, throw
 
 OCM_Data.prototype.fetchCoreReferenceData = function (callbackname, authSessionInfo) {
 
-
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
     $.ajax({
@@ -131,6 +130,21 @@ OCM_Data.prototype.fetchCoreReferenceData = function (callbackname, authSessionI
         contentType: "application/json;",
         dataType: "jsonp",
         crossDomain: true,
+        error: this.handleGeneralAjaxError
+    });
+};
+
+OCM_Data.prototype.fetchGeocodeResult = function (address, successCallback, authSessionInfo) {
+
+    var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
+
+    $.ajax({
+        type: "GET",
+        url: this.serviceBaseURL + "/geocode/?client=" + this.clientName + "&address="+address+"&output=json&verbose=false&camelcase=true&" + authInfoParams,
+        contentType: "application/json;",
+        dataType: "jsonp",
+        crossDomain: true,
+        success: successCallback,
         error: this.handleGeneralAjaxError
     });
 };

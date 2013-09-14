@@ -14,6 +14,9 @@
     <meta name="description" content="OpenChargeMap is a global, open registry of electric vehicle charging locations." />
     <meta name="author" content="www.webprofusion.com" />
 
+    <!-- IE specific Settings-->
+    <meta name="msapplication-tap-highlight" content="no" />
+
     <!-- iOS Specific Settings-->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -345,7 +348,7 @@
                 <div style="float: right"><i class="icon-signin"></i>&nbsp;Sign In</div>
             </div>
         </div>
-        <div data-role="content" data-theme="d">
+        <div data-role="content" data-theme="d" class="container">
 
             <div class="ui-bar ui-bar-b">Sign In or Register</div>
 
@@ -383,7 +386,7 @@
                         <input type="text" id="edit_addressinfo_addressline1" class="form-control" name="edit_addressinfo_addressline1" placeholder="First line of Address" value="" />
                     </div>
                     <div class="form-group">
-                        <label for="edit_addressinfo_addressline2" data-localize="ocm.details.location.addressLine1">Address Line 2</label>
+                        <label for="edit_addressinfo_addressline2" data-localize="ocm.details.location.addressLine2">Address Line 2</label>
                         <input type="text" id="edit_addressinfo_addressline2" class="form-control" name="edit_addressinfo_addressline2" placeholder="Second line of Address (if applicable)" value="" />
                     </div>
                     <div class="form-group">
@@ -487,57 +490,73 @@
                     </div>
                 </div>
 
-                <div id="edit-connectioneditors">
-                    <div id="edit_connection1" data-role="collapsible" data-collapsed="false" data-content-theme="d">
-                        <h3>Connection 1  - Equipment/Charging Level Info</h3>
-                        <div class="form-group">
-                            <label for="edit_connection1_connectiontype" data-localize="ocm.details.equipment.connectionType">Connection Type</label>
-                            <select id="edit_connection1_connectiontype" class="form-control" name="edit_connection1_connectiontype">
-                                <option value="" data-placeholder="false">Unknown</option>
-                            </select>
+                <h3 data-localize="ocm.details.equipment.sectionTitle">Equipment Info</h3>
+                <div class="panel-group" id="edit-connectioneditors">
+
+                    <div id="edit_connection1" class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#edit_connection1_panel">
+                                    Connection 1  - Equipment/Charging Level Info
+                                </a>
+                            </h4>
                         </div>
-                        <div class="form-group">
-                            <label for="edit_connection1_powerkw" data-localize="ocm.details.equipment.powerKW">Power (KW)</label>
-                            <input type="number" id="edit_connection1_powerkw" class="form-control" name="edit_connection1_powerkw" value="" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_connection1_currenttype" data-localize="ocm.details.equipment.supplyType">Supply Type</label>
-                            <select id="edit_connection1_currenttype" class="form-control" name="edit_connection1_currenttype">
-                                <option value="" data-placeholder="false">Unknown</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_connection1_level" data-localize="ocm.details.equipment.powerLevel">Charger Type/Level</label>
-                            <select id="edit_connection1_level" class="form-control" name="edit_connection1_level">
-                                <option value="" data-placeholder="false">Unknown</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_connection1_amps" data-localize="ocm.details.equipment.current">Max Current (Amps)</label>
-                            <input type="number" id="edit_connection1_amps" class="form-control" name="edit_connection1_amps" value="" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_connection1_volts" data-localize="ocm.details.equipment.voltage">Max Voltage</label>
-                            <input type="number" id="edit_connection1_volts" class="form-control" name="edit_connection1_volts" value="" />
+                        <div id="edit_connection1_panel" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="edit_connection1_connectiontype" data-localize="ocm.details.equipment.connectionType">Connection Type</label>
+                                    <select id="edit_connection1_connectiontype" class="form-control" name="edit_connection1_connectiontype">
+                                        <option value="" data-placeholder="false">Unknown</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_connection1_powerkw" data-localize="ocm.details.equipment.powerKW">Power (KW)</label>
+                                    <input type="number" id="edit_connection1_powerkw" class="form-control" name="edit_connection1_powerkw" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_connection1_currenttype" data-localize="ocm.details.equipment.supplyType">Supply Type</label>
+                                    <select id="edit_connection1_currenttype" class="form-control" name="edit_connection1_currenttype">
+                                        <option value="" data-placeholder="false">Unknown</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_connection1_level" data-localize="ocm.details.equipment.powerLevel">Charger Type/Level</label>
+                                    <select id="edit_connection1_level" class="form-control" name="edit_connection1_level">
+                                        <option value="" data-placeholder="false">Unknown</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_connection1_amps" data-localize="ocm.details.equipment.current">Max Current (Amps)</label>
+                                    <input type="number" id="edit_connection1_amps" class="form-control" name="edit_connection1_amps" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_connection1_volts" data-localize="ocm.details.equipment.voltage">Max Voltage</label>
+                                    <input type="number" id="edit_connection1_volts" class="form-control" name="edit_connection1_volts" value="" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="edit_connection1_quantity" data-localize="ocm.details.equipment.quantity">Quantity of this type</label>
+                                    <input type="number" id="edit_connection1_quantity" class="form-control" name="edit_connection1_quantity" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_connection1_status" data-localize="ocm.details.operationalStatus">Status</label>
+                                    <select id="edit_connection1_status" class="form-control" name="edit_connection1_status">
+                                        <option value="" data-placeholder="false">Unknown</option>
+                                    </select>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="edit_connection1_quantity" data-localize="ocm.details.equipment.quantity">Quantity of this type</label>
-                            <input type="number" id="edit_connection1_quantity" class="form-control" name="edit_connection1_quantity" value="" />
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_connection1_status" data-localize="ocm.details.operationalStatus">Status</label>
-                            <select id="edit_connection1_status" class="form-control" name="edit_connection1_status">
-                                <option value="" data-placeholder="false">Unknown</option>
-                            </select>
-                        </div>
                     </div>
 
                 </div>
 
-                <div class="form-group">
-                    <a href="#search-page" class="btn btn-default">Cancel</a>
-                    <a id="editlocation-submit" class="btn btn-primary">Submit</a>
+                <div class="form-options">
+                    <div class="form-group">
+                        <a href="#search-page" class="btn btn-default">Cancel</a>
+                        <a id="editlocation-submit" class="btn btn-primary">Submit</a>
+                    </div>
                 </div>
             </form>
         </div>

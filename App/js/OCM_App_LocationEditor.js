@@ -91,9 +91,8 @@ OCM_App.prototype.populateEditor = function (refData) {
             {
                 templateHTML = templateHTML.replace("Connection 1", "Connection " + n);
                 templateHTML = templateHTML.replace(/connection1/gi, "connection" + n);
-                $connection = $("<div id=\"edit_connection" + n + "\" data-role=\"collapsible\" data-collapsed=\"true\" data-content-theme=\"d\">" +
-					templateHTML +
-				    "</div>");
+                
+                $connection = $("<div id=\"edit_connection" + n + "\" class='panel panel-default'>" + templateHTML + "</div>");
                 $("#edit-connectioneditors").append($connection);
             }
         }
@@ -106,7 +105,8 @@ OCM_App.prototype.populateEditor = function (refData) {
 
         //collapse additional editors by default
         if (n > 1) {
-            $connection.trigger("collapse");
+
+            $(".collapse").collapse();
         }
     }
 
@@ -154,11 +154,14 @@ OCM_App.prototype.populateEditor = function (refData) {
 };
 
 OCM_App.prototype.populateEditorLatLon = function (result) {
-    $("#edit_addressinfo_latitude").val(result.lat());
-    $("#edit_addressinfo_longitude").val(result.lng());
+    var lat = result.coords.latitude;
+    var lng = result.coords.longitude;
+
+    $("#edit_addressinfo_latitude").val(lat);
+    $("#edit_addressinfo_longitude").val(lng);
     
     //refresh map view
-    this.refreshEditorMap(result.lat(), result.lng());
+    this.refreshEditorMap(lat, lng);
 };
 
 OCM_App.prototype.validateLocationEditor = function () {
