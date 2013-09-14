@@ -13,7 +13,7 @@ namespace OCM.API.Common.Model
         Miles = 2
     }
 
-    public partial class AddressInfo
+    public partial class AddressInfo : ICloneable
     {
         public int ID { get; set; }
 
@@ -76,6 +76,32 @@ namespace OCM.API.Common.Model
             if (!String.IsNullOrWhiteSpace(this.Postcode)) output += this.Postcode + ",";
             if (this.Country!=null) output += this.Country.Title;
             return output;
+        }
+
+        public object Clone()
+        {
+            var address = new AddressInfo();
+            address.ID = this.ID;
+            address.Title = this.Title;
+            address.AddressLine1 = this.AddressLine1;
+            address.AddressLine2 = this.AddressLine2;
+            address.Town = this.Town;
+            address.StateOrProvince = this.StateOrProvince;
+            address.Postcode = this.Postcode;
+            address.CountryID = this.CountryID;
+            address.Country = this.Country;
+            address.Latitude = this.Latitude;
+            address.Longitude = this.Longitude;
+            address.ContactTelephone1 = this.ContactTelephone1;
+            address.ContactTelephone2 = this.ContactTelephone2;
+            address.ContactEmail = this.ContactEmail;
+            address.AccessComments = this.AccessComments;
+            address.RelatedURL = this.RelatedURL;
+            address.Distance = this.Distance;
+            address.DistanceUnit = this.DistanceUnit;
+            address.GeneralComments = this.GeneralComments;
+
+            return address;
         }
     }
 }

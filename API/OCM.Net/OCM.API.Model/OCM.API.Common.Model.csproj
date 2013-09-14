@@ -71,6 +71,7 @@
     <Compile Include="Base\CheckinStatusType.cs" />
     <Compile Include="Base\MetadataFieldOption.cs" />
     <Compile Include="Base\DataProviderUser.cs" />
+    <Compile Include="Extended\APIResponse.cs" />
     <Compile Include="Extended\ContactSubmission.cs" />
     <Compile Include="Base\MediaItem.cs" />
     <Compile Include="Base\DataType.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Base\MetadataValue.cs" />
     <Compile Include="Base\OperatorInfo.cs" />
     <Compile Include="Extended\EditQueueFilter.cs" />
+    <Compile Include="Extended\GeocodingResult.cs" />
     <Compile Include="Extended\POIRecentActivity.cs" />
     <Compile Include="Extended\POISearchResult.cs" />
     <Compile Include="Extended\SimpleReferenceType.cs" />

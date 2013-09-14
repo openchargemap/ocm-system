@@ -11,7 +11,8 @@ namespace OCM.API.OutputProviders
     interface IOutputProvider
     {
         string ContentType { get; set; }
-        void GetOutput(Stream outputStream, List<OCM.API.Common.Model.ChargePoint> dataList, SearchFilterSettings settings);
-        void GetOutput(Stream outputStream, CoreReferenceData data, SearchFilterSettings settings);
+        void GetOutput(Stream outputStream, List<OCM.API.Common.Model.ChargePoint> dataList, APIRequestSettings settings);
+        void GetOutput(Stream outputStream, CoreReferenceData data, APIRequestSettings settings);
+        void GetOutput(Stream outputStream, Object data, APIRequestSettings settings);
     }
 }

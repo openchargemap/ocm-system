@@ -89,30 +89,37 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public bool UpdateUserProfile(User user)
+        public bool UpdateUserProfile(User updatedProfile, bool allowAdminChanges)
         {
             try
             {
-                if (user != null)
+                if (updatedProfile != null)
                 {
-                    if (user.ID > 0)
+                    if (updatedProfile.ID > 0)
                     {
                         var dataModel = new Core.Data.OCMEntities();
 
-                        var userData = dataModel.Users.First(u => u.ID == user.ID);
+                        var userData = dataModel.Users.First(u => u.ID == updatedProfile.ID);
                         if (userData != null)
                         {
-                            userData.Location = user.Location;
-                            userData.Profile = user.Profile;
-                            userData.Username = user.Username;
-                            userData.WebsiteURL = user.WebsiteURL;
+                            userData.Location = updatedProfile.Location;
+                            userData.Profile = updatedProfile.Profile;
+                            userData.Username = updatedProfile.Username;
+                            userData.WebsiteURL = updatedProfile.WebsiteURL;
 
-                            userData.IsProfilePublic = (user.IsProfilePublic != null ? (bool)user.IsProfilePublic : false);
-                            userData.IsPublicChargingProvider = (user.IsPublicChargingProvider != null ? (bool)user.IsPublicChargingProvider : false);
-                            userData.IsEmergencyChargingProvider = (user.IsEmergencyChargingProvider != null ? (bool)user.IsEmergencyChargingProvider : false);
-                            userData.EmailAddress = user.EmailAddress;
-                            userData.Latitude = user.Latitude;
-                            userData.Longitude = user.Longitude;
+                            userData.IsProfilePublic = (updatedProfile.IsProfilePublic != null ? (bool)updatedProfile.IsProfilePublic : false);
+                            userData.IsPublicChargingProvider = (updatedProfile.IsPublicChargingProvider != null ? (bool)updatedProfile.IsPublicChargingProvider : false);
+                            userData.IsEmergencyChargingProvider = (updatedProfile.IsEmergencyChargingProvider != null ? (bool)updatedProfile.IsEmergencyChargingProvider : false);
+                            userData.EmailAddress = updatedProfile.EmailAddress;
+                            userData.Latitude = updatedProfile.Latitude;
+                            userData.Longitude = updatedProfile.Longitude;
+
+                            if (allowAdminChanges)
+                            {
+                                userData.Identifier = updatedProfile.Identifier;
+                                userData.Permissions = updatedProfile.Permissions;
+                                userData.IdentityProvider = updatedProfile.IdentityProvider;
+                            }
 
                             dataModel.SaveChanges();
 

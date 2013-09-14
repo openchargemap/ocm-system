@@ -24,7 +24,7 @@ namespace OCM.API.OutputProviders
             EnableGeoRSS = true;
         }
 
-        public void GetOutput(Stream outputStream, List<Common.Model.ChargePoint> dataList, SearchFilterSettings settings)
+        public void GetOutput(Stream outputStream, List<Common.Model.ChargePoint> dataList, APIRequestSettings settings)
         {
             XmlTextWriter xml = new XmlTextWriter(outputStream, Encoding.UTF8);
 
@@ -136,8 +136,12 @@ namespace OCM.API.OutputProviders
 
         }
 
+        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, APIRequestSettings settings)
+        {
+            throw new NotImplementedException();
+        }
 
-        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, SearchFilterSettings settings)
+        public void GetOutput(Stream outputStream, Object data, APIRequestSettings settings)
         {
             throw new NotImplementedException();
         }

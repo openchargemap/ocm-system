@@ -23,7 +23,7 @@ namespace OCM.API.Common.DataSummary
     /// </summary>
     public class DataSummaryManager
     {
-        public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, SearchFilterSettings filterSettings)
+        public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestSettings filterSettings)
         {
             //TODO: optionally output as normal JSON
             string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
@@ -59,7 +59,7 @@ namespace OCM.API.Common.DataSummary
             return output;
         }
 
-        public POIRecentActivity GetActivitySummary(SearchFilterSettings filterSettings)
+        public POIRecentActivity GetActivitySummary(APIRequestSettings filterSettings)
         {
             var dataModel = new Core.Data.OCMEntities();
 

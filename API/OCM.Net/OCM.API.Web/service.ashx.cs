@@ -10,6 +10,8 @@ using System.IO.Compression;
 using System.Web.Caching;
 using System.Configuration;
 using OCM.API.InputProviders;
+using OCM.API.Common.Model.Extended;
+using OCM.MVC.App_Code;
 
 namespace OCM.API
 {
@@ -27,6 +29,10 @@ namespace OCM.API
             DefaultAction = null;
         }
 
+        /// <summary>
+        /// Handle input to API
+        /// </summary>
+        /// <param name="context"></param>
         private void PerformInput(HttpContext context)
         {
             OCM.API.InputProviders.IInputProvider inputProvider = null;
@@ -163,11 +169,15 @@ namespace OCM.API
             context.Response.End();
         }
 
+        /// <summary>
+        /// Handle output from API
+        /// </summary>
+        /// <param name="context"></param>
         private void PerformOutput(HttpContext context)
         {
             //decide correct reponse type
             IOutputProvider outputProvider = null;
-            var filter = new SearchFilterSettings();
+            var filter = new APIRequestSettings();
 
             //set defaults
             string outputType = "xml";
@@ -285,10 +295,21 @@ namespace OCM.API
                 {
                     OutputCoreReferenceData(outputProvider, context, filter);
                 }
+
+                if (filter.Action == "geocode")
+                {
+                    this.OutputGeocodingResult(outputProvider, context, filter);
+                }
             }
         }
 
-        private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, SearchFilterSettings filter)
+        /// <summary>
+        /// Output standard POI List results
+        /// </summary>
+        /// <param name="outputProvider"></param>
+        /// <param name="context"></param>
+        /// <param name="filter"></param>
+        private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
         {
             //get list of charge points for output:
             List<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetChargePoints(filter);
@@ -298,7 +319,12 @@ namespace OCM.API
             outputProvider.GetOutput(context.Response.OutputStream, dataList, filter);
         }
 
-        private void OutputCompactPOIList(HttpContext context, SearchFilterSettings filter)
+        /// <summary>
+        /// Output compact (id's only for reference data) POI list
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="filter"></param>
+        private void OutputCompactPOIList(HttpContext context, APIRequestSettings filter)
         {
             //get list of charge points as compact POISearchResult List for output:
             List<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetChargePoints(filter);
@@ -327,14 +353,20 @@ namespace OCM.API
             o.PerformBinarySerialisation(context.Response.OutputStream, new { status = "OK", description = description, count = poiList.Count, results = poiList }, filter.Callback);
         }
 
-        private void OutputCoreReferenceData(IOutputProvider outputProvider, HttpContext context, SearchFilterSettings filter)
+        /// <summary>
+        /// Output Core Reference Data (lookup lists, default objects)
+        /// </summary>
+        /// <param name="outputProvider"></param>
+        /// <param name="context"></param>
+        /// <param name="filter"></param>
+        private void OutputCoreReferenceData(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
         {
             //get core reference data
             var refDataManager = new ReferenceDataManager();
             CoreReferenceData data = null;
 
             //cache result
-            if (HttpContext.Current.Cache["CoreRefData"] != null)
+            if (HttpContext.Current.Cache["CoreRefData"] != null && filter.EnableCaching)
             {
                 data = (CoreReferenceData)HttpContext.Current.Cache["CoreRefData"];
             }
@@ -350,6 +382,44 @@ namespace OCM.API
             outputProvider.GetOutput(context.Response.OutputStream, data, filter);
         }
 
+        private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
+        {
+          
+            GeocodingResult result = null;
+
+            //get or get and cache result
+            if (HttpContext.Current.Cache["Geocoding_"+filter.HashKey] != null && filter.EnableCaching)
+            {
+                result = (GeocodingResult)HttpContext.Current.Cache["Geocoding_" + filter.HashKey];
+            }
+            else
+            {
+                var geocoder = new GeocodingHelper();
+                geocoder.IncludeExtendedData = true;
+                
+                result = geocoder.GeolocateAddressInfo_OSM(filter.Address);
+
+                HttpContext.Current.Cache.Add("Geocoding_"+filter.HashKey, result, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
+            }
+
+            //send API response
+            if (filter.IsEnvelopedResponse)
+            {
+                var responseEnvelope = new APIResponseEnvelope();
+                responseEnvelope.Data = result;
+                outputProvider.GetOutput(context.Response.OutputStream, responseEnvelope, filter);
+            }
+            else
+            {
+                outputProvider.GetOutput(context.Response.OutputStream, result, filter);
+            }
+            
+        }
+
+        /// <summary>
+        /// Main entry point for API calls
+        /// </summary>
+        /// <param name="context"></param>
         public void ProcessRequest(HttpContext context)
         {
 

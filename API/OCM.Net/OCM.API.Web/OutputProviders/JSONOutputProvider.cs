@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
+using Newtonsoft.Json.Serialization;
 
 namespace OCM.API.OutputProviders
 {
@@ -29,7 +30,8 @@ namespace OCM.API.OutputProviders
             }
         }
 
-        public void PerformSerialisationV2(System.IO.Stream outputStream, object graph, string jsCallbackName){
+        public void PerformSerialisationV2(System.IO.Stream outputStream, object graph, string jsCallbackName)
+        {
             PerformSerialisationV2(outputStream, graph, jsCallbackName, null);
         }
 
@@ -41,7 +43,6 @@ namespace OCM.API.OutputProviders
             // serialize product to BSON
             BsonWriter writer = new BsonWriter(outputStream);
             serializer.Serialize(writer, graph);
-
         }
 
         /// <summary>
@@ -66,6 +67,7 @@ namespace OCM.API.OutputProviders
             {
                 s.Write(")");
             }
+
             s.Flush();
         }
 
@@ -86,37 +88,32 @@ namespace OCM.API.OutputProviders
             }
 
             string json = "";
+            
             using (var ms = new MemoryStream())
             {
                 jsonSerializer.WriteObject(ms, graph);
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);
                 json = sr.ReadToEnd();
-
                 ms.Close();
             }
+            
             s.Write(json);
+
             if (jsCallbackName != null)
             {
                 s.Write(")");
             }
+            
             s.Flush();
 
         }
 
-        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.SearchFilterSettings settings)
+        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
         {
             if (settings.APIVersion >= 2)
             {
-                JsonSerializerSettings jsonSettings = new JsonSerializerSettings();
-
-                if (!settings.IsVerboseOutput)
-                {
-                    jsonSettings.NullValueHandling = NullValueHandling.Ignore;
-                   
-                }
-                jsonSettings.Formatting = Formatting.Indented;
-                PerformSerialisationV2(outputStream, dataList, settings.Callback, jsonSettings);
+                PerformSerialisationV2(outputStream, dataList, settings.Callback, GetSerializerSettings(settings));
             }
             else
             {
@@ -125,19 +122,12 @@ namespace OCM.API.OutputProviders
             }
         }
 
-        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.SearchFilterSettings settings)
+        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestSettings settings)
         {
             if (settings.APIVersion >= 2)
             {
-                JsonSerializerSettings jsonSettings = new JsonSerializerSettings();
-
-                if (!settings.IsVerboseOutput)
-                {
-                    jsonSettings.NullValueHandling = NullValueHandling.Ignore;
-                }
-
-                jsonSettings.Formatting = Formatting.Indented;
-                PerformSerialisationV2(outputStream, data, settings.Callback, jsonSettings);
+               
+                PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
             }
             else
             {
@@ -145,5 +135,31 @@ namespace OCM.API.OutputProviders
                 PerformSerialisationV1(outputStream, data, settings.Callback, jsonSerializer);
             }
         }
+
+      
+        public void GetOutput(Stream outputStream, Object data, Common.APIRequestSettings settings)
+        {
+            PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
+        }
+
+        private JsonSerializerSettings GetSerializerSettings(Common.APIRequestSettings settings)
+        {
+            JsonSerializerSettings jsonSettings = new JsonSerializerSettings();
+
+            if (!settings.IsVerboseOutput)
+            {
+                jsonSettings.NullValueHandling = NullValueHandling.Ignore;
+            }
+
+            jsonSettings.Formatting = Formatting.Indented;
+
+            if (settings.IsCamelCaseOutput)
+            {
+                jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            }
+
+            return jsonSettings;
+        }
+
     }
 }

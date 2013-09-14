@@ -208,6 +208,9 @@
     <Compile Include="v1\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
+    <Compile Include="v2\geocode\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
     <Compile Include="v2\poi\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
@@ -235,6 +238,7 @@
     <Content Include="v2\poi\service.ashx" />
     <Content Include="v2\referencedata\service.ashx" />
     <Content Include="v2\service.ashx" />
+    <Content Include="v2\geocode\service.ashx" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -47,7 +47,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> GetChargePoints(SearchFilterSettings settings)
+        public List<Model.ChargePoint> GetChargePoints(APIRequestSettings settings)
         {
 
             System.Diagnostics.Debug.WriteLine(DateTime.Now);

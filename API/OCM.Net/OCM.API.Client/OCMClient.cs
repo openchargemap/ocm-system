@@ -22,10 +22,14 @@ namespace OCM.API.Client
         public double? Longitude { get; set; }
         public double? Distance { get; set; }
         public DistanceUnit DistanceUnit { get; set; }
-        public int? SubmissionStatusTypeID { get; set; }
+
         public bool IncludeUserComments { get; set; }
         public int MaxResults { get; set; }
         public bool EnableCaching { get; set; }
+
+        public int[] DataProviderIDs { get; set; }
+        public int[] StatusTypeIDs { get; set; }
+        public int[] CountryIDs { get; set; }
 
         public SearchFilters()
         {
@@ -88,9 +92,31 @@ namespace OCM.API.Client
                 url += "&enablecaching=false";
             }
 
-            if (filters.SubmissionStatusTypeID != null)
+            if (filters.StatusTypeIDs != null && filters.StatusTypeIDs.Any())
             {
-                url += "&submissionstatustypeid=" + filters.SubmissionStatusTypeID;
+                url += "&submissionstatustypeid=";
+                foreach(var id in filters.StatusTypeIDs)
+                {
+                    url += id + ",";
+                }
+            }
+
+            if (filters.DataProviderIDs != null && filters.DataProviderIDs.Any())
+            {
+                url += "&dataproviderid=";
+                foreach (var id in filters.DataProviderIDs)
+                {
+                    url += id + ",";
+                }
+            }
+
+            if (filters.CountryIDs != null && filters.CountryIDs.Any())
+            {
+                url += "&countryid=";
+                foreach (var id in filters.CountryIDs)
+                {
+                    url += id + ",";
+                }
             }
 
             url += "&maxresults=" + filters.MaxResults;

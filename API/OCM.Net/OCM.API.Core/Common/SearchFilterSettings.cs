@@ -8,7 +8,7 @@ using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
-    public class SearchFilterSettings : ServiceParameterParser
+    public class APIRequestSettings : ServiceParameterParser
     {
         private const int MAX_API_VERSION =2;
 
@@ -19,6 +19,7 @@ namespace OCM.API.Common
         public string DataProviderName { get; set; }
         public string OperatorName { get; set; }
         public string LocationTitle { get; set; }
+        public string Address { get; set; }
 
         public int? ChargePointID { get; set; }
         public double? Latitude { get; set; }
@@ -33,6 +34,8 @@ namespace OCM.API.Common
         public bool IncludeComments { get; set; }
         public bool IsVerboseOutput { get; set; }
         public bool IsCompactOutput { get; set; }
+        public bool IsCamelCaseOutput { get; set; }
+        public bool IsEnvelopedResponse { get; set; }
         public string Callback { get; set; }
         public double? MinPowerKW { get; set; }
 
@@ -50,7 +53,7 @@ namespace OCM.API.Common
         public bool FastChargeOnly { get; set; }
         #endregion
 
-        public SearchFilterSettings()
+        public APIRequestSettings()
         {
             DistanceUnit = DistanceUnit.Miles;
             MaxResults = 100;
@@ -78,7 +81,7 @@ namespace OCM.API.Common
             this.ParseParameters(this, context);
         }
 
-        public void ParseParameters(SearchFilterSettings settings, HttpContext context)
+        public void ParseParameters(APIRequestSettings settings, HttpContext context)
         {
             //get parameter values if any
             if (!String.IsNullOrEmpty(context.Request["v"])) settings.APIVersion = ParseInt(context.Request["v"]);
@@ -100,6 +103,7 @@ namespace OCM.API.Common
 
             if (!String.IsNullOrEmpty(context.Request["dataprovidername"])) settings.DataProviderName = ParseString(context.Request["dataprovidername"]);
             if (!String.IsNullOrEmpty(context.Request["locationtitle"])) settings.LocationTitle = ParseString(context.Request["locationtitle"]);
+            if (!String.IsNullOrEmpty(context.Request["address"])) settings.Address = ParseString(context.Request["address"]);
             if (!String.IsNullOrEmpty(context.Request["countrycode"])) settings.CountryCode = ParseString(context.Request["countrycode"]);
             
             if (!String.IsNullOrEmpty(context.Request["latitude"]))
@@ -121,6 +125,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["includecomments"])) settings.IncludeComments = ParseBool(context.Request["includecomments"], false);
             if (!String.IsNullOrEmpty(context.Request["verbose"])) settings.IsVerboseOutput = ParseBool(context.Request["verbose"], false);
             if (!String.IsNullOrEmpty(context.Request["compact"])) settings.IsCompactOutput = ParseBool(context.Request["compact"], false);
+            if (!String.IsNullOrEmpty(context.Request["camelcase"])) settings.IsCamelCaseOutput = ParseBool(context.Request["camelcase"], false);
             if (!String.IsNullOrEmpty(context.Request["callback"])) settings.Callback = ParseString(context.Request["callback"]);
            
             if (!String.IsNullOrEmpty(context.Request["maxresults"]))
@@ -166,6 +171,7 @@ namespace OCM.API.Common
                 if (DataProviderName != null) key += ":" + DataProviderName;
                 if (OperatorName != null) key += ":" + OperatorName;
                 if (LocationTitle != null) key += ":" + LocationTitle;
+                if (Address != null) key += ":" + Address;
                 if (Latitude != null) key += ":" + Latitude.ToString();
                 if (Longitude != null) key += ":" + Longitude.ToString();
                 if (Distance != null) key += ":" + Distance.ToString();

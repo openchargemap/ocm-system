@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using OCM.API.Common.Model.Extended;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 
 namespace OCM.MVC.App_Code
 {
-    public class GeoPoint
-    {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string Address { get; set; }
-    }
-
 
     public class LocationImage
     {
@@ -29,6 +28,9 @@ namespace OCM.MVC.App_Code
 
     public class GeocodingHelper
     {
+        public bool IncludeExtendedData { get; set; }
+        public bool IncludeQueryURL { get; set; }
+
         public List<LocationImage> GetGeneralLocationImages(double latitude, double longitude)
         {
             List<LocationImage> imageList = new List<LocationImage>();
@@ -63,19 +65,7 @@ namespace OCM.MVC.App_Code
                         image.Submitter = i["owner_name"].ToString();
                         image.SubmitterURL = i["owner_url"].ToString();
                         image.ImageRepositoryID = "Panoramio.com";
-                        /*"photo_id": 505229,
-                              "photo_title": "Etangs près de Dijon",
-                              "photo_url": "http://www.panoramio.com/photo/505229",
-                              "photo_file_url": "http://static2.bareka.com/photos/medium/505229.jpg",
-                              "longitude": 5.168552,
-                              "latitude": 47.312642,
-                              "width": 350,
-                              "height": 500,
-                              "upload_date": "20 January 2007",
-                              "owner_id": 78506,
-                              "owner_name": "Philippe Stoop",
-                              "owner_url": "http://www.panoramio.com/user/78506"
-                         * */
+
                         imageList.Add(image);
                     }
 
@@ -89,49 +79,180 @@ namespace OCM.MVC.App_Code
             return imageList;
         }
 
-        public GeoPoint GeoCodeFromString(string address)
+        public GeocodingResult GeolocateAddressInfo_Google(AddressInfo address)
         {
-            if (String.IsNullOrWhiteSpace(address)) return null;
+            var result = GeolocateAddressInfo_Google(address.ToString());
+            result.AddressInfoID = address.ID;
 
-            GeoPoint point = null;
-            string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=" + address;
+            return result;
+        }
 
-            using (System.Net.WebClient wc = new System.Net.WebClient())
+        public GeocodingResult GeolocateAddressInfo_Google(string address)
+        {
+            GeocodingResult result = new GeocodingResult();
+            result.Service = "Google Maps";
+
+            if (!String.IsNullOrWhiteSpace(address))
             {
-                wc.Encoding = System.Text.Encoding.UTF8;
-                wc.Headers["User-Agent"] = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+
+                string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=" + address;
+
+                if (IncludeQueryURL) result.QueryURL = url;
+
+                using (System.Net.WebClient wc = new System.Net.WebClient())
+                {
+                    wc.Encoding = System.Text.Encoding.UTF8;
+                    wc.Headers["User-Agent"] = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                    try
+                    {
+                        string queryResult = wc.DownloadString(url);
+
+
+                        if (IncludeExtendedData) result.ExtendedData = queryResult;
+
+                        JavaScriptSerializer jss = new JavaScriptSerializer();
+                        var parsedResult = jss.Deserialize<dynamic>(queryResult);
+
+                        string lat = parsedResult["results"][0]["geometry"]["location"]["lat"].ToString();
+                        string lng = parsedResult["results"][0]["geometry"]["location"]["lng"].ToString();
+                        string desc = parsedResult["results"][0]["formatted_address"].ToString();
+
+                        result.Latitude = Double.Parse(lat);
+                        result.Longitude = Double.Parse(lng);
+                        result.Address = desc;
+
+                        result.ResultsAvailable = true;
+
+                    }
+                    catch (Exception)
+                    {
+                        //failed to geocode
+                        result.ResultsAvailable = false;
+                    }
+                }
+
+            }
+
+            return result;
+        }
+
+        public GeocodingResult GeolocateAddressInfo_MapquestOSM(AddressInfo address)
+        {
+            var result = GeolocateAddressInfo_MapquestOSM(address.ToString());
+            result.AddressInfoID = address.ID;
+
+            return result;
+        }
+
+        public GeocodingResult GeolocateAddressInfo_MapquestOSM(string address)
+        {
+            GeocodingResult result = new GeocodingResult();
+            result.Service = "MapQuest Open";
+
+            string url = "http://open.mapquestapi.com/geocoding/v1/address?key=" + ConfigurationManager.AppSettings["MapQuestOpen_API_Key"] + "&location=" + Uri.EscapeDataString(address.ToString());
+            if (IncludeQueryURL) result.QueryURL = url;
+
+            string data = "";
+            try
+            {
+                WebClient client = new WebClient();
+                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+                client.Encoding = Encoding.GetEncoding("UTF-8");
+                data = client.DownloadString(url);
+
+                if (IncludeExtendedData) result.ExtendedData = data;
+
+                if (data == "[]")
+                {
+                    System.Diagnostics.Debug.WriteLine("No geocoding results:" + url);
+                    result.ResultsAvailable = false;
+                }
+                else
+                {
+                    JObject o = JObject.Parse(data);
+                    var locations = o["results"][0]["locations"];
+                    if (locations.Any())
+                    {
+                        var item = o["results"][0]["locations"][0]["latLng"];
+                        result.Latitude = double.Parse(item["lat"].ToString());
+                        result.Longitude = double.Parse(item["lng"].ToString());
+                        
+                        result.ResultsAvailable = true;
+                    }
+                    else
+                    {
+                        result.ResultsAvailable = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //
+            }
+
+            return result;
+        }
+
+        public GeocodingResult GeolocateAddressInfo_OSM(AddressInfo address)
+        {
+            var result = GeolocateAddressInfo_OSM(address.ToString());
+            result.AddressInfoID = address.ID;
+
+            return result;
+        }
+
+        public GeocodingResult GeolocateAddressInfo_OSM(string address)
+        {
+            GeocodingResult result = new GeocodingResult();
+            result.Service = "OSM Nominatim";
+
+            if (String.IsNullOrWhiteSpace(address))
+            {
+                result.ResultsAvailable = false;
+            }
+            else
+            {
+
+                string url = "http://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationSettings.AppSettings["OSM_API_Key"];
+                
+                if (IncludeQueryURL) result.QueryURL = url;
+
+                string data = "";
                 try
                 {
-                    string result = wc.DownloadString(url);
+                    //enforce rate limiting
+                    System.Threading.Thread.Sleep(1000);
 
-                    JavaScriptSerializer jss = new JavaScriptSerializer();
-                    var parsedResult = jss.Deserialize<dynamic>(result);
+                    //make api request
+                    WebClient client = new WebClient();
+                    client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+                    client.Encoding = Encoding.GetEncoding("UTF-8");
+                    data = client.DownloadString(url);
 
-                    string lat = parsedResult["results"][0]["geometry"]["location"]["lat"].ToString();
-                    string lng = parsedResult["results"][0]["geometry"]["location"]["lng"].ToString();
-                    string desc = parsedResult["results"][0]["formatted_address"].ToString();
-                    point = new GeoPoint();
-                    point.Latitude = Double.Parse(lat);
-                    point.Longitude = Double.Parse(lng);
-                    point.Address = desc;
+                    if (IncludeExtendedData) result.ExtendedData = data;
+
+                    if (data == "[]")
+                    {
+                        result.ResultsAvailable = false;
+                    }
+                    else
+                    {
+                        JArray o = JArray.Parse(data);
+                        result.Latitude = double.Parse(o.First["lat"].ToString());
+                        result.Longitude = double.Parse(o.First["lon"].ToString());
+                        result.Attribution = o.First["licence"].ToString();
+                        result.ResultsAvailable = true;
+                    }
 
                 }
                 catch (Exception)
                 {
-                    //failed to geocode
-                    return null;
+                    //oops
                 }
+
             }
-
-
-            /*JToken
-            dynamic googleResults = new Uri(url + address).GetDynamicJsonObject();
-            foreach (var result in googleResults.results)
-            {
-                Console.WriteLine("[" + result.geometry.location.lat + "," + result.geometry.location.lng + "] " + result.formatted_address);
-            }*/
-
-            return point;
+            return result;
         }
+
     }
 }
