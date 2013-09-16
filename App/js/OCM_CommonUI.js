@@ -5,6 +5,7 @@ function OCM_CommonUI() {
     this.map = null;
     this.ocm_markers = [];
     this.ocm_markerClusterer = null;
+    this.mapView = null;
     this.mapOptions = new Object();
     this.mapOptions.enableClustering = false;
     this.mapOptions.resultBatchID = 0;
@@ -154,8 +155,130 @@ OCM_CommonUI.prototype.getMaxLevelOfPOI = function (poi) {
     return level;
 };
 
-OCM_CommonUI.prototype.showPOIListOnMap2 = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
+OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
 
+    var map = this.map;
+    
+    //if list has changes to results render new markers etc
+    if (this.mapOptions.resultBatchID != resultBatchID) {
+
+        this.mapOptions.resultBatchID = resultBatchID;
+
+        if (console) console.log("Setting up map markers:"+resultBatchID);
+        // Creates a red marker with the coffee icon
+
+        var unknownPowerMarker = L.AwesomeMarkers.icon({
+            icon: 'bolt',
+            color: 'darkpurple'
+        });
+
+        var lowPowerMarker = L.AwesomeMarkers.icon({
+            icon: 'bolt',
+            color: 'darkblue',
+            spin:true
+        });
+
+        var mediumPowerMarker = L.AwesomeMarkers.icon({
+            icon: 'bolt',
+            color: 'green',
+            spin: true
+        });
+
+        var highPowerMarker = L.AwesomeMarkers.icon({
+            icon: 'bolt',
+            color: 'orange',
+            spin:true
+        });
+
+      
+    
+        if (this.mapOptions.enableClustering)
+        {
+            var markerClusterGroup = new L.MarkerClusterGroup();
+      
+            if (poiList != null) {
+                //render poi markers
+                var poiCount = poiList.length;
+                for (var i = 0; i < poiList.length; i++) {
+                    if (poiList[i].AddressInfo != null) {
+                        if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
+
+                            
+                            var poi = poiList[i];
+
+                            var markerTitle = poi.AddressInfo.Title;
+                            var powerTitle = "";
+                            var usageTitle = "";
+
+                            var poiLevel = this.getMaxLevelOfPOI(poi);
+                            var markerIcon = unknownPowerMarker;
+                            
+                            if (poiLevel == 0) {
+                                powerTitle += "Power Level Unknown";
+                            }
+
+                            if (poiLevel == 1) {
+                                markerIcon = lowPowerMarker;
+                                powerTitle += "Low Power";
+                            }
+                    
+                            if (poiLevel == 2) {
+                                markerIcon = mediumPowerMarker;
+                                powerTitle += "Medium Power";
+                            }
+
+                            if (poiLevel == 3) {
+                                markerIcon = highPowerMarker;
+
+                                powerTitle += "High Power";
+                            }
+
+                            usageTitle = "Unknown Usage Restrictions"
+
+                            if (poi.UsageType != null && poi.UsageType.ID!=0)
+                            {
+                                usageTitle = poi.UsageType.Title;
+                            }
+                            markerTitle += " (" + powerTitle + ", " + usageTitle + ")"
+
+                            var marker = new L.Marker([poi.AddressInfo.Latitude, poi.AddressInfo.Longitude], {icon:markerIcon,title:markerTitle, draggable:false, clickable:true});
+                            marker._isClicked = false; //workaround for double click event
+                            marker.poi = poi;
+                            marker.on('click', 
+                                function (e) {
+                                    if (this._isClicked == false)
+                                    {
+                                     this._isClicked = true;
+                                        appcontext.showDetailsView(anchorElement, this.poi);
+                                        appcontext.showPage("locationdetails-page");
+
+                                        //workaround double click event by clearing clicked state after short time
+                                        var mk = this;
+                                        setTimeout(function () {mk._isClicked=false }, 300);
+                                    }
+                                });
+                            
+                            markerClusterGroup.addLayer(marker);
+                  
+                        }
+                    }
+                }
+            }
+
+            map.addLayer(markerClusterGroup);
+            map.fitBounds(markerClusterGroup.getBounds());
+
+            //refresh map view
+            setTimeout(function () { map.invalidateSize(false); }, 300);
+       
+        }
+    }
+
+};
+
+OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
+
+ 
     //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
 
@@ -257,7 +380,7 @@ OCM_CommonUI.prototype.showPOIListOnMap2 = function (mapcanvasID, poiList, appco
 
 };
 
-OCM_CommonUI.prototype.initMap = function (mapcanvasID) {
+OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
     if (this.map == null) {
 
         var mapCanvas = document.getElementById(mapcanvasID);
@@ -306,6 +429,21 @@ OCM_CommonUI.prototype.initMap = function (mapcanvasID) {
                 this.ocm_markerClusterer = new MarkerClusterer(this.map, this.ocm_markers);
             }
         }
+    }
+};
+
+OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID)
+{
+    if (this.map == null) {
+        // create a map in the "map" div, set the view to a given place and zoom
+        var map = L.map(mapcanvasID).setView([51.505, -0.09], 13);
+
+        // add an OpenStreetMap tile layer
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        this.map = map;
     }
 };
 

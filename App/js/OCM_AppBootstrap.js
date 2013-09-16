@@ -32,6 +32,12 @@ function onDeviceReady() {
 	gaPlugin = window.plugins.gaPlugin;
 	gaPlugin.init(successHandler, errorHandler, "UA-76936-12", 10);
 	*/
+
+	if (window.L) {
+	    ocm_app.logEvent("Leaflet ready");
+	} else {
+	    ocm_app.logEvent("Leaflet not ready");
+	}
 	
 	startApp();
 }

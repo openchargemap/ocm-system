@@ -1,7 +1,7 @@
 
 OCM_App.prototype.initEditors = function () {
     this.editorMapInitialised = false;
-    
+
     var editorSubmitMethod = $.proxy(this.performLocationSubmit, this);
 
     $("#editlocation-form").validate({
@@ -87,11 +87,10 @@ OCM_App.prototype.populateEditor = function (refData) {
         if (!$connection.length > 0) {
             //create new section using section 1 as template
             var templateHTML = $("#edit_connection1").html();
-            if (templateHTML != null)
-            {
-                templateHTML = templateHTML.replace("Connection 1", "Connection " + n);
+            if (templateHTML != null) {
+                templateHTML = templateHTML.replace("Equipment Details 1", "Equipment Details " + n);
                 templateHTML = templateHTML.replace(/connection1/gi, "connection" + n);
-                
+
                 $connection = $("<div id=\"edit_connection" + n + "\" class='panel panel-default'>" + templateHTML + "</div>");
                 $("#edit-connectioneditors").append($connection);
             }
@@ -103,10 +102,13 @@ OCM_App.prototype.populateEditor = function (refData) {
         this.populateDropdown("edit_connection" + n + "_status", refData.StatusTypes, null);
         this.populateDropdown("edit_connection" + n + "_currenttype", refData.CurrentTypes, null, true);
 
-        //collapse additional editors by default
-        if (n > 1) {
 
-            $(".collapse").collapse();
+        //collapse additional editors by default
+        //$connection.collapse();
+        
+        if (n==1)
+        {
+            $connection.collapse("show");
         }
     }
 
@@ -140,13 +142,12 @@ OCM_App.prototype.populateEditor = function (refData) {
     this.populateDropdown("filter-usagetype", refData.UsageTypes, "", true, false, "(All)");
     this.populateDropdown("filter-statustype", refData.StatusTypes, "", true, false, "(All)");
 
-   
+
     this.resetEditorForm();
 
     if (refData.UserProfile && refData.UserProfile != null & refData.UserProfile.IsCurrentSessionTokenValid == false) {
         //login info is stale, logout user
-        if (this.isUserSignedIn())
-        {
+        if (this.isUserSignedIn()) {
             this.logEvent("Login info is stale, logging out user.");
             this.logout(false);
         }
@@ -159,7 +160,7 @@ OCM_App.prototype.populateEditorLatLon = function (result) {
 
     $("#edit_addressinfo_latitude").val(lat);
     $("#edit_addressinfo_longitude").val(lng);
-    
+
     //refresh map view
     this.refreshEditorMap(lat, lng);
 };
@@ -278,7 +279,7 @@ OCM_App.prototype.performLocationSubmit = function () {
 
     //set legacy overall charger type
     //if (item.Chargers != null) {
-        //item.Chargers[0].ChargerType = this.ocm_data.getRefDataByID(refData.ChargerTypes, $("#edit_connection1_level").val());
+    //item.Chargers[0].ChargerType = this.ocm_data.getRefDataByID(refData.ChargerTypes, $("#edit_connection1_level").val());
     //}
 
     //show progress
@@ -357,7 +358,8 @@ OCM_App.prototype.showLocationEditor = function () {
                             }
 
                             //expand editor by default
-                            $connection.trigger("expand");
+                           
+                            $connection.collapse('show')
                         }
                     }
                 } else {
@@ -368,22 +370,23 @@ OCM_App.prototype.showLocationEditor = function () {
                         $connection.trigger("collapse");
                     } else {
                         jQuery.data($connection, "_connection_id", 0);
+                        $connection.collapse('hide')
                     }
                 }
             }
         }
     }
-  
+
 };
 
-OCM_App.prototype.refreshEditorMap = function(currentLat, currentLng) {
+OCM_App.prototype.refreshEditorMap = function (currentLat, currentLng) {
     this.initEditorMap(currentLat, currentLng);
 };
 
-OCM_App.prototype.initEditorMap = function(currentLat, currentLng) {
+OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
 
     if (this.editorMapInitialised === false) {
-        
+
         this.editorMapInitialised = true;
         var editPos = google.maps.LatLng(currentLat, currentLng);
 
@@ -407,7 +410,7 @@ OCM_App.prototype.initEditorMap = function(currentLat, currentLng) {
         });
 
         // register event to catch marker drag end
-        google.maps.event.addListener(this.editMarker, 'dragend', function() {
+        google.maps.event.addListener(this.editMarker, 'dragend', function () {
 
             var point = ocm_app.editMarker.getPosition();
             //centre map on dragged marker
@@ -423,9 +426,9 @@ OCM_App.prototype.initEditorMap = function(currentLat, currentLng) {
         //$("#editor_map_canvas").show();
         google.maps.event.trigger(ocm_app.editorMap, 'resize');
     } else {
-       
+
         //var point = ocm_app.editMarker.getPosition();
         //ocm_app.editorMap.panTo(point);
     }
-    
+
 };

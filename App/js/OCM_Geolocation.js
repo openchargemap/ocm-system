@@ -54,7 +54,7 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
     var geocoder = this.ocm_data;
     var appContext = this;
 
-    geocoder.fetchGeocodeResult(locationText, 
+    geocoder.fetchGeocodeResult(locationText,
         function (results) {
             var locationPos = {
                 'lat': results.latitude,
@@ -128,19 +128,20 @@ OCM_Geolocation.prototype.getCardinalDirectionFromBearing = function (bearing) {
 };
 
 OCM_Geolocation.prototype.getDrivingDistanceBetweenPoints = function (startLat, startLng, endLat, endLng, distanceUnit, completedCallback) {
-    var unitSystem = google.maps.UnitSystem.IMPERIAL;
-    if (distanceUnit == "KM") unitSystem = google.maps.UnitSystem.METRIC;
+    if (typeof (google) != "undefined") { 
+        var unitSystem = google.maps.UnitSystem.IMPERIAL;
+        if (distanceUnit == "KM") unitSystem = google.maps.UnitSystem.METRIC;
 
-    var startPos = new google.maps.LatLng(startLat, startLng);
-    var endPos = new google.maps.LatLng(endLat, endLng);
+        var startPos = new google.maps.LatLng(startLat, startLng);
+        var endPos = new google.maps.LatLng(endLat, endLng);
 
-    var service = new google.maps.DistanceMatrixService();
-    service.getDistanceMatrix(
-      {
-          origins: [startPos],
-          destinations: [endPos],
-          travelMode: google.maps.TravelMode.DRIVING,
-          unitSystem: unitSystem
-      }, completedCallback);
-
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+              origins: [startPos],
+              destinations: [endPos],
+              travelMode: google.maps.TravelMode.DRIVING,
+              unitSystem: unitSystem
+          }, completedCallback);
+    }
 }

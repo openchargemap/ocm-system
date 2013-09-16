@@ -62,6 +62,20 @@
     <link rel="stylesheet" href="styles/main.css" />
     <link rel="stylesheet" href="styles/extended.css" />
 
+    <!--start leafletjs-->
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.ie.css" />
+    <![endif]-->
+
+    <script src="js/ThirdParty/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.css" />
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.ie.css" /><![endif]-->
+    <script src="js/ThirdParty/leaflet/markerclusterer/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.css">
+    <script src="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.js"></script>
+    <!--end leafletjs-->
     <!-- JS:LIB:BEGIN -->
     <!-- App JS -->
     <script src="js/OCM_Data.js"></script>
@@ -95,6 +109,9 @@
             </div>
 
             <div class="home-menu-container">
+                <div id="network-error" class="alert alert-warning" style="display:none;">
+                    Your data connection appears to be switched off. Please re-launch app with data switched on for full functionality.
+                </div>
 
                 <div class="main block-group ui-grid-b">
                     <div class="item block">
@@ -202,9 +219,7 @@
                     </div>
 
                 </form>
-                <div id="network-error" class="alert alert-danger" style="display:none;">
-                    <strong>There is no data connection available. Application features will be unavailable.</strong>
-                </div>
+             
             </div>
 
             <div id="search-no-data" class="info-section">Use this search to find charging locations near you or to search near a particular location. To filter by specific criteria go to Settings.</div>
@@ -238,7 +253,7 @@
     <div data-role="page" id="locationdetails-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
-                <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
                 <div style="float: right"><i class="icon-search"></i>&nbsp;<span data-localize="ocm.details.sectionTitle">Location Details</span></div>
             </div>
         </div>
@@ -309,16 +324,16 @@
     <div data-role="page" id="map-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
-                <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
                 <div style="float: right"><i class="icon-map-marker"></i>&nbsp;<span data-localize="ocm.details.location.map">Map</span></div>
             </div>
         </div>
 
         <div data-role="content" style="padding: 0;">
             <div>
-                <button id="map-listview" class="btn btn-default"><i class="icon-list"></i> List View</button>
+                <button id="map-listview" class="btn btn-default"><i class="icon-list"></i> <span id="map-view-resultcount">No Results.</span></button>
 
-                <div class="section-heading" id="map-view-resultcount">No Results. Perform a search to see results on this map.</div>
+
                 <div id="map-view" style="margin-top: 0.5em; position: absolute; width: 99%; min-height: 70%;"></div>
             </div>
 
@@ -333,7 +348,7 @@
                 <div style="float: right"><i class="icon-heart"></i>&nbsp;Favourites</div>
             </div>
         </div>
-        <div data-role="content" data-theme="d">
+        <div data-role="content" class="container">
             <div id="favourites-list">
                 <p>You have no favourite locations set. To add or remove a favourite, tap the <i title="Toggle Favourite" class="icon-heart-empty"></i> icon when viewing a location.</p>
             </div>
@@ -366,8 +381,8 @@
     <div data-role="page" id="editlocation-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
-                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
-                <div style="float: right"><i class="icon-plus"></i>&nbsp;Add Location</div>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <div style="float: right"><i class="icon-plus"></i>&nbsp;Add/Edit Location</div>
             </div>
         </div>
         <div data-role="content" class="container">
@@ -497,11 +512,11 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#edit_connection1_panel">
-                                    Connection 1  - Equipment/Charging Level Info
+                                    Equipment Details 1  - Equipment/Charging Level Info &gt;
                                 </a>
                             </h4>
                         </div>
-                        <div id="edit_connection1_panel" class="panel-collapse collapse in">
+                        <div id="edit_connection1_panel" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label for="edit_connection1_connectiontype" data-localize="ocm.details.equipment.connectionType">Connection Type</label>
@@ -569,7 +584,10 @@
     <!---- Page:Comments:Start ---->
     <div data-role="page" id="submitcomment-page" class="ui-page">
         <div data-role="header" data-position="fixed">
-            <h1>Submit Comment</h1>
+            <div>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <div style="float: right"><i class="icon-comment-alt"></i>&nbsp;<span>Add Comment</span></div>
+            </div>
         </div>
         <div data-role="content" class="container">
             <p style="font-size: 0.8em;">
@@ -600,7 +618,7 @@
                         <option value="" selected="selected">Not Rated</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display:none;">
                     <label for="comment-username">Your Name (will be shown)</label>
                     <input id="comment-username" class="form-control" type="text" />
                 </div>
@@ -624,7 +642,10 @@
     <!---- Page:UploadMediaItem:Start ---->
     <div data-role="page" id="submitmediaitem-page" class="ui-page">
         <div data-role="header" data-position="fixed">
-            <h1>Submit Photo</h1>
+            <div>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <div style="float: right"><i class="icon-camera"></i>&nbsp;<span>Add Photo</span></div>
+            </div>
         </div>
         <div data-role="content" class="container">
 
@@ -633,7 +654,7 @@
             </p>
             <form id="mediaitem-form" action="#" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="ui-input-text" for="fileupload">Choose Photo</label> <input class="form-control" name="fileupload" type="file" />
+                    <label class="ui-input-text" for="fileupload">Choose Photo</label><input class="form-control" id="fileupload" name="fileupload" accept="image/*" type="file" />
                 </div>
                 <div class="form-group">
                     <label for="comment">Comment</label>
@@ -657,7 +678,7 @@
     <div data-role="page" id="settings-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
-                <a href="#search-page" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
                 <div style="float: right"><i class="icon-cog"></i>&nbsp;Settings</div>
             </div>
         </div>
@@ -766,7 +787,7 @@
     <div data-role="page" id="about-page" class="ui-page">
         <div data-role="header" data-position="fixed">
             <div>
-                <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+                <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
                 <div style="float: right"><i class="icon-question-sign"></i>&nbsp;<span data-localize="ocm.general.about">About</span></div>
             </div>
         </div>
@@ -807,6 +828,7 @@
                     <p><em>Data Contributions:</em> OpenChargeMap.org contributors, including: <a target="_blank" href="http://www.carstations.com">Carstations.com</a>, <a target="_blank" href="http://zerocarbonworld.org">Zero Carbon World</a>, <a href="http://www.afdc.energy.gov/afdc/">Alternative Fuels and Advanced Vehicles Data Center (AFDC)</a></p>
                     <p><em>Development:</em> Database, Web Services and Web/Mobile App development led by <a target="_blank" href="http://twitter.com/#!/electriccarbuyr">Christopher Cook</a> of <a target="_blank" href="http://www.webprofusion.com">Webprofusion Ltd</a>, operator of <a target="_blank" href="http://electriccarbuyer.com">electriccarbuyer.com</a>. source code for this app and all system components is available on <a href="https://github.com/openchargemap/">GitHub</a>.</p>
                     <p><em>Translations:</em> User interface translations supplied by the OCM community, please contribute your own translations using our <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map">webtranslateit</a> project.</p>
+                    <p><em>Open Source Libraries &amp; Frameworks Used:</em> jQuery + jQuery.History + jQuery.fastClick, Twitter Bootstrap, Fontawesome, LeafletJS + Awesome Markers + MarkerClusterer + Open Street Map,  PocketGrid,  Google Maps, ASP.NET MVC, NuGet, NodeJS, Inkscape, Jake, Grunt, Oswald + Oxygen Fonts</p>
                 </div>
             </div>
         </div>
@@ -824,7 +846,7 @@
         </div>
         <div data-role="footer" data-position="fixed">
             <div data-role="controlgroup" data-type="horizontal">
-                <a href="#search-page" data-rel="back" data-role="button" data-icon="back">Back</a>
+                <a href="javascript:void();" data-rel="back" data-role="button" data-icon="back">Back</a>
             </div>
         </div>
     </div>
@@ -863,20 +885,20 @@
     <!--Late bound scripts-->
 
     <script>
-        function initGoogleMaps() {
-            ocm_app.mapsInitialised = true;
-        };
+        /*    function initGoogleMaps() {
+                ocm_app.mapsInitialised = true;
+            };
 
-        function loadGoogleMapsScript() {
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMaps';
-            document.body.appendChild(script);
-        }
+            function loadGoogleMapsScript() {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMaps';
+                document.body.appendChild(script);
+            }
 
-        window.onload = loadGoogleMapsScript;
+            window.onload = loadGoogleMapsScript;
+            */
     </script>
-    <script src="js/ThirdParty/markerclusterer_compiled.js"></script>
 
     <script>
         ocm_app.ocm_data.clientName = "ocm.app.TARGETNAME";

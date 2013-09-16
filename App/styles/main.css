@@ -225,17 +225,18 @@ body {
 }
 
 .result {
-    box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
+   
     border-radius: 4px;
     margin: 0 0.3em 1em 0.3em;
 }
 
     .result:hover {
-        background-color: rgba(140, 198, 63, 0.25);
-        -webkit-transition: background-color 1000ms linear;
-        -moz-transition: background-color 1000ms linear;
-        -ms-transition: background-color 1000ms linear;
-        transition: background-color 1000ms linear;
+        background-color: rgb(237, 255, 211);
+        -webkit-transition: background-color 1s linear, box-shadow ease-in 1s;
+        -moz-transition: background-color 1s linear, box-shadow ease-in 1s;
+        -ms-transition: background-color 1s linear, box-shadow ease-in 1s;
+        transition: background-color 1s linear, box-shadow ease-in 1s;
+         box-shadow: -1px 1px 6px rgba(50, 50, 50, 0.38);
     }
 
 .results-list {
@@ -376,11 +377,13 @@ body {
             font-size: 1em;
             margin-bottom: 1em;
             text-shadow: 1px 1px 8px rgba(32,32,32, 0.7);
+            transition: color 500ms linear;
         }
 
             #home-page * .ui-grid-b * a:hover {
                 text-decoration: none;
                 color: greenyellow;
+                transition: color 500ms linear;
             }
 
 .accent {

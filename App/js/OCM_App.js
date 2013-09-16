@@ -20,7 +20,7 @@ function OCM_App() {
     this.ocm_geo = new OCM_Geolocation();
     this.ocm_data = new OCM_Data();
     this.numConnectionEditors = 5;
-    this.maxResults = 1000;
+    this.maxResults = 100;
     this.locationList = null;
     this.resultBatchID = 1; //used to track changes in result sets, avoiding duplicate processing (maps etc)
     this.ocm_app_searchPos = null;
@@ -40,6 +40,7 @@ function OCM_App() {
     this.appInitialised = false;
     this.renderingMode = "jqm";
     this.isRunningUnderCordova = false;
+    this.mapAPI = "leaflet";
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
     this.languageCode = "en";
@@ -118,6 +119,10 @@ OCM_App.prototype.setupUIActions = function () {
     //add header classes to header elements
     $("[data-role='header']").addClass("ui-header");
 
+    //set default back ui buttons handler
+    app.setElementAction("a[data-rel='back']", function () {
+        History.back();
+    });
     //set home page ui link actions
     app.setElementAction("a[href='#search-page'],#map-listview", function () {
         app.navigateToSearch();
@@ -347,8 +352,7 @@ OCM_App.prototype.logout = function (navigateToHome) {
     this.clearCookie("AccessToken");
     this.clearCookie("AccessPermissions");
 
-    if (navigateToHome == true)
-    {
+    if (navigateToHome == true) {
         app.postLoginInit(); //refresh signed in/out ui
         if (this.isRunningUnderCordova) {
             app.navigateToHome();
@@ -471,82 +475,79 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
     $("#intro-section").hide(); //("display", "none");
 
     //detect if mapping/geolocation available
-    if (window.google) {
-        this.showProgressIndicator();
 
-        if (useClientLocation == true) {
-            //initiate client geolocation (if not already determined)
-            if (this.ocm_geo.clientGeolocationPos == null) {
-                this.ocm_geo.determineUserLocation($.proxy(
-						this.determineUserLocationCompleted, this), $.proxy(
-						this.determineUserLocationFailed, this));
-                return;
-            } else {
-                this.ocm_app_searchPos = this.ocm_geo.clientGeolocationPos;
-            }
+    this.showProgressIndicator();
+
+    if (useClientLocation == true) {
+        //initiate client geolocation (if not already determined)
+        if (this.ocm_geo.clientGeolocationPos == null) {
+            this.ocm_geo.determineUserLocation($.proxy(
+                    this.determineUserLocationCompleted, this), $.proxy(
+                    this.determineUserLocationFailed, this));
+            return;
+        } else {
+            this.ocm_app_searchPos = this.ocm_geo.clientGeolocationPos;
         }
-
-        var distance = parseInt(document.getElementById("search-distance").value);
-        var distance_unit = document.getElementById("search-distance-unit").value;
-
-        if (this.ocm_app_searchPos == null || useManualLocation == true) {
-            // search position not set, attempt fetch from location input and
-            // return for now
-            var locationText = document.getElementById("search-location").value;
-            if (locationText === null || locationText == "") {
-                //try to geolocate via browser location API
-                this.ocm_geo.determineUserLocation($.proxy(
-						this.determineUserLocationCompleted, this), $.proxy(
-						this.determineUserLocationFailed, this));
-                return;
-            } else {
-                // try to gecode text location name, if new lookup not
-                // attempted, continue to rendering
-                var lookupAttempted = this.ocm_geo.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this));
-                if (lookupAttempted == true) {
-                    return;
-                }
-            }
-        }
-
-        if (this.ocm_app_searchPos != null && !this.searchInProgress) {
-            this.searchInProgress = true;
-
-            var params = new OCM_LocationSearchParams();
-            params.latitude = this.ocm_app_searchPos.coords.latitude;
-            params.longitude = this.ocm_app_searchPos.coords.longitude;
-            params.distance = distance;
-            params.distanceUnit = distance_unit;
-            params.maxResults = this.maxResults;
-            params.includeComments = true;
-
-            //apply filter settings from UI
-            if ($("#filter-submissionstatus").val() != 200)
-                params.submissionStatusTypeID = $("#filter-submissionstatus")
-						.val();
-            if ($("#filter-connectiontype").val() != "")
-                params.connectionTypeID = $("#filter-connectiontype").val();
-
-            if ($("#filter-operator").val() != "")
-                params.operatorID = $("#filter-operator").val();
-
-            if ($("#filter-connectionlevel").val() != "")
-                params.levelID = $("#filter-connectionlevel").val();
-
-            if ($("#filter-usagetype").val() != "")
-                params.usageTypeID = $("#filter-usagetype").val();
-
-            if ($("#filter-statustype").val() != "")
-                params.statusTypeID = $("#filter-statustype").val();
-
-            this.logEvent("Performing search..");
-            this.ocm_data.fetchLocationDataListByParam(params,
-					"ocm_app.renderPOIList", this.handleSearchError);
-        }
-    } else {
-        this.logEvent("No google maps..");
-        this.showMessage("Geolocation not available. Search on your position is unavailable.");
     }
+
+    var distance = parseInt(document.getElementById("search-distance").value);
+    var distance_unit = document.getElementById("search-distance-unit").value;
+
+    if (this.ocm_app_searchPos == null || useManualLocation == true) {
+        // search position not set, attempt fetch from location input and
+        // return for now
+        var locationText = document.getElementById("search-location").value;
+        if (locationText === null || locationText == "") {
+            //try to geolocate via browser location API
+            this.ocm_geo.determineUserLocation($.proxy(
+                    this.determineUserLocationCompleted, this), $.proxy(
+                    this.determineUserLocationFailed, this));
+            return;
+        } else {
+            // try to gecode text location name, if new lookup not
+            // attempted, continue to rendering
+            var lookupAttempted = this.ocm_geo.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this));
+            if (lookupAttempted == true) {
+                return;
+            }
+        }
+    }
+
+    if (this.ocm_app_searchPos != null && !this.searchInProgress) {
+        this.searchInProgress = true;
+
+        var params = new OCM_LocationSearchParams();
+        params.latitude = this.ocm_app_searchPos.coords.latitude;
+        params.longitude = this.ocm_app_searchPos.coords.longitude;
+        params.distance = distance;
+        params.distanceUnit = distance_unit;
+        params.maxResults = this.maxResults;
+        params.includeComments = true;
+
+        //apply filter settings from UI
+        if ($("#filter-submissionstatus").val() != 200)
+            params.submissionStatusTypeID = $("#filter-submissionstatus")
+                    .val();
+        if ($("#filter-connectiontype").val() != "")
+            params.connectionTypeID = $("#filter-connectiontype").val();
+
+        if ($("#filter-operator").val() != "")
+            params.operatorID = $("#filter-operator").val();
+
+        if ($("#filter-connectionlevel").val() != "")
+            params.levelID = $("#filter-connectionlevel").val();
+
+        if ($("#filter-usagetype").val() != "")
+            params.usageTypeID = $("#filter-usagetype").val();
+
+        if ($("#filter-statustype").val() != "")
+            params.statusTypeID = $("#filter-statustype").val();
+
+        this.logEvent("Performing search..");
+        this.ocm_data.fetchLocationDataListByParam(params,
+                "ocm_app.renderPOIList", this.handleSearchError);
+    }
+
 };
 
 OCM_App.prototype.handleSearchError = function (result) {
@@ -676,9 +677,10 @@ OCM_App.prototype.renderPOIList = function (locationList) {
             var $item = $(itemTemplate);
             if (isAlternate) $item.addClass("alternate");
 
-            $item.on('click', { poi: poi }, function (event) {
+            $item.on('click', { poi: poi }, function (e) {
+                e.preventDefault();
                 //todo: rename as prepareDetailsView
-                appContext.showDetailsView(this, event.data.poi);
+                appContext.showDetailsView(this, e.data.poi);
                 appContext.showPage("locationdetails-page")
             });
 
@@ -781,10 +783,10 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
             var commentDate = this.ocm_ui.fixJSONDate(comment.DateCreated);
             commentOutput +=
                 "<blockquote>" +
-                    "<p>" + (comment.Rating != null ? "<strong>Rating: "+ comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
-				    "<small><cite>"+(comment.CommentType != null ? "[" + comment.CommentType.Title + "] ":"") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() +
+                    "<p>" + (comment.Rating != null ? "<strong>Rating: " + comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
+				    "<small><cite>" + (comment.CommentType != null ? "[" + comment.CommentType.Title + "] " : "") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() +
                     "<em>" +
-                        
+
                         (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
                     "</em> </cite></small></blockquote>";
         }
@@ -948,16 +950,7 @@ OCM_App.prototype.getFavouritePOIList = function (itineraryName) {
 
 OCM_App.prototype.refreshMapView = function () {
 
-    if (typeof (google) == "undefined") {
-        //no google maps currently available
-        $("#map-view").html("Google maps cannot be loaded. Please check your data connection.");
-        return;
-    }
-
-    this.ocm_ui.mapOptions.enableClustering = false;
-
-    //setup map view if not already initialised
-    this.ocm_ui.initMap("map-view");
+    this.ocm_ui.mapOptions.enableClustering = true;
 
     var $resultcount = $("#map-view-resultcount");
 
@@ -967,8 +960,26 @@ OCM_App.prototype.refreshMapView = function () {
         $resultcount.html("No Results. Perform a search to see results on this map");
     }
 
-    this.ocm_ui.showPOIListOnMap2("map-view", this.locationList, this, $resultcount, this.resultBatchID);
+    if (this.mapAPI == "google") {
+        if (typeof (google) == "undefined") {
+            //no google maps currently available
+            $("#map-view").html("Google maps cannot be loaded. Please check your data connection.");
+            return;
+        }
 
+        //setup map view if not already initialised
+        this.ocm_ui.initMapGoogle("map-view");
+
+        this.ocm_ui.showPOIListOnMapViewGoogle("map-view", this.locationList, this, $resultcount, this.resultBatchID);
+    }
+
+    if (this.mapAPI == "leaflet") {
+
+        //setup map view if not already initialised
+        this.ocm_ui.initMapLeaflet("map-view");
+
+        this.ocm_ui.showPOIListOnMapViewLeaflet("map-view", this.locationList, this, $resultcount, this.resultBatchID);
+    }
 };
 
 OCM_App.prototype.hasUserPermissionForPOI = function (poi, permissionLevel) {
@@ -1051,7 +1062,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 
         //hack: reset scroll position for new page once page has had a chance to render
         setTimeout(function () { document.documentElement.scrollIntoView(); }, 100);
-        
+
     }
 
     this._lastPageId = pageId;
@@ -1059,7 +1070,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     if (skipState) {
         //skip storage of current state
     } else {
-        this.History.pushState({ view: pageId, title:pageTitle }, pageTitle, "?view=" + pageId);
+        this.History.pushState({ view: pageId, title: pageTitle }, pageTitle, "?view=" + pageId);
     }
 
 }
@@ -1112,7 +1123,9 @@ OCM_App.prototype.navigateToMap = function () {
     this.logEvent("Navigate To: Map Page");
 
     this.showPage("map-page", "Map");
-    this.refreshMapView();
+    var app = this;
+    setTimeout(function () { app.refreshMapView(); }, 250);
+    
 };
 
 OCM_App.prototype.navigateToFavourites = function () {
@@ -1176,7 +1189,7 @@ OCM_App.prototype.navigateToSettings = function () {
 
 OCM_App.prototype.navigateToAbout = function () {
     this.logEvent("Navigate To: About");
-    this.showPage("about-page","About");
+    this.showPage("about-page", "About");
 };
 
 OCM_App.prototype.navigateToAddComment = function () {
@@ -1210,7 +1223,8 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
 }
 
 OCM_App.prototype.showConnectionError = function () {
-    app.showMessage("An error occurred transferring data. Please check your data connection.");
+    $("#network-error").show();
+    //app.showMessage("An error occurred transferring data. Please check your data connection.");
 };
 
 OCM_App.prototype.showAuthorizationError = function () {

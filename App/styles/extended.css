@@ -2,6 +2,9 @@
     display: none;
     margin-top:54px;
 }
+    #home-page.ui-page {
+        margin-top:0;
+    }
 
 .ui-header {
     position: fixed;
@@ -11,7 +14,18 @@
     top:0px;
 }
 
+    .ui-header > h1 {
+        font-size:12pt;
+        padding-left:1em;
+    }
 .ui-collapsed {
+}
+
+.alert.alert-warning {
+    background-color:transparent;
+    border:none;
+    font-weight:bold;
+    color:#d4763f
 }
 
 .form-options {
@@ -39,8 +53,12 @@ a:focus {
       transition: color 500ms linear;
 }
 
+.btn-default {
+    transition: background-color 500ms linear;
+}
+
 .btn-default:hover{
-    background-color:#d7e8c1;
+    background-color: rgb(237, 255, 211);
     transition: background-color 500ms linear;
 }
 

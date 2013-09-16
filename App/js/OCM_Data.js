@@ -15,7 +15,7 @@ function OCM_LocationSearchParams() {
     this.statusTypeID = null;
     this.submissionStatusTypeID = null;
 
-    this.maxResults = 5000;
+    this.maxResults = 100;
     this.additionalParams = null;
     this.includeComments = false;
     this.enableCaching = true;
