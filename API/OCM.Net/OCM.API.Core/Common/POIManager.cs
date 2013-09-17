@@ -299,7 +299,10 @@ namespace OCM.API.Common
             if (cp.AddressInfo == null) return false;
             if (String.IsNullOrEmpty(cp.AddressInfo.Title)) return false;
 
+            if (cp.AddressInfo.Country == null) return false;
+
             if (cp.AddressInfo.Latitude == null && cp.AddressInfo.Longitude == null) return false;
+
             double lat = (double)cp.AddressInfo.Latitude;
             double lon = (double)cp.AddressInfo.Longitude;
             if (lat < -90 || lat > 90) return false;
@@ -627,6 +630,35 @@ namespace OCM.API.Common
             {
                 dataModel.ConnectionInfoList.Remove(item);
             }
+
+            if (dataChargePoint.MetadataValues == null)
+            {
+                dataChargePoint.MetadataValues = new List<OCM.Core.Data.MetadataValue>();
+                //add metadata values
+            }
+            
+            if (simpleChargePoint.MetadataValues!=null)
+            {
+                foreach( var m in simpleChargePoint.MetadataValues)
+                {
+                    var existingValue = dataChargePoint.MetadataValues.FirstOrDefault(v=>v.ID==m.ID);
+                    if (existingValue!=null)
+                    {
+                        existingValue.ItemValue = m.ItemValue;
+                    } else {
+                        var newValue = new OCM.Core.Data.MetadataValue(){ 
+                            ChargePointID = dataChargePoint.ID,
+                            ItemValue=m.ItemValue,  
+                            MetadataFieldID = m.MetadataFieldID,
+                            MetadataField = dataModel.MetadataFields.FirstOrDefault(f=>f.ID==m.MetadataFieldID)
+                        };
+                        dataChargePoint.MetadataValues.Add(newValue);
+                    }
+                }
+            }
+            
+            //TODO:clean up unused metadata values
+
 
             if (simpleChargePoint.StatusType != null)
             {

@@ -66,9 +66,11 @@ namespace Import
 
         private void btnServiceTest1_Click(object sender, EventArgs e)
         {
-            ServiceManager networkSVCManager = new ServiceManager();
-            string jsonResult = networkSVCManager.GetAllResultsAsJSON(ServiceProvider.CoulombChargePoint, txtAPIKey_Coulomb.Text, txtAPIPwd_Coulomb.Text);
+            //ServiceManager networkSVCManager = new ServiceManager();
+            //string jsonResult = networkSVCManager.GetAllResultsAsJSON(ServiceProvider.CoulombChargePoint, txtAPIKey_Coulomb.Text, txtAPIPwd_Coulomb.Text);
 
+
+            new ImportManager().GeocodingTest();
         }
     }
 }

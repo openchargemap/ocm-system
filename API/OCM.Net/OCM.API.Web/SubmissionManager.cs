@@ -34,7 +34,7 @@ namespace OCM.API.Common
             new POIManager().PopulateChargePoint_SimpleToData(poi, poiData, tempDataModel);
 
             //convert back to simple POI
-            var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData);
+            var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData, false, false, true, true);
             
             //clear temp changes from the poi
             //dataModel.Entry(poiData).Reload();

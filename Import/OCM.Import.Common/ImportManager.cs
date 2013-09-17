@@ -6,6 +6,7 @@ using OCM.API.Client;
 using OCM.API.Common.Model;
 using OCM.Import.Providers;
 using OCM.Import.Misc;
+using Newtonsoft.Json;
 
 namespace OCM.Import
 {
@@ -43,7 +44,7 @@ namespace OCM.Import
         public List<ChargePoint> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData)
         {
             //get list of possible duplicates
-            SearchFilters filters = new SearchFilters { SubmissionStatusTypeID = null, MaxResults = 1000000, EnableCaching = false };
+            SearchFilters filters = new SearchFilters { MaxResults = 1000000, EnableCaching = false };
             List<ChargePoint> masterList = new OCMClient().GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
             List<ChargePoint> duplicateList = new List<ChargePoint>();
             List<ChargePoint> updateList = new List<ChargePoint>();
@@ -444,6 +445,48 @@ namespace OCM.Import
 
             //cache may have updates, save for next time
             geolocationCacheManager.SaveCache();
+        }
+
+        public void GeocodingTest()
+        {
+            OCMClient client = new OCMClient();
+
+            //get a few OCM listings
+            SearchFilters filters = new SearchFilters { StatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };
+
+            var poiList = client.GetLocations(filters);
+            /*
+            GeocodingService g = new GeocodingService();
+            List<GeolocationResult> list = new List<GeolocationResult>();
+
+            //attempt OSM geocoding
+            foreach (var poi in poiList)
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine("OCM-" + poi.ID + " : [" + poi.AddressInfo.Title + "] " + poi.AddressInfo.ToString());
+
+                    System.Diagnostics.Debug.WriteLine("OCM : LL: " + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude);
+
+                    var osm = g.GeolocateAddressInfo_OSM(poi.AddressInfo);
+                    System.Diagnostics.Debug.WriteLine("OSM : LL: " + osm.Latitude + "," + osm.Longitude);
+                    list.Add(osm);
+
+                    var mpq = g.GeolocateAddressInfo_MapquestOSM(poi.AddressInfo);
+                    System.Diagnostics.Debug.WriteLine("MPQ : LL: " + mpq.Latitude + "," + mpq.Longitude);
+                    list.Add(mpq);
+
+                }
+                catch (Exception exp)
+                {
+                    System.Diagnostics.Debug.WriteLine("Exception during geocoding:" + exp.ToString());
+                }
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            string json = JsonConvert.SerializeObject(list, Formatting.Indented);
+            System.IO.File.WriteAllText("C:\\temp\\GeocodingResult.json", json);
+             * */
         }
     }
 }
