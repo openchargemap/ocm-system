@@ -53,7 +53,7 @@ namespace OCM.API.Common
 
             //list of Data Providers
             data.DataProviders = new List<Model.DataProvider>();
-            foreach (var provider in dataModel.DataProviders)
+            foreach (var provider in dataModel.DataProviders.ToList())
             {
                 data.DataProviders.Add(Model.Extensions.DataProvider.FromDataModel(provider));
             }
@@ -100,7 +100,7 @@ namespace OCM.API.Common
             }
 
             data.MetadataGroups = new List<Model.MetadataGroup>();
-            foreach(var g in dataModel.MetadataGroups)
+            foreach(var g in dataModel.MetadataGroups.ToList())
             {
                 data.MetadataGroups.Add(Model.Extensions.MetadataGroup.FromDataModel(g));
             }

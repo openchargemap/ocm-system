@@ -213,7 +213,7 @@ namespace OCM.MVC.App_Code
             else
             {
 
-                string url = "http://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationSettings.AppSettings["OSM_API_Key"];
+                string url = "http://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationManager.AppSettings["OSM_API_Key"];
                 
                 if (IncludeQueryURL) result.QueryURL = url;
 

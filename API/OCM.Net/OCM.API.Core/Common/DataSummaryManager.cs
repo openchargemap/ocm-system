@@ -85,7 +85,7 @@ namespace OCM.API.Common.DataSummary
 
             var summary = new POIRecentActivity();
             summary.RecentComments = new List<UserComment>();
-            foreach (var c in recentComments.OrderByDescending(c => c.DateCreated).Take(10))
+            foreach (var c in recentComments.OrderByDescending(c => c.DateCreated).Take(10).ToList())
             {
                 summary.RecentComments.Add(Model.Extensions.UserComment.FromDataModel(c, true));
             }
