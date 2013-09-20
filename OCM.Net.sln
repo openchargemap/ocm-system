@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20623.1 VSUPREVIEW
+VisualStudioVersion = 12.0.20827.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3CC82B5C-7EA9-484D-9C6E-791BD2E55563}"
 	ProjectSection(SolutionItems) = preProject
@@ -104,6 +104,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Localisation", "http://loca
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "Localisation\"
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCM.API.Data", "API\OCM.Net\OCM.API.Data\OCM.API.Data.csproj", "{9D70A3A3-3A16-4E40-AADD-1D1A79673344}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -321,6 +323,26 @@ Global
 		{9B3734C1-602F-4E3E-80D8-E49143A1AABA}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{9B3734C1-602F-4E3E-80D8-E49143A1AABA}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
 		{9B3734C1-602F-4E3E-80D8-E49143A1AABA}.Release|x86.ActiveCfg = Debug|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Local|Any CPU.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Local|Any CPU.Build.0 = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Local|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Local|Mixed Platforms.Build.0 = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Local|x86.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.ProductionWithSecrets|Any CPU.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.ProductionWithSecrets|Any CPU.Build.0 = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.ProductionWithSecrets|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.ProductionWithSecrets|Mixed Platforms.Build.0 = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.ProductionWithSecrets|x86.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -332,6 +354,7 @@ Global
 		{D59550EF-227C-48CB-B97A-200BB2AEE27C} = {446CBE4E-1E33-4020-BB2C-8334DE1BA602}
 		{FB8CC59F-B6E7-49DA-8D89-F6BB1BD4254C} = {446CBE4E-1E33-4020-BB2C-8334DE1BA602}
 		{F330ECA1-D079-4EE0-AEB4-30A3FD67FE03} = {446CBE4E-1E33-4020-BB2C-8334DE1BA602}
+		{9D70A3A3-3A16-4E40-AADD-1D1A79673344} = {446CBE4E-1E33-4020-BB2C-8334DE1BA602}
 		{79887E64-70D4-45F2-9CDF-BACCB58D9FBD} = {610C828C-B14D-44F6-970C-B60C6A4B75D4}
 		{ABEA90AD-3975-46BC-86AE-AB7974D83E1A} = {610C828C-B14D-44F6-970C-B60C6A4B75D4}
 		{382E3719-469F-42B1-A915-077F1C824894} = {DFA65095-7816-4D00-AE1B-3FEEEE5CBAFB}

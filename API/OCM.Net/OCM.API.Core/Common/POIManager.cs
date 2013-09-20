@@ -185,7 +185,7 @@ namespace OCM.API.Common
                 System.Diagnostics.Debug.WriteLine(sql);
 
 
-                foreach (var item in filteredList.Take(maxResults))
+                foreach (var item in filteredList.Take(maxResults).ToList())
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
                     Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput);
