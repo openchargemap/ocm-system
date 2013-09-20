@@ -99,6 +99,7 @@
     <div id="progress-indicator"><span data-localize="ocm.general.loadingProgress">Loading...</span></div>
     <!--Begin standard OCM app html block -->
     <!--Begin App Page Definitions-->
+    <!--PAGES-->
     <!---- Page:Home:Start ---->
     <div data-role="page" id="home-page" class="ui-page">
         <div data-role="content">
@@ -195,7 +196,7 @@
                         <div class="input-group">
                             <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
                             <span class="input-group-btn">
-                                <button id="search-button" class="btn btn-primary"><i class="icon-search"></i></button>
+                                <button id="search-button" class="btn btn-primary" type="button"><i class="icon-search"></i></button>
                             </span>
                         </div>
 
@@ -203,14 +204,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="btn-group">
-                                <button id="search-nearby" class="btn btn-default"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
-                                <button id="search-settings" class="btn btn-default"><i class="icon-cog"></i> <span data-localize="ocm.general.settings">Settings</span></button>
+                                <button id="search-nearby" class="btn btn-default" type="button"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
+                                <button id="search-settings" class="btn btn-default" type="button"><i class="icon-cog"></i> <span data-localize="ocm.general.settings">Settings</span></button>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="btn-group">
-                                <button id="search-map" class="btn btn-default"><i class="icon-map-marker"></i> <span data-localize="ocm.details.location.map">Map</span></button>
-                                <button id="search-favourites" class="btn btn-default"><i class="icon-heart"></i> <span data-localize="ocm.general.favourites">Favourites</span></button>
+                                <button id="search-map" class="btn btn-default" type="button"><i class="icon-map-marker"></i> <span data-localize="ocm.details.location.map">Map</span></button>
+                                <button id="search-favourites" class="btn btn-default" type="button"><i class="icon-heart"></i> <span data-localize="ocm.general.favourites">Favourites</span></button>
                             </div>
                         </div>
 
@@ -219,7 +220,7 @@
                     </div>
 
                 </form>
-             
+
             </div>
 
             <div id="search-no-data" class="info-section">Use this search to find charging locations near you or to search near a particular location. To filter by specific criteria go to Settings.</div>
@@ -331,7 +332,7 @@
 
         <div data-role="content" style="padding: 0;">
             <div>
-                <button id="map-listview" class="btn btn-default"><i class="icon-list"></i> <span id="map-view-resultcount">No Results.</span></button>
+                <button id="map-listview" class="btn btn-default" type="button"><i class="icon-list"></i> <span id="map-view-resultcount">No Results.</span></button>
 
 
                 <div id="map-view" style="margin-top: 0.5em; position: absolute; width: 99%; min-height: 70%;"></div>
@@ -425,16 +426,21 @@
                     <div class="form-group">
                         <p>
                             If you know the Latitude and Longitude of this location please provide it here, otherwise we can try to look it up for you:
-                            <button id="edit-location-lookup" class="btn btn-primary">Lookup</button>
+                            <button id="edit-location-lookup" class="btn btn-primary" type="button">Lookup</button>
                         </p>
                         <label for="edit_addressinfo_latitude">Latitude</label>
                         <input id="edit_addressinfo_latitude" class="form-control" name="edit_addressinfo_latitude" type="number" placeholder="Latitude (if known)" value="" />
+                       
                     </div>
                     <div class="form-group">
                         <label for="edit_addressinfo_longitude">Longitude</label>
                         <input id="edit_addressinfo_longitude" class="form-control" name="edit_addressinfo_longitude" type="number" placeholder="Longitude (if known)" value="" />
+                        <p id="position-attribution"></p>
                     </div>
-                    <div id="editor_map_canvas" style="width: 600px; height: 300px; display: none; margin: 0; padding: 0; background-color: gainsboro;"></div>
+                    <div id="editor-map">
+                        <p>The exact position of the charging equipment will be recorded as it is on the map below. Please drag the map marker below to the correct position:</p>
+                        <div id="editor-map-canvas" style="width: 100%; height: 300px; display: none; margin: 0; padding: 0; background-color: gainsboro;"></div>
+                    </div>
                     <div class="form-group">
                         <label for="edit_addressinfo_accesscomments" data-localize="ocm.details.accessComments">Comment for Access/Directions</label>
                         <input type="text" id="edit_addressinfo_accesscomments" class="form-control" name="ocm_loc_accesscomments" placeholder="How to find, special instructions etc." value="" />
@@ -884,8 +890,10 @@
     <!--End standard OCM app HTML block-->
     <!--Late bound scripts-->
 
+
+    <!--google maps-->
     <script>
-        /*    function initGoogleMaps() {
+            function initGoogleMaps() {
                 ocm_app.mapsInitialised = true;
             };
 
@@ -897,8 +905,9 @@
             }
 
             window.onload = loadGoogleMapsScript;
-            */
+
     </script>
+    <!--end google maps-->
 
     <script>
         ocm_app.ocm_data.clientName = "ocm.app.TARGETNAME";

@@ -484,11 +484,11 @@ body {
         padding: 0.4em;
     }
 
-body, h1, h2, h3, .ui-body-b, .ui-body-d, a, a:visited {
+body, .ui-body-b, .ui-body-d, a, a:visited {
     font-family: 'Oxygen', sans-serif;
 }
 
-    .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, #progress-indicator {
+    h1, h2, h3, .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, .ui-header a, #progress-indicator {
         font-family: 'Oswald', sans-serif;
         font-weight: 300 !important;
         font-size: 1.1em;
