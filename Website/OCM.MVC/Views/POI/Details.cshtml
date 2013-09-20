@@ -5,12 +5,12 @@
 }
 
 
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
 <!--[if lte IE 8]>
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
-    <![endif]-->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+<![endif]-->
 
-<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
 @{
     var detailsCss = "details-container details-plain";
@@ -254,6 +254,7 @@ else
 </div>
 
 <script>
+    var map = new L.Map('map');
 
     $(document).ready(function () {
 
@@ -266,6 +267,8 @@ else
         $('a#tab-map').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
+
+            setTimeout(function () { map.invalidateSize(true); }, 300);
 
         });
 
@@ -309,7 +312,7 @@ else
         var itemPos = [lat, lng];
 
         //setup map
-        var map = new L.Map('map');
+     
 
         // create the tile layer with correct attribution
         var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -328,7 +331,7 @@ else
         //getLocationImage(itemPos);
         </text>
                     }
-
+      
 
         //fetch nearby places
         getNearbyPlaces(itemPos[0], itemPos[1], 2);

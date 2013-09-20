@@ -14,7 +14,7 @@
 
         <blockquote>
             <p>@Html.DisplayFor(modelItem => item.Comment)</p>
-            <small>Uploaded by <cite>@item.User.Username</cite> on @item.DateCreated.ToString("yyyy-MM-dd")</small>
+            <small>Uploaded by <cite>@item.User!=null?item.User.Username:"Anonymous"</cite> on @item.DateCreated.ToString("yyyy-MM-dd")</small>
         </blockquote>
 
     </div>
