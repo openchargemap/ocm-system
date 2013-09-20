@@ -8,6 +8,7 @@ var path = require("path");
 var wrench = require("wrench");
 var UglifyJS = require("uglify-js");
 var moment = require("moment");
+var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
@@ -257,6 +258,22 @@ task("build-web", ["create-dir", "copy-index", "copy-files", "update-manifest"],
 desc("Build Target: Mobile");
 task("build-mobile", ["create-dir", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Mobile Targets built.");
+});
+
+desc("Concatenates all html page templates files into body for use in index.html");
+task('concat', function () {
+    
+    var files = fs.readdirSync(srcDir+"/html/");
+    var output ="";
+    files.forEach(function (file) {
+            
+        output += fs.readFileSync(srcDir+"/html/"+file,"utf8");
+           
+    });
+    
+
+    indexFile = indexFile.replace("<!--PAGES-->", output);
+    
 });
 
 desc("default");
