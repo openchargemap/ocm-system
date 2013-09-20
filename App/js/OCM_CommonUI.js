@@ -432,19 +432,25 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
     }
 };
 
-OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID)
+OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID, centreLatitude, centreLongitude)
 {
     if (this.map == null) {
-        // create a map in the "map" div, set the view to a given place and zoom
-        var map = L.map(mapcanvasID).setView([51.505, -0.09], 13);
-
-        // add an OpenStreetMap tile layer
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        this.map = map;
+        this.map = this.createMapLeaflet(mapcanvasID, centreLatitude, centreLongitude, 13);
     }
+};
+
+OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, centreLatitude,centreLongitude, zoomLevel) {
+   
+    // create a map in the "map" div, set the view to a given place and zoom
+    var map = L.map(mapcanvasID).setView([centreLatitude,centreLongitude], zoomLevel);
+
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    return map;
+    
 };
 
 OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcontext, anchorElement) {

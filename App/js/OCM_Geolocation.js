@@ -58,7 +58,8 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
         function (results) {
             var locationPos = {
                 'lat': results.latitude,
-                'lng': results.longitude
+                'lng': results.longitude,
+                'attribution': results.attribution
             };
             appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
         }
@@ -78,18 +79,27 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
     return true;
 };
 
-OCM_Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, successCallback) {
+OCM_Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, successCallback, failureCallback) {
 
-    //cinvert google lt/lng result into browser coords
-    var geoPosition = {
-        coords: {
-            latitude: pos.lat,
-            longitude: pos.lng
+    if (pos.resultsAvailable == true) {
+        //convert geocoding service lat/lng result into browser coords, including position source data attribution
+        var geoPosition = {
+            coords: {
+                latitude: pos.lat,
+                longitude: pos.lng
+            },
+            attribution: pos.attribution
+        };
+
+        this.geocodingResultPos = geoPosition;
+        successCallback(geoPosition);
+    } else {
+        if (failureCallback) {
+            failureCallback();
+        } else {
+            alert("The position of this address could not be determined automatically.");
         }
-    };
-
-    this.geocodingResultPos = geoPosition;
-    successCallback(geoPosition);
+    }
 };
 
 OCM_Geolocation.prototype.getBearing = function (lat1, lon1, lat2, lon2) {
@@ -128,7 +138,7 @@ OCM_Geolocation.prototype.getCardinalDirectionFromBearing = function (bearing) {
 };
 
 OCM_Geolocation.prototype.getDrivingDistanceBetweenPoints = function (startLat, startLng, endLat, endLng, distanceUnit, completedCallback) {
-    if (typeof (google) != "undefined") { 
+    if (typeof (google) != "undefined") {
         var unitSystem = google.maps.UnitSystem.IMPERIAL;
         if (distanceUnit == "KM") unitSystem = google.maps.UnitSystem.METRIC;
 

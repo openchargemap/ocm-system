@@ -52,6 +52,7 @@ function OCM_App() {
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+        //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
         this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
@@ -66,6 +67,9 @@ OCM_App.prototype.logEvent = function (logMsg) {
 };
 
 OCM_App.prototype.setElementAction = function (elementSelector, actionHandler) {
+
+    $(elementSelector).unbind("click");
+    $(elementSelector).unbind("touchstart");
     $(elementSelector).fastClick(function (event) {
         event.preventDefault();
         actionHandler();
@@ -164,12 +168,6 @@ OCM_App.prototype.setupUIActions = function () {
 
     app.setElementAction("#search-button", function () {
         app.performSearch(false, true);
-    });
-
-    app.setElementAction("#editlocation-submit", function () {
-        if (app.validateLocationEditor() === true) {
-            app.performLocationSubmit();
-        }
     });
 
     //details page ui actions
@@ -1224,6 +1222,7 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
 
 OCM_App.prototype.showConnectionError = function () {
     $("#network-error").show();
+    this.ocm_ui.hideProgressIndicator();
     //app.showMessage("An error occurred transferring data. Please check your data connection.");
 };
 

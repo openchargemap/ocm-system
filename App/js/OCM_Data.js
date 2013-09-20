@@ -26,6 +26,8 @@ function OCM_LocationSearchParams() {
 function OCM_Data() {
     this.serviceBaseURL = "http://api.openchargemap.io/v2";
     this.hasAuthorizationError = false;
+
+    this.ATTRIBUTION_METADATAFIELDID = 4;
 }
 
 OCM_Data.prototype.fetchLocationDataList = function (countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
@@ -244,6 +246,20 @@ OCM_Data.prototype.sortCoreReferenceData = function () {
 
 OCM_Data.prototype.sortReferenceData = function (sourceList) {
     sourceList.sort(this.sortListByTitle);
+};
+
+
+OCM_Data.prototype.getMetadataValueByMetadataFieldID = function (metadataValues, id) {
+    if (id != "") id = parseInt(id);
+
+    if (metadataValues != null) {
+        for (var i = 0; i < metadataValues.length; i++) {
+            if (metadataValues[i].ID == id) {
+                return metadataValues[i];
+            }
+        }
+    }
+    return null;
 };
 
 OCM_Data.prototype.sortListByTitle = function (a, b) {

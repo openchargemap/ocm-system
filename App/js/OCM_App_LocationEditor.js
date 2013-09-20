@@ -1,6 +1,9 @@
 
 OCM_App.prototype.initEditors = function () {
     this.editorMapInitialised = false;
+    this.editorMap = null;
+    this.editMarker = null;
+    this.positionAttribution = null;
 
     var editorSubmitMethod = $.proxy(this.performLocationSubmit, this);
 
@@ -49,6 +52,14 @@ OCM_App.prototype.resetEditorForm = function () {
     this.setDropdown("edit_dataprovider", 1);
     this.setDropdown("edit_submissionstatus", 1);
     this.setDropdown("edit_statustype", 50); //operational
+
+    //TODO: collapse equipment/connections
+
+    //this.editorMap = null;
+    //this.editMarker = null;
+    //this.editorMapInitialised = false;
+    this.positionAttribution = null;
+    $("#editor-map").hide();
 };
 
 OCM_App.prototype.populateEditor = function (refData) {
@@ -105,24 +116,30 @@ OCM_App.prototype.populateEditor = function (refData) {
 
         //collapse additional editors by default
         //$connection.collapse();
-        
-        if (n==1)
-        {
+
+        if (n == 1) {
             $connection.collapse("show");
         }
     }
 
     //setup geocoding lookup of address in editor
     var appContext = this;
-    $("#edit-location-lookup").fastClick(function (event, ui) {
+    appContext.setElementAction("#edit-location-lookup", function (event, ui) {
         var lookupString =
-			$("#edit_addressinfo_addressline1").val() + ", " +
-			$("#edit_addressinfo_addressline2").val() + "," +
-			$("#edit_addressinfo_town").val() + ", " +
-			$("#edit_addressinfo_postcode").val() + "," +
+			($("#edit_addressinfo_addressline1").val().length>0?$("#edit_addressinfo_addressline1").val() + ", " :"")+
+			($("#edit_addressinfo_addressline2").val().length>0?$("#edit_addressinfo_addressline2").val() + "," :"")+
+			($("#edit_addressinfo_town").val().length>0?$("#edit_addressinfo_town").val() + ", " :"")+
+			($("#edit_addressinfo_postcode").val().length>0?$("#edit_addressinfo_postcode").val() + ",":"") +
 			appContext.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
 
         appContext.ocm_geo.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext));
+    });
+
+
+    appContext.setElementAction("#editlocation-submit", function () {
+        if (appContext.validateLocationEditor() === true) {
+            appContext.performLocationSubmit();
+        }
     });
 
     //populate user comment editor
@@ -161,8 +178,12 @@ OCM_App.prototype.populateEditorLatLon = function (result) {
     $("#edit_addressinfo_latitude").val(lat);
     $("#edit_addressinfo_longitude").val(lng);
 
+    //show data attribution for lookup
+    $("#position-attribution").html(result.attribution);
+    this.positionAttribution = result.attribution;
+
     //refresh map view
-    this.refreshEditorMap(lat, lng);
+    this.refreshEditorMap(lat,lng);
 };
 
 OCM_App.prototype.validateLocationEditor = function () {
@@ -277,12 +298,34 @@ OCM_App.prototype.performLocationSubmit = function () {
 
     }
 
-    //set legacy overall charger type
-    //if (item.Chargers != null) {
-    //item.Chargers[0].ChargerType = this.ocm_data.getRefDataByID(refData.ChargerTypes, $("#edit_connection1_level").val());
-    //}
-
-    //show progress
+    //stored attribution metadata if any
+    if (this.positionAttribution != null)
+    {
+        //add/update position attributiom
+        if (item.MetadataValues == null) item.MetadataValues = new Array();
+        var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
+        if (attributionMetadata != null)
+        {
+            attributionMetadata.ItemValue = this.positionAttribution;
+        } else {
+            attributionMetadata = {
+                MetadataFieldID: this.ocm_data.ATTRIBUTION_METADATAFIELDID,
+                ItemValue : this.positionAttribution
+            };
+            item.MetadataValues.push(attributionMetadata);
+        }
+    } else {
+        //clear position attribution if required
+        var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
+        if (attributionMetadata != null) {
+            //remove existing item from array
+            item.MetadataValues = jQuery.grep(item.MetadataValues, function (a) {
+                return a.MetadataFieldID !== this.ocm_data.ATTRIBUTION_METADATAFIELDID;
+            });
+        }
+    }
+    
+    //show progress indicator
     this.showProgressIndicator();
 
     //submit
@@ -298,6 +341,15 @@ OCM_App.prototype.showLocationEditor = function () {
         this.isLocationEditMode = true;
         var poi = this.selectedPOI;
 
+        this.positionAttribution = null;
+        if (poi.MetadataValues!=null){
+
+            var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(this.poi.MetadataValues,ocm_data.ATTRIBUTION_METADATAFIELDID);
+            if (attributionMetadata != null)
+            {
+                this.positionAttribution = attributionMetadata.ItemValue;
+            }
+        }
         $("#edit_addressinfo_title").val(poi.AddressInfo.Title);
         $("#edit_addressinfo_addressline1").val(poi.AddressInfo.AddressLine1);
         $("#edit_addressinfo_addressline2").val(poi.AddressInfo.AddressLine2);
@@ -307,6 +359,11 @@ OCM_App.prototype.showLocationEditor = function () {
         this.setDropdown("edit_addressinfo_countryid", poi.AddressInfo.Country.ID);
         $("#edit_addressinfo_latitude").val(poi.AddressInfo.Latitude);
         $("#edit_addressinfo_longitude").val(poi.AddressInfo.Longitude);
+
+
+        //show map based on current position
+        this.refreshEditorMap();
+
         $("#edit_addressinfo_accesscomments").val(poi.AddressInfo.AccessComments);
         $("#edit_addressinfo_contacttelephone1").val(poi.AddressInfo.ContactTelephone1);
         $("#edit_addressinfo_contacttelephone2").val(poi.AddressInfo.ContactTelephone2);
@@ -358,7 +415,7 @@ OCM_App.prototype.showLocationEditor = function () {
                             }
 
                             //expand editor by default
-                           
+
                             $connection.collapse('show')
                         }
                     }
@@ -379,8 +436,23 @@ OCM_App.prototype.showLocationEditor = function () {
 
 };
 
-OCM_App.prototype.refreshEditorMap = function (currentLat, currentLng) {
-    this.initEditorMap(currentLat, currentLng);
+OCM_App.prototype.refreshEditorMap = function () {
+
+    var lat = parseFloat($("#edit_addressinfo_latitude").val());
+    var lng = parseFloat($("#edit_addressinfo_longitude").val());
+
+    if (this.editorMap != null)
+    {
+        if (this.editorMap != null) {
+            this.editMarker.setLatLng([lat, lng]);
+            this.editorMap.panTo([lat, lng]);
+            $("#editor-map").show();
+        }
+    } else {
+        this.initEditorMap(lat, lng);
+    }
+
+    
 };
 
 OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
@@ -388,47 +460,55 @@ OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
     if (this.editorMapInitialised === false) {
 
         this.editorMapInitialised = true;
-        var editPos = google.maps.LatLng(currentLat, currentLng);
+        var app = this;
+        //listen for changes to lat/lng input boxes
+        $('#edit_addressinfo_latitude, #edit_addressinfo_longitude').change(function () {
+            if (app.editorMap != null)
+            {
+                //reflect new pos on map
+                app.refreshEditorMap();
 
-        var editMapOptions = {
-            zoom: 16,
-            center: editPos,
-            panControl: true,
-            zoomControl: true,
-            scaleControl: true,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
+                //clear attribution when manually modified
+                app.positionAttribution = null;
+            }
+        })
 
-        // Create map object with options
+        // Create editor map view
+        $("#editor-map").show();
+        this.editorMap = this.ocm_ui.createMapLeaflet("editor-map-canvas", currentLat, currentLng, 14);
 
-        this.editorMap = new google.maps.Map(document.getElementById("editor_map_canvas"), editMapOptions);
-
-        this.editMarker = new google.maps.Marker({
-            map: ocm_app.editorMap,
-            draggable: true,
-            position: editPos
+        var unknownPowerMarker = L.AwesomeMarkers.icon({
+            icon: 'bolt',
+            color: 'darkpurple'
         });
 
-        // register event to catch marker drag end
-        google.maps.event.addListener(this.editMarker, 'dragend', function () {
+        this.editMarker = L.marker([currentLat, currentLng], { draggable: true });
 
-            var point = ocm_app.editMarker.getPosition();
-            //centre map on dragged marker
+        this.editMarker.addTo(this.editorMap);
+        $("#editor-map-canvas").show();
+
+        this.editMarker.on("dragend", function () {
+
+            //move map to new map centre
+            var point = ocm_app.editMarker.getLatLng();
             ocm_app.editorMap.panTo(point);
+            $("#edit_addressinfo_latitude").val(point.lat);
+            $("#edit_addressinfo_longitude").val(point.lng);
 
-            // Update the lat/lng in editor
-            $("#edit_addressinfo_latitude").val(point.lat());
-            $("#edit_addressinfo_longitude").val(point.lng());
+            //suggest new address as well?
 
-            //TODO: lookup address title for pos as well?
+            //clear attribution when manually modified
+            ocm_app.positionAttribution = null;
         });
+        //refresh map rendering
+        var map = this.editorMap;
+        setTimeout(function () { map.invalidateSize(false); }, 300);
 
-        //$("#editor_map_canvas").show();
-        google.maps.event.trigger(ocm_app.editorMap, 'resize');
+
     } else {
 
-        //var point = ocm_app.editMarker.getPosition();
-        //ocm_app.editorMap.panTo(point);
+        var point = ocm_app.editMarker.getLatLng();
+        ocm_app.editorMap.panTo(point);
     }
 
 };
