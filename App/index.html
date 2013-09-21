@@ -202,25 +202,15 @@
 
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-12">
                             <div class="btn-group">
                                 <button id="search-nearby" class="btn btn-default" type="button"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
                                 <button id="search-settings" class="btn btn-default" type="button"><i class="icon-cog"></i> <span data-localize="ocm.general.settings">Settings</span></button>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="btn-group">
-                                <button id="search-map" class="btn btn-default" type="button"><i class="icon-map-marker"></i> <span data-localize="ocm.details.location.map">Map</span></button>
-                                <button id="search-favourites" class="btn btn-default" type="button"><i class="icon-heart"></i> <span data-localize="ocm.general.favourites">Favourites</span></button>
-                            </div>
-                        </div>
-
-
-
+                         
                     </div>
-
                 </form>
-
             </div>
 
             <div id="search-no-data" class="info-section">Use this search to find charging locations near you or to search near a particular location. To filter by specific criteria go to Settings.</div>
@@ -248,6 +238,18 @@
                 </div>
             </div>
         </div>
+
+        <div data-role="footer" data-position="fixed">
+            <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="form-options">
+                    <div class="btn-group pull-right">
+                        <button id="search-map" class="btn btn-default" type="button"><i class="icon-map-marker"></i> <span data-localize="ocm.details.location.map">Map</span></button>
+                        <button id="search-favourites" class="btn btn-default" type="button"><i class="icon-heart"></i> <span data-localize="ocm.general.favourites">Favourites</span></button>
+                        <button id="search-addlocation" class="btn btn-default" type="button"><i class="icon-plus"></i></button>
+                    </div>
+                </div>
+            </nav>
+        </div>
     </div>
     <!---- Page:Search:End ---->
     <!---- Page:LocationDetails:Start ---->
@@ -260,65 +262,78 @@
         </div>
         <div data-role="content" data-theme="d">
             <div id="details-content">
-                <div id="details-general" class="content-subsection">
-                    <div style="overflow: hidden;">
-                        <div class="section-heading">
+                <div class="section-heading">
 
-                            <div id="details-options">
-                                <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="icon-heart-empty"></i></div>
-                                <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="icon-comment-alt"></i></div>
-                                <div class="option-item"><i id="option-uploadphoto" title="Upload Photo" class="icon-camera"></i></div>
-                                <div class="option-item"><i id="option-edit" title="Edit" class="icon-edit"></i></div>
+                    <div id="details-options">
+                        <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="icon-heart-empty"></i></div>
+                        <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="icon-comment-alt"></i></div>
+                        <div class="option-item"><i id="option-uploadphoto" title="Upload Photo" class="icon-camera"></i></div>
+                        <div class="option-item"><i id="option-edit" title="Edit" class="icon-edit"></i></div>
 
+                    </div>
+                    <div id="details-locationtitle"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                       
+
+                        <div id="details-general" class="content-subsection">
+                            <div style="overflow: hidden;">
+                                <div id="details-address"></div>
+                                <div id="details-streetview"></div>
+                                <div id="details-contact-container">
+                                    <div id="details-contact"></div>
+                                    <div id="details-map"></div>
+                                </div>
                             </div>
-                            <div id="details-locationtitle"></div>
                         </div>
 
-                        <div id="details-address"></div>
-                        <div id="details-streetview"></div>
-                        <div id="details-contact-container">
-                            <div id="details-contact"></div>
-                            <div id="details-map"></div>
+                        <div id="details-additional-container" class="content-subsection">
+                            <div class="section-heading" data-localize="ocm.details.equipment.sectionTitle">Equipment Details</div>
+                            <div id="details-additional"></div>
                         </div>
                     </div>
-                </div>
+                    <div class="col-md-6">
+                        <div id="details-usercomments-container" class="content-subsection">
+                            <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
 
-                <div id="details-additional-container" class="content-subsection">
-                    <div class="section-heading" data-localize="ocm.details.equipment.sectionTitle">Equipment Details</div>
-                    <div id="details-additional"></div>
-                </div>
+                            <p>
+                                <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span>
+                            </p>
+                            <p>
+                                <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="icon-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a>
+                            </p>
+                            <div id="details-usercomments">
+                                <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
+                            </div>
+                        </div>
 
-                <div id="details-usercomments-container" class="content-subsection">
-                    <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
-
-                    <p>
-                        <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span>
-                    </p>
-                    <p>
-                        <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="icon-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a>
-                    </p>
-                    <div id="details-usercomments">
-                        <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
-                    </div>
-                </div>
-
-                <div id="details-mediaitems-container" class="content-subsection">
-                    <div class="section-heading" data-localize="ocm.details.mediaItems.sectionTitle">Photos</div>
-                    <div id="details-mediaitems">
-                        No photos submitted.
-                    </div>
-                </div>
-                <div id="details-advanced-container" class="content-subsection">
-                    <div class="section-heading" data-localize="ocm.details.advancedDetails">Additional Information</div>
-                    <div id="details-advanced" style="font-size:smaller;">
-                        None.
+                        <div id="details-mediaitems-container" class="content-subsection">
+                            <div class="section-heading" data-localize="ocm.details.mediaItems.sectionTitle">Photos</div>
+                            <div id="details-mediaitems">
+                                No photos submitted.
+                            </div>
+                        </div>
+                        <div id="details-advanced-container" class="content-subsection">
+                            <div class="section-heading" data-localize="ocm.details.advancedDetails">Additional Information</div>
+                            <div id="details-advanced" style="font-size:smaller;">
+                                None.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div data-role="footer" data-position="fixed">
-            <a id="details-edit" class="btn btn-primary" data-role="button" data-icon="edit">Edit</a>
+            <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="form-options">
+                    <a href="javascript:void();" data-rel="back" class="btn btn-default">Back</a>
+                    <a id="details-edit" class="btn btn-primary" data-role="button" data-icon="edit">Edit</a>
+                </div>
+            </nav>
         </div>
+
     </div>
     <!---- Page:LocationDetails:End ---->
     <!---- Page:Map:Start ---->
@@ -332,12 +347,17 @@
 
         <div data-role="content" style="padding: 0;">
             <div>
-                <button id="map-listview" class="btn btn-default" type="button"><i class="icon-list"></i> <span id="map-view-resultcount">No Results.</span></button>
-
-
-                <div id="map-view" style="margin-top: 0.5em; position: absolute; width: 99%; min-height: 70%;"></div>
+                <div id="map-view" style="position: absolute; width: 99%; min-height: 70%;"></div>
             </div>
+        </div>
 
+        <div data-role="footer" data-position="fixed">
+            <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="form-options">
+                    <a href="javascript:void();" data-rel="back" class="btn btn-default">Back</a>
+                    <button id="map-listview" class="btn btn-primary" type="button"><i class="icon-list"></i> <span id="map-view-resultcount">No Results.</span></button>
+                </div>
+            </nav>
         </div>
     </div>
     <!---- Page:Map:End ---->
@@ -430,7 +450,7 @@
                         </p>
                         <label for="edit_addressinfo_latitude">Latitude</label>
                         <input id="edit_addressinfo_latitude" class="form-control" name="edit_addressinfo_latitude" type="number" placeholder="Latitude (if known)" value="" />
-                       
+
                     </div>
                     <div class="form-group">
                         <label for="edit_addressinfo_longitude">Longitude</label>
@@ -565,25 +585,20 @@
                                         <option value="" data-placeholder="false">Unknown</option>
                                     </select>
                                 </div>
-
                             </div>
                         </div>
-
-                    </div>
-
-                </div>
-
-                <div class="form-options">
-                    <div class="form-group">
-                        <a href="#search-page" class="btn btn-default">Cancel</a>
-                        <a id="editlocation-submit" class="btn btn-primary">Submit</a>
                     </div>
                 </div>
             </form>
         </div>
 
         <div data-role="footer" data-position="fixed">
-
+            <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="form-options">
+                    <a href="javascript:void();" data-rel="back" class="btn btn-default">Cancel</a>
+                    <a id="editlocation-submit" class="btn btn-primary">Submit</a>
+                </div>
+            </nav>
         </div>
     </div>
     <!---- Page:EditLocation:End ---->
@@ -597,12 +612,12 @@
         </div>
         <div data-role="content" class="container">
             <p style="font-size: 0.8em;">
-                Submit your comment about this location below. <em>This information <strong>will</strong> be shared publically</em>. If your comment requires action from an editor, please select <em>Suggested Change</em> as the Comment Type.
+                Please share your experience with this location. <em>Your comment <strong>will</strong> be distributed publically</em>.
             </p>
             <form id="comment-form" role="form" action="#">
 
                 <div class="form-group">
-                    <label for="checkin-type">Check-In Status</label>
+                    <label for="checkin-type">Did you charge here?</label>
                     <select id="checkin-type" class="form-control">
                         <option value="0">Did Not Visit Location</option>
                     </select>
@@ -614,7 +629,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="comment-rating">Your Rating</label>
+                    <label for="comment-rating">How did you rate the location or equipment?</label>
                     <select id="comment-rating" class="form-control">
                         <option value="5">5 - Excellent</option>
                         <option value="4">4 - Good</option>
@@ -629,20 +644,20 @@
                     <input id="comment-username" class="form-control" type="text" />
                 </div>
                 <div class="form-group">
-                    <label for="comment-text">Your Comment</label>
+                    <label for="comment-text">Comment (optional)</label>
                     <textarea id="comment-text" class="form-control"></textarea>
                 </div>
-
-                <div class="form-group">
-                    <a href="#search-page" class="btn btn-default">Cancel</a>
-                    <a id="submitcomment-button" class="btn btn-primary">Submit</a>
-                </div>
-
             </form>
-
-
         </div>
 
+        <div data-role="footer" data-position="fixed">
+            <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="form-options">
+                    <a href="javascript:void();" data-rel="back" class="btn btn-default">Cancel</a>
+                    <a id="submitcomment-button" class="btn btn-primary">Submit</a>
+                </div>
+            </nav>
+        </div>
     </div>
     <!---- Page:Comments:End ---->
     <!---- Page:UploadMediaItem:Start ---->
@@ -666,17 +681,16 @@
                     <label for="comment">Comment</label>
                     <textarea id="comment" class="form-control"></textarea>
                 </div>
+            </form>
+        </div>
 
-                <div class="form-group">
-                    <a href="#search-page" class="btn btn-default">Cancel</a>
+        <div data-role="footer" data-position="fixed">
+            <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="form-options">
+                    <a href="javascript:void();" data-rel="back" class="btn btn-default">Cancel</a>
                     <a id="submitmediaitem-button" class="btn btn-primary">Submit</a>
                 </div>
-            </form>
-
-
-        </div>
-        <div data-role="footer" data-position="fixed">
-
+            </nav>
         </div>
     </div>
     <!---- Page:UploadMediaItem:End ---->
@@ -889,22 +903,20 @@
     <!--End Page Definitions -->
     <!--End standard OCM app HTML block-->
     <!--Late bound scripts-->
-
-
     <!--google maps-->
     <script>
-            function initGoogleMaps() {
-                ocm_app.mapsInitialised = true;
-            };
+        function initGoogleMaps() {
+            ocm_app.mapsInitialised = true;
+        };
 
-            function loadGoogleMapsScript() {
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMaps';
-                document.body.appendChild(script);
-            }
+        function loadGoogleMapsScript() {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMaps';
+            document.body.appendChild(script);
+        }
 
-            window.onload = loadGoogleMapsScript;
+        window.onload = loadGoogleMapsScript;
 
     </script>
     <!--end google maps-->
@@ -913,4 +925,5 @@
         ocm_app.ocm_data.clientName = "ocm.app.TARGETNAME";
     </script>
 </body>
+
 </html>

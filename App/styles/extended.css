@@ -32,9 +32,18 @@
     padding:8px;
 }
 
+.navbar-default {
+    background-color: rgba(0, 0, 0, 0.9)
+}
+
 .panel {
     background-color:transparent;
 }
+
+.populated {
+    border:1px solid red;
+}
+
 /*non-jqm special case*/
 a:focus {
     outline: 0;

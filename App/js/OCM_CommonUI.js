@@ -432,18 +432,30 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
     }
 };
 
-OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID, centreLatitude, centreLongitude)
+OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser)
 {
     if (this.map == null) {
-        this.map = this.createMapLeaflet(mapcanvasID, centreLatitude, centreLongitude, 13);
+        this.map = this.createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, 13);
     }
 };
 
-OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, centreLatitude,centreLongitude, zoomLevel) {
+OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
    
     // create a map in the "map" div, set the view to a given place and zoom
-    var map = L.map(mapcanvasID).setView([centreLatitude,centreLongitude], zoomLevel);
+    var map = L.map(mapcanvasID);
+    if (currentLat != null && currentLng != null) {
+        map.setView([currentLat, currentLng]);
+    }
+    map.setZoom(zoomLevel);
 
+    if (locateUser==true)
+    {
+        map.locate({setView: true, watch:true, enableHighAccuracy:true});
+    } else {
+        //use a default view
+       
+    }
+    
     // add an OpenStreetMap tile layer
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

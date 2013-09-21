@@ -52,8 +52,8 @@ function OCM_App() {
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-        //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
-        this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
+        this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
+        //this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
     this.ocm_geo.ocm_data = this.ocm_data;
@@ -136,7 +136,7 @@ OCM_App.prototype.setupUIActions = function () {
         app.navigateToMap();
     });
 
-    app.setElementAction("a[href='#addlocation-page']", function () {
+    app.setElementAction("a[href='#addlocation-page'],#search-addlocation", function () {
         app.navigateToAddLocation();
     });
 
@@ -358,8 +358,10 @@ OCM_App.prototype.logout = function (navigateToHome) {
         else {
             setTimeout(function () { window.location = app.baseURL; }, 100);
         }
+    } else {
+        app.postLoginInit(); //refresh signed in/out ui
     }
-
+   
 };
 
 OCM_App.prototype.getLoggedInUserInfo = function () {
@@ -771,8 +773,8 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
 
     var streetviewUrl = "http://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
     var streetViewLink = "https://maps.google.com/maps?q=&layer=c&cbll=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&cbp=11,0,0,0,0";
-    $("#details-streetview").html("<a target='_blank' href='" + streetViewLink + "'><img src=\"" + streetviewUrl + "\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" /></a>");
-
+    $("#details-streetview").html("<a target='_blank' href='#' onclick=\"window.open('"+streetViewLink+"', '_system');\"><img src=\"" + streetviewUrl + "\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" /></a>");
+    
     if (poi.UserComments != null) {
         var commentOutput = "<div class='comments'>";
 
@@ -973,8 +975,9 @@ OCM_App.prototype.refreshMapView = function () {
 
     if (this.mapAPI == "leaflet") {
 
-        //setup map view if not already initialised
-        this.ocm_ui.initMapLeaflet("map-view");
+        //setup map view, tracking user pos, if not already initialised
+        //TODO: use last search pos as lat/lng, or first item in locationList
+        this.ocm_ui.initMapLeaflet("map-view", 50,50, true);
 
         this.ocm_ui.showPOIListOnMapViewLeaflet("map-view", this.locationList, this, $resultcount, this.resultBatchID);
     }

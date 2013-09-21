@@ -59,7 +59,8 @@ OCM_Geolocation.prototype.determineGeocodedLocation = function (locationText, su
             var locationPos = {
                 'lat': results.latitude,
                 'lng': results.longitude,
-                'attribution': results.attribution
+                'attribution': results.attribution,
+                'resultsAvailable': results.resultsAvailable
             };
             appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
         }
@@ -97,7 +98,7 @@ OCM_Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, su
         if (failureCallback) {
             failureCallback();
         } else {
-            alert("The position of this address could not be determined automatically.");
+            alert("The position of this address could not be determined automatically. You may wish to try starting with a simpler address.");
         }
     }
 };
