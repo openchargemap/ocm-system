@@ -185,7 +185,7 @@ namespace OCM.API.Common
                 System.Diagnostics.Debug.WriteLine(sql);
 
 
-                foreach (var item in filteredList.Take(maxResults).ToList())
+                foreach (var item in filteredList.Take(maxResults)) //.ToList
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
                     Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput);
@@ -605,10 +605,7 @@ namespace OCM.API.Common
                         }
                     }
                 }
-
-
             }
-
 
             //find existing connections not in updated/added list, add to delete
             if (dataChargePoint.Connections != null)
@@ -628,7 +625,10 @@ namespace OCM.API.Common
             //finally clean up deleted items
             foreach (var item in deleteList)
             {
-                dataModel.ConnectionInfoList.Remove(item);
+                if (item.ID > 0)
+                {
+                    dataModel.ConnectionInfoList.Remove(item);
+                }
             }
 
             if (dataChargePoint.MetadataValues == null)
@@ -636,27 +636,30 @@ namespace OCM.API.Common
                 dataChargePoint.MetadataValues = new List<OCM.Core.Data.MetadataValue>();
                 //add metadata values
             }
-            
-            if (simpleChargePoint.MetadataValues!=null)
+
+            if (simpleChargePoint.MetadataValues != null)
             {
-                foreach( var m in simpleChargePoint.MetadataValues)
+                foreach (var m in simpleChargePoint.MetadataValues)
                 {
-                    var existingValue = dataChargePoint.MetadataValues.FirstOrDefault(v=>v.ID==m.ID);
-                    if (existingValue!=null)
+                    var existingValue = dataChargePoint.MetadataValues.FirstOrDefault(v => v.ID == m.ID);
+                    if (existingValue != null)
                     {
                         existingValue.ItemValue = m.ItemValue;
-                    } else {
-                        var newValue = new OCM.Core.Data.MetadataValue(){ 
+                    }
+                    else
+                    {
+                        var newValue = new OCM.Core.Data.MetadataValue()
+                        {
                             ChargePointID = dataChargePoint.ID,
-                            ItemValue=m.ItemValue,  
+                            ItemValue = m.ItemValue,
                             MetadataFieldID = m.MetadataFieldID,
-                            MetadataField = dataModel.MetadataFields.FirstOrDefault(f=>f.ID==m.MetadataFieldID)
+                            MetadataField = dataModel.MetadataFields.FirstOrDefault(f => f.ID == m.MetadataFieldID)
                         };
                         dataChargePoint.MetadataValues.Add(newValue);
                     }
                 }
             }
-            
+
             //TODO:clean up unused metadata values
 
 

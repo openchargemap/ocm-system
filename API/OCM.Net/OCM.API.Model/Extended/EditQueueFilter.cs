@@ -18,6 +18,7 @@ namespace OCM.API.Common.Model
         {
             MinimumDifferences = 1;
             MaxResults = 200;
+            ShowEditsOnly = true;
         }
     }
 }
