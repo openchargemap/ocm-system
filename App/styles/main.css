@@ -71,20 +71,9 @@ body {
 }
 
 #details-streetview {
-    max-width: 192px;
-    height: 96px;
-    border: 2px solid #202020;
-    border-top-width: 8px;
-    border-bottom-width: 8px;
-    box-shadow: 4px 4px 8px rgba(50, 50, 50, 0.38);
-}
-
-
-#details-streetview, #details-address, #details-contact-container {
-    min-width: 160px;
-    float: left;
-    /*margin-right: 0.5em;
-    margin-top: 0.5em;*/
+    box-shadow: 2px 2px 6px rgba(50, 50, 50, 0.38);
+    width:192px;
+    margin-right:12px;
 }
 
 #details-contact-container {

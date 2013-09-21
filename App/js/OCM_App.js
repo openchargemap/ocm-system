@@ -955,9 +955,9 @@ OCM_App.prototype.refreshMapView = function () {
     var $resultcount = $("#map-view-resultcount");
 
     if (this.locationList != null && this.locationList.length > 0) {
-        $resultcount.html("Showing " + this.locationList.length + " Results:");
+        $resultcount.html(this.locationList.length + " Results");
     } else {
-        $resultcount.html("No Results. Perform a search to see results on this map");
+        $resultcount.html("No Search Results");
     }
 
     if (this.mapAPI == "google") {
@@ -977,7 +977,13 @@ OCM_App.prototype.refreshMapView = function () {
 
         //setup map view, tracking user pos, if not already initialised
         //TODO: use last search pos as lat/lng, or first item in locationList
-        this.ocm_ui.initMapLeaflet("map-view", 50,50, true);
+        var centreLat = 50;
+        var centreLng = 50;
+        if (this.locationList.length > 0) {
+            centreLat = this.locationList[0].AddressInfo.Latitude;
+            centreLng = this.locationList[0].AddressInfo.Longitude;
+        }
+        this.ocm_ui.initMapLeaflet("map-view", centreLat,centreLng, false);
 
         this.ocm_ui.showPOIListOnMapViewLeaflet("map-view", this.locationList, this, $resultcount, this.resultBatchID);
     }

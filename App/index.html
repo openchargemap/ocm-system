@@ -208,7 +208,7 @@
                                 <button id="search-settings" class="btn btn-default" type="button"><i class="icon-cog"></i> <span data-localize="ocm.general.settings">Settings</span></button>
                             </div>
                         </div>
-                         
+
                     </div>
                 </form>
             </div>
@@ -260,7 +260,7 @@
                 <div style="float: right"><i class="icon-search"></i>&nbsp;<span data-localize="ocm.details.sectionTitle">Location Details</span></div>
             </div>
         </div>
-        <div data-role="content" data-theme="d">
+        <div data-role="content" style="padding-bottom:50px;">
             <div id="details-content">
                 <div class="section-heading">
 
@@ -274,18 +274,23 @@
                     <div id="details-locationtitle"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                       
+                    <div class="col-sm-6">
 
                         <div id="details-general" class="content-subsection">
-                            <div style="overflow: hidden;">
-                                <div id="details-address"></div>
-                                <div id="details-streetview"></div>
-                                <div id="details-contact-container">
-                                    <div id="details-contact"></div>
-                                    <div id="details-map"></div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div id="details-address"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="details-streetview"></div>
                                 </div>
                             </div>
+                            <div id="details-contact-container">
+                                <div id="details-contact"></div>
+                                <div id="details-map"></div>
+                            </div>
+
                         </div>
 
                         <div id="details-additional-container" class="content-subsection">
@@ -293,16 +298,14 @@
                             <div id="details-additional"></div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <div id="details-usercomments-container" class="content-subsection">
                             <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
 
                             <p>
-                                <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span>
+                                <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span> <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="icon-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a>
                             </p>
-                            <p>
-                                <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="icon-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a>
-                            </p>
+
                             <div id="details-usercomments">
                                 <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
                             </div>
@@ -327,8 +330,7 @@
 
         <div data-role="footer" data-position="fixed">
             <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-                <div class="form-options">
-                    <a href="javascript:void();" data-rel="back" class="btn btn-default">Back</a>
+                <div class="form-options pull-right">
                     <a id="details-edit" class="btn btn-primary" data-role="button" data-icon="edit">Edit</a>
                 </div>
             </nav>
