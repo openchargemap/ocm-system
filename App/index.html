@@ -61,8 +61,8 @@
     <link rel="stylesheet" href="js/ThirdParty/pocketgrid.min.css" />
     <link rel="stylesheet" href="styles/main.css" />
     <link rel="stylesheet" href="styles/extended.css" />
-
-    <!--start leafletjs-->
+    
+    <!--JS:LEAFLET:BEGIN-->
     <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.css" />
     <!--[if lte IE 8]>
         <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.ie.css" />
@@ -75,7 +75,12 @@
     <script src="js/ThirdParty/leaflet/markerclusterer/leaflet.markercluster.js"></script>
     <link rel="stylesheet" href="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.css">
     <script src="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.js"></script>
-    <!--end leafletjs-->
+    <!--JS:LEAFLET:END-->
+
+    <!--JS:WINDOWS:BEGIN-->
+    <!--<link rel="stylesheet" href="styles/windows.css" />-->
+    <!--JS:WINDOWS:END-->
+
     <!-- JS:LIB:BEGIN -->
     <!-- App JS -->
     <script src="js/OCM_Data.js"></script>
@@ -410,7 +415,7 @@
         </div>
         <div data-role="content" class="container">
             <p>
-                Please provide as much detail as you can about the charging location.<em>Please do not submit private residences</em>:
+                Please provide as much detail as you can about the charging location.<em>Please do not submit private residences (such as your home)</em>:
             </p>
             <form id="editlocation-form" action="#">
                 <div id="edit-location-container" data-role="collapsible" data-collapsed="false">

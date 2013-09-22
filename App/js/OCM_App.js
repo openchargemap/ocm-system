@@ -171,15 +171,11 @@ OCM_App.prototype.setupUIActions = function () {
     });
 
     //details page ui actions
-    app.setElementAction("#details-edit", function () {
-        app.showLocationEditor();
-    });
-
     app.setElementAction("#option-favourite", function () {
         app.toggleFavouritePOI(app.selectedPOI, null);
     });
 
-    app.setElementAction("#option-edit", function () {
+    app.setElementAction("#option-edit, #details-edit", function () {
         app.navigateToEditLocation();
     });
 
@@ -745,14 +741,6 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         $("#option-favourite").addClass("icon-heart-empty");
     }
 
-    //if edit option available to user, enable edit controls
-    var $editControl = $("#details-edit");
-    if (!this.hasUserPermissionForPOI(poi, "Edit")) {
-        $editControl.hide();
-    } else {
-        $editControl.show();
-    }
-
     //TODO: bug/ref data load when editor opens clears settings
 
     var $element = $(element);
@@ -979,7 +967,7 @@ OCM_App.prototype.refreshMapView = function () {
         //TODO: use last search pos as lat/lng, or first item in locationList
         var centreLat = 50;
         var centreLng = 50;
-        if (this.locationList.length > 0) {
+        if (this.locationList!=null && this.locationList.length > 0) {
             centreLat = this.locationList[0].AddressInfo.Latitude;
             centreLng = this.locationList[0].AddressInfo.Longitude;
         }

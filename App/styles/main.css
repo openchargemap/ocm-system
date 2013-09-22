@@ -472,7 +472,7 @@ body {
     }
 
 body, .ui-body-b, .ui-body-d, a, a:visited {
-    font-family: 'Oxygen', sans-serif;
+    font-family: 'Roboto', 'Oxygen', sans-serif;
 }
 
     h1, h2, h3, h4, .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, .ui-header a, #progress-indicator {
