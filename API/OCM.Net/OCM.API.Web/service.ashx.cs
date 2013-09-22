@@ -376,6 +376,7 @@ namespace OCM.API
                 HttpContext.Current.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
 
+            //populate non-cached fragments (user profile)
             data.UserProfile= new InputProviderBase().GetUserFromAPICall(context);
             
             //send response

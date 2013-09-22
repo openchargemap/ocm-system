@@ -84,6 +84,18 @@ namespace OCM.API.Common
             }
         }
 
+        public void AssignNewSessionToken(int userId)
+        {
+            var dataModel = new Core.Data.OCMEntities();
+
+            var user = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+            if (user != null)
+            {
+                user.CurrentSessionToken = Guid.NewGuid().ToString();
+                dataModel.SaveChanges();
+            }
+        }
+
         /// <summary>
         /// Apply updates to a user profile
         /// </summary>
