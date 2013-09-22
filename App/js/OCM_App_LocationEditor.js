@@ -166,6 +166,9 @@ OCM_App.prototype.populateEditor = function (refData) {
             this.logEvent("Login info is stale, logging out user.");
             this.logout(false);
         }
+    } else {
+        this.logEvent("No user profile in reference data. logging out user.");
+        this.logout(false);
     }
 };
 

@@ -1,6 +1,6 @@
 OCM_App.prototype.getCookie = function (c_name) {
     if (this.isRunningUnderCordova) {
-        //console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
+        console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
         return this.ocm_data.getCachedDataObject("_pref_" + c_name);
     } else {
         //http://www.w3schools.com/js/js_cookies.asp

@@ -277,7 +277,7 @@ OCM_App.prototype.isUserSignedIn = function () {
 
     var userInfo = this.getLoggedInUserInfo();
 
-    if (userInfo.Username !== null && userInfo.Username !== "") {
+    if (userInfo.Username !== null && userInfo.Username !== "" && userInfo.SessionToken!==null && userInfo.SessionToken!=="") {
         return true;
     }
     else {
@@ -343,7 +343,6 @@ OCM_App.prototype.logout = function (navigateToHome) {
     this.clearCookie("Identifier");
     this.clearCookie("Username");
     this.clearCookie("OCMSessionToken");
-    this.clearCookie("AccessToken");
     this.clearCookie("AccessPermissions");
 
     if (navigateToHome == true) {
@@ -365,7 +364,6 @@ OCM_App.prototype.getLoggedInUserInfo = function () {
         "Identifier": this.getCookie("Identifier"),
         "Username": this.getCookie("Username"),
         "SessionToken": this.getCookie("OCMSessionToken"),
-        "AccessToken": this.getCookie("AccessToken"),
         "Permissions": this.getCookie("AccessPermissions")
     };
     return userInfo;
@@ -375,8 +373,7 @@ OCM_App.prototype.setLoggedInUserInfo = function (userInfo) {
 
     this.setCookie("Identifier", userInfo.Identifier);
     this.setCookie("Username", userInfo.Username);
-    this.setCookie("OCMSessionToken", userInfo.OCMSessionToken);
-    this.setCookie("AccessToken", userInfo.AccessToken);
+    this.setCookie("OCMSessionToken", userInfo.SessionToken);
     this.setCookie("AccessPermissions", userInfo.AccessPermissions);
 
 };

@@ -8,6 +8,7 @@ namespace OCM.MVC
 {
     public class CommonUtil
     {
+
         /// <summary>
         /// this language list corresponds to the list of supported OCM_UI_LocalisationResources
         /// </summary>

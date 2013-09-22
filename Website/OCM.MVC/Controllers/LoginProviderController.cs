@@ -12,11 +12,20 @@ namespace OCM.MVC.Controllers
     public class LoginProviderController : Controller
     {
 
-        protected void UpdateCookie(string cookieName, string cookieValue)
+        public static void UpdateCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
-            Response.Cookies[cookieName].Value = cookieValue;
-            //Response.Cookies[cookieName].Expires = DateTime.Now.AddDays(1);
+            response.Cookies[cookieName].Value = cookieValue;
         }
+
+        public static void ClearCookie(HttpResponseBase response, string cookieName, string cookieValue)
+        {
+            if (response.Cookies.AllKeys.Contains(cookieName))
+            {
+                response.Cookies[cookieName].Value = cookieValue;
+                response.Cookies[cookieName].Expires = DateTime.Now.AddDays(-1);
+            }
+        }
+
         //
         // GET: /LoginProvider/
 
@@ -77,25 +86,33 @@ namespace OCM.MVC.Controllers
                             userDetails.Username = screenName;
                             userDetails.DateCreated = DateTime.UtcNow;
                             userDetails.DateLastLogin = DateTime.UtcNow;
-                            userDetails.CurrentSessionToken = newSessionToken;
+
+                            //only update session token if new (also done on logout)
+                            if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
 
                             dataModel.Users.Add(userDetails);
                         }
                         else
                         {
                             userDetails.DateLastLogin = DateTime.UtcNow;
-                            //TODO: preserve session token to allow multiple device/browser sessions for single user
-                            userDetails.CurrentSessionToken = newSessionToken;
+
+                            //only update session token if new (also done on logout)
+                            if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
                         }
+
+                        //get whichever session token we used
+                        newSessionToken = userDetails.CurrentSessionToken;
+
                         dataModel.SaveChanges();
 
                         string permissions = (userDetails.Permissions != null ? userDetails.Permissions : "");
-                        UpdateCookie("IdentityProvider", "Twitter");
-                        UpdateCookie("Identifier", screenName);
-                        UpdateCookie("Username", userDetails.Username);
-                        UpdateCookie("OCMSessionToken", newSessionToken);
-                        UpdateCookie("AccessToken", Request["oauth_token"]);
-                        UpdateCookie("AccessPermissions", permissions);
+                        
+                        UpdateCookie(Response, "IdentityProvider", "Twitter");
+                        UpdateCookie(Response, "Identifier", screenName);
+                        UpdateCookie(Response, "Username", userDetails.Username);
+                        UpdateCookie(Response, "OCMSessionToken", newSessionToken);
+                        //UpdateCookie("AccessToken", Request["oauth_token"]);
+                        UpdateCookie(Response, "AccessPermissions", permissions);
 
                         Session["IdentityProvider"] = "Twitter";
                         Session["Identifier"] = screenName;

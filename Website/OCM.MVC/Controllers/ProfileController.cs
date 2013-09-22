@@ -10,6 +10,21 @@ namespace OCM.MVC.Controllers
 {
     public class ProfileController : Controller
     {
+
+        protected static void UpdateCookie(HttpResponseBase response, string cookieName, string cookieValue)
+        {
+            response.Cookies[cookieName].Value = cookieValue;
+        }
+
+        protected static void ClearCookie(HttpResponseBase response, string cookieName, string cookieValue)
+        {
+            if (response.Cookies.AllKeys.Contains(cookieName))
+            {
+                response.Cookies[cookieName].Value = cookieValue;
+                response.Cookies[cookieName].Expires = DateTime.Now.AddDays(-1);
+            }
+        }
+
         //
         // GET: /Profile/
 
@@ -34,7 +49,23 @@ namespace OCM.MVC.Controllers
 
         public ActionResult SignOut()
         {
+            if (Session["UserID"] != null)
+            {
+                // assign fresh session token for next login
+                var userManager = new UserManager();
+                userManager.AssignNewSessionToken((int)Session["UserID"]);
+            }
+
+            //clear cookies & set new session token
+            UpdateCookie(Response, "IdentityProvider", "");
+            UpdateCookie(Response, "Identifier", "");
+            UpdateCookie(Response, "Username", "");
+            UpdateCookie(Response, "OCMSessionToken", "");
+            UpdateCookie(Response, "AccessPermissions", "");
+
+            //clear session
             Session.Abandon();
+
             return RedirectToAction("Index", "Home");
         }
 
