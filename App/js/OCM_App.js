@@ -52,8 +52,8 @@ function OCM_App() {
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-        this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
-        //this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
+        //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
+        this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
     this.ocm_geo.ocm_data = this.ocm_data;

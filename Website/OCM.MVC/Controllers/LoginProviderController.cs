@@ -14,7 +14,14 @@ namespace OCM.MVC.Controllers
 
         public static void UpdateCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
-            response.Cookies[cookieName].Value = cookieValue;
+            if (response.Cookies.AllKeys.Contains(cookieName))
+            { 
+                response.Cookies[cookieName].Value = cookieValue;
+            }
+            else
+            {
+                response.Cookies.Add(new HttpCookie(cookieName, cookieValue));
+            }
         }
 
         public static void ClearCookie(HttpResponseBase response, string cookieName, string cookieValue)

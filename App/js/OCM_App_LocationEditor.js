@@ -167,8 +167,7 @@ OCM_App.prototype.populateEditor = function (refData) {
             this.logout(false);
         }
     } else {
-        this.logEvent("No user profile in reference data. logging out user.");
-        this.logout(false);
+        this.logEvent("No user profile in reference data.");
     }
 };
 
