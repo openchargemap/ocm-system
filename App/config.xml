@@ -23,7 +23,7 @@
   <preference name="phonegap-version" value="2.7.0" />
   <preference name="android-minSdkVersion" value="8" />
   <icon src="images/icons/AppIcon_114x114.png" />
-  <gap:splash src="images/AppSplashscreen_480x800.png" />
+  <gap:splash src="images/splashscreen/AppSplashscreen_480x800.png" />
   <gap:plugin name="ChildBrowser" />
   <gap:plugin name="GAPlugin" />
 

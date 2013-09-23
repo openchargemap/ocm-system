@@ -1,0 +1,34 @@
+<!-- Page:UploadMediaItem:Start -->
+<div data-role="page" id="submitmediaitem-page" class="ui-page">
+    <div data-role="header" data-position="fixed">
+        <div>
+            <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+            <div style="float: right"><i class="icon-camera"></i>&nbsp;<span>Add Photo</span></div>
+        </div>
+    </div>
+    <div data-role="content" class="container">
+
+        <p style="font-size: 0.8em;">
+            Submit your photo for this location below. <em>This information <strong>will</strong> be shared publically</em>.
+        </p>
+        <form id="mediaitem-form" action="#" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="ui-input-text" for="fileupload">Choose Photo</label><input class="form-control" id="fileupload" name="fileupload" accept="image/*" type="file" />
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <textarea id="comment" class="form-control"></textarea>
+            </div>
+        </form>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="form-options">
+                <a href="javascript:void();" data-rel="back" class="btn btn-default">Cancel</a>
+                <a id="submitmediaitem-button" class="btn btn-primary">Submit</a>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Page:UploadMediaItem:End -->

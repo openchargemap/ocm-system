@@ -1,0 +1,86 @@
+ <!-- Page:LocationDetails:Start -->
+<div data-role="page" id="locationdetails-page" class="ui-page">
+    <div data-role="header" data-position="fixed">
+        <div>
+            <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+            <div style="float: right"><i class="icon-search"></i>&nbsp;<span data-localize="ocm.details.sectionTitle">Location Details</span></div>
+        </div>
+    </div>
+    <div data-role="content" style="padding-bottom:50px;">
+        <div id="details-content">
+            <div class="section-heading">
+
+                <div id="details-options">
+                    <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="icon-heart-empty"></i></div>
+                    <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="icon-comment-alt"></i></div>
+                    <div class="option-item"><i id="option-uploadphoto" title="Upload Photo" class="icon-camera"></i></div>
+                    <div class="option-item"><i id="option-edit" title="Edit" class="icon-edit"></i></div>
+
+                </div>
+                <div id="details-locationtitle"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div id="details-general" class="content-subsection">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="details-address"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="details-streetview"></div>
+                            </div>
+                        </div>
+                        <div id="details-contact-container">
+                            <div id="details-contact"></div>
+                            <div id="details-map"></div>
+                        </div>
+
+                    </div>
+
+                    <div id="details-additional-container" class="content-subsection">
+                        <div class="section-heading" data-localize="ocm.details.equipment.sectionTitle">Equipment Details</div>
+                        <div id="details-additional"></div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div id="details-usercomments-container" class="content-subsection">
+                        <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
+
+                        <p>
+                            <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span> <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="icon-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a>
+                        </p>
+
+                        <div id="details-usercomments">
+                            <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
+                        </div>
+                    </div>
+
+                    <div id="details-mediaitems-container" class="content-subsection">
+                        <div class="section-heading" data-localize="ocm.details.mediaItems.sectionTitle">Photos</div>
+                        <div id="details-mediaitems">
+                            No photos submitted.
+                        </div>
+                    </div>
+                    <div id="details-advanced-container" class="content-subsection">
+                        <div class="section-heading" data-localize="ocm.details.advancedDetails">Additional Information</div>
+                        <div id="details-advanced" style="font-size:smaller;">
+                            None.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="form-options pull-right">
+                <a id="details-edit" class="btn btn-primary" data-role="button" data-icon="edit">Edit</a>
+            </div>
+        </nav>
+    </div>
+
+</div>
+<!-- Page:LocationDetails:End -->

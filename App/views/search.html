@@ -1,0 +1,77 @@
+<!-- Page:Search:Start -->
+<div data-role="page" id="search-page" class="ui-page">
+
+    <div data-role="header" data-position="fixed">
+        <div>
+            <a href="#home-page"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+            <div style="float: right"><i class="icon-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></div>
+        </div>
+    </div>
+
+    <div data-role="content">
+        <div id="content-placeholder"></div>
+        <div class="well well-sm">
+            <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
+
+                <div class="form-group">
+                    <label for="search-location" class="sr-only">Location</label>
+
+                    <div class="input-group">
+                        <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" value="Aberdeen, UK" />
+                        <span class="input-group-btn">
+                            <button id="search-button" class="btn btn-primary" type="button"><i class="icon-search"></i></button>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="btn-group">
+                            <button id="search-nearby" class="btn btn-default" type="button"><i class="icon-screenshot"></i> <span data-localize="ocm.search.useMyLocation">Find Near Me</span></button>
+                            <button id="search-settings" class="btn btn-default" type="button"><i class="icon-cog"></i> <span data-localize="ocm.general.settings">Settings</span></button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div id="search-no-data" class="info-section">Use this search to find charging locations near you or to search near a particular location. To filter by specific criteria go to Settings.</div>
+
+        <div id="results-list">
+            <div class="result" style="display: none;" id="results-item-template">
+                <a href="#locationdetails-page" style="overflow: auto;">
+                    <div style="overflow: auto">
+                        <h3>{locationtitle}</h3>
+                        <div style="overflow: auto;">
+                            <div class="result-item-a">
+                                {location}
+                                {comments}
+                            </div>
+                            <div class="result-item-b">
+
+                                <em>{distance} {distanceunit}</em>
+                                <p>
+                                    {status}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="form-options">
+                <div class="btn-group pull-right">
+                    <button id="search-map" class="btn btn-default" type="button"><i class="icon-map-marker"></i> <span data-localize="ocm.details.location.map">Map</span></button>
+                    <button id="search-favourites" class="btn btn-default" type="button"><i class="icon-heart"></i> <span data-localize="ocm.general.favourites">Favourites</span></button>
+                    <button id="search-addlocation" class="btn btn-default" type="button"><i class="icon-plus"></i></button>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Page:Search:End -->

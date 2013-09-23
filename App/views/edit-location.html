@@ -1,0 +1,204 @@
+<!-- Page:EditLocation:Start -->
+<div data-role="page" id="editlocation-page" class="ui-page">
+    <div data-role="header" data-position="fixed">
+        <div>
+            <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;<i class="icon-home"></i></a>
+            <div style="float: right"><i class="icon-plus"></i>&nbsp;Add/Edit Location</div>
+        </div>
+    </div>
+    <div data-role="content" class="container">
+        <p>
+            Please provide as much detail as you can about the charging location.<em>Please do not submit private residences (such as your home)</em>:
+        </p>
+        <form id="editlocation-form" action="#">
+            <div id="edit-location-container" data-role="collapsible" data-collapsed="false">
+                <h3 data-localize="ocm.details.location.sectionTitle">Location Details</h3>
+                <div class="form-group">
+                    <label for="edit_addressinfo_title" data-localize="ocm.details.location.title">Location Title</label>
+                    <input id="edit_addressinfo_title" class="form-control" required="required" placeholder="General Location Name" minlength="2" type="text" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_addressline1" data-localize="ocm.details.location.addressLine1">Address Line 1</label>
+                    <input type="text" id="edit_addressinfo_addressline1" class="form-control" name="edit_addressinfo_addressline1" placeholder="First line of Address" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_addressline2" data-localize="ocm.details.location.addressLine2">Address Line 2</label>
+                    <input type="text" id="edit_addressinfo_addressline2" class="form-control" name="edit_addressinfo_addressline2" placeholder="Second line of Address (if applicable)" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_town" data-localize="ocm.details.location.town">Town/City</label>
+                    <input type="text" id="edit_addressinfo_town" class="form-control" name="edit_addressinfo_town" placeholder="City or Town Name" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_stateorprovince" data-localize="ocm.details.location.stateOrProvince">State/Province</label>
+                    <input type="text" id="edit_addressinfo_stateorprovince" class="form-control" name="edit_addressinfo_stateorprovince" placeholder="State, Province or Region" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_postcode" data-localize="ocm.details.location.postcode">Zip/Postcode</label>
+                    <input type="text" id="edit_addressinfo_postcode" class="form-control" name="edit_addressinfo_postcode" placeholder="Zip/Postal Code if applicable" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_countryid" data-localize="ocm.details.location.country">Country</label>
+                    <select id="edit_addressinfo_countryid" class="form-control" name="edit_addressinfo_countryid">
+                        <option value="">(Not Listed)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <p>
+                        If you know the Latitude and Longitude of this location please provide it here, otherwise we can try to look it up for you:
+                        <button id="edit-location-lookup" class="btn btn-primary" type="button">Lookup</button>
+                    </p>
+                    <label for="edit_addressinfo_latitude">Latitude</label>
+                    <input id="edit_addressinfo_latitude" class="form-control" name="edit_addressinfo_latitude" type="number" placeholder="Latitude (if known)" value="" />
+
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_longitude">Longitude</label>
+                    <input id="edit_addressinfo_longitude" class="form-control" name="edit_addressinfo_longitude" type="number" placeholder="Longitude (if known)" value="" />
+                    <p id="position-attribution"></p>
+                </div>
+                <div id="editor-map">
+                    <p>The exact position of the charging equipment will be recorded as it is on the map below. Please drag the map marker below to the correct position:</p>
+                    <div id="editor-map-canvas" style="width: 100%; height: 300px; display: none; margin: 0; padding: 0; background-color: gainsboro;"></div>
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_accesscomments" data-localize="ocm.details.accessComments">Comment for Access/Directions</label>
+                    <input type="text" id="edit_addressinfo_accesscomments" class="form-control" name="ocm_loc_accesscomments" placeholder="How to find, special instructions etc." value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_contacttelephone1" data-localize="ocm.details.location.contactTelephone1">Contact telephone for enquiries</label>
+                    <input id="edit_addressinfo_contacttelephone1" class="form-control" name="edit_addressinfo_contacttelephone1" type="tel" placeholder="Contact number for more info/access." value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_contacttelephone2" data-localize="ocm.details.location.contactTelephone2">Additional Contact telephone</label>
+                    <input id="edit_addressinfo_contacttelephone2" class="form-control" name="edit_addressinfo_contacttelephone2" type="tel" placeholder="Additional contact number (if required)" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_contactemail" data-localize="ocm.details.location.contactEmail">Public email for enquiries</label>
+                    <input id="edit_addressinfo_contactemail" class="form-control" name="edit_addressinfo_contactemail" type="email" placeholder="Public email address for enquiries" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_addressinfo_relatedurl" data-localize="ocm.details.location.addressRelatedURL">Related Website</label>
+                    <input id="edit_addressinfo_relatedurl" class="form-control" name="edit_addressinfo_relatedurl" type="url" placeholder="Related Website" value="" />
+                </div>
+            </div>
+
+            <div id="edit-equipmentgeneral" data-role="collapsible" data-collapsed="false" data-content-theme="d">
+                <h3 data-localize="ocm.details.equipment.sectionTitle">General Equipment/Service Info</h3>
+                <div class="form-group">
+                    <label for="edit_numberofpoints" data-localize="ocm.details.numberOfPoints">Number of points available</label>
+                    <input id="edit_numberofpoints" class="form-control" name="edit_numberofpoints" type="number" value="1" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_usagetype" data-localize="ocm.details.usageType">Usage Restrictions</label>
+                    <select id="edit_usagetype" class="form-control" name="edit_usagetype">
+                        <option value="">Unknown</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit_usagecost" data-localize="ocm.details.usageType">Usage Cost (if any)</label>
+                    <input type="text" id="edit_usagecost" class="form-control" name="edit_usagecost" value="Free" />
+                </div>
+                <div class="form-group">
+                    <label for="edit_statustype" data-localize="ocm.details.operationalStatus">Status (if known)</label>
+                    <select id="edit_statustype" class="form-control" name="edit_statustype">
+                        <option value="0">Unknown</option>
+                        <option value="50">Operational</option>
+                        <option value="100">Not Operational</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit_generalcomments" data-localize="ocm.details.generalComments">Comments or Additional Info</label>
+                    <input type="text" id="edit_generalcomments" class="form-control" name="edit_generalcomments" value="" />
+                </div>
+                <div id="edit-operator-container" data-role="fieldcontain">
+                    <label for="edit_operator" data-localize="ocm.details.operator.sectionTitle">Network/Operator</label>
+                    <select id="edit_operator" name="edit_operator" class="form-control">
+                        <option value="1">Unknown</option>
+                    </select>
+                </div>
+                <div id="edit-dataprovider-container" data-role="fieldcontain">
+                    <label for="edit_dataprovider" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</label>
+                    <select id="edit_dataprovider" name="edit_dataprovider" class="form-control">
+                        <option value="1">OpenChargeMap Contributor</option>
+                    </select>
+                </div>
+                <div id="edit-submissionstatus-container" data-role="fieldcontain">
+                    <label for="edit_submissionstatus" data-localize="ocm.details.submissionStatus">Submission Status</label>
+                    <select id="edit_submissionstatus" name="edit_submissionstatus" class="form-control">
+                        <option value="1">Submission Under Review</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3 data-localize="ocm.details.equipment.sectionTitle">Equipment Info</h3>
+            <div class="panel-group" id="edit-connectioneditors">
+
+                <div id="edit_connection1" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#edit_connection1_panel">
+                                Equipment Details 1  - Equipment/Charging Level Info &gt;
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="edit_connection1_panel" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="edit_connection1_connectiontype" data-localize="ocm.details.equipment.connectionType">Connection Type</label>
+                                <select id="edit_connection1_connectiontype" class="form-control" name="edit_connection1_connectiontype">
+                                    <option value="" data-placeholder="false">Unknown</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_connection1_powerkw" data-localize="ocm.details.equipment.powerKW">Power (KW)</label>
+                                <input type="number" id="edit_connection1_powerkw" class="form-control" name="edit_connection1_powerkw" value="" />
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_connection1_currenttype" data-localize="ocm.details.equipment.supplyType">Supply Type</label>
+                                <select id="edit_connection1_currenttype" class="form-control" name="edit_connection1_currenttype">
+                                    <option value="" data-placeholder="false">Unknown</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_connection1_level" data-localize="ocm.details.equipment.powerLevel">Charger Type/Level</label>
+                                <select id="edit_connection1_level" class="form-control" name="edit_connection1_level">
+                                    <option value="" data-placeholder="false">Unknown</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_connection1_amps" data-localize="ocm.details.equipment.current">Max Current (Amps)</label>
+                                <input type="number" id="edit_connection1_amps" class="form-control" name="edit_connection1_amps" value="" />
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_connection1_volts" data-localize="ocm.details.equipment.voltage">Max Voltage</label>
+                                <input type="number" id="edit_connection1_volts" class="form-control" name="edit_connection1_volts" value="" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_connection1_quantity" data-localize="ocm.details.equipment.quantity">Quantity of this type</label>
+                                <input type="number" id="edit_connection1_quantity" class="form-control" name="edit_connection1_quantity" value="" />
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_connection1_status" data-localize="ocm.details.operationalStatus">Status</label>
+                                <select id="edit_connection1_status" class="form-control" name="edit_connection1_status">
+                                    <option value="" data-placeholder="false">Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="form-options">
+                <a href="javascript:void();" data-rel="back" class="btn btn-default">Cancel</a>
+                <a id="editlocation-submit" class="btn btn-primary">Submit</a>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Page:EditLocation:End -->

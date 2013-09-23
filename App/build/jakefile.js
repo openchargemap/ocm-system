@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "4.0.0_"+ moment().format('YYYYMMDD');
+var releaseVersion = "4.0.1_"+ moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/webapp";
@@ -251,7 +251,7 @@ task("update-manifest", function () {
 });
 
 desc("Build Target: Web");
-task("build-web", ["create-dir", "copy-index", "copy-files", "update-manifest"], function () {
+task("build-web", ["create-dir", "concat", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Web Target built.");
 });
 
@@ -263,16 +263,18 @@ task("build-mobile", ["create-dir", "copy-index", "copy-files", "update-manifest
 desc("Concatenates all html page templates files into body for use in index.html");
 task('concat', function () {
     
-    var files = fs.readdirSync(srcDir+"/html/");
+    var files = fs.readdirSync(srcDir+"/views/");
     var output ="";
     files.forEach(function (file) {
-            
-        output += fs.readFileSync(srcDir+"/html/"+file,"utf8");
+        if (file.indexOf(".html") > 0)
+            {
+            output += fs.readFileSync(srcDir+"/views/"+file,"utf8")+"\r\n";
+        }
            
     });
     
 
-    indexFile = indexFile.replace("<!--PAGES-->", output);
+    indexFile = indexFile.replace("<!--INCLUDE:VIEWS-->", output);
     
 });
 

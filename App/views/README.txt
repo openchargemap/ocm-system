@@ -1,0 +1,1 @@
+﻿.html view are saved as UTF-8 without Byte Order Marker (BOM) codepage 65001 in visual studio or UTF-8 without BOM in Notepad++

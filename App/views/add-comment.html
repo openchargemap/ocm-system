@@ -1,0 +1,58 @@
+<!-- Page:Comments:Start -->
+<div data-role="page" id="submitcomment-page" class="ui-page">
+    <div data-role="header" data-position="fixed">
+        <div>
+            <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
+            <div style="float: right"><i class="icon-comment-alt"></i>&nbsp;<span>Add Comment</span></div>
+        </div>
+    </div>
+    <div data-role="content" class="container">
+        <p style="font-size: 0.8em;">
+            Please share your experience with this location. <em>Your comment <strong>will</strong> be distributed publically</em>.
+        </p>
+        <form id="comment-form" role="form" action="#">
+
+            <div class="form-group">
+                <label for="checkin-type">Did you charge here?</label>
+                <select id="checkin-type" class="form-control">
+                    <option value="0">Did Not Visit Location</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comment-type">Comment Type</label>
+                <select id="comment-type" class="form-control">
+                    <option value="10">General Comment</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comment-rating">How did you rate the location or equipment?</label>
+                <select id="comment-rating" class="form-control">
+                    <option value="5">5 - Excellent</option>
+                    <option value="4">4 - Good</option>
+                    <option value="3">3 - Average</option>
+                    <option value="2">2 - Not Good</option>
+                    <option value="1">1 - Bad</option>
+                    <option value="" selected="selected">Not Rated</option>
+                </select>
+            </div>
+            <div class="form-group" style="display:none;">
+                <label for="comment-username">Your Name (will be shown)</label>
+                <input id="comment-username" class="form-control" type="text" />
+            </div>
+            <div class="form-group">
+                <label for="comment-text">Comment (optional)</label>
+                <textarea id="comment-text" class="form-control"></textarea>
+            </div>
+        </form>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="form-options">
+                <a href="javascript:void();" data-rel="back" class="btn btn-default">Cancel</a>
+                <a id="submitcomment-button" class="btn btn-primary">Submit</a>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Page:Comments:End -->
