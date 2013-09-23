@@ -1,5 +1,7 @@
 /// <reference path="TypeScriptReferences/jquery.d.ts" />
+
 //"use strict";
+
 function OCM_LocationSearchParams() {
     this.countryCode = null;
     this.latitude = null;
@@ -31,13 +33,11 @@ function OCM_Data() {
 }
 
 OCM_Data.prototype.fetchLocationDataList = function (countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
-    if (countrycode === null)
-        countrycode = "";
-    if (additionalparams === null)
-        additionalparams = "";
 
-    if (!errorcallback)
-        errorcallback = this.handleGeneralAjaxError;
+    if (countrycode === null) countrycode = "";
+    if (additionalparams === null) additionalparams = "";
+
+    if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
     $.ajax({
         type: "GET",
@@ -51,46 +51,30 @@ OCM_Data.prototype.fetchLocationDataList = function (countrycode, lat, lon, dist
 };
 
 OCM_Data.prototype.fetchLocationDataListByParam = function (params, callbackname, errorcallback) {
+
     var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json";
     var serviceParams = "";
-    if (params.countryCode != null)
-        serviceParams += "&countrycode=" + params.countryCode;
-    if (params.latitude != null)
-        serviceParams += "&latitude=" + params.latitude;
-    if (params.longitude != null)
-        serviceParams += "&longitude=" + params.longitude;
-    if (params.distance != null)
-        serviceParams += "&distance=" + params.distance;
-    if (params.distanceUnit != null)
-        serviceParams += "&distanceunit=" + params.distanceUnit;
-    if (params.includeComments != null)
-        serviceParams += "&includecomments=" + params.includeComments;
-    if (params.maxResults != null)
-        serviceParams += "&maxresults=" + params.maxResults;
-    if (params.countryID != null)
-        serviceParams += "&countryid=" + params.countryID;
-    if (params.levelID != null)
-        serviceParams += "&levelid=" + params.levelID;
-    if (params.connectionTypeID != null)
-        serviceParams += "&connectiontypeid=" + params.connectionTypeID;
-    if (params.operatorID != null)
-        serviceParams += "&operatorid=" + params.operatorID;
-    if (params.usageTypeID != null)
-        serviceParams += "&usagetypeid=" + params.usageTypeID;
-    if (params.statusTypeID != null)
-        serviceParams += "&statustypeid=" + params.statusTypeID;
-    if (params.submissionStatusTypeID != null)
-        serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
+    if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
+    if (params.latitude != null) serviceParams += "&latitude=" + params.latitude;
+    if (params.longitude != null) serviceParams += "&longitude=" + params.longitude;
+    if (params.distance != null) serviceParams += "&distance=" + params.distance;
+    if (params.distanceUnit != null) serviceParams += "&distanceunit=" + params.distanceUnit;
+    if (params.includeComments != null) serviceParams += "&includecomments=" + params.includeComments;
+    if (params.maxResults != null) serviceParams += "&maxresults=" + params.maxResults;
+    if (params.countryID != null) serviceParams += "&countryid=" + params.countryID;
+    if (params.levelID != null) serviceParams += "&levelid=" + params.levelID;
+    if (params.connectionTypeID != null) serviceParams += "&connectiontypeid=" + params.connectionTypeID;
+    if (params.operatorID != null) serviceParams += "&operatorid=" + params.operatorID;
+    if (params.usageTypeID != null) serviceParams += "&usagetypeid=" + params.usageTypeID;
+    if (params.statusTypeID != null) serviceParams += "&statustypeid=" + params.statusTypeID;
+    if (params.submissionStatusTypeID != null) serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
 
-    if (params.enableCaching == false)
-        serviceParams += "&enablecaching=false";
-    if (params.additionalParams != null)
-        serviceParams += "&" + params.additionalParams;
+    if (params.enableCaching == false) serviceParams += "&enablecaching=false";
+    if (params.additionalParams != null) serviceParams += "&" + params.additionalParams;
 
-    if (!errorcallback)
-        errorcallback = this.handleGeneralAjaxError;
+    if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
-    var ajaxSettings = {
+    var ajaxSettings: JQueryAjaxSettings = {
         type: "GET",
         url: serviceURL + serviceParams + "&callback=" + callbackname,
         jsonp: "false",
@@ -105,10 +89,9 @@ OCM_Data.prototype.fetchLocationDataListByParam = function (params, callbackname
 
 OCM_Data.prototype.fetchLocationById = function (id, callbackname, errorcallback) {
     var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
-    if (!errorcallback)
-        errorcallback = this.handleGeneralAjaxError;
+    if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
-    var ajaxSettings = {
+    var ajaxSettings: JQueryAjaxSettings = {
         type: "GET",
         url: serviceURL + "&callback=" + callbackname,
         jsonp: "false",
@@ -134,7 +117,8 @@ OCM_Data.prototype.handleGeneralAjaxError = function (result, ajaxOptions, throw
         } else {
             alert("Your session has expired. Please sign in again.");
         }
-    } else {
+    }
+    else {
         if (this.generalErrorCallback) {
             this.generalErrorCallback();
         } else {
@@ -144,9 +128,10 @@ OCM_Data.prototype.handleGeneralAjaxError = function (result, ajaxOptions, throw
 };
 
 OCM_Data.prototype.fetchCoreReferenceData = function (callbackname, authSessionInfo) {
+
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
-    var ajaxSettings = {
+    var ajaxSettings: JQueryAjaxSettings = {
         type: "GET",
         url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json&verbose=false&callback=" + callbackname + "&" + authInfoParams,
         jsonp: "false",
@@ -160,9 +145,10 @@ OCM_Data.prototype.fetchCoreReferenceData = function (callbackname, authSessionI
 };
 
 OCM_Data.prototype.fetchGeocodeResult = function (address, successCallback, authSessionInfo) {
+
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
-    var ajaxSettings = {
+    var ajaxSettings: JQueryAjaxSettings = {
         type: "GET",
         url: this.serviceBaseURL + "/geocode/?client=" + this.clientName + "&address=" + address + "&output=json&verbose=false&camelcase=true&" + authInfoParams,
         contentType: "application/json;",
@@ -179,10 +165,8 @@ OCM_Data.prototype.getAuthParamsFromSessionInfo = function (authSessionInfo) {
     var authInfoParams = "";
 
     if (authSessionInfo != null) {
-        if (authSessionInfo.Identifier != null)
-            authInfoParams += "&Identifier=" + authSessionInfo.Identifier;
-        if (authSessionInfo.SessionToken != null)
-            authInfoParams += "&SessionToken=" + authSessionInfo.SessionToken;
+        if (authSessionInfo.Identifier != null) authInfoParams += "&Identifier=" + authSessionInfo.Identifier;
+        if (authSessionInfo.SessionToken != null) authInfoParams += "&SessionToken=" + authSessionInfo.SessionToken;
 
         return authInfoParams;
     }
@@ -190,17 +174,16 @@ OCM_Data.prototype.getAuthParamsFromSessionInfo = function (authSessionInfo) {
 };
 
 OCM_Data.prototype.submitLocation = function (data, authSessionInfo, completedCallback, failureCallback) {
+
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
     var jsonString = JSON.stringify(data);
 
-    var ajaxSettings = {
+    var ajaxSettings: JQueryAjaxSettings = {
         type: "POST",
         url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=cp_submission&format=json" + authInfoParams,
         data: jsonString,
-        complete: function (jqXHR, textStatus) {
-            completedCallback(jqXHR, textStatus);
-        },
+        complete: function (jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
         crossDomain: true,
         error: this.handleGeneralAjaxError
     };
@@ -209,6 +192,7 @@ OCM_Data.prototype.submitLocation = function (data, authSessionInfo, completedCa
 };
 
 OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, completedCallback, failureCallback) {
+
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
     var jsonString = JSON.stringify(data);
@@ -217,30 +201,27 @@ OCM_Data.prototype.submitUserComment = function (data, authSessionInfo, complete
         type: "POST",
         url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=comment_submission&format=json" + authInfoParams,
         data: jsonString,
-        success: function (result, textStatus, jqXHR) {
-            completedCallback(jqXHR, textStatus);
-        },
+        success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
         crossDomain: true,
         error: this.handleGeneralAjaxError
     });
 };
 
 OCM_Data.prototype.submitMediaItem = function (data, authSessionInfo, completedCallback, failureCallback) {
+
     var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
     $.ajax({
         url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams,
         type: 'POST',
-        xhr: function () {
+        xhr: function () {  // custom xhr
             var myXhr = $.ajaxSettings.xhr();
-            if (myXhr.upload) {
+            if (myXhr.upload) { // check if upload property exists
                 //myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // for handling the progress of the upload
             }
             return myXhr;
         },
-        success: function (result, textStatus, jqXHR) {
-            completedCallback(jqXHR, textStatus);
-        },
+        success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
         error: this.handleGeneralAjaxError,
         data: data,
         cache: false,
@@ -248,11 +229,11 @@ OCM_Data.prototype.submitMediaItem = function (data, authSessionInfo, completedC
         processData: false,
         crossDomain: true
     });
+
 };
 
 OCM_Data.prototype.getRefDataByID = function (refDataList, id) {
-    if (id != "")
-        id = parseInt(id);
+    if (id != "") id = parseInt(id);
 
     if (refDataList != null) {
         for (var i = 0; i < refDataList.length; i++) {
@@ -279,9 +260,9 @@ OCM_Data.prototype.sortReferenceData = function (sourceList) {
     sourceList.sort(this.sortListByTitle);
 };
 
+
 OCM_Data.prototype.getMetadataValueByMetadataFieldID = function (metadataValues, id) {
-    if (id != "")
-        id = parseInt(id);
+    if (id != "") id = parseInt(id);
 
     if (metadataValues != null) {
         for (var i = 0; i < metadataValues.length; i++) {
@@ -294,12 +275,9 @@ OCM_Data.prototype.getMetadataValueByMetadataFieldID = function (metadataValues,
 };
 
 OCM_Data.prototype.sortListByTitle = function (a, b) {
-    if (a.Title < b.Title)
-        return -1;
-    if (a.Title > b.Title)
-        return 1;
-    if (a.Title == b.Title)
-        return 0;
+    if (a.Title < b.Title) return -1;
+    if (a.Title > b.Title) return 1;
+    if (a.Title == b.Title) return 0;
 
     return 0;
 };
@@ -310,13 +288,14 @@ OCM_Data.prototype.isLocalStorageAvailable = function () {
 
 OCM_Data.prototype.setCachedDataObject = function (itemName, itemValue) {
     if (this.isLocalStorageAvailable()) {
-        if (typeof itemValue === 'undefined')
-            itemValue = null;
+        if (typeof itemValue === 'undefined') itemValue = null;
         if (itemValue === null) {
             localStorage.removeItem(itemName);
-        } else {
+        }
+        else {
             localStorage.setItem(itemName, JSON.stringify(itemValue));
         }
+
     }
 };
 

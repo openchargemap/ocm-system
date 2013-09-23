@@ -1,3 +1,4 @@
+/// <reference path="TypeScriptReferences/google.maps.d.ts" />
 //"use strict";
 
 function OCM_Geolocation() {
