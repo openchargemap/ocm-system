@@ -367,6 +367,8 @@
     <Content Include="Views\LoginProvider\AppLogin.cshtml" />
     <Content Include="Views\Profile\View.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MetadataValue.cshtml" />
+    <Content Include="Views\Admin\EditOperator.cshtml" />
+    <Content Include="Views\Admin\Operators.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

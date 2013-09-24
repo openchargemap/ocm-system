@@ -1,0 +1,48 @@
+﻿@model IEnumerable<OCM.API.Common.Model.OperatorInfo>
+
+@{
+    ViewBag.Title = "Operators";
+}
+
+<h2>Operators</h2>
+
+<p>
+    @Html.ActionLink("Create New", "EditOperator", null, new  {@class="btn btn-primary" })
+</p>
+<table class="table table-striped">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WebsiteURL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FaultReportEmail)
+        </th>
+        
+        
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "EditOperator", new { id = item.ID })
+            </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+            </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.WebsiteURL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FaultReportEmail)
+        </td>
+  
+
+    </tr>
+}
+
+</table>

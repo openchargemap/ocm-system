@@ -103,6 +103,7 @@
     <Compile Include="Common\Extensions\MetadataGroup.cs" />
     <Compile Include="Common\Extensions\DataType.cs" />
     <Compile Include="Common\MediaItemManager.cs" />
+    <Compile Include="Common\OperatorInfoManager.cs" />
     <Compile Include="Common\SearchFilterSettings.cs" />
     <Compile Include="Common\AuditLogManager.cs" />
     <Compile Include="Common\POIManager.cs" />

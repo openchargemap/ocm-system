@@ -37,10 +37,41 @@ namespace OCM.MVC.Controllers
         {
             var userManager = new UserManager();
 
-            //var user = userManager.GetUser(userDetails.ID);
+            //save
             userManager.UpdateUserProfile(userDetails, true);
-            //TODO: save
+            
             return View(userDetails);
+        }
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult Operators()
+        {
+            var operatorInfoManager=  new OperatorInfoManager();
+
+            return View(operatorInfoManager.GetOperators());
+        }
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult EditOperator(int? id)
+        {
+            var operatorInfo = new OperatorInfo();
+
+            if (id != null) operatorInfo = new OperatorInfoManager().GetOperatorInfo((int)id);
+            return View(operatorInfo);
+        }
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult EditOperator(OperatorInfo operatorInfo)
+        {
+            if(ModelState.IsValid)
+            { 
+                var operatorInfoManager = new OperatorInfoManager();
+
+                operatorInfo = operatorInfoManager.UpdateOperatorInfo(operatorInfo);
+                return RedirectToAction("Operators", "Admin");
+            }
+            return View(operatorInfo);
         }
     }
 }
