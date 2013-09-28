@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
     <meta http-equiv="cache-control" content="no-cache">
 
     <title>Open Charge Map - Web App</title>
@@ -31,8 +31,35 @@
     <link rel="apple-touch-icon-precomposed" href="images/icons/AppIcon_57x57.png" />
     <link rel="icon" type="image/png" href="images/icons/AppIcon_57x57.png" />
 
-    <!-- Reset CSS Styles -->
+    <!-- CSS Styles -->
     <!--<link rel="stylesheet" href="styles/reset.css" />-->
+    <link rel="stylesheet" href="js/ThirdParty/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css">-->
+    <!--[if IE 7]>
+    <!--<link href="fonts/FontAwesome/css/font-awesome-ie7.min.css" rel="stylesheet">-->
+    <![endif]-->
+    <!-- Apply App Styles -->
+    <link rel="stylesheet" href="js/ThirdParty/pocketgrid.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/extended.css" />
+
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.ie.css" />
+    <![endif]-->
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.css" />
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.css">
+    <!--CSS:WINDOWS:BEGIN-->
+    <link rel="stylesheet" href="styles/windows.css" />
+    <!--<script>
+        $('body').on('mousemove', function (e) {
+            //attempt to avoid overscrolling
+            e.preventDefault();
+        });
+    </script>
+        -->
+    <!--CSS:WINDOWS:END-->
     <!--JS:Cordova:Begin-->
     <script src="cordova.js"></script>
     <!--JS:Cordova:End-->
@@ -44,43 +71,15 @@
     <script src="js/ThirdParty/jquery.validate.min.js"></script>
     <script src="js/ThirdParty/json3.min.js"></script>
     <script src="js/ThirdParty/jquery.history.js"></script>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="js/ThirdParty/bootstrap/css/bootstrap.min.css">
-
-    <!-- Latest compiled and minified JavaScript -->
     <script src="js/ThirdParty/bootstrap/js/bootstrap.min.js"></script>
-
-    <!--fonts-->
-    <link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css">
-
-    <!--[if IE 7]>
-    <link href="fonts/FontAwesome/css/font-awesome-ie7.min.css" rel="stylesheet">
-    <![endif]-->
-    <!-- Apply App Styles -->
-    <link rel="stylesheet" href="js/ThirdParty/pocketgrid.min.css" />
-    <link rel="stylesheet" href="styles/main.css" />
-    <link rel="stylesheet" href="styles/extended.css" />
-
-    <!--JS:LEAFLET:BEGIN-->
-    <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.css" />
-    <!--[if lte IE 8]>
-        <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.ie.css" />
-    <![endif]-->
-
     <script src="js/ThirdParty/leaflet/leaflet.js"></script>
-    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.css" />
-    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.css" />
     <!--[if lte IE 8]><link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.ie.css" /><![endif]-->
     <script src="js/ThirdParty/leaflet/markerclusterer/leaflet.markercluster.js"></script>
-    <link rel="stylesheet" href="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.css">
     <script src="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.js"></script>
-    <!--JS:LEAFLET:END-->
 
-    <!--JS:WINDOWS:BEGIN-->
-    <!--<link rel="stylesheet" href="styles/windows.css" />-->
-    <!--JS:WINDOWS:END-->
-
+    <!--JS:IOS:BEGIN-->
+    <!--<link rel="stylesheet" href="styles/ios.css" />-->
+    <!--JS:IOS:END-->
     <!-- JS:LIB:BEGIN -->
     <!-- App JS -->
     <script src="js/OCM_Data.js"></script>

@@ -8,7 +8,8 @@ Cordova Build Notes
 	- Remove analytics.js reference
 	- WP7 Build notes
 		- Set resources (js/images etc) as Content in VS project file
-		- Edit Properties/WMAppManifest.xml to include permissions:
+		- Edit Properties/WMAppManifest.xml to include permissions
+		- remove reference to fontawesome/webfonts
     -iOS Build Notes
         - Uncheck Automatic Reference Counting
         - Drag www folder to project root

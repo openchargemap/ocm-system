@@ -1,3 +1,4 @@
+
 /*
 OCM charging location browser/editor Mobile App
 Christopher Cook
@@ -10,10 +11,10 @@ See http://www.openchargemap.org/ for more details
 /*global define, $, window, document, OCM_CommonUI, OCM_Geolocation, OCM_Data, OCM_LocationSearchParams */
 
 /*typescript*/
+/// <reference path="TypeScriptReferences/jquery.d.ts" />
 //declare var OCM_CommonUI;
 //declare var OCM_Geolocation;
 //declare var OCM_Data;
-//declare var $;
 
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
@@ -83,6 +84,8 @@ OCM_App.prototype.initApp = function () {
     this.showProgressIndicator();
     this.appInitialised = true;
 
+    this.ocm_ui.isRunningUnderCordova = this.isRunningUnderCordova;
+
     //wire up state tracking
     this.initStateTracking();
 
@@ -108,10 +111,8 @@ OCM_App.prototype.initApp = function () {
     $('#option-language').change(function () {
         app.switchLanguage($("#option-language").val());
     });
-    //setTimeout(function(){
+    
     app.initDeferredUI();
-    //},50);
-
 };
 
 OCM_App.prototype.setupUIActions = function () {
@@ -189,7 +190,7 @@ OCM_App.prototype.setupUIActions = function () {
     });
 
     //media item uploads
-    app.setElementAction("#option-uploadphoto", function () {
+    app.setElementAction("#option-uploadphoto, #btn-uploadphoto", function () {
         app.navigateToAddMediaItem();
     });
 
@@ -758,7 +759,7 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
 
     var streetviewUrl = "http://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
     var streetViewLink = "https://maps.google.com/maps?q=&layer=c&cbll=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&cbp=11,0,0,0,0";
-    $("#details-streetview").html("<a target='_blank' href='#' onclick=\"window.open('"+streetViewLink+"', '_system');\"><img src=\"" + streetviewUrl + "\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" /></a>");
+    $("#details-streetview").html("<a href='#' onclick=\"window.open('"+streetViewLink+"', '_system');\"><img src=\"" + streetviewUrl + "\" width=\"192\" height=\"96\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" /></a>");
     
     if (poi.UserComments != null) {
         var commentOutput = "<div class='comments'>";
