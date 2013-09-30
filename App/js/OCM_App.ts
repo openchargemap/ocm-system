@@ -1,3 +1,25 @@
+
+/*
+OCM charging location browser/editor Mobile App
+Christopher Cook
+http://openchargemap.org
+
+See http://www.openchargemap.org/ for more details
+*/
+
+/*jslint browser: true, devel: true, eqeq: true, white: true */
+/*global define, $, window, document, OCM_CommonUI, OCM_Geolocation, OCM_Data, OCM_LocationSearchParams */
+
+/*typescript*/
+/// <reference path="TypeScriptReferences/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/phonegap.d.ts" />
+
+//typescript declarations
+declare var OCM_CommonUI;
+declare var OCM_Geolocation;
+declare var OCM_Data;
+declare var localisation_dictionary;
+
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
     this.ocm_geo = new OCM_Geolocation();
@@ -5,7 +27,7 @@ function OCM_App() {
     this.numConnectionEditors = 5;
     this.maxResults = 100;
     this.locationList = null;
-    this.resultBatchID = 1;
+    this.resultBatchID = 1; //used to track changes in result sets, avoiding duplicate processing (maps etc)
     this.ocm_app_searchPos = null;
 
     this.currentInfoWindow = null;
@@ -35,12 +57,12 @@ function OCM_App() {
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-
         //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
         this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
     this.ocm_geo.ocm_data = this.ocm_data;
+
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -50,6 +72,7 @@ OCM_App.prototype.logEvent = function (logMsg) {
 };
 
 OCM_App.prototype.setElementAction = function (elementSelector, actionHandler) {
+
     $(elementSelector).unbind("click");
     $(elementSelector).unbind("touchstart");
     $(elementSelector).fastClick(function (event) {
@@ -59,6 +82,7 @@ OCM_App.prototype.setElementAction = function (elementSelector, actionHandler) {
 };
 
 OCM_App.prototype.initApp = function () {
+
     var app = this.ocm_app_context;
 
     this.showProgressIndicator();
@@ -70,6 +94,7 @@ OCM_App.prototype.initApp = function () {
     this.initStateTracking();
 
     //wire up button events
+
     this.setupUIActions();
 
     $('#intro-section').show();
@@ -77,21 +102,16 @@ OCM_App.prototype.initApp = function () {
     this.initEditors();
 
     //populate language options
+
     this.populateDropdown("option-language", this.ocm_data.languageList, this.languageCode);
 
     //load options settings from storage/cookies
     this.loadSettings();
 
     //when options change, store settings
-    $('#search-distance').change(function () {
-        app.storeSettings();
-    });
-    $('#search-distance-unit').change(function () {
-        app.storeSettings();
-    });
-    $('#option-enable-experiments').change(function () {
-        app.storeSettings();
-    });
+    $('#search-distance').change(function () { app.storeSettings(); });
+    $('#search-distance-unit').change(function () { app.storeSettings(); });
+    $('#option-enable-experiments').change(function () { app.storeSettings(); });
     $('#option-language').change(function () {
         app.switchLanguage($("#option-language").val());
     });
@@ -100,8 +120,8 @@ OCM_App.prototype.initApp = function () {
 };
 
 OCM_App.prototype.setupUIActions = function () {
-    var app = this;
 
+    var app = this;
     //running straight jquery, pages are hidden by default, show home screen
     $("#home-page").show();
 
@@ -112,7 +132,6 @@ OCM_App.prototype.setupUIActions = function () {
     app.setElementAction("a[data-rel='back']", function () {
         History.back();
     });
-
     //set home page ui link actions
     app.setElementAction("a[href='#search-page'],#map-listview", function () {
         app.navigateToSearch();
@@ -182,11 +201,13 @@ OCM_App.prototype.setupUIActions = function () {
     app.setElementAction("#submitmediaitem-button", function () {
         app.performMediaItemSubmit();
     });
+
 };
 
 OCM_App.prototype.postLoginInit = function () {
     var userInfo = this.getLoggedInUserInfo();
 
+    //if user logged in, enable features
     if (!this.isUserSignedIn()) {
         //user is not signed in
         //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");
@@ -197,7 +218,9 @@ OCM_App.prototype.postLoginInit = function () {
         //user is signed in
         $("#user-profile-info").html("You are signed in as: " + userInfo.Username + " <input type=\"button\" data-mini=\"true\" class='btn btn-primary' value=\"Sign Out\" onclick='ocm_app.logout(true);' />").trigger("create");
         $("#login-button").hide();
+
     }
+
 };
 
 OCM_App.prototype.initDeferredUI = function () {
@@ -218,6 +241,7 @@ OCM_App.prototype.initDeferredUI = function () {
         if ($.mobile) {
             $("#navbar").trigger("create");
             $("#navbar").navbar("refresh");
+
 
             $("#experiment-page").delegate('pageshow', function (event, ui) {
                 app.initExperimentalContent();
@@ -243,6 +267,7 @@ OCM_App.prototype.initDeferredUI = function () {
     //if ID of location passed in, show details view
     var idParam = app.getParameter("id");
     if (idParam !== null && idParam !== "") {
+
         var poiId = parseInt(app.getParameter("id"), 10);
         setTimeout(function () {
             app.showDetailsViewById(poiId);
@@ -261,7 +286,8 @@ OCM_App.prototype.isUserSignedIn = function () {
 
     if (userInfo.Username !== null && userInfo.Username !== "" && userInfo.SessionToken !== null && userInfo.SessionToken !== "") {
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 };
@@ -275,32 +301,36 @@ OCM_App.prototype.beginLogin = function () {
     if (this.isRunningUnderCordova) {
         //do phonegapped login using InAppBrowser
         var app = this;
-        var ref = window.open(this.loginProviderRedirectBaseURL + 'AppLogin', '_blank', 'location=yes');
+        var ref: any = window.open(this.loginProviderRedirectBaseURL + 'AppLogin', '_blank', 'location=yes');
 
         ref.addEventListener('loadstop', function (event) {
             app.hideProgressIndicator();
 
             app.logEvent('fetching login result: ' + event.url);
 
-            try  {
+            try {
+
                 ref.executeScript({
                     code: "getSignInResult();"
                 }, function (result) {
-                    if (result != null) {
-                        ref.close();
-                        var userInfo = result[0];
+                        if (result != null) {
+                            ref.close();
+                            var userInfo = result[0];
 
-                        app.logEvent('got login: ' + userInfo.Username);
+                            app.logEvent('got login: ' + userInfo.Username);
 
-                        app.setLoggedInUserInfo(userInfo);
-                        app.postLoginInit();
-                    } else {
-                        app.logEvent('no sign in result received');
-                    }
+                            app.setLoggedInUserInfo(userInfo);
+                            app.postLoginInit();
+                        }
+                        else {
+                            app.logEvent('no sign in result received');
+                        }
 
-                    //return to home
-                    app.navigateToHome();
-                });
+                        //return to home
+                        app.navigateToHome();
+
+                    });
+
             } catch (err) {
                 app.logEvent("Ignoring phonegap error evaluation login script");
             }
@@ -308,12 +338,14 @@ OCM_App.prototype.beginLogin = function () {
 
         ref.addEventListener('loaderror', function (event) {
             app.logEvent('error: ' + event.message);
-        });
+        }
+            );
 
         ref.addEventListener('exit', function (event) {
             app.logEvent(event.type);
         });
-    } else {
+    }
+    else {
         //do normal web login
         window.location = this.loginProviderRedirectURL;
     }
@@ -328,17 +360,17 @@ OCM_App.prototype.logout = function (navigateToHome) {
     this.clearCookie("AccessPermissions");
 
     if (navigateToHome == true) {
-        app.postLoginInit();
+        app.postLoginInit(); //refresh signed in/out ui
         if (this.isRunningUnderCordova) {
             app.navigateToHome();
-        } else {
-            setTimeout(function () {
-                window.location = app.baseURL;
-            }, 100);
+        }
+        else {
+            setTimeout(function () { window.location = app.baseURL; }, 100);
         }
     } else {
-        app.postLoginInit();
+        app.postLoginInit(); //refresh signed in/out ui
     }
+
 };
 
 OCM_App.prototype.getLoggedInUserInfo = function () {
@@ -352,10 +384,12 @@ OCM_App.prototype.getLoggedInUserInfo = function () {
 };
 
 OCM_App.prototype.setLoggedInUserInfo = function (userInfo) {
+
     this.setCookie("Identifier", userInfo.Identifier);
     this.setCookie("Username", userInfo.Username);
     this.setCookie("OCMSessionToken", userInfo.SessionToken);
     this.setCookie("AccessPermissions", userInfo.AccessPermissions);
+
 };
 OCM_App.prototype.storeSettings = function () {
     //save option settings to cookies
@@ -368,17 +402,14 @@ OCM_App.prototype.storeSettings = function () {
 };
 
 OCM_App.prototype.loadSettings = function () {
-    if (this.getCookie("optsearchdist") != null)
-        $('#search-distance').val(this.getCookie("optsearchdist"));
-    if (this.getCookie("optsearchdistunit") != null)
-        $('#search-distance-unit').val(this.getCookie("optsearchdistunit"));
-    if (this.getCookie("optenableexperiments") != null)
-        $('#option-enable-experiments').val(this.getCookie("optenableexperiments"));
-    if (this.getCookie("optlanguagecode") != null)
-        $('#option-language').val(this.getCookie("optlanguagecode"));
+    if (this.getCookie("optsearchdist") != null) $('#search-distance').val(this.getCookie("optsearchdist"));
+    if (this.getCookie("optsearchdistunit") != null) $('#search-distance-unit').val(this.getCookie("optsearchdistunit"));
+    if (this.getCookie("optenableexperiments") != null) $('#option-enable-experiments').val(this.getCookie("optenableexperiments"));
+    if (this.getCookie("optlanguagecode") != null) $('#option-language').val(this.getCookie("optlanguagecode"));
 };
 
 OCM_App.prototype.performCommentSubmit = function () {
+
     var app = this;
     if (app.enableCommentSubmit === true) {
         app.enableCommentSubmit = false;
@@ -402,6 +433,7 @@ OCM_App.prototype.performCommentSubmit = function () {
 };
 
 OCM_App.prototype.performMediaItemSubmit = function () {
+
     var $fileupload = $(':file');
     var mediafile = $fileupload[0].files[0];
     var name, size, type;
@@ -430,9 +462,9 @@ OCM_App.prototype.submissionCompleted = function (jqXHR, textStatus) {
     this.hideProgressIndicator();
     if (textStatus != "error") {
         this.showMessage("Thank you for your contribution, you may need to refresh your browser page for changes to appear. If approval is required your change may take 24hrs or more to show up. (Status Code: " + textStatus + ")");
-
         //navigate back to search page
         this.navigateToHome();
+
     } else {
         this.showMessage("Sorry, there was a problem accepting your submission. Please try again later. (Status Code: " + textStatus + "). If the problem persists try clearing your web browser cookies/cache.");
     }
@@ -444,15 +476,20 @@ OCM_App.prototype.submissionFailed = function () {
 };
 
 OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation) {
+
     //hide intro section if still displayed
-    $("#intro-section").hide();
+    $("#intro-section").hide(); //("display", "none");
 
     //detect if mapping/geolocation available
+
     this.showProgressIndicator();
 
     if (useClientLocation == true) {
+        //initiate client geolocation (if not already determined)
         if (this.ocm_geo.clientGeolocationPos == null) {
-            this.ocm_geo.determineUserLocation($.proxy(this.determineUserLocationCompleted, this), $.proxy(this.determineUserLocationFailed, this));
+            this.ocm_geo.determineUserLocation($.proxy(
+                this.determineUserLocationCompleted, this), $.proxy(
+                    this.determineUserLocationFailed, this));
             return;
         } else {
             this.ocm_app_searchPos = this.ocm_geo.clientGeolocationPos;
@@ -468,7 +505,9 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         var locationText = document.getElementById("search-location").value;
         if (locationText === null || locationText == "") {
             //try to geolocate via browser location API
-            this.ocm_geo.determineUserLocation($.proxy(this.determineUserLocationCompleted, this), $.proxy(this.determineUserLocationFailed, this));
+            this.ocm_geo.determineUserLocation($.proxy(
+                this.determineUserLocationCompleted, this), $.proxy(
+                    this.determineUserLocationFailed, this));
             return;
         } else {
             // try to gecode text location name, if new lookup not
@@ -491,8 +530,10 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         params.maxResults = this.maxResults;
         params.includeComments = true;
 
+        //apply filter settings from UI
         if ($("#filter-submissionstatus").val() != 200)
-            params.submissionStatusTypeID = $("#filter-submissionstatus").val();
+            params.submissionStatusTypeID = $("#filter-submissionstatus")
+                .val();
         if ($("#filter-connectiontype").val() != "")
             params.connectionTypeID = $("#filter-connectiontype").val();
 
@@ -509,8 +550,10 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
             params.statusTypeID = $("#filter-statustype").val();
 
         this.logEvent("Performing search..");
-        this.ocm_data.fetchLocationDataListByParam(params, "ocm_app.renderPOIList", this.handleSearchError);
+        this.ocm_data.fetchLocationDataListByParam(params,
+            "ocm_app.renderPOIList", this.handleSearchError);
     }
+
 };
 
 OCM_App.prototype.handleSearchError = function (result) {
@@ -538,7 +581,8 @@ OCM_App.prototype.determineGeocodedLocationCompleted = function (pos) {
 };
 
 OCM_App.prototype.renderPOIList = function (locationList) {
-    this.resultBatchID++;
+
+    this.resultBatchID++; //indicates that results have changed and need reprocessed (maps etc)
 
     if (locationList != null && locationList.length > 0) {
         this.logEvent("Caching search results..");
@@ -559,19 +603,19 @@ OCM_App.prototype.renderPOIList = function (locationList) {
 
     //var $listContent = $('#results-list');
     var $listContent = $('<div id="results-list" class="results-list"></div>');
-    if (this.resultItemTemplate == null)
-        this.resultItemTemplate = $("#results-item-template").html();
+    if (this.resultItemTemplate == null) this.resultItemTemplate = $("#results-item-template").html();
 
     $listContent.children().remove();
 
     if (this.locationList == null || this.locationList.length == 0) {
         var $content = $("<div class=\"section-heading\"><p><span class=\"ui-li-count\">0 Results match your search</span></p></div>");
         $listContent.append($content);
-    } else {
+    }
+    else {
+
         var distUnitPref = document.getElementById("search-distance-unit");
         var distance_unit = "Miles";
-        if (distUnitPref != null)
-            distance_unit = distUnitPref.value;
+        if (distUnitPref != null) distance_unit = distUnitPref.value;
 
         var $resultCount = $("<div class=\"section-heading\">The following " + locationList.length + " locations match your search</div>");
 
@@ -589,17 +633,16 @@ OCM_App.prototype.renderPOIList = function (locationList) {
 
             var itemTemplate = "<div class='result'>" + this.resultItemTemplate + "</div>";
             var locTitle = poi.AddressInfo.Title;
-            if (poi.AddressInfo.Town != null && poi.AddressInfo.Town != "")
-                locTitle = poi.AddressInfo.Town + " - " + locTitle;
+            if (poi.AddressInfo.Town != null && poi.AddressInfo.Town != "") locTitle = poi.AddressInfo.Town + " - " + locTitle;
 
             itemTemplate = itemTemplate.replace("{locationtitle}", locTitle);
             itemTemplate = itemTemplate.replace("{location}", addressHTML);
             itemTemplate = itemTemplate.replace("{comments}", "");
 
+
             var direction = "";
 
-            if (this.ocm_app_searchPos != null)
-                direction = this.ocm_geo.getCardinalDirectionFromBearing(this.ocm_geo.getBearing(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+            if (this.ocm_app_searchPos != null) direction = this.ocm_geo.getCardinalDirectionFromBearing(this.ocm_geo.getBearing(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
 
             itemTemplate = itemTemplate.replace("{distance}", distance.toFixed(1));
             itemTemplate = itemTemplate.replace("{distanceunit}", distance_unit + (direction != "" ? " <span title='" + direction + "' class='direction-" + direction + "'>&nbsp;&nbsp;</span>" : ""));
@@ -616,14 +659,15 @@ OCM_App.prototype.renderPOIList = function (locationList) {
             var maxLevel = null;
             if (poi.Connections != null) {
                 if (poi.Connections.length > 0) {
+
                     for (var c = 0; c < poi.Connections.length; c++) {
                         var con = poi.Connections[c];
                         if (con.Level != null) {
                             if (maxLevel == null) {
                                 maxLevel = con.Level;
-                            } else {
-                                if (con.Level.ID > maxLevel.ID)
-                                    maxLevel = con.Level;
+                            }
+                            else {
+                                if (con.Level.ID > maxLevel.ID) maxLevel = con.Level;
                             }
                         }
                     }
@@ -637,18 +681,18 @@ OCM_App.prototype.renderPOIList = function (locationList) {
             itemTemplate = itemTemplate.replace("{status}", statusInfo);
 
             var $item = $(itemTemplate);
-            if (isAlternate)
-                $item.addClass("alternate");
+            if (isAlternate) $item.addClass("alternate");
 
             $item.on('click', { poi: poi }, function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                try  {
+                //todo: rename as prepareDetailsView
+                try {
                     appContext.showDetailsView(this, e.data.poi);
                 } catch (err) {
                 }
-                appContext.showPage("locationdetails-page");
+                appContext.showPage("locationdetails-page")
             });
 
             $listContent.append($item);
@@ -658,24 +702,23 @@ OCM_App.prototype.renderPOIList = function (locationList) {
     }
 
     //show hidden results ui
+
     $('#results-list').replaceWith($listContent);
     $("#results-list").css("display", "block");
 };
 
 OCM_App.prototype.showDetailsViewById = function (id) {
     var itemShown = false;
-
+    //if id in current result list, show
     if (this.locationList != null) {
         for (var i = 0; i < this.locationList.length; i++) {
             if (this.locationList[i].ID == id) {
                 this.showDetailsView(document.getElementById("content-placeholder"), this.locationList[i]);
-
                 //if ($.mobile) $.mobile.changePage("#locationdetails-page");
                 itemShown = true;
             }
 
-            if (itemShown)
-                break;
+            if (itemShown) break;
         }
     }
 
@@ -699,6 +742,7 @@ OCM_App.prototype.showDetailsFromList = function (results) {
 };
 
 OCM_App.prototype.showDetailsView = function (element, poi) {
+
     this.selectedPOI = poi;
 
     this.logEvent("Showing OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
@@ -706,12 +750,14 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     if (this.isFavouritePOI(poi, null)) {
         $("#option-favourite").removeClass("icon-heart-empty");
         $("#option-favourite").addClass("icon-heart");
+
     } else {
         $("#option-favourite").removeClass("icon-heart");
         $("#option-favourite").addClass("icon-heart-empty");
     }
 
     //TODO: bug/ref data load when editor opens clears settings
+
     var $element = $(element);
     var $detailsView = $("#locationdetails-view");
     $detailsView.css("width", "90%");
@@ -738,11 +784,19 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
         for (var c = 0; c < poi.UserComments.length; c++) {
             var comment = poi.UserComments[c];
             var commentDate = this.ocm_ui.fixJSONDate(comment.DateCreated);
-            commentOutput += "<blockquote>" + "<p>" + (comment.Rating != null ? "<strong>Rating: " + comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " + "<small><cite>" + (comment.CommentType != null ? "[" + comment.CommentType.Title + "] " : "") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() + "<em>" + (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") + "</em> </cite></small></blockquote>";
+            commentOutput +=
+            "<blockquote>" +
+            "<p>" + (comment.Rating != null ? "<strong>Rating: " + comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
+            "<small><cite>" + (comment.CommentType != null ? "[" + comment.CommentType.Title + "] " : "") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() +
+            "<em>" +
+
+            (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
+            "</em> </cite></small></blockquote>";
         }
         commentOutput += "</div>";
 
         $("#details-usercomments").html(commentOutput);
+
     } else {
         $("#details-usercomments").html("No comments submitted.");
     }
@@ -754,13 +808,16 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
             var mediaItem = poi.MediaItems[c];
             if (mediaItem.IsEnabled == true) {
                 var itemDate = this.ocm_ui.fixJSONDate(mediaItem.DateCreated);
-                mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a href='" + mediaItem.ItemURL + "' target='_blank'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " + "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" + "</blockquote>";
+                mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a href='" + mediaItem.ItemURL + "' target='_blank'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+                "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" +
+                "</blockquote>";
             }
         }
 
         mediaItemOutput += "</div>";
 
         $("#details-mediaitems").html(mediaItemOutput);
+
     } else {
         $("#details-mediaitems").html("No photos submitted.");
     }
@@ -770,25 +827,26 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     $detailsView.css("left", leftPos);
     $detailsView.css("top", topPos);
 
+    //general mobile related refresh/recreate widget events
     if ($.mobile) {
-        try  {
+        try {
             $("#details-locationtitle").trigger("create");
             $("#details-content").trigger("create");
             $("#details-usercomments").trigger("create");
-        } catch (exp) {
-        }
+        } catch (exp) { }
 
-        try  {
+        try {
             $("#details-usercomments").listview("refresh");
             $("#details-general").trigger("create");
-        } catch (exp) {
-        }
+        } catch (exp) { }
     }
 
+    //once displayed, try fetching a more accurate distance estimate
     if (this.ocm_app_searchPos != null) {
         this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
     }
 
+    //apply translations (if required)
     if (this.languageCode != null) {
         this.ocm_ui.applyLocalisation(false);
     }
@@ -828,9 +886,9 @@ OCM_App.prototype.addFavouritePOI = function (poi, itineraryName) {
             }
 
             if (itineraryName != null) {
-                favouriteLocations.push({ "poi": poi, "itineraryName": itineraryName });
+                favouriteLocations.push({ "poi": poi, "itineraryName": itineraryName }); //add to specific itinerary
             }
-            favouriteLocations.push({ "poi": poi, "itineraryName": null });
+            favouriteLocations.push({ "poi": poi, "itineraryName": null }); // add to 'all' list
 
             this.logEvent("Added Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
 
@@ -859,6 +917,7 @@ OCM_App.prototype.removeFavouritePOI = function (poi, itineraryName) {
             }
             this.ocm_data.setCachedDataObject("favouritePOIList", newFavList);
             this.logEvent("Removed Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
+
         } else {
             this.logEvent("Cannot remove: Not a Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
         }
@@ -893,6 +952,7 @@ OCM_App.prototype.getFavouritePOIList = function (itineraryName) {
 };
 
 OCM_App.prototype.refreshMapView = function () {
+
     this.ocm_ui.mapOptions.enableClustering = true;
 
     var $resultcount = $("#map-view-resultcount");
@@ -917,6 +977,7 @@ OCM_App.prototype.refreshMapView = function () {
     }
 
     if (this.mapAPI == "leaflet") {
+
         //setup map view, tracking user pos, if not already initialised
         //TODO: use last search pos as lat/lng, or first item in locationList
         var centreLat = 50;
@@ -932,6 +993,7 @@ OCM_App.prototype.refreshMapView = function () {
 };
 
 OCM_App.prototype.hasUserPermissionForPOI = function (poi, permissionLevel) {
+
     var userInfo = this.getLoggedInUserInfo();
     if (userInfo.Permissions != null) {
         if (userInfo.Permissions.indexOf("[Administrator=true]") != -1) {
@@ -939,6 +1001,7 @@ OCM_App.prototype.hasUserPermissionForPOI = function (poi, permissionLevel) {
         }
 
         if (permissionLevel == "Edit") {
+            //check if user has country level or all countries edit permission
             if (userInfo.Permissions.indexOf("[CountryLevel_Editor=All]") != -1) {
                 return true;
             }
@@ -964,9 +1027,11 @@ OCM_App.prototype.initExperimentalContent = function () {
         }
     }
     $("#experiment-output").html(output).trigger("create");
+
 };
 
 OCM_App.prototype.switchLanguage = function (languageCode) {
+
     this.logEvent("Switching UI language: " + languageCode);
 
     this.languageCode = languageCode;
@@ -982,29 +1047,29 @@ OCM_App.prototype.switchLanguage = function (languageCode) {
 
 OCM_App.prototype.hidePage = function (pageId) {
     $("#" + pageId).hide();
-};
+}
 
 OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
-    if (!pageTitle)
-        pageTitle = pageId;
+    if (!pageTitle) pageTitle = pageId;
 
-    this.logEvent("app.showPage:" + pageId);
+    this.logEvent("app.showPage:"+pageId);
+    //show new page
 
+    //hide last shown page
     if (this._lastPageId && this._lastPageId != null) {
         this.hidePage(this._lastPageId);
     }
-
     //hide home page
     document.getElementById("home-page").style.display = "none";
     document.getElementById(pageId).style.display = "block";
-
     //$("#home-page").hide();
+
     //show new page
     //$("#" + pageId).show();
+
     //hack: reset scroll position for new page once page has had a chance to render
-    setTimeout(function () {
-        document.documentElement.scrollIntoView();
-    }, 100);
+    setTimeout(function () { document.documentElement.scrollIntoView(); }, 100);
+
 
     this._lastPageId = pageId;
 
@@ -1015,17 +1080,17 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     }
 
     this.logEvent("leaving app.showPage:" + pageId);
-};
+}
 
 OCM_App.prototype.initStateTracking = function () {
     var app = this;
-
+    // Check Location
     if (document.location.protocol === 'file:') {
         //state not supported
     }
 
     // Establish Variables
-    this.History = window.History;
+    this.History = window.History; // Note: We are using a capital H instead of a lower h
 
     var History = this.History;
     var State = History.getState();
@@ -1035,14 +1100,15 @@ OCM_App.prototype.initStateTracking = function () {
     History.log('initial:', State.data, State.title, State.url);
 
     // Bind to State Change
-    History.Adapter.bind(window, 'statechange', function () {
+    History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
         // Log the State
-        var State = History.getState();
+        var State = History.getState(); // Note: We are using History.getState() instead of event.state
+        //History.log('statechange:', State.data, State.title, State.url);
 
+        // app.logEvent("state switch to :" + State.data.view);
         if (State.data.view) {
             if (app._lastPageId && app._lastPageId != null) {
-                if (State.data.view == app._lastPageId)
-                    return;
+                if (State.data.view == app._lastPageId) return;//dont show same page twice
             }
             app.showPage(State.data.view, State.Title, true);
         } else {
@@ -1068,24 +1134,24 @@ OCM_App.prototype.navigateToMap = function () {
 
     this.showPage("map-page", "Map");
     var app = this;
-    setTimeout(function () {
-        app.refreshMapView();
-    }, 250);
+    setTimeout(function () { app.refreshMapView(); }, 250);
+
 };
 
 OCM_App.prototype.navigateToFavourites = function () {
     this.logEvent("Navigate To: Favourites");
     var app = this;
-
     //get list of favourites as POI list and render in standard search page
     var favouritesList = app.getFavouritePOIList();
     if (favouritesList === null || favouritesList.length === 0) {
         $("#favourites-list").html("<p>You have no favourite locations set. To add or remove a favourite, tap the <i title=\"Toggle Favourite\" class=\"icon-heart-empty\"></i> icon when viewing a location.</p>");
         this.showPage("favourites-page", "Favourites");
     } else {
+
         app.renderPOIList(favouritesList);
 
         //TODO: manage favourites in single page?
+
         //show favourites on search page
         this.navigateToSearch();
     }
@@ -1099,6 +1165,7 @@ OCM_App.prototype.navigateToAddLocation = function () {
         app.selectedPOI = null;
         app.showLocationEditor();
         this.showPage("editlocation-page", "Add Location");
+
     } else {
         app.showMessage("Please Sign In before adding a location.");
     }
@@ -1147,7 +1214,7 @@ OCM_App.prototype.navigateToAddComment = function () {
     } else {
         app.showMessage("Please Sign In");
     }
-};
+}
 
 OCM_App.prototype.navigateToAddMediaItem = function () {
     this.logEvent("Navigate To: Add Media Item");
@@ -1160,7 +1227,7 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
     } else {
         app.showMessage("Please Sign In");
     }
-};
+}
 
 OCM_App.prototype.showConnectionError = function () {
     $("#network-error").show();
@@ -1174,11 +1241,14 @@ OCM_App.prototype.showAuthorizationError = function () {
 
 OCM_App.prototype.showMessage = function (msg) {
     if (this.isRunningUnderCordova) {
-        navigator.notification.alert(msg, function () {
-            ;
-            ;
-        }, 'Open Charge Map', 'OK');
+        navigator.notification.alert(
+            msg,  // message
+            function () { ;; },         // callback
+            'Open Charge Map',            // title
+            'OK'                  // buttonName
+            );
     } else {
         alert(msg);
     }
+
 };

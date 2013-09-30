@@ -1,3 +1,7 @@
+/// <reference path="TypeScriptReferences/jquery.d.ts" />
+
+declare var OCM_App: any;
+
 OCM_App.prototype.getCookie = function (c_name) {
     if (this.isRunningUnderCordova) {
         console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
@@ -11,8 +15,7 @@ OCM_App.prototype.getCookie = function (c_name) {
             x = x.replace(/^\s+|\s+$/g, "");
             if (x == c_name) {
                 var val = unescape(y);
-                if (val == "null")
-                    val = null;
+                if (val == "null") val = null;
                 return val;
             }
         }
@@ -24,8 +27,8 @@ OCM_App.prototype.setCookie = function (c_name, value, exdays) {
     if (this.isRunningUnderCordova) {
         this.ocm_data.setCachedDataObject("_pref_" + c_name, value);
     } else {
-        if (exdays == null)
-            exdays = 1;
+
+        if (exdays == null) exdays = 1;
 
         //http://www.w3schools.com/js/js_cookies.asp
         var exdate = new Date();
@@ -53,13 +56,12 @@ OCM_App.prototype.getParameter = function (name) {
     var results = regex.exec(window.location.href);
     if (results == null)
         return "";
-else
+    else
         return results[1];
 };
 
 OCM_App.prototype.setDropdown = function (id, selectedValue) {
-    if (selectedValue == null)
-        selectedValue = "";
+    if (selectedValue == null) selectedValue = "";
     var $dropdown = $("#" + id);
     $dropdown.val(selectedValue);
 };
@@ -69,8 +71,7 @@ OCM_App.prototype.populateDropdown = function (id, refDataList, selectedValue, d
     $('option', $dropdown).remove();
 
     if (defaultToUnspecified == true) {
-        if (unspecifiedText == null)
-            unspecifiedText = "Unknown";
+        if (unspecifiedText == null) unspecifiedText = "Unknown";
         $dropdown.append($('<option > </option>').val("").html(unspecifiedText));
         $dropdown.val("");
     }
@@ -78,13 +79,13 @@ OCM_App.prototype.populateDropdown = function (id, refDataList, selectedValue, d
     for (var i = 0; i < refDataList.length; i++) {
         if (useTitleAsValue == true) {
             $dropdown.append($('<option > </option>').val(refDataList[i].Title).html(refDataList[i].Title));
-        } else {
+        }
+        else {
             $dropdown.append($('<option > </option>').val(refDataList[i].ID).html(refDataList[i].Title));
         }
     }
 
-    if (selectedValue != null)
-        $dropdown.val(selectedValue);
+    if (selectedValue != null) $dropdown.val(selectedValue);
 };
 
 OCM_App.prototype.showProgressIndicator = function () {
