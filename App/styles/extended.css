@@ -1,12 +1,14 @@
-.ui-page {
+
+div[data-role=page] {
     display: none;
     margin-top:54px;
 }
-    #home-page.ui-page {
+    
+div[data-role=page]#home-page {
         margin-top:0;
     }
 
-.ui-header {
+div[data-role=header] {
     position: fixed;
     background-color:black;
     width:100%;
@@ -14,10 +16,11 @@
     top:0px;
 }
 
-    .ui-header > h1 {
+    div[data-role=header] > h1 {
         font-size:12pt;
         padding-left:1em;
     }
+
 .ui-collapsed {
 }
 

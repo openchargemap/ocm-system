@@ -1,7 +1,7 @@
 ﻿*, body, h1, h2, h3, h4, .result-item-a, .result-item-b, body, .ui-body-b, .ui-body-d, a, a:visited,
  .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, .ui-header a, #progress-indicator,
 .section-heading, .result h3 {
-    font-family: 'Segoe WP', 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI','Segoe WP',  sans-serif;
 }
 
 html {
@@ -14,26 +14,50 @@ body {
 
 }
 
-div[data-role="content"] {
-    overflow: scroll;
-    min-height:660px;
+div[data-role=page] {
+    display: none;
+    margin-top:0;
+    height:100%;
+    overflow:hidden;
 }
 
-div[data-role="footer"] {
-   
+div[data-role=header] {
+    margin-top:0;
+    overflow:hidden;
+    height:50px;
     position:relative;
-    background-color:black;
+}
+
+div[data-role=content] {
+    height:414px;
+    overflow:scroll;
+}
+
+div[data-role=content]#home-page {
+    height:100%;
+    overflow:hidden;
+}
+
+div[data-role=footer] {
+   
+   /* position:relative;*/
+   background-color:black;
+   height:46px;
 }
 
 .navbar-default {
     background-color:black;
 }
 .navbar-fixed-bottom {
-        position:relative;
         bottom:auto;
         margin:auto;
+        border:none;
 }
 
+#progress-indicator {
+        background-color: white;
+        border:1.5px solid black;
+}
 @media screen and (min-width: 0px) and (max-width: 400px) {
     #home-page * .ui-grid-b * a {
         font-size: 100%;

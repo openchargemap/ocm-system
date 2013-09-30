@@ -1,0 +1,15 @@
+﻿body, 1, h2, h3, h4 {
+     font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial;
+}
+
+.btn-default {
+    border:none;
+    background-color:transparent;
+    color:#2c77ba;
+}
+
+.btn-default:hover {
+    border:none;
+    background-color:transparent;
+    color:#2c77ba;
+}
