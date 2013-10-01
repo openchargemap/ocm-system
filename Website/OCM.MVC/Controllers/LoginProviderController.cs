@@ -24,6 +24,17 @@ namespace OCM.MVC.Controllers
             }
         }
 
+        public static string GetCookie(HttpRequestBase request, string cookieName)
+        {
+            if (request.Cookies.AllKeys.Contains(cookieName))
+            {
+                return request.Cookies[cookieName].Value;
+            }
+            else
+            {
+                return "";
+            }
+        }
         public static void ClearCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
             if (response.Cookies.AllKeys.Contains(cookieName))
@@ -150,9 +161,29 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
-        public ActionResult AppLogin()
+        public ActionResult AppLogin(bool? redirectWithToken)
         {
-            return View();
+            if (redirectWithToken==true)
+            { 
+                var IdentityProvider  = GetCookie(Request, "IdentityProvider");
+                var Identifier  = GetCookie(Request,"Identifier");
+                var Username  = GetCookie(Request,"Username");
+                var SessionToken  = GetCookie(Request,"OCMSessionToken");
+                var Permissions  = GetCookie(Request,"Permissions");
+
+                return RedirectToAction("AppLogin", new
+                {
+                    IdentityProvider = IdentityProvider,
+                    Identifier = Identifier,
+                    OCMSessionToken = SessionToken,
+                    Permissions = Permissions
+                });
+            }
+            else
+            {
+                return View();
+            }
+            
         }
     }
 }
