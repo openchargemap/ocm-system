@@ -1,259 +1,156 @@
-﻿*, body, h1, h2, h3, h4, .result-item-a, .result-item-b, body, .ui-body-b, .ui-body-d, a, a:visited,
- .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, .ui-header a, #progress-indicator,
-.section-heading, .result h3 {
-    font-family: 'Segoe UI','Segoe WP',  sans-serif;
-}
-
-html {
-      -ms-touch-action: none;
-}
-
-body {
-  overflow: hidden;
-  -ms-content-zooming: none; 
-
-}
-
-div[data-role=page] {
-    display: none;
-    margin-top:0;
-    height:100%;
-    overflow:hidden;
-}
-
-div[data-role=header] {
-    margin-top:0;
-    overflow:hidden;
-    height:50px;
-    position:relative;
-}
-
-div[data-role=content] {
-    height:414px;
-    overflow:scroll;
-}
-
-div#home-page > div[data-role=content] {
-    height:100%;
-    overflow:hidden;
-}
-
-
-div[data-role=footer] {
-   
-   /* position:relative;*/
-   background-color:black;
-   height:46px;
-}
-
-.navbar-default {
-    background-color:black;
-}
-.navbar-fixed-bottom {
-        bottom:auto;
-        margin:auto;
-        border:none;
-}
-
-#progress-indicator {
-        background-color: white;
-        border:1.5px solid black;
-}
-
-#details-contact-container  {
-    background-color: #666666;
-    color:white;
-    border:none;
-}
-    #details-contact-container a {
-        color:white;
-    }
-
-@media screen and (min-width: 0px) and (max-width: 400px) {
-    #home-page * .ui-grid-b * a {
-        font-size: 100%;
-    }
-}
-
-.well {
-    background-color:black;
-    border:none;
-    color:white;
-}
-
-.btn {
-    color:#fff;
-    border:1.5pt solid white;
-    border-radius:0;
-} 
-.btn-primary {
-    
-}
-.btn-default {
-    background-color:black;
-}
-
-.btn-default:hover {
-    
-}
-
-/*icon overrides*/
-
-[class^="icon-"] {
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-    border: none;
-    background-color: red;
-}
-
-.icon-2x {
-    width:32px;
-    height:32px;
-}
-
-.icon-search{
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="../styles/windows.css" />
+</head>
+<body style="background-color:black;color:white;">
+    <i class="icon-search icon-2x"></i> Search
+    .icon-search{
     background: url(../images/icons/FontAwesomeExport16.png) 0 -32px;
-}
-.icon-search.icon-2x {
+    }
+    .icon-search.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) 0 -64px;
-}
+    }
 
-.icon-home{
+    .icon-home{
     background: url(../images/icons/FontAwesomeExport16.png) -16px -32px;
-}
-.icon-home.icon-2x{
+    }
+    .icon-home.icon-2x{
     background: url(../images/icons/FontAwesomeExport32.png) -32px -64px;
-}
+    }
 
-.icon-chevron-left
-{
+    .icon-chevron-left
+    {
     background: url(../images/icons/FontAwesomeExport16.png) -32px -32px;
-}
-.icon-chevron-left.icon-2x {
+    }
+    .icon-chevron-left.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -64px -64px;
-}
+    }
 
-.icon-map-marker{
+    .icon-map-marker{
     background: url(../images/icons/FontAwesomeExport16.png) -48px -32px;
-}
-.icon-map-marker.icon-2x
-{
+    }
+    .icon-map-marker.icon-2x
+    {
     background: url(../images/icons/FontAwesomeExport32.png) -96px -64px;
-}
+    }
 
-.icon-plus{
+    .icon-plus{
     background: url(../images/icons/FontAwesomeExport16.png) -64px -32px;
-}
-.icon-plus.icon-2x
-{
+    }
+    .icon-plus.icon-2x
+    {
     background: url(../images/icons/FontAwesomeExport32.png) -128px -64px;
-}
+    }
 
-.icon-cog{
+    .icon-cog{
     background: url(../images/icons/FontAwesomeExport16.png) -80px -32px;
-}
-.icon-cog.icon-2x
-{
+    }
+    .icon-cog.icon-2x
+    {
     background: url(../images/icons/FontAwesomeExport32.png) -160px -64px;
-}
+    }
 
-.icon-question-sign{
+    .icon-question-sign{
     background: url(../images/icons/FontAwesomeExport16.png) -96px -32px;
-}
-.icon-question-sign.icon-2x
-{
+    }
+    .icon-question-sign.icon-2x
+    {
     background: url(../images/icons/FontAwesomeExport32.png) -192px -64px;
-}
+    }
 
-.icon-signin{
+    .icon-signin{
     background: url(../images/icons/FontAwesomeExport16.png) -112px -32px;
-}
-.icon-signin.icon-2x
-{
+    }
+    .icon-signin.icon-2x
+    {
     background: url(../images/icons/FontAwesomeExport32.png) -224px -64px;
-}
+    }
 
-.icon-heart{
+    .icon-heart{
     background: url(../images/icons/FontAwesomeExport16.png) -128px -32px;
-}
-.icon-heart.icon-2x{
+    }
+    .icon-heart.icon-2x{
     background: url(../images/icons/FontAwesomeExport32.png) -256px -64px;
-}
+    }
 
-.icon-comment-alt{
+    .icon-comment-alt{
     background: url(../images/icons/FontAwesomeExport16.png) 0px -16px;
-}
-.icon-comment-alt.icon-2x{
+    }
+    .icon-comment-alt.icon-2x{
     background: url(../images/icons/FontAwesomeExport32.png) 0px -32px;
-}
+    }
 
-.icon-camera {
+    .icon-camera {
     background: url(../images/icons/FontAwesomeExport16.png) -16px -16px;
-}
-.icon-camera.icon-2x {
+    }
+    .icon-camera.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -32px -32px;
-}
+    }
 
-.icon-screenshot {
+    .icon-screenshot {
     background: url(../images/icons/FontAwesomeExport16.png) -32px -16px;
-}
-.icon-screenshot.icon-2x {
+    }
+    .icon-screenshot.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -64px -32px;
-}
+    }
 
-.icon-heart-empty {
+    .icon-heart-empty {
     background: url(../images/icons/FontAwesomeExport16.png) -48px -16px;
-}
-.icon-heart-empty.icon-2x {
+    }
+    .icon-heart-empty.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -96px -32px;
-}
+    }
 
-.icon-edit {
+    .icon-edit {
     background: url(../images/icons/FontAwesomeExport16.png) -64px -16px;
-}
-.icon-edit.icon-2x {
+    }
+    .icon-edit.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -128px -32px;
-}
+    }
 
-.icon-road {
+    .icon-road {
     background: url(../images/icons/FontAwesomeExport16.png) -80px -16px;
-}
-.icon-road.icon-2x {
+    }
+    .icon-road.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -160px -32px;
-}
+    }
 
-.icon-list {
+    .icon-list {
     background: url(../images/icons/FontAwesomeExport16.png) -96px -16px;
-}
-.icon-list.icon-2x {
+    }
+    .icon-list.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -192px -32px;
-}
+    }
 
-.icon-bolt {
+    .icon-bolt {
     background: url(../images/icons/FontAwesomeExport16.png) -112px -16px;
-}
-.icon-bolt.icon-2x {
+    }
+    .icon-bolt.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -224px -32px;
-}
+    }
 
-.icon-phone {
+    .icon-phone {
     background: url(../images/icons/FontAwesomeExport16.png) -128px -16px;
-}
-.icon-phone.icon-2x {
+    }
+    .icon-phone.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -256px -32px;
-}
+    }
 
-.icon-envelope {
+    .icon-envelope {
     background: url(../images/icons/FontAwesomeExport16.png) 0px -32px;
-}
-.icon-envelope.icon-2x {
+    }
+    .icon-envelope.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) 0px -64px;
-}
+    }
 
-.icon-external-link {
+    .icon-external-link {
     background: url(../images/icons/FontAwesomeExport16.png) -16px -32px;
-}
-.icon-external-link.icon-2x {
+    }
+    .icon-external-link.icon-2x {
     background: url(../images/icons/FontAwesomeExport32.png) -32px -64px;
-}
+    }
+
+</body>
+</html>

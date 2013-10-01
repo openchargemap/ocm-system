@@ -266,55 +266,133 @@ OCM_App.prototype.isUserSignedIn = function () {
     }
 };
 
+OCM_App.prototype.getParameterFromURL = function (name, url) {
+    var sval = "";
+
+    if (url.indexOf("?") >= 0) {
+        var params = url.substr(url.indexOf("?") + 1);
+
+        params = params.split("&");
+        var temp = "";
+
+        for (var i = 0; i < params.length; i++) {
+            temp = params[i].split("=");
+            //console.log("parse param:" + params[i]);
+            if ([temp[0]] == name) {
+                sval = temp[1];
+                //console.log("parse val:" + temp[1]);
+            }
+        }
+    }
+    return sval;
+};
+
 OCM_App.prototype.beginLogin = function () {
     this.showProgressIndicator();
 
     //reset previous authorization warnings
     this.ocm_data.isAuthorizationError = false;
+    var app = this;
 
     if (this.isRunningUnderCordova) {
         //do phonegapped login using InAppBrowser
-        var app = this;
-        var ref = window.open(this.loginProviderRedirectBaseURL + 'AppLogin', '_blank', 'location=yes');
+        var ref = window.open(this.loginProviderRedirectBaseURL + 'AppLogin?redirectWithToken=true', '_blank', 'location=yes');
 
-        ref.addEventListener('loadstop', function (event) {
+        app.logEvent("OCM: adding loadstop events..");
+        app.logEvent("OCM: " + ref);
+        app.hideProgressIndicator();
+
+
+        try  {
+            /*
+            ref.addEventListener('loadstop', function (event) {
+            
+            app.logEvent('in loadstop: ' + event.url);
+            
             app.hideProgressIndicator();
+            
+            
+            
+            //attempt to fetch from js injection
+            setTimeout(function () {
+            
+            app.logEvent('checking for login result: ' + event.url);
+            try {
+            
+            ref.executeScript({
+            code: "if (getSignInResult) getSignInResult();"
+            }, function (result) {
+            if (result != null) {
+            ref.close();
+            var userInfo = result[0];
+            
+            app.logEvent('got login: ' + userInfo.Username);
+            
+            app.setLoggedInUserInfo(userInfo);
+            app.postLoginInit();
+            
+            //return to home
+            app.navigateToHome();
+            }
+            else {
+            app.logEvent('no sign in result received');
+            }
+            
+            
+            
+            });
+            
+            } catch (err) {
+            app.logEvent("Ignoring phonegap error evaluation login script");
+            }
+            }, 1000);
+            
+            });
+            */
+            ref.addEventListener('loaderror', function (event) {
+                app.logEvent('error: ' + event.message);
+            });
 
-            app.logEvent('fetching login result: ' + event.url);
+            ref.addEventListener('loadstart', function (event) {
+                app.logEvent('loadstart: ' + event.url);
 
-            try  {
-                ref.executeScript({
-                    code: "getSignInResult();"
-                }, function (result) {
-                    if (result != null) {
-                        ref.close();
-                        var userInfo = result[0];
+                //attempt to fetch from url
+                var url = event.url;
+                var token = app.getParameterFromURL("OCMSessionToken", url);
+                if (token.length > 0) {
+                    app.logEvent('OCM: Got a token ' + event.url);
+                    var userInfo = {
+                        "Identifier": app.getParameterFromURL("Identifier", url),
+                        "Username": app.getParameterFromURL("Identifier", url),
+                        "SessionToken": app.getParameterFromURL("OCMSessionToken", url),
+                        "AccessToken": "",
+                        "Permissions": app.getParameterFromURL("Permissions", url)
+                    };
 
-                        app.logEvent('got login: ' + userInfo.Username);
+                    app.logEvent('got login: ' + userInfo.Username);
 
-                        app.setLoggedInUserInfo(userInfo);
-                        app.postLoginInit();
-                    } else {
-                        app.logEvent('no sign in result received');
-                    }
+                    app.setLoggedInUserInfo(userInfo);
+                    app.postLoginInit();
 
+                    ref.close();
                     //return to home
                     app.navigateToHome();
-                });
-            } catch (err) {
-                app.logEvent("Ignoring phonegap error evaluation login script");
-            }
-        });
+                } else {
+                    app.logEvent('OCM: Not got a token ' + event.url);
+                }
+            });
 
-        ref.addEventListener('loaderror', function (event) {
-            app.logEvent('error: ' + event.message);
-        });
+            ref.addEventListener('exit', function (event) {
+                app.logEvent(event.type);
+            });
+        } catch (err) {
+            app.logEvent("OCM: error adding inappbrowser events :" + err);
+        }
 
-        ref.addEventListener('exit', function (event) {
-            app.logEvent(event.type);
-        });
+        app.logEvent("OCM: events added..");
     } else {
         //do normal web login
+        app.logEvent("OCM: not cordova, redirecting after login..");
         window.location = this.loginProviderRedirectURL;
     }
 };

@@ -151,7 +151,7 @@ task("remove-debug", function () {
 });
 
 desc("Copy index.html");
-task("copy-index", ["use-min-js", "remove-debug"], function () {
+task("copy-index", [ "remove-debug"], function () { //["use-min-js",
     console.log("Copying index.html to build targets");
 
     //copy modified index.html to each target
