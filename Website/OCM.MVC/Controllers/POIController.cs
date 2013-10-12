@@ -245,10 +245,68 @@ namespace OCM.MVC.Controllers
         [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
         public ActionResult Edit(ChargePoint poi)
         {
+            
             try
             {
                 var user = new UserManager().GetUser((int)Session["UserID"]);
-                if (new SubmissionManager().PerformSubmission(poi, user))
+
+                //reset any values provided as -1 to a standard default (unknown etc)
+                if (poi.DataProviderID == -1 || poi.DataProviderID == null)
+                {
+                    poi.DataProvider = null;
+                    poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
+                }
+                if (poi.OperatorID == -1 || poi.OperatorID == null)
+                {
+                    poi.OperatorInfo = null;
+                    poi.OperatorID = (int)StandardOperators.UnknownOperator;
+                }
+
+                if (poi.StatusType!=null && (poi.StatusTypeID==-1 || poi.StatusTypeID==null))
+                {
+                    poi.StatusTypeID = poi.StatusType.ID;
+                }
+                if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
+                {
+                    poi.StatusType = null;
+                    poi.StatusTypeID = (int)StandardStatusTypes.Unknown;
+                }
+
+                if (poi.SubmissionStatusTypeID == -1)
+                {
+                    poi.SubmissionStatus = null;
+                    poi.SubmissionStatusTypeID = null;
+                }
+                
+                if (poi.Connections!=null)
+                {
+                    foreach (var connection in poi.Connections)
+                    {
+                        if (connection.ConnectionTypeID == -1 || connection.ConnectionTypeID == null)
+                        {
+                            connection.ConnectionType = null;
+                            connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
+                        }
+                        if (connection.CurrentTypeID == -1)
+                        {
+                            connection.CurrentType = null;
+                            connection.CurrentTypeID = null;
+                        }
+                        if (connection.StatusTypeID == -1)
+                        {
+                            connection.StatusType = null;
+                            connection.StatusTypeID = (int)StandardStatusTypes.Unknown;
+                        }
+                        if (connection.LevelID == -1)
+                        {
+                            connection.Level = null;
+                            connection.LevelID = null;
+                        }
+                    }
+                }
+                //TODO: prevent null country/lat/long
+
+                if (new SubmissionManager().PerformPOISubmission(poi, user))
                 {
                     if (poi.ID > 0)
                     {

@@ -369,6 +369,7 @@
     <Content Include="Views\Shared\DisplayTemplates\MetadataValue.cshtml" />
     <Content Include="Views\Admin\EditOperator.cshtml" />
     <Content Include="Views\Admin\Operators.cshtml" />
+    <Content Include="Views\Shared\_LicenseBlock.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

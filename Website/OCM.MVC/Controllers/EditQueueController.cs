@@ -50,7 +50,7 @@ namespace OCM.MVC.Controllers
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult MarkAsProcessed(int id)
         {
-            //approves/publishes the given edit directly
+            //marks item as processed without publishing the edit
             using (var editQueueManager = new EditQueueManager())
             {
                 editQueueManager.ProcessEditQueueItem(id, false, (int)Session["UserID"]);
