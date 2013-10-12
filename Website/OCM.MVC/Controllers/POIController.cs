@@ -121,8 +121,10 @@ namespace OCM.MVC.Controllers
         // GET: /POI/Details/5
 
         //[OutputCache(Duration=240, VaryByParam="id")]
-        public ActionResult Details(int id, string layout)
+        public ActionResult Details(int id, string layout, string status)
         {
+            if (status != null) ViewBag.Status = status;
+
             OCM.API.Common.POIManager cpManager = new API.Common.POIManager();
             var poi = cpManager.Get(id, true);
             ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
@@ -310,7 +312,7 @@ namespace OCM.MVC.Controllers
                 {
                     if (poi.ID > 0)
                     {
-                        return RedirectToAction("Details", "POI", new { id = poi.ID });
+                        return RedirectToAction("Details", "POI", new { id = poi.ID, status="editsubmitted" });
                     }
                     else
                     {

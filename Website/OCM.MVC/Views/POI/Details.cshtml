@@ -32,6 +32,11 @@
 @if (Session["UserID"] != null)
 {
     <div class="form-actions">
+
+        @if (ViewBag.Status == "editsubmitted")
+        {
+            <div class="alert alert-info">Thank you, if required your submission will now wait in a queue for approval.</div>
+        }
         <a href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
     </div>
 }
