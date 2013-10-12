@@ -238,6 +238,7 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\SecurityHelper.cs" />
     <Compile Include="Util\StorageManager.cs" />
   </ItemGroup>
   <ItemGroup>

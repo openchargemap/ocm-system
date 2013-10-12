@@ -8,6 +8,7 @@
 
 <table class="table table-striped">
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.IdentityProvider)
         </th>
@@ -64,6 +65,8 @@
 
 @foreach (var item in Model) {
     <tr>
+        <td> @(item.EmailAddress!=null?Html.Raw("<img src=\"http://www.gravatar.com/avatar/"+OCM.Core.Util.SecurityHelper.GetMd5Hash(item.EmailAddress.ToLower().Trim())+"\" />"):Html.Raw(""))
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.IdentityProvider)
         </td>

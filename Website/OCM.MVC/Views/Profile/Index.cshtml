@@ -11,7 +11,14 @@
         <fieldset>
             <legend>Your Profile</legend>
             
-            <div class="well clearfix"><a href="@Url.Action("Edit")" class="btn btn-primary clearfix">Edit Your Profile</a></div>
+            <div class="well clearfix">
+                
+                @(Model.EmailAddress != null ? Html.Raw("<img class='pull-left img-thumbnail' style='margin-right:1em;' src=\"http://www.gravatar.com/avatar/" + OCM.Core.Util.SecurityHelper.GetMd5Hash(Model.EmailAddress.ToLower().Trim()) + "\" />") : Html.Raw(""))
+                <a href="@Url.Action("Edit")" class="btn btn-primary clearfix">Edit Your Profile</a> 
+                <p>
+                    Note: you can edit your profile image using the popular <a href="http://gravatar.com/" target="_blank">Gravatar</a> service then adding your email address to your profile here (email address is not shared publically).
+                </p>
+            </div>
             
 
             <div class="display-label">
