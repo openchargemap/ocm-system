@@ -104,6 +104,7 @@ namespace OCM.MVC.Controllers
                             userDetails.Username = screenName;
                             userDetails.DateCreated = DateTime.UtcNow;
                             userDetails.DateLastLogin = DateTime.UtcNow;
+                            userDetails.IsProfilePublic = true;
 
                             //only update session token if new (also done on logout)
                             if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;

@@ -1,25 +1,32 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.MediaItem>
 
 <div class="row">
-    
-        @foreach (var item in Model.Where(i => i.IsEnabled))
-        {
-<div class="col-sm-6 col-md-3">
-    <div class="img-thumbnail">
-       
-        <a href="@item.ItemURL">
-            <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" />
 
-        </a>
+    @foreach (var item in Model.Where(i => i.IsEnabled))
+    {
+        <div class="col-sm-6 col-md-3">
+            <div class="img-thumbnail">
 
-        <blockquote>
-            <p>@Html.DisplayFor(modelItem => item.Comment)</p>
-            <small>Uploaded by <cite>@item.User!=null?item.User.Username:"Anonymous"</cite> on @item.DateCreated.ToString("yyyy-MM-dd")</small>
-        </blockquote>
+                <a href="@item.ItemURL">
+                    <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" />
+                </a>
+               
+                            
+                <blockquote>
+                    <p>@Html.DisplayFor(modelItem => item.Comment)</p>
+                    <small>Uploaded by <cite>@if (item.User != null)
+{
+    <a href="@Url.Action("View", "Profile", new {id=item.User.ID })">@Html.DisplayFor(modelItem => item.User.Username)</a>
+}
+else
+{
+    @Html.DisplayFor(m => item.User.Username)
+}</cite> on @item.DateCreated.ToString("yyyy-MM-dd")</small>
+                </blockquote>
 
-    </div>
+            </div>
 
-</div>
-        }
-    
+        </div>
+    }
+
 </div>
