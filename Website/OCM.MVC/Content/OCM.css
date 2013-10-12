@@ -416,3 +416,7 @@ div.details-plain {
   padding: 1em;
   background-color: #f8f8f8;
 }
+.display-group {
+  display: block;
+  clear: both;
+}
