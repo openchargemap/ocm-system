@@ -16,6 +16,9 @@ namespace OCM.API.Common.Model
         [StringLength(100)]
         public string UUID { get; set; }
 
+        [DisplayName("Parent POI")]
+        public int? ParentChargePointID { get; set; }
+
         public int? DataProviderID { get; set; }
         [DisplayName("Data Provider")]
         public DataProvider DataProvider { get; set; }

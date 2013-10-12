@@ -137,7 +137,15 @@ namespace OCM.API.Common
                         var poiData = new Core.Data.ChargePoint();
 
                         //if its an edit, load the original details before applying the change
-                        if (poiUpdateRequired) poiData = DataModel.ChargePoints.First(c => c.ID == poiB.ID);
+                        if (poiUpdateRequired)
+                        {
+                            //updates to externally provided POIs require old version to be superseded (archived) first
+                            if (poiA!=null && poiA.DataProviderID!=(int)StandardDataProviders.OpenChargeMapContrib)
+                            {
+                                poiManager.SupersedePOI(DataModel, poiA, poiB);
+                            }
+                            poiData = DataModel.ChargePoints.First(c => c.ID == poiB.ID);
+                        }
 
                         //set/update cp properties
                         poiManager.PopulateChargePoint_SimpleToData(poiB, poiData, DataModel);

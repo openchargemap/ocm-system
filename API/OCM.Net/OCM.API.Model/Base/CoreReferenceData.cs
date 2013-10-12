@@ -10,6 +10,10 @@ namespace OCM.API.Common.Model
         OpenChargeMapContrib = 1
     }
 
+    public enum StandardStatusTypes
+    {
+        Unknown=0
+    }
     public enum StandardOperators
     {
         UnknownOperator = 0
@@ -32,6 +36,7 @@ namespace OCM.API.Common.Model
         Delisted = 1000,
         Delisted_Duplicate = 1001,
         Delisted_NoLongerActive = 1002,
+        Delisted_SupersededByUpdate = 1005,
         Delisted_NotPublicInformation = 1010
     }
 
@@ -54,6 +59,12 @@ namespace OCM.API.Common.Model
         POI=1
     }
 
+    public enum StandardConnectionTypes
+    {
+        Unknown =0,
+        J1772 = 1,
+        CHAdeMO = 2
+    }
     public class CoreReferenceData
     {
         public List<ChargerType> ChargerTypes { get; set; }

@@ -35,7 +35,7 @@ namespace OCM.API.Common
 
             //convert back to simple POI
             var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData, false, false, true, true);
-            
+
             //clear temp changes from the poi
             //dataModel.Entry(poiData).Reload();
             tempDataModel.Dispose();
@@ -47,44 +47,38 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="submission">ChargePoint info for submission, if ID and UUID set will be treated as an update</param>
         /// <returns>false on error or not enough data supplied</returns>
-        public bool PerformSubmission(Model.ChargePoint poi, Model.User user)
+        public bool PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user)
         {
             try
             {
-                var cpManager = new POIManager();
-                bool enableEditQueue = bool.Parse(ConfigurationManager.AppSettings["EnableEditQueue"]);
-                bool addToQueueAndDB = true; //if true item is entered in edit queue and to the ChargePoint list in db
+                var poiManager = new POIManager();
+                bool enableEditQueueLogging = bool.Parse(ConfigurationManager.AppSettings["EnableEditQueue"]);
                 bool isUpdate = false;
-                bool userCanEdit = false;
+                bool userCanEditWithoutApproval = false;
 
                 //if user signed in, check if they have required permission to perform an edit/approve (if required)
                 if (user != null)
                 {
-                    int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
-
-                    if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All") || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString())))
-                    {
-                        userCanEdit = true;
-                    }
+                    userCanEditWithoutApproval = CanUserEditPOI(updatedPOI, user);
 
                     //if user is system user, edits/updates are not recorded in edit queue
                     if (user.ID == (int)StandardUsers.System)
                     {
-                        enableEditQueue = false;
+                        enableEditQueueLogging = false;
                     }
                 }
 
                 var dataModel = new Core.Data.OCMEntities();
 
-                if (poi.ID > 0 && !String.IsNullOrEmpty(poi.UUID))
+                //if poi is an update, validate if update can be performed
+                if (updatedPOI.ID > 0 && !String.IsNullOrEmpty(updatedPOI.UUID))
                 {
-                    //poi is an update, validate
-                    if (dataModel.ChargePoints.Any(c => c.ID == poi.ID && c.UUID == poi.UUID))
+                    if (dataModel.ChargePoints.Any(c => c.ID == updatedPOI.ID && c.UUID == updatedPOI.UUID))
                     {
                         //update is valid poi, check if user has permission to perform an update
                         isUpdate = true;
-                        if (userCanEdit) AllowUpdates = true;
-                        if (!AllowUpdates && !enableEditQueue)
+                        if (userCanEditWithoutApproval) AllowUpdates = true;
+                        if (!AllowUpdates && !enableEditQueueLogging)
                         {
                             return false; //valid update requested but updates not allowed
                         }
@@ -96,20 +90,21 @@ namespace OCM.API.Common
                     }
 
                     //validate if minimal required data is present
-                    if (poi.AddressInfo.Title==null || poi.AddressInfo.Country == null || poi.AddressInfo.Latitude == null || poi.AddressInfo.Longitude == null)
+                    if (updatedPOI.AddressInfo.Title == null || updatedPOI.AddressInfo.Country == null || updatedPOI.AddressInfo.Latitude == null || updatedPOI.AddressInfo.Longitude == null)
                     {
                         return false;
                     }
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
-                poi = PopulateFullPOI(poi);
+                updatedPOI = PopulateFullPOI(updatedPOI);
+                Model.ChargePoint oldPOI = null; 
 
-                //if user cannot edit, add to edit queue for approval
+                //if user cannot edit directly, add to edit queue for approval
                 var editQueueItem = new Core.Data.EditQueueItem { DateSubmitted = DateTime.UtcNow };
-                if (enableEditQueue)
+                if (enableEditQueueLogging)
                 {
-                    editQueueItem.EntityID = poi.ID;
+                    editQueueItem.EntityID = updatedPOI.ID;
                     editQueueItem.EntityType = dataModel.EntityTypes.FirstOrDefault(t => t.ID == 1);
                     //charging point location entity type id
 
@@ -117,26 +112,26 @@ namespace OCM.API.Common
                     var jsonOutput = new OutputProviders.JSONOutputProvider();
 
                     //null extra data we don't want to serialize/compare
-                    poi.UserComments = null;
-                    poi.MediaItems = null;
+                    updatedPOI.UserComments = null;
+                    updatedPOI.MediaItems = null;
 
-                    string editData = jsonOutput.PerformSerialisationToString(poi, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    string editData = jsonOutput.PerformSerialisationToString(updatedPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                     editQueueItem.EditData = editData;
 
-                    if (poi.ID > 0)
+                    if (updatedPOI.ID > 0)
                     {
                         //get json snapshot of current cp data to store as 'previous'
-                        var currentPOI = cpManager.Get(poi.ID);
+                        oldPOI = poiManager.Get(updatedPOI.ID);
 
                         //check if poi will change with this edit, if not we discard it completely
-                        if (!cpManager.HasDifferences(currentPOI, poi))
+                        if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
                             return false;
                         }
                         else
                         {
-                            editQueueItem.PreviousData = jsonOutput.PerformSerialisationToString(currentPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                            editQueueItem.PreviousData = jsonOutput.PerformSerialisationToString(oldPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                         }
                     }
 
@@ -145,6 +140,7 @@ namespace OCM.API.Common
                     editQueueItem = dataModel.EditQueueItems.Add(editQueueItem);
                     //TODO: send notification of new item for approval
 
+                    //save edit queue item
                     dataModel.SaveChanges();
 
                     //if previous edit queue item exists by same user for same POI, mark as processed
@@ -163,159 +159,191 @@ namespace OCM.API.Common
                         previousEdit.DateProcessed = DateTime.UtcNow;
 
                     }
+                    //save updated edit queue items
                     dataModel.SaveChanges();
                 }
 
                 //prepare and save changes POI changes/addition
-
-                int newID = 0;
-
-
                 if (isUpdate && !AllowUpdates)
                 {
                     //user has submitted an edit but is not an approved editor
+                    SendEditSubmissionNotification(updatedPOI, user);
 
-                    try
-                    {
-                        string approvalStatus = "Edit Submitted for approval";
-
-                        //send notification
-                        var notification = new NotificationManager();
-                        var msgParams = new Hashtable();
-                        msgParams.Add("Description", "OCM-" + poi.ID + " : " + poi.AddressInfo.Title);
-                        msgParams.Add("SubmissionStatusType", approvalStatus);
-
-                        msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
-                        msgParams.Add("MessageBody",
-                                      "Edit item for Approval: Location " + approvalStatus + " OCM-" + poi.ID + " Submitted: " +
-                                      poi.AddressInfo.Title);
-
-                        notification.PrepareNotification(NotificationType.LocationSubmitted, msgParams);
-
-                        //notify default system recipients
-                        notification.SendNotification(NotificationType.LocationSubmitted);
-                    }
-                    catch (Exception)
-                    {
-                        ;
-                        ; //failed to send notification
-                    }
-
-                    //item is in edit queue for approval.
+                    //user is not an editor, item is now pending in edit queue for approval.
                     return true;
                 }
 
-                if (addToQueueAndDB)
+                int? supersedesID = null;
+                //if update will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
+                if (isUpdate && oldPOI.DataProviderID!= (int)StandardDataProviders.OpenChargeMapContrib)
                 {
+                    //move old poi to new id, set status of new item to superseded
+                    supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);
+                }
 
+                //user is an editor, go ahead and store the addition/update
+                var cpData = new Core.Data.ChargePoint();
+                if (isUpdate) cpData = dataModel.ChargePoints.First(c => c.ID == updatedPOI.ID);
 
-                    //updates allowed for this user, go ahead and store the update
-                    var cpData = new Core.Data.ChargePoint();
-                    if (isUpdate) cpData = dataModel.ChargePoints.First(c => c.ID == poi.ID);
+                //set/update cp properties
+                poiManager.PopulateChargePoint_SimpleToData(updatedPOI, cpData, dataModel);
 
-                    //set/update cp properties
-                    cpManager.PopulateChargePoint_SimpleToData(poi, cpData, dataModel);
+                //if item has no submission status and user permitted to edit, set to published
+                if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)
+                {
+                    cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                }
 
-                    //if item has no submission status and user permitted to edit, set to published
-                    if (userCanEdit && cpData.SubmissionStatusTypeID == null)
+                if (!isUpdate)
+                {
+                    //new data objects need added to data model before save
+                    if (cpData.AddressInfo != null) dataModel.AddressInfoList.Add(cpData.AddressInfo);
+
+                    dataModel.ChargePoints.Add(cpData);
+                }
+                else
+                {
+                    cpData.DateLastStatusUpdate = DateTime.UtcNow;
+                }
+
+                //finally - save poi update
+                dataModel.SaveChanges();
+
+                //get id of update/new poi
+                int newPoiID = cpData.ID;
+
+                //this is an authorised update, reflect change in edit queue item
+                if (enableEditQueueLogging && user != null && user.ID > 0)
+                {
+                    var editUser = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
+                    editQueueItem.User = editUser;
+
+                    if (newPoiID > 0) editQueueItem.EntityID = newPoiID;
+
+                    //if user is authorised to edit, process item automatically without review
+                    if (userCanEditWithoutApproval)
                     {
-                        cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                        editQueueItem.ProcessedByUser = editUser;
+                        editQueueItem.DateProcessed = DateTime.UtcNow;
+                        editQueueItem.IsProcessed = true;
                     }
 
-                    if (!isUpdate)
-                    {
-                        //new data objects need added to data model before save
-                        if (cpData.AddressInfo != null) dataModel.AddressInfoList.Add(cpData.AddressInfo);
-
-                        dataModel.ChargePoints.Add(cpData);
-                    }
-                    else
-                    {
-                        cpData.DateLastStatusUpdate = DateTime.UtcNow;
-                    }
-
-                    //save poi
+                    //save edit queue item changes
                     dataModel.SaveChanges();
 
-                    newID = cpData.ID;
-
-                    //is an authorised update, reflect change in edit queue item
-                    if (enableEditQueue && user != null && user.ID > 0)
+                    
+                }
+                else
+                {
+                    //anonymous submission, update edit queue item
+                    if (enableEditQueueLogging && user == null)
                     {
-                        var editUser = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
-                        editQueueItem.User = editUser;
-
-                        if (newID > 0) editQueueItem.EntityID = newID;
-
-                        //if user is authorised to edit, process item automatically without review
-                        if (userCanEdit)
-                        {
-                            editQueueItem.ProcessedByUser = editUser;
-                            editQueueItem.DateProcessed = DateTime.UtcNow;
-                            editQueueItem.IsProcessed = true;
-                        }
-
+                        if (newPoiID > 0) editQueueItem.EntityID = newPoiID;
                         dataModel.SaveChanges();
                     }
-                    else
-                    {
-                        //anonymous submission, update edit queue item
-                        if (enableEditQueue && user == null)
-                        {
-                            if (newID > 0) editQueueItem.EntityID = newID;
-                            dataModel.SaveChanges();
-                        }
-                    }
+                }
 
-                    System.Diagnostics.Debug.WriteLine("Added/Updated CP:" + cpData.ID);
+                System.Diagnostics.Debug.WriteLine("Added/Updated CP:" + cpData.ID);
 
-                    if (user != null)
-                    {
-                        AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem, "Modified OCM-" + cpData.ID, null);
-                        //add reputation points
-                        new UserManager().AddReputationPoints(user, 1);
-                    }
+                //if user is not anonymous, log their submission and update their reputation points
+                if (user != null)
+                {
+                    AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem, "Modified OCM-" + cpData.ID, null);
+                    //add reputation points
+                    new UserManager().AddReputationPoints(user, 1);
+                }
 
-                    //if new item added, send notification
-                    if (!isUpdate)
-                    {
-                        try
-                        {
-                            string approvalStatus = cpData.SubmissionStatusType.Title;
-
-                            //send notification
-                            NotificationManager notification = new NotificationManager();
-                            Hashtable msgParams = new Hashtable();
-                            msgParams.Add("Description", "OCM-" + cpData.ID + " : " + poi.AddressInfo.Title);
-                            msgParams.Add("SubmissionStatusType", approvalStatus);
-
-                            msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
-                            msgParams.Add("MessageBody",
-                                          "New Location " + approvalStatus + " OCM-" + cpData.ID + " Submitted: " +
-                                          poi.AddressInfo.Title);
-
-                            notification.PrepareNotification(NotificationType.LocationSubmitted, msgParams);
-
-                            //notify default system recipients
-                            notification.SendNotification(NotificationType.LocationSubmitted);
-                        }
-                        catch (Exception)
-                        {
-                            ;
-                            ; //failed to send notification
-                        }
-                    }
-
+                //if new item added, send notification
+                if (!isUpdate)
+                {
+                    SendNewPOISubmissionNotification(updatedPOI, user, cpData);
                 }
 
                 return true;
             }
             catch (Exception exp)
             {
-
                 System.Diagnostics.Debug.WriteLine(exp.ToString());
                 //throw exp;
                 //error performing submission
+                return false;
+            }
+        }
+
+        private static void SendNewPOISubmissionNotification(Model.ChargePoint poi, Model.User user, Core.Data.ChargePoint cpData)
+        {
+            try
+            {
+                string approvalStatus = cpData.SubmissionStatusType.Title;
+
+                //send notification
+                NotificationManager notification = new NotificationManager();
+                Hashtable msgParams = new Hashtable();
+                msgParams.Add("Description", "OCM-" + cpData.ID + " : " + poi.AddressInfo.Title);
+                msgParams.Add("SubmissionStatusType", approvalStatus);
+
+                msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
+                msgParams.Add("MessageBody",
+                              "New Location " + approvalStatus + " OCM-" + cpData.ID + " Submitted: " +
+                              poi.AddressInfo.Title);
+
+                notification.PrepareNotification(NotificationType.LocationSubmitted, msgParams);
+
+                //notify default system recipients
+                notification.SendNotification(NotificationType.LocationSubmitted);
+            }
+            catch (Exception)
+            {
+                ;
+                ; //failed to send notification
+            }
+        }
+
+        private static void SendEditSubmissionNotification(Model.ChargePoint poi, Model.User user)
+        {
+            try
+            {
+                string approvalStatus = "Edit Submitted for approval";
+
+                //send notification
+                var notification = new NotificationManager();
+                var msgParams = new Hashtable();
+                msgParams.Add("Description", "OCM-" + poi.ID + " : " + poi.AddressInfo.Title);
+                msgParams.Add("SubmissionStatusType", approvalStatus);
+
+                msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
+                msgParams.Add("MessageBody",
+                              "Edit item for Approval: Location " + approvalStatus + " OCM-" + poi.ID + " Submitted: " +
+                              poi.AddressInfo.Title);
+
+                notification.PrepareNotification(NotificationType.LocationSubmitted, msgParams);
+
+                //notify default system recipients
+                notification.SendNotification(NotificationType.LocationSubmitted);
+            }
+            catch (Exception)
+            {
+                ;
+                ; //failed to send notification
+            }
+        }
+
+        /// <summary>
+        /// Check if user can edit given POI with review/approval from another editor
+        /// </summary>
+        /// <param name="poi"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private static bool CanUserEditPOI(Model.ChargePoint poi, Model.User user)
+        {
+            int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
+
+            if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All") || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString())))
+            {
+                return true;
+            }
+            else
+            {
                 return false;
             }
         }
@@ -369,61 +397,7 @@ namespace OCM.API.Common
                     new UserManager().AddReputationPoints(user, 1);
                 }
 
-                try
-                {
-                    //prepare notification
-                    NotificationManager notification = new NotificationManager();
-                    Hashtable msgParams = new Hashtable();
-                    msgParams.Add("Description", "");
-                    msgParams.Add("ChargePointID", comment.ChargePointID);
-                    msgParams.Add("ItemURL", "http://openchargemap.org/site/poi/details/" + comment.ChargePointID);
-                    msgParams.Add("UserName", user != null ? user.Username : comment.UserName);
-                    msgParams.Add("MessageBody", "Comment (" + dataComment.UserCommentType.Title + ") added to OCM-" + comment.ChargePointID + ": " + dataComment.Comment);
-
-                    //if fault report, attempt to notify operator
-                    if (dataComment.UserCommentType.ID == (int)StandardCommentTypes.FaultReport)
-                    {
-                        //decide if we can send a fault notification to the operator
-                        notification.PrepareNotification(NotificationType.FaultReport, msgParams);
-
-                        //notify default system recipients
-                        bool operatorNotified = false;
-                        if (dataComment.ChargePoint.Operator != null)
-                        {
-                            if (!String.IsNullOrEmpty(dataComment.ChargePoint.Operator.FaultReportEmail))
-                            {
-                                try
-                                {
-                                    notification.SendNotification(dataComment.ChargePoint.Operator.FaultReportEmail, ConfigurationManager.AppSettings["DefaultRecipientEmailAddresses"].ToString());
-                                    operatorNotified = true;
-                                }
-                                catch (Exception)
-                                {
-                                    System.Diagnostics.Debug.WriteLine("Fault report: failed to notify operator");
-                                }
-                            }
-                        }
-
-                        if (!operatorNotified)
-                        {
-                            notification.Subject += " (OCM: Could not notify Operator)";
-                            notification.SendNotification(NotificationType.LocationCommentReceived);
-                        }
-                    }
-                    else
-                    {
-                        //normal comment, notification to OCM only
-                        notification.PrepareNotification(NotificationType.LocationCommentReceived, msgParams);
-
-                        //notify default system recipients
-                        notification.SendNotification(NotificationType.LocationCommentReceived);
-                    }
-
-                }
-                catch (Exception)
-                {
-                    ; ; // failed to send notification
-                }
+                SendPOICommentSubmissionNotifications(comment, user, dataComment);
 
                 return dataComment.ID;
             }
@@ -432,6 +406,65 @@ namespace OCM.API.Common
                 return -2; //error saving
             }
 
+        }
+
+        private static void SendPOICommentSubmissionNotifications(Common.Model.UserComment comment, Model.User user, Core.Data.UserComment dataComment)
+        {
+            try
+            {
+                //prepare notification
+                NotificationManager notification = new NotificationManager();
+                Hashtable msgParams = new Hashtable();
+                msgParams.Add("Description", "");
+                msgParams.Add("ChargePointID", comment.ChargePointID);
+                msgParams.Add("ItemURL", "http://openchargemap.org/site/poi/details/" + comment.ChargePointID);
+                msgParams.Add("UserName", user != null ? user.Username : comment.UserName);
+                msgParams.Add("MessageBody", "Comment (" + dataComment.UserCommentType.Title + ") added to OCM-" + comment.ChargePointID + ": " + dataComment.Comment);
+
+                //if fault report, attempt to notify operator
+                if (dataComment.UserCommentType.ID == (int)StandardCommentTypes.FaultReport)
+                {
+                    //decide if we can send a fault notification to the operator
+                    notification.PrepareNotification(NotificationType.FaultReport, msgParams);
+
+                    //notify default system recipients
+                    bool operatorNotified = false;
+                    if (dataComment.ChargePoint.Operator != null)
+                    {
+                        if (!String.IsNullOrEmpty(dataComment.ChargePoint.Operator.FaultReportEmail))
+                        {
+                            try
+                            {
+                                notification.SendNotification(dataComment.ChargePoint.Operator.FaultReportEmail, ConfigurationManager.AppSettings["DefaultRecipientEmailAddresses"].ToString());
+                                operatorNotified = true;
+                            }
+                            catch (Exception)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Fault report: failed to notify operator");
+                            }
+                        }
+                    }
+
+                    if (!operatorNotified)
+                    {
+                        notification.Subject += " (OCM: Could not notify Operator)";
+                        notification.SendNotification(NotificationType.LocationCommentReceived);
+                    }
+                }
+                else
+                {
+                    //normal comment, notification to OCM only
+                    notification.PrepareNotification(NotificationType.LocationCommentReceived, msgParams);
+
+                    //notify default system recipients
+                    notification.SendNotification(NotificationType.LocationCommentReceived);
+                }
+
+            }
+            catch (Exception)
+            {
+                ; ; // failed to send notification
+            }
         }
 
         public int PerformSubmission(Common.Model.MediaItem mediaItem, Model.User user)
@@ -474,7 +507,7 @@ namespace OCM.API.Common
             cp.ID = 0;
 
             cp.AddressInfo = new Model.AddressInfo();
-            PerformSubmission(cp, null);
+            PerformPOISubmission(cp, null);
         }
     }
 }

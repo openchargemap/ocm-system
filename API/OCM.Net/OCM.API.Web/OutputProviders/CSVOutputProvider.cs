@@ -18,7 +18,7 @@ namespace OCM.API.OutputProviders
 
         private void AppendText(string val)
         {
-            
+
             if (val == null) currentLine += ",";
             else currentLine += "\"" + val.Replace("\"", "").Trim() + "\"" + ",";
         }
@@ -64,7 +64,9 @@ namespace OCM.API.OutputProviders
                     AppendText(item.AddressInfo.ContactTelephone2);
                     AppendText(item.AddressInfo.ContactEmail);
                     AppendText(item.AddressInfo.AccessComments);
+#pragma warning disable 0612
                     AppendText(item.AddressInfo.GeneralComments);
+#pragma warning restore 0612
                     AppendText(item.AddressInfo.RelatedURL);
 
                     //ConnectionType,ChargerType,UsageType,NumberOfPoints,GeneralComments,DateLastConfirmed,StatusType,DateLastStatusUpdate
@@ -97,6 +99,7 @@ namespace OCM.API.OutputProviders
                         AppendValue(null);
                     }
 
+#pragma warning disable 0612
                     if (item.Chargers != null)
                     {
                         appendedText = false;
@@ -147,8 +150,9 @@ namespace OCM.API.OutputProviders
                     currentLine = currentLine.Replace(System.Environment.NewLine, " ");
                     output.WriteLine(currentLine);
                 }
-                
+
             }
+#pragma warning restore 0612
             output.Flush();
             //output.Close();
         }

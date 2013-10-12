@@ -71,7 +71,9 @@ namespace OCM.API.OutputProviders
                     if (item.AddressInfo.ContactTelephone2 != null) xml.WriteElementString("ContactTelephone2", item.AddressInfo.ContactTelephone2);
                     if (item.AddressInfo.ContactEmail != null) xml.WriteElementString("ContactEmail", item.AddressInfo.ContactEmail);
                     if (item.AddressInfo.AccessComments != null) xml.WriteElementString("AccessComments", item.AddressInfo.AccessComments);
+#pragma warning disable 0612
                     if (item.AddressInfo.GeneralComments != null) xml.WriteElementString("GeneralComments", item.AddressInfo.GeneralComments);
+#pragma warning restore 0612
                     if (item.AddressInfo.RelatedURL != null) xml.WriteElementString("RelatedURL", item.AddressInfo.RelatedURL);
 
                     xml.WriteEndElement();
@@ -124,7 +126,7 @@ namespace OCM.API.OutputProviders
                     }
                     xml.WriteEndElement();
                 }
-
+#pragma warning disable 0612
                 var chargerList = item.Chargers;
                 if (chargerList==null || chargerList.Count==0){
                     if (item.Connections != null)
@@ -144,6 +146,8 @@ namespace OCM.API.OutputProviders
                         
                     }
                 }
+
+#pragma warning restore 0612
 
                 if (chargerList != null)
                 {

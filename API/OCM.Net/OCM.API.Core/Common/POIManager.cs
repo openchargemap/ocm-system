@@ -452,6 +452,18 @@ namespace OCM.API.Common
         {
             if (String.IsNullOrEmpty(dataChargePoint.UUID)) dataChargePoint.UUID = Guid.NewGuid().ToString().ToUpper();
 
+            //if required, set the parent charge point id
+            if (simpleChargePoint.ParentChargePointID != null)
+            {
+                //dataChargePoint.ParentChargePoint = dataModel.ChargePoints.FirstOrDefault(c=>c.ID==simpleChargePoint.ParentChargePointID);
+                dataChargePoint.ParentChargePointID = simpleChargePoint.ParentChargePointID;
+            }
+            else
+            {
+                dataChargePoint.ParentChargePoint = null;
+                dataChargePoint.ParentChargePointID = null;
+            }
+
             if (simpleChargePoint.DataProvider != null && simpleChargePoint.DataProvider.ID >= 0)
             {
                 dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == simpleChargePoint.DataProvider.ID);
@@ -498,9 +510,13 @@ namespace OCM.API.Common
                 dataChargePoint.DataQualityLevel = 1;
             }
 
-            if (dataChargePoint.DateCreated == null)
+            if (simpleChargePoint.DateCreated != null)
             {
-                dataChargePoint.DateCreated = DateTime.UtcNow;
+                dataChargePoint.DateCreated = simpleChargePoint.DateCreated;
+            }
+            else
+            {
+                if (dataChargePoint.DateCreated == null) dataChargePoint.DateCreated = DateTime.UtcNow;
             }
 
             var updateConnectionList = new List<OCM.Core.Data.ConnectionInfo>();
@@ -663,22 +679,69 @@ namespace OCM.API.Common
             //TODO:clean up unused metadata values
 
 
-            if (simpleChargePoint.StatusType != null)
-            {
-                dataChargePoint.StatusType = dataModel.StatusTypes.First(s => s.ID == simpleChargePoint.StatusType.ID);
-            }
 
-            if (simpleChargePoint.SubmissionStatus != null)
+            if (simpleChargePoint.StatusTypeID != null || simpleChargePoint.StatusType != null)
             {
-                dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == simpleChargePoint.SubmissionStatus.ID);
+                if (simpleChargePoint.StatusTypeID == null && simpleChargePoint.StatusType != null) simpleChargePoint.StatusTypeID = simpleChargePoint.StatusType.ID;
+                dataChargePoint.StatusTypeID = simpleChargePoint.StatusTypeID;
+                dataChargePoint.StatusType = dataModel.StatusTypes.FirstOrDefault(s => s.ID == simpleChargePoint.StatusTypeID);
             }
             else
             {
+                dataChargePoint.StatusType = null;
+                dataChargePoint.StatusTypeID = null;
+            }
+
+            if (simpleChargePoint.SubmissionStatusTypeID != null || simpleChargePoint.SubmissionStatus != null)
+            {
+                if (simpleChargePoint.SubmissionStatusTypeID == null & simpleChargePoint.SubmissionStatus != null) simpleChargePoint.SubmissionStatusTypeID = simpleChargePoint.SubmissionStatus.ID;
+                dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == simpleChargePoint.SubmissionStatusTypeID);
+                dataChargePoint.SubmissionStatusTypeID = simpleChargePoint.SubmissionStatusTypeID;
+            }
+            else
+            {
+                dataChargePoint.SubmissionStatusTypeID = null;
                 dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
             }
 
         }
 
+        /// <summary>
+        /// used to replace a POI from an external source with a new OCM provided POI, updated POI must still be saved after to store association
+        /// </summary>
+        /// <param name="oldPOI"></param>
+        /// <param name="updatedPOI"></param>
+        public int SupersedePOI(OCMEntities dataModel, Model.ChargePoint oldPOI, Model.ChargePoint updatedPOI)
+        {
+            //When applying an edit to imported or externally provided data:
+            //Save old item with new POI ID, Submission Status: Delisted - Superseded By Edit
+            //Save edit over old POI ID, with Contributor set to OCM, Parent POI ID set to new (old) POI ID
+            //This means that comments/photos/metadata etc for the old POI are preserved against the new POI
+
+            //zero existing ids we want to move to superseded poi (otherwise existing items will be updated)
+            oldPOI.ID = 0;
+            oldPOI.UUID = null;
+            oldPOI.AddressInfo.ID = 0;
+            foreach (var connection in oldPOI.Connections)
+            {
+                connection.ID = 0;
+            }
+            oldPOI.SubmissionStatus = null;
+            oldPOI.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Delisted_SupersededByUpdate;
+
+            var supersededPOIData = new OCM.Core.Data.ChargePoint();
+            this.PopulateChargePoint_SimpleToData(oldPOI, supersededPOIData, dataModel);
+            dataModel.ChargePoints.Add(supersededPOIData);
+            dataModel.SaveChanges();
+
+            //associate updated poi with older parent poi, set OCM as new data provider
+            updatedPOI.ParentChargePointID = supersededPOIData.ID;
+            updatedPOI.DataProvider = null;
+            updatedPOI.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
+
+            //return new ID for the archived version of the POI
+            return supersededPOIData.ID;
+        }
     }
 
 }
