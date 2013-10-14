@@ -20,6 +20,7 @@ function OCM_CommonUI() {
     this.mapOptions.useMarkerIcons = true;
     this.mapOptions.useMarkerAnimation = true;
     this.isRunningUnderCordova = false;
+
 }
 
 OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, isTestMode) {
@@ -31,7 +32,7 @@ OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, is
             return "[" + resourceKey + "]";
         } else {
             return defaultValue;
-        }
+        } 
     }
 };
 
@@ -366,7 +367,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             appcontext.showPage("locationdetails-page");
                         });
 
-                        bounds.extend(newMarker.position);
+                        bounds.extend(newMarker.getPosition());
                         this.ocm_markers.push(newMarker);
                     }
                 }
@@ -666,7 +667,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     if (poi.StatusType != null) {
         equipmentInfo += this.formatTextField(poi.StatusType.Title, "Status", false, false, "ocm.details.operationalStatus");
         if (poi.DateLastStatusUpdate != null) {
-            equipmentInfo += this.formatTextField(Math.round(((currentDate - this.fixJSONDate(poi.DateLastStatusUpdate)) / dayInMilliseconds)) + " days ago", "Last Updated", false, false, "ocm.details.lastUpdated");
+            equipmentInfo += this.formatTextField(Math.round(((<any>currentDate - <any>this.fixJSONDate(poi.DateLastStatusUpdate)) / dayInMilliseconds)) + " days ago", "Last Updated", false, false, "ocm.details.lastUpdated");
         }
     }
 

@@ -1,5 +1,11 @@
 /// <reference path="TypeScriptReferences/jquery.d.ts" />
+/// <reference path="OCM_App.ts" />
 declare var OCM_App: any;
+
+interface JQuery {
+    validate: any;
+    collapse: any;
+}
 
 OCM_App.prototype.initEditors = function () {
     this.editorMapInitialised = false;
@@ -8,6 +14,7 @@ OCM_App.prototype.initEditors = function () {
     this.positionAttribution = null;
 
     var editorSubmitMethod = $.proxy(this.performLocationSubmit, this);
+
 
     $("#editlocation-form").validate({
         rules: {
@@ -40,7 +47,7 @@ OCM_App.prototype.initEditors = function () {
 OCM_App.prototype.resetEditorForm = function () {
     //init editor to default settings
 
-    document.getElementById("editlocation-form").reset();
+    (<HTMLFormElement>document.getElementById("editlocation-form")).reset();
     for (var n = 1; n <= this.numConnectionEditors; n++) {
         //reset editor dropdowns
         this.setDropdown("edit_connection" + n + "_connectiontype", "0");
@@ -66,7 +73,7 @@ OCM_App.prototype.resetEditorForm = function () {
 
 OCM_App.prototype.populateEditor = function (refData) {
 
-    ocm_app.hideProgressIndicator();
+    this.hideProgressIndicator();
 
     //todo:move this into OCM_Data then pass to here from callback
     if (refData == null) {
@@ -97,7 +104,7 @@ OCM_App.prototype.populateEditor = function (refData) {
     for (var n = 1; n <= this.numConnectionEditors; n++) {
         //create editor section
         var $connection = ($("#edit_connection" + n));
-        if (!$connection.length > 0) {
+        if (!($connection.length > 0)) {
             //create new section using section 1 as template
             var templateHTML = $("#edit_connection1").html();
             if (templateHTML != null) {
@@ -124,12 +131,12 @@ OCM_App.prototype.populateEditor = function (refData) {
 
         //format current address as string
         var lookupString =
-			($("#edit_addressinfo_addressline1").val().length > 0 ? $("#edit_addressinfo_addressline1").val() + "," : "") +
-			($("#edit_addressinfo_addressline2").val().length > 0 ? $("#edit_addressinfo_addressline2").val() + "," : "") +
-			($("#edit_addressinfo_town").val().length > 0 ? $("#edit_addressinfo_town").val() + "," : "") +
+            ($("#edit_addressinfo_addressline1").val().length > 0 ? $("#edit_addressinfo_addressline1").val() + "," : "") +
+            ($("#edit_addressinfo_addressline2").val().length > 0 ? $("#edit_addressinfo_addressline2").val() + "," : "") +
+            ($("#edit_addressinfo_town").val().length > 0 ? $("#edit_addressinfo_town").val() + "," : "") +
             ($("#edit_addressinfo_stateorprovince").val().length > 0 ? $("#edit_addressinfo_stateorprovince").val() + "," : "") +
-			($("#edit_addressinfo_postcode").val().length > 0 ? $("#edit_addressinfo_postcode").val() + "," : "") +
-			appContext.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
+            ($("#edit_addressinfo_postcode").val().length > 0 ? $("#edit_addressinfo_postcode").val() + "," : "") +
+            appContext.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
 
         //attempt to geocode address
         appContext.ocm_geo.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext));
@@ -162,7 +169,7 @@ OCM_App.prototype.populateEditor = function (refData) {
 
     this.resetEditorForm();
 
-    if (refData.UserProfile && refData.UserProfile != null & refData.UserProfile.IsCurrentSessionTokenValid == false) {
+    if (refData.UserProfile && refData.UserProfile != null && refData.UserProfile.IsCurrentSessionTokenValid == false) {
         //login info is stale, logout user
         if (this.isUserSignedIn()) {
             this.logEvent("Login info is stale, logging out user.");
@@ -262,7 +269,7 @@ OCM_App.prototype.performLocationSubmit = function () {
             originalConnection = item.Connections[n - 1];
         }
 
-        var connectionInfo = {
+        var connectionInfo: OCM.ConnectionInfo = {
             "ID": -1,
             "Reference": null,
             "ConnectionType": this.ocm_data.getRefDataByID(refData.ConnectionTypes, $("#edit_connection" + n + "_connectiontype").val()),
@@ -432,27 +439,18 @@ OCM_App.prototype.showLocationEditor = function () {
                             $("#edit_connection" + n + "_quantity").val(con.Quantity);
                             $("#edit_connection" + n + "_powerkw").val(con.PowerKW);
 
-                            if ($.mobile) {
-                                $connection.jqmData("_connection_id", con.ID);
-                            } else {
-                                jQuery.data($connection, "_connection_id", con.ID);
-                            }
+                            $.data((<Element>$connection), "_connection_id", con.ID);
 
                             $connection.addClass("panel-primary");
                         }
                     }
                 } else {
                     //null data (if present) from connection editor
-                    if ($.mobile) {
-                        $connection.jqmData("_connection_id", 0);
-                        //collapse editor by default
-                        $connection.trigger("collapse");
-                    } else {
-                        jQuery.data($connection, "_connection_id", 0);
-                        // $connection.collapse('hide')
 
-                        $connection.addClass("panel-default");
-                    }
+                    $.data((<Element>$connection), "_connection_id", 0);
+
+                    $connection.addClass("panel-default");
+
                 }
             }
         }

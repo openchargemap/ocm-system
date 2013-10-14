@@ -5,6 +5,15 @@
 
 declare var OCM_App: any;
 
+interface JQueryStatic {
+    mobile: any;
+}
+
+interface Window {
+    L: any;
+    cordova: any;
+}
+
 //Set iOS App Splashscreen depending on device size
 var filename = navigator.platform === 'iPad' ? 'images/splashscreen/AppSplashscreen_768x1004.png' : 'images/splashscreen/AppSplashscreen_320x460.png';
 document.write('<link rel="apple-touch-startup-image" href="' + filename + '" />');

@@ -1,7 +1,7 @@
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
-    this.ocm_geo = new OCM_Geolocation();
-    this.ocm_data = new OCM_Data();
+    this.ocm_geo = new OCM.Geolocation();
+    this.ocm_data = new OCM.API();
     this.numConnectionEditors = 5;
     this.maxResults = 100;
     this.locationList = null;
@@ -28,8 +28,8 @@ function OCM_App() {
     this.ocm_data.clientName = "ocm.app.webapp";
     this.languageCode = "en";
 
-    this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError);
-    this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError);
+    this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError, this);
+    this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
 
     this.isLocalDevMode = false;
     if (this.isLocalDevMode == true) {
@@ -214,15 +214,7 @@ OCM_App.prototype.initDeferredUI = function () {
 
     if ($("#option-enable-experiments").val() == "on") {
         this.enableExperimental = true;
-        $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>").trigger("create");
-        if ($.mobile) {
-            $("#navbar").trigger("create");
-            $("#navbar").navbar("refresh");
-
-            $("#experiment-page").delegate('pageshow', function (event, ui) {
-                app.initExperimentalContent();
-            });
-        }
+        $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>");
     } else {
         this.enableExperimental = false;
     }
@@ -233,7 +225,7 @@ OCM_App.prototype.initDeferredUI = function () {
 
     if (cachedResults !== null) {
         if (cachedResult_Location !== null) {
-            document.getElementById("search-location").value = cachedResult_Location;
+            (document.getElementById("search-location")).value = cachedResult_Location;
         }
         setTimeout(function () {
             app.renderPOIList(cachedResults);
@@ -277,10 +269,9 @@ OCM_App.prototype.getParameterFromURL = function (name, url) {
 
         for (var i = 0; i < params.length; i++) {
             temp = params[i].split("=");
-            //console.log("parse param:" + params[i]);
+
             if ([temp[0]] == name) {
                 sval = temp[1];
-                //console.log("parse val:" + temp[1]);
             }
         }
     }
@@ -300,8 +291,6 @@ OCM_App.prototype.beginLogin = function () {
 
         app.logEvent("OCM: adding loadstop events..");
         app.logEvent("OCM: " + ref);
-        app.hideProgressIndicator();
-
 
         try  {
             /*
@@ -374,7 +363,6 @@ OCM_App.prototype.beginLogin = function () {
                     app.setLoggedInUserInfo(userInfo);
                     app.postLoginInit();
 
-                    ref.close();
                     //return to home
                     app.navigateToHome();
                 } else {
@@ -537,13 +525,13 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         }
     }
 
-    var distance = parseInt(document.getElementById("search-distance").value);
-    var distance_unit = document.getElementById("search-distance-unit").value;
+    var distance = parseInt((document.getElementById("search-distance")).value);
+    var distance_unit = (document.getElementById("search-distance-unit")).value;
 
     if (this.ocm_app_searchPos == null || useManualLocation == true) {
         // search position not set, attempt fetch from location input and
         // return for now
-        var locationText = document.getElementById("search-location").value;
+        var locationText = (document.getElementById("search-location")).value;
         if (locationText === null || locationText == "") {
             //try to geolocate via browser location API
             this.ocm_geo.determineUserLocation($.proxy(this.determineUserLocationCompleted, this), $.proxy(this.determineUserLocationFailed, this));
@@ -561,7 +549,7 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
     if (this.ocm_app_searchPos != null && !this.searchInProgress) {
         this.searchInProgress = true;
 
-        var params = new OCM_LocationSearchParams();
+        var params = new OCM.POI_SearchParams();
         params.latitude = this.ocm_app_searchPos.coords.latitude;
         params.longitude = this.ocm_app_searchPos.coords.longitude;
         params.distance = distance;
@@ -621,7 +609,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
     if (locationList != null && locationList.length > 0) {
         this.logEvent("Caching search results..");
         this.ocm_data.setCachedDataObject("SearchResults", locationList);
-        this.ocm_data.setCachedDataObject("SearchResults_Location", document.getElementById("search-location").value);
+        this.ocm_data.setCachedDataObject("SearchResults_Location", (document.getElementById("search-location")).value);
     } else {
         this.logEvent("No search results, will not overwrite cached search results.");
     }
@@ -848,21 +836,6 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     $detailsView.css("left", leftPos);
     $detailsView.css("top", topPos);
 
-    if ($.mobile) {
-        try  {
-            $("#details-locationtitle").trigger("create");
-            $("#details-content").trigger("create");
-            $("#details-usercomments").trigger("create");
-        } catch (exp) {
-        }
-
-        try  {
-            $("#details-usercomments").listview("refresh");
-            $("#details-general").trigger("create");
-        } catch (exp) {
-        }
-    }
-
     if (this.ocm_app_searchPos != null) {
         this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
     }
@@ -1081,7 +1054,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     //$("#" + pageId).show();
     //hack: reset scroll position for new page once page has had a chance to render
     setTimeout(function () {
-        document.documentElement.scrollIntoView();
+        (document.documentElement).scrollIntoView();
     }, 100);
 
     this._lastPageId = pageId;
@@ -1216,7 +1189,7 @@ OCM_App.prototype.navigateToAddComment = function () {
     var app = this;
 
     //reset comment form on show
-    document.getElementById("comment-form").reset();
+    (document.getElementById("comment-form")).reset();
     app.enableCommentSubmit = true;
 
     if (app.isUserSignedIn()) {
@@ -1260,3 +1233,4 @@ OCM_App.prototype.showMessage = function (msg) {
         alert(msg);
     }
 };
+//# sourceMappingURL=OCM_App.js.map

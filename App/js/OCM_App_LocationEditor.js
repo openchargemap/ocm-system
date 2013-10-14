@@ -40,7 +40,7 @@ OCM_App.prototype.initEditors = function () {
 
 OCM_App.prototype.resetEditorForm = function () {
     //init editor to default settings
-    document.getElementById("editlocation-form").reset();
+    (document.getElementById("editlocation-form")).reset();
     for (var n = 1; n <= this.numConnectionEditors; n++) {
         //reset editor dropdowns
         this.setDropdown("edit_connection" + n + "_connectiontype", "0");
@@ -64,7 +64,7 @@ OCM_App.prototype.resetEditorForm = function () {
 };
 
 OCM_App.prototype.populateEditor = function (refData) {
-    ocm_app.hideProgressIndicator();
+    this.hideProgressIndicator();
 
     if (refData == null) {
         //may be loaded from cache
@@ -92,7 +92,7 @@ OCM_App.prototype.populateEditor = function (refData) {
     for (var n = 1; n <= this.numConnectionEditors; n++) {
         //create editor section
         var $connection = ($("#edit_connection" + n));
-        if (!$connection.length > 0) {
+        if (!($connection.length > 0)) {
             //create new section using section 1 as template
             var templateHTML = $("#edit_connection1").html();
             if (templateHTML != null) {
@@ -148,7 +148,7 @@ OCM_App.prototype.populateEditor = function (refData) {
 
     this.resetEditorForm();
 
-    if (refData.UserProfile && refData.UserProfile != null & refData.UserProfile.IsCurrentSessionTokenValid == false) {
+    if (refData.UserProfile && refData.UserProfile != null && refData.UserProfile.IsCurrentSessionTokenValid == false) {
         if (this.isUserSignedIn()) {
             this.logEvent("Login info is stale, logging out user.");
             this.logout(false);
@@ -470,3 +470,4 @@ OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
         ocm_app.editorMap.panTo(point);
     }
 };
+//# sourceMappingURL=OCM_App_LocationEditor.js.map

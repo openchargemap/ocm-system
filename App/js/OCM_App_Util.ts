@@ -1,12 +1,16 @@
 /// <reference path="TypeScriptReferences/jquery.d.ts" />
+/// <reference path="OCM_App.ts" />
 
 declare var OCM_App: any;
+declare var escape:any;
+declare var unescape: any; //TODO: replace with newer escaping methods
 
 OCM_App.prototype.getCookie = function (c_name) {
     if (this.isRunningUnderCordova) {
         console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
         return this.ocm_data.getCachedDataObject("_pref_" + c_name);
     } else {
+        
         //http://www.w3schools.com/js/js_cookies.asp
         var i, x, y, ARRcookies = document.cookie.split(";");
         for (i = 0; i < ARRcookies.length; i++) {

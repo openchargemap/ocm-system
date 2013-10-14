@@ -1,5 +1,5 @@
 //populate cached ref data if not already present
-var _d= new OCM_Data();
+var _d= new OCM.API();
 
 if (_d.setCachedDataObject("CoreReferenceData")==null)
 {

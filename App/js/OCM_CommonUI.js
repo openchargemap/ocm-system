@@ -331,7 +331,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             appcontext.showPage("locationdetails-page");
                         });
 
-                        bounds.extend(newMarker.position);
+                        bounds.extend(newMarker.getPosition());
                         this.ocm_markers.push(newMarker);
                     }
                 }
@@ -664,3 +664,4 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     };
     return output;
 };
+//# sourceMappingURL=OCM_CommonUI.js.map

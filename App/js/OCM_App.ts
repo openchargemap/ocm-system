@@ -14,16 +14,22 @@ See http://www.openchargemap.org/ for more details
 /// <reference path="TypeScriptReferences/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap.d.ts" />
 
-//typescript declarations
-declare var OCM_CommonUI;
-declare var OCM_Geolocation;
-declare var OCM_Data;
-declare var localisation_dictionary;
 
+//typescript declarations
+declare var localisation_dictionary;
+interface JQuery {
+    fastClick: any;
+}
+interface History {
+    back():void;
+}
+interface Window {
+    History: History;
+}
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
-    this.ocm_geo = new OCM_Geolocation();
-    this.ocm_data = new OCM_Data();
+    this.ocm_geo = new OCM.Geolocation();
+    this.ocm_data = new OCM.API();
     this.numConnectionEditors = 5;
     this.maxResults = 100;
     this.locationList = null;
@@ -50,8 +56,8 @@ function OCM_App() {
     this.ocm_data.clientName = "ocm.app.webapp";
     this.languageCode = "en";
 
-    this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError);
-    this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError);
+    this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError, this);
+    this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
 
     this.isLocalDevMode = false;
     if (this.isLocalDevMode == true) {
@@ -237,16 +243,7 @@ OCM_App.prototype.initDeferredUI = function () {
 
     if ($("#option-enable-experiments").val() == "on") {
         this.enableExperimental = true;
-        $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>").trigger("create");
-        if ($.mobile) {
-            $("#navbar").trigger("create");
-            $("#navbar").navbar("refresh");
-
-
-            $("#experiment-page").delegate('pageshow', function (event, ui) {
-                app.initExperimentalContent();
-            });
-        }
+        $("#nav-items").append("<li><a href=\"#experiment-page\" data-icon=\"info\">Kapow!</a></li>");
     } else {
         this.enableExperimental = false;
     }
@@ -257,7 +254,7 @@ OCM_App.prototype.initDeferredUI = function () {
 
     if (cachedResults !== null) {
         if (cachedResult_Location !== null) {
-            document.getElementById("search-location").value = cachedResult_Location;
+            (<HTMLInputElement>document.getElementById("search-location")).value = cachedResult_Location;
         }
         setTimeout(function () {
             app.renderPOIList(cachedResults);
@@ -303,10 +300,9 @@ OCM_App.prototype.getParameterFromURL = function (name, url) {
         // split param and value into individual pieces
         for (var i = 0; i < params.length; i++) {
             temp = params[i].split("=");
-            console.log("parse param:"+params[i]);
+            
             if ([temp[0]] == name) {
                 sval = temp[1];
-                console.log("parse val:" + temp[1]);
             }
         }
     }
@@ -568,13 +564,13 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         }
     }
 
-    var distance = parseInt(document.getElementById("search-distance").value);
-    var distance_unit = document.getElementById("search-distance-unit").value;
+    var distance = parseInt((<HTMLInputElement>document.getElementById("search-distance")).value);
+    var distance_unit = (<HTMLInputElement>document.getElementById("search-distance-unit")).value;
 
     if (this.ocm_app_searchPos == null || useManualLocation == true) {
         // search position not set, attempt fetch from location input and
         // return for now
-        var locationText = document.getElementById("search-location").value;
+        var locationText = (<HTMLInputElement>document.getElementById("search-location")).value;
         if (locationText === null || locationText == "") {
             //try to geolocate via browser location API
             this.ocm_geo.determineUserLocation($.proxy(
@@ -594,7 +590,7 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
     if (this.ocm_app_searchPos != null && !this.searchInProgress) {
         this.searchInProgress = true;
 
-        var params = new OCM_LocationSearchParams();
+        var params = new OCM.POI_SearchParams();
         params.latitude = this.ocm_app_searchPos.coords.latitude;
         params.longitude = this.ocm_app_searchPos.coords.longitude;
         params.distance = distance;
@@ -659,7 +655,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
     if (locationList != null && locationList.length > 0) {
         this.logEvent("Caching search results..");
         this.ocm_data.setCachedDataObject("SearchResults", locationList);
-        this.ocm_data.setCachedDataObject("SearchResults_Location", document.getElementById("search-location").value);
+        this.ocm_data.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
     } else {
         this.logEvent("No search results, will not overwrite cached search results.");
     }
@@ -685,7 +681,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
     }
     else {
 
-        var distUnitPref = document.getElementById("search-distance-unit");
+        var distUnitPref = <HTMLInputElement>document.getElementById("search-distance-unit");
         var distance_unit = "Miles";
         if (distUnitPref != null) distance_unit = distUnitPref.value;
 
@@ -898,20 +894,6 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     var topPos = $element.position().top;
     $detailsView.css("left", leftPos);
     $detailsView.css("top", topPos);
-
-    //general mobile related refresh/recreate widget events
-    if ($.mobile) {
-        try {
-            $("#details-locationtitle").trigger("create");
-            $("#details-content").trigger("create");
-            $("#details-usercomments").trigger("create");
-        } catch (exp) { }
-
-        try {
-            $("#details-usercomments").listview("refresh");
-            $("#details-general").trigger("create");
-        } catch (exp) { }
-    }
 
     //once displayed, try fetching a more accurate distance estimate
     if (this.ocm_app_searchPos != null) {
@@ -1140,7 +1122,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     //$("#" + pageId).show();
 
     //hack: reset scroll position for new page once page has had a chance to render
-    setTimeout(function () { document.documentElement.scrollIntoView(); }, 100);
+    setTimeout(function () { (<HTMLElement>document.documentElement).scrollIntoView(); }, 100);
 
 
     this._lastPageId = pageId;
@@ -1277,7 +1259,7 @@ OCM_App.prototype.navigateToAddComment = function () {
     var app = this;
 
     //reset comment form on show
-    document.getElementById("comment-form").reset();
+    (<HTMLFormElement>document.getElementById("comment-form")).reset();
     app.enableCommentSubmit = true;
 
     if (app.isUserSignedIn()) {
