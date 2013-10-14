@@ -10,6 +10,7 @@ Cordova Build Notes
 		- Set resources (js/images etc) as Content in VS project file
 		- Edit Properties/WMAppManifest.xml to include permissions
 		- remove reference to fontawesome/webfonts
+		- include windows.css, remove fontawesome.css
     -iOS Build Notes
         - Uncheck Automatic Reference Counting
         - Drag www folder to project root
