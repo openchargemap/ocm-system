@@ -721,10 +721,13 @@ namespace OCM.API.Common
             //zero existing ids we want to move to superseded poi (otherwise existing items will be updated)
             oldPOI.ID = 0;
             oldPOI.UUID = null;
-            oldPOI.AddressInfo.ID = 0;
-            foreach (var connection in oldPOI.Connections)
-            {
-                connection.ID = 0;
+            if (oldPOI.AddressInfo!=null)  oldPOI.AddressInfo.ID = 0;
+            if (oldPOI.Connections!=null)
+            { 
+                foreach (var connection in oldPOI.Connections)
+                {
+                    connection.ID = 0;
+                }
             }
             oldPOI.SubmissionStatus = null;
             oldPOI.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Delisted_SupersededByUpdate;

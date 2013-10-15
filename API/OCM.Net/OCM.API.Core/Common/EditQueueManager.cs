@@ -91,7 +91,7 @@ namespace OCM.API.Common
             //perform object level differencing on json contents of edit queue items (very expensive), used to get summary and count of differences per item
             foreach (var editQueueItem in sourceList)
             {
-                outputList.Add(GetItemWithDifferences(editQueueItem, cpManager, true));
+                outputList.Add(GetItemWithDifferences(editQueueItem, cpManager, false));
             }
 
             return outputList.Where(i => i.Differences.Count >= filter.MinimumDifferences).Take(filter.MaxResults).ToList();

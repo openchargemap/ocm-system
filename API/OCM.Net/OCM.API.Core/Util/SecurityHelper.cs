@@ -9,6 +9,11 @@ namespace OCM.Core.Util
 {
     public class SecurityHelper
     {
+        public static string GetGravatarURLFromEmailAddress(string email)
+        {
+            return "http://www.gravatar.com/avatar/"+GetMd5Hash(email.ToLower().Trim())+"?d=mm";
+        }
+
         public static string GetMd5Hash(string input)
         {
             // Create a new instance of the MD5CryptoServiceProvider object.

@@ -41,8 +41,9 @@ namespace OCM.MVC.Controllers
             //approves/publishes the given edit directly
             using (var editQueueManager = new EditQueueManager())
             {
+                
                 editQueueManager.ProcessEditQueueItem(id, true, (int)Session["UserID"]);
-
+                
                 return RedirectToAction("Index", "EditQueue");
             }
         }

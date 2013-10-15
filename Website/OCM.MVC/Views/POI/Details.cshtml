@@ -37,7 +37,9 @@
         {
             <div class="alert alert-info">Thank you, if required your submission will now wait in a queue for approval.</div>
         }
-        <a href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
+            
+        <a @(ViewBag.EnableSimpleView == true?Html.Raw("target=\"_blank\""):Html.Raw("")) href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
+        
     </div>
 }
 
