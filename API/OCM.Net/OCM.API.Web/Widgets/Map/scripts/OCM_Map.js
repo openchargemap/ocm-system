@@ -15,7 +15,7 @@ function OCM_MapOptions() {
 
     this.geolocateUserOnLoad = false;
 
-    this.searchParams = new OCM_LocationSearchParams();
+    this.searchParams = new OCM.POI_SearchParams();
 
     this.useMarkerIcons = true;
     this.useMarkerAnimation = true;
@@ -27,8 +27,8 @@ function OCM_MapOptions() {
 
 function OCM_Map() {
     this.ocm_ui = new OCM_CommonUI();
-    this.ocm_data = new OCM_Data();
-    this.ocm_geo = new OCM_Geolocation();
+    this.ocm_data = new OCM.API();
+    this.ocm_geo = new OCM.Geolocation();
     this.mapOptions = new OCM_MapOptions();
 
     this.ocm_ui.ocm_markers = null;

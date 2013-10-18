@@ -1,4 +1,4 @@
-var ocm_data = new OCM_Data();
+var ocm_data = new OCM.API();
 var ocm_app = new OCM_App();
 
 var supported_languages = [

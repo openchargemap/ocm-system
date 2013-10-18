@@ -208,7 +208,9 @@ namespace OCM.Import
                 destItem.AddressInfo.ContactEmail = sourceItem.AddressInfo.ContactEmail;
                 destItem.AddressInfo.ContactTelephone1 = sourceItem.AddressInfo.ContactTelephone1;
                 destItem.AddressInfo.ContactTelephone2 = sourceItem.AddressInfo.ContactTelephone2;
+#pragma warning disable 0612
                 destItem.AddressInfo.GeneralComments = sourceItem.AddressInfo.GeneralComments;
+#pragma warning restore 0612
                 destItem.AddressInfo.Latitude = sourceItem.AddressInfo.Latitude;
                 destItem.AddressInfo.Longitude = sourceItem.AddressInfo.Longitude;
 
@@ -224,7 +226,6 @@ namespace OCM.Import
                 destItem.DateLastConfirmed = sourceItem.DateLastConfirmed;
                 destItem.DateLastStatusUpdate = sourceItem.DateLastStatusUpdate;
                 destItem.DatePlanned = sourceItem.DatePlanned;
-                destItem.MetadataTags = sourceItem.MetadataTags;
 
                 //update connections
                 //TODO:: update connections
