@@ -1,0 +1,50 @@
+before import: 13543
+
+United States: 5794 United Kingdom: 1718 Japan: 1300 Norway: 959 Netherlands: 811 Germany: 664 Austria: 503 Ireland: 322 Portugal: 300 Belgium: 251 France: 238 Canada: 226 Hong Kong: 188 Australia: 75 Switzerland: 39 Monaco: 36 Luxembourg: 23 Poland: 15 Denmark: 11 Hungary: 11 Lithuania: 9 Spain: 7 Estonia: 6 Turkey: 5 Iceland: 4 Slovakia: 4 Croatia: 3 Finland: 3 Brazil: 2 Isle Of Man: 2 Italy: 2 Albania: 1 Barbados: 1 Belarus: 1 Bulgaria: 1 Chile: 1 Czech Republic: 1 Israel: 1 Latvia: 1 Malta: 1 New Zealand: 1 Puerto Rico: 1 Serbia: 1
+21177 charging stations across 13543 locations.
+
+after import: 13834
+
+United States: 5882 United Kingdom: 1740 Japan: 1300 Norway: 959 Netherlands: 811 Germany: 664 Austria: 503 Ireland: 322 Portugal: 300 Canada: 285 Belgium: 251 France: 238 Hong Kong: 188 China: 121 Australia: 76 Switzerland: 39 Monaco: 36 Luxembourg: 23 Poland: 15 Denmark: 11 Hungary: 11 Lithuania: 9 Spain: 7 Estonia: 6 Turkey: 5 Iceland: 4 Slovakia: 4 Croatia: 3 Finland: 3 Brazil: 2 Isle Of Man: 2 Italy: 2 Albania: 1 Barbados: 1 Belarus: 1 Bulgaria: 1 Chile: 1 Czech Republic: 1 Israel: 1 Latvia: 1 Malta: 1 New Zealand: 1 Puerto Rico: 1 Serbia: 1
+21508 charging stations across 13834 locations.
+
+
+after fixed import: 13834
+
+
+
+
+[blinknetwork.com]: Publishing via API..
+A first chance exception of type 'System.Net.WebException' occurred in System.dll
+Update Item Failed: {0: Shell Station #70 - 1509 E. Buckeye}
+A first chance exception of type 'System.Net.WebException' occurred in System.dll
+Update Item Failed: {0: Dalton Utilities}
+A first chance exception of type 'System.Net.WebException' occurred in System.dll
+Update Item Failed: {16221: Chevron Discovery Market}
+A first chance exception of type 'System.Net.WebException' occurred in System.dll
+Update Item Failed: {13601: Chateau Montelena Winery}
+
+[RWE-Mobility.com]: Country Not Matched, will require Geolocation:Czechoslovakia
+A first chance exception of type 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException' occurred in System.Core.dll
+[RWE-Mobility.com]: Import Failed:RWE-Mobility.com ::Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: Cannot perform runtime binding on a null reference
+   at CallSite.Target(Closure , CallSite , Object )
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   at CallSite.Target(Closure , CallSite , Object )
+   at OCM.Import.Providers.ImportProvider_RWEMobility.Process(CoreReferenceData coreRefData) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\Providers\ImportProvider_RWEMobility.cs:line 84
+   at OCM.Import.ImportManager.PerformImportProcessing(ExportType exportType, String defaultDataPath, String apiIdentifier, String apiSessionToken, Boolean fetchLiveData) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\ImportManager.cs:line 341
+
+
+[mobie.pt]: Processing input..
+A first chance exception of type 'System.Collections.Generic.KeyNotFoundException' occurred in mscorlib.dll
+[mobie.pt]: Import Failed:mobie.pt ::System.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at OCM.Import.Providers.DynamicJsonObject.TryGetMember(GetMemberBinder binder, Object& result) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\Providers\BaseImportProvider.cs:line 40
+   at CallSite.Target(Closure , CallSite , Object )
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   at OCM.Import.Providers.ImportProvider_Mobie.OCM.Import.Providers.IImportProvider.Process(CoreReferenceData coreRefData) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\Providers\ImportProvider_Mobie.cs:line 41
+   at OCM.Import.ImportManager.PerformImportProcessing(ExportType exportType, String defaultDataPath, String apiIdentifier, String apiSessionToken, Boolean fetchLiveData) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\ImportManager.cs:line 341
+
+[ESB_eCars]: Import Failed:ESB_eCars ::System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at OCM.Import.Providers.ImportProvider_ESB_eCars.ParseBasicDetails(ChargePoint cp, XmlNode item) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\Providers\ImportProvider_ESB_eCars.cs:line 36
+   at OCM.Import.Providers.ImportProvider_GenericKML.Process(CoreReferenceData coreRefData) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\Providers\ImportProvider_GenericKML.cs:line 62
+   at OCM.Import.ImportManager.PerformImportProcessing(ExportType exportType, String defaultDataPath, String apiIdentifier, String apiSessionToken, Boolean fetchLiveData) in c:\Temp\GIT\projects\ocm-system\Import\OCM.Import.Common\ImportManager.cs:line 341
