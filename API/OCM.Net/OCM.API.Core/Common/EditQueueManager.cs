@@ -140,7 +140,7 @@ namespace OCM.API.Common
                         if (poiUpdateRequired)
                         {
                             //updates to externally provided POIs require old version to be superseded (archived) first
-                            if (poiA!=null && poiA.DataProviderID!=(int)StandardDataProviders.OpenChargeMapContrib)
+                            if (poiA != null && poiA.DataProviderID != (int)StandardDataProviders.OpenChargeMapContrib)
                             {
                                 poiManager.SupersedePOI(DataModel, poiA, poiB);
                             }
@@ -159,7 +159,10 @@ namespace OCM.API.Common
                         if (poiData.ID == 0)
                         {
                             //new item, set contributor on poi details
-                            poiData.Contributor = DataModel.Users.First(u => u.ID == queueItem.User.ID);
+                            if (queueItem.User != null)
+                            {
+                                poiData.Contributor = DataModel.Users.First(u => u.ID == queueItem.User.ID);
+                            }
                         }
 
                         //publish edit
