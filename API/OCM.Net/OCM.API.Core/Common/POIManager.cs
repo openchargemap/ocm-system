@@ -127,8 +127,8 @@ namespace OCM.API.Common
                 //compile initial list of locations
                 var chargePointList = from c in dataModel.ChargePoints
                                       where
-                                          c.ParentChargePointID == null //exclude under review and delisted charge points
-                                          && (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null)
+                                          //c.ParentChargePointID == null //exclude under review and delisted charge points
+                                          (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
                                           && ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
                                                 || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
                                                 || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
@@ -184,8 +184,9 @@ namespace OCM.API.Common
                 //writes to output window
                 System.Diagnostics.Debug.WriteLine(sql);
 
+                var additionalFilteredList = filteredList.Take(maxResults).ToList();
 
-                foreach (var item in filteredList.Take(maxResults)) //.ToList
+                foreach (var item in additionalFilteredList) //.ToList
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
                     Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput);
@@ -721,9 +722,9 @@ namespace OCM.API.Common
             //zero existing ids we want to move to superseded poi (otherwise existing items will be updated)
             oldPOI.ID = 0;
             oldPOI.UUID = null;
-            if (oldPOI.AddressInfo!=null)  oldPOI.AddressInfo.ID = 0;
-            if (oldPOI.Connections!=null)
-            { 
+            if (oldPOI.AddressInfo != null) oldPOI.AddressInfo.ID = 0;
+            if (oldPOI.Connections != null)
+            {
                 foreach (var connection in oldPOI.Connections)
                 {
                     connection.ID = 0;
