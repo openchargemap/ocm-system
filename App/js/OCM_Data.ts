@@ -7,8 +7,6 @@ module OCM {
         public longitude: number = null;
         public distance: number = null;
         public distanceUnit: string = null;
-
-
         public connectionTypeID: number = null;
         public operatorID: number = null;
         public levelID: number = null;

@@ -376,27 +376,16 @@ OCM_App.prototype.showLocationEditor = function () {
                             $("#edit_connection" + n + "_quantity").val(con.Quantity);
                             $("#edit_connection" + n + "_powerkw").val(con.PowerKW);
 
-                            if ($.mobile) {
-                                $connection.jqmData("_connection_id", con.ID);
-                            } else {
-                                jQuery.data($connection, "_connection_id", con.ID);
-                            }
+                            $.data(($connection), "_connection_id", con.ID);
 
                             $connection.addClass("panel-primary");
                         }
                     }
                 } else {
-                    if ($.mobile) {
-                        $connection.jqmData("_connection_id", 0);
+                    //null data (if present) from connection editor
+                    $.data(($connection), "_connection_id", 0);
 
-                        //collapse editor by default
-                        $connection.trigger("collapse");
-                    } else {
-                        jQuery.data($connection, "_connection_id", 0);
-
-                        // $connection.collapse('hide')
-                        $connection.addClass("panel-default");
-                    }
+                    $connection.addClass("panel-default");
                 }
             }
         }
