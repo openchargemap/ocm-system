@@ -29,7 +29,7 @@ namespace OCM.MVC
         protected void Application_Error(object sender, EventArgs e)
         {
             // Code that runs when an unhandled error occurs
-
+            
             // Get the exception object.
             Exception exc = Server.GetLastError();
 

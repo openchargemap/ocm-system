@@ -124,7 +124,7 @@ namespace OCM.API.Common
                         //get json snapshot of current cp data to store as 'previous'
                         oldPOI = poiManager.Get(updatedPOI.ID);
 
-                        //check if poi will change with this edit, if not we discard it completely
+                        //FIXME: check if poi will change with this edit, if not we discard it completely
                         if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
                             return false;

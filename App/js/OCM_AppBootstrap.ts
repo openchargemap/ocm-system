@@ -1,7 +1,7 @@
 
-/// <reference path="TypeScriptReferences/jquery.d.ts" />
-/// <reference path="TypeScriptReferences/phonegap.d.ts" />
-/// <reference path="TypeScriptReferences/leaflet.d.ts" />
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
+/// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 
 declare var OCM_App: any;
 

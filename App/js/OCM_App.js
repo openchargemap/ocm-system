@@ -33,11 +33,11 @@ function OCM_App() {
 
     this.isLocalDevMode = false;
     if (this.isLocalDevMode == true) {
-        this.baseURL = "http://localhost:81";
+        this.baseURL = "http://localhost:81/app";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+        this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
 
-        //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
-        this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
+        //this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
     this.ocm_geo.ocm_data = this.ocm_data;
@@ -469,7 +469,7 @@ OCM_App.prototype.performCommentSubmit = function () {
 
 OCM_App.prototype.performMediaItemSubmit = function () {
     var $fileupload = $(':file');
-    var mediafile = $fileupload[0].files[0];
+    var mediafile = ($fileupload[0]).files[0];
     var name, size, type;
     if (mediafile) {
         name = mediafile.name;
@@ -1214,8 +1214,8 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
 };
 
 OCM_App.prototype.showConnectionError = function () {
+    $("#progress-indicator").hide();
     $("#network-error").show();
-    this.ocm_ui.hideProgressIndicator();
     //app.showMessage("An error occurred transferring data. Please check your data connection.");
 };
 

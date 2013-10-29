@@ -1,12 +1,14 @@
-/// <reference path="TypeScriptReferences/jquery.d.ts" />
-/// <reference path="TypeScriptReferences/google.maps.d.ts" />
-/// <reference path="TypeScriptReferences/leaflet.d.ts" />
-/// <reference path="TypeScriptReferences/phonegap.d.ts" />
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
+/// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
+/// <reference path="TypeScriptReferences/leaflet/leaflet.awesomemarkers.d.ts" />
+/// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 //"use strict";
 
 
 //typescript declarations
 declare var localisation_dictionary;
+declare var MarkerClusterer: any;
 
 function OCM_CommonUI() {
     this.enablePOIMap = true;
@@ -253,7 +255,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
                             }
                             markerTitle += " (" + powerTitle + ", " + usageTitle + ")"
 
-                            var marker = new L.Marker([poi.AddressInfo.Latitude, poi.AddressInfo.Longitude], {icon:markerIcon,title:markerTitle, draggable:false, clickable:true});
+                            var marker = new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{icon:markerIcon,title:markerTitle, draggable:false, clickable:true});
                             marker._isClicked = false; //workaround for double click event
                             marker.poi = poi;
                             marker.on('click', 
@@ -452,7 +454,7 @@ OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, cur
     // create a map in the "map" div, set the view to a given place and zoom
     var map = new L.Map(mapcanvasID);
     if (currentLat != null && currentLng != null) {
-        map.setView([currentLat, currentLng]);
+        map.setView(new L.LatLng(currentLat, currentLng), zoomLevel, true);
     }
     map.setZoom(zoomLevel);
 
@@ -465,7 +467,7 @@ OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, cur
     }
     
     // add an OpenStreetMap tile layer
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 

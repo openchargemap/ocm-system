@@ -1,3 +1,6 @@
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
+/// <reference path="OCM_App.ts" />
 OCM_App.prototype.initEditors = function () {
     this.editorMapInitialised = false;
     this.editorMap = null;
@@ -210,6 +213,7 @@ OCM_App.prototype.performLocationSubmit = function () {
 
     var country = this.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val());
     item.AddressInfo.Country = country;
+    item.AddressInfo.CountryID = null;
 
     item.AddressInfo.AccessComments = $("#edit_addressinfo_accesscomments").val();
     item.AddressInfo.ContactTelephone1 = $("#edit_addressinfo_contacttelephone1").val();
@@ -218,22 +222,34 @@ OCM_App.prototype.performLocationSubmit = function () {
     item.AddressInfo.RelatedURL = $("#edit_addressinfo_relatedurl").val();
 
     item.NumberOfPoints = $("#edit_numberofpoints").val();
+
     item.UsageType = this.ocm_data.getRefDataByID(refData.UsageTypes, $("#edit_usagetype").val());
+    item.UsageTypeID = null;
+
     item.UsageCost = $("#edit_usagecost").val();
+
     item.StatusType = this.ocm_data.getRefDataByID(refData.StatusTypes, $("#edit_statustype").val());
+    item.StatusTypeID = null;
+
     item.GeneralComments = $("#edit_generalcomments").val();
+
     item.OperatorInfo = this.ocm_data.getRefDataByID(refData.Operators, $("#edit_operator").val());
+    item.OperatorID = null;
 
     if (this.isLocationEditMode != true) {
         item.DataProvider = null;
+        item.DataProviderID = null;
 
         if (this.hasUserPermissionForPOI(item, "Edit")) {
             item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, 200);
+            item.SubmissionStatusTypeID = null;
         }
     } else {
         //in edit mode use submission status from form
         item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
+        item.SubmissionStatusTypeID = null;
         item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
+        item.DataProviderID = null;
     }
 
     if (item.Connections == null)
@@ -375,15 +391,14 @@ OCM_App.prototype.showLocationEditor = function () {
                             $("#edit_connection" + n + "_volts").val(con.Voltage);
                             $("#edit_connection" + n + "_quantity").val(con.Quantity);
                             $("#edit_connection" + n + "_powerkw").val(con.PowerKW);
-
-                            $.data(($connection), "_connection_id", con.ID);
+                            $connection.data("_connection_id", con.ID);
 
                             $connection.addClass("panel-primary");
                         }
                     }
                 } else {
                     //null data (if present) from connection editor
-                    $.data(($connection), "_connection_id", 0);
+                    $connection.data("_connection_id", 0);
 
                     $connection.addClass("panel-default");
                 }
@@ -432,21 +447,21 @@ OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
             color: 'darkpurple'
         });
 
-        this.editMarker = L.marker([currentLat, currentLng], { draggable: true });
+        this.editMarker = new L.Marker(new L.LatLng(currentLat, currentLng), { draggable: true });
 
         this.editMarker.addTo(this.editorMap);
         $("#editor-map-canvas").show();
 
         this.editMarker.on("dragend", function () {
             //move map to new map centre
-            var point = ocm_app.editMarker.getLatLng();
-            ocm_app.editorMap.panTo(point);
+            var point = app.editMarker.getLatLng();
+            app.editorMap.panTo(point);
             $("#edit_addressinfo_latitude").val(point.lat);
             $("#edit_addressinfo_longitude").val(point.lng);
 
             //suggest new address as well?
             //clear attribution when manually modified
-            ocm_app.positionAttribution = null;
+            app.positionAttribution = null;
         });
 
         //refresh map rendering
@@ -455,8 +470,8 @@ OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
             map.invalidateSize(false);
         }, 300);
     } else {
-        var point = ocm_app.editMarker.getLatLng();
-        ocm_app.editorMap.panTo(point);
+        var point = app.editMarker.getLatLng();
+        app.editorMap.panTo(point);
     }
 };
 //# sourceMappingURL=OCM_App_LocationEditor.js.map

@@ -94,4 +94,3 @@ OCM_App.prototype.showProgressIndicator = function () {
 OCM_App.prototype.hideProgressIndicator = function () {
     $("#progress-indicator").fadeOut();
 };
-//# sourceMappingURL=OCM_App_Util.js.map

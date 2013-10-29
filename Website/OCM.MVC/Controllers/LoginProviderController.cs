@@ -87,7 +87,7 @@ namespace OCM.MVC.Controllers
                     }
 
                     string screenName;
-                    int userId;
+                    long userId;
                     if (TwitterConsumer.TryFinishSignInWithTwitter(out screenName, out userId))
                     {
                         string newSessionToken = Guid.NewGuid().ToString();

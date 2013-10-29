@@ -1,4 +1,4 @@
-/// <reference path="TypeScriptReferences/google.maps.d.ts" />
+/// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.ts" />
 //"use strict";
 

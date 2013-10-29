@@ -1,4 +1,4 @@
-/// <reference path="TypeScriptReferences/google.maps.d.ts" />
+/// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.ts" />
 //"use strict";
 var OCM;
@@ -158,4 +158,3 @@ var OCM;
     })();
     OCM.Geolocation = Geolocation;
 })(OCM || (OCM = {}));
-//# sourceMappingURL=OCM_Geolocation.js.map

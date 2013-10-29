@@ -1,4 +1,4 @@
-﻿/// <reference path="TypeScriptReferences/jquery.d.ts" />
+﻿/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 var OCM;
 (function (OCM) {
     var POI_SearchParams = (function () {

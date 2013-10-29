@@ -1,7 +1,6 @@
-/// <reference path="TypeScriptReferences/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="OCM_App.ts" />
 
-declare var OCM_App: any;
 declare var escape:any;
 declare var unescape: any; //TODO: replace with newer escaping methods
 

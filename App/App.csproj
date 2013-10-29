@@ -548,13 +548,6 @@
     <Content Include="images\splashscreen\AppSplashscreen_768x1004.png" />
     <Content Include="index.html" />
     <Content Include="js\Localisation\languagePack.min.js" />
-    <Content Include="js\OCM_App.js" />
-    <Content Include="js\OCM_AppBootstrap.js" />
-    <Content Include="js\OCM_App_LocationEditor.js" />
-    <Content Include="js\OCM_App_Util.js" />
-    <Content Include="js\OCM_CommonUI.js" />
-    <Content Include="js\OCM_Data.js" />
-    <Content Include="js\OCM_Geolocation.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
     <Content Include="js\ThirdParty\analytics.js" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css" />
@@ -810,10 +803,11 @@
     <TypeScriptCompile Include="js\OCM_CommonUI.ts" />
     <TypeScriptCompile Include="js\OCM_Data.ts" />
     <TypeScriptCompile Include="js\OCM_Geolocation.ts" />
-    <TypeScriptCompile Include="js\TypeScriptReferences\google.maps.d.ts" />
-    <TypeScriptCompile Include="js\TypeScriptReferences\jquery.d.ts" />
-    <TypeScriptCompile Include="js\TypeScriptReferences\leaflet.d.ts" />
-    <TypeScriptCompile Include="js\TypeScriptReferences\phonegap.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\leaflet\leaflet.awesomemarkers.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\leaflet\leaflet.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\phonegap\phonegap.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="build\node_modules\jake-utils\node_modules\jake\lib\task\" />

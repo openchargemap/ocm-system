@@ -1,4 +1,4 @@
-﻿/// <reference path="TypeScriptReferences/jquery.d.ts" />
+﻿/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 module OCM {
     export class POI_SearchParams {
         constructor() { }

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Data.Objects.DataClasses;
 using OCM.Core.Data;
 using OCM.API.Common.Model;
 using KellermanSoftware.CompareNetObjects;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Objects;
 using System.Diagnostics;
+using System.Data.Entity.Core.Objects.DataClasses;
+using System.Data.Entity;
 
 namespace OCM.API.Common
 {
@@ -34,7 +34,7 @@ namespace OCM.API.Common
             return Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
         }
 
-        [EdmFunction("OCM.Core.Data.OCMEntities.Store", "udf_GetDistanceFromLatLonKM")]
+        [DbFunctionAttribute("OCM.Core.Data.OCMEntities.Store", "udf_GetDistanceFromLatLonKM")]
         public static double? GetDistanceFromLatLonKM(double? Latitude1, double? Longitude1, double? Latitude2, double? Longitude2)
         {
             //implements dummy call for entity framework mapping to corresponding SQL function
@@ -375,24 +375,20 @@ namespace OCM.API.Common
                 {
                     "DateCreated",
                     "DateLastStatusUpdate",
-                    ".DataProvider.ID",
                     ".DataProvider.WebsiteURL",
                     ".DataProvider.DataProviderStatusType",
-                    ".StatusType.ID",
                     ".StatusType.IsOperational",
                     ".ConnectionType.FormalName",
                     ".Level.Comments",
                     ".AddressInfo.Distance",
                     ".AddressInfo.DistanceUnit",
                     ".AddressInfo.DistanceUnit.DistanceUnit",
-                    ".SubmissionStatus.ID",
                     ".SubmissionStatus.IsLive",
                     ".OperatorInfo.WebsiteURL",
                     ".OperatorInfo.PhonePrimaryContact",
                     ".OperatorInfo.IsPrivateIndividual",
                     ".OperatorInfo.ContactEmail",
                     ".OperatorInfo.FaultReportEmail",
-                    ".OperatorInfo.ID"
                 };
             objectComparison.ElementsToIgnore.AddRange(exclusionList);
 
