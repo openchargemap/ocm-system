@@ -12,18 +12,21 @@ namespace OCM.API.Common.Model
 
     public enum StandardStatusTypes
     {
-        Unknown=0
+        Unknown = 0
     }
     public enum StandardOperators
     {
-        UnknownOperator = 0
+        UnknownOperator = 1
     }
 
     public enum StandardUsageTypes
     {
+        Unknown = 0,
         Public = 1,
         PrivateRestricted = 2,
-        PrivatelyOwned_NoticeRequired = 3
+        PrivatelyOwned_NoticeRequired = 3,
+        Public_MembershipRequired = 4,
+        Public_PayAtLocation= 5
     }
 
     public enum StandardSubmissionStatusTypes
@@ -56,14 +59,28 @@ namespace OCM.API.Common.Model
 
     public enum StandardEntityTypes
     {
-        POI=1
+        POI = 1
     }
 
     public enum StandardConnectionTypes
     {
-        Unknown =0,
+        Unknown = 0,
         J1772 = 1,
         CHAdeMO = 2
+    }
+
+    public enum StandardCurrentTypes
+    {
+        SinglePhaseAC = 10,
+        ThreePhaseAC = 20,
+        DC = 30
+    }
+
+    public enum StandardMetadataFields
+    {
+        POIType = 1,
+        AccessHours = 2,
+        Attribution = 4
     }
     public class CoreReferenceData
     {
