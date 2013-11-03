@@ -1,3 +1,11 @@
+var google;
+(function (google) {
+    (function (maps) {
+        var visualRefresh;
+    })(google.maps || (google.maps = {}));
+    var maps = google.maps;
+})(google || (google = {}));
+
 function OCM_CommonUI() {
     this.enablePOIMap = true;
     this.map = null;

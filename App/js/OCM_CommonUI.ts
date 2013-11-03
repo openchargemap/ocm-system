@@ -5,10 +5,16 @@
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 //"use strict";
 
-
 //typescript declarations
 declare var localisation_dictionary;
 declare var MarkerClusterer: any;
+interface MVCObject {
+    visualRefresh: any;
+}
+
+module google.maps {
+    var visualRefresh: any;
+}
 
 function OCM_CommonUI() {
     this.enablePOIMap = true;
