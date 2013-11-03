@@ -21,7 +21,7 @@ namespace OCM.MVC.Controllers
             if (response.Cookies.AllKeys.Contains(cookieName))
             {
                 response.Cookies[cookieName].Value = cookieValue;
-                response.Cookies[cookieName].Expires = DateTime.Now.AddDays(-1);
+                response.Cookies[cookieName].Expires = DateTime.UtcNow.AddDays(-1);
             }
         }
 

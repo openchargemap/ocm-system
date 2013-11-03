@@ -40,7 +40,7 @@ namespace OCM.MVC.Controllers
             if (response.Cookies.AllKeys.Contains(cookieName))
             {
                 response.Cookies[cookieName].Value = cookieValue;
-                response.Cookies[cookieName].Expires = DateTime.Now.AddDays(-1);
+                response.Cookies[cookieName].Expires = DateTime.UtcNow.AddDays(-1);
             }
         }
 
@@ -73,6 +73,7 @@ namespace OCM.MVC.Controllers
             if (_mode == "silent" && String.IsNullOrEmpty(oauth_token))
             {
                 //silently initiate pass through to twitter login
+                if (_forceLogin == null) _forceLogin = true;
                 TwitterConsumer.StartSignInWithTwitter((bool)_forceLogin).Send();
             }
             else

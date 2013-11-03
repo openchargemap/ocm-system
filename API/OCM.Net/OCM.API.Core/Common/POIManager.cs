@@ -50,7 +50,7 @@ namespace OCM.API.Common
         public List<Model.ChargePoint> GetChargePoints(APIRequestSettings settings)
         {
 
-            System.Diagnostics.Debug.WriteLine(DateTime.Now);
+            System.Diagnostics.Debug.WriteLine(DateTime.UtcNow);
 
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
@@ -243,7 +243,7 @@ namespace OCM.API.Common
                 dataList = (List<Model.ChargePoint>)HttpContext.Current.Cache[cacheKey];
             }
 
-            System.Diagnostics.Debug.WriteLine(DateTime.Now);
+            System.Diagnostics.Debug.WriteLine(DateTime.UtcNow);
 
             return dataList.Take(settings.MaxResults).ToList();
         }

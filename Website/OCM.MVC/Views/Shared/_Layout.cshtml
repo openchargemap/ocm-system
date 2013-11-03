@@ -14,7 +14,7 @@
         <meta name="apple-itunes-app" content="app-id=528951115">
     }
 
-    <link href="~/content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/content/bootstrap.min.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/css")
 
@@ -117,7 +117,7 @@
                         <ul class="dropdown-menu">
                             @foreach (var language in CommonUtil.SupportedLanguages)
                             {
-                                <li><a href="?languagecode=@language.Key">@language.Value</a></li>
+                                <li><a rel="nofollow" href="?languagecode=@language.Key">@language.Value</a></li>
                             }
                         </ul>
                     </li>

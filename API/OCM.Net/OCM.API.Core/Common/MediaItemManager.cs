@@ -5,6 +5,7 @@ using System.Linq;
 using ImageResizer;
 using OCM.Core.Data;
 using OCM.Core.Util;
+using System.Threading;
 
 namespace OCM.API.Common
 {
@@ -20,20 +21,30 @@ namespace OCM.API.Common
 
             var poi = new POIManager().Get(chargePointId);
             string[] urls = UploadPOIImageToStorage(tempFolder, sourceImageFile, poi);
-            mediaItem.ItemURL = urls[0];
-            mediaItem.ItemThumbnailURL = urls[1];
+            if (urls == null)
+            {
+                //failed to upload, preserve submission data
+                System.IO.File.WriteAllText(tempFolder+"//OCM_"+chargePointId+"_"+(DateTime.Now.ToFileTimeUtc().ToString())+".json", "{userId:"+userId+",comment:\""+comment+"\"}");
+                return null;
+            }
+            else
+            {
+                mediaItem.ItemURL = urls[0];
+                mediaItem.ItemThumbnailURL = urls[1];
 
-            mediaItem.User = dataModel.Users.FirstOrDefault(u => u.ID == userId);
-            mediaItem.ChargePoint = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == chargePointId);
-            mediaItem.Comment = comment;
-            mediaItem.DateCreated = DateTime.UtcNow;
-            mediaItem.IsEnabled = true;
-            mediaItem.IsExternalResource = false;
-            mediaItem.IsVideo = isVideo;
+                mediaItem.User = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+                mediaItem.ChargePoint = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == chargePointId);
+                mediaItem.Comment = comment;
+                mediaItem.DateCreated = DateTime.UtcNow;
+                mediaItem.IsEnabled = true;
+                mediaItem.IsExternalResource = false;
+                mediaItem.IsVideo = isVideo;
 
-            dataModel.MediaItems.Add(mediaItem);
-            dataModel.SaveChanges();
-            return mediaItem;
+                dataModel.MediaItems.Add(mediaItem);
+                dataModel.SaveChanges();
+                return mediaItem;
+            }
+            
         }
 
         private void GenerateImageThumbnails(string sourceFile, string destFile, int maxWidth)
@@ -76,27 +87,40 @@ namespace OCM.API.Common
                 }
                 catch (Exception)
                 {
+                    AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to generate image upload thumbnails : OCM-" + poi.ID, "");
                     return null;
                 }
 
 
                 //attempt upload
-                try
+                bool success = false;
+                int attemptCount = 0;
+                while (success == false && attemptCount < 5)
                 {
-                    urls[0] = storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
-                    urls[1] =
-                      storage.UploadImage(tempFolder + thumbFileName,
-                                          destFolderPrefix + thumbFileName, metadataTags);
-                    urls[2] =
-                        storage.UploadImage(tempFolder + mediumFileName,
-                                            destFolderPrefix + mediumFileName, metadataTags);
-                }
-                catch (Exception)
-                {
-                    //failed to store blobs
-                    return null;
+                    attemptCount++;
+                    try
+                    {
+                        urls[0] = storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
+                        urls[1] =
+                          storage.UploadImage(tempFolder + thumbFileName,
+                                              destFolderPrefix + thumbFileName, metadataTags);
+                        urls[2] =
+                            storage.UploadImage(tempFolder + mediumFileName,
+                                                destFolderPrefix + mediumFileName, metadataTags);
+
+                        success = true;
+                    }
+                    catch (Exception)
+                    {
+                        //failed to store blobs
+                        AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to upload images to azure (attempt " + attemptCount + "): OCM-" + poi.ID, "");
+                        //return null;
+                    }
+                    attemptCount++;
+                    Thread.Sleep(1000); //wait a bit then try again
                 }
 
+                Thread.Sleep(5000);
                 //attempt to delete temp files
                 try
                 {
@@ -115,6 +139,8 @@ namespace OCM.API.Common
             catch (Exception)
             {
                 //failed to upload
+                AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Final attempt to upload images to azure failed: OCM-" + poi.ID, "");
+
                 return null;
             }
 
