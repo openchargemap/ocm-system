@@ -1,4 +1,5 @@
 ﻿using DotNetOpenAuth.ApplicationBlock;
+using Microsoft.Web.WebPages.OAuth;
 using OCM.API.Common;
 using OCM.Core.Data;
 using System;
@@ -12,6 +13,7 @@ namespace OCM.MVC.Controllers
     public class LoginProviderController : Controller
     {
 
+        #region Cookie Helpers
         public static void UpdateCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
             if (response.Cookies.AllKeys.Contains(cookieName))
@@ -35,6 +37,7 @@ namespace OCM.MVC.Controllers
                 return "";
             }
         }
+
         public static void ClearCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
             if (response.Cookies.AllKeys.Contains(cookieName))
@@ -43,8 +46,65 @@ namespace OCM.MVC.Controllers
                 response.Cookies[cookieName].Expires = DateTime.UtcNow.AddDays(-1);
             }
         }
+        #endregion
 
-        //
+        #region Login Workflow Handlers
+        public ActionResult BeginLogin()
+        {
+            ViewBag.LoginProviders = OAuthWebSecurity.RegisteredClientData;
+            return View();
+        }
+
+        public ActionResult LoginFailed()
+        {
+            ViewBag.LoginFailed = true;
+            return RedirectToAction("BeginLogin");
+        }
+
+        [AllowAnonymous]
+        public void LoginWithProvider(string provider)
+        {
+            OAuthWebSecurity.RequestAuthentication(provider, Url.Action("AuthenticationCallback"));
+        }
+
+        [AllowAnonymous]
+        public ActionResult AuthenticationCallback()
+        {
+            //http://brockallen.com/2012/09/04/using-oauthwebsecurity-without-simplemembership/
+            var result = OAuthWebSecurity.VerifyAuthentication();
+            if (result.IsSuccessful)
+            {
+                // name of the provider we just used
+                var provider = result.Provider;
+                // provider's unique ID for the user
+                var uniqueUserID = result.ProviderUserId;
+                // since we might use multiple identity providers, then 
+                // our app uniquely identifies the user by combination of 
+                // provider name and provider user id
+                var uniqueID = provider + "/" + uniqueUserID;
+
+                // we then log the user into our application
+                // we could have done a database lookup for a 
+                // more user-friendly username for our app
+                //FormsAuthentication.SetAuthCookie(uniqueID, false);
+
+                // dictionary of values from identity provider
+                var userDataFromProvider = result.ExtraData;
+
+                string email = null;
+                string name = null;
+                if (userDataFromProvider.ContainsKey("email")) email = userDataFromProvider["email"];
+                if (userDataFromProvider.ContainsKey("name")) name = userDataFromProvider["name"];
+
+                //for legacy reasons, with twitter we use the text username instead of numeric userid
+                if (provider == "twitter" && !String.IsNullOrEmpty(result.UserName)) uniqueUserID = result.UserName;
+                
+                return ProcessLoginResult(uniqueUserID, provider, name, email);
+            }
+            return View("LoginFailed", result.Error);
+        }
+
+        // Legacy entry point/endpoint for oauth logins
         // GET: /LoginProvider/
 
         public ActionResult Index(string _mode, bool? _forceLogin, string _redirectURL, string oauth_token, string denied)
@@ -69,6 +129,8 @@ namespace OCM.MVC.Controllers
                 }
             }
 
+            return RedirectToAction("BeginLogin");
+            /*
             //if initiating a login, attempt to authenticate with twitter
             if (_mode == "silent" && String.IsNullOrEmpty(oauth_token))
             {
@@ -87,80 +149,90 @@ namespace OCM.MVC.Controllers
                         Session["_redirectURL"] = _redirectURL;
                     }
 
-                    string screenName;
-                    long userId;
+                    string screenName = null;
+                    long userId = 0;
                     if (TwitterConsumer.TryFinishSignInWithTwitter(out screenName, out userId))
                     {
-                        string newSessionToken = Guid.NewGuid().ToString();
-
-
-                        var dataModel = new OCMEntities();
-                        var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier == screenName && u.IdentityProvider == "Twitter");
-                        if (userDetails == null)
-                        {
-                            //create new user details   
-                            userDetails = new Core.Data.User();
-                            userDetails.IdentityProvider = "Twitter";
-                            userDetails.Identifier = screenName;
-                            userDetails.Username = screenName;
-                            userDetails.DateCreated = DateTime.UtcNow;
-                            userDetails.DateLastLogin = DateTime.UtcNow;
-                            userDetails.IsProfilePublic = true;
-
-                            //only update session token if new (also done on logout)
-                            if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
-
-                            dataModel.Users.Add(userDetails);
-                        }
-                        else
-                        {
-                            userDetails.DateLastLogin = DateTime.UtcNow;
-
-                            //only update session token if new (also done on logout)
-                            if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
-                        }
-
-                        //get whichever session token we used
-                        newSessionToken = userDetails.CurrentSessionToken;
-
-                        dataModel.SaveChanges();
-
-                        string permissions = (userDetails.Permissions != null ? userDetails.Permissions : "");
-                        
-                        UpdateCookie(Response, "IdentityProvider", "Twitter");
-                        UpdateCookie(Response, "Identifier", screenName);
-                        UpdateCookie(Response, "Username", userDetails.Username);
-                        UpdateCookie(Response, "OCMSessionToken", newSessionToken);
-                        //UpdateCookie("AccessToken", Request["oauth_token"]);
-                        UpdateCookie(Response, "AccessPermissions", permissions);
-
-                        Session["IdentityProvider"] = "Twitter";
-                        Session["Identifier"] = screenName;
-                        Session["Username"] = userDetails.Username;
-                        Session["UserID"] = userDetails.ID;
-
-                        if (UserManager.IsUserAdministrator(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails)))
-                        {
-                            Session["IsAdministrator"] = true;
-                        }
-
-                        if (!String.IsNullOrEmpty((string)Session["_redirectURL"]))
-                        {
-                            string returnURL = Session["_redirectURL"].ToString();
-                            //Response.Redirect(returnURL);
-                            return Redirect(returnURL);
-                        }
-                        else
-                        {
-                            //redirect to home page
-                            return RedirectToAction("Index", "Home");
-                        }
+                        return ProcessLoginResult(screenName, screenName, null, "Twitter");
                     }
-
                 }
             }
 
             return View();
+             * */
+        }
+
+        private ActionResult ProcessLoginResult(string userIdentifier,string loginProvider, string name, string email )
+        {
+            //TODO: move all of this logic to UserManager
+            string newSessionToken = Guid.NewGuid().ToString();
+
+            var dataModel = new OCMEntities();
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier.ToLower() == userIdentifier.ToLower() && u.IdentityProvider.ToLower() == loginProvider.ToLower());
+            if (userDetails == null)
+            {
+                //create new user details   
+                userDetails = new Core.Data.User();
+                userDetails.IdentityProvider = loginProvider;
+                userDetails.Identifier = userIdentifier;
+                if (String.IsNullOrEmpty(name) && email != null) name = email.Substring(0, email.IndexOf("@"));
+                userDetails.Username = name;
+                userDetails.EmailAddress = email;
+                userDetails.DateCreated = DateTime.UtcNow;
+                userDetails.DateLastLogin = DateTime.UtcNow;
+                userDetails.IsProfilePublic = true;
+
+                //only update session token if new (also done on logout)
+                if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
+
+                dataModel.Users.Add(userDetails);
+            }
+            else
+            {
+                //update date last logged in and refresh users details if more information provided
+                userDetails.DateLastLogin = DateTime.UtcNow;
+                
+                if (userDetails.Username == userDetails.Identifier && !String.IsNullOrEmpty(name)) userDetails.Username = name;
+                if (String.IsNullOrEmpty(userDetails.EmailAddress) && !String.IsNullOrEmpty(email)) userDetails.EmailAddress = email;
+                
+                //only update session token if new (also done on logout)
+                if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
+            }
+
+            //get whichever session token we used
+            newSessionToken = userDetails.CurrentSessionToken;
+
+            //store updates to user
+            dataModel.SaveChanges();
+
+            string permissions = (userDetails.Permissions != null ? userDetails.Permissions : "");
+
+            UpdateCookie(Response, "IdentityProvider", "Twitter");
+            UpdateCookie(Response, "Identifier", userIdentifier);
+            UpdateCookie(Response, "Username", userDetails.Username);
+            UpdateCookie(Response, "OCMSessionToken", newSessionToken);
+            UpdateCookie(Response, "AccessPermissions", permissions);
+
+            Session["IdentityProvider"] = loginProvider;
+            Session["Identifier"] = userDetails.Identifier;
+            Session["Username"] = userDetails.Username;
+            Session["UserID"] = userDetails.ID;
+
+            if (UserManager.IsUserAdministrator(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails)))
+            {
+                Session["IsAdministrator"] = true;
+            }
+
+            if (!String.IsNullOrEmpty((string)Session["_redirectURL"]))
+            {
+                string returnURL = Session["_redirectURL"].ToString();
+                return Redirect(returnURL);
+            }
+            else
+            {
+                //nowhere specified to redirect to, redirect to home page
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult AppLogin(bool? redirectWithToken)
@@ -185,7 +257,9 @@ namespace OCM.MVC.Controllers
             {
                 return View();
             }
-            
+
         }
+
+        #endregion
     }
 }

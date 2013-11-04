@@ -420,3 +420,14 @@ div.details-plain {
   display: block;
   clear: both;
 }
+.login-provider {
+  border: 1px solid #f2fae6;
+  width: 200px;
+  height: 60px;
+  margin: 8px;
+  padding: 8px;
+  overflow: hidden;
+}
+.login-provider-preferred {
+  border: 3px solid green;
+}

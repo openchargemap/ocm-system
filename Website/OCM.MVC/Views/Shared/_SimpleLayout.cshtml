@@ -1,6 +1,4 @@
-﻿@using OCM.MVC
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -82,6 +80,6 @@
 
     @RenderSection("scripts", required: false)
 
-    @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"),this.ViewContext.RouteData.Values["languagecode"] as string))
+    @Html.Raw(OCM.MVC.CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"),this.ViewContext.RouteData.Values["languagecode"] as string))
 </body>
 </html>

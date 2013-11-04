@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Open Charge Map - Login</h2>
+<p>You can Sign In to Open Charge Map using a range of identity providers. Please choose your preferred identity provider to begin. If you are an existing user you should probably use Twitter:</p>
+
+<div class="row">
+    @if (ViewBag.LoginProviders != null)
+    {
+        foreach (var provider in (ICollection<AuthenticationClientData>)ViewBag.LoginProviders)
+        {
+            <div class="col-md-3 login-provider" >
+                <a href="LoginWithProvider?provider=@provider.AuthenticationClient.ProviderName">
+                    
+                    <img style="margin-right:8px;width:32px" src="@Url.Content("~/content/images/loginproviders/"+provider.AuthenticationClient.ProviderName+".jpg")"> Sign In with @provider.DisplayName
+                </a>
+            </div>
+        }
+    }
+</div>
