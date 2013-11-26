@@ -39,6 +39,8 @@
             this.tabPageTest = new System.Windows.Forms.TabPage();
             this.btnServiceTest1 = new System.Windows.Forms.Button();
             this.tabPageSettings = new System.Windows.Forms.TabPage();
+            this.txtDataFolderPath = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.txtAPIPwd_Coulomb = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtAPIKey_Coulomb = new System.Windows.Forms.TextBox();
@@ -49,8 +51,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtAPIIdentifier = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtDataFolderPath = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.tabSettings.SuspendLayout();
             this.tabPageImport.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -122,6 +122,7 @@
             this.lstOutputType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lstOutputType.FormattingEnabled = true;
             this.lstOutputType.Items.AddRange(new object[] {
+            "JSON Export",
             "CSV Export",
             "XML Export",
             "API Publish (Live)",
@@ -192,6 +193,22 @@
             this.tabPageSettings.TabIndex = 2;
             this.tabPageSettings.Text = "Settings";
             this.tabPageSettings.UseVisualStyleBackColor = true;
+            // 
+            // txtDataFolderPath
+            // 
+            this.txtDataFolderPath.Location = new System.Drawing.Point(135, 18);
+            this.txtDataFolderPath.Name = "txtDataFolderPath";
+            this.txtDataFolderPath.Size = new System.Drawing.Size(230, 20);
+            this.txtDataFolderPath.TabIndex = 28;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(102, 13);
+            this.label2.TabIndex = 27;
+            this.label2.Text = "Path to data folders:";
             // 
             // txtAPIPwd_Coulomb
             // 
@@ -272,22 +289,6 @@
             this.label3.Size = new System.Drawing.Size(67, 13);
             this.label3.TabIndex = 17;
             this.label3.Text = "API Identifier";
-            // 
-            // txtDataFolderPath
-            // 
-            this.txtDataFolderPath.Location = new System.Drawing.Point(135, 18);
-            this.txtDataFolderPath.Name = "txtDataFolderPath";
-            this.txtDataFolderPath.Size = new System.Drawing.Size(230, 20);
-            this.txtDataFolderPath.TabIndex = 28;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 21);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(102, 13);
-            this.label2.TabIndex = 27;
-            this.label2.Text = "Path to data folders:";
             // 
             // AppMain
             // 

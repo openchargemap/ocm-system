@@ -18,7 +18,7 @@ namespace Import
         {
             InitializeComponent();
 
-            lstOutputType.SelectedItem = "CSV Export";
+            lstOutputType.SelectedItem = "JSON Export";
 
             //load settings
             this.txtDataFolderPath.Text = Properties.Settings.Default.Import_DataFolder;
@@ -32,10 +32,12 @@ namespace Import
         private void btnProcessImports_Click(object sender, EventArgs e)
         {
             ImportManager importManager = new ImportManager();
-            ExportType exportType = ExportType.CSV;
+            ExportType exportType = ExportType.JSON;
             
             if (lstOutputType.SelectedItem.ToString().StartsWith("XML")) exportType = ExportType.XML;
             if (lstOutputType.SelectedItem.ToString().StartsWith("API")) exportType = ExportType.API;
+            if (lstOutputType.SelectedItem.ToString().StartsWith("CSV")) exportType = ExportType.CSV;
+            if (lstOutputType.SelectedItem.ToString().StartsWith("JSON")) exportType = ExportType.JSON;
             
             importManager.GeonamesAPIUserName = txtGeonamesAPIUserID.Text;
             importManager.ImportUpdatesOnly = chkUpdatesOnly.Checked;

@@ -97,9 +97,9 @@ namespace OCM.Import.Manager.Console
                     ExportType exportType = ExportType.API;
 
                     ImportManager importManager = new ImportManager();
-                    LogEvent("Performing Import, Publishing via API (" + OCM_API_Identifier + ":" + OCM_API_SessionToken + "): " + DateTime.Now.ToShortTimeString());
+                    LogEvent("Performing Import, Publishing via API (" + OCM_API_Identifier + ":" + OCM_API_SessionToken + "): " + DateTime.UtcNow.ToShortTimeString());
                     importManager.PerformImportProcessing(exportType, importFolder, OCM_API_Identifier, OCM_API_SessionToken, true);
-                    LogEvent("Import Processed. Exiting. " + DateTime.Now.ToShortTimeString());
+                    LogEvent("Import Processed. Exiting. " + DateTime.UtcNow.ToShortTimeString());
 
                     actionPerformed = true;
                 }
@@ -113,7 +113,7 @@ namespace OCM.Import.Manager.Console
 
                 if (!actionPerformed)
                 {
-                    LogEvent("Nothing to do. Exiting. " + DateTime.Now.ToShortTimeString());
+                    LogEvent("Nothing to do. Exiting. " + DateTime.UtcNow.ToShortTimeString());
                 }
             }
 
