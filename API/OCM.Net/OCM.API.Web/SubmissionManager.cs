@@ -55,17 +55,20 @@ namespace OCM.API.Common
                 bool enableEditQueueLogging = bool.Parse(ConfigurationManager.AppSettings["EnableEditQueue"]);
                 bool isUpdate = false;
                 bool userCanEditWithoutApproval = false;
+                bool isSystemUser = false;
 
                 //if user signed in, check if they have required permission to perform an edit/approve (if required)
                 if (user != null)
                 {
-                    userCanEditWithoutApproval = CanUserEditPOI(updatedPOI, user);
-
+                    if (user.ID == (int)StandardUsers.System) isSystemUser = true;
+                    
                     //if user is system user, edits/updates are not recorded in edit queue
-                    if (user.ID == (int)StandardUsers.System)
+                    if (isSystemUser)
                     {
                         enableEditQueueLogging = false;
                     }
+
+                    userCanEditWithoutApproval = CanUserEditPOI(updatedPOI, user);
                 }
 
                 var dataModel = new Core.Data.OCMEntities();
@@ -98,7 +101,13 @@ namespace OCM.API.Common
 
                 //convert to DB version of POI and back so that properties are fully populated
                 updatedPOI = PopulateFullPOI(updatedPOI);
-                Model.ChargePoint oldPOI = null; 
+                Model.ChargePoint oldPOI = null;
+
+                if (updatedPOI.ID>0)
+                { 
+                    //get json snapshot of current cp data to store as 'previous'
+                    oldPOI = poiManager.Get(updatedPOI.ID);
+                }
 
                 //if user cannot edit directly, add to edit queue for approval
                 var editQueueItem = new Core.Data.EditQueueItem { DateSubmitted = DateTime.UtcNow };
@@ -121,9 +130,7 @@ namespace OCM.API.Common
 
                     if (updatedPOI.ID > 0)
                     {
-                        //get json snapshot of current cp data to store as 'previous'
-                        oldPOI = poiManager.Get(updatedPOI.ID);
-
+                    
                         //FIXME: check if poi will change with this edit, if not we discard it completely
                         if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
@@ -174,8 +181,8 @@ namespace OCM.API.Common
                 }
 
                 int? supersedesID = null;
-                //if update will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
-                if (isUpdate && oldPOI.DataProviderID!= (int)StandardDataProviders.OpenChargeMapContrib)
+                //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
+                if (isUpdate && !isSystemUser && oldPOI.DataProviderID!= (int)StandardDataProviders.OpenChargeMapContrib)
                 {
                     //move old poi to new id, set status of new item to superseded
                     supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);

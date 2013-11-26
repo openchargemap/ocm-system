@@ -41,7 +41,11 @@ namespace OCM.API.Client
 
     public class OCMClient
     {
+#if DEBUG
+        public string ServiceBaseURL = "http://localhost:8080/v2/";
+#else 
         public string ServiceBaseURL = "http://api.openchargemap.io/v2/";
+#endif
         /// <summary>
         /// Get core reference data such as lookup lists
         /// </summary>

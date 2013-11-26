@@ -50,6 +50,10 @@ namespace OCM.API.Common
                     if (con.Request.Url.ToString().EndsWith("/trackback/")) ignoreException = true;
 
                 }
+                if (con.Request.UserAgent != null)
+                {
+                    body += "<br>User Agent: " + con.Request.UserAgent;
+                }
                 body += "<br><br>" + DateTime.UtcNow.ToString();
             }
 
