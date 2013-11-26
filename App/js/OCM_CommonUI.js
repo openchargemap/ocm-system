@@ -363,7 +363,7 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
     if (this.map == null) {
         var mapCanvas = document.getElementById(mapcanvasID);
         if (mapCanvas != null) {
-            google.maps.visualRefresh = true;
+            (google.maps).visualRefresh = true;
 
             mapCanvas.style.width = '99.5%';
             mapCanvas.style.height = $(document).height().toString();

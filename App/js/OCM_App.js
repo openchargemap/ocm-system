@@ -1,3 +1,5 @@
+var Historyjs = History;
+
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
     this.ocm_geo = new OCM.Geolocation();
@@ -110,7 +112,7 @@ OCM_App.prototype.setupUIActions = function () {
 
     //set default back ui buttons handler
     app.setElementAction("a[data-rel='back']", function () {
-        History.back();
+        Historyjs.back();
     });
 
     //set home page ui link actions
@@ -1076,19 +1078,17 @@ OCM_App.prototype.initStateTracking = function () {
     }
 
     // Establish Variables
-    this.History = window.History;
-
-    var History = this.History;
-    var State = History.getState();
+    //this.Historyjs = History; // Note: We are using a capital H instead of a lower h
+    var State = Historyjs.getState();
 
     // Log Initial State
     State.data.view = "home-page";
-    History.log('initial:', State.data, State.title, State.url);
+    Historyjs.log('initial:', State.data, State.title, State.url);
 
     // Bind to State Change
-    History.Adapter.bind(window, 'statechange', function () {
+    Historyjs.Adapter.bind(window, 'statechange', function () {
         // Log the State
-        var State = History.getState();
+        var State = Historyjs.getState();
 
         if (State.data.view) {
             if (app._lastPageId && app._lastPageId != null) {

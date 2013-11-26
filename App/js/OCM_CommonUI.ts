@@ -261,7 +261,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
                             }
                             markerTitle += " (" + powerTitle + ", " + usageTitle + ")"
 
-                            var marker = new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{icon:markerIcon,title:markerTitle, draggable:false, clickable:true});
+                            var marker = <any>new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{icon:markerIcon,title:markerTitle, draggable:false, clickable:true});
                             marker._isClicked = false; //workaround for double click event
                             marker.poi = poi;
                             marker.on('click', 
@@ -359,7 +359,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             animation = google.maps.Animation.DROP;
                         }
 
-                        var newMarker = new google.maps.Marker({
+                        var newMarker = <any>new google.maps.Marker({
                             position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
                             map: this.mapOptions.enableClustering ? null : map,
                             icon: markerImg != null ? markerImg : iconURL,
@@ -402,7 +402,7 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
         var mapCanvas = document.getElementById(mapcanvasID);
         if (mapCanvas != null) {
 
-            google.maps.visualRefresh = true;
+            (<any>google.maps).visualRefresh = true;
 
             mapCanvas.style.width = '99.5%';
             mapCanvas.style.height = $(document).height().toString();

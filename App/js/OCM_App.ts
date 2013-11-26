@@ -14,6 +14,7 @@ See http://www.openchargemap.org/ for more details
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
+/// <reference path="TypeScriptReferences/history/history.d.ts" />
 
 /// <reference path="OCM_Data.ts" />
 /// <reference path="OCM_CommonUI.ts" />
@@ -24,15 +25,11 @@ declare var localisation_dictionary;
 interface JQuery {
     fastClick: any;
 }
-interface History {
-    back():void;
-}
-interface Window {
-    History: History;
-}
 interface HTMLFormElement {
     files: any;
 }
+
+var Historyjs: Historyjs = <any>History;
 
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
@@ -77,6 +74,7 @@ function OCM_App() {
     }
     this.ocm_geo.ocm_data = this.ocm_data;
 
+    
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -144,7 +142,8 @@ OCM_App.prototype.setupUIActions = function () {
 
     //set default back ui buttons handler
     app.setElementAction("a[data-rel='back']", function () {
-        History.back();
+        
+        Historyjs.back();
     });
     //set home page ui link actions
     app.setElementAction("a[href='#search-page'],#map-listview", function () {
@@ -1152,19 +1151,18 @@ OCM_App.prototype.initStateTracking = function () {
     }
 
     // Establish Variables
-    this.History = window.History; // Note: We are using a capital H instead of a lower h
+    //this.Historyjs = History; // Note: We are using a capital H instead of a lower h
 
-    var History = this.History;
-    var State = History.getState();
+    var State = Historyjs.getState();
 
     // Log Initial State
     State.data.view = "home-page";
-    History.log('initial:', State.data, State.title, State.url);
+    Historyjs.log('initial:', State.data, State.title, State.url);
 
     // Bind to State Change
-    History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
+    Historyjs.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
         // Log the State
-        var State = History.getState(); // Note: We are using History.getState() instead of event.state
+        var State = Historyjs.getState(); // Note: We are using History.getState() instead of event.state
         //History.log('statechange:', State.data, State.title, State.url);
 
         // app.logEvent("state switch to :" + State.data.view);

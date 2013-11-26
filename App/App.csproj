@@ -18,7 +18,6 @@
   <ItemGroup>
     <Content Include="build\icons.html" />
     <Content Include="build\jakefile.js" />
-    <Content Include="build\log.txt" />
     <Content Include="build\node_modules\jake-utils\node_modules\handlebars\lib\handlebars\compiler\ast.js" />
     <Content Include="build\node_modules\jake-utils\node_modules\handlebars\lib\handlebars\compiler\base.js" />
     <Content Include="build\node_modules\jake-utils\node_modules\handlebars\lib\handlebars\compiler\compiler.js" />
@@ -804,6 +803,7 @@
     <TypeScriptCompile Include="js\OCM_Data.ts" />
     <TypeScriptCompile Include="js\OCM_Geolocation.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\history\history.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\leaflet\leaflet.awesomemarkers.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\leaflet\leaflet.d.ts" />
