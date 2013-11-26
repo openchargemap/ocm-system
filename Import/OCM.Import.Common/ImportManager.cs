@@ -53,12 +53,14 @@ namespace OCM.Import
 
             foreach (var item in cpList)
             {
+                //TODO: find better deduplication algorithm
                 var dupeList = masterList.Where(c =>
                         (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)
                         ||
                         (c.AddressInfo != null && (
-                                c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 ||
-                                (
+                            c.AddressInfo.ToString()==item.AddressInfo.ToString() || //same address
+                                c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 || //same first address line
+                                ( //same postcode
                                     !String.IsNullOrEmpty(c.AddressInfo.Postcode)
                                     &&
                                     !String.IsNullOrEmpty(item.AddressInfo.Postcode)
@@ -68,7 +70,7 @@ namespace OCM.Import
                             )
                         )
                         ||
-                        (
+                        ( //very similar lat/lon
                         c.AddressInfo != null &&
                             (c.AddressInfo.Latitude != null && Math.Round((double)c.AddressInfo.Latitude, 4) == Math.Round((double)item.AddressInfo.Latitude, 4))
                             &&
@@ -351,6 +353,7 @@ namespace OCM.Import
                         //de-duplicate and clean list based on existing data
                         //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
                         var finalList = DeDuplicateList(list, true, coreRefData);
+                        //var finalList = list;
 
                         if (ImportUpdatesOnly)
                         {
@@ -374,6 +377,12 @@ namespace OCM.Import
                             p.ExportCSVFile(finalList, outputPath + p.OutputNamePrefix + ".csv");
                         }
 
+                        if (p.ExportType == ExportType.JSON)
+                        {
+                            p.Log("Exporting JSON..");
+                            //output json
+                            p.ExportJSONFile(finalList, outputPath + p.OutputNamePrefix + ".json");
+                        }
                         if (p.ExportType == ExportType.API && p.IsProductionReady)
                         {
 

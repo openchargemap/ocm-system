@@ -58,7 +58,7 @@ namespace OCM.Import.Providers
 
                     cp.DataProvider = new DataProvider() { ID = 7 }; //mobie.pt
                     cp.DataProvidersReference = item["chargingStationId"].ToString();
-                    cp.DateLastStatusUpdate = DateTime.Now;
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     cp.AddressInfo.AddressLine1 = item["street"].ToString();
                     cp.AddressInfo.Town = item["city"].ToString();

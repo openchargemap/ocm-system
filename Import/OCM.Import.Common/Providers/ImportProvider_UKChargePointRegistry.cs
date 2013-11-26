@@ -16,6 +16,8 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://chargepoints.dft.gov.uk/api/retrieve/registry/format/json";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            MergeDuplicatePOIEquipment = true;
+            DataAttribution = "Contains public sector information licensed under the Open Government Licence v2.0. http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/";
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -28,14 +30,16 @@ namespace OCM.Import.Providers
 
             var dataList = o["ChargeDevice"].ToArray();
 
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == 100);//imported and published
+            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_Published);//imported and published
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
-            var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == 0);
-            var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == 1);
-            var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == 2);
-            var usageTypePublicMembershipRequired = coreRefData.UsageTypes.First(u => u.ID == 4);
-            var operatorUnknown = coreRefData.Operators.First(opUnknown => opUnknown.ID == 1);
+            var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == (int)StandardStatusTypes.Unknown);
+            var usageTypeUnknown = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Unknown);
+            var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Public);
+            var usageTypePublicPayAtLocation = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Public_PayAtLocation);
+            var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.PrivateRestricted);
+            var usageTypePublicMembershipRequired = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Public_MembershipRequired);
+            var operatorUnknown = coreRefData.Operators.First(opUnknown => opUnknown.ID == (int)StandardOperators.UnknownOperator);
 
             int itemCount = 0;
 
@@ -45,7 +49,7 @@ namespace OCM.Import.Providers
                 ChargePoint cp = new ChargePoint();
                 cp.DataProvider = new DataProvider() { ID = 18 }; //UK National Charge Point Registry
                 cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
 
                 var locationDetails = item["ChargeDeviceLocation"];
@@ -53,7 +57,7 @@ namespace OCM.Import.Providers
 
             
                 cp.AddressInfo.RelatedURL = "";
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo.AddressLine1 = addressDetails["Street"].ToString().Replace("<br>",", ");
                 cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? cp.AddressInfo.AddressLine1 : locationDetails["LocationShortDescription"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
@@ -63,7 +67,20 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString();
                 cp.AddressInfo.Latitude = double.Parse(locationDetails["Latitude"].ToString());
                 cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
-                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", "); 
+                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n",", "); 
+
+                //if title is empty, attempt to add a suitable replacement
+                if (String.IsNullOrEmpty(cp.AddressInfo.Title))
+                {
+                    if (!String.IsNullOrEmpty(cp.AddressInfo.AddressLine1))
+                    {
+                        cp.AddressInfo.Title = cp.AddressInfo.AddressLine1;
+                    }
+                    else
+                    {
+                        cp.AddressInfo.Title = cp.AddressInfo.Postcode;
+                    }
+                }
                 //cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
 
                 if (!String.IsNullOrEmpty(addressDetails["Country"].ToString()))
@@ -121,9 +138,29 @@ namespace OCM.Import.Providers
                 }
 
                 //determine most likely usage type
-                cp.UsageType = usageTypePrivate;
+                cp.UsageType = usageTypeUnknown;
 
-                if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE") cp.UsageType = usageTypePublicMembershipRequired;
+                if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE") {
+                    //membership required
+                    cp.UsageType = usageTypePublicMembershipRequired;
+                }
+                else
+                {
+                    
+                    if (item["PaymentRequiredFlag"].ToString().ToUpper() == "TRUE")
+                    {
+                        //payment required
+                        cp.UsageType = usageTypePublicPayAtLocation;
+                    }
+                    else
+                    {
+                        //accessible 24 hours, payment not required and membership not required, assume public
+                        if (item["Accessible24Hours"].ToString().ToUpper() == "TRUE")
+                        {
+                            cp.UsageType = usageTypePublic;
+                        }
+                    }
+                }
 
                 //add connections
                 var connectorList = item["Connector"].ToArray();
@@ -187,7 +224,42 @@ namespace OCM.Import.Providers
                             cinfo.StatusType = operationalStatus;
                             if (conn["ChargePointStatus"].ToString() == "Out of service") cinfo.StatusType = nonoperationalStatus;
                         }
-                        
+
+                        if (conn["RatedOutputkW"] != null)
+                        {
+                            double tmpKw=0;
+                            if (double.TryParse(conn["RatedOutputkW"].ToString(), out tmpKw))
+                            {
+                                cinfo.PowerKW = tmpKw;
+                            }
+                        }
+
+                        if (conn["RatedOutputVoltage"] != null)
+                        {
+                            int tmpV = 0;
+                            if (int.TryParse(conn["RatedOutputVoltage"].ToString(), out tmpV))
+                            {
+                                cinfo.Voltage = tmpV;
+                            }
+                        }
+
+                        if (conn["RatedOutputCurrent"] != null)
+                        {
+                            int tmpA = 0;
+                            if (int.TryParse(conn["RatedOutputCurrent"].ToString(), out tmpA))
+                            {
+                                cinfo.Amps = tmpA;
+                            }
+                        }
+
+                        if (conn["ChargeMethod"]!=null && !String.IsNullOrEmpty(conn["ChargeMethod"].ToString()))
+                        {
+                            string method = conn["ChargeMethod"].ToString();
+                            //Single Phase AC, Three Phase AC, DC
+                            if (method == "Single Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                            if (method == "Three Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
+                            if (method == "DC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                        }
                         cinfo.ConnectionType = cType;
                         cinfo.Level = level;
 
@@ -201,6 +273,10 @@ namespace OCM.Import.Providers
                         }
                     }
                 }
+
+                //apply data attribution metadata
+                if (cp.MetadataValues == null) cp.MetadataValues = new List<MetadataValue>();
+                cp.MetadataValues.Add(new MetadataValue { MetadataFieldID= (int)StandardMetadataFields.Attribution, ItemValue=DataAttribution });
 
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 

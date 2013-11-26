@@ -64,7 +64,7 @@ namespace OCM.Import.Providers
                     cp.AddressInfo.Title = item["title"].ToString();
                     cp.AddressInfo.RelatedURL = "http://www.pod-point.com";
                     cp.DataProvidersReference = item["position"].ToString().Replace(", ", "@");
-                    cp.DateLastStatusUpdate = DateTime.Now;
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     string content = item["content"].ToString();
                     content = content.Substring(content.LastIndexOf("<p>") + 3, content.LastIndexOf("</p>") - (content.LastIndexOf("<p>") + 3));

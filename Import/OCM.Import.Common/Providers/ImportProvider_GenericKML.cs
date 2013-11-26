@@ -53,7 +53,7 @@ namespace OCM.Import.Providers
                 bool skipItem = false;
 
                 ChargePoint cp = new ChargePoint();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 
                 SetDataProviderDetails(cp, item);
                 

@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Threading;
 using System.Security.Cryptography;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace OCM.Import.Providers
 {
@@ -20,7 +21,8 @@ namespace OCM.Import.Providers
     {
         XML,
         CSV,
-        API
+        API,
+        JSON
     }
 
 
@@ -149,6 +151,8 @@ namespace OCM.Import.Providers
         public string OutputNamePrefix { get; set; }
         public ExportType ExportType { get; set; }
         public bool IsProductionReady { get; set; }
+        public bool MergeDuplicatePOIEquipment { get; set; }
+        public string DataAttribution { get; set; }
         public Encoding SourceEncoding { get; set; }
         public string HTTPPostVariables { get; set; }
         public string APIKeyPrimary { get; set; }
@@ -373,6 +377,13 @@ namespace OCM.Import.Providers
         {
             if (val == null) return "";
             else return val.ToString();
+        }
+
+        public bool ExportJSONFile(List<ChargePoint> dataList, string outputPath)
+        {
+            var json = JsonConvert.SerializeObject(dataList);
+            System.IO.File.WriteAllText(outputPath, json,  new UnicodeEncoding());
+            return true;
         }
 
         public bool ExportCSVFile(List<ChargePoint> dataList, string outputPath)

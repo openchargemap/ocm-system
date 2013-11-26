@@ -59,12 +59,12 @@ namespace OCM.Import.Providers
                     cp.OperatorsReference = item["StationID"].ToString();
                     cp.DataProvider = new DataProvider() { ID = 20 }; //couloumb
                     cp.DataProvidersReference = item["StationID"].ToString();
-                    cp.DateLastStatusUpdate = DateTime.Now;
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     cp.AddressInfo.Title = item["Name"] != null ? item["Name"].ToString() : item["StationID"].ToString();
                     cp.AddressInfo.Title = textInfo.ToTitleCase(cp.AddressInfo.Title.ToLower());
                     cp.AddressInfo.RelatedURL = "http://www.chargepoint.net";
-                    cp.DateLastStatusUpdate = DateTime.Now;
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     cp.AddressInfo.Latitude = double.Parse(item["Geo"]["lat"].ToString());
                     cp.AddressInfo.Longitude = double.Parse(item["Geo"]["long"].ToString());

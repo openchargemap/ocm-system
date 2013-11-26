@@ -93,7 +93,7 @@ namespace OCM.Import.Providers
                 ChargePoint cp = new ChargePoint();
                 cp.DataProvider = new DataProvider() { ID = 19 }; //nobil.no
                 cp.DataProvidersReference = item["id"].ToString();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
 
                 //carstations.com have requested we not use the station names from their data, so we use address
@@ -102,7 +102,7 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Trim().Replace("&amp;", "&");
                 cp.AddressInfo.RelatedURL = item["url"].ToString();
 
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo.AddressLine1 = item["adresse"].ToString().Trim();
                 cp.AddressInfo.Town = item["kommunenavn"].ToString().Trim();
                 cp.AddressInfo.StateOrProvince = item["kommunenavn"].ToString().Trim();

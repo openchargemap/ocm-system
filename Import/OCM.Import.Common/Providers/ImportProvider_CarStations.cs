@@ -42,7 +42,7 @@ namespace OCM.Import.Providers
                 ChargePoint cp = new ChargePoint();
                 cp.DataProvider = new DataProvider() { ID = 15 }; //carstations.com
                 cp.DataProvidersReference = item["post_id"].ToString();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
 
                 //carstations.com have requested we not use the station names from their data, so we use address
@@ -50,7 +50,7 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Title = item["address"] != null ? item["address"].ToString() : item["post_id"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Trim().Replace("&amp;", "&");
                 cp.AddressInfo.RelatedURL = "http://carstations.com/" + cp.DataProvidersReference;
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo.AddressLine1 = item["address"].ToString().Trim();
                 cp.AddressInfo.Town = item["city"].ToString().Trim();
                 cp.AddressInfo.StateOrProvince = item["region"].ToString().Trim();

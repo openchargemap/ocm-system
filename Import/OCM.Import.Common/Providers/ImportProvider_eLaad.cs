@@ -53,7 +53,7 @@ namespace OCM.Import.Providers
                         evse.Title = GetAttributeValue("Address", item);
                         evse.Latitude = double.Parse(GetAttributeValue("CoordinateWgs84Latitude", item));
                         evse.Longitude = double.Parse(GetAttributeValue("CoordinateWgs84Longitude", item));
-                        evse.Updated = DateTime.Now;
+                        evse.Updated = DateTime.UtcNow;
                         evse.ID = GetAttributeValue("Uid", item);
                         evse.ExtendedAttributes = new List<ExtendedAttribute>();
                         evse.ExtendedAttributes.Add(new ExtendedAttribute { Name = "City", Value = GetAttributeValue("City", item) });

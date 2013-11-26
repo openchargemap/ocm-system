@@ -55,11 +55,11 @@ namespace OCM.Import.Providers
                     cp.OperatorsReference = item["encid"].ToString();
                     cp.DataProvider = new DataProvider() { ID = 17 }; //blinknetwork.com
                     cp.DataProvidersReference = item["id"].ToString();
-                    cp.DateLastStatusUpdate = DateTime.Now;
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     cp.AddressInfo.Title = item["name"] != null ? item["name"].ToString() : item["name"].ToString();
                     cp.AddressInfo.RelatedURL = "http://www.blinknetwork.com";
-                    cp.DateLastStatusUpdate = DateTime.Now;
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     cp.AddressInfo.Latitude = double.Parse(item["latitude"].ToString());
                     cp.AddressInfo.Longitude = double.Parse(item["longitude"].ToString());

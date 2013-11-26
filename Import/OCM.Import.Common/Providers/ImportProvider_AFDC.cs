@@ -53,11 +53,11 @@ namespace OCM.Import.Providers
                 ChargePoint cp = new ChargePoint();
                 cp.DataProvider = new DataProvider() { ID = 2 }; //AFDC
                 cp.DataProvidersReference = item["id"].ToString();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
 
                 if (item["ev_network_web"] != null) cp.AddressInfo.RelatedURL = item["ev_network_web"].ToString();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 if (item["street_address"] != null) cp.AddressInfo.AddressLine1 = item["street_address"].ToString().Replace("<br>", ", ");
                 if (item["station_name"] != null) cp.AddressInfo.Title = item["station_name"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
@@ -182,7 +182,7 @@ namespace OCM.Import.Providers
                     ConnectionInfo cinfo = new ConnectionInfo() { };
 
                     cinfo.Quantity = numLevel2;
-                    cinfo.ConnectionType = new ConnectionType { ID = 0 }; //unknown
+                    cinfo.ConnectionType = new ConnectionType { ID = 1 }; //J1772
                     cinfo.Level = chrgLevel2;
 
                     if (!IsConnectionInfoBlank(cinfo))

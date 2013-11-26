@@ -60,7 +60,7 @@ namespace OCM.Import.Providers
                 {
                     EVSE evse = new EVSE();
                     evse.Link = "http://www.chargeyourcar.org.uk";
-                    evse.Updated = DateTime.Now;
+                    evse.Updated = DateTime.UtcNow;
                     evse.ExtendedAttributes = new List<ExtendedAttribute>();
                       
                     JToken[]  elements = item["value"].Values().ToArray();

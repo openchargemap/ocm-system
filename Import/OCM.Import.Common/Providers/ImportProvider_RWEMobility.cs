@@ -63,7 +63,7 @@ namespace OCM.Import.Providers
                 cp.DataProvider = new DataProvider() { ID = 21 }; //rwe-mobility
                 cp.DataProvidersReference = item["id"].ToString();
                 cp.OperatorsReference = item["oid"].ToString();
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
 
                 try
@@ -79,7 +79,7 @@ namespace OCM.Import.Providers
                 }
                 //cp.AddressInfo.RelatedURL = item["url"].ToString();
 
-                cp.DateLastStatusUpdate = DateTime.Now;
+                cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo.AddressLine1 = item["house_number"] != null ? item["house_number"] + " " + item["street"].ToString() : item["street"].ToString().Trim();
                 cp.AddressInfo.Town = item["city"].ToString().Trim();
                 if (!String.IsNullOrEmpty(item["postal_code"])) cp.AddressInfo.Postcode = item["postal_code"].ToString().Trim();
