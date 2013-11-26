@@ -1,5 +1,4 @@
-﻿using DotNetOpenAuth.ApplicationBlock;
-using Microsoft.Web.WebPages.OAuth;
+﻿using Microsoft.Web.WebPages.OAuth;
 using OCM.API.Common;
 using OCM.Core.Data;
 using System;
@@ -101,7 +100,7 @@ namespace OCM.MVC.Controllers
                 
                 return ProcessLoginResult(uniqueUserID, provider, name, email);
             }
-            return View("LoginFailed", result.Error);
+            return RedirectToAction("LoginFailed");
         }
 
         // Legacy entry point/endpoint for oauth logins
