@@ -509,7 +509,7 @@
     <Content Include="config.xml" />
     <Content Include="cordova_index.html" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\FontAwesome\css\font-awesome-ie7.min.css" />
+    <Content Include="fonts\FontAwesome\css\font-awesome.css" />
     <Content Include="fonts\FontAwesome\css\font-awesome.min.css" />
     <Content Include="fonts\FontAwesome\font\fontawesome-webfont.svg" />
     <Content Include="fonts\Oswald\OFL.txt" />
@@ -589,6 +589,9 @@
     <Content Include="js\ThirdParty\marker.svg" />
     <Content Include="js\ThirdParty\markerclusterer_compiled.js" />
     <Content Include="js\ThirdParty\pocketgrid.min.css" />
+    <Content Include="res\icons\windows-phone\icon-173-tile.png" />
+    <Content Include="res\icons\windows-phone\icon-48.png" />
+    <Content Include="res\icons\windows-phone\icon-62-tile.png" />
     <Content Include="robots.txt" />
     <Content Include="styles\extended.css" />
     <Content Include="styles\ios.css" />
@@ -768,12 +771,6 @@
     <Content Include="build\node_modules\wrench\tests\shown\foo\dolor.md" />
     <Content Include="build\node_modules\wrench\tests\withsymlinks\test" />
     <Content Include="build\readme.md" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.eot" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.ttf" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.woff" />
-    <Content Include="fonts\FontAwesome\font\FontAwesome.otf" />
-    <Content Include="fonts\FontAwesome\jqm\font\fontawesome-webfont.ttf" />
-    <Content Include="fonts\FontAwesome\jqm\font\FontAwesome.otf" />
     <Content Include="fonts\Oswald\oswald-light-webfont.eot" />
     <Content Include="fonts\Oswald\oswald-light-webfont.ttf" />
     <Content Include="fonts\Oswald\oswald-light-webfont.woff" />
@@ -787,6 +784,12 @@
     <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="js\ThirdParty\jquery-2.0.3.min.map" />
     <Content Include="js\ThirdParty\leaflet\awesome-markers\images\Thumbs.db" />
+    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.woff" />
+    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.ttf" />
+    <Content Include="fonts\FontAwesome\font\FontAwesome.otf" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -817,6 +820,7 @@
     <Folder Include="build\node_modules\jake-utils\node_modules\log4js\.bob\report\" />
     <Folder Include="build\node_modules\jake-utils\node_modules\log4js\lib\appenders\" />
     <Folder Include="build\node_modules\jake-utils\node_modules\log4js\node_modules\.bin\" />
+    <Folder Include="res\screens\windows-phone\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -850,6 +854,7 @@
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
@@ -858,4 +863,7 @@
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>jake --jakefile $(ProjectDir)\build\jakefile.js</PostBuildEvent>
+  </PropertyGroup>
 </Project>
