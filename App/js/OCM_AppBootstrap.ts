@@ -3,7 +3,7 @@
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 
-declare var OCM_App: any;
+//declare var OCM_App: any;
 
 interface JQueryStatic {
     mobile: any;
@@ -15,8 +15,8 @@ interface Window {
 }
 
 //Set iOS App Splashscreen depending on device size
-var filename = navigator.platform === 'iPad' ? 'images/splashscreen/AppSplashscreen_768x1004.png' : 'images/splashscreen/AppSplashscreen_320x460.png';
-document.write('<link rel="apple-touch-startup-image" href="' + filename + '" />');
+//var filename = navigator.platform === 'iPad' ? 'images/splashscreen/AppSplashscreen_768x1004.png' : 'images/splashscreen/AppSplashscreen_320x460.png';
+//document.write('<link rel="apple-touch-startup-image" href="' + filename + '" />');
 
 //Perform App Init
 var ocm_app = new OCM_App();

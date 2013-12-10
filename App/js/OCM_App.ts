@@ -1,4 +1,3 @@
-
 /*
 OCM charging location browser/editor Mobile App
 Christopher Cook
@@ -405,6 +404,8 @@ OCM_App.prototype.beginLogin = function () {
 
                     //return to home
                     app.navigateToHome();
+                    app.hideProgressIndicator();
+                    ref.close();
                 } else {
                     app.logEvent('OCM: Not got a token ' + event.url);
                 }
@@ -758,7 +759,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
             var $item = $(itemTemplate);
             if (isAlternate) $item.addClass("alternate");
 
-            $item.on('click', { poi: poi }, function (e) {
+            $item.on('click', <any>{ poi: poi }, function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -1137,7 +1138,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     if (skipState) {
         //skip storage of current state
     } else {
-        this.History.pushState({ view: pageId, title: pageTitle }, pageTitle, "?view=" + pageId);
+        Historyjs.pushState({ view: pageId, title: pageTitle }, pageTitle, "?view=" + pageId);
     }
 
     this.logEvent("leaving app.showPage:" + pageId);

@@ -6,6 +6,7 @@ module OCM {
     export class Geolocation {
 
         constructor() {
+
             //result for latest client gelocation attempt
             this.clientGeolocationPos = null;
 
