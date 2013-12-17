@@ -17,6 +17,7 @@ See http://www.openchargemap.org/ for more details
 
 /// <reference path="OCM_Data.ts" />
 /// <reference path="OCM_CommonUI.ts" />
+/// <reference path="OCM_Geolocation.ts" />
 
 
 //typescript declarations

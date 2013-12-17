@@ -957,7 +957,7 @@ declare module L {
 
         /**
           * Function that will be used for converting GeoJSON coordinates to LatLng points
-          * (if not specified, coords will be assumed to be WGS84 ï¿½ standard[longitude, latitude]
+          * (if not specified, coords will be assumed to be WGS84 � standard[longitude, latitude]
           * values in degrees).
           */
         coordsToLatLng?: (coords: any[]) => LatLng[];
@@ -1171,7 +1171,7 @@ declare module L {
 
         /**
           * Fires an event of the specified type. You can optionally provide an data object
-          * â€” the first argument of the listener function will contain its properties.
+          * — the first argument of the listener function will contain its properties.
           */
         fireEvent(type: string, data?: any): T;
 
@@ -1781,7 +1781,7 @@ declare module L {
 
         /**
           * Pixel coordinates of the point where the mouse event occured relative to
-          * the map Ñontainer.
+          * the map сontainer.
           */
         containerPoint: Point;
 
@@ -2013,14 +2013,14 @@ declare module L {
         panBy(point: Point, options?: PanOptions): Map;
 
         /**
-          * Checks if the map container size changed and updates the map if so â€” call it
+          * Checks if the map container size changed and updates the map if so — call it
           * after you've changed the map size dynamically, also animating pan by default.
           * If options.pan is false, panning will not occur.
           */
         invalidateSize(options: ZoomPanOptions): Map;
 
         /**
-          * Checks if the map container size changed and updates the map if so â€” call it
+          * Checks if the map container size changed and updates the map if so — call it
           * after you've changed the map size dynamically, also animating pan by default.
           */
         invalidateSize(animate: boolean): Map;
@@ -2970,7 +2970,7 @@ declare module L {
         /**
           * True if Canvas is used for vector rendering (Android 2). You can also force
           * this by setting global variable L_PREFER_CANVAS to true before the Leaflet
-          * include on your page â€” sometimes it can increase performance dramatically
+          * include on your page — sometimes it can increase performance dramatically
           * when rendering thousands of circle markers, but currently suffers from
           * a bug that causes removing such layers to be extremely slow.
           */
@@ -3448,21 +3448,21 @@ declare module L {
     export class Projection {
 
         /**
-          * Spherical Mercator projection â€” the most common projection for online maps,
+          * Spherical Mercator projection — the most common projection for online maps,
           * used by almost all free and commercial tile providers. Assumes that Earth
           * is a sphere. Used by the EPSG:3857 CRS.
           */
         static SphericalMercator: IProjection;
 
         /**
-          * Elliptical Mercator projection â€” more complex than Spherical Mercator.
+          * Elliptical Mercator projection — more complex than Spherical Mercator.
           * Takes into account that Earth is a geoid, not a perfect sphere. Used by the
           * EPSG:3395 CRS.
           */
         static Mercator: IProjection;
 
         /**
-          * Equirectangular, or Plate Carree projection â€” the most simple projection,
+          * Equirectangular, or Plate Carree projection — the most simple projection,
           * mostly used by GIS enthusiasts. Directly maps x as longitude, and y as latitude.
           * Also suitable for flat worlds, e.g. game maps. Used by the EPSG:3395 and Simple
           * CRS.
@@ -3717,7 +3717,7 @@ declare module L {
         errorTileUrl?: string;
 
         /**
-          * e.g. "Â© CloudMade" â€” the string used by the attribution control, describes
+          * e.g. "© CloudMade" — the string used by the attribution control, describes
           * the layer data.
           *
           * Default value: ''.
@@ -3891,8 +3891,8 @@ declare module L {
 
         /**
           * Simple templating facility, creates a string by applying the values of the
-          * data object of a form {a: 'foo', b: 'bar', â€¦} to a template string of the form
-          * 'Hello {a}, {b}' â€” in this example you will get 'Hello foo, bar'.
+          * data object of a form {a: 'foo', b: 'bar', …} to a template string of the form
+          * 'Hello {a}, {b}' — in this example you will get 'Hello foo, bar'.
           */
         static template(str: string, data: any): string;
 

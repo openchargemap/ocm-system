@@ -3,6 +3,7 @@
 // Definitions by: Boris Yankov <https://github.com/borisyankov/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
+/*
 interface EventTarget {
     result: any;
 }
@@ -129,7 +130,7 @@ interface Capture {
     captureImage(captureSuccess: (mediaFiles: MediaFile[]) => void, captureError: (error: CaptureError) => void, options?: CaptureImageOptions);
     captureVideo(captureSuccess: (mediaFiles: MediaFile[]) => void, captureError: (error: CaptureError) => void, options?: CaptureImageOptions);
 }
-
+*/
 interface Connection {
     UNKNOWN: number;
     ETHERNET: number;
@@ -140,7 +141,7 @@ interface Connection {
     NONE: number;
 }
 declare var Connection: Connection;
-
+/*
 interface CompassOptions {
     frequency?: number;
     filter?: number;
@@ -259,7 +260,7 @@ interface Contacts {
     create(properties?: any): Contact;
     find(contactFields: string[], contactSuccess: (contacts: Contact[]) => void, contactError: (error: ContactError) => void, contactFindOptions?: ContactFindOptions): void;
 }
-
+*/
 interface Device {
     name: string;
     cordova: string;
@@ -267,16 +268,9 @@ interface Device {
     uuid: string;
     version: string;
     model: string;
-    capture: Capture;
+    capture: any;
 }
-
-/* Defined in lib.d.ts
-interface File {
-    fullPath: string;
-    type: string;
-    size: number;
-}
-*/
+/*
 
 interface FileWriter {
     readyState: any;
@@ -370,12 +364,6 @@ interface FileUploadResult {
 
 // TODO Flags
 
-/*
-interface LocalFileSystem {
-    requestFileSystem: Function;
-    resolveLocalFileSystemURI: Function;
-}*/
-
 interface LocalFileSystem {
     PERSISTENT: number;
     TEMPORARY: number;
@@ -450,15 +438,6 @@ interface Globalization {
     getCurrencyPattern(currencyCode, successCB, errorCB): void;
 }
 
-/*
-interface InAppBrowser {
-    addEventListener(eventname: string, callback): void;
-    removeEventListener(eventname: string, callback): void;
-    open(url?: string, target?: string, features?: string, replace?: boolean): Window;
-    close(): void;
-}
-*/
-
 interface Media {
     new (src: string, mediaSuccess: Function, mediaError?: (mediaError: MediaError) => any, mediaStatus?: Function);
     getCurrentPosition(mediaSuccess: Function, mediaError?: (mediaError: MediaError) => any): void;
@@ -512,35 +491,27 @@ interface SQLResultSet {
 interface SQLTransaction {
     executeSql(sql: string): SQLResultSet;
 }
-
-/* Defined in lib.d.ts
-
-interface LocalStorage {
-    key;
-    getItem;
-    setItem;
-    removeItem;
-    clear;
-}
 */
-
-interface /*PhoneGapNavigator extends*/ Navigator {
-    accelerometer: Accelerometer;
-    camera: Camera;
-    capture: Capture;
-    compass: Compass;
-    connection: Connection;
-    contacts: Contacts;
-    device: Device;
-    globalization: Globalization;
-    notification: Notification;
-    splashscreen: Splashscreen;
+interface Navigator {
+    accelerometer: any;
+    camera: any;
+    capture: any;
+    compass: any;
+    connection: any;
+    contacts: any;
+    device: any;
+    globalization: any;
+    notification: any;
+    splashscreen: any;
 }
 
+/*
 interface Window {
     requestFileSystem: any;
     openDatabase(database_name: string, database_version: string, database_displayname: string, database_size: number): Database;
 }
-
+*/
 declare var device: Device;
-declare var phoneGapNavigator: Navigator /*PhoneGapNavigator*/;
+/*
+declare var phoneGapNavigator: Navigator;
+*/
