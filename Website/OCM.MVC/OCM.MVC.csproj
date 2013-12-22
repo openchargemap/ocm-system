@@ -240,6 +240,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
+    <Content Include="Scripts\modernizr-2.7.1.js" />
     <Content Include="Scripts\OCM\GeoSummary.js" />
     <Content Include="Scripts\OCM\Localisation\languagePack.min.js" />
     <Content Include="Scripts\OCM\OCM_CommonUI.js" />
@@ -328,7 +329,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Temp\Uploads\readme.txt" />
     <Content Include="Web.config">

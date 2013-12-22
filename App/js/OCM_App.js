@@ -1,3 +1,17 @@
+ /*
+OCM charging location browser/editor Mobile App
+Christopher Cook
+http://openchargemap.org
+See http://www.openchargemap.org/ for more details
+*/
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
+/// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
+/// <reference path="TypeScriptReferences/history/history.d.ts" />
+/// <reference path="OCM_Data.ts" />
+/// <reference path="OCM_CommonUI.ts" />
+/// <reference path="OCM_Geolocation.ts" />
+
 var Historyjs = History;
 
 function OCM_App() {
@@ -7,7 +21,7 @@ function OCM_App() {
     this.numConnectionEditors = 5;
     this.maxResults = 100;
     this.locationList = null;
-    this.resultBatchID = 1;
+    this.resultBatchID = 1; //used to track changes in result sets, avoiding duplicate processing (maps etc)
     this.ocm_app_searchPos = null;
 
     this.currentInfoWindow = null;
@@ -189,6 +203,7 @@ OCM_App.prototype.setupUIActions = function () {
 OCM_App.prototype.postLoginInit = function () {
     var userInfo = this.getLoggedInUserInfo();
 
+    //if user logged in, enable features
     if (!this.isUserSignedIn()) {
         //user is not signed in
         //$("#login-summary").html("Register and login (via your Twitter account, if you have one): <input type=\"button\" data-inline='true' value=\"Register or Sign In\" onclick='ocm_app.beginLogin();' />").trigger("create");
@@ -227,7 +242,7 @@ OCM_App.prototype.initDeferredUI = function () {
 
     if (cachedResults !== null) {
         if (cachedResult_Location !== null) {
-            (document.getElementById("search-location")).value = cachedResult_Location;
+            document.getElementById("search-location").value = cachedResult_Location;
         }
         setTimeout(function () {
             app.renderPOIList(cachedResults);
@@ -367,6 +382,8 @@ OCM_App.prototype.beginLogin = function () {
 
                     //return to home
                     app.navigateToHome();
+                    app.hideProgressIndicator();
+                    ref.close();
                 } else {
                     app.logEvent('OCM: Not got a token ' + event.url);
                 }
@@ -396,7 +413,7 @@ OCM_App.prototype.logout = function (navigateToHome) {
     this.clearCookie("AccessPermissions");
 
     if (navigateToHome == true) {
-        app.postLoginInit();
+        app.postLoginInit(); //refresh signed in/out ui
         if (this.isRunningUnderCordova) {
             app.navigateToHome();
         } else {
@@ -405,7 +422,7 @@ OCM_App.prototype.logout = function (navigateToHome) {
             }, 100);
         }
     } else {
-        app.postLoginInit();
+        app.postLoginInit(); //refresh signed in/out ui
     }
 };
 
@@ -471,7 +488,7 @@ OCM_App.prototype.performCommentSubmit = function () {
 
 OCM_App.prototype.performMediaItemSubmit = function () {
     var $fileupload = $(':file');
-    var mediafile = ($fileupload[0]).files[0];
+    var mediafile = $fileupload[0].files[0];
     var name, size, type;
     if (mediafile) {
         name = mediafile.name;
@@ -513,12 +530,13 @@ OCM_App.prototype.submissionFailed = function () {
 
 OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation) {
     //hide intro section if still displayed
-    $("#intro-section").hide();
+    $("#intro-section").hide(); //("display", "none");
 
     //detect if mapping/geolocation available
     this.showProgressIndicator();
 
     if (useClientLocation == true) {
+        //initiate client geolocation (if not already determined)
         if (this.ocm_geo.clientGeolocationPos == null) {
             this.ocm_geo.determineUserLocation($.proxy(this.determineUserLocationCompleted, this), $.proxy(this.determineUserLocationFailed, this));
             return;
@@ -527,13 +545,13 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         }
     }
 
-    var distance = parseInt((document.getElementById("search-distance")).value);
-    var distance_unit = (document.getElementById("search-distance-unit")).value;
+    var distance = parseInt(document.getElementById("search-distance").value);
+    var distance_unit = document.getElementById("search-distance-unit").value;
 
     if (this.ocm_app_searchPos == null || useManualLocation == true) {
         // search position not set, attempt fetch from location input and
         // return for now
-        var locationText = (document.getElementById("search-location")).value;
+        var locationText = document.getElementById("search-location").value;
         if (locationText === null || locationText == "") {
             //try to geolocate via browser location API
             this.ocm_geo.determineUserLocation($.proxy(this.determineUserLocationCompleted, this), $.proxy(this.determineUserLocationFailed, this));
@@ -559,6 +577,7 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         params.maxResults = this.maxResults;
         params.includeComments = true;
 
+        //apply filter settings from UI
         if ($("#filter-submissionstatus").val() != 200)
             params.submissionStatusTypeID = $("#filter-submissionstatus").val();
         if ($("#filter-connectiontype").val() != "")
@@ -606,12 +625,12 @@ OCM_App.prototype.determineGeocodedLocationCompleted = function (pos) {
 };
 
 OCM_App.prototype.renderPOIList = function (locationList) {
-    this.resultBatchID++;
+    this.resultBatchID++; //indicates that results have changed and need reprocessed (maps etc)
 
     if (locationList != null && locationList.length > 0) {
         this.logEvent("Caching search results..");
         this.ocm_data.setCachedDataObject("SearchResults", locationList);
-        this.ocm_data.setCachedDataObject("SearchResults_Location", (document.getElementById("search-location")).value);
+        this.ocm_data.setCachedDataObject("SearchResults_Location", document.getElementById("search-location").value);
     } else {
         this.logEvent("No search results, will not overwrite cached search results.");
     }
@@ -733,6 +752,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
 OCM_App.prototype.showDetailsViewById = function (id) {
     var itemShown = false;
 
+    //if id in current result list, show
     if (this.locationList != null) {
         for (var i = 0; i < this.locationList.length; i++) {
             if (this.locationList[i].ID == id) {
@@ -838,10 +858,12 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     $detailsView.css("left", leftPos);
     $detailsView.css("top", topPos);
 
+    //once displayed, try fetching a more accurate distance estimate
     if (this.ocm_app_searchPos != null) {
         this.ocm_geo.getDrivingDistanceBetweenPoints(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updateDistanceDetails);
     }
 
+    //apply translations (if required)
     if (this.languageCode != null) {
         this.ocm_ui.applyLocalisation(false);
     }
@@ -881,9 +903,9 @@ OCM_App.prototype.addFavouritePOI = function (poi, itineraryName) {
             }
 
             if (itineraryName != null) {
-                favouriteLocations.push({ "poi": poi, "itineraryName": itineraryName });
+                favouriteLocations.push({ "poi": poi, "itineraryName": itineraryName }); //add to specific itinerary
             }
-            favouriteLocations.push({ "poi": poi, "itineraryName": null });
+            favouriteLocations.push({ "poi": poi, "itineraryName": null }); // add to 'all' list
 
             this.logEvent("Added Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
 
@@ -992,6 +1014,7 @@ OCM_App.prototype.hasUserPermissionForPOI = function (poi, permissionLevel) {
         }
 
         if (permissionLevel == "Edit") {
+            //check if user has country level or all countries edit permission
             if (userInfo.Permissions.indexOf("[CountryLevel_Editor=All]") != -1) {
                 return true;
             }
@@ -1043,6 +1066,8 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 
     this.logEvent("app.showPage:" + pageId);
 
+    //show new page
+    //hide last shown page
     if (this._lastPageId && this._lastPageId != null) {
         this.hidePage(this._lastPageId);
     }
@@ -1056,7 +1081,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     //$("#" + pageId).show();
     //hack: reset scroll position for new page once page has had a chance to render
     setTimeout(function () {
-        (document.documentElement).scrollIntoView();
+        document.documentElement.scrollIntoView();
     }, 100);
 
     this._lastPageId = pageId;
@@ -1064,7 +1089,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     if (skipState) {
         //skip storage of current state
     } else {
-        this.History.pushState({ view: pageId, title: pageTitle }, pageTitle, "?view=" + pageId);
+        Historyjs.pushState({ view: pageId, title: pageTitle }, pageTitle, "?view=" + pageId);
     }
 
     this.logEvent("leaving app.showPage:" + pageId);
@@ -1073,6 +1098,7 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 OCM_App.prototype.initStateTracking = function () {
     var app = this;
 
+    // Check Location
     if (document.location.protocol === 'file:') {
         //state not supported
     }
@@ -1090,6 +1116,8 @@ OCM_App.prototype.initStateTracking = function () {
         // Log the State
         var State = Historyjs.getState();
 
+        //History.log('statechange:', State.data, State.title, State.url);
+        // app.logEvent("state switch to :" + State.data.view);
         if (State.data.view) {
             if (app._lastPageId && app._lastPageId != null) {
                 if (State.data.view == app._lastPageId)
@@ -1189,7 +1217,7 @@ OCM_App.prototype.navigateToAddComment = function () {
     var app = this;
 
     //reset comment form on show
-    (document.getElementById("comment-form")).reset();
+    document.getElementById("comment-form").reset();
     app.enableCommentSubmit = true;
 
     if (app.isUserSignedIn()) {

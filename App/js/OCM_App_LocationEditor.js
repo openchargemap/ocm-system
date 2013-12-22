@@ -1,6 +1,7 @@
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 /// <reference path="OCM_App.ts" />
+
 OCM_App.prototype.initEditors = function () {
     this.editorMapInitialised = false;
     this.editorMap = null;
@@ -43,7 +44,7 @@ OCM_App.prototype.initEditors = function () {
 
 OCM_App.prototype.resetEditorForm = function () {
     //init editor to default settings
-    (document.getElementById("editlocation-form")).reset();
+    document.getElementById("editlocation-form").reset();
     for (var n = 1; n <= this.numConnectionEditors; n++) {
         //reset editor dropdowns
         this.setDropdown("edit_connection" + n + "_connectiontype", "0");
@@ -56,7 +57,7 @@ OCM_App.prototype.resetEditorForm = function () {
     this.setDropdown("edit_operator", 1);
     this.setDropdown("edit_dataprovider", 1);
     this.setDropdown("edit_submissionstatus", 1);
-    this.setDropdown("edit_statustype", 50);
+    this.setDropdown("edit_statustype", 50); //operational
 
     //TODO: collapse equipment/connections
     //this.editorMap = null;
@@ -69,10 +70,12 @@ OCM_App.prototype.resetEditorForm = function () {
 OCM_App.prototype.populateEditor = function (refData) {
     this.hideProgressIndicator();
 
+    //todo:move this into OCM_Data then pass to here from callback
     if (refData == null) {
         //may be loaded from cache
         refData = this.ocm_data.referenceData;
     } else {
+        //store cached ref data
         if (refData != null) {
             this.ocm_data.setCachedDataObject("CoreReferenceData", refData);
             this.logEvent("Updated cached CoreReferenceData.");
@@ -152,6 +155,7 @@ OCM_App.prototype.populateEditor = function (refData) {
     this.resetEditorForm();
 
     if (refData.UserProfile && refData.UserProfile != null && refData.UserProfile.IsCurrentSessionTokenValid == false) {
+        //login info is stale, logout user
         if (this.isUserSignedIn()) {
             this.logEvent("Login info is stale, logging out user.");
             this.logout(false);
@@ -240,6 +244,7 @@ OCM_App.prototype.performLocationSubmit = function () {
         item.DataProvider = null;
         item.DataProviderID = null;
 
+        //if user is editor for this location, set to publish on submit
         if (this.hasUserPermissionForPOI(item, "Edit")) {
             item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, 200);
             item.SubmissionStatusTypeID = null;
@@ -276,12 +281,42 @@ OCM_App.prototype.performLocationSubmit = function () {
             "Quantity": $("#edit_connection" + n + "_quantity").val()
         };
 
+        //preserve original connection info not editable in this editor
         if (originalConnection != null) {
             connectionInfo.ID = originalConnection.ID;
             connectionInfo.Reference = originalConnection.Reference;
             connectionInfo.Comments = originalConnection.Comments;
         }
 
+        /*
+        var $connection = $("#edit_connection" + n);
+        var currentID = null;
+        if ($.mobile) {
+        currentID = $connection.jqmData("_connection_id");
+        } else {
+        currentID = jQuery.data($connection, "_connection_id");
+        }
+        if (currentID > 0) {
+        connectionInfo.ID = parseInt(currentID);
+        }
+        */
+        //add only non-blank connection info
+        /* if (
+        (connectionInfo.Reference != null && connectionInfo.Reference != "")
+        || connectionInfo.Amps != ""
+        || connectionInfo.Voltage != ""
+        || connectionInfo.PowerKW != ""
+        || (connectionInfo.ConnectionType != null && connectionInfo.ConnectionType.ID > 0)
+        || (connectionInfo.StatusType != null && connectionInfo.StatusType.ID > 0)
+        || (connectionInfo.Level != null && connectionInfo.Level.ID > 1)
+        || (connectionInfo.Quantity != null && connectionInfo.Quantity > 1)
+        || (connectionInfo.CurrentType != null && connectionInfo.CurrentType.ID > 0)
+        ) {
+        item.Connections.push(connectionInfo);
+        numConnections++;
+        }
+        */
+        //add new connection or update existing
         if (item.Connections.length >= n) {
             item.Connections[n - 1] = connectionInfo;
         } else {
@@ -289,7 +324,9 @@ OCM_App.prototype.performLocationSubmit = function () {
         }
     }
 
+    //stored attribution metadata if any
     if (this.positionAttribution != null) {
+        //add/update position attributiom
         if (item.MetadataValues == null)
             item.MetadataValues = new Array();
         var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
@@ -307,7 +344,7 @@ OCM_App.prototype.performLocationSubmit = function () {
         var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
         if (attributionMetadata != null) {
             //remove existing item from array
-            item.MetadataValues = jQuery.grep(item.MetadataValues, function (a) {
+            item.MetadataValues = jQuery.grep(item.MetadataValues, function (a, i) {
                 return a.MetadataFieldID !== this.ocm_data.ATTRIBUTION_METADATAFIELDID;
             });
         }
@@ -323,12 +360,14 @@ OCM_App.prototype.performLocationSubmit = function () {
 OCM_App.prototype.showLocationEditor = function () {
     this.resetEditorForm();
 
+    //populate editor with currently selected poi
     if (this.selectedPOI != null) {
         this.isLocationEditMode = true;
         var poi = this.selectedPOI;
 
         this.positionAttribution = null;
 
+        //load existing position attribution (if any)
         if (poi.MetadataValues != null) {
             var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(poi.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
             if (attributionMetadata != null) {
@@ -369,6 +408,7 @@ OCM_App.prototype.showLocationEditor = function () {
         $("#edit-operator-container").show();
         $("#edit-dataprovider-container").show();
 
+        //populate connection editor(s)
         if (poi.Connections != null) {
             for (var n = 1; n <= this.numConnectionEditors; n++) {
                 var $connection = ($("#edit_connection" + n));

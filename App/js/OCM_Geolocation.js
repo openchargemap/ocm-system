@@ -17,6 +17,7 @@ var OCM;
         Geolocation.prototype.determineUserLocation = function (successCallback, failureCallback) {
             var appContext = this;
 
+            //determine user location automatically if enabled & supported
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     this.clientGeolocationPos = position;
@@ -36,6 +37,7 @@ var OCM;
         };
 
         Geolocation.prototype.determineGeocodedLocation = function (locationText, successCallback) {
+            //caller is searching for same (previously geocoded) text again, return last result
             if (locationText == this.geocodingTextInput) {
                 if (this.geocodingResultPos != null) {
                     successCallback(this.geocodingResultPos);
@@ -114,6 +116,7 @@ var OCM;
         };
 
         Geolocation.prototype.getCardinalDirectionFromBearing = function (bearing) {
+            //partly inspired by http://bryan.reynoldslive.com/post/Latitude2c-Longitude2c-Bearing2c-Cardinal-Direction2c-Distance2c-and-C.aspx
             if (bearing >= 0 && bearing <= 22.5)
                 return "N";
             if (bearing >= 22.5 && bearing <= 67.5)

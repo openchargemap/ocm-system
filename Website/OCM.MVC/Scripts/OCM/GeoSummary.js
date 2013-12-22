@@ -1,4 +1,7 @@
-﻿define(["require", "exports"], function(require, exports) {
+﻿/// <reference path="references/jquery.d.ts" />
+define(["require", "exports"], function(require, exports) {
+    
+
     //OCM.Widgets.GeoSummary
     (function (OCM) {
         (function (Widgets) {

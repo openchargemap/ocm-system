@@ -1,7 +1,10 @@
-//Set iOS App Splashscreen depending on device size
-var filename = navigator.platform === 'iPad' ? 'images/splashscreen/AppSplashscreen_768x1004.png' : 'images/splashscreen/AppSplashscreen_320x460.png';
-document.write('<link rel="apple-touch-startup-image" href="' + filename + '" />');
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
+/// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 
+//Set iOS App Splashscreen depending on device size
+//var filename = navigator.platform === 'iPad' ? 'images/splashscreen/AppSplashscreen_768x1004.png' : 'images/splashscreen/AppSplashscreen_320x460.png';
+//document.write('<link rel="apple-touch-startup-image" href="' + filename + '" />');
 //Perform App Init
 var ocm_app = new OCM_App();
 var _appBootStrapped = false;
@@ -30,6 +33,12 @@ function onDeviceReady() {
         ocm_app.logEvent("OCM: error checkin for connection status");
     }
 
+    /*
+    //phonegap analytics plugin
+    
+    gaPlugin = window.plugins.gaPlugin;
+    gaPlugin.init(successHandler, errorHandler, "UA-76936-12", 10);
+    */
     if (window.L) {
         ocm_app.logEvent("Leaflet ready");
     } else {
@@ -69,6 +78,7 @@ $(document).bind('pageinit', function () {
 
 //startup for non-jquerymobile version
 $(function () {
+    //experimental removal of jqm
     if (!$.mobile) {
         bootStrap();
     }

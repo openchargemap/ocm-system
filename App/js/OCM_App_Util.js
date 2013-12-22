@@ -1,3 +1,6 @@
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="OCM_App.ts" />
+
 OCM_App.prototype.getCookie = function (c_name) {
     if (this.isRunningUnderCordova) {
         console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
@@ -53,7 +56,7 @@ OCM_App.prototype.getParameter = function (name) {
     var results = regex.exec(window.location.href);
     if (results == null)
         return "";
-else
+    else
         return results[1];
 };
 
