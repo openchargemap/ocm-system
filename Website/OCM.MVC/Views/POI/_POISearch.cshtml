@@ -55,7 +55,7 @@
                 <label class="control-label col-md-2" for="locationtitle">Title</label>
 
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="locationtitle" placeholder="Title of place or business" data-toggle="tooltip" title="You can optionally search location titles for a business name etc. " />
+                    <input type="text" value="@Model.LocationTitle" class="form-control" name="locationtitle" placeholder="Title of place or business" data-toggle="tooltip" title="You can optionally search location titles for a business name etc. " />
                 </div>
             </div>
             <div class="form-group">
@@ -101,7 +101,7 @@
             <div class="form-group">
                 <label class="control-label col-md-2">Submission Status</label>
                 <div class="col-md-8">
-                    @Html.DropDownList("submissiontypeids", Model.SubmissionTypeList, new { @class = "form-control" })
+                    @Html.DropDownList("submissionstatustypeid", Model.SubmissionTypeList, new { @class = "form-control" })
                 </div>
             </div>
         </div>
@@ -116,16 +116,26 @@
         </div>
     </div>
 
+    @Html.HiddenFor(model=>model.ShowAdvancedOptions)
 }
 
 <script>
     $(document).ready(function () {
 
-        $("#search-advanced").hide();
+        var showAdvanced = @Html.Raw(Model.ShowAdvancedOptions.ToString().ToLower() + ";")
+         
+        if (!showAdvanced)
+        {
+            $("#search-advanced").hide();
+        }
 
         $("#toggle-search-advanced").on("click", function () {
             //toggle advanced
             $("#search-advanced").toggle();
+
+            var advId= "@Html.IdFor(model => model.ShowAdvancedOptions)";
+            var advVisible = $("#search-advanced").is(":visible");
+            $("#"+advId).val(advVisible);
         });
 
         $("#search-nearme").on("click", function () {
