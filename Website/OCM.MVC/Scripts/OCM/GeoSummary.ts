@@ -47,12 +47,14 @@ export module OCM {
                 var geochart = new google.visualization.GeoChart(
                     document.getElementById('visualization')
                     );
+
                 google.visualization.events.addListener(geochart, "regionClick", function (eventData) {
                     var countryISO = eventData["region"];
                     if (top != null && top.loadCountryMap) {
                         top.loadCountryMap(countryISO, countryISO);
                     }
                 });
+
                 geochart.draw(data, options);
 
                 this.refreshDataSummary();
@@ -65,7 +67,7 @@ export module OCM {
                 var totalLocations = 0;
                 var totalStations = 0;
                 for (var i = 0; i < ocm_summary.length; i++) {
-                    summaryContent += " <a title='" + ocm_summary[i].stationcount + " charging stations across " + ocm_summary[i].locationcount + " locations.' href='javascript:ocmSummary.loadCountryMap(\"" + ocm_summary[i].country + "\",\"" + ocm_summary[i].isocode + "\");'><strong>" + ocm_summary[i].country + ":</strong> " + ocm_summary[i].locationcount + "</a>";
+                    summaryContent += " <a title='" + ocm_summary[i].stationcount + " charging stations across " + ocm_summary[i].locationcount + " locations.' href='javascript:ocmSummary.loadCountryMap(\"" + ocm_summary[i].country + "\",\"" + ocm_summary[i].isocode + "\");'><strong>" + ocm_summary[i].country + ":</strong> " + ocm_summary[i].locationcount + "</a>&nbsp;";
                     totalLocations += ocm_summary[i].locationcount;
                     totalStations += ocm_summary[i].stationcount;
                 }
