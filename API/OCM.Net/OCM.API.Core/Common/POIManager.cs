@@ -124,6 +124,8 @@ namespace OCM.API.Common
                 if (settings.DataProviderIDs != null) { filterByDataProvider = true; }
                 else { settings.DataProviderIDs = new int[] { -1 }; }
 
+                if (settings.SubmissionStatusTypeID == -1) settings.SubmissionStatusTypeID = null;
+
                 //compile initial list of locations
                 var chargePointList = from c in dataModel.ChargePoints
                                       where
@@ -149,8 +151,10 @@ namespace OCM.API.Common
                                           && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
                                       select c;
 
-                //compute/filter by distance (if required)
-                var filteredList = from c in chargePointList
+             
+
+                    //compute/filter by distance (if required)
+                    var filteredList = from c in chargePointList
                                    where
                                    (requiresDistance == false)
                                    ||
@@ -166,7 +170,7 @@ namespace OCM.API.Common
                                        )
                                    )
                                    select new { c, DistanceKM = GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) };
-
+                
                 if (requiresDistance)
                 {
                     //if distance was a required output, sort results by distance

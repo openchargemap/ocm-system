@@ -20,6 +20,9 @@ namespace OCM.MVC.Models
         public string Country { get; set; }
         public List<OCM.API.Common.Model.ChargePoint> POIList { get; set; }
         public CoreReferenceData ReferenceData { get; set; }
+
+        public bool ShowAdvancedOptions { get; set; }
+
         public SelectList CountryList
         {
             get

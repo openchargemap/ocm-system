@@ -33,7 +33,8 @@ namespace OCM.MVC.Controllers
             filter.StatusTypeIDs = this.ConvertNullableSelection(filter.StatusTypeIDs);
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
             filter.DataProviderIDs = this.ConvertNullableSelection(filter.DataProviderIDs);
-
+            
+            
             if (!String.IsNullOrWhiteSpace(filter.Country))
             {
                 //TODO: cache country id lookup
@@ -84,7 +85,7 @@ namespace OCM.MVC.Controllers
                         filter.Longitude = position.Longitude;
                         if (filter.Distance == null) filter.Distance = 50;
                         filter.DistanceUnit = API.Common.Model.DistanceUnit.Miles;
-
+                        //TODO: distance unit KM
                         //if (distanceunit == "km") searchfilters.DistanceUnit = API.Common.Model.DistanceUnit.KM;
 
                         ViewBag.FormattedAddress = position.Address;
@@ -92,6 +93,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
+            
             filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestSettings)filter);
             return View(filter);
 
