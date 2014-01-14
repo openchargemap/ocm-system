@@ -189,25 +189,29 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 
         var unknownPowerMarker = L.AwesomeMarkers.icon({
             icon: 'bolt',
-            color: 'darkpurple'
+            color: 'darkpurple',
+            prefix: 'fa'
         });
 
         var lowPowerMarker = L.AwesomeMarkers.icon({
             icon: 'bolt',
             color: 'darkblue',
-            spin:true
+            spin: true,
+            prefix: 'fa'
         });
 
         var mediumPowerMarker = L.AwesomeMarkers.icon({
             icon: 'bolt',
             color: 'green',
-            spin: true
+            spin: true,
+            prefix: 'fa'
         });
 
         var highPowerMarker = L.AwesomeMarkers.icon({
             icon: 'bolt',
             color: 'orange',
-            spin:true
+            spin: true,
+            prefix: 'fa'
         });
 
       
