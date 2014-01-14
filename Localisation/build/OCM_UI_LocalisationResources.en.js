@@ -8,7 +8,7 @@ var localisation_dictionary_en ={
       "linkBrowsePOI": "Browse All Locations",
       "loadingProgress": "Loading...",
       "addLocation": "Add Location",
-	"addItem": "Add",
+      "addItem": "Add",
       "favourites": "Favourites",
       "settings": "Settings",
       "about": "About",

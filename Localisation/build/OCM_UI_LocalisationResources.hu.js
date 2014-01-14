@@ -3,102 +3,102 @@ var localisation_dictionary_hu ={
   "_langCode": "hu",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
-      "linkBrowsePOI": null,
-      "loadingProgress": null,
-      "addLocation": null,
-      "addItem": null,
-      "favourites": null,
-      "settings": null,
-      "about": null,
-      "signIn": null,
-      "signOut": null
+      "shortDescription": "a globális nyilvános nyilvántartásba az elektromos jármű töltőállomásokon helyek",
+      "linkWebApp": "Keresési helyek a Web App alkalmazással",
+      "linkBrowsePOI": "Keresse minden fekvések",
+      "loadingProgress": "Betöltése...",
+      "addLocation": "Hely hozzáadása",
+      "addItem": "Add hozzá",
+      "favourites": "Kedvencek",
+      "settings": "Beállítások",
+      "about": "Körülbelül",
+      "signIn": "bejelentkezés",
+      "signOut": "Kijelentkezés"
     },
     "details": {
-      "sectionTitle": null,
+      "sectionTitle": "Töltési helye",
       "location": {
-        "sectionTitle": null,
-        "title": null,
-        "address": null,
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
-        "postcode": null,
-        "country": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
-        "contactEmail": null,
-        "map": null,
-        "streetView": null,
-        "addressRelatedURL": null
+        "sectionTitle": "Elhelyezés részlet",
+        "title": "Hely címe",
+        "address": "Legközelebbi cím",
+        "addressLine1": "Lakcim első sor",
+        "addressLine2": "Lakcim második sor",
+        "town": "Város",
+        "stateOrProvince": "Állam/megye",
+        "postcode": "Postai/Zip Code",
+        "country": "Ország",
+        "contactTelephone1": "Elsődleges telefonszám",
+        "contactTelephone2": "Másodlagos telefonszám",
+        "contactEmail": "Lépjen kapcsolatba e-mailben",
+        "map": "Megjelenítése",
+        "streetView": "Utcára néző",
+        "addressRelatedURL": "Honlap"
       },
-      "generalComments": null,
-      "accessComments": null,
-      "advancedDetails": null,
-      "numberOfPoints": null,
-      "usageType": null,
-      "usageCost": null,
-      "operationalStatus": null,
-      "datePlanned": null,
-      "dateLastConfirmed": null,
-      "lastUpdated": null,
-      "refNumber": null,
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
-      "submissionStatus": null,
+      "generalComments": "Általános információk",
+      "accessComments": "Hozzáférési információk",
+      "advancedDetails": "További információk",
+      "numberOfPoints": "Állomások/öblök száma",
+      "usageType": "Használat",
+      "usageCost": "Felhasználás költsége",
+      "operationalStatus": "Működési állapot",
+      "datePlanned": "Tervezett időpontja",
+      "dateLastConfirmed": "Utolsó napján",
+      "lastUpdated": "Utolsó frissítés",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Adatok minőségi szint",
+      "importedDataNotice": "Megjegyzés: Az adatok automatikusan forrásból, változtatásokat kell benyújtani az adatszolgáltató közvetlenül.",
+      "submissionStatus": "Benyújtását, státusz",
       "placesNearby": {
-        "sectionTitle": null
+        "sectionTitle": "Közeli helyek"
       },
       "mediaItems": {
-        "sectionTitle": null,
-        "addPrompt": null
+        "sectionTitle": "Fotók",
+        "addPrompt": "Töltsd fel a saját fényképek, ehhez a helyhez"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "További címkék"
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
-        "addPrompt": null
+        "sectionTitle": "Megjegyzései és minősítései",
+        "zeroComments": "Nincs felhasználó észrevételeit",
+        "addPrompt": "Adjunk hozzá egy megjegyzést vagy gyors állapot-frissítéséhez"
       },
       "equipment": {
-        "sectionTitle": null,
-        "connectionType": null,
-        "powerKW": null,
-        "powerLevel": null,
-        "quantity": null,
-        "supplyType": null,
-        "voltage": null,
-        "current": null,
-        "comment": null,
-        "reference": null
+        "sectionTitle": "Berendezések adatait",
+        "connectionType": "Kapcsolat típusa",
+        "powerKW": "Max teljesítmény (KW)",
+        "powerLevel": "Szint",
+        "quantity": "Mennyiség",
+        "supplyType": "Tápegység-típus",
+        "voltage": "Feszültség",
+        "current": "Max aktuális",
+        "comment": "Megjegyzések",
+        "reference": "Referencia"
       },
       "dataProvider": {
-        "sectionTitle": null,
-        "website": null,
-        "providersReference": null
+        "sectionTitle": "Adatszolgáltató",
+        "website": "Honlap",
+        "providersReference": "Szolgáltatók Ref"
       },
       "operator": {
-        "sectionTitle": null,
-        "operatorsReference": null
+        "sectionTitle": "Hálózati/üzemeltető",
+        "operatorsReference": "Szereplők Ref"
       }
     },
     "search": {
-      "sectionTitle": null,
-      "locationInput": null,
-      "useMyLocation": null,
-      "distance": null,
-      "chargingLevels": null,
-      "connectionTypes": null,
-      "networkOperators": null,
-      "countries": null,
-      "submissionStatus": null,
-      "usageTypes": null,
-      "operationalStatusTypes": null,
-      "performSearch": null,
-      "progress": null
+      "sectionTitle": "Szálláshelyek keresése",
+      "locationInput": "Hely",
+      "useMyLocation": "Keresés a közelemben",
+      "distance": "Távolság",
+      "chargingLevels": "Töltési szint",
+      "connectionTypes": "Kapcsolat típusa",
+      "networkOperators": "Hálózati/üzemeltető",
+      "countries": "Ország",
+      "submissionStatus": "Benyújtását, státusz",
+      "usageTypes": "Használat",
+      "operationalStatusTypes": "Állapot",
+      "performSearch": "Szálláshelyek keresése",
+      "progress": "Keres..."
     }
   }
 };

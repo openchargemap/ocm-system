@@ -1,5 +1,5 @@
 var localisation_dictionary_de ={
-  "_langTitle": "Deutsch",
+  "_langTitle": "German/Deutsch",
   "_langCode": "de",
   "ocm": {
     "general": {

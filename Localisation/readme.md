@@ -9,3 +9,4 @@ To assist with translation you can either supply updates to these files or use t
 - Build Notes:
 	- use 'wti pull' in /Localisation/src/ to refresh .json language files
 	- use 'grunt' in /Localisation/ to build js files, language pack etc and to copy build output to other projects (app, website, map widget etc)
+	- on new dev machine use "npm install" to fetch dependencies (grunt etc)

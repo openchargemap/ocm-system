@@ -1,4 +1,4 @@
-{
+var localisation_dictionary_pt ={
   "_langTitle": "Portuguese/português",
   "_langCode": "pt",
   "ocm": {
@@ -101,4 +101,4 @@
       "progress": "Procurando.."
     }
   }
-}
+};
