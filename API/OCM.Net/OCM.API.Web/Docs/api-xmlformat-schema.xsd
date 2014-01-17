@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ChargePoints">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="ChargePoint">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="GeneralComments" type="xs:string" />
+              <xs:element name="AddressInfo">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="LocationTitle" type="xs:string" />
+                    <xs:element name="AddressLine1" type="xs:string" />
+                    <xs:element name="AddressLine2" type="xs:string" />
+                    <xs:element name="Town" type="xs:string" />
+                    <xs:element name="StateOrProvince" type="xs:string" />
+                    <xs:element name="Postcode" type="xs:string" />
+                    <xs:element name="Country" type="xs:string" />
+                    <xs:element name="Latitude" type="xs:decimal" />
+                    <xs:element name="Longitude" type="xs:decimal" />
+                    <xs:element minOccurs="0" name="ContactTelephone1" type="xs:string" />
+                    <xs:element minOccurs="0" name="ContactTelephone2" type="xs:string" />
+                    <xs:element minOccurs="0" name="ContactEmail" type="xs:string" />
+                    <xs:element minOccurs="0" name="AccessComments" type="xs:string" />
+                    <xs:element minOccurs="0" name="GeneralComments" type="xs:string" />
+                    <xs:element minOccurs="0" name="RelatedURL" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="Connections">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="ConnectionInfo">
+                      <xs:complexType>
+                        <xs:attribute name="ID" type="xs:int" use="required" />
+                        <xs:attribute name="TypeID" type="xs:int" use="required" />
+                        <xs:attribute name="TypeName" type="xs:string" use="required" />
+                        <xs:attribute name="LevelID" type="xs:int" use="optional" />
+                        <xs:attribute name="LevelName" type="xs:string" use="optional" />
+                        <xs:attribute name="Status" type="xs:string" use="optional" />
+                        <xs:attribute name="Amps" type="xs:int" use="optional" />
+                        <xs:attribute name="Voltage" type="xs:int" use="optional" />
+                        <xs:attribute name="Reference" type="xs:string" use="optional" />
+                        <xs:attribute name="Quantity" type="xs:int" use="optional" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="ChargerTypes">
+                <xs:complexType>
+                  <xs:sequence minOccurs="0">
+                    <xs:element maxOccurs="unbounded" name="ChargerType">
+                      <xs:complexType>
+                        <xs:attribute name="ID" type="xs:int" use="required" />
+                        <xs:attribute name="Title" type="xs:string" use="required" />
+                        <xs:attribute name="IsFastChargeCapable" type="xs:string" use="optional" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="UsageType">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="ID" type="xs:int" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" name="UsageCost" type="xs:string" />
+              <xs:element minOccurs="0" name="StatusType">
+                <xs:complexType>
+                  <xs:attribute name="ID" type="xs:int" use="required" />
+                  <xs:attribute name="Title" type="xs:string" use="required" />
+                  <xs:attribute name="DateLastStatusUpdate" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="ID" type="xs:int" use="required" />
+            <xs:attribute name="UUID" type="xs:string" use="required" />
+            <xs:attribute name="DateLastConfirmed" type="xs:string" use="required" />
+            <xs:attribute name="OperatorID" type="xs:int" use="optional" />
+            <xs:attribute name="OperatorTitle" type="xs:string" use="optional" />
+            <xs:attribute name="DataProviderID" type="xs:int" use="required" />
+            <xs:attribute name="NumberOfPoints" type="xs:string" use="required" />
+            <xs:attribute name="DataQualityLevel" type="xs:string" use="required" />
+            <xs:attribute name="PercentageSimilarity" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
