@@ -12,6 +12,9 @@ namespace OCM.API.InputProviders
     {
         public bool ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
         {
+            return false; //html input provider no longer supported
+
+            /*
             //construct simple model view of new CP based on input, to then be used to contruct data model version
             cp.AddressInfo = new Common.Model.AddressInfo();
 
@@ -22,8 +25,8 @@ namespace OCM.API.InputProviders
             cp.AddressInfo.StateOrProvince = ParseString(context.Request["ocm_loc_stateorprovince"]);
             cp.AddressInfo.Postcode = ParseString(context.Request["ocm_loc_postcode"]);
 
-            cp.AddressInfo.Latitude = ParseDouble(context.Request["ocm_loc_latitude"]);
-            cp.AddressInfo.Longitude = ParseDouble(context.Request["ocm_loc_longitude"]);
+            cp.AddressInfo.Latitude = (double)ParseDouble(context.Request["ocm_loc_latitude"]);
+            cp.AddressInfo.Longitude = (double)ParseDouble(context.Request["ocm_loc_longitude"]);
 
             int? countryID = ParseInt(context.Request["ocm_loc_countryid"]);
             if (countryID != null) cp.AddressInfo.Country = new Common.Model.Country() { ID = (int)countryID };
@@ -82,6 +85,7 @@ namespace OCM.API.InputProviders
             cp.GeneralComments = ParseLongString(context.Request["ocm_cp_generalcomments"]);
 
             return true;
+             * */
         }
 
 
