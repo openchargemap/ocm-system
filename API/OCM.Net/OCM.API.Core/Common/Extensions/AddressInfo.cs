@@ -36,7 +36,9 @@ namespace OCM.API.Common.Model.Extensions
             a.ContactTelephone2 = source.ContactTelephone2;
             a.ContactEmail = source.ContactEmail;
             a.AccessComments = source.AccessComments;
+#pragma warning disable 612 //suppress obsolete warning
             a.GeneralComments = source.GeneralComments;
+#pragma warning restore 612 //restore warning
             a.RelatedURL = source.RelatedURL;
             
             return a;

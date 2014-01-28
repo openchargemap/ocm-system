@@ -83,8 +83,7 @@ namespace OCM.API.Common
                 bool filterByUsage = false;
                 bool filterByStatus = false;
                 bool filterByDataProvider = false;
-                int? countryCodeFilterID = null;
-
+                
                 if (settings.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
                 else { settings.ConnectionTypeIDs = new int[] { -1 }; }
 
@@ -306,7 +305,7 @@ namespace OCM.API.Common
 
             if (cp.AddressInfo.Country == null) return false;
 
-            if (cp.AddressInfo.Latitude == null && cp.AddressInfo.Longitude == null) return false;
+            if (cp.AddressInfo.Latitude == 0 && cp.AddressInfo.Longitude == 0) return false;
 
             double lat = (double)cp.AddressInfo.Latitude;
             double lon = (double)cp.AddressInfo.Longitude;
@@ -442,7 +441,9 @@ namespace OCM.API.Common
                 dataAddressInfo.ContactTelephone2 = simpleAddressInfo.ContactTelephone2;
                 dataAddressInfo.ContactEmail = simpleAddressInfo.ContactEmail;
                 dataAddressInfo.AccessComments = simpleAddressInfo.AccessComments;
+#pragma warning disable 612 //suppress obsolete warning
                 dataAddressInfo.GeneralComments = simpleAddressInfo.GeneralComments;
+#pragma warning restore 612 //suppress obsolete warning
                 dataAddressInfo.RelatedURL = simpleAddressInfo.RelatedURL;
             }
 

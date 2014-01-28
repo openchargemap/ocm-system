@@ -14,7 +14,8 @@ namespace OCM.API.Common.Model.Extensions
             {
                 ID = source.ID,
                 Title = source.Title,
-                IsOperational = source.IsOperational
+                IsOperational = source.IsOperational,
+                IsUserSelectable = source.IsUserSelectable
             };
         }
     }

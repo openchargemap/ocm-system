@@ -27,9 +27,9 @@ namespace OCM.Core.Data
         public string Town { get; set; }
         public string StateOrProvince { get; set; }
         public string Postcode { get; set; }
-        public Nullable<int> CountryID { get; set; }
-        public Nullable<double> Latitude { get; set; }
-        public Nullable<double> Longitude { get; set; }
+        public int CountryID { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public string ContactTelephone1 { get; set; }
         public string ContactTelephone2 { get; set; }
         public string ContactEmail { get; set; }

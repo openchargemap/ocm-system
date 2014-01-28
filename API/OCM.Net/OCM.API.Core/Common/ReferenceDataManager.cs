@@ -60,7 +60,7 @@ namespace OCM.API.Common
 
             //list of Operators
             data.Operators = new List<Model.OperatorInfo>();
-            foreach (var source in dataModel.Operators)
+            foreach (var source in dataModel.Operators.OrderBy(o=>o.Title))
             {
                 data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
             }
@@ -74,7 +74,7 @@ namespace OCM.API.Common
 
             //list of Usage Types (public etc)
             data.UsageTypes = new List<Model.UsageType>();
-            foreach (var usage in dataModel.UsageTypes)
+            foreach (var usage in dataModel.UsageTypes.OrderBy(u=>u.Title))
             {
                 data.UsageTypes.Add(Model.Extensions.UsageType.FromDataModel(usage));
             }
