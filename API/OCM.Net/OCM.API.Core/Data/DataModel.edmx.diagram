@@ -69,6 +69,8 @@
         <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.MetadataFieldOption" Width="1.5" PointX="11.313163149782067" PointY="17.362051316239896" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_MetadataFieldOption_MetadataField" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_MetadataValue_MetadataFieldOption" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.RegisteredApplication" Width="1.5" PointX="3" PointY="33.5" />
+        <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_RegisteredApplication_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

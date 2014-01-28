@@ -53,5 +53,6 @@ namespace OCM.Core.Data
         public DbSet<MediaItem> MediaItems { get; set; }
         public DbSet<DataProviderUser> DataProviderUsers { get; set; }
         public DbSet<MetadataFieldOption> MetadataFieldOptions { get; set; }
+        public DbSet<RegisteredApplication> RegisteredApplications { get; set; }
     }
 }

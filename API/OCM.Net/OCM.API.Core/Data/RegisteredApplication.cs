@@ -12,20 +12,21 @@ namespace OCM.Core.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class UsageType
+    public partial class RegisteredApplication
     {
-        public UsageType()
-        {
-            this.ChargePoints = new HashSet<ChargePoint>();
-        }
-    
         public int ID { get; set; }
         public string Title { get; set; }
-        public Nullable<bool> IsPayAtLocation { get; set; }
-        public Nullable<bool> IsMembershipRequired { get; set; }
-        public Nullable<bool> IsAccessKeyRequired { get; set; }
-        public Nullable<bool> IsPublicAccess { get; set; }
+        public string WebsiteURL { get; set; }
+        public string Description { get; set; }
+        public bool IsEnabled { get; set; }
+        public bool IsWriteEnabled { get; set; }
+        public string PrimaryAPIKey { get; set; }
+        public string DeprecatedAPIKey { get; set; }
+        public string SharedSecret { get; set; }
+        public Nullable<System.DateTime> DateAPIKeyLastUsed { get; set; }
+        public System.DateTime DateCreated { get; set; }
+        public int UserID { get; set; }
     
-        public virtual ICollection<ChargePoint> ChargePoints { get; set; }
+        public virtual User User { get; set; }
     }
 }

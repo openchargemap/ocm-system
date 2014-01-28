@@ -23,6 +23,7 @@ namespace OCM.Core.Data
         public int ID { get; set; }
         public string Title { get; set; }
         public Nullable<bool> IsOperational { get; set; }
+        public bool IsUserSelectable { get; set; }
     
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
         public virtual ICollection<ConnectionInfo> ConnectionInfoes { get; set; }
