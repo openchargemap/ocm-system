@@ -72,9 +72,9 @@ namespace OCM.Import
                         ||
                         ( //very similar lat/lon
                         c.AddressInfo != null &&
-                            (c.AddressInfo.Latitude != null && Math.Round((double)c.AddressInfo.Latitude, 4) == Math.Round((double)item.AddressInfo.Latitude, 4))
+                            (Math.Round(c.AddressInfo.Latitude, 4) == Math.Round(item.AddressInfo.Latitude, 4))
                             &&
-                            (c.AddressInfo.Longitude != null && Math.Round((double)c.AddressInfo.Longitude, 4) == Math.Round((double)item.AddressInfo.Longitude, 4))
+                            (Math.Round(c.AddressInfo.Longitude, 4) == Math.Round(item.AddressInfo.Longitude, 4))
                         )
                 );
 
