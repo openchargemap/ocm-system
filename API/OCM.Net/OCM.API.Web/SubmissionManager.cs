@@ -91,12 +91,13 @@ namespace OCM.API.Common
                         //update does not correctly identify an existing poi
                         return false;
                     }
+ 
+                }
 
-                    //validate if minimal required data is present
-                    if (updatedPOI.AddressInfo.Title == null || updatedPOI.AddressInfo.Country == null || updatedPOI.AddressInfo.Latitude == null || updatedPOI.AddressInfo.Longitude == null)
-                    {
-                        return false;
-                    }
+                //validate if minimal required data is present
+                if (updatedPOI.AddressInfo.Title == null || updatedPOI.AddressInfo.Country == null)
+                {
+                    return false;
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
