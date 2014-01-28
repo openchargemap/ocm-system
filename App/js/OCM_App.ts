@@ -1276,7 +1276,7 @@ OCM_App.prototype.navigateToAddComment = function () {
     } else {
         app.showMessage("Please Sign In");
     }
-}
+};
 
 OCM_App.prototype.navigateToAddMediaItem = function () {
     this.logEvent("Navigate To: Add Media Item");
@@ -1289,7 +1289,7 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
     } else {
         app.showMessage("Please Sign In");
     }
-}
+};
 
 OCM_App.prototype.showConnectionError = function () {
     $("#progress-indicator").hide();

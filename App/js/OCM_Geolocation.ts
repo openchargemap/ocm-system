@@ -7,7 +7,7 @@ module OCM {
 
         constructor() {
 
-            //result for latest client gelocation attempt
+            //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
 
             //input/results for latest text geocoding attempt
@@ -54,7 +54,7 @@ module OCM {
         determineGeocodedLocation(locationText, successCallback) {
 
             //caller is searching for same (previously geocoded) text again, return last result
-            if (locationText == this.geocodingTextInput) {
+            if (locationText === this.geocodingTextInput) {
                 if (this.geocodingResultPos != null) {
                     successCallback(this.geocodingResultPos);
                     return false;
@@ -70,10 +70,10 @@ module OCM {
             geocoder.fetchGeocodeResult(locationText,
                 function (results) {
                     var locationPos = {
-                        'lat': results.latitude,
-                        'lng': results.longitude,
-                        'attribution': results.attribution,
-                        'resultsAvailable': results.resultsAvailable
+                        "lat": results.latitude,
+                        "lng": results.longitude,
+                        "attribution": results.attribution,
+                        "resultsAvailable": results.resultsAvailable
                     };
                     appContext.determineGeocodedLocationCompleted(locationPos, successCallback, null);
                 }
@@ -95,7 +95,7 @@ module OCM {
 
         determineGeocodedLocationCompleted(pos, successCallback, failureCallback) {
 
-            if (pos.resultsAvailable == true) {
+            if (pos.resultsAvailable === true) {
                 //convert geocoding service lat/lng result into browser coords, including position source data attribution
                 var geoPosition = {
                     coords: {
@@ -111,7 +111,7 @@ module OCM {
                 if (failureCallback) {
                     failureCallback();
                 } else {
-                    alert("The position of this address could not be determined automatically. You may wish to try starting with a simpler address.");
+                    alert("The position of this address could not be determined. You may wish to try starting with a simpler address.");
                 }
             }
         }
@@ -138,23 +138,25 @@ module OCM {
         getCardinalDirectionFromBearing(bearing) {
             //partly inspired by http://bryan.reynoldslive.com/post/Latitude2c-Longitude2c-Bearing2c-Cardinal-Direction2c-Distance2c-and-C.aspx
 
-            if (bearing >= 0 && bearing <= 22.5) return "N";
-            if (bearing >= 22.5 && bearing <= 67.5) return "NE";
-            if (bearing >= 67.5 && bearing <= 112.5) return "E";
-            if (bearing >= 112.5 && bearing <= 157.5) return "SE";
-            if (bearing >= 157.5 && bearing <= 202.5) return "S";
-            if (bearing >= 202.5 && bearing <= 247.5) return "SW";
-            if (bearing >= 247.5 && bearing <= 292.5) return "W";
-            if (bearing >= 292.5 && bearing <= 337.5) return "NW";
-            if (bearing >= 337.5 && bearing <= 360.1) return "N";
+            if (bearing >= 0 && bearing <= 22.5) { return "N"; }
+            if (bearing >= 22.5 && bearing <= 67.5) { return "NE"; }
+            if (bearing >= 67.5 && bearing <= 112.5) { return "E"; }
+            if (bearing >= 112.5 && bearing <= 157.5) { return "SE"; }
+            if (bearing >= 157.5 && bearing <= 202.5) { return "S"; }
+            if (bearing >= 202.5 && bearing <= 247.5) { return "SW"; }
+            if (bearing >= 247.5 && bearing <= 292.5) { return "W"; }
+            if (bearing >= 292.5 && bearing <= 337.5) { return "NW"; }
+            if (bearing >= 337.5 && bearing <= 360.1) { return "N"; }
 
             return "?";
         }
 
         getDrivingDistanceBetweenPoints(startLat, startLng, endLat, endLng, distanceUnit, completedCallback) {
-            if (typeof (google) != "undefined") {
+            if (typeof (google) !== "undefined") {
                 var unitSystem = google.maps.UnitSystem.IMPERIAL;
-                if (distanceUnit == "KM") unitSystem = google.maps.UnitSystem.METRIC;
+                if (distanceUnit === "KM") {
+                    unitSystem = google.maps.UnitSystem.METRIC;
+                }
 
                 var startPos = new google.maps.LatLng(startLat, startLng);
                 var endPos = new google.maps.LatLng(endLat, endLng);
