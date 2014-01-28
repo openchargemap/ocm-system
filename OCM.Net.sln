@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3CC82B5C-7EA9-484D-9C6E-791BD2E55563}"
 	ProjectSection(SolutionItems) = preProject
 		BuildPrerequisites.md = BuildPrerequisites.md
+		..\..\localhost.xml = ..\..\localhost.xml
 		README.md = README.md
 	EndProjectSection
 EndProject
