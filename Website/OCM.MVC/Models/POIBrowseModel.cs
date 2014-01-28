@@ -13,6 +13,7 @@ namespace OCM.MVC.Models
         public POIBrowseModel()
         {
             this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData();
+            this.AllowOptionalCountrySelection = true;
             //this.CountryIDs = new int[] { 1 }; //default to uk
         }
 
@@ -22,12 +23,13 @@ namespace OCM.MVC.Models
         public CoreReferenceData ReferenceData { get; set; }
 
         public bool ShowAdvancedOptions { get; set; }
+        public bool AllowOptionalCountrySelection { get; set; }
 
         public SelectList CountryList
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.Countries), this.CountryIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData.Countries), this.CountryIDs, AllowOptionalCountrySelection);
             }
         }
 
@@ -51,7 +53,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.StatusTypes), this.StatusTypeIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData.StatusTypes.Where(s=>s.IsUserSelectable==true)), this.StatusTypeIDs);
             }
         }
 

@@ -1,108 +1,119 @@
 ﻿@model OCM.API.Common.Model.ConnectionInfo
-
-<h2>
-    @if (Model.Reference == null)
-    {
-        @:OCM-CN-@Model.ID
-            }
-    else
-    {@Html.DisplayFor(modelItem => Model.Reference)}
-
-</h2>
-
+    
 @Html.HiddenFor(model => model.ID)
 
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.ConnectionType)
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="core">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.ConnectionType)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.ConnectionType.ID, (SelectList)ViewBag.ReferenceData.ConnectionTypeList)
+                @Html.ValidationMessageFor(model => model.ConnectionType)
+            </div>
+        </div>
     </div>
-    <div class="editor-field">
-        @Html.DropDownListFor(model => model.ConnectionType.ID, (SelectList)ViewBag.ReferenceData.ConnectionTypeList)
-        @Html.ValidationMessageFor(model => model.ConnectionType)
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="core">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Amps)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Amps)
+                @Html.ValidationMessageFor(model => model.Amps)
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="core">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Voltage)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Voltage)
+                @Html.ValidationMessageFor(model => model.Voltage)
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.StatusType)
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="core">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PowerKW)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.PowerKW)
+                @Html.ValidationMessageFor(model => model.PowerKW)
+            </div>
+        </div>
     </div>
-    <div class="editor-field">
-        @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList)
-        @Html.ValidationMessageFor(model => model.StatusType)
+
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="core">
+            <div class=" editor-label">
+                @Html.LabelFor(model => model.Quantity)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="core">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Level)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.Level.ID, (SelectList)ViewBag.ReferenceData.LevelList)
+                @Html.ValidationMessageFor(model => model.Level)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="extended">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.StatusType)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList)
+                @Html.ValidationMessageFor(model => model.StatusType)
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="extended">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.CurrentType)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.CurrentType.ID, (SelectList)ViewBag.ReferenceData.CurrentTypeList)
+                @Html.ValidationMessageFor(model => model.CurrentType)
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group" data-editormode="advanced">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Reference)
+            </div>
+            <div class="editor-field">
+
+                @Html.EditorFor(model => model.Reference)
+                @Html.ValidationMessageFor(model => model.Reference)
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.CurrentType)
-    </div>
-    <div class="editor-field">
-        @Html.DropDownListFor(model => model.CurrentType.ID, (SelectList)ViewBag.ReferenceData.CurrentTypeList)
-        @Html.ValidationMessageFor(model => model.CurrentType)
-    </div>
-</div>
 
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.Reference)
-    </div>
-    <div class="editor-field">
-
-        @Html.EditorFor(model => model.Reference)
-        @Html.ValidationMessageFor(model => model.Reference)
-    </div>
-</div>
-
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.Amps)
-    </div>
-    <div class="editor-field">
-        @Html.EditorFor(model => model.Amps)
-        @Html.ValidationMessageFor(model => model.Amps)
-    </div>
-</div>
-
-
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.Voltage)
-    </div>
-    <div class="editor-field">
-        @Html.EditorFor(model => model.Voltage)
-        @Html.ValidationMessageFor(model => model.Voltage)
-    </div>
-</div>
-
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.PowerKW)
-    </div>
-    <div class="editor-field">
-        @Html.EditorFor(model => model.PowerKW)
-        @Html.ValidationMessageFor(model => model.PowerKW)
-    </div>
-</div>
-<div class="form-group">
-    <div class=" editor-label">
-        @Html.LabelFor(model => model.Quantity)
-    </div>
-    <div class="editor-field">
-        @Html.EditorFor(model => model.Quantity)
-        @Html.ValidationMessageFor(model => model.Quantity)
-    </div>
-</div>
-<div class="form-group">
-    <div class="editor-label">
-        @Html.LabelFor(model => model.Level)
-    </div>
-    <div class="editor-field">
-        @Html.DropDownListFor(model => model.Level.ID, (SelectList)ViewBag.ReferenceData.LevelList)
-        @Html.ValidationMessageFor(model => model.Level)
-    </div>
-</div>
-
-<div class="form-group">
+<div class="form-group" data-editormode="extended">
     <div class="editor-label">
         @Html.LabelFor(model => model.Comments)
     </div>
@@ -111,3 +122,4 @@
         @Html.ValidationMessageFor(model => model.Comments)
     </div>
 </div>
+<hr />

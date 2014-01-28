@@ -4,58 +4,74 @@
 @Html.HiddenFor(model => model.UUID)
 
 <div class="row">
-    <div class="col-md-6">
-
+   
         <fieldset>
             <legend>Basic Information</legend>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.operationalStatus">
-                    @Html.LabelFor(model => model.StatusType)
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group" data-editormode="core">
+                        <div class="editor-label" data-localize="ocm.details.operationalStatus">
+                            @Html.LabelFor(model => model.StatusType)
+                        </div>
+                        <div class="editor-field">
+                            <span id="tip-statustype" data-toggle="tooltip" title="Operational Status, usually Operational or Not Operational. Available & In Use are reserved for live status updates.">
+                                @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList)
+                            </span>
+                            @Html.ValidationMessageFor(model => model.StatusType)
+                        </div>
+                    </div>
                 </div>
-                <div class="editor-field">
-                    <span id="tip-statustype" data-toggle="tooltip" title="Operational Status, usually Operational or Not Operational. Available & In Use are reserved for live status updates.">
-                        @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList)
-                    </span>
-                    @Html.ValidationMessageFor(model => model.StatusType)
+                <div class="col-sm-4">
+                    <div class="form-group" data-editormode="core">
+                        <div class="editor-label" data-localize="ocm.details.operator.sectionTitle">
+                            @Html.LabelFor(model => model.OperatorInfo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.DropDownListFor(model => model.OperatorInfo.ID, (SelectList)ViewBag.ReferenceData.OperatorList)
+                            @Html.ValidationMessageFor(model => model.OperatorInfo)
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.operator.sectionTitle">
-                    @Html.LabelFor(model => model.OperatorInfo)
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.OperatorInfo.ID, (SelectList)ViewBag.ReferenceData.OperatorList)
-                    @Html.ValidationMessageFor(model => model.OperatorInfo)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.usageType">
-                    @Html.LabelFor(model => model.UsageType)
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.UsageType.ID, (SelectList)ViewBag.ReferenceData.UsageTypeList)
-                    @Html.ValidationMessageFor(model => model.UsageType)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.usageCost">
-                    @Html.LabelFor(model => model.UsageCost)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.UsageCost)
-                    @Html.ValidationMessageFor(model => model.UsageCost)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.numberOfPoints">
-                    @Html.LabelFor(model => model.NumberOfPoints)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.NumberOfPoints)
-                    @Html.ValidationMessageFor(model => model.NumberOfPoints)
+                <div class="col-sm-4">
+                    <div class="form-group" data-editormode="core">
+                        <div class="editor-label" data-localize="ocm.details.usageType">
+                            @Html.LabelFor(model => model.UsageType)
+                        </div>
+                        <div class="editor-field">
+                            @Html.DropDownListFor(model => model.UsageType.ID, (SelectList)ViewBag.ReferenceData.UsageTypeList)
+                            @Html.ValidationMessageFor(model => model.UsageType)
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
+            
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group" data-editormode="core">
+                        <div class="editor-label" data-localize="ocm.details.numberOfPoints">
+                            @Html.LabelFor(model => model.NumberOfPoints)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.NumberOfPoints)
+                            @Html.ValidationMessageFor(model => model.NumberOfPoints)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group" data-editormode="core">
+                        <div class="editor-label" data-localize="ocm.details.usageCost">
+                            @Html.LabelFor(model => model.UsageCost)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.UsageCost)
+                            @Html.ValidationMessageFor(model => model.UsageCost)
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+           
+            <div class="form-group" data-editormode="extended">
                 <div class="editor-label" data-localize="ocm.details.generalComments">
                     @Html.LabelFor(model => model.GeneralComments)
                 </div>
@@ -65,67 +81,70 @@
                 </div>
             </div>
         </fieldset>
-    </div>
+</div>
+<div class="row">
+    @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
+    {
+        
+            <fieldset>
+                <legend>Advanced</legend>
+                <div class="form-group">
+                    <div class="editor-label" data-localize="ocm.details.submissionStatus">
+                        @Html.LabelFor(model => model.SubmissionStatus)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
+                        @Html.ValidationMessageFor(model => model.SubmissionStatus)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label" data-localize="ocm.details.dataProvider.sectionTitle">
+                        @Html.LabelFor(model => model.DataProvider)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownListFor(model => model.DataProvider.ID, (SelectList)ViewBag.ReferenceData.DataProviderList)
+                        @Html.ValidationMessageFor(model => model.DataProvider)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label" data-localize="ocm.details.dataProvider.providersReference">
+                        @Html.LabelFor(model => model.DataProvidersReference)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DataProvidersReference)
+                        @Html.ValidationMessageFor(model => model.DataProvidersReference)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label" data-localize="ocm.details.operator.operatorsReference">
+                        @Html.LabelFor(model => model.OperatorsReference)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.OperatorsReference)
+                        @Html.ValidationMessageFor(model => model.OperatorsReference)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label" data-localize="ocm.details.datePlanned">
+                        @Html.LabelFor(model => model.DatePlanned)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DatePlanned)
+                        @Html.ValidationMessageFor(model => model.DatePlanned)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label" data-localize="ocm.details.dateLastConfirmed">
+                        @Html.LabelFor(model => model.DateLastConfirmed)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.DateLastConfirmed)
+                        @Html.ValidationMessageFor(model => model.DateLastConfirmed)
+                    </div>
+                </div>
+                @Html.HiddenFor(model => model.DataQualityLevel)
 
-    <div class="col-md-6 well">
-        <fieldset>
-            <legend>Advanced</legend>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.submissionStatus">
-                    @Html.LabelFor(model => model.SubmissionStatus)
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
-                    @Html.ValidationMessageFor(model => model.SubmissionStatus)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.dataProvider.sectionTitle">
-                    @Html.LabelFor(model => model.DataProvider)
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.DataProvider.ID, (SelectList)ViewBag.ReferenceData.DataProviderList)
-                    @Html.ValidationMessageFor(model => model.DataProvider)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.dataProvider.providersReference">
-                    @Html.LabelFor(model => model.DataProvidersReference)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.DataProvidersReference)
-                    @Html.ValidationMessageFor(model => model.DataProvidersReference)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.operator.operatorsReference">
-                    @Html.LabelFor(model => model.OperatorsReference)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.OperatorsReference)
-                    @Html.ValidationMessageFor(model => model.OperatorsReference)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.datePlanned">
-                    @Html.LabelFor(model => model.DatePlanned)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.DatePlanned)
-                    @Html.ValidationMessageFor(model => model.DatePlanned)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="editor-label" data-localize="ocm.details.dateLastConfirmed">
-                    @Html.LabelFor(model => model.DateLastConfirmed)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.DateLastConfirmed)
-                    @Html.ValidationMessageFor(model => model.DateLastConfirmed)
-                </div>
-            </div>
-            @Html.HiddenFor(model => model.DataQualityLevel)
-
-        </fieldset>
-    </div>
+            </fieldset>
+        
+    }
 </div>

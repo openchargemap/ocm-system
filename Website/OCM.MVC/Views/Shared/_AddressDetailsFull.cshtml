@@ -1,0 +1,19 @@
+﻿@model OCM.API.Common.Model.AddressInfo
+
+<div class="col-md-4">
+    <strong class="ocm-label" data-localize="ocm.details.location.address">Nearest Address</strong>:
+    <address>
+        <div>@Html.DisplayFor(m => m.AddressLine1)</div>
+        <div>@Html.DisplayFor(m => m.AddressLine2)</div>
+        <div>@Html.DisplayFor(m => m.Town)</div>
+        <div>@Html.DisplayFor(m => m.StateOrProvince)</div>
+        <div>@Html.DisplayFor(m => m.Postcode)</div>
+        <div>@Html.DisplayFor(m => m.Country.Title)</div>
+    </address>
+</div>
+<div class="col-md-4">
+    <strong class="ocm-label" data-localize="ocm.details.location.streetView">Street View</strong>:
+    <div>
+        <a target="_blank" href="http://maps.google.com/?q=@Model.ToString()"><img class="img-thumbnail img-polaroid" src="http://maps.googleapis.com/maps/api/streetview?size=300x160&location=@Model.Latitude,@Model.Longitude&heading=235&sensor=false" /></a>
+    </div>
+</div>

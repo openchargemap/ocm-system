@@ -14,18 +14,13 @@
 
 @{
     var detailsCss = "details-container details-plain";
-    if (ViewBag.EnableSimpleView == true)
-    {
-        //detailsCss += " details-plain";
-    }
-    else
+    if (!ViewBag.EnableSimpleView == true)
     {
         <ol class="breadcrumb">
             <li>@Html.ActionLink("Home", "Index", "Home")</li>
             <li>@Html.ActionLink("Browse", "Index", "POI")</li>
             <li class="active">@Model.POI.AddressInfo.Title, @Model.POI.AddressInfo.Country.Title <small>OCM-@Model.POI.ID</small></li>
         </ol>
-
     }
 }
 
@@ -37,25 +32,17 @@
         {
             <div class="alert alert-info">Thank you, if required your submission will now wait in a queue for approval.</div>
         }
-            
-        <a @(ViewBag.EnableSimpleView == true?Html.Raw("target=\"_blank\""):Html.Raw("")) href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
-        
+
+        <a @(ViewBag.EnableSimpleView == true ? Html.Raw("target=\"_blank\"") : Html.Raw("")) href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit</a>
+
     </div>
 }
 
-
-@if (ViewBag.EnableSimpleView != true)
-{
-    <!--<div id="details-imageblock"></div>-->
-}
-else
-{
-}
 <div id="details-container" class="@detailsCss">
 
     <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.sectionTitle">charging location</small></h1>
     <div class="tabbable">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="poiTabs">
             <li class="active">
                 <a href="#tab-general" data-toggle="tab" data-localize="ocm.details.location.sectionTitle">Details</a>
             </li>
@@ -65,30 +52,33 @@ else
             <li>
                 <a href="#tab-equipment" data-toggle="tab" data-localize="ocm.details.equipment.sectionTitle">Equipment Info</a>
             </li>
-            <li>
-                <a href="#tab-comments" data-toggle="tab">
-                    <span data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments</span>
-                    (@if (Model.POI.UserComments != null)
-                    {
-                        @Model.POI.UserComments.Count
-                    }
-                    else
-                    {
-                        @Html.Raw(0)
-                    })
-                </a>
-            </li>
-            <li>
-                <a href="#tab-nearby" data-toggle="tab" data-localize="ocm.details.placesNearby.sectionTitle">Places Nearby</a>
-            </li>
-            <li>
-                <a href="#tab-media" data-toggle="tab">
-                    <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> (@if (Model.POI.MediaItems != null)
-                    { @Model.POI.MediaItems.Count }
-                    else
-                    { @Html.Raw(0) })
-                </a>
-            </li>
+            @if (ViewBag.EnablePreviewMode != true)
+            {
+                <li>
+                    <a href="#tab-comments" data-toggle="tab">
+                        <span data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments</span>
+                        (@if (Model.POI.UserComments != null)
+                        {
+                            @Model.POI.UserComments.Count
+                        }
+                        else
+                        {
+                            @Html.Raw(0)
+                        })
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab-nearby" data-toggle="tab" data-localize="ocm.details.placesNearby.sectionTitle">Places Nearby</a>
+                </li>
+                <li>
+                    <a href="#tab-media" data-toggle="tab">
+                        <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> (@if (Model.POI.MediaItems != null)
+                        { @Model.POI.MediaItems.Count }
+                        else
+                        { @Html.Raw(0) })
+                    </a>
+                </li>
+            }
         </ul>
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
@@ -184,7 +174,7 @@ else
                                             @Html.DisplayFor(m => m.POI.DataProvider.WebsiteURL)
 
                                         </p>
-                                        @if (Model.POI.DataProvider.DataProviderStatusType.ID == 20)
+                                        @if (Model.POI.DataProvider.DataProviderStatusType != null && Model.POI.DataProvider.DataProviderStatusType.ID == 20)
                                         {
                                             <div class="alert alert-info" data-localize="ocm.details.importedDataNotice">Note: This data is sourced automatically, changes should ideally be submitted to the data provider directly.</div>
                                         }
@@ -217,45 +207,48 @@ else
                     Html.RenderPartial("_ConnectionList", Model.POI.Connections);
                 }
             </div>
-            <div id="tab-comments" class="tab-pane">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><span data-localize="ocm.details.commentsAndRatings.addPrompt">Add your own comment/check-in for this location</span>:</p>
+            @if (ViewBag.EnablePreviewMode != true)
+            {
+                <div id="tab-comments" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><span data-localize="ocm.details.commentsAndRatings.addPrompt">Add your own comment/check-in for this location</span>:</p>
+                            @if (Session["UserID"] != null)
+                            {
+                                @Html.EditorFor(m => m.NewComment)
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            @Html.DisplayFor(m => m.POI.UserComments)
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-nearby" class="tab-pane">
+                </div>
+                <div id="tab-media" class="tab-pane">
+                    <p>
+                        <span data-localize="ocm.details.mediaItems.addPrompt">Upload your own photos for this location</span>:
                         @if (Session["UserID"] != null)
                         {
-                            @Html.EditorFor(m => m.NewComment)
+                            @Html.ActionLink("Upload", "AddMediaItem", "POI", new { id = Model.POI.ID }, new { @class = "btn btn-primary" })
                         }
                         else
                         {
-                            @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
                         }
-                    </div>
-                    <div class="col-md-6">
-                        @Html.DisplayFor(m => m.POI.UserComments)
-                    </div>
+
+
+                    </p>
+                    @if (Model.POI.MediaItems != null)
+                    {
+                        Html.RenderPartial("_MediaItemList", Model.POI.MediaItems);
+                    }
                 </div>
-            </div>
-            <div id="tab-nearby" class="tab-pane">
-            </div>
-            <div id="tab-media" class="tab-pane">
-                <p>
-                    <span data-localize="ocm.details.mediaItems.addPrompt">Upload your own photos for this location</span>:
-                    @if (Session["UserID"] != null)
-                    {
-                        @Html.ActionLink("Upload", "AddMediaItem", "POI", new { id = Model.POI.ID }, new { @class = "btn btn-primary" })
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
-                    }
-
-
-                </p>
-                @if (Model.POI.MediaItems != null)
-                {
-                    Html.RenderPartial("_MediaItemList", Model.POI.MediaItems);
-                }
-            </div>
+            }
         </div>
     </div>
 </div>
@@ -266,47 +259,17 @@ else
     $(document).ready(function () {
 
         //setup tabs
-        $('a#tab-general').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-
-        $('a#tab-map').click(function (e) {
+        $('#poiTabs a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            setTimeout(function () { map.invalidateSize(true); }, 300);
-
-        });
-
-        //fix map after tab shown
-        //('a[data-toggle="tab"]').on('shown', function (e) {
-        $('a[data-toggle="tab"]').on('shown', function (e) {
             if (e.target.hash == "#tab-map") {
-                map.invalidateSize(false);
+                //when map tab is shown, invalidate map to avoid redraw issue
+                setTimeout(function () { map.invalidateSize(true); }, 300);
             }
 
         });
 
-        $('a#tab-comments').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-
-        $('a#tab-equipment').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-
-        $('a#tab-nearby').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-
-        $('a#tab-media').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
 
         //setup map
 
@@ -317,9 +280,6 @@ else
         @Html.Raw(scriptContent)
 
         var itemPos = [lat, lng];
-
-        //setup map
-     
 
         // create the tile layer with correct attribution
         var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -338,7 +298,7 @@ else
         //getLocationImage(itemPos);
         </text>
                     }
-      
+
 
         //fetch nearby places
         getNearbyPlaces(itemPos[0], itemPos[1], 2);

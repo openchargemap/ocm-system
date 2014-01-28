@@ -33,8 +33,8 @@ namespace OCM.MVC.Controllers
             filter.StatusTypeIDs = this.ConvertNullableSelection(filter.StatusTypeIDs);
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
             filter.DataProviderIDs = this.ConvertNullableSelection(filter.DataProviderIDs);
-            
-            
+
+
             if (!String.IsNullOrWhiteSpace(filter.Country))
             {
                 //TODO: cache country id lookup
@@ -93,7 +93,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-            
+
             filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestSettings)filter);
             return View(filter);
 
@@ -140,7 +140,7 @@ namespace OCM.MVC.Controllers
             }
 
             POIViewModel viewModel = new POIViewModel();
-            viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID=0} };
+            viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
             viewModel.POI = poi;
 
             ViewBag.ReferenceData = new POIBrowseModel();
@@ -174,7 +174,7 @@ namespace OCM.MVC.Controllers
             var user = new UserManager().GetUser((int)Session["UserID"]);
             var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
 
-            if (user!=null)
+            if (user != null)
             {
                 var mediaItem = new MediaItem();
                 bool uploaded = htmlInputProvider.ProcessMediaItemSubmission(this.HttpContext.ApplicationInstance.Context, ref mediaItem, user.ID);
@@ -185,49 +185,93 @@ namespace OCM.MVC.Controllers
             }
 
             return View();
+
+            /* try
+             {
+                 int userId = (int)Session["UserID"];
+
+                 var files = Request.Files;
+                 string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
+                 string comment = collection["comment"];
+                 var tempFiles = new List<string>();
+
+                 string tempFolder = Server.MapPath("~/temp/uploads/");
+                 foreach (string file in Request.Files)
+                 {
+                     HttpPostedFileBase postedFile = Request.Files[file];
+                     if (postedFile != null && postedFile.ContentLength > 0)
+                     {
+                         string tmpFile = tempFolder + filePrefix + postedFile.FileName;
+                         postedFile.SaveAs(tmpFile);
+                         tempFiles.Add(tmpFile);
+                     }
+                 }
+
+                 var task = Task.Factory.StartNew(() =>
+                 {
+                     var mediaManager = new MediaItemManager();
+
+                     foreach (var tmpFile in tempFiles)
+                     {
+                         var photoAdded = mediaManager.AddPOIMediaItem(tempFolder, tmpFile, id, comment, false, userId);
+                     }
+
+                 }
+             , TaskCreationOptions.LongRunning);
+
+                 ViewBag.PoiId = id;
+                 ViewBag.UploadCompleted = true;
+                 return View();
+                 //return RedirectToAction("Details", new { id = id });
+             }
+             catch
+             {
+                 return View();
+             }*/
+        }
+
+        //[AuthSignedInOnly]
+        public ActionResult Add()
+        {
+            var refData = new POIBrowseModel();
+            refData.AllowOptionalCountrySelection = false;
+
+            ViewBag.ReferenceData = refData;
+            ViewBag.ConnectionIndex = 0; //conenction counter shared by equipment detais
+         
+            //get a default new POI using std core reference data
+            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
+            coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
+            coreReferenceData.ChargePoint.StatusType.ID = 50; //Operational
+            coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors
+            coreReferenceData.ChargePoint.SubmissionStatus = null; //let system decide on submit
+            coreReferenceData.ChargePoint.SubmissionStatusTypeID = null;
+            return View(coreReferenceData.ChargePoint);
+        }
+        
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Add(ChargePoint poi)
+        {
+            var refData = new POIBrowseModel();
+            refData.AllowOptionalCountrySelection = false;
+
+            ViewBag.ReferenceData = refData;
+            ViewBag.ConnectionIndex = 0; //conenction counter shared by equipment detais
             
-           /* try
+            if (Request["editoption"]=="addconnection")
             {
-                int userId = (int)Session["UserID"];
-
-                var files = Request.Files;
-                string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
-                string comment = collection["comment"];
-                var tempFiles = new List<string>();
-
-                string tempFolder = Server.MapPath("~/temp/uploads/");
-                foreach (string file in Request.Files)
-                {
-                    HttpPostedFileBase postedFile = Request.Files[file];
-                    if (postedFile != null && postedFile.ContentLength > 0)
-                    {
-                        string tmpFile = tempFolder + filePrefix + postedFile.FileName;
-                        postedFile.SaveAs(tmpFile);
-                        tempFiles.Add(tmpFile);
-                    }
-                }
-
-                var task = Task.Factory.StartNew(() =>
-                {
-                    var mediaManager = new MediaItemManager();
-
-                    foreach (var tmpFile in tempFiles)
-                    {
-                        var photoAdded = mediaManager.AddPOIMediaItem(tempFolder, tmpFile, id, comment, false, userId);
-                    }
-
-                }
-            , TaskCreationOptions.LongRunning);
-
-                ViewBag.PoiId = id;
-                ViewBag.UploadCompleted = true;
-                return View();
-                //return RedirectToAction("Details", new { id = id });
+                poi.Connections.Add(new ConnectionInfo());
+                return View(poi);
             }
-            catch
+            
+            if (Request["editoption"]=="preview")
             {
-                return View();
-            }*/
+                ViewBag.EnablePreviewMode = true;
+                return View(poi);
+            }
+
+            //otherwise process the add/edit submission
+            return Edit(poi);
         }
 
         //
@@ -249,83 +293,93 @@ namespace OCM.MVC.Controllers
         [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
         public ActionResult Edit(ChargePoint poi)
         {
-            
-            try
+            if (ModelState.IsValid)
             {
-                var user = new UserManager().GetUser((int)Session["UserID"]);
+                try
+                {
+                    var user = new UserManager().GetUser((int)Session["UserID"]);
 
-                //reset any values provided as -1 to a standard default (unknown etc)
-                if (poi.DataProviderID == -1 || poi.DataProviderID == null)
-                {
-                    poi.DataProvider = null;
-                    poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
-                }
-                if (poi.OperatorID == -1 || poi.OperatorID == null)
-                {
-                    poi.OperatorInfo = null;
-                    poi.OperatorID = (int)StandardOperators.UnknownOperator;
-                }
-
-                if (poi.StatusType!=null && (poi.StatusTypeID==-1 || poi.StatusTypeID==null))
-                {
-                    poi.StatusTypeID = poi.StatusType.ID;
-                }
-                if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
-                {
-                    poi.StatusType = null;
-                    poi.StatusTypeID = (int)StandardStatusTypes.Unknown;
-                }
-
-                if (poi.SubmissionStatusTypeID == -1)
-                {
-                    poi.SubmissionStatus = null;
-                    poi.SubmissionStatusTypeID = null;
-                }
-                
-                if (poi.Connections!=null)
-                {
-                    foreach (var connection in poi.Connections)
+                    //reset any values provided as -1 to a standard default (unknown etc)
+                    if (poi.DataProviderID == -1 || poi.DataProviderID == null)
                     {
-                        if (connection.ConnectionTypeID == -1 || connection.ConnectionTypeID == null)
+                        poi.DataProvider = null;
+                        poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
+                    }
+                    if (poi.OperatorID == -1 || poi.OperatorID == null)
+                    {
+                        poi.OperatorInfo = null;
+                        poi.OperatorID = (int)StandardOperators.UnknownOperator;
+                    }
+
+                    if (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null))
+                    {
+                        poi.StatusTypeID = poi.StatusType.ID;
+                    }
+                    if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
+                    {
+                        poi.StatusType = null;
+                        poi.StatusTypeID = (int)StandardStatusTypes.Unknown;
+                    }
+
+                    if (poi.SubmissionStatusTypeID == -1)
+                    {
+                        poi.SubmissionStatus = null;
+                        poi.SubmissionStatusTypeID = null;
+                    }
+
+                    if (poi.Connections != null)
+                    {
+                        foreach (var connection in poi.Connections)
                         {
-                            connection.ConnectionType = null;
-                            connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
-                        }
-                        if (connection.CurrentTypeID == -1)
-                        {
-                            connection.CurrentType = null;
-                            connection.CurrentTypeID = null;
-                        }
-                        if (connection.StatusTypeID == -1)
-                        {
-                            connection.StatusType = null;
-                            connection.StatusTypeID = (int)StandardStatusTypes.Unknown;
-                        }
-                        if (connection.LevelID == -1)
-                        {
-                            connection.Level = null;
-                            connection.LevelID = null;
+                            if (connection.ConnectionTypeID == -1 || connection.ConnectionTypeID == null)
+                            {
+                                connection.ConnectionType = null;
+                                connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
+                            }
+                            if (connection.CurrentTypeID == -1)
+                            {
+                                connection.CurrentType = null;
+                                connection.CurrentTypeID = null;
+                            }
+                            if (connection.StatusTypeID == -1)
+                            {
+                                connection.StatusType = null;
+                                connection.StatusTypeID = (int)StandardStatusTypes.Unknown;
+                            }
+                            if (connection.LevelID == -1)
+                            {
+                                connection.Level = null;
+                                connection.LevelID = null;
+                            }
                         }
                     }
-                }
-                //TODO: prevent null country/lat/long
 
-                if (new SubmissionManager().PerformPOISubmission(poi, user))
-                {
-                    if (poi.ID > 0)
+                    if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID==-1) ModelState.AddModelError("Country", "Required");
+                    
+                    //TODO: prevent null country/lat/long
+
+                    if (new SubmissionManager().PerformPOISubmission(poi, user))
                     {
-                        return RedirectToAction("Details", "POI", new { id = poi.ID, status="editsubmitted" });
+                        if (poi.ID > 0)
+                        {
+                            return RedirectToAction("Details", "POI", new { id = poi.ID, status = "editsubmitted" });
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index");
+                        }
                     }
                     else
                     {
-                        return RedirectToAction("Index");
+                        ViewBag.ValidationFailed = true;
                     }
+
+                }
+                catch
+                {
+                    //return View(poi);
                 }
 
-            }
-            catch
-            {
-                //return View(poi);
             }
 
             ViewBag.ReferenceData = new POIBrowseModel();

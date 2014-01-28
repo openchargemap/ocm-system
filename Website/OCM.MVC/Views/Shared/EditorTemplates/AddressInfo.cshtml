@@ -1,205 +1,261 @@
 ﻿@model OCM.API.Common.Model.AddressInfo
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
+        <!--begin map position editor-->
+        <h3>Map Position</h3>
+        <p class="text-info">
+            Please begin by placing the marker for this charging location at it's exact position on the map. Drag the map to mark the exact position of this charging equipment. Alternatively you can fill out the Nearest Address information and use that to position the map marker.
+        </p>
+        <p>
+            @if (Model.ID > 0)
+            {
+                <input type="button" class="btn btn-primary" value="Move marker back to original position" />
+            }
+            else
+            {
+                <input type="button" class="btn btn-primary" id="positionMarkerAtUserLocation" value="Start at my current location" data-toggle="popover" data-content="Map Marker has been positioned at your current location" />
+            }
+        </p>
+
+        <div id="map-canvas" class="map-box" style="width: 100%; height: 300px; margin-bottom: 1em;"></div>
+
+        <p class="well well-sm">
+            <span id="nearest-address"></span>
+            <input type="button" class="btn btn-success" id="copyAddress" value="Use this as the Nearest Address &gt;&gt;" data-toggle="popover" data-content="Address has been copied to Nearest Address details" />
+        </p>
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Latitude)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Latitude)
+                        @Html.ValidationMessageFor(model => model.Latitude)
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Longitude)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Longitude)
+                        @Html.ValidationMessageFor(model => model.Longitude)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="nearbypoi"></div>
+
+        <!--end map position editor -->
+        <!--begin nearest address details-->
         @Html.HiddenFor(model => model.ID)
 
-        <div class="form-group">
+        <h3 data-localize="ocm.details.location.sectionTitle">Nearest Address</h3>
+        <p class="text-info">
+            Please verify the nearest address details which will appear to users who are not using the map view.
+        </p>
+        <div class="form-group" data-editormode="core">
             <div class="editor-label" data-localize="ocm.details.location.title">
                 @Html.LabelFor(model => model.Title)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Title)
-                        @Html.ValidationMessageFor(model => model.Title)
-                        </div>
             </div>
-        <div class="form-group">
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "General location name e.g. High Street Car Park" } })
+                @Html.ValidationMessageFor(model => model.Title)
+            </div>
+        </div>
+        <div class="form-group" data-editormode="core">
             <div class="editor-label" data-localize="ocm.details.location.addressLine1">
                 @Html.LabelFor(model => model.AddressLine1)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.AddressLine1)
-                        @Html.ValidationMessageFor(model => model.AddressLine1)
-                        </div>
             </div>
-        <div class="form-group">
+            <div class="editor-field">
+                @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @class = "form-control", placeholder = "First line of Address" } })
+                @Html.ValidationMessageFor(model => model.AddressLine1)
+            </div>
+        </div>
+        <div class="form-group" data-editormode="core">
             <div class="editor-label" data-localize="ocm.details.location.addressLine2">
                 @Html.LabelFor(model => model.AddressLine2)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.AddressLine2)
-                        @Html.ValidationMessageFor(model => model.AddressLine2)
-                        </div>
             </div>
-        <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.town">
-                @Html.LabelFor(model => model.Town)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Town)
+            <div class="editor-field">
+                @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @class = "form-control", placeholder = "Second line of Address (if applicable)" } })
+                @Html.ValidationMessageFor(model => model.AddressLine2)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label" data-localize="ocm.details.location.town">
+                        @Html.LabelFor(model => model.Town)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Town, new { htmlAttributes = new { @class = "form-control", placeholder = "City or Town Name" } })
                         @Html.ValidationMessageFor(model => model.Town)
-                        </div>
-            </div>
-        <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.stateOrProvince">
-                @Html.LabelFor(model => model.StateOrProvince)
+                    </div>
                 </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.StateOrProvince)
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label" data-localize="ocm.details.location.stateOrProvince">
+                        @Html.LabelFor(model => model.StateOrProvince)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.StateOrProvince, new { htmlAttributes = new { @class = "form-control", placeholder = "State, Province or Region" } })
                         @Html.ValidationMessageFor(model => model.StateOrProvince)
-                        </div>
-            </div>
-        <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.postcode">
-                @Html.LabelFor(model => model.Postcode)
+                    </div>
                 </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Postcode)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label" data-localize="ocm.details.location.postcode">
+                        @Html.LabelFor(model => model.Postcode)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.Postcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Zip/Postal Code (if applicable)" } })
                         @Html.ValidationMessageFor(model => model.Postcode)
-                        </div>
-            </div>
-        <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.country">
-                @Html.LabelFor(model => model.Country)
+                    </div>
                 </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.Country.ID, (SelectList)ViewBag.ReferenceData.CountryList)
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label" data-localize="ocm.details.location.country">
+                        @Html.LabelFor(model => model.Country)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownListFor(model => model.Country.ID, (SelectList)ViewBag.ReferenceData.CountryList)
                         @Html.ValidationMessageFor(model => model.Country)
-                        </div>
-            </div>
-        <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.contactTelephone1">
-                @Html.LabelFor(model => model.ContactTelephone1)
+                    </div>
                 </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.ContactTelephone1)
-                        @Html.ValidationMessageFor(model => model.ContactTelephone1)
-                        </div>
             </div>
+        </div>
         <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.contactTelephone2">
-                @Html.LabelFor(model => model.ContactTelephone2)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.ContactTelephone2)
-                        @Html.ValidationMessageFor(model => model.ContactTelephone2)
-                        </div>
-            </div>
-        <div class="form-group">
-            <div class="editor-label" data-localize="ocm.details.location.contactEmail">
-                @Html.LabelFor(model => model.ContactEmail)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.ContactEmail)
-                        @Html.ValidationMessageFor(model => model.ContactEmail)
-                        </div>
-            </div>
-        <div class="form-group">
+            <input type="button" class="btn btn-warning" value="&lt;&lt; Position map marker at this address" id="positionMarkerFromAddress" data-toggle="popover" data-content="Marker has been moved to this address" />
+        </div>
+        <!--end nearest address details -->
+        <!--begin additional location details-->
+        <h3>Additional Location Details</h3>
+        <div class="form-group" data-editormode="core">
             <div class="editor-label" data-localize="ocm.details.accessComments">
                 @Html.LabelFor(model => model.AccessComments)
-                </div>
-                <div class="editor-field">
-                    @Html.TextAreaFor(model => model.AccessComments)
-                        @Html.ValidationMessageFor(model => model.AccessComments)
-                        </div>
             </div>
-        <div class="form-group">
+            <div class="editor-field">
+                @Html.TextAreaFor(model => model.AccessComments)
+                @Html.ValidationMessageFor(model => model.AccessComments)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label" data-localize="ocm.details.location.contactTelephone1">
+                        @Html.LabelFor(model => model.ContactTelephone1)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.ContactTelephone1)
+                        @Html.ValidationMessageFor(model => model.ContactTelephone1)
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" data-editormode="core">
+                    <div class="editor-label" data-localize="ocm.details.location.contactTelephone2">
+                        @Html.LabelFor(model => model.ContactTelephone2)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.ContactTelephone2)
+                        @Html.ValidationMessageFor(model => model.ContactTelephone2)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group" data-editormode="core">
+            <div class="editor-label" data-localize="ocm.details.location.contactEmail">
+                @Html.LabelFor(model => model.ContactEmail)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.ContactEmail)
+                @Html.ValidationMessageFor(model => model.ContactEmail)
+            </div>
+        </div>
+
+        <div class="form-group" data-editormode="core">
             <div class="editor-label" data-localize="ocm.details.location.addressRelatedURL">
                 @Html.LabelFor(model => model.RelatedURL)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.RelatedURL)
-                        @Html.ValidationMessageFor(model => model.RelatedURL)
-                        </div>
             </div>
-                    </div>
-    <div class="col-md-6">
-        <div id="map-canvas" class="map-box" style="width: 100%; height: 300px; margin-bottom: 1em;"></div>
-        <p class="text-info">Drag the map marker above to specify the exact position of this charging equipment.</p>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Latitude)
+            <div class="editor-field">
+                @Html.EditorFor(model => model.RelatedURL)
+                @Html.ValidationMessageFor(model => model.RelatedURL)
+            </div>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Latitude)
-            @Html.ValidationMessageFor(model => model.Latitude)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Longitude)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Longitude)
-            @Html.ValidationMessageFor(model => model.Longitude)
-        </div>
-
-        <div>
-           <!--
-            <input type="button" class="btn btn-default" value="Use Address" />
-            <input type="button" class="btn btn-default" value="Refresh Map" />
-               -->
-        </div>
+        <!-- end additional location details-->
     </div>
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script src="@Url.Content("~/Scripts/OCM/Editor/LocationEditor.js")"></script>
 <script>
 
-    //TODO: shadow marker for original marker pos, find near me, show geocoded address, option to adopt new address, show duplicates nearby
-    var map, poiPos;
 
+    //go-go-gadget map
     @{
-        var scriptContent = "var lat = " + Model.Latitude + "; var lng = " + Model.Longitude + ";";
+        var scriptContent = "var locationEditor = new LocationEditor(" + Model.Latitude + ", " + Model.Longitude + ", '"+Html.IdFor(m => m.Latitude)+"','"+Html.IdFor(m => m.Longitude)+"');";
     }
 
     @Html.Raw(scriptContent)
 
-    function initializeMap() {
+    google.maps.event.addDomListener(window, 'load', $.proxy(locationEditor.initializeMap, locationEditor));
 
-        // Enable the visual refresh
-        //google.maps.visualRefresh = true;
-
-        poiPos = new google.maps.LatLng(lat, lng);
-        var mapOptions = {
-            zoom: 16,
-            center: poiPos,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            panControl: true,
-            zoomControl: true,
-            scaleControl: true
-        };
-        map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
-
-        marker = new google.maps.Marker({
-            map: map,
-            draggable: true,
-            animation: google.maps.Animation.DROP,
-            position: poiPos
-        });
-
-        google.maps.event.addListener(marker, 'drag', setNewPOIPos);
-
+    @if (Model.ID<=0)
+    {
+        //adding new location, get user location as starting pos
+        <text>
+    //for add only, get user current position by default
+    locationEditor.getUserLocation();
+    </text>
     }
 
-    function setNewPOIPos(e) {
-        var newPos = e.latLng;
-        poiPos = newPos;
-        $("#@Html.IdFor(m => m.Latitude)").val(newPos.lat());
-        $("#@Html.IdFor(m => m.Longitude)").val(newPos.lng());
 
-      }
+    $(document).ready(function () {
+        $("#positionMarkerAtUserLocation").click(function () {
+            locationEditor.getUserLocation();
+            //hide popover after click
+            setTimeout(function () {
+                $('#positionMarkerAtUserLocation').popover('hide');
+            }, 2000);
+        });
 
-      function refreshMap() {
-          google.maps.event.trigger(map, 'resize');
-          map.setCenter(poiPos);
-      }
+        $("#copyAddress").click(function () {
+            locationEditor.useSuggestedAddress();
 
-      google.maps.event.addDomListener(window, 'load', initializeMap);
+            //hide popover after click
+            setTimeout(function () {
+                $('#copyAddress').popover('hide');
+            }, 2000);
+        });
 
-      google.maps.event.addListenerOnce(map, 'idle', function () {
-          refreshMap();
-      });
+        $("#positionMarkerFromAddress").click(function () {
+            locationEditor.lookupAddressPosition();
 
-      //go-go-gadget map
-      initializeMap();
+            //hide popover after click
+            setTimeout(function () {
+                $('#positionMarkerFromAddress').popover('hide');
+            }, 2000);
+        });
+
+        //init popovers & button visibility
+        $('#positionMarkerAtUserLocation').popover();
+        $('#copyAddress').popover();
+        $('#copyAddress').hide();
+        $('#positionMarkerFromAddress').popover();
+
+    });
 </script>
