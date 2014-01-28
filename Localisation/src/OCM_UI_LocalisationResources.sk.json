@@ -1,4 +1,4 @@
-var localisation_dictionary_sk ={
+{
   "_langTitle": "Slovak/slovenčina",
   "_langCode": "sk",
   "ocm": {
@@ -101,4 +101,4 @@ var localisation_dictionary_sk ={
       "progress": "Hľadám..."
     }
   }
-};
+}
