@@ -34,14 +34,15 @@ namespace OCM.API.Common.Model
 
         [DisplayName("Zip/Postcode"), StringLength(100), DataType(System.ComponentModel.DataAnnotations.DataType.PostalCode)]
         public string Postcode { get; set; }
-
-        public int? CountryID { get; set; }
+        
+        public int CountryID { get; set; }
+        [Required]
         public Country Country { get; set; }
 
         [DisplayName("Latitude"), Range(-90, 90), Required]
-        public double? Latitude { get; set; }
+        public double Latitude { get; set; }
         [DisplayName("Longitude"), Range(-180, 180), Required]
-        public double? Longitude { get; set; }
+        public double Longitude { get; set; }
 
         [DisplayName("Main Contact Phone"), StringLength(200), DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]
         public string ContactTelephone1 { get; set; }
