@@ -77,11 +77,9 @@ namespace OCM.API.OutputProviders
                     {
                         if (address != "") xml.WriteElementString("carwings:address", address);
                         if (item.AddressInfo.ContactTelephone1 != null) xml.WriteElementString("carwings:tel", item.AddressInfo.ContactTelephone1);
-                        if (item.AddressInfo.Latitude != null)
-                        {
-                            xml.WriteElementString("carwings:lat", item.AddressInfo.Latitude.ToString());
-                            xml.WriteElementString("carwings:lon", item.AddressInfo.Longitude.ToString());
-                        }
+                        xml.WriteElementString("carwings:lat", item.AddressInfo.Latitude.ToString());
+                        xml.WriteElementString("carwings:lon", item.AddressInfo.Longitude.ToString());
+                        
                     }
 
                     if (EnableGeoRSS)

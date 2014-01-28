@@ -56,8 +56,8 @@ namespace OCM.API.OutputProviders
                     xml.WriteElementString("Postcode", item.AddressInfo.Postcode);
 
                     if (item.AddressInfo.Country != null) xml.WriteElementString("Country", item.AddressInfo.Country.Title);
-                    if (item.AddressInfo.Latitude != null) xml.WriteElementString("Latitude", item.AddressInfo.Latitude.ToString());
-                    if (item.AddressInfo.Longitude != null) xml.WriteElementString("Longitude", item.AddressInfo.Longitude.ToString());
+                    xml.WriteElementString("Latitude", item.AddressInfo.Latitude.ToString());
+                    xml.WriteElementString("Longitude", item.AddressInfo.Longitude.ToString());
 
                     if (item.AddressInfo.Distance!=null)
                     {
@@ -72,7 +72,7 @@ namespace OCM.API.OutputProviders
                     if (item.AddressInfo.ContactEmail != null) xml.WriteElementString("ContactEmail", item.AddressInfo.ContactEmail);
                     if (item.AddressInfo.AccessComments != null) xml.WriteElementString("AccessComments", item.AddressInfo.AccessComments);
 #pragma warning disable 0612
-                    if (item.AddressInfo.GeneralComments != null) xml.WriteElementString("GeneralComments", item.AddressInfo.GeneralComments);
+                    //if (item.AddressInfo.GeneralComments != null) xml.WriteElementString("GeneralComments", item.AddressInfo.GeneralComments);
 #pragma warning restore 0612
                     if (item.AddressInfo.RelatedURL != null) xml.WriteElementString("RelatedURL", item.AddressInfo.RelatedURL);
 

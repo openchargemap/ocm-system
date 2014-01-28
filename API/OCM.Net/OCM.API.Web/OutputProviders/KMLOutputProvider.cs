@@ -49,13 +49,11 @@ namespace OCM.API.OutputProviders
                     xml.WriteElementString("name", item.AddressInfo.Title);
 
                     xml.WriteElementString("description", item.GetSummaryDescription(true));
-                    if (item.AddressInfo.Latitude != null)
-                    {
-                        xml.WriteStartElement("Point");
-                        string coords = item.AddressInfo.Longitude.ToString() + "," + item.AddressInfo.Latitude.ToString();
-                        xml.WriteElementString("coordinates", coords);
-                        xml.WriteEndElement();
-                    }
+                    
+                    xml.WriteStartElement("Point");
+                    string coords = item.AddressInfo.Longitude.ToString() + "," + item.AddressInfo.Latitude.ToString();
+                    xml.WriteElementString("coordinates", coords);
+                    xml.WriteEndElement();
 
                     xml.WriteEndElement();
                 }
