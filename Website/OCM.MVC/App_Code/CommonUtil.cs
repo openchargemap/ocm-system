@@ -30,6 +30,9 @@ namespace OCM.MVC
                 languages.Add(new KeyValuePair<string, string>("ru", "Russian/Pусский"));
                 languages.Add(new KeyValuePair<string, string>("el", "Greek/Ελληνική"));
                 languages.Add(new KeyValuePair<string, string>("ar", "العربية / Arabic"));
+                languages.Add(new KeyValuePair<string, string>("hu", "Hungarian/Magyar Nyelv"));
+                languages.Add(new KeyValuePair<string, string>("pt", "Portuguese/português"));
+                languages.Add(new KeyValuePair<string, string>("sk", "Slovak/slovenčina"));
                 
                 languages.Add(new KeyValuePair<string, string>("test", "Test (For Translators)"));
 
