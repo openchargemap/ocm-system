@@ -44,7 +44,7 @@ function OCM_Map() {
         }
     }
     catch (err) {
-        this.enableClustering = false;
+        this.mapOptions.enableClustering = false;
     }
 
 }
@@ -130,6 +130,17 @@ OCM_Map.prototype.initMap = function () {
 
     if (this.getParameter("iconset") != "") {
         this.mapOptions.iconSet = unescape(this.getParameter("iconset"));
+    }
+
+    if (this.getParameter("clustering") != "") {
+        var val = unescape(this.getParameter("clustering"));
+        if (val == "false")
+        {
+            this.mapOptions.enableClustering = false;
+        } else {
+            //default to true
+            this.mapOptions.enableClustering = true;
+        }
     }
 
     if (this.getParameter("maxresults") != "") {

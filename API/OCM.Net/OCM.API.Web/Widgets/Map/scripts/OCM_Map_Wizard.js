@@ -78,6 +78,10 @@ function refreshMap() {
         url_params += "&iconset="+$("#icon-set").val();
     }
 
+    if ($("#clustering").val() != "") {
+        url_params += "&clustering=" + $("#clustering").val();
+    }
+
     var embedHTML = "<iframe style=\"" + map_style + "\" src=\"http://openchargemap.org/api/widgets/map/?" + url_params + "\"></iframe>";
 
     document.getElementById("ocm-map-embed-html").value = embedHTML;
