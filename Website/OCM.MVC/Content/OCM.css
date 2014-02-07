@@ -1,4 +1,4 @@
-﻿.a-example-palette {
+.a-example-palette {
   color: #8cc63f;
   /*color-a*/
   color: #c6e29e;
@@ -81,7 +81,6 @@ div.footer {
 div#ocm_map_container {
   border-radius: 6px;
 }
-label,
 .display-label,
 .editor-label {
   display: block;
@@ -192,7 +191,8 @@ div.result {
 }
 #locationdetails-container {
   padding: 1em;
-  min-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
   color: white;
 }
 #map-container {
@@ -208,10 +208,10 @@ div.result {
 .details-container {
   position: relative;
   top: -700px;
-  overflow: auto;
   padding: 1em;
-  min-height: 500px;
-  border-radius: 8px;
+  /*overflow: auto;
+    min-height: 500px;
+         */
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
 }
@@ -303,6 +303,7 @@ div.stat {
   font-family: 'Oswald', Arial, sans-serif;
   font-weight: 300;
   padding-top: 14px;
+  height: 42px;
 }
 .navbar-inverse {
   background-color: #2c3e50;

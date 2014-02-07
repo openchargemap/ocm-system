@@ -96,7 +96,7 @@ footer, div.footer {
     border-radius: 6px;
 }
 
-label, .display-label, .editor-label {
+.display-label, .editor-label {
     display: block;
     float: left;
     margin-right: 20px;
@@ -216,7 +216,8 @@ div.result {
 
 #locationdetails-container {
     padding: 1em;
-    min-height: 400px;
+    overflow-y:auto;
+    overflow-x:hidden;
     color: white;
 }
 
@@ -238,10 +239,11 @@ div.details-container {
 .details-container {
     position: relative;
     top: -700px;
-    overflow: auto;
+   
     padding: 1em;
+     /*overflow: auto;
     min-height: 500px;
-    border-radius: 8px;
+         */
     background-color: @color-black-semitrans;
     color: white;
 
@@ -349,6 +351,7 @@ div.stat {
     font-family: @font-headings;
     font-weight: 300;
     padding-top: 14px;
+    height:42px;
 }
 
 
