@@ -34,6 +34,21 @@ namespace OCM.API.Common
             return Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
         }
 
+        /// <summary>
+        /// Populates extended properties (reference data etc) of a simple POI from data model, useful for previewing as a fully populated new/edited poi
+        /// </summary>
+        /// <param name="poi"></param>
+        /// <returns></returns>
+        public Model.ChargePoint PreviewPopulatedPOIFromModel(Model.ChargePoint poi)
+        {
+            var dataModel = new OCMEntities();
+
+            Core.Data.ChargePoint dataPreviewPOI = new Core.Data.ChargePoint();
+            PopulateChargePoint_SimpleToData(poi, dataPreviewPOI, dataModel);
+
+            return Model.Extensions.ChargePoint.FromDataModel(dataPreviewPOI);
+        }
+
         [DbFunctionAttribute("OCM.Core.Data.OCMEntities.Store", "udf_GetDistanceFromLatLonKM")]
         public static double? GetDistanceFromLatLonKM(double? Latitude1, double? Longitude1, double? Latitude2, double? Longitude2)
         {
