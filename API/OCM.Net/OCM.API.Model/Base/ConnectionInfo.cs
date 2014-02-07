@@ -10,7 +10,9 @@ namespace OCM.API.Common.Model
     {
         public int ID { get; set; }
 
+        
         public int? ConnectionTypeID { get; set; }
+        [DisplayName("Connection Type")]
         public ConnectionType ConnectionType { get; set; }
 
         [DisplayName("Operators Own Ref"), StringLength(100)]

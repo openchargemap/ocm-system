@@ -100,7 +100,9 @@ namespace OCM.API.Common.Model
             address.RelatedURL = this.RelatedURL;
             address.Distance = this.Distance;
             address.DistanceUnit = this.DistanceUnit;
+#pragma warning disable 0612
             address.GeneralComments = this.GeneralComments;
+#pragma warning restore 0612
 
             return address;
         }
