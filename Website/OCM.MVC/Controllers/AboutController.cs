@@ -18,6 +18,11 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
+        public ActionResult Terms()
+        {
+            return View();
+        }
+
         /// <summary>
         /// /Contact
         /// </summary>

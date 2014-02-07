@@ -64,7 +64,7 @@
                         <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown">browse <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
-                            <li><a href="http://openchargemap.org/app">add a location</a></li>
+                            <li><a href="@Url.Action("Add", "POI")">add a location</a></li>
                             <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
                             <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
                         </ul>
@@ -88,6 +88,7 @@
                         <a href="@Url.Action("Index", "About")" class="dropdown-toggle" data-toggle="dropdown">about <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("Index", "About")">about</a></li>
+                            <li><a href="@Url.Action("Terms", "About")">terms &amp; privacy</a></li>
                             <li><a href="@Url.Action("Contact", "About")">contact</a></li>
                         </ul>
                     </li>
@@ -153,7 +154,6 @@
         </footer>
     </div>
 
-    <!--@Scripts.Render("~/bundles/modernizr")-->
     <script src="~/scripts/bootstrap.min.js"></script>
     
     @RenderSection("scripts", required: false)
