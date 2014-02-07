@@ -1,4 +1,5 @@
-//TODO: shadow marker for original marker pos, find near me, show geocoded address, option to adopt new address, show duplicates nearby
+//Note: this class is built using TypeScript, only the .ts file should be edited
+//TODO: shadow marker for original marker pos, show duplicates nearby
 var LocationEditor = (function () {
     function LocationEditor(startLat, startLng, latControlId, lngControlId) {
         this.map = null;
@@ -112,8 +113,14 @@ var LocationEditor = (function () {
     };
 
     LocationEditor.prototype.refreshMap = function () {
-        google.maps.event.trigger(this.map, "resize");
-        this.map.setCenter(this.poiPos);
+        this.logMessage("Refreshing map..");
+        var appContext = this;
+
+        //TODO: support google or osm
+        setTimeout(function () {
+            google.maps.event.trigger(appContext.map, "resize");
+            appContext.map.setCenter(appContext.poiPos);
+        }, 300);
     };
 
     LocationEditor.prototype.getUserLocation = function () {
@@ -225,6 +232,11 @@ var LocationEditor = (function () {
                     $("#AddressInfo_AddressLine1").val(address.bridleway);
                 }
 
+                if ($("#AddressInfo_AddressLine1").val() !== "") {
+                    //use address line 1 as title if not already set
+                    $("#AddressInfo_Title").val($("#AddressInfo_AddressLine1").val());
+                }
+
                 $("#AddressInfo_AddressLine2").val(address.suburb);
 
                 if (!address.suburb && address.hamlet) {
@@ -269,7 +281,10 @@ var LocationEditor = (function () {
         address += $("#AddressInfo_Country_ID option:selected").text();
 
         console.log("Finding lat/lon of address.." + address);
+        this.beginGeocodingFromPlacename(address);
+    };
 
+    LocationEditor.prototype.beginGeocodingFromPlacename = function (address) {
         var appContext = this;
         var geocoding = new OCM.Geolocation();
         geocoding.ocm_data = new OCM.API();
@@ -306,18 +321,35 @@ var LocationEditor = (function () {
         var output = "<h4>Charging Locations Nearby</h4>";
 
         if (poiList.length > 0) {
-            output += "<p>The following locations already exist. Please ensure you are not adding a duplicate. You can edit any of these listings if required:</p>";
+            output += "<p class='alert alert-danger'>The following locations already exist nearby. Please ensure you are not adding a duplicate. You can edit any of these listings if required instead:</p>";
         } else {
-            output += "<p>There are no locations listed nearby.</p>";
+            output += "<p class='alert alert-info'>There are no locations listed nearby.</p>";
         }
 
         for (var i = 0; i < poiList.length; i++) {
             var poi = poiList[i];
             var url = "http://openchargemap.org/site/poi/details/" + poi.ID;
-            output += "<li><a target='_blank' href=\"" + url + "\">OCM-" + poi.ID + " : " + poi.AddressInfo.Title + "</a> (" + (Math.round(poi.AddressInfo.Distance * 10) / 10) + " Miles)</li>";
+            if (poi.ID === poiId) {
+                output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title + " <span class='label label-info'>Being Edited</span></li>";
+            } else {
+                output += "<li><a target='_blank' href=\"" + url + "\">OCM-" + poi.ID + " : " + poi.AddressInfo.Title + "</a> (" + (Math.round(poi.AddressInfo.Distance * 10) / 10) + " Miles)</li>";
+            }
         }
+
         output += "</ul>";
         $("#nearbypoi").html(output);
+    };
+
+    LocationEditor.prototype.logMessage = function (msg) {
+        if (console) {
+            console.log(msg);
+        }
+    };
+
+    LocationEditor.prototype.positionMarkerAtTextLocation = function (location) {
+        if (location.length > 4) {
+            this.beginGeocodingFromPlacename(location);
+        }
     };
     return LocationEditor;
 })();

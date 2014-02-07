@@ -1,13 +1,20 @@
 ﻿@using OCM.API.Common.Model;
 @model OCM.API.Common.Model.ChargePoint
 
-@{
+@if (ViewBag.EnableEditView == false)
+{
+    ViewBag.Title = "Add Charging Location";
+    <h2>Add a Charging Location</h2>
+    <script>var enableEditMode = false; var poiId = 0;</script>
+}
+else
+{
     ViewBag.Title = "Edit Charging Location";
+    <script>var enableEditMode = true; var poiId = @(Model.ID)</script>
 }
 
-<h1>Edit Charging Location <small>OCM-@Model.ID : @Model.AddressInfo.Title</small></h1>
 
-@using (Html.BeginForm("Edit", "POI", FormMethod.Post, new { @class="form"}))
+@using (Html.BeginForm("Edit", "POI", FormMethod.Post, new { @class = "form", id = "editor" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -15,50 +22,266 @@
     @Html.HiddenFor(model => model.ID)
     @Html.HiddenFor(model => model.UUID)
 
-    <div class="form-actions">
-        <a href="@Url.Action("Details", "POI", new { id = Model.ID })" class="btn btn-info">Cancel</a>
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
-    
-    
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab-location" data-toggle="tab" data-localize="ocm.details.location.sectionTitle">Location</a></li>
-            <li><a href="#tab-general" data-toggle="tab" data-localize="ocm.details.generalDetails">Details</a></li>
-            <li><a href="#tab-equipment" data-toggle="tab" data-localize="ocm.details.equipmentDetails.sectionTitle">Equipment Info</a></li>
-            <li class="dropdown">
 
-                <a class="dropdown-toggle" data-toggle="dropdown" id="dropdownAdvanced" href="#">Advanced <b class="caret"></b></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownAdvanced">
-                    <li><a href="#tab-metadata" data-toggle="tab" data-localize="ocm.details.metadataValues.sectionTitle">Metadata</a></li>
-                </ul>
+    if (ViewBag.EnablePreviewMode == true)
+    {
 
-            </li>
+        //setup flags to signal to details view that we're doing a preview
+        ViewBag.EnableSimpleView = true;
 
-        </ul>
+        <!--begin preview dialog-->
+        <div class="modal fade" id="modalpreview" tabindex="-1" role="dialog" aria-labelledby="modalpreviewtitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="modaltitle">Preview Submission</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <input type="button" class="btn btn-primary" value="Edit" id="preview-edit" />
+                            <button type="submit" class="btn btn-success">Submit changes</button>
+                        </div>
 
-        <div class="tab-content">
+                        @Html.Partial("_TermsLink")
+                        @Html.Partial("Details", new OCM.MVC.Models.POIViewModel() { POI = Model })
 
-            <div id="tab-location" class="tab-pane active">
-                @Html.EditorFor(model => model.AddressInfo)
-            </div>
-            <div id="tab-general" class="tab-pane">
-                @Html.Partial("_EditPOIBasicDetails", Model)
-            </div>
-            <div id="tab-equipment" class="tab-pane">
-                <div class="alert alert-info">You should use this section to specify the specific types of charging equipment available at this location, giving as much information as possible.</div>
-                @Html.EditorFor(model => model.Connections)
-            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
-            <div id="tab-metadata" class="tab-pane">
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.MetadataValues)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.MetadataValues)
-                    @Html.ValidationMessageFor(model => model.MetadataValues)
+                    </div>
                 </div>
             </div>
         </div>
+        <!--end preview dialog-->
+
+        <h3 id="editheading">Edit Submission:</h3>
+        <div class="checkbox" style="display:none;">
+            <label>
+                <input type="checkbox" value="" id="editExtendedMode">
+                Use Advanced Editor
+            </label>
+        </div>
+
+
+
+        <p class="text-info">Select a section below to make changes:</p>
+    }
+    else
+    {
+        <text>
+            <div class="alert alert-info">
+                Thanks for taking the time to contribute information, please provide as much detail as you can about this charging location. Please <strong>do not</strong> submit private residences (such as your home).
+
+                @if (Session["UserID"] == null)
+                {
+                    <div class="text text-warning">You are not signed in. You can proceed with your submission but certain features may be unavailable.</div>
+                    @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Edit", "POI", new { id = Model.ID }) }, new { @class = "btn btn-sm btn-success" })
+                }
+            </div>
+        </text>
+    }
+
+    @Html.Partial("_POIListingStatus", Model)
+
+    <div class="panel-group" id="wizardsteps">
+
+        @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver">
+                            <span class="glyphicon glyphicon-map-marker"></span> Approver Options
+                        </a>
+                    </h4>
+                </div>
+                <div id="step-approver" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+                        <p class="text-info">To make a new listing public it's Submission Status must be set to <strong>Submission Published</strong>.</p>
+                        <div class="form-group">
+                            <div class="editor-label" data-localize="ocm.details.submissionStatus">
+                                @Html.LabelFor(model => model.SubmissionStatus)
+                            </div>
+                            <div class="editor-field">
+                                @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
+                                @Html.ValidationMessageFor(model => model.SubmissionStatus)
+                            </div>
+                        </div>
+
+                        <input type="submit" value="Save Changes" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver-adv">
+                            <span class="glyphicon glyphicon-wrench"></span> Advanced
+                        </a>
+                    </h4>
+                </div>
+                <div id="step-approver-adv" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p class="text-info">This section contains options which are not usually changed or are deprecated.</p>
+                        <div class="form-group">
+                            <div class="editor-label" data-localize="ocm.details.dataProvider.sectionTitle">
+                                @Html.LabelFor(model => model.DataProvider)
+                            </div>
+                            <div class="editor-field">
+                                @Html.DropDownListFor(model => model.DataProvider.ID, (SelectList)ViewBag.ReferenceData.DataProviderList)
+                                @Html.ValidationMessageFor(model => model.DataProvider)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="editor-label" data-localize="ocm.details.dataProvider.providersReference">
+                                @Html.LabelFor(model => model.DataProvidersReference)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.DataProvidersReference)
+                                @Html.ValidationMessageFor(model => model.DataProvidersReference)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="editor-label" data-localize="ocm.details.operator.operatorsReference">
+                                @Html.LabelFor(model => model.OperatorsReference)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.OperatorsReference)
+                                @Html.ValidationMessageFor(model => model.OperatorsReference)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="editor-label" data-localize="ocm.details.datePlanned">
+                                @Html.LabelFor(model => model.DatePlanned)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.DatePlanned)
+                                @Html.ValidationMessageFor(model => model.DatePlanned)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="editor-label" data-localize="ocm.details.dateLastConfirmed">
+                                @Html.LabelFor(model => model.DateLastConfirmed)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.DateLastConfirmed)
+                                @Html.ValidationMessageFor(model => model.DateLastConfirmed)
+                            </div>
+                        </div>
+                        @Html.HiddenFor(model => model.DataQualityLevel)
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+
+            @Html.HiddenFor(model => model.DataProvidersReference)
+            @Html.HiddenFor(model => model.DataQualityLevel)
+            @Html.HiddenFor(model => model.DatePlanned)
+            @Html.HiddenFor(model => model.DateLastConfirmed)
+            @Html.HiddenFor(model => model.OperatorsReference)
+            @Html.HiddenFor(model => model.SubmissionStatusTypeID)
+            @Html.HiddenFor(model => model.DataProviderID)
+        }
+
+
+        <!--step 1-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step1">
+                        <span class="glyphicon glyphicon-map-marker"></span> Step 1 - Location Details
+                    </a>
+                </h4>
+            </div>
+            <div id="step1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <!--begin location editor-->
+                    @Html.EditorFor(model => model.AddressInfo)
+
+                    <!--end location editor-->
+                </div>
+            </div>
+        </div>
+
+        <!--step 2-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step2">
+                        <span class="glyphicon glyphicon-info-sign"></span> Step 2 - Basic Charging Details
+                    </a>
+                </h4>
+            </div>
+            <div id="step2" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <!--begin basic detail editor-->
+                    <div class="container">
+                        @Html.Partial("_EditPOIBasicDetails", Model)
+                    </div>
+                    <!--end basic details editor-->
+                </div>
+            </div>
+        </div>
+
+        <!--step 3-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step3">
+                        <span class="glyphicon glyphicon-flash"></span> Step 3 - <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="step3" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <!--begin basic detail editor-->
+                    <div id="tab-equipment">
+
+                        <p>This section details the exact type and power level of connections available at this site. All details are optional but please provide as much info as possible. </p>
+                        @for (int i = 0; i < Model.Connections.Count; i++)
+                        {
+                            var connectionItem = Model.Connections[i];
+                            <h4>
+                                Equipment Item @(i + 1) :
+                                @if (connectionItem.Reference == null)
+                                {
+                                    if (connectionItem.ID > 0)
+                                    {
+                                        @:OCM-CN-@connectionItem.ID
+                                    }
+                                }
+                                <input type="button" id="remove-equipment-@(i + "-" + connectionItem.ID)" value="Remove" class="btn btn-danger" />
+                            </h4>
+                            @Html.EditorFor(m => Model.Connections[i])
+                        }
+
+
+                        <input type="button" id="additional-equipment" value="Add Additional Equipment" class="btn btn-info" />
+                        <input type="hidden" id="editoption" name="editoption" />
+                    </div>
+                    <!--end basic details editor-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        @Html.Partial("_TermsLink")
+
+        <a href="@Url.Action("Details", "POI", new { id = Model.ID })" class="btn btn-info">Cancel</a>
+
+        <input type="button" value="Preview" class="btn btn-success" id="preview" />
+        @if (ViewBag.EnablePreviewMode == true)
+        {
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        }
+
+    </div>
 
 }
 
@@ -66,34 +289,80 @@
     @Scripts.Render("~/bundles/jqueryval")
 }
 
+<script src="@Url.Content("~/Scripts/OCM/SharedLibs/OCM_Data.js")"></script>
+<script src="@Url.Content("~/Scripts/OCM/SharedLibs/OCM_Geolocation.js")"></script>
+
 <script>
 
     $(document).ready(function () {
 
-
-        //setup tabs
-        $('a#tab-general').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
+        $("#editExtendedMode").change(function () {
+            refreshEditorMode();
         });
 
-        //fix map after tab shown
-        $('a[data-toggle="tab"]').on('shown', function (e) {
-            if (e.target.hash == "#tab-location") {
-                refreshMap();
+        //FIXME: use bootstrap styles for form controls
+        $(".text-box, select, textarea").addClass("form-control");
+
+        refreshEditorMode();
+
+        $("#additional-equipment").click(function () {
+            //submit form and request additional equipment
+            $("#editoption").val("addconnection");
+            $("#editor").submit();
+        });
+
+        $('[id^="remove-equipment"]').click(
+            function () {
+                //submit form and request equipment removal
+                $("#editoption").val(this.id);
+                $("#editor").submit();
             }
+            );
+
+        $("#preview").click(function () {
+            //submit form and request additional equipment
+            $("#editoption").val("preview");
+            $("#editor").submit();
         });
 
-        $('a#tab-equipment').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
+        $("#preview-edit").click(function () {
+            //hide preview and expand edit
+            $("#modalpreview").modal("hide");
+            $('#step1').collapse('show');
+
         });
 
-        $('a#tab-metadata').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+        if (enableEditMode == true) {
+            //show preview (if enabled)
+            $('#modalpreview').modal('show');
+            //collapse all edit sections
+            $('#step1').collapse('hide');
+            $('#step2').collapse('hide');
+            $('#step3').collapse('hide');
 
+            //refresh map view when collapsed region is opened
+            $('#step1').on('shown.bs.collapse', function (e) {
+                locationEditor.refreshMap();
+            })
+        }
     });
+
+
+    function refreshEditorMode() {
+        var extendedMode = false;
+        if (document.getElementById('editExtendedMode') != null) {
+            extendedMode = document.getElementById('editExtendedMode').checked;
+        }
+
+        if (extendedMode === true) {
+            $("[data-editormode='extended']").show();
+        } else {
+            $("[data-editormode='extended']").hide();
+            $("[data-editormode='advanced']").hide();
+        }
+
+        //TODO: advanced mode
+    }
+
 
 </script>

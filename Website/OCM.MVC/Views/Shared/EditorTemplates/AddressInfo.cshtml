@@ -5,53 +5,74 @@
         <!--begin map position editor-->
         <h3>Map Position</h3>
         <p class="text-info">
-            Please begin by placing the marker for this charging location at it's exact position on the map. Drag the map to mark the exact position of this charging equipment. Alternatively you can fill out the Nearest Address information and use that to position the map marker.
-        </p>
-        <p>
-            @if (Model.ID > 0)
-            {
-                <input type="button" class="btn btn-primary" value="Move marker back to original position" />
-            }
-            else
-            {
-                <input type="button" class="btn btn-primary" id="positionMarkerAtUserLocation" value="Start at my current location" data-toggle="popover" data-content="Map Marker has been positioned at your current location" />
-            }
+            1. Please begin by placing the marker for this charging location at it's exact position on the map. Alternatively you can fill out the Nearest Address information below and use that to position the map marker.
         </p>
 
+        <div class="row" style="margin:1em;">
+            <div class="col-sm-6">
+                @if (Model.ID > 0)
+                {
+                    <input type="button" class="btn btn-primary" value="Move marker to original position" />
+                }
+                else
+                {
+                    <input type="button" class="btn btn-primary" id="positionMarkerAtUserLocation" value="Use my current location" data-toggle="popover" data-content="Map Marker has been positioned at your current location" />
+                }
+
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="text-location" placeholder="or find a place e.g. Bond Street, London, UK" />
+                    <input type="button" class="btn btn-default" id="positionMarkerAtTextLocation" value="Find Place" />
+                </div>
+            </div>
+
+        </div>
+
+        <p class="text text-info">2. Drag the map to mark the exact position of this charging equipment. </p>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         <div id="map-canvas" class="map-box" style="width: 100%; height: 300px; margin-bottom: 1em;"></div>
 
         <p class="well well-sm">
             <span id="nearest-address"></span>
             <input type="button" class="btn btn-success" id="copyAddress" value="Use this as the Nearest Address &gt;&gt;" data-toggle="popover" data-content="Address has been copied to Nearest Address details" />
         </p>
-        <div class="row">
-            <div class="col-sm-6">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
 
-                <div class="form-group" data-editormode="core">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.Latitude)
-                    </div>
-                    <div class="editor-field">
-                        @Html.EditorFor(model => model.Latitude)
-                        @Html.ValidationMessageFor(model => model.Latitude)
-                    </div>
-                </div>
+        <div class="form-group" data-editormode="core">
+            <div>
+                @Html.LabelFor(model => model.Latitude, new { @class = "control-label col-sm-2" })
             </div>
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
-                    <div class="editor-label">
-                        @Html.LabelFor(model => model.Longitude)
-                    </div>
-                    <div class="editor-field">
-                        @Html.EditorFor(model => model.Longitude)
-                        @Html.ValidationMessageFor(model => model.Longitude)
-                    </div>
-                </div>
-
+                @Html.EditorFor(model => model.Latitude)
+                @Html.ValidationMessageFor(model => model.Latitude)
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group" data-editormode="core">
+            <div>
+                @Html.LabelFor(model => model.Longitude, new { @class = "control-label col-sm-2" })
+            </div>
+            <div class="col-sm-6">
+                @Html.EditorFor(model => model.Longitude)
+                @Html.ValidationMessageFor(model => model.Longitude)
             </div>
         </div>
 
-        <div id="nearbypoi"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="container" id="nearbypoi"></div>
 
         <!--end map position editor -->
         <!--begin nearest address details-->
@@ -62,28 +83,28 @@
             Please verify the nearest address details which will appear to users who are not using the map view.
         </p>
         <div class="form-group" data-editormode="core">
-            <div class="editor-label" data-localize="ocm.details.location.title">
+            <div data-localize="ocm.details.location.title">
                 @Html.LabelFor(model => model.Title)
             </div>
-            <div class="editor-field">
+            <div>
                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "General location name e.g. High Street Car Park" } })
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
         <div class="form-group" data-editormode="core">
-            <div class="editor-label" data-localize="ocm.details.location.addressLine1">
+            <div data-localize="ocm.details.location.addressLine1">
                 @Html.LabelFor(model => model.AddressLine1)
             </div>
-            <div class="editor-field">
+            <div>
                 @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @class = "form-control", placeholder = "First line of Address" } })
                 @Html.ValidationMessageFor(model => model.AddressLine1)
             </div>
         </div>
         <div class="form-group" data-editormode="core">
-            <div class="editor-label" data-localize="ocm.details.location.addressLine2">
+            <div data-localize="ocm.details.location.addressLine2">
                 @Html.LabelFor(model => model.AddressLine2)
             </div>
-            <div class="editor-field">
+            <div>
                 @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @class = "form-control", placeholder = "Second line of Address (if applicable)" } })
                 @Html.ValidationMessageFor(model => model.AddressLine2)
             </div>
@@ -91,10 +112,10 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group" data-editormode="core">
-                    <div class="editor-label" data-localize="ocm.details.location.town">
+                    <div data-localize="ocm.details.location.town">
                         @Html.LabelFor(model => model.Town)
                     </div>
-                    <div class="editor-field">
+                    <div>
                         @Html.EditorFor(model => model.Town, new { htmlAttributes = new { @class = "form-control", placeholder = "City or Town Name" } })
                         @Html.ValidationMessageFor(model => model.Town)
                     </div>
@@ -102,10 +123,10 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group" data-editormode="core">
-                    <div class="editor-label" data-localize="ocm.details.location.stateOrProvince">
+                    <div data-localize="ocm.details.location.stateOrProvince">
                         @Html.LabelFor(model => model.StateOrProvince)
                     </div>
-                    <div class="editor-field">
+                    <div>
                         @Html.EditorFor(model => model.StateOrProvince, new { htmlAttributes = new { @class = "form-control", placeholder = "State, Province or Region" } })
                         @Html.ValidationMessageFor(model => model.StateOrProvince)
                     </div>
@@ -115,10 +136,10 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group" data-editormode="core">
-                    <div class="editor-label" data-localize="ocm.details.location.postcode">
+                    <div data-localize="ocm.details.location.postcode">
                         @Html.LabelFor(model => model.Postcode)
                     </div>
-                    <div class="editor-field">
+                    <div>
                         @Html.EditorFor(model => model.Postcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Zip/Postal Code (if applicable)" } })
                         @Html.ValidationMessageFor(model => model.Postcode)
                     </div>
@@ -126,10 +147,10 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group" data-editormode="core">
-                    <div class="editor-label" data-localize="ocm.details.location.country">
+                    <div data-localize="ocm.details.location.country">
                         @Html.LabelFor(model => model.Country)
                     </div>
-                    <div class="editor-field">
+                    <div>
                         @Html.DropDownListFor(model => model.Country.ID, (SelectList)ViewBag.ReferenceData.CountryList)
                         @Html.ValidationMessageFor(model => model.Country)
                     </div>
@@ -143,10 +164,10 @@
         <!--begin additional location details-->
         <h3>Additional Location Details</h3>
         <div class="form-group" data-editormode="core">
-            <div class="editor-label" data-localize="ocm.details.accessComments">
+            <div data-localize="ocm.details.accessComments">
                 @Html.LabelFor(model => model.AccessComments)
             </div>
-            <div class="editor-field">
+            <div>
                 @Html.TextAreaFor(model => model.AccessComments)
                 @Html.ValidationMessageFor(model => model.AccessComments)
             </div>
@@ -154,10 +175,10 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group" data-editormode="core">
-                    <div class="editor-label" data-localize="ocm.details.location.contactTelephone1">
+                    <div data-localize="ocm.details.location.contactTelephone1">
                         @Html.LabelFor(model => model.ContactTelephone1)
                     </div>
-                    <div class="editor-field">
+                    <div>
                         @Html.EditorFor(model => model.ContactTelephone1)
                         @Html.ValidationMessageFor(model => model.ContactTelephone1)
                     </div>
@@ -165,10 +186,10 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group" data-editormode="core">
-                    <div class="editor-label" data-localize="ocm.details.location.contactTelephone2">
+                    <div data-localize="ocm.details.location.contactTelephone2">
                         @Html.LabelFor(model => model.ContactTelephone2)
                     </div>
-                    <div class="editor-field">
+                    <div>
                         @Html.EditorFor(model => model.ContactTelephone2)
                         @Html.ValidationMessageFor(model => model.ContactTelephone2)
                     </div>
@@ -178,20 +199,20 @@
 
 
         <div class="form-group" data-editormode="core">
-            <div class="editor-label" data-localize="ocm.details.location.contactEmail">
+            <div data-localize="ocm.details.location.contactEmail">
                 @Html.LabelFor(model => model.ContactEmail)
             </div>
-            <div class="editor-field">
+            <div>
                 @Html.EditorFor(model => model.ContactEmail)
                 @Html.ValidationMessageFor(model => model.ContactEmail)
             </div>
         </div>
 
         <div class="form-group" data-editormode="core">
-            <div class="editor-label" data-localize="ocm.details.location.addressRelatedURL">
+            <div data-localize="ocm.details.location.addressRelatedURL">
                 @Html.LabelFor(model => model.RelatedURL)
             </div>
-            <div class="editor-field">
+            <div>
                 @Html.EditorFor(model => model.RelatedURL)
                 @Html.ValidationMessageFor(model => model.RelatedURL)
             </div>
@@ -202,9 +223,8 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script src="@Url.Content("~/Scripts/OCM/Editor/LocationEditor.js")"></script>
+
 <script>
-
-
     //go-go-gadget map
     @{
         var scriptContent = "var locationEditor = new LocationEditor(" + Model.Latitude + ", " + Model.Longitude + ", '"+Html.IdFor(m => m.Latitude)+"','"+Html.IdFor(m => m.Longitude)+"');";
@@ -214,7 +234,7 @@
 
     google.maps.event.addDomListener(window, 'load', $.proxy(locationEditor.initializeMap, locationEditor));
 
-    @if (Model.ID<=0)
+    @if (Model.ID <= 0 && ViewBag.EnableEditView == false)
     {
         //adding new location, get user location as starting pos
         <text>
@@ -231,6 +251,10 @@
             setTimeout(function () {
                 $('#positionMarkerAtUserLocation').popover('hide');
             }, 2000);
+        });
+
+        $("#positionMarkerAtTextLocation").click(function () {
+            locationEditor.positionMarkerAtTextLocation($("#text-location").val());
         });
 
         $("#copyAddress").click(function () {

@@ -17,13 +17,14 @@ using OCM.MVC.Models;
 namespace OCM.MVC.Controllers
 {
 
-    public class POIController : Controller
+    public class POIController : BaseController
     {
         //
         // GET: /POI/
 
         public ActionResult Index(POIBrowseModel filter)
         {
+            if (filter == null) filter = new POIBrowseModel();
             var cpManager = new API.Common.POIManager();
 
             //dropdown selections of -1 represent an intended null selection, fix this by nulling relevant items
@@ -123,8 +124,10 @@ namespace OCM.MVC.Controllers
         // GET: /POI/Details/5
 
         //[OutputCache(Duration=240, VaryByParam="id")]
-        public ActionResult Details(int id, string layout, string status)
+        public ActionResult Details(int id = 0, string layout = null, string status = null)
         {
+            if (id <=0 ) return Index(null);
+
             if (status != null) ViewBag.Status = status;
 
             OCM.API.Common.POIManager cpManager = new API.Common.POIManager();
@@ -185,49 +188,6 @@ namespace OCM.MVC.Controllers
             }
 
             return View();
-
-            /* try
-             {
-                 int userId = (int)Session["UserID"];
-
-                 var files = Request.Files;
-                 string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
-                 string comment = collection["comment"];
-                 var tempFiles = new List<string>();
-
-                 string tempFolder = Server.MapPath("~/temp/uploads/");
-                 foreach (string file in Request.Files)
-                 {
-                     HttpPostedFileBase postedFile = Request.Files[file];
-                     if (postedFile != null && postedFile.ContentLength > 0)
-                     {
-                         string tmpFile = tempFolder + filePrefix + postedFile.FileName;
-                         postedFile.SaveAs(tmpFile);
-                         tempFiles.Add(tmpFile);
-                     }
-                 }
-
-                 var task = Task.Factory.StartNew(() =>
-                 {
-                     var mediaManager = new MediaItemManager();
-
-                     foreach (var tmpFile in tempFiles)
-                     {
-                         var photoAdded = mediaManager.AddPOIMediaItem(tempFolder, tmpFile, id, comment, false, userId);
-                     }
-
-                 }
-             , TaskCreationOptions.LongRunning);
-
-                 ViewBag.PoiId = id;
-                 ViewBag.UploadCompleted = true;
-                 return View();
-                 //return RedirectToAction("Details", new { id = id });
-             }
-             catch
-             {
-                 return View();
-             }*/
         }
 
         //[AuthSignedInOnly]
@@ -237,8 +197,9 @@ namespace OCM.MVC.Controllers
             refData.AllowOptionalCountrySelection = false;
 
             ViewBag.ReferenceData = refData;
-            ViewBag.ConnectionIndex = 0; //conenction counter shared by equipment detais
-         
+            ViewBag.ConnectionIndex = 0; //connection counter shared by equipment detais
+            ViewBag.EnableEditView = false;
+
             //get a default new POI using std core reference data
             var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
             coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
@@ -246,58 +207,74 @@ namespace OCM.MVC.Controllers
             coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors
             coreReferenceData.ChargePoint.SubmissionStatus = null; //let system decide on submit
             coreReferenceData.ChargePoint.SubmissionStatusTypeID = null;
-            return View(coreReferenceData.ChargePoint);
+            return View("Edit", coreReferenceData.ChargePoint);
         }
-        
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Add(ChargePoint poi)
-        {
-            var refData = new POIBrowseModel();
-            refData.AllowOptionalCountrySelection = false;
 
-            ViewBag.ReferenceData = refData;
-            ViewBag.ConnectionIndex = 0; //conenction counter shared by equipment detais
-            
-            if (Request["editoption"]=="addconnection")
-            {
-                poi.Connections.Add(new ConnectionInfo());
-                return View(poi);
-            }
-            
-            if (Request["editoption"]=="preview")
-            {
-                ViewBag.EnablePreviewMode = true;
-                return View(poi);
-            }
-
-            //otherwise process the add/edit submission
-            return Edit(poi);
-        }
 
         //
         // GET: /POI/Edit/5
-        [AuthSignedInOnly]
         public ActionResult Edit(int id)
         {
             var poi = new POIManager().Get(id);
+            InitEditReferenceData(poi);
 
             var refData = new POIBrowseModel();
-
             ViewBag.ReferenceData = refData;
+            ViewBag.HideAdvancedInfo = false; //enable advanced edit options for full editors/admin
             return View(poi);
         }
 
         //
         // POST: /POI/Edit/
 
-        [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(ChargePoint poi)
         {
+            var refData = new POIBrowseModel();
+            refData.AllowOptionalCountrySelection = false;
+            ViewBag.ReferenceData = refData;
+
+            ViewBag.ConnectionIndex = 0; //connection counter shared by equipment details
+            ViewBag.EnableEditView = true;
+
+            if (Request["editoption"] == "addconnection")
+            {
+                //add a placeholder for new equipment details
+                if (poi.Connections == null) poi.Connections = new List<ConnectionInfo>();
+                //TODO: setup defaults
+                poi.Connections.Add(new ConnectionInfo());
+                return View(poi);
+            }
+
+            if (Request["editoption"].ToString().StartsWith("remove-equipment"))
+            {
+                //TODO:remove requested connection
+                //poi.Connections.Remove();
+                string[] equipmentElementIDs = Request["editoption"].ToString().Split('-');
+                int itemIndex = int.Parse(equipmentElementIDs[2]);
+                poi.Connections.RemoveAt(itemIndex);
+                return View(poi);
+            }
+
+            if (Request["editoption"] == "preview")
+            {
+                //preview poi
+                ViewBag.EnablePreviewMode = true;
+                //update preview of poi with fully populated reference data
+                poi = new POIManager().PreviewPopulatedPOIFromModel(poi);
+
+                InitEditReferenceData(poi);
+
+                return View(poi);
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var user = new UserManager().GetUser((int)Session["UserID"]);
+                    User user = null;
+
+                    if (IsUserSignedIn) user = new UserManager().GetUser((int)Session["UserID"]);
 
                     //reset any values provided as -1 to a standard default (unknown etc)
                     if (poi.DataProviderID == -1 || poi.DataProviderID == null)
@@ -331,7 +308,7 @@ namespace OCM.MVC.Controllers
                     {
                         foreach (var connection in poi.Connections)
                         {
-                            if (connection.ConnectionTypeID == -1 || connection.ConnectionTypeID == null)
+                            if (connection.ConnectionTypeID == -1)
                             {
                                 connection.ConnectionType = null;
                                 connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
@@ -354,8 +331,8 @@ namespace OCM.MVC.Controllers
                         }
                     }
 
-                    if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID==-1) ModelState.AddModelError("Country", "Required");
-                    
+                    if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID == -1) ModelState.AddModelError("Country", "Required");
+
                     //TODO: prevent null country/lat/long
 
                     if (new SubmissionManager().PerformPOISubmission(poi, user))
@@ -384,7 +361,24 @@ namespace OCM.MVC.Controllers
 
             ViewBag.ReferenceData = new POIBrowseModel();
 
+
             return View(poi);
+        }
+
+        private void InitEditReferenceData(ChargePoint poi)
+        {
+            //edit/preview may not have some basic info we need for further edits such as a default connectioninfo object
+            if (poi.Connections == null)
+            {
+                poi.Connections = new List<OCM.API.Common.Model.ConnectionInfo>();
+                poi.Connections.Add(new OCM.API.Common.Model.ConnectionInfo());
+            }
+
+            //urls require at least http:// prefix
+            if (poi.AddressInfo.RelatedURL!=null && poi.AddressInfo.RelatedURL.Trim().Length>0 && !poi.AddressInfo.RelatedURL.Trim().StartsWith("http"))
+            {
+                poi.AddressInfo.RelatedURL = "http://" + poi.AddressInfo.RelatedURL;
+            }
         }
 
         [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
