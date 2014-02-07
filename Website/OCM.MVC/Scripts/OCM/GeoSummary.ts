@@ -26,8 +26,8 @@ export module OCM {
 
                 var data = new google.visualization.DataTable();
                 data.addRows(ocm_summary.length);
-                data.addColumn('string', 'Country');
-                data.addColumn('number', 'Charging Locations');
+                data.addColumn("string", "Country");
+                data.addColumn("number", "Charging Locations");
 
                 for (var i = 0; i < ocm_summary.length; i++) {
                     data.setValue(i, 0, ocm_summary[i].country);
@@ -40,16 +40,16 @@ export module OCM {
                     width: 840,
                     height: 380,
                     backgroundColor: "#B3D1FF",
-                    displayMode: 'regions',
-                    colorAxis: { colors: ['#5cb85c', '#9fdc9f'] }
+                    displayMode: "regions",
+                    colorAxis: { colors: ["#5cb85c", "#9fdc9f"] }
                 };
 
                 var geochart = new google.visualization.GeoChart(
-                    document.getElementById('visualization')
+                    document.getElementById("visualization")
                     );
 
                 google.visualization.events.addListener(geochart, "regionClick", function (eventData) {
-                    var countryISO = eventData["region"];
+                    var countryISO = eventData.region;
                     if (top != null && top.loadCountryMap) {
                         top.loadCountryMap(countryISO, countryISO);
                     }
