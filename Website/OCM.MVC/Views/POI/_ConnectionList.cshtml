@@ -1,39 +1,69 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.ConnectionInfo>
-<div class="table-responsive">
-    <table class="table">
-        <tr>
-            <th data-localize="ocm.details.equipment.connectionType">Connection Type</th>
-            <th data-localize="ocm.details.equipment.powerKW">Max Power (KW)</th>
-            <th data-localize="ocm.details.equipment.powerLevel">Level</th>
-            <th data-localize="ocm.details.equipment.supplyType">Supply Type</th>
-            <th data-localize="ocm.details.equipment.voltage">Voltage</th>
-            <th data-localize="ocm.details.equipment.current">Max Current</th>
-            <th data-localize="ocm.details.equipment.quantity">Quantity</th>
-            <th data-localize="ocm.details.equipment.comment">Comments</th>
-            <th data-localize="ocm.details.equipment.reference">Reference</th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.ConnectionType.Title)</td>
-                <td>@Html.DisplayFor(modelItem => item.PowerKW)</td>
-                <td>@Html.DisplayFor(modelItem => item.Level.Title)</td>
-                <td>@Html.DisplayFor(modelItem => item.CurrentType.Title)</td>
-                <td>@Html.DisplayFor(modelItem => item.Voltage)</td>
-                <td>@Html.DisplayFor(modelItem => item.Amps)</td>
-                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                <td>@Html.DisplayFor(modelItem => item.Comments)</td>
-                <td style="white-space: nowrap">
-                    <small>
-                        @if (item.Reference == null)
-                        {
-                            @:OCM-CN-@item.ID
-            }
-                        else
-                        {@Html.DisplayFor(modelItem => item.Reference)}
-                    </small>
-                </td>
-            </tr>
-        }
-    </table>
-</div>
+
+<style>
+    .equipment-row {
+        min-height: 6em;
+        margin: 1em;
+    }
+
+    .equipment-core {
+        min-height: 8em;
+        background-color: #eef3d7;
+        color: #303030;
+        padding: 1em;
+        border-right: 6px solid #e2e6ce;
+    }
+
+    .equipment-extended {
+        min-height: 8em;
+        background-color: #fbfbfb;
+        color: #303030;
+        padding: 1em;
+    }
+
+    .equipment-ref {
+        color: #a39e9e;
+        font-size: 80%;
+    }
+</style>
+
+@foreach (var item in Model)
+{
+    <div class="row equipment-row">
+        <div class="col-sm-4 equipment-core">
+            <h4>
+                <span class="glyphicon glyphicon-link"></span> @Html.DisplayFor(modelItem => item.ConnectionType.Title)
+            </h4>
+            <div>
+                <span class="glyphicon glyphicon-flash"></span> @(item.Level==null?"Charging Level Unknown":Html.DisplayFor(modelItem => item.Level.Title).ToString())
+            </div>
+            <div>
+                @if (item.Quantity!=null) {
+                    <span class="glyphicon glyphicon-star"></span> @Html.DisplayFor(modelItem => item.Quantity) <text> Present</text>
+                }
+        </div>
+
+    </div>
+
+                <div class="col-sm-6 equipment-extended">
+                    <div class="equipment-ref">
+                        <span class="glyphicon glyphicon-flash"></span>
+                        OCM-CN-@item.ID
+                    </div>
+                    <div>
+                        @(item.PowerKW == null ? "" : Html.DisplayFor(modelItem => item.PowerKW).ToString() + " kW") @Html.DisplayFor(modelItem => item.CurrentType.Title)
+                    </div>
+                    <div>
+                        @(item.Voltage == null ? "" : Html.DisplayFor(modelItem => item.Voltage).ToString()+ " V")
+                    </div>
+                    <div>
+                        @(item.Amps == null ? "" : Html.DisplayFor(modelItem => item.Amps).ToString()+" A")
+                    </div>
+
+                </div>
+                    <div class="col-sm-3">
+                        <p>@Html.DisplayFor(modelItem => item.Comments)</p>
+                    </div>
+
+                </div>
+}
