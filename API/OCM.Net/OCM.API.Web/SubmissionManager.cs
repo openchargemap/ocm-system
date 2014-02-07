@@ -132,10 +132,11 @@ namespace OCM.API.Common
                     if (updatedPOI.ID > 0)
                     {
                     
-                        //FIXME: check if poi will change with this edit, if not we discard it completely
+                        //check if poi will change with this edit, if not we discard it completely
                         if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
-                            return false;
+                            System.Diagnostics.Debug.WriteLine("POI Update has no changes, discarding change.");
+                            return true;
                         }
                         else
                         {
