@@ -428,7 +428,7 @@ namespace OCM.Import
             //process list of locations, populating country refreshing cache where required
             foreach (var item in itemList)
             {
-                if (item.AddressInfo.Country == null && item.AddressInfo.Latitude != null && item.AddressInfo.Longitude != null)
+                if (item.AddressInfo.Country == null)
                 {
                     var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
                     if (geoLookup != null)
