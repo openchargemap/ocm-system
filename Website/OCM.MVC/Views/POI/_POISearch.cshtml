@@ -145,7 +145,7 @@
     });
 
     function getUserLocation() {
-        if (Modernizr.geolocation) {
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(gotUserLocation);
         } else {
             alert("Sorry, your browser cannot supply your location information.");
