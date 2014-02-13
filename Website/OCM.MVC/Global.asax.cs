@@ -16,6 +16,41 @@ namespace OCM.MVC
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        #region Cookie Helpers
+        public static void UpdateCookie(System.Web.HttpResponseBase response, string cookieName, string cookieValue)
+        {
+            if (response.Cookies.AllKeys.Contains(cookieName))
+            {
+                response.Cookies[cookieName].Value = cookieValue;
+            }
+            else
+            {
+                response.Cookies.Add(new HttpCookie(cookieName, cookieValue));
+            }
+        }
+
+        public static string GetCookie(System.Web.HttpRequestBase request, string cookieName)
+        {
+            if (request.Cookies.AllKeys.Contains(cookieName))
+            {
+                return request.Cookies[cookieName].Value;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public static void ClearCookie(System.Web.HttpResponseBase response, string cookieName, string cookieValue)
+        {
+            if (response.Cookies.AllKeys.Contains(cookieName))
+            {
+                response.Cookies[cookieName].Value = cookieValue;
+                response.Cookies[cookieName].Expires = DateTime.UtcNow.AddDays(-1);
+            }
+        }
+        #endregion
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -45,6 +80,25 @@ namespace OCM.MVC
             Server.ClearError();
             Response.RedirectToRoute(new { controller = "Home", action = "GeneralError" });
              
+        }
+
+        protected void Session_OnStart()
+        {
+
+            //if user has existing OCM session token, sign in automatically
+            var sessionToken = GetCookie(new HttpRequestWrapper(Request), "OCMSessionToken");
+            var identifier = GetCookie(new HttpRequestWrapper(Request), "Identifier");
+            if (!String.IsNullOrEmpty(sessionToken) && !String.IsNullOrEmpty(identifier))
+            {
+                //got token, if valid sign in users
+                var userManager = new OCM.API.Common.UserManager();
+                var user = userManager.GetUserFromIdentifier(identifier,sessionToken);
+                if (user != null)
+                {
+                    OCM.MVC.Controllers.LoginProviderController.PerformCoreLogin(user);
+                }
+           
+            }
         }
     }
 }

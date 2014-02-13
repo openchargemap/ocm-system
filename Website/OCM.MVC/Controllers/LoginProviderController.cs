@@ -199,29 +199,13 @@ namespace OCM.MVC.Controllers
             }
 
             //get whichever session token we used
-            newSessionToken = userDetails.CurrentSessionToken;
+            //newSessionToken = userDetails.CurrentSessionToken;
 
             //store updates to user
             dataModel.SaveChanges();
 
-            string permissions = (userDetails.Permissions != null ? userDetails.Permissions : "");
-
-            UpdateCookie(Response, "IdentityProvider", "Twitter");
-            UpdateCookie(Response, "Identifier", userIdentifier);
-            UpdateCookie(Response, "Username", userDetails.Username);
-            UpdateCookie(Response, "OCMSessionToken", newSessionToken);
-            UpdateCookie(Response, "AccessPermissions", permissions);
-
-            Session["IdentityProvider"] = loginProvider;
-            Session["Identifier"] = userDetails.Identifier;
-            Session["Username"] = userDetails.Username;
-            Session["UserID"] = userDetails.ID;
-
-            if (UserManager.IsUserAdministrator(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails)))
-            {
-                Session["IsAdministrator"] = true;
-            }
-
+            LoginProviderController.PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
+            
             if (!String.IsNullOrEmpty((string)Session["_redirectURL"]))
             {
                 string returnURL = Session["_redirectURL"].ToString();
@@ -232,6 +216,30 @@ namespace OCM.MVC.Controllers
                 //nowhere specified to redirect to, redirect to home page
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        public static void PerformCoreLogin(OCM.API.Common.Model.User userDetails)
+        {
+            string permissions = (userDetails.Permissions != null ? userDetails.Permissions : "");
+            var session = System.Web.HttpContext.Current.Session;
+            var response = new HttpResponseWrapper(System.Web.HttpContext.Current.Response);
+
+            UpdateCookie(response, "IdentityProvider", userDetails.IdentityProvider);
+            UpdateCookie(response, "Identifier", userDetails.Identifier);
+            UpdateCookie(response, "Username", userDetails.Username);
+            UpdateCookie(response, "OCMSessionToken", userDetails.CurrentSessionToken);
+            UpdateCookie(response, "AccessPermissions", permissions);
+
+            session["IdentityProvider"] = userDetails.IdentityProvider;
+            session["Identifier"] = userDetails.Identifier;
+            session["Username"] = userDetails.Username;
+            session["UserID"] = userDetails.ID;
+
+            if (UserManager.IsUserAdministrator(userDetails))
+            {
+                session["IsAdministrator"] = true;
+            }
+
         }
 
         public ActionResult AppLogin(bool? redirectWithToken)
