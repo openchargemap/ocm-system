@@ -47,7 +47,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="submission">ChargePoint info for submission, if ID and UUID set will be treated as an update</param>
         /// <returns>false on error or not enough data supplied</returns>
-        public bool PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user)
+        public int PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user)
         {
             try
             {
@@ -83,13 +83,13 @@ namespace OCM.API.Common
                         if (userCanEditWithoutApproval) AllowUpdates = true;
                         if (!AllowUpdates && !enableEditQueueLogging)
                         {
-                            return false; //valid update requested but updates not allowed
+                            return -1; //valid update requested but updates not allowed
                         }
                     }
                     else
                     {
                         //update does not correctly identify an existing poi
-                        return false;
+                        return -1;
                     }
  
                 }
@@ -97,7 +97,7 @@ namespace OCM.API.Common
                 //validate if minimal required data is present
                 if (updatedPOI.AddressInfo.Title == null || updatedPOI.AddressInfo.Country == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
@@ -136,7 +136,7 @@ namespace OCM.API.Common
                         if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
                             System.Diagnostics.Debug.WriteLine("POI Update has no changes, discarding change.");
-                            return true;
+                            return updatedPOI.ID;
                         }
                         else
                         {
@@ -179,7 +179,7 @@ namespace OCM.API.Common
                     SendEditSubmissionNotification(updatedPOI, user);
 
                     //user is not an editor, item is now pending in edit queue for approval.
-                    return true;
+                    return updatedPOI.ID;
                 }
 
                 int? supersedesID = null;
@@ -262,20 +262,23 @@ namespace OCM.API.Common
                     new UserManager().AddReputationPoints(user, 1);
                 }
 
+                //preserve new POI Id for caller
+                updatedPOI.ID = cpData.ID;
+
                 //if new item added, send notification
                 if (!isUpdate)
                 {
                     SendNewPOISubmissionNotification(updatedPOI, user, cpData);
                 }
 
-                return true;
+                return updatedPOI.ID;
             }
             catch (Exception exp)
             {
                 System.Diagnostics.Debug.WriteLine(exp.ToString());
                 //throw exp;
                 //error performing submission
-                return false;
+                return -1;
             }
         }
 
@@ -508,15 +511,6 @@ namespace OCM.API.Common
             {
                 return false; //failed
             }
-        }
-
-        public void TestSubmission()
-        {
-            Model.ChargePoint cp = new Model.ChargePoint();
-            cp.ID = 0;
-
-            cp.AddressInfo = new Model.AddressInfo();
-            PerformPOISubmission(cp, null);
         }
     }
 }

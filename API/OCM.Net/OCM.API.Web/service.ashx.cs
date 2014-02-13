@@ -71,7 +71,9 @@ namespace OCM.API
                     if (processedOK == true)
                     {
                         //perform submission
-                        submittedOK = submissionManager.PerformPOISubmission(cp, user);
+                        
+                         int submissionId= submissionManager.PerformPOISubmission(cp, user);
+                         if (submissionId > -1) submittedOK = true;
                     }
 
                     if (processedOK && submittedOK)

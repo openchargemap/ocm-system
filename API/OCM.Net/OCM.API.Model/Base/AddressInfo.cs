@@ -35,7 +35,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Zip/Postcode"), StringLength(100), DataType(System.ComponentModel.DataAnnotations.DataType.PostalCode)]
         public string Postcode { get; set; }
         
-        public int CountryID { get; set; }
+        public int? CountryID { get; set; }
         [Required]
         public Country Country { get; set; }
 

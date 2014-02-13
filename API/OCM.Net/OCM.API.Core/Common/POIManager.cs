@@ -467,6 +467,8 @@ namespace OCM.API.Common
 
         public void PopulateChargePoint_SimpleToData(Model.ChargePoint simpleChargePoint, Core.Data.ChargePoint dataChargePoint, OCM.Core.Data.OCMEntities dataModel)
         {
+            if (simpleChargePoint.ID > 0) dataChargePoint.ID = simpleChargePoint.ID; // dataModel.ChargePoints.FirstOrDefault(c => c.ID == simpleChargePoint.ID);
+
             if (String.IsNullOrEmpty(dataChargePoint.UUID)) dataChargePoint.UUID = Guid.NewGuid().ToString().ToUpper();
 
             //if required, set the parent charge point id
@@ -718,7 +720,7 @@ namespace OCM.API.Common
             else
             {
                 dataChargePoint.SubmissionStatusTypeID = null;
-                dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
+                dataChargePoint.SubmissionStatusType = null; // dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
             }
 
         }

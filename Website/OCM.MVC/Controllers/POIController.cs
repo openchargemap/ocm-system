@@ -126,7 +126,7 @@ namespace OCM.MVC.Controllers
         //[OutputCache(Duration=240, VaryByParam="id")]
         public ActionResult Details(int id = 0, string layout = null, string status = null)
         {
-            if (id <=0 ) return Index(null);
+            if (id <= 0) return RedirectToAction("Index");
 
             if (status != null) ViewBag.Status = status;
 
@@ -276,22 +276,38 @@ namespace OCM.MVC.Controllers
 
                     if (IsUserSignedIn) user = new UserManager().GetUser((int)Session["UserID"]);
 
-                    //reset any values provided as -1 to a standard default (unknown etc)
+
+                    //reset any values provided as -1 to a standard default (unknown etc) 
+                    //the binding method varies between hidden fields and dropdown values (FIXME)
                     if (poi.DataProviderID == -1 || poi.DataProviderID == null)
                     {
                         poi.DataProvider = null;
                         poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
                     }
-                    if (poi.OperatorID == -1 || poi.OperatorID == null)
+
+                    if (poi.OperatorInfo != null)
                     {
-                        poi.OperatorInfo = null;
+                        poi.OperatorID = poi.OperatorInfo.ID;
+                    }
+                    else
+                    {
                         poi.OperatorID = (int)StandardOperators.UnknownOperator;
+                    }
+
+                    if (poi.UsageType != null)
+                    {
+                        poi.UsageTypeID = poi.UsageType.ID;
+                    }
+                    else
+                    {
+                        poi.UsageTypeID = (int)StandardUsageTypes.Unknown;
                     }
 
                     if (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null))
                     {
                         poi.StatusTypeID = poi.StatusType.ID;
                     }
+
                     if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
                     {
                         poi.StatusType = null;
@@ -313,16 +329,19 @@ namespace OCM.MVC.Controllers
                                 connection.ConnectionType = null;
                                 connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
                             }
+
                             if (connection.CurrentTypeID == -1)
                             {
                                 connection.CurrentType = null;
                                 connection.CurrentTypeID = null;
                             }
+
                             if (connection.StatusTypeID == -1)
                             {
                                 connection.StatusType = null;
                                 connection.StatusTypeID = (int)StandardStatusTypes.Unknown;
                             }
+
                             if (connection.LevelID == -1)
                             {
                                 connection.Level = null;
@@ -333,13 +352,13 @@ namespace OCM.MVC.Controllers
 
                     if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID == -1) ModelState.AddModelError("Country", "Required");
 
-                    //TODO: prevent null country/lat/long
-
-                    if (new SubmissionManager().PerformPOISubmission(poi, user))
+                    //perform actual POI submission, then redirect to POI details if we can
+                    int poiSubmissionID = new SubmissionManager().PerformPOISubmission(poi, user);
+                    if (poiSubmissionID > -1)
                     {
-                        if (poi.ID > 0)
+                        if (poiSubmissionID > 0)
                         {
-                            return RedirectToAction("Details", "POI", new { id = poi.ID, status = "editsubmitted" });
+                            return RedirectToAction("Details", "POI", new { id = poiSubmissionID, status = "editsubmitted" });
                         }
                         else
                         {
@@ -375,7 +394,7 @@ namespace OCM.MVC.Controllers
             }
 
             //urls require at least http:// prefix
-            if (poi.AddressInfo.RelatedURL!=null && poi.AddressInfo.RelatedURL.Trim().Length>0 && !poi.AddressInfo.RelatedURL.Trim().StartsWith("http"))
+            if (poi.AddressInfo.RelatedURL != null && poi.AddressInfo.RelatedURL.Trim().Length > 0 && !poi.AddressInfo.RelatedURL.Trim().StartsWith("http"))
             {
                 poi.AddressInfo.RelatedURL = "http://" + poi.AddressInfo.RelatedURL;
             }
