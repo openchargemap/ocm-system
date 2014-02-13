@@ -21,6 +21,8 @@ namespace OCM.MVC.Controllers
             }
             else
             {
+                var cookie = new HttpCookie(cookieName, cookieValue);
+                cookie.Expires = DateTime.Now.AddMonths(2);
                 response.Cookies.Add(new HttpCookie(cookieName, cookieValue));
             }
         }
@@ -174,7 +176,9 @@ namespace OCM.MVC.Controllers
                 userDetails = new Core.Data.User();
                 userDetails.IdentityProvider = loginProvider;
                 userDetails.Identifier = userIdentifier;
+                if (String.IsNullOrEmpty(name) && loginProvider.ToLower()=="twitter") name = userIdentifier;
                 if (String.IsNullOrEmpty(name) && email != null) name = email.Substring(0, email.IndexOf("@"));
+                
                 userDetails.Username = name;
                 userDetails.EmailAddress = email;
                 userDetails.DateCreated = DateTime.UtcNow;
