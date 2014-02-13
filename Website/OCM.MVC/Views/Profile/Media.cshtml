@@ -1,0 +1,43 @@
+﻿@model IEnumerable<OCM.API.Common.Model.MediaItem>
+
+@{
+    ViewBag.Title = "Media Uploads";
+}
+
+<h2>My Media Uploads</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            POI
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment)
+        </th>       
+        <th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a href="@Url.Action("Details","POI",new {id=item.ChargePointID})">OCM-@item.ChargePointID</a>
+        </td>
+        <td>
+            <img src="@Html.Raw(item.ItemThumbnailURL)" class="img-thumbnail" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            <a href="@Url.Action("MediaDelete", new { id=item.ID})" class="btn btn-danger"> Delete</a>
+        </td>
+    </tr>
+}
+
+</table>

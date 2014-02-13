@@ -120,6 +120,63 @@ namespace OCM.MVC.Controllers
             }
             return View(updateProfile);
         }
+
+        [AuthSignedInOnly]
+        public ActionResult Comments()
+        {
+           
+            UserManager userManager = new UserManager();
+
+            var user = userManager.GetUser(int.Parse(Session["UserID"].ToString()));
+            var list = new UserCommentManager().GetUserComments(user.ID);
+            return View(list);
+           
+        }
+
+        [AuthSignedInOnly]
+        public ActionResult CommentDelete(int id)
+        {
+            var user = new UserManager().GetUser(int.Parse(Session["UserID"].ToString()));
+            var commentManager = new UserCommentManager();
+            var list = commentManager.GetUserComments(user.ID);
+
+            //delete comment if owned by this user
+            if (list.Where(c=>c.User.ID ==user.ID && c.ID==id).Any())
+            {
+                commentManager.DeleteComment(user.ID, id);
+            }
+
+
+            return RedirectToAction("Comments");
+        }
+
+        [AuthSignedInOnly]
+        public ActionResult Media()
+        {
+
+            UserManager userManager = new UserManager();
+
+            var user = userManager.GetUser(int.Parse(Session["UserID"].ToString()));
+            var list = new MediaItemManager().GetUserMediaItems(user.ID);
+            return View(list);
+
+        }
+
+        [AuthSignedInOnly]
+        public ActionResult MediaDelete(int id)
+        {
+            var user = new UserManager().GetUser(int.Parse(Session["UserID"].ToString()));
+            var itemManager = new MediaItemManager();
+            var list = itemManager.GetUserMediaItems(user.ID);
+
+            //delete item if owned by this user
+            if (list.Where(c => c.User.ID == user.ID && c.ID == id).Any())
+            {
+                itemManager.DeleteMediaItem(user.ID, id);
+            }
+
+            return RedirectToAction("Media");
+        }
     }
 }
 

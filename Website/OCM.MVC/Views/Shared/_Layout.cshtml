@@ -101,6 +101,8 @@
                                 <li><p class="navbar-text">@Html.Encode(Session["Username"])</p></li>
 
                                 <li>@Html.ActionLink("my profile", "Index", "Profile")</li>
+                                <li>@Html.ActionLink("my comments", "Comments", "Profile")</li>
+                                <li>@Html.ActionLink("my uploads", "Media", "Profile")</li>
                                 <li><a href="@Url.Action("SignOut", "Profile")">sign out</a></li>
 
                             }

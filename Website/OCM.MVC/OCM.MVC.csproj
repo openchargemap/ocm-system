@@ -405,6 +405,8 @@
     <Content Include="Views\About\Terms.cshtml" />
     <Content Include="Views\Shared\_TermsLink.cshtml" />
     <Content Include="Views\Shared\_POIListingStatus.cshtml" />
+    <Content Include="Views\Profile\Comments.cshtml" />
+    <Content Include="Views\Profile\Media.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -107,7 +107,6 @@ namespace OCM.API.Common
                         urls[2] =
                             storage.UploadImage(tempFolder + mediumFileName,
                                                 destFolderPrefix + mediumFileName, metadataTags);
-
                         success = true;
                     }
                     catch (Exception)
@@ -146,5 +145,38 @@ namespace OCM.API.Common
 
         }
 
+        public List<OCM.API.Common.Model.MediaItem> GetUserMediaItems(int userId)
+        {
+            var dataModel = new OCMEntities();
+
+            var list = dataModel.MediaItems.Where(u => u.UserID == userId);
+
+            var results = new List<OCM.API.Common.Model.MediaItem>();
+            foreach (var mediaItem in list)
+            {
+                results.Add(OCM.API.Common.Model.Extensions.MediaItem.FromDataModel(mediaItem));
+            }
+
+            return results;
+        }
+
+        public void DeleteMediaItem(int userId, int mediaItemId)
+        {
+            var dataModel = new OCMEntities();
+
+            var item = dataModel.MediaItems.FirstOrDefault(c => c.ID == mediaItemId);
+
+            if (item != null)
+            {
+                var cpID = item.ChargePointID;
+                dataModel.MediaItems.Remove(item);
+                dataModel.SaveChanges();
+
+                //TODO: delete from underlying storage
+                var user = new UserManager().GetUser(userId);
+                AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\", EntityID:" + mediaItemId + ",ChargePointID:" + cpID + "}", "User deleted media item");
+            }
+
+        }
     }
 }

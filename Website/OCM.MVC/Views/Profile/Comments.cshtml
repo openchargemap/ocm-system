@@ -1,0 +1,64 @@
+﻿@model IEnumerable<OCM.API.Common.Model.UserComment>
+
+@{
+    ViewBag.Title = "Comments";
+}
+
+<h2>My Comments</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            POI
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CommentType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rating)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RelatedURL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckinStatusType)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a href="@Url.Action("Details","POI",new {id=item.ChargePointID})">OCM-@item.ChargePointID</a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CommentType.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Rating)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RelatedURL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckinStatusType.Title)
+        </td>
+        <td>
+            <a href="@Url.Action("CommentDelete", new { id=item.ID})" class="btn btn-danger"> Delete Comment</a>
+        </td>
+    </tr>
+}
+
+</table>

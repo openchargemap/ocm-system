@@ -143,6 +143,7 @@
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\ReferenceDataManager.cs" />
     <Compile Include="Common\ServiceParameterParser.cs" />
+    <Compile Include="Common\UserCommentManager.cs" />
     <Compile Include="Common\UserManager.cs" />
     <Compile Include="Data\AddressInfo.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
