@@ -42,8 +42,12 @@ namespace OCM.API.Common
 
                 dataModel.MediaItems.Add(mediaItem);
                 dataModel.SaveChanges();
+
+                new UserManager().AddReputationPoints(userId, 1);
+
                 return mediaItem;
             }
+
             
         }
 

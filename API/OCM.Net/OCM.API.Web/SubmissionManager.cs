@@ -367,6 +367,7 @@ namespace OCM.API.Common
         /// <returns>ID of new comment, -1 for invalid cp, -2 for general error saving comment</returns>
         public int PerformSubmission(Common.Model.UserComment comment, Model.User user)
         {
+            //TODO: move all to UserCommentManager
             //populate data model comment from simple comment object
 
             var dataModel = new Core.Data.OCMEntities();

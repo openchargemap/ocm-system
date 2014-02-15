@@ -53,6 +53,13 @@ namespace OCM.API.Common
             }
         }
 
+        public void AddReputationPoints(int userId, int amount)
+        {
+             OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+             var user = Model.Extensions.User.FromDataModel(dataModel.Users.FirstOrDefault(u => u.ID == userId));
+             this.AddReputationPoints(user, amount);
+        }
+
         /// <summary>
         /// Add reputation points to a user
         /// </summary>
