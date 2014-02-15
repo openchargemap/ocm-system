@@ -83,6 +83,7 @@ footer, div.footer {
     color: @color-b;
     text-align: center;
     font-size: 8pt;
+    background-color: #f8fbf7;
 }
 
 .license {
@@ -216,8 +217,8 @@ div.result {
 
 #locationdetails-container {
     padding: 1em;
-    overflow-y:auto;
-    overflow-x:hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     color: white;
 }
 
@@ -239,9 +240,8 @@ div.details-container {
 .details-container {
     position: relative;
     top: -700px;
-   
     padding: 1em;
-     /*overflow: auto;
+    /*overflow: auto;
     min-height: 500px;
          */
     background-color: @color-black-semitrans;
@@ -351,7 +351,7 @@ div.stat {
     font-family: @font-headings;
     font-weight: 300;
     padding-top: 14px;
-    height:42px;
+    height: 42px;
 }
 
 
@@ -484,32 +484,49 @@ div.details-plain {
 
 
 .login-provider {
-    border:1px solid #f2fae6;
-    width:200px;
-    height:60px;
-    margin:8px;
-    padding:8px;
-    overflow:hidden;
+    border: 1px solid #f2fae6;
+    width: 200px;
+    height: 60px;
+    margin: 8px;
+    padding: 8px;
+    overflow: hidden;
 }
 
 .login-provider-preferred {
-    border:3px solid green;
+    border: 3px solid green;
 }
 
 div[data-editormode="core"] label {
-    color:@color-b;
-    
+    color: @color-b;
 }
+
 div[data-editormode="extended"] {
-    
+
     label {
         color: @color-a;
     }
 }
 
 div[data-editormode="advanced"] {
-    
+
     label {
         color: @color-b-light;
+    }
+}
+
+.social {
+    display: inline;
+    margin-right: 4em;
+    font-size: 1.618em;
+
+    a:link, a:hover, a:visited {
+        color: @color-b-light;
+    }
+}
+
+
+@media (max-width: 480px) { 
+    .nav-tabs > li {
+        float:none;
     }
 }

@@ -18,19 +18,7 @@
 
     @Styles.Render("~/Content/css")
 
-    <script type="text/javascript">
 
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-76936-12']);
-        _gaq.push(['_setDomainName', 'openchargemap.org']);
-        _gaq.push(['_trackPageview']);
-
-        (function () {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
     @Scripts.Render("~/bundles/jquery")
     <!--fav and touch icons -->
     <link rel="shortcut icon" href="/favicon.ico">
@@ -40,6 +28,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/app/images/icons/AppIcon_57x57.png" />
     <link rel="icon" type="image/png" href="/app/images/icons/AppIcon_57x57.png" />
     <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
 
@@ -152,12 +141,18 @@
         </div>
 
         <footer>
+            <div class="social"><a href="https://www.facebook.com/openchargemap" title="Like us on Facebook"><i class="fa fa-facebook"></i></a></div>
+            <div class="social"><a href="https://twitter.com/#!/openchargemap" title="Follow us on Twitter"><i class="fa fa-twitter"></i></a></div>
+            <div class="social"><a href="https://github.com/openchargemap/" title="Get involved on Github"><i class="fa fa-github"></i></a></div>
+            <div class="social"><a href="@Url.Action("Contact","About")" title="Contact Us"><i class="fa fa-comments"></i></a></div>
+            <br />
             Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.
         </footer>
     </div>
 
     <script src="~/scripts/bootstrap.min.js"></script>
-    
+    <script src="~/scripts/analytics.js"></script>
+
     @RenderSection("scripts", required: false)
 
     @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"), this.ViewContext.RouteData.Values["languagecode"] as string))

@@ -69,6 +69,7 @@ div.footer {
   color: #2c3e50;
   text-align: center;
   font-size: 8pt;
+  background-color: #f8fbf7;
 }
 .license {
   padding: 6px;
@@ -431,4 +432,19 @@ div[data-editormode="extended"] label {
 }
 div[data-editormode="advanced"] label {
   color: #3d4f61;
+}
+.social {
+  display: inline;
+  margin-right: 4em;
+  font-size: 1.618em;
+}
+.social a:link,
+.social a:hover,
+.social a:visited {
+  color: #3d4f61;
+}
+@media (max-width: 480px) {
+  .nav-tabs > li {
+    float: none;
+  }
 }

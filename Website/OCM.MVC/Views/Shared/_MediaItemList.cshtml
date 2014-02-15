@@ -7,9 +7,9 @@
         <div class="col-sm-6 col-md-3">
             <div class="img-thumbnail">
 
-                <a href="@item.ItemURL">
-                    <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" />
-                </a>
+                
+                    <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" onclick="showLightBox('@item.ItemURL');" />
+                
 
 
                 <blockquote>
@@ -34,3 +34,35 @@
     }
 
 </div>
+
+<!-- Button trigger modal -->
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Image Details
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-lightbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Image Details</h4>
+            </div>
+            <div class="modal-body" id="modal-lightbox-content">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function showLightBox(imgUrl)
+    {
+        $("#modal-lightbox-content").html("<img src='"+imgUrl+"' class='img-responsive' />");
+        $('#modal-lightbox').modal("show");
+    }
+</script>

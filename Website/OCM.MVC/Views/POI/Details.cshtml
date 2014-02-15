@@ -5,8 +5,8 @@
 }
 
 
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+<link rel="stylesheet" href="~/scripts/leafletjs/leaflet.min.css" />
+<script src="~/scripts/leafletjs/leaflet.min.js"></script>
 
 @{
     var detailsCss = "details-container details-plain";
@@ -45,11 +45,12 @@
 
 @Html.Partial("_POIListingStatus", Model.POI)
 
+
 <div id="details-container" class="@detailsCss">
 
     <h1><span id="location-title">@Html.DisplayFor(m => m.POI.AddressInfo.Title)</span><small data-localize="ocm.details.sectionTitle">charging location</small></h1>
     <div class="tabbable">
-        <ul class="nav nav-tabs" id="poiTabs">
+        <ul class="nav nav-tabs responsive" id="poiTabs">
             <li class="active">
                 <a href="#tab-general" data-toggle="tab" data-localize="ocm.details.location.sectionTitle">Details</a>
             </li>
@@ -87,10 +88,23 @@
                 </li>
             }
         </ul>
-        <div class="tab-content">
+        <div class="tab-content responsive">
             <div id="tab-general" class="tab-pane active">
                 <div id="locationdetails-container">
                     <div id="location-details">
+                        
+                        <div class="social" style="display:none;">
+                            <a onclick="sharePopup('http://www.facebook.com/sharer/sharer.php?u=@Url.Content("http://openchargemap.org"+Url.Action("Details", "POI", new { id=Model.POI.ID}))');">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                            <a onclick="sharePopup('http://twitter.com/intent/tweet?url=@Url.Content("http://openchargemap.org"+Url.Action("Details", "POI", new { id=Model.POI.ID})) via &#64;openchargemap');">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                            <a onclick="sharePopup('https://plus.google.com/share?url=@Url.Content("http://openchargemap.org"+Url.Action("Details", "POI", new { id=Model.POI.ID}))');">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                           
+                        </div>
                         <div class="row">
                             <div class="col-sm-4 col-xs-6">
                                 <strong class="ocm-label" data-localize="ocm.details.location.address">Nearest Address</strong>:
@@ -366,5 +380,10 @@
                 $("#tab-nearby").html(output);
             }
         });
+    }
+
+
+    function sharePopup(url){
+        window.open(url,"_blank");
     }
 </script>

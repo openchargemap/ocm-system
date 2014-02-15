@@ -36,11 +36,11 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Get Involved</h2>
+        <p>You can <a href="@Url.Action("Index","POI")">browse for locations near you</a> and add your own comments and photos.</p>
         <p>
-            Can't see a charging location you know exists? Please send us the details (click 'Add' on the following page):
+            Can't see a charging location you know exists? <a class="btn btn-warning" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addPOI">Add A Location <span class="glyphicon glyphicon-pencil"></span></a>
         </p>
-        <a class="btn btn-success" href="http://openchargemap.org/app">Add A Charging Location &gt;</a>
-        <p>If you own a website and would like to include a charging location map, you can embed a customised version of the above map <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">on your own website</a></p>
+        
     </div>
     <div class="col-md-4">
         <h2>Get Charging Station Data</h2>
@@ -48,11 +48,7 @@
             <em>Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> You can access and download
             our latest charging locations using our <a href="@Url.Action("Index", "Develop")">API</a>.
         </p>
-        <p>
-            You can use this data in your own apps, databases, websites etc. and we even provide
-            some helpful <a href="http://openchargemap.org/api/widgets/map/mapwizard.htm">widgets</a> you can include on your own pages to provide maps and to
-            gather data submissions from your users.
-        </p>
+        <p>If you operate a website and would like to include a charging location map, you can <a href="@Url.Action("Index", "Develop")">embed a map on your own website</a></p>
     </div>
     <div class="col-md-4">
         <h2>Operators and Data Providers</h2>
@@ -66,9 +62,6 @@
         </p>
     </div>
 </div>
-
-<h2>Open Charge Map Data License</h2>
-@Html.Partial("_LicenseBlock")
 
 <script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript">
