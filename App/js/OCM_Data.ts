@@ -18,7 +18,7 @@ module OCM {
         public maxResults: number = 100;
         public additionalParams: string = null;
         public includeComments: boolean = false;
-        public enableCaching: boolean = true;
+        public enableCaching: boolean = false; //FIXME: need way for user to specially request latest data
 
     }
 

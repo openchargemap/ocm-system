@@ -312,6 +312,7 @@ var LocationEditor = (function () {
             params.distanceUnit = "Miles";
             params.maxResults = 5;
             params.includeComments = true;
+            params.enableCaching = false;
 
             ocm_api.fetchLocationDataListByParam(params, "locationEditor.renderNearbyPOI", null);
         }

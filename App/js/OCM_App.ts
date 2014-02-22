@@ -606,6 +606,7 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         params.distanceUnit = distance_unit;
         params.maxResults = this.maxResults;
         params.includeComments = true;
+        params.enableCaching = true;
 
         //apply filter settings from UI
         if ($("#filter-submissionstatus").val() != 200)
