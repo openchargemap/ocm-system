@@ -1,4 +1,4 @@
-/*
+﻿/*
 OCM charging location browser/editor Mobile App
 Christopher Cook
 http://openchargemap.org
@@ -576,6 +576,7 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
         params.distanceUnit = distance_unit;
         params.maxResults = this.maxResults;
         params.includeComments = true;
+        params.enableCaching = true;
 
         //apply filter settings from UI
         if ($("#filter-submissionstatus").val() != 200)

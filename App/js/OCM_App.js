@@ -1,4 +1,4 @@
-﻿/*
+/*
 OCM charging location browser/editor Mobile App
 Christopher Cook
 http://openchargemap.org

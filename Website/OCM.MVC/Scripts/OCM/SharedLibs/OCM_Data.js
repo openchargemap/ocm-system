@@ -18,7 +18,7 @@ var OCM;
             this.maxResults = 100;
             this.additionalParams = null;
             this.includeComments = false;
-            this.enableCaching = false;
+            this.enableCaching = true;
         }
         return POI_SearchParams;
     })();

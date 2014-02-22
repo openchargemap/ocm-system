@@ -339,7 +339,6 @@
     <Content Include="Scripts\OCM\SharedLibs\OCM_Geolocation.js" />
     <Content Include="Scripts\OCM\SharedLibs\readme.txt" />
     <Content Include="Scripts\require.js" />
-    <Content Include="Scripts\responsive-tabs.js" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />
     <Content Include="Templates\Notifications\FaultReport.htm" />
