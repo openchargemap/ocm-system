@@ -202,6 +202,11 @@ namespace OCM.API.Common
                 {
                     cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
                 }
+                else
+                {
+                    //no submission status, set to 'under review'
+                    if (cpData.SubmissionStatusType == null) cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
+                }
 
                 if (!isUpdate)
                 {
