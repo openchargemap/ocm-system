@@ -29,6 +29,7 @@ function OCM_Map() {
     this.ocm_ui = new OCM_CommonUI();
     this.ocm_data = new OCM.API();
     this.ocm_geo = new OCM.Geolocation();
+    this.ocm_geo.ocm_data = this.ocm_data;
     this.mapOptions = new OCM_MapOptions();
 
     this.ocm_ui.ocm_markers = null;
@@ -420,9 +421,22 @@ OCM_Map.prototype.performSearch = function (useClientLocation, useManualLocation
         $("#statustypeid").val() != "" ? searchParams.statusTypeID = $("#statustypeid").val() : searchParams.statusTypeID = null;
         $("#submissionstatustypeid").val() != "" ? searchParams.submissionStatusTypeID = $("#submissionstatustypeid").val() : searchParams.submissionStatusTypeID = null;
 
+        
         if (this.ocm_app_searchPos != null && useDistanceSearch == true) {
-            searchParams.latitude = this.ocm_app_searchPos.lat();
-            searchParams.longitude = this.ocm_app_searchPos.lng();
+
+            //convert from google lookup coords
+            if (this.ocm_app_searchPos.coords == undefined) this.ocm_app_searchPos.coords = {
+                latitude: this.ocm_app_searchPos.lat(),
+                longitude: this.ocm_app_searchPos.lng()
+            };
+
+            //searchParams.latitude = this.ocm_app_searchPos.lat();
+            //searchParams.longitude = this.ocm_app_searchPos.lng();
+            searchParams.latitude = this.ocm_app_searchPos.coords.latitude;
+            searchParams.longitude = this.ocm_app_searchPos.coords.longitude;
+
+            //country not required if searching on position
+            searchParams.countryID = null;
         } else {
             //TODO: check if this still required
             //searchParams.latitude = null;

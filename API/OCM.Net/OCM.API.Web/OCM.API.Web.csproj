@@ -108,6 +108,13 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="OData\OData.svc" />
+    <Content Include="Scripts\SharedLibs\OCM_App.js" />
+    <Content Include="Scripts\SharedLibs\OCM_AppBootstrap.js" />
+    <Content Include="Scripts\SharedLibs\OCM_App_LocationEditor.js" />
+    <Content Include="Scripts\SharedLibs\OCM_App_Util.js" />
+    <Content Include="Scripts\SharedLibs\OCM_CommonUI.js" />
+    <Content Include="Scripts\SharedLibs\OCM_Data.js" />
+    <Content Include="Scripts\SharedLibs\OCM_Geolocation.js" />
     <Content Include="Styles\StyleSheet.css" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />
@@ -213,6 +220,9 @@
     <Compile Include="v1\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
+    <Compile Include="v2\compactpoi\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
     <Compile Include="v2\geocode\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
@@ -244,6 +254,7 @@
     <Content Include="v2\referencedata\service.ashx" />
     <Content Include="v2\service.ashx" />
     <Content Include="v2\geocode\service.ashx" />
+    <Content Include="v2\compactpoi\service.ashx" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
