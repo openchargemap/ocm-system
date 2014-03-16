@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3CC82B5C-7EA9-484D-9C6E-791BD2E55563}"
 	ProjectSection(SolutionItems) = preProject
@@ -62,8 +62,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9A552B
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCM.MVC", "Website\OCM.MVC\OCM.MVC.csproj", "{10B51133-EEA6-41E4-8F90-62597E400C2F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BAEE068-B233-4645-8015-088CC85FF5C9}"
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Localisation", "http://localhost:56272", "{9B3734C1-602F-4E3E-80D8-E49143A1AABA}"
 	ProjectSection(WebsiteProperties) = preProject
