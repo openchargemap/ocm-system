@@ -3,24 +3,24 @@
   "_langCode": "el",
   "ocm": {
     "general": {
-      "shortDescription": "Παγκόσμιο δημόσιο μητρώο των ηλεκτρικό όχημα χρέωσης θέσεις",
-      "linkWebApp": "Θέσεις αναζήτηση, χρησιμοποιώντας Web App μας",
-      "linkBrowsePOI": "Αναζητήστε όλες τις θέσεις",
+      "shortDescription": "Παγκόσμιο δημόσιο μητρώο σημείων φόρτισης ηλεκτρικών οχημάτων",
+      "linkWebApp": "Αναζήτηση τοποθεσιών με χρήση των δικτυακών εφαρμογών μας",
+      "linkBrowsePOI": "Αναζήτηση σε όλες τις τοποθεσίες",
       "loadingProgress": "Φόρτωση...",
-      "addLocation": "Προσθέστε την τοποθεσία",
-      "addItem": null,
+      "addLocation": "Προσθέστε τοποθεσία",
+      "addItem": "Προσθέστε",
       "favourites": "Αγαπημένα",
       "settings": "Ρυθμίσεις",
       "about": "Σχετικά με",
-      "signIn": "Είσοδος",
+      "signIn": "Εισέλθετε",
       "signOut": "Εξέλθετε"
     },
     "details": {
-      "sectionTitle": "Φόρτιση τοποθεσία",
+      "sectionTitle": "Τοποθεσία Φόρτισης",
       "location": {
-        "sectionTitle": "Λεπτομερειακή τοποθεσία",
-        "title": "Θέση τίτλος",
-        "address": "Πλησιέστερο διεύθυνση",
+        "sectionTitle": "Λεπτομέρειες τοποθεσίας",
+        "title": "Όνομα τοποθεσίας",
+        "address": "Πλησιέστερη διεύθυνση",
         "addressLine1": "Διεύθυνση ΓΡΑΜΜΗ 1",
         "addressLine2": "Διεύθυνση, γραμμή 2",
         "town": "Πόλη/Κοινότητα",
@@ -28,40 +28,40 @@
         "postcode": "Ταχυδρομικος Κωδικας",
         "country": "Χώρα",
         "contactTelephone1": "Κύριο τηλέφωνο επικοινωνίας",
-        "contactTelephone2": "Δευτεροβάθμια τηλέφωνο επικοινωνίας",
-        "contactEmail": "Επικοινωνήστε με Email",
+        "contactTelephone2": "Πρόσθετο τηλέφωνο επικοινωνίας",
+        "contactEmail": "Επικοινωνήστε μέσω Email",
         "map": "Χάρτης",
-        "streetView": "Θέα στο δρόμο",
+        "streetView": "Εικόνα από το δρόμο",
         "addressRelatedURL": "Ιστοσελίδα"
       },
       "generalComments": "Γενικές πληροφορίες",
       "accessComments": "Πρόσβαση σε πληροφορίες",
       "advancedDetails": "Πρόσθετες πληροφορίες",
-      "numberOfPoints": "Αριθμός των σταθμών/κόλπων",
+      "numberOfPoints": "Αριθμός των σταθμών/σημείων",
       "usageType": "Χρήση",
       "usageCost": "Κόστος χρήσης",
       "operationalStatus": "Κατάσταση λειτουργίας",
-      "datePlanned": "Ημερομηνία που προβλέπεται",
-      "dateLastConfirmed": "Ημερομηνία τελευταία επιβεβαιώθηκε",
+      "datePlanned": "Ημερομηνία που έχει προγραμματιστεί",
+      "dateLastConfirmed": "Τελευταία ημερομηνία που έχει επιβεβαιωθεί",
       "lastUpdated": "Τελευταία ενημέρωση",
       "refNumber": "OpenChargeMap Ref",
-      "dataQualityLevel": "Δεδομένα επίπεδο ποιότητας",
-      "importedDataNotice": "Σημείωση: Αυτά τα δεδομένα είναι προέρχονται αυτόματα, αλλαγές θα πρέπει να υποβάλλονται απευθείας στην υπηρεσία παροχής δεδομένων.",
+      "dataQualityLevel": "Επίπεδο Ποιότητας Δεδομένων",
+      "importedDataNotice": "Σημείωση: Αυτά τα δεδομένα παρέχονται αυτόματα και τυχόν αλλαγές θα πρέπει να υποβάλλονται απευθείας στον πάροχο των δεδομένων.",
       "submissionStatus": "Υποβολή κατάστασης",
       "placesNearby": {
         "sectionTitle": "Κοντινά μέρη"
       },
       "mediaItems": {
         "sectionTitle": "Φωτογραφίες",
-        "addPrompt": "Ανεβάστε τις φωτογραφίες σας για αυτή την τοποθεσία"
+        "addPrompt": "Ανεβάστε τις φωτογραφίες σας για την τοποθεσία αυτή"
       },
       "metadataValues": {
         "sectionTitle": "Πρόσθετες Ετικέτες"
       },
       "commentsAndRatings": {
         "sectionTitle": "Σχόλια και οι αξιολογήσεις",
-        "zeroComments": "Δεν σχόλια χρήστη που υποβάλλονται",
-        "addPrompt": "Προσθέστε ένα σχόλιο ή γρήγορης κατάστασης ενημερωμένη έκδοση"
+        "zeroComments": "Δεν έχουν υποβληθεί σχόλια χρηστών",
+        "addPrompt": "Προσθέστε ένα σχόλιο ή μια σύντομη ενημέρωση της κατάτασης"
       },
       "equipment": {
         "sectionTitle": "Λεπτομέρειες εξοπλισμού",
@@ -69,20 +69,20 @@
         "powerKW": "Μέγιστη ισχύς (KW)",
         "powerLevel": "Επίπεδο",
         "quantity": "Ποσότητα",
-        "supplyType": "Τύπος προσφοράς",
+        "supplyType": "Τύπος παροχής",
         "voltage": "Τάση",
         "current": "ΑΝΩΤΑΤΟ ρεύμα",
         "comment": "Σχόλια",
-        "reference": "Αναφοράς"
+        "reference": "Αναφορά"
       },
       "dataProvider": {
-        "sectionTitle": "Υπηρεσία παροχής δεδομένων",
+        "sectionTitle": "Πάροχος δεδομένων",
         "website": "Ιστοσελίδα",
-        "providersReference": "Οι πάροχοι Ref"
+        "providersReference": "Πάροχοι Ref"
       },
       "operator": {
-        "sectionTitle": "Δίκτυο/φορέα",
-        "operatorsReference": "Φορείς Ref"
+        "sectionTitle": "Δίκτυο/Διαχειριστής",
+        "operatorsReference": "Διαχειριστές Ref"
       }
     },
     "search": {
@@ -90,9 +90,9 @@
       "locationInput": "Τοποθεσία",
       "useMyLocation": "Αναζήτηση κοντά μου",
       "distance": "Απόσταση",
-      "chargingLevels": "Φόρτιση επίπεδο",
-      "connectionTypes": "Τύπους σύνδεσης",
-      "networkOperators": "Δίκτυο/φορέα",
+      "chargingLevels": "Επίπεδο Φόρτισης",
+      "connectionTypes": "Τύποι σύνδεσης",
+      "networkOperators": "Δίκτυο/Διαχειριστής",
       "countries": "Χώρα",
       "submissionStatus": "Υποβολή κατάστασης",
       "usageTypes": "Χρήση",
