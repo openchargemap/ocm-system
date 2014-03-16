@@ -18,7 +18,8 @@
 <a id="api"></a>
 <h2>Data Consumer API</h2>
 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
-<p><em>API V2 June 2013 - Please join the discussion forum to track development.</em></p>
+<p><div class="alert alert-warning">Data returned by the API has mixed licensing and applicable copyright attribution (included in results as "Data Provider"). If you require <em>Open</em> data you must filter by <code>dataproviderid=1</code> to return only original OCM data.</div></p>
+<p><em>API V2 (updated March 2014) - Please join the discussion forum to discuss development.</em></p>
 <h3>Service Base URL: </h3>
 <p style="margin-left: 40px">http://api.openchargemap.io/v2/</p>
 <h3>Example API Calls: </h3>
@@ -102,6 +103,11 @@
     <tr>
         <td>statustypeid</td>
         <td>exact match on a given status type id (comma separated list)</td>
+        <td>(blank)</td>
+    </tr>
+    <tr>
+        <td>dataproviderid</td>
+        <td>exact match on a given data provider id id (comma separated list). <span class="label label-warning">Use dataproviderid=1 for only OCM provided ("Open") data.</span></td>
         <td>(blank)</td>
     </tr>
     <tr>

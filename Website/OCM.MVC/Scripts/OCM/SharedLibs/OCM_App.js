@@ -1,4 +1,4 @@
-﻿/*
+/*
 OCM charging location browser/editor Mobile App
 Christopher Cook
 http://openchargemap.org
@@ -47,6 +47,7 @@ function OCM_App() {
     this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError, this);
     this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
 
+    this.isEmbeddedAppMode = true; //used when app is embedded in another site
     this.isLocalDevMode = false;
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81/app";
@@ -118,8 +119,13 @@ OCM_App.prototype.initApp = function () {
 OCM_App.prototype.setupUIActions = function () {
     var app = this;
 
-    //running straight jquery, pages are hidden by default, show home screen
-    $("#home-page").show();
+    if (this.isEmbeddedAppMode) {
+        //default to map screen and begin loading closest data to centre of map
+        this.navigateToMap();
+    } else {
+        //pages are hidden by default, show home screen
+        this.navigateToHome();
+    }
 
     //add header classes to header elements
     $("[data-role='header']").addClass("ui-header");
@@ -1067,7 +1073,6 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 
     this.logEvent("app.showPage:" + pageId);
 
-    //show new page
     //hide last shown page
     if (this._lastPageId && this._lastPageId != null) {
         this.hidePage(this._lastPageId);
@@ -1075,15 +1080,16 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 
     //hide home page
     document.getElementById("home-page").style.display = "none";
+
+    //show new page
     document.getElementById(pageId).style.display = "block";
 
-    //$("#home-page").hide();
-    //show new page
-    //$("#" + pageId).show();
-    //hack: reset scroll position for new page once page has had a chance to render
-    setTimeout(function () {
-        document.documentElement.scrollIntoView();
-    }, 100);
+    if (!this.isEmbeddedAppMode) {
+        //hack: reset scroll position for new page once page has had a chance to render
+        setTimeout(function () {
+            document.documentElement.scrollIntoView();
+        }, 100);
+    }
 
     this._lastPageId = pageId;
 

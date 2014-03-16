@@ -39,7 +39,7 @@
     }
     else
     {
-        <div class="form-actions">To edit, add comments or upload photos: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" }) </div>
+        <div class="form-actions">To edit, add comments or upload photos: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary", target="_blank" }) </div>
     }
 }
 
