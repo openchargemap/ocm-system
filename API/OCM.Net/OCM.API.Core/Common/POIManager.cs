@@ -397,10 +397,8 @@ namespace OCM.API.Common
                 return diffList;
             }
 
-            var objectComparison = new CompareObjects();
-            objectComparison.CompareChildren = true;
-            objectComparison.MaxDifferences = 1000;
-
+            var objectComparison = new CompareLogic(new ComparisonConfig { CompareChildren=true, MaxDifferences=1000});
+         
             var exclusionList = new string[]
                 {
                     "DateCreated",
@@ -419,18 +417,27 @@ namespace OCM.API.Common
                     ".OperatorInfo.IsPrivateIndividual",
                     ".OperatorInfo.ContactEmail",
                     ".OperatorInfo.FaultReportEmail",
+                    ".UsageType.IsPayAtLocation",
+                    ".UsageType.IsMembershipRequired",
+                    ".UsageType.IsAccessKeyRequired",
+                    ".UsageType.ID",
+                    ".DataProvider.ID",
+                    ".DataProvider.DataProviderStatusType.ID",
+                    ".DataProvider.DataProviderStatusType.Title"
                 };
-            objectComparison.ElementsToIgnore.AddRange(exclusionList);
+            objectComparison.Config.MembersToIgnore.AddRange(exclusionList);
 
-            if (!objectComparison.Compare(poiA, poiB))
+            var comparisonResult = objectComparison.Compare(poiA, poiB);
+
+            if (!comparisonResult.AreEqual)
             {
                 //clean up differences we want to exclude
                 foreach (var exclusionSuffix in exclusionList)
                 {
-                    objectComparison.Differences.RemoveAll(e => e.PropertyName.EndsWith(exclusionSuffix));
+                    comparisonResult.Differences.RemoveAll(e => e.PropertyName.EndsWith(exclusionSuffix));
                 }
 
-                diffList.AddRange(objectComparison.Differences.Select(difference => new DiffItem { Context = difference.PropertyName, ValueA = difference.Object1Value, ValueB = difference.Object2Value }));
+                diffList.AddRange(comparisonResult.Differences.Select(difference => new DiffItem { Context = difference.PropertyName, ValueA = difference.Object1Value, ValueB = difference.Object2Value }));
 
                 //remove items which only vary on null vs ""
                 diffList.RemoveAll(d => (String.IsNullOrWhiteSpace(d.ValueA) || d.ValueA == "(null)") && (String.IsNullOrWhiteSpace(d.ValueB) || d.ValueB == "(null)"));
