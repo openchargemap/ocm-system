@@ -104,21 +104,30 @@ namespace OCM.API.Common.Model.Extensions
             {
                 poi.Contributor = User.BasicFromDataModel(source.Contributor);
             }
-            
-            if (source.Connections != null)
+          
+
+            /*if (source.Connections != null)
             {
                 if (source.Connections.Any())
-                {
+                {*/
+
                     poi.Connections = new List<Model.ConnectionInfo>();
                     foreach (var conn in source.Connections)
                     {
                         poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode));
                     }
-                }
-            }
+
+                /*}
+
+            }*/
+
+
+            //loadUserComments = true;
+            //loadMetadataValues = true;
+            //loadMediaItems = true;
 
             //optionally load user comments
-            if (loadUserComments && source.UserComments != null)
+            if (loadUserComments)
             {
                 foreach (var comment in source.UserComments.OrderByDescending(cm => cm.DateCreated))
                 {
@@ -128,7 +137,7 @@ namespace OCM.API.Common.Model.Extensions
                 }
             }
 
-            if (loadMediaItems && source.MediaItems != null)
+            if (loadMediaItems)
             {
                 foreach (var mediaItem in source.MediaItems)
                 {
@@ -137,7 +146,7 @@ namespace OCM.API.Common.Model.Extensions
                 }
             }
 
-            if (loadMetadataValues && source.MetadataValues != null)
+            if (loadMetadataValues )
             {
                 foreach (var metadataValue in source.MetadataValues)
                 {

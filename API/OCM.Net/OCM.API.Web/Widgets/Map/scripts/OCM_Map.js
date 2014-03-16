@@ -226,7 +226,6 @@ OCM_Map.prototype.initMap = function () {
     this.mapOptions.showFilter_UsageType = (enabledFilterList.indexOf("usage") > 0);
     this.mapOptions.showFilter_StatusType = (enabledFilterList.indexOf("status") > 0);
 
-
     var filterCount = 0;
 
     //enable/disable visible filter controls
@@ -442,6 +441,9 @@ OCM_Map.prototype.performSearch = function (useClientLocation, useManualLocation
             //searchParams.latitude = null;
             //searchParams.longitude = null;
         }
+
+        searchParams.includeComments = false;
+
         //perform data lookup via OCM API
         this.ocm_data.fetchLocationDataListByParam(searchParams, "ocm_map.renderLocations");
     }

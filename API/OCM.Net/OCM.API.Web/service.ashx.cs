@@ -71,9 +71,9 @@ namespace OCM.API
                     if (processedOK == true)
                     {
                         //perform submission
-                        
-                         int submissionId= submissionManager.PerformPOISubmission(cp, user);
-                         if (submissionId > -1) submittedOK = true;
+
+                        int submissionId = submissionManager.PerformPOISubmission(cp, user);
+                        if (submissionId > -1) submittedOK = true;
                     }
 
                     if (processedOK && submittedOK)
@@ -156,10 +156,12 @@ namespace OCM.API
                     if (p.ProcessMediaItemSubmission(context, ref m, user.ID))
                     {
                         submissionManager.PerformSubmission(m, user);
-                        context.Response.Write("OK");                    
+                        context.Response.Write("OK");
                     }
-                } else {
-                        context.Response.Write("Error");
+                }
+                else
+                {
+                    context.Response.Write("Error");
                 }
             }
         }
@@ -177,6 +179,9 @@ namespace OCM.API
         /// <param name="context"></param>
         private void PerformOutput(HttpContext context)
         {
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
             //decide correct reponse type
             IOutputProvider outputProvider = null;
             var filter = new APIRequestSettings();
@@ -269,7 +274,7 @@ namespace OCM.API
 
                         if (encodings.ToLower().Contains("gzip"))
                         {
-                            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionMode.Compress);
+                            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionLevel.Optimal,false);
                             context.Response.AppendHeader("Content-Encoding", "gzip");
                             //context.Trace.Warn("GZIP Compression on");
                         }
@@ -302,6 +307,10 @@ namespace OCM.API
                 {
                     this.OutputGeocodingResult(outputProvider, context, filter);
                 }
+
+                stopwatch.Stop();
+                System.Diagnostics.Debug.WriteLine("Total output time: " + stopwatch.Elapsed.ToString());
+
             }
         }
 
@@ -352,7 +361,7 @@ namespace OCM.API
             }
             var o = new JSONOutputProvider();
             string description = "Compact POI List: id=ID, t= Title, u= UsageTypeID, s= StatusTypeID, a=Address, p=Postcode, lt=Latitude, lg=Longitude, d= Distance";
-            o.PerformBinarySerialisation(context.Response.OutputStream, new { status = "OK", description = description, count = poiList.Count, results = poiList }, filter.Callback);
+            o.PerformSerialisationV2(context.Response.OutputStream, new { status = "OK", description = description, count = poiList.Count, results = poiList }, filter.Callback);
         }
 
         /// <summary>
@@ -379,19 +388,19 @@ namespace OCM.API
             }
 
             //populate non-cached fragments (user profile)
-            data.UserProfile= new InputProviderBase().GetUserFromAPICall(context);
-            
+            data.UserProfile = new InputProviderBase().GetUserFromAPICall(context);
+
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, data, filter);
         }
 
         private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
         {
-          
+
             GeocodingResult result = null;
 
             //get or get and cache result
-            if (HttpContext.Current.Cache["Geocoding_"+filter.HashKey] != null && filter.EnableCaching)
+            if (HttpContext.Current.Cache["Geocoding_" + filter.HashKey] != null && filter.EnableCaching)
             {
                 result = (GeocodingResult)HttpContext.Current.Cache["Geocoding_" + filter.HashKey];
             }
@@ -399,10 +408,10 @@ namespace OCM.API
             {
                 var geocoder = new GeocodingHelper();
                 geocoder.IncludeExtendedData = true;
-                
+
                 result = geocoder.GeolocateAddressInfo_OSM(filter.Address);
 
-                HttpContext.Current.Cache.Add("Geocoding_"+filter.HashKey, result, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
+                HttpContext.Current.Cache.Add("Geocoding_" + filter.HashKey, result, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
 
             //send API response
@@ -416,7 +425,7 @@ namespace OCM.API
             {
                 outputProvider.GetOutput(context.Response.OutputStream, result, filter);
             }
-            
+
         }
 
         /// <summary>

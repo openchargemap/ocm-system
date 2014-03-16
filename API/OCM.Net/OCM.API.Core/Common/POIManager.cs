@@ -65,7 +65,8 @@ namespace OCM.API.Common
         public List<Model.ChargePoint> GetChargePoints(APIRequestSettings settings)
         {
 
-            System.Diagnostics.Debug.WriteLine(DateTime.UtcNow);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
@@ -84,6 +85,8 @@ namespace OCM.API.Common
 
                 dataList = new List<Model.ChargePoint>();
                 var dataModel = new OCMEntities();
+                dataModel.Configuration.LazyLoadingEnabled = true;
+                dataModel.Configuration.AutoDetectChangesEnabled = false;
 
                 //if distance filter provided in miles, convert to KM before use
                 if (settings.DistanceUnit == Model.DistanceUnit.Miles && settings.Distance != null)
@@ -142,6 +145,7 @@ namespace OCM.API.Common
 
                 //compile initial list of locations
                 var chargePointList = from c in dataModel.ChargePoints
+                                        
                                       where
                                           //c.ParentChargePointID == null //exclude under review and delisted charge points
                                           (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
@@ -197,12 +201,19 @@ namespace OCM.API.Common
 
 
                 //query is of type IQueryable
+#if DEBUG
                 string sql = filteredList.ToString();
 
                 //writes to output window
                 System.Diagnostics.Debug.WriteLine(sql);
-
+#endif
                 var additionalFilteredList = filteredList.Take(maxResults).ToList();
+
+                stopwatch.Stop();
+
+                System.Diagnostics.Debug.WriteLine("Total query time: " + stopwatch.Elapsed.ToString());
+
+                stopwatch.Restart();
 
                 foreach (var item in additionalFilteredList) //.ToList
                 {
@@ -261,7 +272,8 @@ namespace OCM.API.Common
                 dataList = (List<Model.ChargePoint>)HttpContext.Current.Cache[cacheKey];
             }
 
-            System.Diagnostics.Debug.WriteLine(DateTime.UtcNow);
+            System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.Elapsed.ToString());
+
 
             return dataList.Take(settings.MaxResults).ToList();
         }
