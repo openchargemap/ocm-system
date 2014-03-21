@@ -85,6 +85,8 @@ else
 
     @Html.Partial("_POIListingStatus", Model)
 
+    @Html.ValidationSummary()
+    
     <div class="panel-group" id="wizardsteps">
 
         @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
@@ -243,22 +245,26 @@ else
                     <div id="tab-equipment">
 
                         <p>This section details the exact type and power level of connections available at this site. All details are optional but please provide as much info as possible. </p>
-                        @for (int i = 0; i < Model.Connections.Count; i++)
+                        @if (Model.Connections != null)
                         {
-                            var connectionItem = Model.Connections[i];
-                            <h4>
-                                Equipment Item @(i + 1) :
-                                @if (connectionItem.Reference == null)
-                                {
-                                    if (connectionItem.ID > 0)
+                            for (int i = 0; i < Model.Connections.Count; i++)
+                            {
+                                var connectionItem = Model.Connections[i];
+                                <h4>
+                                    Equipment Item @(i + 1) :
+                                    @if (connectionItem.Reference == null)
                                     {
-                                        @:OCM-CN-@connectionItem.ID
+                                        if (connectionItem.ID > 0)
+                                        {
+                                            @:OCM-CN-@connectionItem.ID
                                     }
-                                }
-                                <input type="button" id="remove-equipment-@(i + "-" + connectionItem.ID)" value="Remove" class="btn btn-danger" />
-                            </h4>
-                            @Html.EditorFor(m => Model.Connections[i])
+                                    }
+                                    <input type="button" id="remove-equipment-@(i + "-" + connectionItem.ID)" value="Remove" class="btn btn-danger" />
+                                </h4>
+                                @Html.EditorFor(m => Model.Connections[i])
+                            }
                         }
+
 
 
                         <input type="button" id="additional-equipment" value="Add Additional Equipment" class="btn btn-info" />
@@ -273,7 +279,15 @@ else
     <div class="form-actions">
         @Html.Partial("_TermsLink")
 
-        <a href="@Url.Action("Details", "POI", new { id = Model.ID })" class="btn btn-info">Cancel</a>
+        @if (Model.ID > 0)
+        {
+            <a href="@Url.Action("Details", "POI", new { id = Model.ID })" class="btn btn-info">Cancel</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "POI")" class="btn btn-info">Cancel</a>
+        }
+
 
         <input type="button" value="Preview" class="btn btn-success" id="preview" />
         @if (ViewBag.EnablePreviewMode == true)
@@ -336,9 +350,10 @@ else
             //show preview (if enabled)
             $('#modalpreview').modal('show');
             //collapse all edit sections
-            $('#step1').collapse('hide');
-            $('#step2').collapse('hide');
-            $('#step3').collapse('hide');
+            //$('#step1').collapse('hide');
+            //$('#step2').collapse('hide');
+            //$('#step3').collapse('hide');
+            locationEditor.refreshMap();
 
             //refresh map view when collapsed region is opened
             $('#step1').on('shown.bs.collapse', function (e) {

@@ -1,52 +1,57 @@
 ﻿@model OCM.API.Common.Model.EditQueueFilter
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+<div class="well well-sm">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <fieldset>
-        <legend>Options</legend>
+        <div class="form-inline">
+          
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShowEditsOnly, new { @class = "control-label" })
 
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.DateFrom)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.DateFrom)
-                @Html.ValidationMessageFor(model => model.DateFrom)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.DateTo)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.DateTo)
-                @Html.ValidationMessageFor(model => model.DateTo)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.ShowEditsOnly)
-            </div>
-            <div class="editor-field">
                 @Html.EditorFor(model => model.ShowEditsOnly)
                 @Html.ValidationMessageFor(model => model.ShowEditsOnly)
+
             </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.ShowProcessed)
-            </div>
-            <div class="editor-field">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShowProcessed, new { @class = "control-label" })
+
                 @Html.EditorFor(model => model.ShowProcessed)
                 @Html.ValidationMessageFor(model => model.ShowProcessed)
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateFrom, new { @class = "control-label" })
+
+                @Html.EditorFor(model => model.DateFrom)
+                @Html.ValidationMessageFor(model => model.DateFrom)
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateTo, new { @class = "control-label" })
+
+                @Html.EditorFor(model => model.DateTo)
+                @Html.ValidationMessageFor(model => model.DateTo)
+
+            </div>
+
+            @Html.HiddenFor(model => model.MinimumDifferences)
+            @Html.HiddenFor(model => model.MaxResults)
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Refresh" class="btn btn-default" />
+                </div>
             </div>
         </div>
-        <p>
-            <input type="submit" value="Refresh" />
-        </p>
-    </fieldset>
-}
+    }
 
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</div>

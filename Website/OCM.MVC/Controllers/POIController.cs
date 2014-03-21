@@ -220,7 +220,15 @@ namespace OCM.MVC.Controllers
 
             var refData = new POIBrowseModel();
             ViewBag.ReferenceData = refData;
-            ViewBag.HideAdvancedInfo = false; //enable advanced edit options for full editors/admin
+            ViewBag.HideAdvancedInfo = true; 
+            
+            var user = new UserManager().GetUser((int)Session["UserID"]);
+            if (POIManager.CanUserEditPOI(poi, user))
+            {
+                ViewBag.HideAdvancedInfo = false; 
+            }
+
+            //enable advanced edit options for full editors/admin
             return View(poi);
         }
 
@@ -377,6 +385,16 @@ namespace OCM.MVC.Controllers
                 }
 
             }
+            else
+            {
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        System.Diagnostics.Debug.WriteLine(error.ToString());
+                    }
+                }
+            }
 
             ViewBag.ReferenceData = new POIBrowseModel();
 
@@ -390,6 +408,9 @@ namespace OCM.MVC.Controllers
             if (poi.Connections == null)
             {
                 poi.Connections = new List<OCM.API.Common.Model.ConnectionInfo>();
+            }
+
+            if (poi.Connections.Count==0){
                 poi.Connections.Add(new OCM.API.Common.Model.ConnectionInfo());
             }
 

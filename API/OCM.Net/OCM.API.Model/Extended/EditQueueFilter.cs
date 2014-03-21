@@ -2,14 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace OCM.API.Common.Model
 {
     public class EditQueueFilter
     {
+        [Display(Name="Show Edits Only")]
         public bool ShowEditsOnly { get; set; }
+        [Display(Name = "Show Processed Items")]
         public bool ShowProcessed { get; set; }
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [Display(Name = "Date From")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+   
         public DateTime? DateFrom { get; set; }
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [Display(Name = "Date To")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+   
         public DateTime? DateTo { get; set; }
         public int MinimumDifferences { get; set; }
         public int MaxResults { get; set; }

@@ -124,7 +124,7 @@
     $(document).ready(function () {
 
         var showAdvanced = @Html.Raw(Model.ShowAdvancedOptions.ToString().ToLower() + ";")
-         
+
         if (!showAdvanced)
         {
             $("#search-advanced").hide();

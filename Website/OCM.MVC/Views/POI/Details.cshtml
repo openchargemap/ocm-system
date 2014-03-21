@@ -30,7 +30,7 @@
 
             @if (ViewBag.Status == "editsubmitted")
             {
-                <div class="alert alert-info">Thank you for your submission.</div>
+                <div class="alert alert-info">Thank you for your submission. If you are an Editor your changes will take effect immediately, otherwise your proposed change will be reviewed by another editor first.</div>
             }
 
             <a @(ViewBag.EnableSimpleView == true ? Html.Raw("target=\"_blank\"") : Html.Raw("")) href="@Url.Action("Edit", "POI", new { id = Model.POI.ID })" class="btn btn-info">Edit Listing</a>
