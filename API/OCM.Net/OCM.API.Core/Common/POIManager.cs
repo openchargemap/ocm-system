@@ -48,6 +48,28 @@ namespace OCM.API.Common
 
             return Model.Extensions.ChargePoint.FromDataModel(dataPreviewPOI);
         }
+        /// <summary>
+        /// Check if user can edit given POI with review/approval from another editor
+        /// </summary>
+        /// <param name="poi"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static bool CanUserEditPOI(Model.ChargePoint poi, Model.User user)
+        {
+            if (user == null || poi == null) return false;
+
+            int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
+
+            if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All") || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString())))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         [DbFunctionAttribute("OCM.Core.Data.OCMEntities.Store", "udf_GetDistanceFromLatLonKM")]
         public static double? GetDistanceFromLatLonKM(double? Latitude1, double? Longitude1, double? Latitude2, double? Longitude2)

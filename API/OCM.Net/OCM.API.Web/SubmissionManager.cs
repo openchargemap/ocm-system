@@ -68,7 +68,7 @@ namespace OCM.API.Common
                         enableEditQueueLogging = false;
                     }
 
-                    userCanEditWithoutApproval = CanUserEditPOI(updatedPOI, user);
+                    userCanEditWithoutApproval = POIManager.CanUserEditPOI(updatedPOI, user);
                 }
 
                 var dataModel = new Core.Data.OCMEntities();
@@ -346,26 +346,7 @@ namespace OCM.API.Common
             }
         }
 
-        /// <summary>
-        /// Check if user can edit given POI with review/approval from another editor
-        /// </summary>
-        /// <param name="poi"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        private static bool CanUserEditPOI(Model.ChargePoint poi, Model.User user)
-        {
-            int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
-
-            if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All") || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString())))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
+        
         /// <summary>
         /// Submit a new comment against a given charge equipment id
         /// </summary>
