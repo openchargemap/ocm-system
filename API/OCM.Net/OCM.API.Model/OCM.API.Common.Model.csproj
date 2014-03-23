@@ -90,6 +90,7 @@
     <Compile Include="Base\OperatorInfo.cs" />
     <Compile Include="Extended\EditQueueFilter.cs" />
     <Compile Include="Extended\GeocodingResult.cs" />
+    <Compile Include="Extended\POIDuplicates.cs" />
     <Compile Include="Extended\POIRecentActivity.cs" />
     <Compile Include="Extended\POISearchResult.cs" />
     <Compile Include="Extended\SimpleReferenceType.cs" />

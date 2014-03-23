@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using OCM.API.Common.Model.Extended;
 
 namespace OCM.API.Common
 {
@@ -346,6 +347,91 @@ namespace OCM.API.Common
                 }
             }
             return list;
+        }
+
+        public POIDuplicates GetAllPOIDuplicates(int countryId)
+        {
+            List<DuplicatePOIItem> allDuplicates = new List<DuplicatePOIItem>();
+            
+            OCMEntities dataModel = new OCMEntities();
+
+            double DUPLICATE_DISTANCE_METERS = 25;
+            double POSSIBLE_DUPLICATE_DISTANCE_METERS = 50;
+
+            //TODO: better method for large number of POIs
+            //grab all live POIs (30-100,000 items)
+            var allPOIs = dataModel.ChargePoints.Where(s=>s.AddressInfo.CountryID==countryId && (s.SubmissionStatusTypeID==100 || s.SubmissionStatusTypeID==200)).ToList();
+            foreach (var poi in allPOIs)
+            {
+                //find pois which duplicate the given poi
+                var dupePOIs = allPOIs.Where(p =>p.ID!=poi.ID &&
+                    (
+                        p.DataProvidersReference != null && p.DataProvidersReference.Length > 0 && p.DataProvidersReference == poi.DataProvidersReference
+                        || new System.Device.Location.GeoCoordinate(p.AddressInfo.Latitude, p.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude)) < POSSIBLE_DUPLICATE_DISTANCE_METERS
+                    )
+                    );
+
+
+                    var poiModel = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poi);
+
+                    foreach(var dupe in dupePOIs)
+                    {
+                        //poi has duplicates
+                        DuplicatePOIItem dupePoi = new DuplicatePOIItem { DuplicatePOI = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(dupe), DuplicateOfPOI = poiModel};
+                        dupePoi.Reasons = new List<string>();
+                        if (dupe.AddressInfo.Latitude == poi.AddressInfo.Latitude && dupe.AddressInfo.Longitude == poi.AddressInfo.Longitude)
+                        {
+                            dupePoi.Reasons.Add("POI location is exact match for OCM-"+poi.ID);
+                            dupePoi.Confidence=95;
+                        }
+                        else
+                        {
+                            double distanceMeters =  new System.Device.Location.GeoCoordinate(dupe.AddressInfo.Latitude, dupe.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+                            if (distanceMeters<DUPLICATE_DISTANCE_METERS)
+                            {
+                                dupePoi.Reasons.Add("POI location is close proximity ("+distanceMeters+"m) to OCM-"+poi.ID);
+                                dupePoi.Confidence=75;
+                            } else {
+                                if (distanceMeters<POSSIBLE_DUPLICATE_DISTANCE_METERS){
+                                    dupePoi.Reasons.Add("POI location is in surrounding proximity ("+distanceMeters+"m) to OCM-"+poi.ID);
+                                    dupePoi.Confidence=50;
+                                }
+                            }
+                        }
+
+                        allDuplicates.Add(dupePoi);
+                    }
+            }
+
+            //arrange all duplicates into groups
+            POIDuplicates duplicatesSummary = new POIDuplicates();
+            duplicatesSummary.DuplicateSummaryList = new List<DuplicatePOIGroup>();
+            foreach (var dupe in allDuplicates)
+            {
+                bool isNewGroup = false;
+                var dupeGroup = duplicatesSummary.DuplicateSummaryList.FirstOrDefault(d=>d.DuplicatePOIList.Any(p=>p.DuplicateOfPOI.ID== dupe.DuplicateOfPOI.ID || p.DuplicatePOI.ID==dupe.DuplicatePOI.ID) || d.SuggestedBestPOI.ID==dupe.DuplicatePOI.ID);
+                if (dupeGroup == null)
+                {
+                    isNewGroup = true;
+                    dupeGroup = new DuplicatePOIGroup();
+                    dupeGroup.SuggestedBestPOI = dupe.DuplicatePOI;//TODO: select best
+                    
+                    dupeGroup.DuplicatePOIList = new List<DuplicatePOIItem>();
+                }
+
+                if (!dupeGroup.DuplicatePOIList.Contains(dupe))
+                {
+                    dupeGroup.DuplicatePOIList.Add(dupe);
+                }
+
+                if (isNewGroup)
+                {
+                    duplicatesSummary.DuplicateSummaryList.Add(dupeGroup);
+                }
+            }
+
+            //TODO: go through all dupe groups and nominate best poi to be main poi (most comments, most equipment info etc)
+            return duplicatesSummary;
         }
 
         public static bool IsValid(Model.ChargePoint cp)

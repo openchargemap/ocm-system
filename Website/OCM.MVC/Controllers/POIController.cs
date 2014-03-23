@@ -458,5 +458,25 @@ namespace OCM.MVC.Controllers
             ViewBag.ShowPOILink = true;
             return View(summary);
         }
+
+        
+        public ActionResult ReviewDuplicates(int countryId)
+        {
+            ViewBag.MinConfidenceLevel = 70;
+            string cacheKey = "DupeList_" + countryId;
+
+            OCM.API.Common.Model.Extended.POIDuplicates duplicateSummary = null;
+            if (HttpRuntime.Cache[cacheKey] != null)
+            {
+                duplicateSummary = (OCM.API.Common.Model.Extended.POIDuplicates)HttpRuntime.Cache[cacheKey];
+            }
+            else
+            {
+                duplicateSummary = new POIManager().GetAllPOIDuplicates(1);
+                HttpRuntime.Cache[cacheKey] = duplicateSummary;
+            }
+
+            return View(duplicateSummary.DuplicateSummaryList);
+        }
     }
 }

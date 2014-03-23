@@ -426,6 +426,7 @@
     <Content Include="Scripts\leafletjs\leaflet.min.js.map">
       <DependentUpon>leaflet.min.js</DependentUpon>
     </Content>
+    <Content Include="Views\POI\ReviewDuplicates.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
