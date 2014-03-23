@@ -419,7 +419,8 @@ namespace OCM.API.Common
                     dupeGroup.DuplicatePOIList = new List<DuplicatePOIItem>();
                 }
 
-                if (!dupeGroup.DuplicatePOIList.Contains(dupe))
+                //only add to dupe group if not already added for another reason
+                if (!dupeGroup.DuplicatePOIList.Contains(dupe) && !dupeGroup.DuplicatePOIList.Any(d=>d.DuplicatePOI.ID==dupe.DuplicatePOI.ID))
                 {
                     dupeGroup.DuplicatePOIList.Add(dupe);
                 }
