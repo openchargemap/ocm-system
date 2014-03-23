@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace OCM.API.Common
 {
@@ -109,6 +110,7 @@ namespace OCM.API.Common
                 var dataModel = new OCMEntities();
                 dataModel.Configuration.LazyLoadingEnabled = true;
                 dataModel.Configuration.AutoDetectChangesEnabled = false;
+                ((IObjectContextAdapter)dataModel).ObjectContext.CommandTimeout = 180; //allow longer time for query to complete
 
                 //if distance filter provided in miles, convert to KM before use
                 if (settings.DistanceUnit == Model.DistanceUnit.Miles && settings.Distance != null)
@@ -303,9 +305,9 @@ namespace OCM.API.Common
         /// <summary>
         /// for given charge point, return list of similar charge points based on location/title etc with approx similarity
         /// </summary>
-        /// <param name="submission"></param>
+        /// <param name="poi"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> FindSimilar(Model.ChargePoint submission)
+        public List<Model.ChargePoint> FindSimilar(Model.ChargePoint poi)
         {
             List<Model.ChargePoint> list = new List<Model.ChargePoint>();
 
@@ -313,17 +315,17 @@ namespace OCM.API.Common
 
             //find similar locations (excluding same cp)
             var similarData = dataModel.ChargePoints.Where(c =>
-                        c.ID != submission.ID
+                        c.ID != poi.ID
                         && c.ParentChargePointID == null //exclude under review and delisted charge points
                         && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == 100 || c.SubmissionStatusTypeID == 200)
                         && (
-                            c.AddressInfoID == submission.AddressInfo.ID
+                            c.AddressInfoID == poi.AddressInfo.ID
                             ||
-                            c.AddressInfo.Postcode == submission.AddressInfo.Postcode
+                            c.AddressInfo.Postcode == poi.AddressInfo.Postcode
                             ||
-                            c.AddressInfo.AddressLine1 == submission.AddressInfo.AddressLine1
+                            c.AddressInfo.AddressLine1 == poi.AddressInfo.AddressLine1
                              ||
-                            c.AddressInfo.Title == submission.AddressInfo.Title
+                            c.AddressInfo.Title == poi.AddressInfo.Title
                             )
                         );
 
@@ -334,10 +336,10 @@ namespace OCM.API.Common
                 if (c != null)
                 {
                     int percentageSimilarity = 0;
-                    if (c.AddressInfo.ID == submission.AddressInfo.ID) percentageSimilarity += 75;
-                    if (c.AddressInfo.Postcode == submission.AddressInfo.Postcode) percentageSimilarity += 20;
-                    if (c.AddressInfo.AddressLine1 == submission.AddressInfo.AddressLine1) percentageSimilarity += 50;
-                    if (c.AddressInfo.Title == submission.AddressInfo.Title) percentageSimilarity += 25;
+                    if (c.AddressInfo.ID == poi.AddressInfo.ID) percentageSimilarity += 75;
+                    if (c.AddressInfo.Postcode == poi.AddressInfo.Postcode) percentageSimilarity += 20;
+                    if (c.AddressInfo.AddressLine1 == poi.AddressInfo.AddressLine1) percentageSimilarity += 50;
+                    if (c.AddressInfo.Title == poi.AddressInfo.Title) percentageSimilarity += 25;
                     if (percentageSimilarity > 100) percentageSimilarity = 99;
                     c.PercentageSimilarity = percentageSimilarity;
                     list.Add(c);
