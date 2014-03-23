@@ -28,7 +28,7 @@ namespace OCM.API.Client
         public bool EnableCaching { get; set; }
 
         public int[] DataProviderIDs { get; set; }
-        public int[] StatusTypeIDs { get; set; }
+        public int[] SubmissionStatusTypeIDs { get; set; }
         public int[] CountryIDs { get; set; }
 
         public SearchFilters()
@@ -96,10 +96,10 @@ namespace OCM.API.Client
                 url += "&enablecaching=false";
             }
 
-            if (filters.StatusTypeIDs != null && filters.StatusTypeIDs.Any())
+            if (filters.SubmissionStatusTypeIDs != null && filters.SubmissionStatusTypeIDs.Any())
             {
                 url += "&submissionstatustypeid=";
-                foreach(var id in filters.StatusTypeIDs)
+                foreach(var id in filters.SubmissionStatusTypeIDs)
                 {
                     url += id + ",";
                 }
@@ -127,7 +127,9 @@ namespace OCM.API.Client
 
             try
             {
+                System.Diagnostics.Debug.WriteLine("Client: Fetching data from "+url);
                 string data = FetchDataStringFromURL(url);
+                System.Diagnostics.Debug.WriteLine("Client: completed fetch");
                 JObject o = JObject.Parse("{\"root\": " + data + "}");
                 JsonSerializer serializer = new JsonSerializer();
                 List<ChargePoint> c = (List<ChargePoint>)serializer.Deserialize(new JTokenReader(o["root"]), typeof(List<ChargePoint>));
