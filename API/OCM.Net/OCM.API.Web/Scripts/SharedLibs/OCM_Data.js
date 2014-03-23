@@ -1,5 +1,4 @@
-﻿/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
-var OCM;
+﻿var OCM;
 (function (OCM) {
     var POI_SearchParams = (function () {
         function POI_SearchParams() {
@@ -128,9 +127,7 @@ var OCM;
             this.hasAuthorizationError = false;
 
             if (result.status == 200) {
-                //all ok
             } else if (result.status == 401) {
-                //unauthorised, user session has probably expired
                 this.hasAuthorizationError = true;
                 if (this.authorizationErrorCallback) {
                     this.authorizationErrorCallback();
@@ -237,7 +234,6 @@ var OCM;
                 xhr: function () {
                     var myXhr = $.ajaxSettings.xhr();
                     if (myXhr.upload) {
-                        //myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // for handling the progress of the upload
                     }
                     return myXhr;
                 },
@@ -268,7 +264,6 @@ var OCM;
         };
 
         API.prototype.sortCoreReferenceData = function () {
-            //sort reference data lists
             this.sortReferenceData(this.referenceData.ConnectionTypes);
             this.sortReferenceData(this.referenceData.Countries);
             this.sortReferenceData(this.referenceData.Operators);
@@ -336,4 +331,3 @@ var OCM;
     })();
     OCM.API = API;
 })(OCM || (OCM = {}));
-//# sourceMappingURL=OCM_Data.js.map

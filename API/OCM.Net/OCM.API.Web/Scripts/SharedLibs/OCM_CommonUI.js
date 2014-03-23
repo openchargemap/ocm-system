@@ -1,9 +1,3 @@
-/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
-/// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
-/// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
-/// <reference path="TypeScriptReferences/leaflet/leaflet.awesomemarkers.d.ts" />
-/// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
-//"use strict";
 
 var google;
 (function (google) {
@@ -31,7 +25,6 @@ OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, is
     if (typeof localisation_dictionary != 'undefined' || isTestMode == true) {
         return eval("localisation_dictionary." + resourceKey);
     } else {
-        //localisation not in use
         if (isTestMode == true) {
             return "[" + resourceKey + "]";
         } else {
@@ -53,7 +46,6 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
                     var localisedText;
 
                     if (isTestMode == true) {
-                        //in test mode the resource key is displayed as the localised text
                         localisedText = "[" + resourceKey + "] " + eval("localisation_dictionary." + resourceKey);
                     } else {
                         localisedText = eval("localisation_dictionary." + resourceKey);
@@ -61,15 +53,12 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
 
                     if ($element.is("input")) {
                         if ($element.attr("type") == "button") {
-                            //set input button value
                             $element.val(localisedText);
                         }
                     } else {
                         if ($element.attr("data-localize-opt") == "title") {
-                            //set title of element only
                             $(elementList[i]).attr("title", localisedText);
                         } else {
-                            //standard localisation method is to replace inner text of element
                             $(elementList[i]).text(localisedText);
                         }
                     }
@@ -77,7 +66,6 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
             }
         }
     } catch (exp) {
-        //localisation attempt failed
     } finally {
     }
 };
@@ -123,7 +111,6 @@ OCM_CommonUI.prototype.showPOIOnMap = function (mapcanvasID, poi) {
         var lat = poi.AddressInfo.Latitude;
         var lon = poi.AddressInfo.Longitude;
 
-        //map item if possible:
         var markerLatlng = new google.maps.LatLng(lat, lon);
         var myOptions = {
             zoom: 14,
@@ -164,23 +151,21 @@ OCM_CommonUI.prototype.getMaxLevelOfPOI = function (poi) {
     }
 
     if (level == 4)
-        level = 2; //lvl 1&2
+        level = 2;
     if (level > 4)
-        level = 3; //lvl 2&3 etc
+        level = 3;
     return level;
 };
 
 OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
     var map = this.map;
 
-    //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
         this.mapOptions.resultBatchID = resultBatchID;
 
         if (console)
             console.log("Setting up map markers:" + resultBatchID);
 
-        // Creates a red marker with the coffee icon
         var unknownPowerMarker = L.AwesomeMarkers.icon({
             icon: 'bolt',
             color: 'darkpurple',
@@ -212,7 +197,6 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
             var markerClusterGroup = new L.MarkerClusterGroup();
 
             if (poiList != null) {
-                //render poi markers
                 var poiCount = poiList.length;
                 for (var i = 0; i < poiList.length; i++) {
                     if (poiList[i].AddressInfo != null) {
@@ -254,7 +238,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
                             markerTitle += " (" + powerTitle + ", " + usageTitle + ")";
 
                             var marker = new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), { icon: markerIcon, title: markerTitle, draggable: false, clickable: true });
-                            marker._isClicked = false; //workaround for double click event
+                            marker._isClicked = false;
                             marker.poi = poi;
                             marker.on('click', function (e) {
                                 if (this._isClicked == false) {
@@ -262,7 +246,6 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
                                     appcontext.showDetailsView(anchorElement, this.poi);
                                     appcontext.showPage("locationdetails-page");
 
-                                    //workaround double click event by clearing clicked state after short time
                                     var mk = this;
                                     setTimeout(function () {
                                         mk._isClicked = false;
@@ -279,7 +262,6 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
             map.addLayer(markerClusterGroup);
             map.fitBounds(markerClusterGroup.getBounds());
 
-            //refresh map view
             setTimeout(function () {
                 map.invalidateSize(false);
             }, 300);
@@ -288,7 +270,6 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 };
 
 OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
-    //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
         this.mapOptions.resultBatchID = resultBatchID;
 
@@ -299,7 +280,6 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
             this.ocm_markerClusterer.clearMarkers();
         }
 
-        //clear existing markers
         if (this.ocm_markers != null) {
             for (var i = 0; i < this.ocm_markers.length; i++) {
                 if (this.ocm_markers[i]) {
@@ -310,7 +290,6 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
 
         this.ocm_markers = new Array();
         if (poiList != null) {
-            //render poi markers
             var poiCount = poiList.length;
             for (var i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
@@ -365,13 +344,11 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
             this.ocm_markerClusterer.addMarkers(this.ocm_markers);
         }
 
-        //include centre search location in bounds of map zoom
         if (this.ocm_searchmarker != null)
             bounds.extend(this.ocm_searchmarker.position);
         map.fitBounds(bounds);
     }
 
-    //map.setCenter(markerLatlng);
     google.maps.event.trigger(this.map, 'resize');
 };
 
@@ -388,7 +365,6 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
                 this.ocm_markerClusterer.clearMarkers();
             }
 
-            //create map
             var mapOptions = {
                 zoom: 3,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -432,7 +408,6 @@ OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID, currentLat, curre
 };
 
 OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
-    // create a map in the "map" div, set the view to a given place and zoom
     var map = new L.Map(mapcanvasID);
     if (currentLat != null && currentLng != null) {
         map.setView(new L.LatLng(currentLat, currentLng), zoomLevel, true);
@@ -442,10 +417,8 @@ OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, cur
     if (locateUser == true) {
         map.locate({ setView: true, watch: true, enableHighAccuracy: true });
     } else {
-        //use a default view
     }
 
-    // add an OpenStreetMap tile layer
     new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -456,12 +429,9 @@ OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, cur
 OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcontext, anchorElement) {
     var mapCanvas = document.getElementById(mapcanvasID);
     if (mapCanvas != null) {
-        //if (this.isMobileBrowser()) {
         mapCanvas.style.width = '90%';
         mapCanvas.style.height = '80%';
 
-        //}
-        //create map
         var mapOptions = {
             zoom: 3,
             mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -470,7 +440,6 @@ OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcon
 
         var bounds = new google.maps.LatLngBounds();
 
-        //clear existing markers
         if (this.ocm_markers != null) {
             for (var i = 0; i < this.ocm_markers.length; i++) {
                 if (this.ocm_markers[i]) {
@@ -497,7 +466,6 @@ OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcon
 
                         google.maps.event.addListener(this.ocm_markers[i], 'click', function () {
                             appcontext.showDetailsView(anchorElement, this.poi);
-                            // $.mobile.changePage("#locationdetails-page");
                         });
 
                         bounds.extend(this.ocm_markers[i].position);
@@ -506,14 +474,12 @@ OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcon
             }
         }
 
-        //include centre search location in bounds of map zoom
         if (this.ocm_searchmarker != null)
             bounds.extend(this.ocm_searchmarker.position);
         map.fitBounds(bounds);
     }
 };
 
-///Begin Standard data formatting methods ///
 OCM_CommonUI.prototype.formatMapLinkFromPosition = function (poi, searchLatitude, searchLongitude, distance, distanceunit) {
     return '<a href="http://maps.google.com/maps?saddr=' + searchLatitude + ',' + searchLongitude + '&daddr=' + poi.AddressInfo.Latitude + ',' + poi.AddressInfo.Longitude + '">Map (' + Math.ceil(distance) + ' ' + distanceunit + ')</a>';
 };
@@ -531,7 +497,6 @@ OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
         }
     }
 
-    //default to google maps online link
     return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
 };
 
@@ -609,10 +574,8 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     if (poi.AddressInfo.RelatedURL != null && poi.AddressInfo.RelatedURL != "") {
         var displayUrl = poi.AddressInfo.RelatedURL;
 
-        //remove protocol from url
         displayUrl = displayUrl.replace(/.*?:\/\//g, "");
 
-        //shorten url if over 40 characters
         if (displayUrl.length > 40)
             displayUrl = displayUrl.substr(0, 40) + "..";
         contactInfo += "<i class='icon-external-link'></i>  " + this.formatURL(poi.AddressInfo.RelatedURL, "<span data-localize='ocm.details.addressRelatedURL'>" + displayUrl + "</span>");
@@ -652,7 +615,6 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
         }
     }
 
-    //output table of connection info
     if (poi.Connections != null) {
         if (poi.Connections.length > 0) {
             equipmentInfo += "<table class='datatable'>";
@@ -692,4 +654,3 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     };
     return output;
 };
-//# sourceMappingURL=OCM_CommonUI.js.map
