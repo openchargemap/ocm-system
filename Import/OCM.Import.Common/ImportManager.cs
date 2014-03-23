@@ -12,6 +12,7 @@ namespace OCM.Import
 {
     public class ImportManager
     {
+        public const int DUPLICATE_DISTANCE_METERS = 25;
         public bool ImportUpdatesOnly { get; set; }
         public string GeonamesAPIUserName { get; set; }
         /**
@@ -43,39 +44,31 @@ namespace OCM.Import
 
         public List<ChargePoint> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData)
         {
-            //get list of possible duplicates
-            SearchFilters filters = new SearchFilters { MaxResults = 1000000, EnableCaching = false };
+            //get list of all current POIs including most delisted ones
+            SearchFilters filters = new SearchFilters { MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeIDs = new int[1]{0} };
             List<ChargePoint> masterList = new OCMClient().GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
+            
+            //if we failed to get a master list, quit with no result
+            if (masterList.Count == 0) return new List<ChargePoint>();
+
             List<ChargePoint> duplicateList = new List<ChargePoint>();
             List<ChargePoint> updateList = new List<ChargePoint>();
 
             ChargePoint previousCP = null;
 
-            foreach (var item in cpList)
+            //for each item to be imported, deduplicate by adding to updateList only the items which we don't already have
+
+            var cpListSortedByPos = cpList.OrderBy(c => c.AddressInfo.Latitude).ThenBy(c => c.AddressInfo.Longitude);
+
+            foreach (var item in cpListSortedByPos)
             {
-                //TODO: find better deduplication algorithm
+                var itemGeoPos = new System.Device.Location.GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
+
+                //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
                 var dupeList = masterList.Where(c =>
-                        (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)
+                        (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)               
                         ||
-                        (c.AddressInfo != null && (
-                            c.AddressInfo.ToString()==item.AddressInfo.ToString() || //same address
-                                c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 || //same first address line
-                                ( //same postcode
-                                    !String.IsNullOrEmpty(c.AddressInfo.Postcode)
-                                    &&
-                                    !String.IsNullOrEmpty(item.AddressInfo.Postcode)
-                                    &&
-                                    c.AddressInfo.Postcode == item.AddressInfo.Postcode
-                                )
-                            )
-                        )
-                        ||
-                        ( //very similar lat/lon
-                        c.AddressInfo != null &&
-                            (Math.Round(c.AddressInfo.Latitude, 4) == Math.Round(item.AddressInfo.Latitude, 4))
-                            &&
-                            (Math.Round(c.AddressInfo.Longitude, 4) == Math.Round(item.AddressInfo.Longitude, 4))
-                        )
+                        new System.Device.Location.GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS //meters distance apart
                 );
 
                 if (dupeList.Count() > 0)
@@ -107,11 +100,13 @@ namespace OCM.Import
                             //updateList.Add(updatedItem);
                         }
                     }
+                    
+                    //item has one or more likely duplicates, add it to list of items to remove
                     duplicateList.Add(item);
                 }
 
 
-                //mark item as duplicate if location/title exactly matches previous entry
+                //mark item as duplicate if location/title exactly matches previous entry or lat/long is within DuplicateDistance meters
                 if (previousCP != null)
                 {
                     if (IsDuplicateLocation(item, previousCP, true))
@@ -148,16 +143,34 @@ namespace OCM.Import
             var submissionStatusDelistedDupe = coreRefData.SubmissionStatusTypes.First(s => s.ID == 1001); //delisted duplicate
             previousCP = null;
 
-            foreach (var cp in cpList)
+            //sort current cp list by position again
+            cpListSortedByPos = cpList.OrderBy(c => c.AddressInfo.Latitude).ThenBy(c => c.AddressInfo.Longitude);
+
+            //mark any duplicates in final list as delisted duplicates (submitted to api)
+            foreach (var cp in cpListSortedByPos)
             {
+                bool isDuplicate = false;
                 if (previousCP != null)
                 {
-                    if (IsDuplicateLocation(cp, previousCP, false))
+                    isDuplicate = IsDuplicateLocation(cp, previousCP, false);
+                    if (isDuplicate)
                     {
                         cp.SubmissionStatus = submissionStatusDelistedDupe;
+                        cp.SubmissionStatusTypeID = submissionStatusDelistedDupe.ID;
+                        if (previousCP.ID > 0)
+                        {
+                            if (cp.GeneralComments == null) cp.GeneralComments = "";
+                            cp.GeneralComments += " [Duplicate of OCM-" + previousCP.ID + "]";
+                            cp.ParentChargePointID = previousCP.ID;
+                        }
                     }
                 }
-                previousCP = cp;
+                
+                if (!isDuplicate)
+                {
+                    previousCP = cp;
+                }
+                
             }
 
             //return final processed list ready for applying as insert/updates
@@ -165,21 +178,30 @@ namespace OCM.Import
         }
 
         /// <summary>
-        /// Determine if 2 CPs have the same location details
+        /// Determine if 2 CPs have the same location details or very close lat/lng
         /// </summary>
         /// <param name="current"></param>
         /// <param name="previous"></param>
         /// <returns></returns>
         public bool IsDuplicateLocation(ChargePoint current, ChargePoint previous, bool compareTitle)
         {
+            //is duplicate item if latlon is exact match for previous item or latlon is within few meters of previous item
             if (
-                (compareTitle && (previous.AddressInfo.Title == current.AddressInfo.Title) || compareTitle == false)
-                && previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1
-                && previous.AddressInfo.Latitude == current.AddressInfo.Latitude
-                && previous.AddressInfo.Longitude == current.AddressInfo.Longitude
+                (compareTitle && (previous.AddressInfo.Title == current.AddressInfo.Title))
+                //&& previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1
+                || (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
                 || (current.DataProvidersReference != null && current.DataProvidersReference.Length > 0 && previous.DataProvidersReference == current.DataProvidersReference)
+                || new System.Device.Location.GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS //meters distance apart
                 )
             {
+                if (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
+                {
+                    System.Diagnostics.Debug.WriteLine(current.AddressInfo.ToString() + " is Duplicate due to exact equal latlon to " + previous.AddressInfo.ToString());
+                }
+                else if (new System.Device.Location.GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS)
+                {
+                    System.Diagnostics.Debug.WriteLine(current.AddressInfo.ToString() + " is Duplicate due to close proximity to " + previous.AddressInfo.ToString());
+                }
                 return true;
             }
             else
@@ -190,6 +212,7 @@ namespace OCM.Import
 
         public bool MergeItemChanges(ChargePoint sourceItem, ChargePoint destItem, bool statusOnly)
         {
+            //TODO: move to POIManager or a common base?
             bool hasDifferences = true;
             //var diffs = GetDifferingProperties(sourceItem, destItem);
 
@@ -226,7 +249,7 @@ namespace OCM.Import
                 destItem.NumberOfPoints = sourceItem.NumberOfPoints;
                 destItem.GeneralComments = sourceItem.GeneralComments;
                 destItem.DateLastConfirmed = sourceItem.DateLastConfirmed;
-                destItem.DateLastStatusUpdate = sourceItem.DateLastStatusUpdate;
+                //destItem.DateLastStatusUpdate = sourceItem.DateLastStatusUpdate;
                 destItem.DatePlanned = sourceItem.DatePlanned;
 
                 //update connections
@@ -462,7 +485,7 @@ namespace OCM.Import
             OCMClient client = new OCMClient();
 
             //get a few OCM listings
-            SearchFilters filters = new SearchFilters { StatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };
+            SearchFilters filters = new SearchFilters { SubmissionStatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };
 
             var poiList = client.GetLocations(filters);
             /*

@@ -67,7 +67,13 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString();
                 cp.AddressInfo.Latitude = double.Parse(locationDetails["Latitude"].ToString());
                 cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
-                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n",", "); 
+                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n",", ");
+
+                //TODO: if address wasn't provide in address details try to parse from "LocationLongDescription": 
+                /*if (String.IsNullOrEmpty(cp.AddressInfo.AddressLine1) && string.IsNullOrEmpty(cp.AddressInfo.AddressLine2) && string.IsNullOrEmpty(cp.AddressInfo.Town) && string.IsNullOrEmpty(cp.AddressInfo.Postcode))
+                {
+
+                }*/
 
                 //if title is empty, attempt to add a suitable replacement
                 if (String.IsNullOrEmpty(cp.AddressInfo.Title))
@@ -268,6 +274,7 @@ namespace OCM.Import.Providers
                             cp.Connections = new List<ConnectionInfo>();
                             if (!IsConnectionInfoBlank(cinfo))
                             {
+                                //TODO: skip items with blank address info
                                 cp.Connections.Add(cinfo);
                             }
                         }
