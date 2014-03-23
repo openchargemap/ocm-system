@@ -300,6 +300,7 @@ namespace OCM.API.Common
                 msgParams.Add("Description", "OCM-" + cpData.ID + " : " + poi.AddressInfo.Title);
                 msgParams.Add("SubmissionStatusType", approvalStatus);
                 msgParams.Add("ItemURL", "http://openchargemap.org/site/poi/details/" + cpData.ID);
+                msgParams.Add("ChargePointID", cpData.ID);
                 msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
                 msgParams.Add("MessageBody",
                               "New Location " + approvalStatus + " OCM-" + cpData.ID + " Submitted: " +
