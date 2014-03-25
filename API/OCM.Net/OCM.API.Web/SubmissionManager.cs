@@ -182,12 +182,20 @@ namespace OCM.API.Common
                     return updatedPOI.ID;
                 }
 
-                int? supersedesID = null;
-                //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
-                if (isUpdate && !isSystemUser && oldPOI.DataProviderID!= (int)StandardDataProviders.OpenChargeMapContrib)
+                if (isUpdate && updatedPOI.SubmissionStatusTypeID >= 1000)
                 {
-                    //move old poi to new id, set status of new item to superseded
-                    supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);
+                    //update is a delisting, skip superseding poi
+                    System.Diagnostics.Debug.WriteLine("skipping superseding of imported POI due to delisting");
+                }
+                else
+                {
+                    int? supersedesID = null;
+                    //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
+                    if (isUpdate && !isSystemUser && oldPOI.DataProviderID != (int)StandardDataProviders.OpenChargeMapContrib)
+                    {
+                        //move old poi to new id, set status of new item to superseded
+                        supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);
+                    }
                 }
 
                 //user is an editor, go ahead and store the addition/update

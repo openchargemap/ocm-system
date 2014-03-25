@@ -287,6 +287,10 @@ namespace OCM.MVC.Controllers
 
                     //reset any values provided as -1 to a standard default (unknown etc) 
                     //the binding method varies between hidden fields and dropdown values (FIXME)
+                    if (poi.DataProvider!=null && poi.DataProvider.ID>0)
+                    {
+                        poi.DataProviderID = poi.DataProvider.ID;
+                    }
                     if (poi.DataProviderID == -1 || poi.DataProviderID == null)
                     {
                         poi.DataProvider = null;
@@ -472,7 +476,7 @@ namespace OCM.MVC.Controllers
             }
             else
             {
-                duplicateSummary = new POIManager().GetAllPOIDuplicates(1);
+                duplicateSummary = new POIManager().GetAllPOIDuplicates(countryId);
                 HttpRuntime.Cache[cacheKey] = duplicateSummary;
             }
 

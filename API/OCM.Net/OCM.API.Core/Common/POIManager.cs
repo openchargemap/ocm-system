@@ -522,6 +522,7 @@ namespace OCM.API.Common
                     ".AddressInfo.Distance",
                     ".AddressInfo.DistanceUnit",
                     ".AddressInfo.DistanceUnit.DistanceUnit",
+                    ".SubmissionStatus.ID",
                     ".SubmissionStatus.IsLive",
                     ".OperatorInfo.WebsiteURL",
                     ".OperatorInfo.PhonePrimaryContact",
@@ -886,9 +887,10 @@ namespace OCM.API.Common
             dataModel.ChargePoints.Add(supersededPOIData);
             dataModel.SaveChanges();
 
-            //associate updated poi with older parent poi, set OCM as new data provider
+            //associate updated poi with older parent poi, set OCM as data provider
             updatedPOI.ParentChargePointID = supersededPOIData.ID;
             updatedPOI.DataProvider = null;
+            updatedPOI.DataProvidersReference = null;
             updatedPOI.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
 
             //return new ID for the archived version of the POI
