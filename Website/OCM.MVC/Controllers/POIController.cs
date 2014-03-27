@@ -213,23 +213,39 @@ namespace OCM.MVC.Controllers
 
         //
         // GET: /POI/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            var poi = new POIManager().Get(id);
-            InitEditReferenceData(poi);
-
-            var refData = new POIBrowseModel();
-            ViewBag.ReferenceData = refData;
-            ViewBag.HideAdvancedInfo = true; 
-            
-            var user = new UserManager().GetUser((int)Session["UserID"]);
-            if (POIManager.CanUserEditPOI(poi, user))
+            if (id > 0)
             {
-                ViewBag.HideAdvancedInfo = false; 
+                var poi = new POIManager().Get((int)id);
+                if (poi != null)
+                {
+                    InitEditReferenceData(poi);
+
+                    var refData = new POIBrowseModel();
+                    ViewBag.ReferenceData = refData;
+                    ViewBag.HideAdvancedInfo = true;
+
+                    try
+                    {
+                        var user = new UserManager().GetUser((int)Session["UserID"]);
+                        if (POIManager.CanUserEditPOI(poi, user))
+                        {
+                            ViewBag.HideAdvancedInfo = false;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ; ; //user not signed in
+                    }
+
+                    //enable advanced edit options for full editors/admin
+                    return View(poi);
+                }
             }
 
-            //enable advanced edit options for full editors/admin
-            return View(poi);
+            //no applicable poi, jump back to browse
+            return RedirectToAction("Index", "POI");
         }
 
         //
@@ -287,7 +303,7 @@ namespace OCM.MVC.Controllers
 
                     //reset any values provided as -1 to a standard default (unknown etc) 
                     //the binding method varies between hidden fields and dropdown values (FIXME)
-                    if (poi.DataProvider!=null && poi.DataProvider.ID>0)
+                    if (poi.DataProvider != null && poi.DataProvider.ID > 0)
                     {
                         poi.DataProviderID = poi.DataProvider.ID;
                     }
@@ -414,7 +430,8 @@ namespace OCM.MVC.Controllers
                 poi.Connections = new List<OCM.API.Common.Model.ConnectionInfo>();
             }
 
-            if (poi.Connections.Count==0){
+            if (poi.Connections.Count == 0)
+            {
                 poi.Connections.Add(new OCM.API.Common.Model.ConnectionInfo());
             }
 
@@ -463,7 +480,7 @@ namespace OCM.MVC.Controllers
             return View(summary);
         }
 
-        
+
         public ActionResult ReviewDuplicates(int countryId)
         {
             ViewBag.MinConfidenceLevel = 70;
