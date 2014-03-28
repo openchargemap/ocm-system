@@ -16,7 +16,7 @@ namespace OCM.MVC.Controllers
         public static void UpdateCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
             if (response.Cookies.AllKeys.Contains(cookieName))
-            { 
+            {
                 response.Cookies[cookieName].Value = cookieValue;
             }
             else
@@ -58,7 +58,7 @@ namespace OCM.MVC.Controllers
 
         public ActionResult LoginFailed()
         {
-            ViewBag.LoginFailed = true;
+            TempData["LoginFailed"] = true;
             return RedirectToAction("BeginLogin");
         }
 
@@ -71,37 +71,45 @@ namespace OCM.MVC.Controllers
         [AllowAnonymous]
         public ActionResult AuthenticationCallback()
         {
-            //http://brockallen.com/2012/09/04/using-oauthwebsecurity-without-simplemembership/
-            var result = OAuthWebSecurity.VerifyAuthentication();
-            if (result.IsSuccessful)
+            try
             {
-                // name of the provider we just used
-                var provider = result.Provider;
-                // provider's unique ID for the user
-                var uniqueUserID = result.ProviderUserId;
-                // since we might use multiple identity providers, then 
-                // our app uniquely identifies the user by combination of 
-                // provider name and provider user id
-                var uniqueID = provider + "/" + uniqueUserID;
+                //http://brockallen.com/2012/09/04/using-oauthwebsecurity-without-simplemembership/
+                var result = OAuthWebSecurity.VerifyAuthentication();
+                if (result.IsSuccessful)
+                {
+                    // name of the provider we just used
+                    var provider = result.Provider;
+                    // provider's unique ID for the user
+                    var uniqueUserID = result.ProviderUserId;
+                    // since we might use multiple identity providers, then 
+                    // our app uniquely identifies the user by combination of 
+                    // provider name and provider user id
+                    var uniqueID = provider + "/" + uniqueUserID;
 
-                // we then log the user into our application
-                // we could have done a database lookup for a 
-                // more user-friendly username for our app
-                //FormsAuthentication.SetAuthCookie(uniqueID, false);
+                    // we then log the user into our application
+                    // we could have done a database lookup for a 
+                    // more user-friendly username for our app
+                    //FormsAuthentication.SetAuthCookie(uniqueID, false);
 
-                // dictionary of values from identity provider
-                var userDataFromProvider = result.ExtraData;
+                    // dictionary of values from identity provider
+                    var userDataFromProvider = result.ExtraData;
 
-                string email = null;
-                string name = null;
-                if (userDataFromProvider.ContainsKey("email")) email = userDataFromProvider["email"];
-                if (userDataFromProvider.ContainsKey("name")) name = userDataFromProvider["name"];
+                    string email = null;
+                    string name = null;
+                    if (userDataFromProvider.ContainsKey("email")) email = userDataFromProvider["email"];
+                    if (userDataFromProvider.ContainsKey("name")) name = userDataFromProvider["name"];
 
-                //for legacy reasons, with twitter we use the text username instead of numeric userid
-                if (provider == "twitter" && !String.IsNullOrEmpty(result.UserName)) uniqueUserID = result.UserName;
-                
-                return ProcessLoginResult(uniqueUserID, provider, name, email);
+                    //for legacy reasons, with twitter we use the text username instead of numeric userid
+                    if (provider == "twitter" && !String.IsNullOrEmpty(result.UserName)) uniqueUserID = result.UserName;
+
+                    return ProcessLoginResult(uniqueUserID, provider, name, email);
+                }
             }
+            catch (Exception exp)
+            {
+                System.Diagnostics.Debug.WriteLine(exp.ToString());
+            }
+
             return RedirectToAction("LoginFailed");
         }
 
@@ -163,7 +171,7 @@ namespace OCM.MVC.Controllers
              * */
         }
 
-        private ActionResult ProcessLoginResult(string userIdentifier,string loginProvider, string name, string email )
+        private ActionResult ProcessLoginResult(string userIdentifier, string loginProvider, string name, string email)
         {
             //TODO: move all of this logic to UserManager
             string newSessionToken = Guid.NewGuid().ToString();
@@ -176,9 +184,9 @@ namespace OCM.MVC.Controllers
                 userDetails = new Core.Data.User();
                 userDetails.IdentityProvider = loginProvider;
                 userDetails.Identifier = userIdentifier;
-                if (String.IsNullOrEmpty(name) && loginProvider.ToLower()=="twitter") name = userIdentifier;
+                if (String.IsNullOrEmpty(name) && loginProvider.ToLower() == "twitter") name = userIdentifier;
                 if (String.IsNullOrEmpty(name) && email != null) name = email.Substring(0, email.IndexOf("@"));
-                
+
                 userDetails.Username = name;
                 userDetails.EmailAddress = email;
                 userDetails.DateCreated = DateTime.UtcNow;
@@ -194,10 +202,10 @@ namespace OCM.MVC.Controllers
             {
                 //update date last logged in and refresh users details if more information provided
                 userDetails.DateLastLogin = DateTime.UtcNow;
-                
+
                 if (userDetails.Username == userDetails.Identifier && !String.IsNullOrEmpty(name)) userDetails.Username = name;
                 if (String.IsNullOrEmpty(userDetails.EmailAddress) && !String.IsNullOrEmpty(email)) userDetails.EmailAddress = email;
-                
+
                 //only update session token if new (also done on logout)
                 if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
             }
@@ -209,7 +217,7 @@ namespace OCM.MVC.Controllers
             dataModel.SaveChanges();
 
             LoginProviderController.PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
-            
+
             if (!String.IsNullOrEmpty((string)Session["_redirectURL"]))
             {
                 string returnURL = Session["_redirectURL"].ToString();
@@ -248,13 +256,13 @@ namespace OCM.MVC.Controllers
 
         public ActionResult AppLogin(bool? redirectWithToken)
         {
-            if (redirectWithToken==true)
-            { 
-                var IdentityProvider  = GetCookie(Request, "IdentityProvider");
-                var Identifier  = GetCookie(Request,"Identifier");
-                var Username  = GetCookie(Request,"Username");
-                var SessionToken  = GetCookie(Request,"OCMSessionToken");
-                var Permissions  = GetCookie(Request,"Permissions");
+            if (redirectWithToken == true)
+            {
+                var IdentityProvider = GetCookie(Request, "IdentityProvider");
+                var Identifier = GetCookie(Request, "Identifier");
+                var Username = GetCookie(Request, "Username");
+                var SessionToken = GetCookie(Request, "OCMSessionToken");
+                var Permissions = GetCookie(Request, "Permissions");
 
                 return RedirectToAction("AppLogin", new
                 {

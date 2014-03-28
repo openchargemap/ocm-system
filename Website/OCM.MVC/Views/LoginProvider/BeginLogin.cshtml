@@ -3,6 +3,12 @@
 }
 
 <h2>Open Charge Map - Sign In</h2>
+@if (TempData["LoginFailed"] != null && (bool)TempData["LoginFailed"] == true)
+{
+    <div class="alert alert-danger">
+        There was a problem Signing In. This can be caused by intermittent issues with your chosen identify provider or because the login was refused. Please try again in a moment.
+    </div>
+}
 <p>You can Sign In to Open Charge Map using a range of identity providers. Please choose your preferred identity provider to begin. If you are an existing user you are probably using Twitter:</p>
 
 <div class="row">
