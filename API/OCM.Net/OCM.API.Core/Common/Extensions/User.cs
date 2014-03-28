@@ -20,14 +20,7 @@ namespace OCM.API.Common.Model.Extensions
             {
                 ID = source.ID,
                 Username = source.Username,
-                //Profile = source.Profile,
-                //Location = source.Location,
-                //WebsiteURL = source.WebsiteURL,
-                ReputationPoints = source.ReputationPoints,
-                //DateCreated = source.DateCreated,
-                //IsProfilePublic = source.IsProfilePublic,
-                //IsPublicChargingProvider = source.IsPublicChargingProvider,
-                //IsEmergencyChargingProvider = source.IsEmergencyChargingProvider
+                ReputationPoints = source.ReputationPoints
             };
         }
 
@@ -54,7 +47,10 @@ namespace OCM.API.Common.Model.Extensions
                 IsEmergencyChargingProvider = source.IsEmergencyChargingProvider,
                 Latitude =  source.Latitude,
                 Longitude = source.Longitude,
-                EmailAddress = source.EmailAddress
+                EmailAddress = source.EmailAddress,
+                ReceiveCommentNotifications = source.ReceiveCommentNotifications,
+                ReceiveEditNotifications = source.ReceiveEditNotifications,
+                SyncedSettings = source.SyncedSettings
             };
         }
     }

@@ -14,5 +14,8 @@ namespace OCM.API.Common.Model
         public string Comments { get; set; }
         public DataProviderStatusType DataProviderStatusType { get; set; }
         public bool IsRestrictedEdit { get; set; }
+        public bool? IsOpenDataLicensed { get; set; }
+        public bool? IsApprovedImport { get; set; }
+        public string License { get; set; }
     }
 }

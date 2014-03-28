@@ -17,6 +17,7 @@ namespace OCM.Core.Data
         public Operator()
         {
             this.ChargePoints = new HashSet<ChargePoint>();
+            this.OperatorCountries = new HashSet<OperatorCountry>();
         }
     
         public int ID { get; set; }
@@ -34,5 +35,6 @@ namespace OCM.Core.Data
     
         public virtual AddressInfo AddressInfo { get; set; }
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
+        public virtual ICollection<OperatorCountry> OperatorCountries { get; set; }
     }
 }

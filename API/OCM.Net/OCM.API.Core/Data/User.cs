@@ -22,7 +22,6 @@ namespace OCM.Core.Data
             this.EditQueueItems1 = new HashSet<EditQueueItem>();
             this.UserComments = new HashSet<UserComment>();
             this.MediaItems = new HashSet<MediaItem>();
-            this.DataProviderUsers = new HashSet<DataProviderUser>();
             this.RegisteredApplications = new HashSet<RegisteredApplication>();
         }
     
@@ -48,6 +47,7 @@ namespace OCM.Core.Data
         public string APIKey { get; set; }
         public bool ReceiveEditNotifications { get; set; }
         public bool ReceiveCommentNotifications { get; set; }
+        public string SyncedSettings { get; set; }
     
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
@@ -55,7 +55,6 @@ namespace OCM.Core.Data
         public virtual ICollection<EditQueueItem> EditQueueItems1 { get; set; }
         public virtual ICollection<UserComment> UserComments { get; set; }
         public virtual ICollection<MediaItem> MediaItems { get; set; }
-        public virtual ICollection<DataProviderUser> DataProviderUsers { get; set; }
         public virtual ICollection<RegisteredApplication> RegisteredApplications { get; set; }
     }
 }

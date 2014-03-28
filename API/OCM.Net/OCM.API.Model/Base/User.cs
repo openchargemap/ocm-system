@@ -63,5 +63,9 @@ namespace OCM.API.Common.Model
 
         public string APIKey { get; set; }
 
+        public bool ReceiveCommentNotifications { get; set; }
+        public bool ReceiveEditNotifications { get; set; }
+        public string SyncedSettings { get; set; }
+
     }
 }

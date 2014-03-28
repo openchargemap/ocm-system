@@ -12,14 +12,13 @@ namespace OCM.Core.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class DataProviderUser
+    public partial class OperatorCountry
     {
         public int ID { get; set; }
-        public int DataProviderID { get; set; }
-        public int UserID { get; set; }
-        public bool IsDataProviderAdmin { get; set; }
+        public int OperatorID { get; set; }
+        public int CountryID { get; set; }
     
-        public virtual DataProvider DataProvider { get; set; }
-        public virtual User User { get; set; }
+        public virtual Country Country { get; set; }
+        public virtual Operator Operator { get; set; }
     }
 }

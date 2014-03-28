@@ -51,8 +51,8 @@ namespace OCM.Core.Data
         public DbSet<UserComment> UserComments { get; set; }
         public DbSet<UserCommentType> UserCommentTypes { get; set; }
         public DbSet<MediaItem> MediaItems { get; set; }
-        public DbSet<DataProviderUser> DataProviderUsers { get; set; }
         public DbSet<MetadataFieldOption> MetadataFieldOptions { get; set; }
         public DbSet<RegisteredApplication> RegisteredApplications { get; set; }
+        public DbSet<OperatorCountry> OperatorCountries { get; set; }
     }
 }

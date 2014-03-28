@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="OCM.Core.Data.OCMEntities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="OCM.Core.Data.OCMEntities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AddressInfo">
           <Key>
             <PropertyRef Name="ID" />
@@ -133,6 +133,9 @@
           <Property Name="Comments" Type="nvarchar(max)" />
           <Property Name="DataProviderStatusTypeID" Type="int" />
           <Property Name="IsRestrictedEdit" Type="bit" Nullable="false" />
+          <Property Name="IsOpenDataLicensed" Type="bit" />
+          <Property Name="IsApprovedImport" Type="bit" />
+          <Property Name="License" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="DataProviderStatusType">
           <Key>
@@ -141,15 +144,6 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="IsProviderEnabled" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="DataProviderUser">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DataProviderID" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="IsDataProviderAdmin" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="DataType">
           <Key>
@@ -252,6 +246,14 @@
           <Property Name="FaultReportEmail" Type="nvarchar" MaxLength="500" />
           <Property Name="IsRestrictedEdit" Type="bit" />
         </EntityType>
+        <EntityType Name="OperatorCountry">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OperatorID" Type="int" Nullable="false" />
+          <Property Name="CountryID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="RegisteredApplication">
           <Key>
             <PropertyRef Name="ID" />
@@ -326,11 +328,12 @@
           <Property Name="IsEmergencyChargingProvider" Type="bit" Nullable="false" />
           <Property Name="IsProfilePublic" Type="bit" Nullable="false" />
           <Property Name="IsPublicChargingProvider" Type="bit" Nullable="false" />
-          <Property Name="ReceiveEditNotifications" Type="bit" Nullable="false" />
-          <Property Name="ReceiveCommentNotifications" Type="bit" Nullable="false" />
           <Property Name="APIKey" Type="nvarchar" MaxLength="100" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
+          <Property Name="ReceiveCommentNotifications" Type="bit" Nullable="false" />
+          <Property Name="ReceiveEditNotifications" Type="bit" Nullable="false" />
+          <Property Name="SyncedSettings" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -537,30 +540,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DataProviderUser_DataProvider">
-          <End Role="DataProvider" Type="Self.DataProvider" Multiplicity="1" />
-          <End Role="DataProviderUser" Type="Self.DataProviderUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DataProvider">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DataProviderUser">
-              <PropertyRef Name="DataProviderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DataProviderUser_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="DataProviderUser" Type="Self.DataProviderUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DataProviderUser">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_EditQueue_User">
           <End Role="User" Type="Self.User" Multiplicity="0..1" />
           <End Role="EditQueueItem" Type="Self.EditQueueItem" Multiplicity="*" />
@@ -717,6 +696,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OperatorCountry_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="OperatorCountry" Type="Self.OperatorCountry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OperatorCountry">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OperatorCountry_Operator">
+          <End Role="Operator" Type="Self.Operator" Multiplicity="1" />
+          <End Role="OperatorCountry" Type="Self.OperatorCountry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Operator">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OperatorCountry">
+              <PropertyRef Name="OperatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RegisteredApplication_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="RegisteredApplication" Type="Self.RegisteredApplication" Multiplicity="*" />
@@ -807,7 +810,6 @@
           <EntitySet Name="CurrentType" EntityType="Self.CurrentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataProvider" EntityType="Self.DataProvider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataProviderStatusType" EntityType="Self.DataProviderStatusType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DataProviderUser" EntityType="Self.DataProviderUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataType" EntityType="Self.DataType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EditQueueItem" EntityType="Self.EditQueueItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityType" EntityType="Self.EntityType" Schema="dbo" store:Type="Tables" />
@@ -817,6 +819,7 @@
           <EntitySet Name="MetadataGroup" EntityType="Self.MetadataGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MetadataValue" EntityType="Self.MetadataValue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Operator" EntityType="Self.Operator" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OperatorCountry" EntityType="Self.OperatorCountry" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegisteredApplication" EntityType="Self.RegisteredApplication" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusType" EntityType="Self.StatusType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubmissionStatusType" EntityType="Self.SubmissionStatusType" Schema="dbo" store:Type="Tables" />
@@ -885,14 +888,6 @@
             <End Role="DataProviderStatusType" EntitySet="DataProviderStatusType" />
             <End Role="DataProvider" EntitySet="DataProvider" />
           </AssociationSet>
-          <AssociationSet Name="FK_DataProviderUser_DataProvider" Association="Self.FK_DataProviderUser_DataProvider">
-            <End Role="DataProvider" EntitySet="DataProvider" />
-            <End Role="DataProviderUser" EntitySet="DataProviderUser" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DataProviderUser_User" Association="Self.FK_DataProviderUser_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="DataProviderUser" EntitySet="DataProviderUser" />
-          </AssociationSet>
           <AssociationSet Name="FK_EditQueue_User" Association="Self.FK_EditQueue_User">
             <End Role="User" EntitySet="User" />
             <End Role="EditQueueItem" EntitySet="EditQueueItem" />
@@ -944,6 +939,14 @@
           <AssociationSet Name="FK_Operator_AddressInfo" Association="Self.FK_Operator_AddressInfo">
             <End Role="AddressInfo" EntitySet="AddressInfo" />
             <End Role="Operator" EntitySet="Operator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OperatorCountry_Country" Association="Self.FK_OperatorCountry_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="OperatorCountry" EntitySet="OperatorCountry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OperatorCountry_Operator" Association="Self.FK_OperatorCountry_Operator">
+            <End Role="Operator" EntitySet="Operator" />
+            <End Role="OperatorCountry" EntitySet="OperatorCountry" />
           </AssociationSet>
           <AssociationSet Name="FK_RegisteredApplication_User" Association="Self.FK_RegisteredApplication_User">
             <End Role="User" EntitySet="User" />
@@ -1125,18 +1128,9 @@
             <End Role="User" EntitySet="Users" />
             <End Role="MediaItem" EntitySet="MediaItems" />
           </AssociationSet>
-          <EntitySet Name="DataProviderUsers" EntityType="OCM.Core.Data.OCMEntities.DataProviderUser" />
-          <AssociationSet Name="FK_DataProviderUser_DataProvider" Association="OCM.Core.Data.OCMEntities.FK_DataProviderUser_DataProvider">
-            <End Role="DataProvider" EntitySet="DataProviders" />
-            <End Role="DataProviderUser" EntitySet="DataProviderUsers" />
-          </AssociationSet>
           <AssociationSet Name="FK_MetadataGroup_DataProvider" Association="OCM.Core.Data.OCMEntities.FK_MetadataGroup_DataProvider">
             <End Role="DataProvider" EntitySet="DataProviders" />
             <End Role="MetadataGroup" EntitySet="MetadataGroups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DataProviderUser_User" Association="OCM.Core.Data.OCMEntities.FK_DataProviderUser_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="DataProviderUser" EntitySet="DataProviderUsers" />
           </AssociationSet>
           <EntitySet Name="MetadataFieldOptions" EntityType="OCM.Core.Data.OCMEntities.MetadataFieldOption" />
           <AssociationSet Name="FK_MetadataFieldOption_MetadataField" Association="OCM.Core.Data.OCMEntities.FK_MetadataFieldOption_MetadataField">
@@ -1151,6 +1145,15 @@
           <AssociationSet Name="FK_RegisteredApplication_User" Association="OCM.Core.Data.OCMEntities.FK_RegisteredApplication_User">
             <End Role="User" EntitySet="Users" />
             <End Role="RegisteredApplication" EntitySet="RegisteredApplications" />
+          </AssociationSet>
+          <EntitySet Name="OperatorCountries" EntityType="OCM.Core.Data.OCMEntities.OperatorCountry" />
+          <AssociationSet Name="FK_OperatorCountry_Country" Association="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="OperatorCountry" EntitySet="OperatorCountries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OperatorCountry_Operator" Association="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Operator">
+            <End Role="Operator" EntitySet="Operators" />
+            <End Role="OperatorCountry" EntitySet="OperatorCountries" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AddressInfo">
@@ -1287,6 +1290,7 @@
           <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="ISOCode" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="AddressInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="Country" ToRole="AddressInfo" />
+          <NavigationProperty Name="OperatorCountries" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country" FromRole="Country" ToRole="OperatorCountry" />
         </EntityType>
         <EntityType Name="CurrentType">
           <Key>
@@ -1308,9 +1312,11 @@
           <Property Name="DataProviderStatusTypeID" Type="Int32" />
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_DataProvider" FromRole="DataProvider" ToRole="ChargePoint" />
           <NavigationProperty Name="DataProviderStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_DataProvider_DataProviderStatus" FromRole="DataProvider" ToRole="DataProviderStatusType" />
-          <NavigationProperty Name="DataProviderUsers" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_DataProvider" FromRole="DataProvider" ToRole="DataProviderUser" />
           <NavigationProperty Name="MetadataGroups" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataGroup_DataProvider" FromRole="DataProvider" ToRole="MetadataGroup" />
           <Property Type="Boolean" Name="IsRestrictedEdit" Nullable="false" />
+          <Property Name="IsOpenDataLicensed" Type="Boolean" />
+          <Property Name="IsApprovedImport" Type="Boolean" />
+          <Property Name="License" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DataProviderStatusType">
           <Key>
@@ -1413,6 +1419,7 @@
           <NavigationProperty Name="AddressInfo" Relationship="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo" FromRole="Operator" ToRole="AddressInfo" />
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_Operator" FromRole="Operator" ToRole="ChargePoint" />
           <Property Type="Boolean" Name="IsRestrictedEdit" />
+          <NavigationProperty Name="OperatorCountries" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Operator" FromRole="Operator" ToRole="OperatorCountry" />
         </EntityType>
         <EntityType Name="StatusType">
           <Key>
@@ -1485,10 +1492,10 @@
           <Property Type="Double" Name="Longitude" />
           <Property Type="String" Name="APIKey" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MediaItems" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_User" FromRole="User" ToRole="MediaItem" />
-          <NavigationProperty Name="DataProviderUsers" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_User" FromRole="User" ToRole="DataProviderUser" />
           <Property Name="ReceiveEditNotifications" Type="Boolean" Nullable="false" />
           <Property Name="ReceiveCommentNotifications" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="RegisteredApplications" Relationship="OCM.Core.Data.OCMEntities.FK_RegisteredApplication_User" FromRole="User" ToRole="RegisteredApplication" />
+          <Property Name="SyncedSettings" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -1911,29 +1918,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DataProviderUser">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="DataProviderID" Nullable="false" />
-          <Property Type="Int32" Name="UserID" Nullable="false" />
-          <NavigationProperty Name="DataProvider" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_DataProvider" FromRole="DataProviderUser" ToRole="DataProvider" />
-          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_DataProviderUser_User" FromRole="DataProviderUser" ToRole="User" />
-          <Property Type="Boolean" Name="IsDataProviderAdmin" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_DataProviderUser_DataProvider">
-          <End Type="OCM.Core.Data.OCMEntities.DataProvider" Role="DataProvider" Multiplicity="1" />
-          <End Type="OCM.Core.Data.OCMEntities.DataProviderUser" Role="DataProviderUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DataProvider">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DataProviderUser">
-              <PropertyRef Name="DataProviderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MetadataGroup_DataProvider">
           <End Type="OCM.Core.Data.OCMEntities.DataProvider" Role="DataProvider" Multiplicity="1" />
           <End Type="OCM.Core.Data.OCMEntities.MetadataGroup" Role="MetadataGroup" Multiplicity="*" />
@@ -1943,18 +1927,6 @@
             </Principal>
             <Dependent Role="MetadataGroup">
               <PropertyRef Name="DataProviderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DataProviderUser_User">
-          <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="1" />
-          <End Type="OCM.Core.Data.OCMEntities.DataProviderUser" Role="DataProviderUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DataProviderUser">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2019,6 +1991,40 @@
             </Principal>
             <Dependent Role="RegisteredApplication">
               <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OperatorCountry">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OperatorID" Type="Int32" Nullable="false" />
+          <Property Name="CountryID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Country" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country" FromRole="OperatorCountry" ToRole="Country" />
+          <NavigationProperty Name="Operator" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Operator" FromRole="OperatorCountry" ToRole="Operator" />
+        </EntityType>
+        <Association Name="FK_OperatorCountry_Country">
+          <End Type="OCM.Core.Data.OCMEntities.Country" Role="Country" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.OperatorCountry" Role="OperatorCountry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OperatorCountry">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OperatorCountry_Operator">
+          <End Type="OCM.Core.Data.OCMEntities.Operator" Role="Operator" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.OperatorCountry" Role="OperatorCountry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Operator">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OperatorCountry">
+              <PropertyRef Name="OperatorID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2158,6 +2164,9 @@
           <EntitySetMapping Name="DataProviders">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProvider">
               <MappingFragment StoreEntitySet="DataProvider">
+                <ScalarProperty Name="License" ColumnName="License" />
+                <ScalarProperty Name="IsApprovedImport" ColumnName="IsApprovedImport" />
+                <ScalarProperty Name="IsOpenDataLicensed" ColumnName="IsOpenDataLicensed" />
                 <ScalarProperty Name="IsRestrictedEdit" ColumnName="IsRestrictedEdit" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -2302,6 +2311,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="SyncedSettings" ColumnName="SyncedSettings" />
                 <ScalarProperty Name="ReceiveCommentNotifications" ColumnName="ReceiveCommentNotifications" />
                 <ScalarProperty Name="ReceiveEditNotifications" ColumnName="ReceiveEditNotifications" />
                 <ScalarProperty Name="APIKey" ColumnName="APIKey" />
@@ -2372,16 +2382,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DataProviderUsers">
-            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProviderUser">
-              <MappingFragment StoreEntitySet="DataProviderUser">
-                <ScalarProperty Name="IsDataProviderAdmin" ColumnName="IsDataProviderAdmin" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="DataProviderID" ColumnName="DataProviderID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MetadataFieldOptions">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.MetadataFieldOption">
               <MappingFragment StoreEntitySet="MetadataFieldOption">
@@ -2405,6 +2405,15 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OperatorCountries">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.OperatorCountry">
+              <MappingFragment StoreEntitySet="OperatorCountry">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="OperatorID" ColumnName="OperatorID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

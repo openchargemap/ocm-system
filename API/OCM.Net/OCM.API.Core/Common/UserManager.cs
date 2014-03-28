@@ -132,7 +132,9 @@ namespace OCM.API.Common
                             userData.EmailAddress = updatedProfile.EmailAddress;
                             userData.Latitude = updatedProfile.Latitude;
                             userData.Longitude = updatedProfile.Longitude;
-
+                            userData.ReceiveCommentNotifications = updatedProfile.ReceiveEditNotifications;
+                            userData.ReceiveEditNotifications = updatedProfile.ReceiveEditNotifications;
+                            //TODO: SyncedSettings
                             if (allowAdminChanges)
                             {
                                 userData.Identifier = updatedProfile.Identifier;
