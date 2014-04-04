@@ -1,9 +1,12 @@
+/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/// <reference path="OCM_App.ts" />
 
 OCM_App.prototype.getCookie = function (c_name) {
     if (this.isRunningUnderCordova) {
         console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
         return this.ocm_data.getCachedDataObject("_pref_" + c_name);
     } else {
+        //http://www.w3schools.com/js/js_cookies.asp
         var i, x, y, ARRcookies = document.cookie.split(";");
         for (i = 0; i < ARRcookies.length; i++) {
             x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
@@ -27,6 +30,7 @@ OCM_App.prototype.setCookie = function (c_name, value, exdays) {
         if (exdays == null)
             exdays = 1;
 
+        //http://www.w3schools.com/js/js_cookies.asp
         var exdate = new Date();
         exdate.setDate(exdate.getDate() + exdays);
         var c_value = escape(value) + "; expires=" + exdate.toUTCString();
@@ -45,6 +49,7 @@ OCM_App.prototype.clearCookie = function (c_name) {
 };
 
 OCM_App.prototype.getParameter = function (name) {
+    //Get a parameter value from the document url
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
@@ -92,3 +97,4 @@ OCM_App.prototype.showProgressIndicator = function () {
 OCM_App.prototype.hideProgressIndicator = function () {
     $("#progress-indicator").fadeOut();
 };
+//# sourceMappingURL=OCM_App_Util.js.map

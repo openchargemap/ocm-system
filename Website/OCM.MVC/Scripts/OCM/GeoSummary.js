@@ -84,4 +84,6 @@ define(["require", "exports"], function(require, exports) {
     })(exports.OCM || (exports.OCM = {}));
     var OCM = exports.OCM;
 });
+//var summary = new OCM.Widgets.GeoSummary("geochart", "datasummary");
+//summary.show();
 //# sourceMappingURL=GeoSummary.js.map

@@ -1,9 +1,14 @@
+/// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
+/// <reference path="OCM_Data.ts" />
+//"use strict";
 var OCM;
 (function (OCM) {
     var Geolocation = (function () {
         function Geolocation() {
+            //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
 
+            //input/results for latest text geocoding attempt
             this.geocodingTextInput = null;
             this.geocodingResultPos = null;
 
@@ -12,11 +17,13 @@ var OCM;
         Geolocation.prototype.determineUserLocation = function (successCallback, failureCallback) {
             var appContext = this;
 
+            //determine user location automatically if enabled & supported
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     this.clientGeolocationPos = position;
                     successCallback(this.clientGeolocationPos);
                 }, function () {
+                    // could not geolocate
                     appContext.determineUserLocationFailed(failureCallback);
                 });
             } else {
@@ -25,10 +32,12 @@ var OCM;
         };
 
         Geolocation.prototype.determineUserLocationFailed = function (failureCallback) {
+            //failed
             failureCallback();
         };
 
         Geolocation.prototype.determineGeocodedLocation = function (locationText, successCallback) {
+            //caller is searching for same (previously geocoded) text again, return last result
             if (locationText === this.geocodingTextInput) {
                 if (this.geocodingResultPos != null) {
                     successCallback(this.geocodingResultPos);
@@ -52,11 +61,23 @@ var OCM;
                 appContext.determineGeocodedLocationCompleted(locationPos, successCallback, null);
             }, null);
 
+            /*
+            geocoder.geocode({ 'address': locationText }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+            var locationPos = results[0].geometry.location;
+            
+            appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
+            } else {
+            alert("Sorry, we could not identify this location: " + status);
+            }
+            });
+            */
             return true;
         };
 
         Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, successCallback, failureCallback) {
             if (pos.resultsAvailable === true) {
+                //convert geocoding service lat/lng result into browser coords, including position source data attribution
                 var geoPosition = {
                     coords: {
                         latitude: pos.lat,
@@ -77,6 +98,8 @@ var OCM;
         };
 
         Geolocation.prototype.getBearing = function (lat1, lon1, lat2, lon2) {
+            //from http://stackoverflow.com/questions/1971585/mapping-math-and-javascript
+            //convert degrees to radians
             lat1 = lat1 * Math.PI / 180;
             lat2 = lat2 * Math.PI / 180;
             var dLon = (lon2 - lon1) * Math.PI / 180;
@@ -93,6 +116,7 @@ var OCM;
         };
 
         Geolocation.prototype.getCardinalDirectionFromBearing = function (bearing) {
+            //partly inspired by http://bryan.reynoldslive.com/post/Latitude2c-Longitude2c-Bearing2c-Cardinal-Direction2c-Distance2c-and-C.aspx
             if (bearing >= 0 && bearing <= 22.5) {
                 return "N";
             }
@@ -147,3 +171,4 @@ var OCM;
     })();
     OCM.Geolocation = Geolocation;
 })(OCM || (OCM = {}));
+//# sourceMappingURL=OCM_Geolocation.js.map
