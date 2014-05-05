@@ -103,6 +103,8 @@ namespace OCM.API.Common.Model
         public string MetadataTags { get; set; }
         #endregion
 
+
+#if !PORTABLE
         /// <summary>
         /// Get a simple summary description of the Charge Point including address/access info
         /// </summary>
@@ -149,6 +151,8 @@ namespace OCM.API.Common.Model
                            "\">View Details (OCM-" + this.ID + ")</a>";
             return description;
         }
+
+#endif
 
         public string GetAddressSummary(bool UseHTML)
         {

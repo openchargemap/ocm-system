@@ -18,7 +18,9 @@ namespace OCM.API.Common.Model
         public int? EntityID { get; set; }
         public EntityType EntityType { get; set; }
 
+#if !PORTABLE
         //extended properties
         public List<DiffItem> Differences { get; set; }
+#endif
     }
 }
