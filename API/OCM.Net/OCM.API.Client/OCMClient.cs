@@ -7,6 +7,9 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
+using System.Threading.Tasks;
+using System.Net.Http;
+
 
 namespace OCM.API.Client
 {
@@ -42,21 +45,25 @@ namespace OCM.API.Client
     public class OCMClient
     {
 #if DEBUG
-        public string ServiceBaseURL = "http://localhost:8080/v2/";
+        //public string ServiceBaseURL = "http://localhost:8080/v2/";
+        public string ServiceBaseURL = "http://api.openchargemap.io/v2/";
 #else 
         public string ServiceBaseURL = "http://api.openchargemap.io/v2/";
 #endif
+
+        HttpWebResponse response = null;
+
         /// <summary>
         /// Get core reference data such as lookup lists
         /// </summary>
         /// <returns></returns>
-        public CoreReferenceData GetCoreReferenceData()
+        public async Task<CoreReferenceData> GetCoreReferenceData()
         {
             //get core reference data
             string url = ServiceBaseURL + "/referencedata/?output=json";
             try
             {
-                string data = FetchDataStringFromURL(url);
+                string data = await FetchDataStringFromURLAsync(url);
                 JObject o = JObject.Parse(data);
                 JsonSerializer serializer = new JsonSerializer();
                 CoreReferenceData c = (CoreReferenceData)serializer.Deserialize(new JTokenReader(o), typeof(CoreReferenceData));
@@ -75,7 +82,7 @@ namespace OCM.API.Client
         /// </summary>
         /// <param name="cp"></param>
         /// <returns></returns>
-        public List<ChargePoint> GetLocations(SearchFilters filters)
+        public async Task<List<ChargePoint>> GetLocations(SearchFilters filters)
         {
             //TODO: implement proper call to server side
             string url = ServiceBaseURL + "/poi/?output=json&verbose=false";
@@ -94,6 +101,11 @@ namespace OCM.API.Client
             if (filters.EnableCaching == false)
             {
                 url += "&enablecaching=false";
+            }
+
+            if (filters.IncludeUserComments == true)
+            {
+                url += "&includecomments=true";
             }
 
             if (filters.SubmissionStatusTypeIDs != null && filters.SubmissionStatusTypeIDs.Any())
@@ -128,7 +140,7 @@ namespace OCM.API.Client
             try
             {
                 System.Diagnostics.Debug.WriteLine("Client: Fetching data from "+url);
-                string data = FetchDataStringFromURL(url);
+                string data = await FetchDataStringFromURLAsync(url);
                 System.Diagnostics.Debug.WriteLine("Client: completed fetch");
                 JObject o = JObject.Parse("{\"root\": " + data + "}");
                 JsonSerializer serializer = new JsonSerializer();
@@ -142,6 +154,7 @@ namespace OCM.API.Client
             }
         }
 
+#if !PORTABLE
         public List<ChargePoint> FindSimilar(ChargePoint cp, int MinimumPercentageSimilarity)
         {
             List<ChargePoint> results = new List<ChargePoint>();
@@ -183,20 +196,21 @@ namespace OCM.API.Client
                 return false;
             }
         }
-
+#endif
         public APICredentials GetCredentials(string APIKey)
         {
             //TODO: implement in API, when API Key provided, return current credentials
             return new APICredentials() { };
         }
 
-        public string FetchDataStringFromURL(string url)
+        public async Task<string> FetchDataStringFromURLAsync(string url)
         {
-            WebClient client = new WebClient();
-            string output = client.DownloadString(url);
-            return output;
+            HttpClient client = new HttpClient();
+            //TODO: error handling
+            return await client.GetStringAsync(url);
         }
 
+#if !PORTABLE
         public string PostDataToURL(string url, string data)
         {
             //http://msdn.microsoft.com/en-us/library/debx8sh9.aspx
@@ -238,5 +252,7 @@ namespace OCM.API.Client
                 }
             }
         }
+#endif
     }
+
 }
