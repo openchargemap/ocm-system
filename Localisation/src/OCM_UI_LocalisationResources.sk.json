@@ -43,7 +43,7 @@
       "operationalStatus": null,
       "datePlanned": null,
       "dateLastConfirmed": null,
-      "lastUpdated": null,
+      "lastUpdated": "Posledná aktualizácia",
       "refNumber": null,
       "dataQualityLevel": "Úroveň kvality dát",
       "importedDataNotice": null,
@@ -56,7 +56,7 @@
         "addPrompt": "Nahrať vlastné fotografie pre toto umiestnenie"
       },
       "metadataValues": {
-        "sectionTitle": null
+        "sectionTitle": "Dodatočné značky"
       },
       "commentsAndRatings": {
         "sectionTitle": "Komentáre a hodnotenia",

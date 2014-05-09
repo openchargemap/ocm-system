@@ -34,7 +34,10 @@ namespace OCM.MVC
                 languages.Add(new KeyValuePair<string, string>("pt", "Portuguese/português"));
                 languages.Add(new KeyValuePair<string, string>("sk", "Slovak/slovenčina"));
                 languages.Add(new KeyValuePair<string, string>("it", "Italian/Italiano"));
+                languages.Add(new KeyValuePair<string, string>("et", "Estonian/Eesti"));
+                languages.Add(new KeyValuePair<string, string>("fy", "Frisian/Frysk"));
                 
+                //note: es,is,pl,ro,tr lang code are blank resources and should be removed
                 
                 languages.Add(new KeyValuePair<string, string>("test", "Test (For Translators)"));
 
