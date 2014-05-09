@@ -222,6 +222,7 @@
     <PostBuildEvent>jake --jakefile $(ProjectDir)\build\jakefile.js</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Y  $(ProjectDir)\js\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs</PreBuildEvent>
+    <PreBuildEvent>xcopy /Y  $(ProjectDir)\js\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
+xcopy /Y  $(ProjectDir)\js\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs</PreBuildEvent>
   </PropertyGroup>
 </Project>

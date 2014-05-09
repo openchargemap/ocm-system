@@ -360,7 +360,7 @@ OCM_App.prototype.performLocationSubmit = function () {
         var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
         if (attributionMetadata != null) {
             //remove existing item from array
-            item.MetadataValues = jQuery.grep(item.MetadataValues, function (a:any, i:number) {
+            item.MetadataValues = jQuery.grep(item.MetadataValues, function (a: any, i: number) {
                 return a.MetadataFieldID !== this.ocm_data.ATTRIBUTION_METADATAFIELDID;
             });
         }

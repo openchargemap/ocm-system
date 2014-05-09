@@ -111,3 +111,38 @@ a:focus {
     }
     /* 4 columns */
 }
+
+
+/*app test styles*/
+/*
+html, body { min-height: 100%; }
+
+body {
+    background-color:#ffffff;
+    color:#000000;
+    padding:0;
+}
+
+#home-intro{
+    display:none;
+}
+
+.ui-body-a{
+    background-color:transparent;
+    color:#111111;
+}
+
+.home-menu-container{
+    background-color:#8cc63f;
+}
+
+div[data-role="header"]{
+    background-color:#8cc63f;
+    color:white;    
+}
+.ui-header {
+    font-size:1em;
+}
+div[data-role="page"] {
+
+}*/

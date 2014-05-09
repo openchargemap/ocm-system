@@ -64,6 +64,7 @@ function OCM_App() {
     this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError, this);
     this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
 
+    this.isEmbeddedAppMode = false; //used when app is embedded in another site
     this.isLocalDevMode = false;
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81/app";
@@ -74,7 +75,7 @@ function OCM_App() {
     }
     this.ocm_geo.ocm_data = this.ocm_data;
 
-    
+
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -134,15 +135,21 @@ OCM_App.prototype.initApp = function () {
 OCM_App.prototype.setupUIActions = function () {
 
     var app = this;
-    //running straight jquery, pages are hidden by default, show home screen
-    $("#home-page").show();
+
+    if (this.isEmbeddedAppMode) {
+        //default to map screen and begin loading closest data to centre of map
+        this.navigateToMap();
+    } else {
+        //pages are hidden by default, show home screen
+        this.navigateToHome();
+    }
 
     //add header classes to header elements
     $("[data-role='header']").addClass("ui-header");
 
     //set default back ui buttons handler
     app.setElementAction("a[data-rel='back']", function () {
-        
+
         Historyjs.back();
     });
     //set home page ui link actions
@@ -301,13 +308,13 @@ OCM_App.prototype.getParameterFromURL = function (name, url) {
 
     if (url.indexOf("?") >= 0) {
         var params = url.substr(url.indexOf("?") + 1);
-        
+
         params = params.split("&");
         var temp = "";
         // split param and value into individual pieces
         for (var i = 0; i < params.length; i++) {
             temp = params[i].split("=");
-            
+
             if ([temp[0]] == name) {
                 sval = temp[1];
             }
@@ -325,11 +332,11 @@ OCM_App.prototype.beginLogin = function () {
 
     if (this.isRunningUnderCordova) {
         //do phonegapped login using InAppBrowser
-       
+
         var ref: any = window.open(this.loginProviderRedirectBaseURL + 'AppLogin?redirectWithToken=true', '_blank', 'location=yes');
 
         app.logEvent("OCM: adding loadstop events..");
-        app.logEvent("OCM: "+ref);
+        app.logEvent("OCM: " + ref);
         //attempt attach event listeners
         try {
 
@@ -388,7 +395,7 @@ OCM_App.prototype.beginLogin = function () {
                 //attempt to fetch from url
                 var url = event.url;
                 var token = app.getParameterFromURL("OCMSessionToken", url);
-                if (token.length>0) {
+                if (token.length > 0) {
                     app.logEvent('OCM: Got a token ' + event.url);
                     var userInfo = {
                         "Identifier": app.getParameterFromURL("Identifier", url),
@@ -1116,24 +1123,23 @@ OCM_App.prototype.hidePage = function (pageId) {
 OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     if (!pageTitle) pageTitle = pageId;
 
-    this.logEvent("app.showPage:"+pageId);
-    //show new page
+    this.logEvent("app.showPage:" + pageId);
 
     //hide last shown page
     if (this._lastPageId && this._lastPageId != null) {
         this.hidePage(this._lastPageId);
     }
+
     //hide home page
     document.getElementById("home-page").style.display = "none";
-    document.getElementById(pageId).style.display = "block";
-    //$("#home-page").hide();
 
     //show new page
-    //$("#" + pageId).show();
+    document.getElementById(pageId).style.display = "block";
 
-    //hack: reset scroll position for new page once page has had a chance to render
-    setTimeout(function () { (<HTMLElement>document.documentElement).scrollIntoView(); }, 100);
-
+    if (!this.isEmbeddedAppMode) {
+        //hack: reset scroll position for new page once page has had a chance to render
+        setTimeout(function () { (<HTMLElement>document.documentElement).scrollIntoView(); }, 100);
+    }
 
     this._lastPageId = pageId;
 
@@ -1295,7 +1301,7 @@ OCM_App.prototype.navigateToAddMediaItem = function () {
 OCM_App.prototype.showConnectionError = function () {
     $("#progress-indicator").hide();
     $("#network-error").show();
-   
+
     //app.showMessage("An error occurred transferring data. Please check your data connection.");
 };
 
