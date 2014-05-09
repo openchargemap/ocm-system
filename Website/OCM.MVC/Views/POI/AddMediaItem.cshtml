@@ -41,6 +41,10 @@ else
     }
     else
     {
-        <span>Please Sign In to upload</span>
+        <h2>Add Your Photos <small>@Model.AddressInfo.Title</small></h2>
+        @Html.Partial("_POISummary",Model)
+        <p>
+            Please Sign In to proceed: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new { id = Model.ID }) }, new { @class = "btn btn-primary" })
+        </p>
     }
 }

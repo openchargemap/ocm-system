@@ -1,0 +1,8 @@
+﻿@model OCM.API.Common.Model.ChargePoint
+
+<div class="well">
+    <h4>OCM-@Model.ID: @Model.AddressInfo.Title</h4>
+    <hr />
+    @Model.AddressInfo
+    <p><a href="@Url.Action("Details","POI", new{Model.ID})">Details</a></p>
+</div>

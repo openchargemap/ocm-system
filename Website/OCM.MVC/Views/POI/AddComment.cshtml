@@ -1,0 +1,35 @@
+﻿@model OCM.MVC.Models.POIViewModel
+
+@{
+    ViewBag.Title = "Add Comment";
+}
+
+<h2><span data-localize="ocm.details.commentsAndRatings.addPrompt">Add your own comment/check-in for this location</span>:</h2>
+
+@Html.Partial("_POISummary",Model.POI)
+<div class="container">
+
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @if (Session["UserID"] != null)
+            {
+                @Html.EditorFor(m => m.NewComment)
+            }
+            else
+            {
+                <p>
+                    Please Sign In to proceed: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddComment", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
+                </p>
+            }
+
+
+        </div>
+    
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

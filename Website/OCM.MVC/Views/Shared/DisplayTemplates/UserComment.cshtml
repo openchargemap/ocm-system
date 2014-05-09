@@ -22,6 +22,10 @@
        
         ]
         <p>@Html.DisplayFor(m => m.Comment)</p>
+        @if (Model.RelatedURL != null)
+        {
+            @Html.DisplayFor(m => m.RelatedURL)
+        }
         <small>Comment by 
             <cite title="Source Title">
             @if (Model.User!=null) {
@@ -30,10 +34,9 @@
                 @Html.DisplayFor(m => m.UserName)
             }                                             
             </cite> @Html.DisplayFor(m => m.DateCreated)</small>
+
+       
     </blockquote>
 
-    @if (Model.RelatedURL != null)
-    {
-        @Html.DisplayFor(m => m.RelatedURL)
-    }
+  
 </div>

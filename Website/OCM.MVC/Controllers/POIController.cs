@@ -442,6 +442,20 @@ namespace OCM.MVC.Controllers
             }
         }
 
+        public ActionResult AddComment(int id)
+        {
+            var cpManager = new API.Common.POIManager();
+            var poi = cpManager.Get(id, true);
+
+            POIViewModel viewModel = new POIViewModel();
+            viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
+            viewModel.POI = poi;
+
+            ViewBag.ReferenceData = new POIBrowseModel();
+
+            return View(viewModel);
+        }
+
         [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
         public ActionResult Comment(POIViewModel model)
         {
@@ -451,6 +465,7 @@ namespace OCM.MVC.Controllers
                 try
                 {
                     var user = new UserManager().GetUser((int)Session["UserID"]);
+                    if (comment.Rating==0) comment.Rating=null;
                     if (new SubmissionManager().PerformSubmission(comment, user) > 0)
                     {
                         if (comment.ChargePointID > 0)
@@ -468,6 +483,17 @@ namespace OCM.MVC.Controllers
                 {
                     //return View(poi);
                 }
+            }
+            else
+            {
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        System.Diagnostics.Debug.WriteLine(error.ToString());
+                    }
+                }
+                return View("AddComment", model);
             }
             return RedirectToAction("Index");
         }

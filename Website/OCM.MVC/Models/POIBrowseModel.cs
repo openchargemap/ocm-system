@@ -125,7 +125,7 @@ namespace OCM.MVC.Models
                 ratingtypes.Add(new SimpleReferenceDataType { ID = 2, Title = "2 - Not Good" });
                 ratingtypes.Add(new SimpleReferenceDataType { ID = 1, Title = "1 - Bad" });
 
-                return SimpleSelectList(ratingtypes, null, true);
+                return SimpleSelectList(ratingtypes, null, true, 0,"Not Rated");
             }
         }
 
@@ -150,6 +150,11 @@ namespace OCM.MVC.Models
 
         private SelectList SimpleSelectList(List<SimpleReferenceDataType> list, int[] selectedItems, bool includeNoSelectionValue)
         {
+            return SimpleSelectList(list, selectedItems, includeNoSelectionValue, null, null);
+        }
+
+        private SelectList SimpleSelectList(List<SimpleReferenceDataType> list, int[] selectedItems, bool includeNoSelectionValue, int? noSelectionValue, string noSelectionText)
+        {
             if (list == null)
             {
                 return null;
@@ -158,7 +163,7 @@ namespace OCM.MVC.Models
             {
                 if (includeNoSelectionValue)
                 {
-                    list.Insert(0, new SimpleReferenceDataType { ID = -1, Title = "(None Selected)" });
+                    list.Insert(0, new SimpleReferenceDataType { ID = (noSelectionValue!=null?(int)noSelectionValue: -1), Title = (noSelectionText!=null?noSelectionText: "(None Selected)") });
                 }
                 return new SelectList(list, "ID", "Title", (selectedItems != null && selectedItems.Length > 0) ? selectedItems[0].ToString() : null);
             }
