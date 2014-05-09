@@ -8,6 +8,7 @@
 //typescript declarations
 declare var localisation_dictionary;
 declare var MarkerClusterer: any;
+declare var MarkerWithLabel: any;
 interface MVCObject {
     visualRefresh: any;
 }
@@ -27,6 +28,8 @@ function OCM_CommonUI() {
     this.mapOptions.resultBatchID = 0;
     this.mapOptions.useMarkerIcons = true;
     this.mapOptions.useMarkerAnimation = true;
+    this.mapOptions.enableTrackingMapCentre = false;
+    this.mapOptions.mapCentre = null;
     this.isRunningUnderCordova = false;
 
 }
@@ -40,7 +43,7 @@ OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, is
             return "[" + resourceKey + "]";
         } else {
             return defaultValue;
-        } 
+        }
     }
 };
 
@@ -109,10 +112,10 @@ OCM_CommonUI.prototype.showPOIOnStaticMap = function (mapcanvasID, poi, includeM
         var width = 200;
         var height = 200;
 
-        var mapImageURL = "http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size="+width+"x"+height+"&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
+        var mapImageURL = "http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
         var mapHTML = "";
         if (includeMapLink == true) {
-            mapHTML += "<div>" + this.formatMapLink(poi, "<div><img width=\""+width+"\" height=\""+height+"\" src=\"" + mapImageURL + "\" /></div>") + "</div>";
+            mapHTML += "<div>" + this.formatMapLink(poi, "<div><img width=\"" + width + "\" height=\"" + height + "\" src=\"" + mapImageURL + "\" /></div>") + "</div>";
         } else {
             mapHTML += "<div><img width=\"" + width + "\" height=\"" + height + "\" src=\"" + mapImageURL + "\" /></div>";
         }
@@ -178,13 +181,13 @@ OCM_CommonUI.prototype.getMaxLevelOfPOI = function (poi) {
 OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
 
     var map = this.map;
-    
+
     //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
 
         this.mapOptions.resultBatchID = resultBatchID;
 
-        if (console) console.log("Setting up map markers:"+resultBatchID);
+        if (console) console.log("Setting up map markers:" + resultBatchID);
         // Creates a red marker with the coffee icon
 
         var unknownPowerMarker = L.AwesomeMarkers.icon({
@@ -214,12 +217,11 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
             prefix: 'fa'
         });
 
-      
-    
-        if (this.mapOptions.enableClustering)
-        {
+
+
+        if (this.mapOptions.enableClustering) {
             var markerClusterGroup = new L.MarkerClusterGroup();
-      
+
             if (poiList != null) {
                 //render poi markers
                 var poiCount = poiList.length;
@@ -227,7 +229,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
                     if (poiList[i].AddressInfo != null) {
                         if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
 
-                            
+
                             var poi = poiList[i];
 
                             var markerTitle = poi.AddressInfo.Title;
@@ -236,7 +238,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 
                             var poiLevel = this.getMaxLevelOfPOI(poi);
                             var markerIcon = unknownPowerMarker;
-                            
+
                             if (poiLevel == 0) {
                                 powerTitle += "Power Level Unknown";
                             }
@@ -245,7 +247,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
                                 markerIcon = lowPowerMarker;
                                 powerTitle += "Low Power";
                             }
-                    
+
                             if (poiLevel == 2) {
                                 markerIcon = mediumPowerMarker;
                                 powerTitle += "Medium Power";
@@ -259,31 +261,29 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 
                             usageTitle = "Unknown Usage Restrictions"
 
-                            if (poi.UsageType != null && poi.UsageType.ID!=0)
-                            {
+                            if (poi.UsageType != null && poi.UsageType.ID != 0) {
                                 usageTitle = poi.UsageType.Title;
                             }
                             markerTitle += " (" + powerTitle + ", " + usageTitle + ")"
 
-                            var marker = <any>new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{icon:markerIcon,title:markerTitle, draggable:false, clickable:true});
+                            var marker = <any>new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{ icon: markerIcon, title: markerTitle, draggable: false, clickable: true });
                             marker._isClicked = false; //workaround for double click event
                             marker.poi = poi;
-                            marker.on('click', 
+                            marker.on('click',
                                 function (e) {
-                                    if (this._isClicked == false)
-                                    {
-                                     this._isClicked = true;
+                                    if (this._isClicked == false) {
+                                        this._isClicked = true;
                                         appcontext.showDetailsView(anchorElement, this.poi);
                                         appcontext.showPage("locationdetails-page");
 
                                         //workaround double click event by clearing clicked state after short time
                                         var mk = this;
-                                        setTimeout(function () {mk._isClicked=false }, 300);
+                                        setTimeout(function () { mk._isClicked = false }, 300);
                                     }
                                 });
-                            
+
                             markerClusterGroup.addLayer(marker);
-                  
+
                         }
                     }
                 }
@@ -294,7 +294,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 
             //refresh map view
             setTimeout(function () { map.invalidateSize(false); }, 300);
-       
+
         }
     }
 
@@ -302,7 +302,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 
 OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
 
- 
+
     //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
 
@@ -344,18 +344,18 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             if (this.mapOptions.iconSet == "SmallPins") {
                                 iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
                             } else {
-                                iconURL = "images/icons/map/level" + poiLevel + ".png";
+                                iconURL = "images/icons/map/set2_level" + poiLevel + ".png";
                                 shadow = new google.maps.MarkerImage("images/icons/map/marker-shadow.png",
-								        new google.maps.Size(41.0, 31.0),
-								        new google.maps.Point(0, 0),
-								        new google.maps.Point(12.0, 15.0)
-    							);
+                                    new google.maps.Size(41.0, 31.0),
+                                    new google.maps.Point(0, 0),
+                                    new google.maps.Point(12.0, 15.0)
+                                    );
 
                                 markerImg = new google.maps.MarkerImage(iconURL,
-								        new google.maps.Size(25.0, 31.0),
-								        new google.maps.Point(0, 0),
-								        new google.maps.Point(12.0, 15.0)
-    								);
+                                    new google.maps.Size(25.0, 31.0),
+                                    new google.maps.Point(0, 0),
+                                    new google.maps.Point(12.0, 15.0)
+                                    );
                             }
                         }
 
@@ -363,15 +363,30 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             animation = google.maps.Animation.DROP;
                         }
 
+                        var markerTooltip = "OCM-"+poi.ID+ ": "+poi.AddressInfo.Title +":";
+                        if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+                        if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
+                        if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+
                         var newMarker = <any>new google.maps.Marker({
                             position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
                             map: this.mapOptions.enableClustering ? null : map,
                             icon: markerImg != null ? markerImg : iconURL,
                             shadow: shadow,
                             animation: animation,
-                            title: poi.AddressInfo.Title
+                            title: markerTooltip
                         });
 
+                        /*var marker1 = new MarkerWithLabel({
+                            position: homeLatLng,
+                            draggable: true,
+                            raiseOnDrag: true,
+                            map: map,
+                            labelContent: "$425K",
+                            labelAnchor: new google.maps.Point(22, 0),
+                            labelClass: "labels", // the CSS class for the label
+                            labelStyle: { opacity: 0.75 }
+                        });*/
                         newMarker.poi = poi;
 
                         google.maps.event.addListener(newMarker, 'click', function () {
@@ -392,7 +407,23 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
 
         //include centre search location in bounds of map zoom
         if (this.ocm_searchmarker != null) bounds.extend(this.ocm_searchmarker.position);
+
+        //zoom to bounds of markers
+        if (console) console.log("Fitting to marker bounds:" + bounds);
         map.fitBounds(bounds);
+
+        //TODO: add marker for current search position
+        if (this.mapOptions.enableTrackingMapCentre == false) {
+            this.mapOptions.enableTrackingMapCentre = true;
+            var uiContext = this;
+            google.maps.event.addListener(map, 'center_changed', function () {
+                // 500ms after the center of the map has changed, update search centre pos
+                window.setTimeout(function () {
+                    var centrePos = map.getCenter();
+                    uiContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
+                }, 500);
+            });
+        }
     }
 
     //map.setCenter(markerLatlng);
@@ -400,8 +431,20 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
 
 };
 
+OCM_CommonUI.prototype.updateMapCentrePos = function (lat: number, lng: number, moveMap: boolean) {
+    //update record of map centre so search results can optionally be refreshed
+    if (moveMap) {
+        //TODO: re-centre map
+        if (this.map) {
+            this.map.setCenter(new google.maps.LatLng(lat, lng));
+        }
+    }
+
+    this.mapOptions.mapCentre = { 'coords': { 'latitude': lat, 'longitude': lng } };
+};
+
 OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
-    if (this.map == null) {
+    if (this.map == null && google.maps) {
 
         var mapCanvas = document.getElementById(mapcanvasID);
         if (mapCanvas != null) {
@@ -417,7 +460,7 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
 
             //create map
             var mapOptions = {
-                zoom: 3,
+                zoom: 10,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 mapTypeControl: true,
                 mapTypeControlOptions: {
@@ -452,15 +495,14 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
     }
 };
 
-OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser)
-{
+OCM_CommonUI.prototype.initMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser) {
     if (this.map == null) {
         this.map = this.createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, 13);
     }
 };
 
 OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
-   
+
     // create a map in the "map" div, set the view to a given place and zoom
     var map = new L.Map(mapcanvasID);
     if (currentLat != null && currentLng != null) {
@@ -468,21 +510,20 @@ OCM_CommonUI.prototype.createMapLeaflet = function (mapcanvasID, currentLat, cur
     }
     map.setZoom(zoomLevel);
 
-    if (locateUser==true)
-    {
-        map.locate({setView: true, watch:true, enableHighAccuracy:true});
+    if (locateUser == true) {
+        map.locate({ setView: true, watch: true, enableHighAccuracy: true });
     } else {
         //use a default view
-       
+
     }
-    
+
     // add an OpenStreetMap tile layer
     new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     return map;
-    
+
 };
 
 OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcontext, anchorElement) {
@@ -533,7 +574,7 @@ OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcon
 
                         google.maps.event.addListener(this.ocm_markers[i], 'click', function () {
                             appcontext.showDetailsView(anchorElement, this.poi);
-                           // $.mobile.changePage("#locationdetails-page");
+                            // $.mobile.changePage("#locationdetails-page");
                         });
 
                         bounds.extend(this.ocm_markers[i].position);
@@ -554,13 +595,13 @@ OCM_CommonUI.prototype.formatMapLinkFromPosition = function (poi, searchLatitude
 };
 
 OCM_CommonUI.prototype.formatSystemWebLink = function (linkURL, linkTitle) {
-    return "<a href='#' onclick=\"window.open('" + linkURL + "', '_system');return false;\">"+linkTitle+"</a>";
+    return "<a href='#' onclick=\"window.open('" + linkURL + "', '_system');return false;\">" + linkTitle + "</a>";
 }
 
 OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
 
     if (this.isRunningUnderCordova) {
-        
+
         if (device.platform == "WinCE") {
             return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
         } else {
@@ -568,7 +609,7 @@ OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
         }
     }
     //default to google maps online link
-    return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent+ "</a>";
+    return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
 
 };
 
@@ -580,10 +621,10 @@ OCM_CommonUI.prototype.formatURL = function (url, title) {
 
 OCM_CommonUI.prototype.formatPOIAddress = function (poi) {
     var output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
-		this.formatTextField(poi.AddressInfo.AddressLine2) +
-		this.formatTextField(poi.AddressInfo.Town) +
-		this.formatTextField(poi.AddressInfo.StateOrProvince) +
-		this.formatTextField(poi.AddressInfo.Postcode) +
+        this.formatTextField(poi.AddressInfo.AddressLine2) +
+        this.formatTextField(poi.AddressInfo.Town) +
+        this.formatTextField(poi.AddressInfo.StateOrProvince) +
+        this.formatTextField(poi.AddressInfo.Postcode) +
         this.formatTextField(poi.AddressInfo.Country.Title);
 
     if (this.enablePOIMap == true) {
@@ -632,7 +673,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     if (poi.AddressInfo.Distance != null) {
         var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
         contactInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
-        contactInfo += " <br/><i class='icon-road'></i>  "+this.formatSystemWebLink(directionsUrl, "Get Directions")+"<br/>";
+        contactInfo += " <br/><i class='icon-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
     }
 
     contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone1);
@@ -649,7 +690,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     }
 
     var comments = this.formatTextField(poi.GeneralComments, "Comments", true, true, "ocm.details.generalComments") +
-				  this.formatTextField(poi.AddressInfo.AccessComments, "Access", true, true, "ocm.details.accessComments");
+        this.formatTextField(poi.AddressInfo.AccessComments, "Access", true, true, "ocm.details.accessComments");
 
     var additionalInfo = "";
 
@@ -698,16 +739,16 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
                 if (con.PowerKW == "") con.PowerKW = null;
 
                 equipmentInfo += "<tr>" +
-					"<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" +
-					"<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") +
-					 (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
-					 (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
-					 (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
-                     (con.CurrentType != null ? con.CurrentType.Title : "") +
-					"</td>" +
-					"<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
-					"<td>" + (con.Quantity != null ? this.formatString(con.Quantity) : "1") + "</td>" +
-					"</tr>";
+                "<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" +
+                "<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") +
+                (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
+                (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
+                (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
+                (con.CurrentType != null ? con.CurrentType.Title : "") +
+                "</td>" +
+                "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
+                "<td>" + (con.Quantity != null ? this.formatString(con.Quantity) : "1") + "</td>" +
+                "</tr>";
             }
             equipmentInfo += "</table>";
         }

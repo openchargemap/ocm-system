@@ -56,7 +56,7 @@ function OCM_App() {
     this.appInitialised = false;
     this.renderingMode = "jqm";
     this.isRunningUnderCordova = false;
-    this.mapAPI = "leaflet";
+    this.mapAPI = "google"; //leaflet
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
     this.languageCode = "en";
@@ -152,6 +152,7 @@ OCM_App.prototype.setupUIActions = function () {
 
         Historyjs.back();
     });
+
     //set home page ui link actions
     app.setElementAction("a[href='#search-page'],#map-listview", function () {
         app.navigateToSearch();
@@ -193,6 +194,15 @@ OCM_App.prototype.setupUIActions = function () {
 
     app.setElementAction("#search-button", function () {
         app.performSearch(false, true);
+    });
+
+    app.setElementAction("#map-refresh", function () {
+        //refresh search based on map centre
+        if (app.ocm_ui.mapOptions.mapCentre != null) {
+            app.ocm_app_searchPos = app.ocm_ui.mapOptions.mapCentre;
+            app.performSearch(false, false);
+        }
+
     });
 
     //details page ui actions
@@ -790,6 +800,9 @@ OCM_App.prototype.renderPOIList = function (locationList) {
 
     $('#results-list').replaceWith($listContent);
     $("#results-list").css("display", "block");
+
+    //refresh map view
+    appContext.refreshMapView();
 };
 
 OCM_App.prototype.showDetailsViewById = function (id) {
@@ -1024,7 +1037,7 @@ OCM_App.prototype.getFavouritePOIList = function (itineraryName) {
 
 OCM_App.prototype.refreshMapView = function () {
 
-    this.ocm_ui.mapOptions.enableClustering = true;
+    this.ocm_ui.mapOptions.enableClustering = false;
 
     var $resultcount = $("#map-view-resultcount");
 
@@ -1041,6 +1054,9 @@ OCM_App.prototype.refreshMapView = function () {
             return;
         }
 
+        if (this.ocm_app_searchPos != null) {
+            this.ocm_ui.updateMapCentrePos(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, true);
+        }
         //setup map view if not already initialised
         this.ocm_ui.initMapGoogle("map-view");
 
@@ -1182,6 +1198,12 @@ OCM_App.prototype.initStateTracking = function () {
             app.showPage(State.data.view, State.Title, true);
         } else {
             app.showPage("home-page", "Home");
+            if (app._lastPageId && app._lastPageId == "home-page") {
+
+                if (this.isRunningUnderCordova) {
+                    (<any>navigator).app.exitApp();
+                }
+            }
         }
     });
 };

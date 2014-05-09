@@ -147,7 +147,7 @@ body {
     }
 
 #map-view {
-    border: 2px solid gainsboro;
+    border: none;
 }
 
 .ocm-label {

@@ -48,6 +48,10 @@
     <Content Include="images\icons\map\level2.png" />
     <Content Include="images\icons\map\level3.png" />
     <Content Include="images\icons\map\marker-shadow.png" />
+    <Content Include="images\icons\map\set2_level0.png" />
+    <Content Include="images\icons\map\set2_level1.png" />
+    <Content Include="images\icons\map\set2_level2.png" />
+    <Content Include="images\icons\map\set2_level3.png" />
     <Content Include="images\icons\map\sm_pin_level0.png" />
     <Content Include="images\icons\map\sm_pin_level1.png" />
     <Content Include="images\icons\map\sm_pin_level2.png" />
@@ -68,6 +72,8 @@
     <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="js\ThirdParty\bootstrap\js\bootstrap.js" />
     <Content Include="js\ThirdParty\bootstrap\js\bootstrap.min.js" />
+    <Content Include="js\ThirdParty\google.maps\markerclusterer_compiled.js" />
+    <Content Include="js\ThirdParty\google.maps\markerwithlabel_packed.js" />
     <Content Include="js\ThirdParty\jquery-2.0.3.js" />
     <Content Include="js\ThirdParty\jquery-2.0.3.min.js" />
     <Content Include="js\ThirdParty\jQuery.fastClick.js" />
@@ -99,7 +105,6 @@
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.css" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.ie.css" />
     <Content Include="js\ThirdParty\marker.svg" />
-    <Content Include="js\ThirdParty\markerclusterer_compiled.js" />
     <Content Include="js\ThirdParty\pocketgrid.min.css" />
     <Content Include="res\icons\windows-phone\icon-173-tile.png" />
     <Content Include="res\icons\windows-phone\icon-48.png" />

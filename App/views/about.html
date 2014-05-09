@@ -7,8 +7,15 @@
         </div>
     </div>
     <div data-role="content" class="container">
-        <div class="ui-body ui-body-a">
-            <div data-role="collapsible" data-collapsed="false">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-about" data-toggle="tab"><span data-localize="ocm.general.about">About</span></a></li>
+            <li><a href="#tab-credits" data-toggle="tab">Credits</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-about">
+
                 <h2 data-localize="ocm.general.about">About</h2>
                 <h3>Open Charge Map App APPVERSION</h3>
                 <p>
@@ -24,11 +31,11 @@
                 <p>
                     Please send us your <a target="_blank" href="http://openchargemap.org/site/about/contact">feedback &amp; comments</a>. You can read more about the project at <a target="_blank" href="http://openchargemap.org">http://openchargemap.org</a>.
                 </p>
-                <p style="font-size: smaller;"><strong>Privacy Notice:</strong> This application may need to use and process your location as provided by you or your device, this information may be temporarily logged in some instances. To prevent sharing your location you may disable Location Services on your device. In addition, as this application is based around open sharing of information, comments or information submitted by you will be made public, however your own location is not shared publically.  If you have questions, <a target="_blank" href="http://openchargemap.org/about/contact">contact us</a>. </p>
+                <p><strong>Privacy Notice:</strong> This application may need to use and process your location as provided by you or your device, this information may be temporarily logged in some instances. To prevent sharing your location you may disable Location Services on your device. In addition, as this application is based around open sharing of information, comments or information submitted by you will be made public, however your own location is not shared publically.  If you have questions, <a target="_blank" href="http://openchargemap.org/about/contact">contact us</a>. </p>
 
             </div>
+            <div class="tab-pane" id="tab-credits">
 
-            <div data-role="collapsible" data-collapsed="false">
                 <h4>About Open Charge Map</h4>
 
                 <p>
@@ -44,8 +51,10 @@
                 <p><em>Development:</em> Database, Web Services and Web/Mobile App development led by <a target="_blank" href="http://twitter.com/#!/electriccarbuyr">Christopher Cook</a> of <a target="_blank" href="http://www.webprofusion.com">Webprofusion Ltd</a>, operator of <a target="_blank" href="http://electriccarbuyer.com">electriccarbuyer.com</a>. source code for this app and all system components is available on <a href="https://github.com/openchargemap/">GitHub</a>.</p>
                 <p><em>Translations:</em> User interface translations supplied by the OCM community, please contribute your own translations using our <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map">webtranslateit</a> project.</p>
                 <p><em>Open Source Libraries &amp; Frameworks Used:</em> jQuery + jQuery.History + jQuery.fastClick, Twitter Bootstrap, FontAwesome, LeafletJS + Awesome Markers + MarkerClusterer + Open Street Map,  PocketGrid,  Google Maps, ASP.NET MVC, TypeScript, NuGet, NodeJS, Inkscape, Jake, Grunt, Oswald + Oxygen Fonts</p>
+
             </div>
         </div>
+
     </div>
 </div>
 <!-- Page:About:End -->
