@@ -95,7 +95,8 @@
     <!--google maps-->
     <script>
         function initGoogleMaps() {
-            ocm_app.mapsInitialised = true;
+            if (console) console.log("Google Maps initialised");
+            ocm_app.ocm_ui.mapsInitialised = true;
         };
 
         function loadGoogleMapsScript() {

@@ -31,6 +31,7 @@ function OCM_CommonUI() {
     this.mapOptions.enableTrackingMapCentre = false;
     this.mapOptions.mapCentre = null;
     this.isRunningUnderCordova = false;
+    this.mapsInitialised = false;
 
 }
 
@@ -302,7 +303,9 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 
 OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
 
-
+    if (!this.mapsInitialised) {
+        return;
+    }
     //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
 
@@ -363,7 +366,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             animation = google.maps.Animation.DROP;
                         }
 
-                        var markerTooltip = "OCM-"+poi.ID+ ": "+poi.AddressInfo.Title +":";
+                        var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                         if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
                         if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
                         if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
@@ -405,28 +408,54 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
             this.ocm_markerClusterer.addMarkers(this.ocm_markers);
         }
 
+        if (this.mapOptions.mapCentre != null) {
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude),
+                map: map,
+                title: "Searching From Here",
+                content: 'Your search position'
+            });
+            bounds.extend(marker.getPosition());
+            this.ocm_markers.push(marker);
+        }
+
         //include centre search location in bounds of map zoom
         if (this.ocm_searchmarker != null) bounds.extend(this.ocm_searchmarker.position);
 
+        var uiContext = this;
         //zoom to bounds of markers
-        if (console) console.log("Fitting to marker bounds:" + bounds);
-        map.fitBounds(bounds);
+        if (poiList != null && poiList.length > 0) {
+            if (console) console.log("Fitting to marker bounds:" + bounds);
+            map.setCenter(bounds.getCenter());
+            if (console) console.log("zoom before fit bounds:" + map.getZoom());
+            map.fitBounds(bounds);
+
+            //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+            var zoom = map.getZoom();
+            map.setZoom(zoom < 6 ? 6 : zoom);
+
+        }
 
         //TODO: add marker for current search position
         if (this.mapOptions.enableTrackingMapCentre == false) {
             this.mapOptions.enableTrackingMapCentre = true;
             var uiContext = this;
             google.maps.event.addListener(map, 'center_changed', function () {
+
                 // 500ms after the center of the map has changed, update search centre pos
                 window.setTimeout(function () {
-                    var centrePos = map.getCenter();
+
+                    //create new latlng from map centre so that values get normalised to 180/-180
+                    var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
+                    if (console) console.log("Map centre changed, updating search position:" + centrePos);
+
                     uiContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
                 }, 500);
             });
         }
     }
 
-    //map.setCenter(markerLatlng);
     google.maps.event.trigger(this.map, 'resize');
 
 };
@@ -444,6 +473,8 @@ OCM_CommonUI.prototype.updateMapCentrePos = function (lat: number, lng: number, 
 };
 
 OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
+
+    if (!this.mapsInitialised) return false;
     if (this.map == null && google.maps) {
 
         var mapCanvas = document.getElementById(mapcanvasID);
@@ -461,6 +492,7 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
             //create map
             var mapOptions = {
                 zoom: 10,
+                minZoom: 6,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 mapTypeControl: true,
                 mapTypeControlOptions: {
@@ -492,6 +524,7 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
                 this.ocm_markerClusterer = new MarkerClusterer(this.map, this.ocm_markers);
             }
         }
+        return true;
     }
 };
 

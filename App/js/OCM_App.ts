@@ -74,7 +74,7 @@ function OCM_App() {
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
     this.ocm_geo.ocm_data = this.ocm_data;
-
+    this.autoRefreshMapResults = false;
 
 }
 
@@ -282,9 +282,11 @@ OCM_App.prototype.initDeferredUI = function () {
         }
         setTimeout(function () {
             app.renderPOIList(cachedResults);
+            
         }, 50);
     }
 
+    
     //if ID of location passed in, show details view
     var idParam = app.getParameter("id");
     if (idParam !== null && idParam !== "") {
@@ -296,6 +298,7 @@ OCM_App.prototype.initDeferredUI = function () {
     }
 
     this.switchLanguage($("#option-language").val());
+
 };
 
 OCM_App.prototype.isUserSignedIn = function () {
@@ -720,7 +723,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
         for (var i = 0; i < this.locationList.length; i++) {
             var poi = this.locationList[i];
             var distance = poi.AddressInfo.Distance;
-
+            if (distance == null) distance = 0;
             var addressHTML = this.ocm_ui.formatPOIAddress(poi);
 
             var contactHTML = "";
@@ -801,8 +804,11 @@ OCM_App.prototype.renderPOIList = function (locationList) {
     $('#results-list').replaceWith($listContent);
     $("#results-list").css("display", "block");
 
-    //refresh map view
-    appContext.refreshMapView();
+    //after initial load subsequent queries auto refresh the map markers
+    if (this.autoRefreshMapResults) {
+        this.logEvent("Auto refreshing map view");
+        this.refreshMapView();
+    }
 };
 
 OCM_App.prototype.showDetailsViewById = function (id) {
@@ -1055,7 +1061,7 @@ OCM_App.prototype.refreshMapView = function () {
         }
 
         if (this.ocm_app_searchPos != null) {
-            this.ocm_ui.updateMapCentrePos(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, true);
+            this.ocm_ui.updateMapCentrePos(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, false);
         }
         //setup map view if not already initialised
         this.ocm_ui.initMapGoogle("map-view");
@@ -1077,6 +1083,8 @@ OCM_App.prototype.refreshMapView = function () {
 
         this.ocm_ui.showPOIListOnMapViewLeaflet("map-view", this.locationList, this, $resultcount, this.resultBatchID);
     }
+
+    this.autoRefreshMapResults = true;
 };
 
 OCM_App.prototype.hasUserPermissionForPOI = function (poi, permissionLevel) {
