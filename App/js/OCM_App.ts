@@ -262,7 +262,7 @@ OCM_App.prototype.initDeferredUI = function () {
     this.postLoginInit();
 
     if (this.isRunningUnderCordova) {
-        navigator.splashscreen.hide();
+        if (navigator.splashscreen) navigator.splashscreen.hide();
     }
 
     if ($("#option-enable-experiments").val() == "on") {
@@ -352,52 +352,6 @@ OCM_App.prototype.beginLogin = function () {
         app.logEvent("OCM: " + ref);
         //attempt attach event listeners
         try {
-
-            /*
-            ref.addEventListener('loadstop', function (event) {
-                
-                app.logEvent('in loadstop: ' + event.url);
-
-                app.hideProgressIndicator();
-
-              
-                
-                //attempt to fetch from js injection
-                setTimeout(function () {
-
-                    app.logEvent('checking for login result: ' + event.url);
-                        try {
-
-                            ref.executeScript({
-                                code: "if (getSignInResult) getSignInResult();"
-                            }, function (result) {
-                                    if (result != null) {
-                                        ref.close();
-                                        var userInfo = result[0];
-
-                                        app.logEvent('got login: ' + userInfo.Username);
-
-                                        app.setLoggedInUserInfo(userInfo);
-                                        app.postLoginInit();
-
-                                        //return to home
-                                        app.navigateToHome();
-                                    }
-                                    else {
-                                        app.logEvent('no sign in result received');
-                                    }
-
-
-
-                                });
-
-                        } catch (err) {
-                            app.logEvent("Ignoring phonegap error evaluation login script");
-                        }
-                    }, 1000);
-                
-            });
-*/
 
             ref.addEventListener('loaderror', function (event) {
                 app.logEvent('error: ' + event.message);
@@ -575,7 +529,7 @@ OCM_App.prototype.submissionFailed = function () {
 OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation) {
 
     //hide intro section if still displayed
-    $("#intro-section").hide(); //("display", "none");
+    $("#intro-section").hide();
 
     //detect if mapping/geolocation available
 

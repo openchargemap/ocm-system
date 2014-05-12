@@ -635,9 +635,11 @@ OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
 
     if (this.isRunningUnderCordova) {
 
-        if (device.platform == "WinCE") {
+        if (device && device.platform == "WinCE") {
             return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
-        } else {
+        } else if (device && device.platform == "iOS") {
+            return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"http://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
+        }else {
             return this.formatSystemWebLink("http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
         }
     }

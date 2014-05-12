@@ -115,9 +115,13 @@ a:focus {
 
 /*app test styles*/
 #google-map-legend{
-    font-size:10pt;
-    background-color: rgba(230, 230, 230, 0.53);
+    font-size:8pt;
+    background-color: rgba(230, 230, 230, 0.5);
     padding:6px;
+}
+#google-map-legend img{
+    width:16px;
+
 }
 /*
 html, body { min-height: 100%; }
