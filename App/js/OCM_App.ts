@@ -24,12 +24,20 @@ See http://www.openchargemap.org/ for more details
 declare var localisation_dictionary;
 interface JQuery {
     fastClick: any;
+    swipebox: any;
+    closeSlide: any;
+}
+interface JQueryStatic {
+    swipebox: any;
 }
 interface HTMLFormElement {
     files: any;
 }
 
 var Historyjs: Historyjs = <any>History;
+var bootbox: any;
+
+////////////////////////////////////////////////////////////////
 
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
@@ -282,11 +290,11 @@ OCM_App.prototype.initDeferredUI = function () {
         }
         setTimeout(function () {
             app.renderPOIList(cachedResults);
-            
+
         }, 50);
     }
 
-    
+
     //if ID of location passed in, show details view
     var idParam = app.getParameter("id");
     if (idParam !== null && idParam !== "") {
@@ -860,13 +868,15 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
     }
 
     if (poi.MediaItems != null) {
+
+        //gallery
         var mediaItemOutput = "<div class='comments'>";
 
         for (var c = 0; c < poi.MediaItems.length; c++) {
             var mediaItem = poi.MediaItems[c];
             if (mediaItem.IsEnabled == true) {
                 var itemDate = this.ocm_ui.fixJSONDate(mediaItem.DateCreated);
-                mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a href='" + mediaItem.ItemURL + "' target='_blank'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+                mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a class='swipebox' href='" + mediaItem.ItemURL + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment!="") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
                 "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" +
                 "</blockquote>";
             }
@@ -874,7 +884,10 @@ OCM_App.prototype.showDetailsView = function (element, poi) {
 
         mediaItemOutput += "</div>";
 
-        $("#details-mediaitems").html(mediaItemOutput);
+        $("#details-mediaitems-gallery").html(mediaItemOutput);
+
+        //activate swipebox gallery
+        $('.swipebox').swipebox();
 
     } else {
         $("#details-mediaitems").html("No photos submitted.");
@@ -1004,7 +1017,7 @@ OCM_App.prototype.refreshMapView = function () {
     if (this.locationList != null && this.locationList.length > 0) {
         $resultcount.html(this.locationList.length + " Results");
     } else {
-        $resultcount.html("No Search Results");
+        $resultcount.html("0 Results");
     }
 
     if (this.mapAPI == "google") {
@@ -1105,6 +1118,15 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
 
     //hide last shown page
     if (this._lastPageId && this._lastPageId != null) {
+        
+        if (this._lastPageId == "home-page" && pageId == "home-page") {
+            this.logEvent("Time to QUIT");
+            
+            //double home page request, time to exit on android etc
+            if (this.isRunningUnderCordova) {
+                (<any>navigator).app.exitApp();
+            }
+        }
         this.hidePage(this._lastPageId);
     }
 
@@ -1160,12 +1182,16 @@ OCM_App.prototype.initStateTracking = function () {
             app.showPage(State.data.view, State.Title, true);
         } else {
             app.showPage("home-page", "Home");
-            if (app._lastPageId && app._lastPageId == "home-page") {
+            app.logEvent("pageid:" + app._lastPageId);
+           
+        }
 
-                if (this.isRunningUnderCordova) {
-                    (<any>navigator).app.exitApp();
-                }
-            }
+        //if swipebox is open, need to close it:
+        if ($.swipebox && $.swipebox.isOpen) {
+            $('html').removeClass('swipebox-html');
+            $('html').removeClass('swipebox-touch');
+            $("#swipebox-overlay").remove();
+            $(window).trigger('resize');
         }
     });
 };
@@ -1302,7 +1328,10 @@ OCM_App.prototype.showMessage = function (msg) {
             'OK'                  // buttonName
             );
     } else {
-        alert(msg);
+        bootbox.alert(msg, function () {
+
+        });
+
     }
 
 };

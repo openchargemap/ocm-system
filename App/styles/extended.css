@@ -123,6 +123,10 @@ a:focus {
     width:16px;
 
 }
+
+.bootbox-body {
+    color: #808080;
+}
 /*
 html, body { min-height: 100%; }
 

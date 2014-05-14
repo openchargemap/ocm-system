@@ -65,6 +65,7 @@
     <Content Include="js\Localisation\languagePack.min.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
     <Content Include="js\ThirdParty\analytics.js" />
+    <Content Include="js\ThirdParty\bootbox.min.js" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap.css" />
@@ -74,8 +75,7 @@
     <Content Include="js\ThirdParty\bootstrap\js\bootstrap.min.js" />
     <Content Include="js\ThirdParty\google.maps\markerclusterer_compiled.js" />
     <Content Include="js\ThirdParty\google.maps\markerwithlabel_packed.js" />
-    <Content Include="js\ThirdParty\jquery-2.0.3.js" />
-    <Content Include="js\ThirdParty\jquery-2.0.3.min.js" />
+    <Content Include="js\ThirdParty\jquery-2.1.1.min.js" />
     <Content Include="js\ThirdParty\jQuery.fastClick.js" />
     <Content Include="js\ThirdParty\jquery.history.js" />
     <Content Include="js\ThirdParty\jquery.validate.min.js" />
@@ -106,6 +106,13 @@
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.ie.css" />
     <Content Include="js\ThirdParty\marker.svg" />
     <Content Include="js\ThirdParty\pocketgrid.min.css" />
+    <Content Include="js\ThirdParty\swipebox\css\swipebox.css" />
+    <Content Include="js\ThirdParty\swipebox\css\swipebox.min.css" />
+    <Content Include="js\ThirdParty\swipebox\img\icons.png" />
+    <Content Include="js\ThirdParty\swipebox\img\icons.svg" />
+    <Content Include="js\ThirdParty\swipebox\img\loader.gif" />
+    <Content Include="js\ThirdParty\swipebox\js\jquery.swipebox.js" />
+    <Content Include="js\ThirdParty\swipebox\js\jquery.swipebox.min.js" />
     <Content Include="res\icons\windows-phone\icon-173-tile.png" />
     <Content Include="res\icons\windows-phone\icon-48.png" />
     <Content Include="res\icons\windows-phone\icon-62-tile.png" />
@@ -146,10 +153,6 @@
     <Content Include="fonts\Oxygen\oxygen-light-webfont.ttf" />
     <Content Include="fonts\Oxygen\oxygen-light-webfont.woff" />
     <Content Include="fonts\Oxygen\Oxygen-Light.ttf" />
-    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="js\ThirdParty\jquery-2.0.3.min.map" />
     <Content Include="js\ThirdParty\leaflet\awesome-markers\images\Thumbs.db" />
     <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.woff" />
@@ -157,6 +160,11 @@
     <Content Include="fonts\FontAwesome\font\fontawesome-webfont.woff" />
     <Content Include="fonts\FontAwesome\font\fontawesome-webfont.ttf" />
     <Content Include="fonts\FontAwesome\font\FontAwesome.otf" />
+    <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="js\ThirdParty\bootstrap\css\bootstrap.css.map" />
+    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
