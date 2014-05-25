@@ -108,19 +108,19 @@ body {
 #progress-indicator {
     display: none;
     border-radius: 0;
-    position: fixed;
-    background-color: rgba(255, 255, 255, 0.9);
-    background-position: 10px 10px;
-    background-image: url('../images/ajax-loader2.gif');
+    position: absolute;
+    background-color: #000000;
+    background-position:center;
+    background-image: url('../images/ajax-loader3.gif');
     background-repeat: no-repeat;
     vertical-align: middle;
     padding-top: 6px;
     padding-left: 60px;
     padding-right: 60px;
-    top: 64px;
-    height: 5em;
+    top: 0px;
+    height: 2em;
     width: 100%;
-    color: #666666;
+    color: #ffffff;
     font-size: 1.5em;
     z-index: 1100;
 }
@@ -472,7 +472,7 @@ body {
     }
 
 body, .ui-body-b, .ui-body-d, a, a:visited {
-    font-family: 'Roboto', 'Oxygen', sans-serif;
+    font-family: 'Oxygen', sans-serif;
 }
 
     h1, h2, h3, h4, .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, .ui-header a, #progress-indicator {

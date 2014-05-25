@@ -28,9 +28,8 @@
     <Content Include="fonts\Oswald\oswald-light-webfont.svg" />
     <Content Include="fonts\Oxygen\OFL.txt" />
     <Content Include="fonts\Oxygen\oxygen-light-webfont.svg" />
-    <Content Include="images\ajax-loader.gif" />
+    <Content Include="images\ajax-loader3.gif" />
     <Content Include="images\ajax-loader2.gif" />
-    <Content Include="images\background.png" />
     <Content Include="images\icons\AppIcon_114x114.png" />
     <Content Include="images\icons\AppIcon_128x128.png" />
     <Content Include="images\icons\AppIcon_16x16.png" />
@@ -57,7 +56,6 @@
     <Content Include="images\icons\map\sm_pin_level2.png" />
     <Content Include="images\icons\map\sm_pin_level3.png" />
     <Content Include="images\icons\map\sm_pin_level_offline.png" />
-    <Content Include="images\LocationIcon.png" />
     <Content Include="images\splashscreen\AppSplashscreen_320x460.png" />
     <Content Include="images\splashscreen\AppSplashscreen_480x800.png" />
     <Content Include="images\splashscreen\AppSplashscreen_768x1004.png" />
@@ -97,13 +95,11 @@
     <Content Include="js\ThirdParty\leaflet\images\marker-shadow.png" />
     <Content Include="js\ThirdParty\leaflet\leaflet-src.js" />
     <Content Include="js\ThirdParty\leaflet\leaflet.css" />
-    <Content Include="js\ThirdParty\leaflet\leaflet.ie.css" />
     <Content Include="js\ThirdParty\leaflet\leaflet.js" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\leaflet.markercluster-src.js" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\leaflet.markercluster.js" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.css" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.css" />
-    <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.ie.css" />
     <Content Include="js\ThirdParty\marker.svg" />
     <Content Include="js\ThirdParty\pocketgrid.min.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.css" />

@@ -74,6 +74,7 @@ function OCM_App() {
 
     this.isEmbeddedAppMode = false; //used when app is embedded in another site
     this.isLocalDevMode = false;
+
     if (this.isLocalDevMode == true) {
         this.baseURL = "http://localhost:81/app";
         this.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
@@ -81,9 +82,9 @@ function OCM_App() {
         //this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     }
+
     this.ocm_geo.ocm_data = this.ocm_data;
     this.autoRefreshMapResults = false;
-
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -105,8 +106,7 @@ OCM_App.prototype.setElementAction = function (elementSelector, actionHandler) {
 OCM_App.prototype.initApp = function () {
 
     var app = this.ocm_app_context;
-
-    this.showProgressIndicator();
+   
     this.appInitialised = true;
 
     this.ocm_ui.isRunningUnderCordova = this.isRunningUnderCordova;
@@ -115,7 +115,6 @@ OCM_App.prototype.initApp = function () {
     this.initStateTracking();
 
     //wire up button events
-
     this.setupUIActions();
 
     $('#intro-section').show();
@@ -520,12 +519,18 @@ OCM_App.prototype.submissionCompleted = function (jqXHR, textStatus) {
 
     this.hideProgressIndicator();
     if (textStatus != "error") {
-        this.showMessage("Thank you for your contribution, you may need to refresh your browser page for changes to appear. If approval is required your change may take 24hrs or more to show up. (Status Code: " + textStatus + ")");
-        //navigate back to search page
-        this.navigateToHome();
+        this.showMessage("Thank you for your contribution, you may need to refresh your search for changes to appear. If approval is required your change may take 1 or more days to show up. (Status Code: " + textStatus + ")");
+
+        if (this.selectedPOI != null) {
+            //navigate to last viewed location
+            this.showDetailsView(document.getElementById("content-placeholder"), this.selectedPOI);
+        } else {
+            //navigate back to search page
+            this.navigateToHome();
+        }
 
     } else {
-        this.showMessage("Sorry, there was a problem accepting your submission. Please try again later. (Status Code: " + textStatus + "). If the problem persists try clearing your web browser cookies/cache.");
+        this.showMessage("Sorry, there was a problem accepting your submission. Please try again later. (Status Code: " + textStatus + ").");
     }
 };
 
