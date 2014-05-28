@@ -24,6 +24,7 @@ namespace OCM.API.Common.Model.Extended
     {
         public ChargePoint SuggestedBestPOI { get; set; }
         public List<DuplicatePOIItem> DuplicatePOIList {get;set;}
+        public List<ChargePoint> AllPOI { get; set; }
     }
 
     /// <summary>

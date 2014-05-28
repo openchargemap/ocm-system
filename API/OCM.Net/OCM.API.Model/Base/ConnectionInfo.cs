@@ -44,5 +44,23 @@ namespace OCM.API.Common.Model
 
         [DisplayName("Additional Comments")]
         public string Comments { get; set; }
+
+        public override string ToString()
+        {
+            string output = "";
+
+            if (this.ConnectionType!=null) output +="Connection Type: "+ConnectionType.Title+ ", ";
+            if (this.Amps!=null) output += Amps+"A Max. Current, ";
+            if (this.Voltage != null) output += Voltage + "V, ";
+            if (this.PowerKW !=null) output += PowerKW + "kW, ";
+            if (this.CurrentType != null) output += this.CurrentType.Title + ", ";
+            if (this.Quantity !=null) output += this.Quantity+" Present, ";
+            if (this.StatusType != null) output += "Status: "+this.StatusType.Title + ", ";
+            if (this.CurrentType != null) output += this.CurrentType.Title + ", ";
+            if (this.Comments != null) output += "Comment: " + this.Comments + ", ";
+
+            if (output.EndsWith(", ")) output = output.Substring(0, output.Length - 2);
+            return output;
+        }
     }
 }
