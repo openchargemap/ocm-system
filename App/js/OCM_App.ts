@@ -85,6 +85,8 @@ function OCM_App() {
 
     this.ocm_geo.ocm_data = this.ocm_data;
     this.autoRefreshMapResults = false;
+
+    if (this.getParameter("mode")==="embedded") this.isEmbeddedAppMode=true;
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -146,6 +148,9 @@ OCM_App.prototype.setupUIActions = function () {
     if (this.isEmbeddedAppMode) {
         //default to map screen and begin loading closest data to centre of map
         this.navigateToMap();
+        //search nearby on startup
+        app.performSearch(true, false);
+
     } else {
         //pages are hidden by default, show home screen
         this.navigateToHome();

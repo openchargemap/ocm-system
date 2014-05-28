@@ -111,7 +111,7 @@ body {
     position: absolute;
     background-color: #000000;
     background-position:center;
-    background-image: url('../images/ajax-loader3.gif');
+   /* background-image: url('../images/ajax-loader3.gif');*/
     background-repeat: no-repeat;
     vertical-align: middle;
     padding-top: 6px;
