@@ -29,9 +29,11 @@ namespace Import
             this.txtAPIPwd_Coulomb.Text = Properties.Settings.Default.APIPwd_Coulomb;
         }
 
-        private void btnProcessImports_Click(object sender, EventArgs e)
+        private async void btnProcessImports_Click(object sender, EventArgs e)
         {
             ImportManager importManager = new ImportManager();
+            importManager.IsSandboxedAPIMode = false;
+
             ExportType exportType = ExportType.JSON;
             
             if (lstOutputType.SelectedItem.ToString().StartsWith("XML")) exportType = ExportType.XML;
@@ -45,7 +47,7 @@ namespace Import
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
             
-            importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked);
+            await importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked);
             this.Cursor = Cursors.Default;
             this.btnProcessImports.Enabled = true;
             MessageBox.Show("Processing Completed");
