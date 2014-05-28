@@ -25,6 +25,7 @@
           <Property Name="AccessComments" Type="nvarchar(max)" />
           <Property Name="GeneralComments" Type="nvarchar(max)" />
           <Property Name="RelatedURL" Type="nvarchar" MaxLength="500" />
+          <Property Name="SpatialPosition" Type="geography" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="AuditLog">
           <Key>
@@ -792,12 +793,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="udf_GetDistanceFromLatLonKM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="float">
-          <Parameter Name="Latitude1" Type="float" Mode="In" />
-          <Parameter Name="Longitude1" Type="float" Mode="In" />
-          <Parameter Name="Latitude2" Type="float" Mode="In" />
-          <Parameter Name="Longitude2" Type="float" Mode="In" />
-        </Function>
         <EntityContainer Name="OCMCoreDataOCMEntitiesStoreContainer">
           <EntitySet Name="AddressInfo" EntityType="Self.AddressInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" store:Type="Tables" />
@@ -1179,6 +1174,7 @@
           <NavigationProperty Name="Country" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="AddressInfo" ToRole="Country" />
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_AddressInfo" FromRole="AddressInfo" ToRole="ChargePoint" />
           <NavigationProperty Name="Operators" Relationship="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo" FromRole="AddressInfo" ToRole="Operator" />
+          <Property Name="SpatialPosition" Type="Geography" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="AuditLog">
           <Key>
@@ -2037,6 +2033,7 @@
           <EntitySetMapping Name="AddressInfoList">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.AddressInfo">
               <MappingFragment StoreEntitySet="AddressInfo">
+                <ScalarProperty Name="SpatialPosition" ColumnName="SpatialPosition" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />

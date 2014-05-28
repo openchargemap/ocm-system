@@ -14,6 +14,14 @@ using OCM.API.Common.Model.Extended;
 
 namespace OCM.API.Common
 {
+    public class OCMAPIException : Exception
+    {
+        public OCMAPIException(string message)
+            : base(message)
+        {
+
+        }
+    }
 
     public class POIManager
     {
@@ -126,7 +134,7 @@ namespace OCM.API.Common
                 bool filterByUsage = false;
                 bool filterByStatus = false;
                 bool filterByDataProvider = false;
-                
+
                 if (settings.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
                 else { settings.ConnectionTypeIDs = new int[] { -1 }; }
 
@@ -170,7 +178,7 @@ namespace OCM.API.Common
 
                 //compile initial list of locations
                 var chargePointList = from c in dataModel.ChargePoints
-                                        
+
                                       where
                                           //c.ParentChargePointID == null //exclude under review and delisted charge points
                                           (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
@@ -194,10 +202,12 @@ namespace OCM.API.Common
                                           && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
                                       select c;
 
-             
+                System.Data.Entity.Spatial.DbGeography searchPos = null;
 
-                    //compute/filter by distance (if required)
-                    var filteredList = from c in chargePointList
+                if (requiresDistance && settings.Latitude != null && settings.Longitude != null) searchPos = System.Data.Entity.Spatial.DbGeography.PointFromText("POINT(" + settings.Longitude + " " + settings.Latitude + ")", 4326);
+
+                //compute/filter by distance (if required)
+                var filteredList = from c in chargePointList
                                    where
                                    (requiresDistance == false)
                                    ||
@@ -207,13 +217,19 @@ namespace OCM.API.Common
                                            && (settings.Latitude != null && settings.Longitude != null)
                                            && (settings.Distance == null ||
                                                     (settings.Distance != null &&
-                                                        GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) <= settings.Distance
+                                       // GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) <= settings.Distance
+                                                       c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < settings.Distance
                                                     )
                                            )
                                        )
                                    )
-                                   select new { c, DistanceKM = GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) };
-                
+                                   select new
+                                   {
+                                       c,
+                                       //    DistanceKM = GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) 
+                                       DistanceKM = c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000
+                                   };
+
                 if (requiresDistance)
                 {
                     //if distance was a required output, sort results by distance
@@ -349,58 +365,64 @@ namespace OCM.API.Common
             return list;
         }
 
-        public POIDuplicates GetAllPOIDuplicates(int countryId)
+        public POIDuplicates GetAllPOIDuplicates(int countryId, double maxDupeRange = 500)
         {
             List<DuplicatePOIItem> allDuplicates = new List<DuplicatePOIItem>();
-            
+
             OCMEntities dataModel = new OCMEntities();
 
             double DUPLICATE_DISTANCE_METERS = 25;
-            double POSSIBLE_DUPLICATE_DISTANCE_METERS = 50;
+            double POSSIBLE_DUPLICATE_DISTANCE_METERS = maxDupeRange;
 
             //TODO: better method for large number of POIs
             //grab all live POIs (30-100,000 items)
-            var allPOIs = dataModel.ChargePoints.Where(s=>s.AddressInfo.CountryID==countryId && (s.SubmissionStatusTypeID==100 || s.SubmissionStatusTypeID==200)).ToList();
+            var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
             foreach (var poi in allPOIs)
             {
                 //find pois which duplicate the given poi
-                var dupePOIs = allPOIs.Where(p =>p.ID!=poi.ID &&
+                var dupePOIs = allPOIs.Where(p => p.ID != poi.ID &&
                     (
                         p.DataProvidersReference != null && p.DataProvidersReference.Length > 0 && p.DataProvidersReference == poi.DataProvidersReference
                         || new System.Device.Location.GeoCoordinate(p.AddressInfo.Latitude, p.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude)) < POSSIBLE_DUPLICATE_DISTANCE_METERS
                     )
                     );
 
+                if (dupePOIs.Any())
+                {
+                    var poiModel = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poi, true, true, true, true);
 
-                    var poiModel = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poi);
-
-                    foreach(var dupe in dupePOIs)
+                    foreach (var dupe in dupePOIs)
                     {
                         //poi has duplicates
-                        DuplicatePOIItem dupePoi = new DuplicatePOIItem { DuplicatePOI = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(dupe), DuplicateOfPOI = poiModel};
+                        DuplicatePOIItem dupePoi = new DuplicatePOIItem { DuplicatePOI = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(dupe), DuplicateOfPOI = poiModel };
                         dupePoi.Reasons = new List<string>();
                         if (dupe.AddressInfo.Latitude == poi.AddressInfo.Latitude && dupe.AddressInfo.Longitude == poi.AddressInfo.Longitude)
                         {
-                            dupePoi.Reasons.Add("POI location is exact match for OCM-"+poi.ID);
-                            dupePoi.Confidence=95;
+                            dupePoi.Reasons.Add("POI location is exact match for OCM-" + poi.ID);
+                            dupePoi.Confidence = 95;
                         }
                         else
                         {
-                            double distanceMeters =  new System.Device.Location.GeoCoordinate(dupe.AddressInfo.Latitude, dupe.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
-                            if (distanceMeters<DUPLICATE_DISTANCE_METERS)
+                            double distanceMeters = new System.Device.Location.GeoCoordinate(dupe.AddressInfo.Latitude, dupe.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+                            if (distanceMeters < DUPLICATE_DISTANCE_METERS)
                             {
-                                dupePoi.Reasons.Add("POI location is close proximity ("+distanceMeters+"m) to OCM-"+poi.ID);
-                                dupePoi.Confidence=75;
-                            } else {
-                                if (distanceMeters<POSSIBLE_DUPLICATE_DISTANCE_METERS){
-                                    dupePoi.Reasons.Add("POI location is in surrounding proximity ("+distanceMeters+"m) to OCM-"+poi.ID);
-                                    dupePoi.Confidence=50;
+                                dupePoi.Reasons.Add("POI location is close proximity (" + distanceMeters + "m) to OCM-" + poi.ID);
+                                dupePoi.Confidence = 75;
+                            }
+                            else
+                            {
+                                if (distanceMeters < POSSIBLE_DUPLICATE_DISTANCE_METERS)
+                                {
+                                    dupePoi.Reasons.Add("POI location is in surrounding proximity (" + distanceMeters + "m) to OCM-" + poi.ID);
+                                    dupePoi.Confidence = 50;
                                 }
                             }
                         }
 
                         allDuplicates.Add(dupePoi);
                     }
+                }
+
             }
 
             //arrange all duplicates into groups
@@ -409,18 +431,18 @@ namespace OCM.API.Common
             foreach (var dupe in allDuplicates)
             {
                 bool isNewGroup = false;
-                var dupeGroup = duplicatesSummary.DuplicateSummaryList.FirstOrDefault(d=>d.DuplicatePOIList.Any(p=>p.DuplicateOfPOI.ID== dupe.DuplicateOfPOI.ID || p.DuplicatePOI.ID==dupe.DuplicatePOI.ID) || d.SuggestedBestPOI.ID==dupe.DuplicatePOI.ID);
+                var dupeGroup = duplicatesSummary.DuplicateSummaryList.FirstOrDefault(d => d.DuplicatePOIList.Any(p => p.DuplicateOfPOI.ID == dupe.DuplicateOfPOI.ID || p.DuplicatePOI.ID == dupe.DuplicatePOI.ID) || d.SuggestedBestPOI.ID == dupe.DuplicatePOI.ID);
                 if (dupeGroup == null)
                 {
                     isNewGroup = true;
                     dupeGroup = new DuplicatePOIGroup();
                     dupeGroup.SuggestedBestPOI = dupe.DuplicatePOI;//TODO: select best
-                    
+
                     dupeGroup.DuplicatePOIList = new List<DuplicatePOIItem>();
                 }
 
                 //only add to dupe group if not already added for another reason
-                if (!dupeGroup.DuplicatePOIList.Contains(dupe) && !dupeGroup.DuplicatePOIList.Any(d=>d.DuplicatePOI.ID==dupe.DuplicatePOI.ID))
+                if (!dupeGroup.DuplicatePOIList.Contains(dupe) && !dupeGroup.DuplicatePOIList.Any(d => d.DuplicatePOI.ID == dupe.DuplicatePOI.ID))
                 {
                     dupeGroup.DuplicatePOIList.Add(dupe);
                 }
@@ -431,8 +453,97 @@ namespace OCM.API.Common
                 }
             }
 
+            //loop through groups and rearrange
+            RearrangeDuplicates(duplicatesSummary);
+
+            //go through all groups and populate final list of All POI per group
+            foreach (var g in duplicatesSummary.DuplicateSummaryList)
+            {
+                var poiList = new List<Model.ChargePoint>();
+                foreach (var d in g.DuplicatePOIList)
+                {
+                    if (!poiList.Contains(d.DuplicatePOI))
+                    {
+                        poiList.Add(d.DuplicatePOI);
+                    }
+
+                    if (!poiList.Contains(d.DuplicateOfPOI))
+                    {
+                        poiList.Add(d.DuplicateOfPOI);
+                    }
+
+                    g.AllPOI = poiList;
+                }
+            }
+
             //TODO: go through all dupe groups and nominate best poi to be main poi (most comments, most equipment info etc)
             return duplicatesSummary;
+        }
+
+
+        private bool OtherDuplicationPOIGroupListHasReference(POIDuplicates duplicates, int poiId, DuplicatePOIGroup currentGroup)
+        {
+
+            var mentionedGroups = duplicates.DuplicateSummaryList.Where(d => d.DuplicatePOIList.Any(p => p.DuplicateOfPOI.ID == poiId || p.DuplicatePOI.ID == poiId));
+            if (mentionedGroups.Any(m => m != currentGroup))
+            {
+                //POI has a mention in another group
+                return true;
+            }
+            else
+            {
+                //POI not mentioned in any other group
+                return false;
+            }
+
+        }
+        /// <summary>
+        /// Recursive grouping of duplicates into groups, removing unused/redundant groups
+        /// </summary>
+        /// <param name="duplicates"></param>
+        /// <returns></returns>
+        private bool RearrangeDuplicates(POIDuplicates duplicates)
+        {
+            var actionRequired = false;
+
+            var removedgroups = new List<DuplicatePOIGroup>();
+            foreach (var dupegroup in duplicates.DuplicateSummaryList)
+            {
+                var removedDupes = new List<DuplicatePOIItem>();
+                foreach (var dupe in dupegroup.DuplicatePOIList)
+                {
+                    //if dupe variation is identified an another group, remove from this group
+                    if (OtherDuplicationPOIGroupListHasReference(duplicates, dupe.DuplicatePOI.ID, dupegroup))
+                    {
+                        removedDupes.Add(dupe);
+                    }
+                }
+
+                if (removedDupes.Any())
+                {
+                    actionRequired = true;
+                    //remove all dupes already present in other groups
+                    dupegroup.DuplicatePOIList.RemoveAll(d => removedDupes.Contains(d));
+                }
+
+                if (!dupegroup.DuplicatePOIList.Any())
+                {
+                    actionRequired = true;
+                    removedgroups.Add(dupegroup);
+                }
+            }
+
+            if (removedgroups.Any())
+            {
+                actionRequired = true;
+                //remove empty groups
+                duplicates.DuplicateSummaryList.RemoveAll(g => removedgroups.Contains(g));
+            }
+
+            //did something this pass, recurse to see if more needed
+            if (actionRequired) RearrangeDuplicates(duplicates);
+
+            return actionRequired;
         }
 
         public static bool IsValid(Model.ChargePoint cp)
@@ -508,8 +619,8 @@ namespace OCM.API.Common
                 return diffList;
             }
 
-            var objectComparison = new CompareLogic(new ComparisonConfig { CompareChildren=true, MaxDifferences=1000});
-         
+            var objectComparison = new CompareLogic(new ComparisonConfig { CompareChildren = true, MaxDifferences = 1000 });
+
             var exclusionList = new string[]
                 {
                     "DateCreated",
@@ -616,7 +727,15 @@ namespace OCM.API.Common
 
             if (simpleChargePoint.DataProvider != null && simpleChargePoint.DataProvider.ID >= 0)
             {
-                dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == simpleChargePoint.DataProvider.ID);
+                try
+                {
+                    dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == simpleChargePoint.DataProvider.ID);
+                }
+                catch (Exception)
+                {
+                    //unknown operator
+                    throw new OCMAPIException("Unknown Data Provider Specified");
+                }
             }
             else
             {
@@ -628,11 +747,31 @@ namespace OCM.API.Common
 
             if (simpleChargePoint.OperatorInfo != null && simpleChargePoint.OperatorInfo.ID >= 0)
             {
-                dataChargePoint.Operator = dataModel.Operators.First(o => o.ID == simpleChargePoint.OperatorInfo.ID);
+                try
+                {
+                    dataChargePoint.Operator = dataModel.Operators.First(o => o.ID == simpleChargePoint.OperatorInfo.ID);
+                }
+                catch (Exception)
+                {
+                    //unknown operator
+                    throw new OCMAPIException("Unknown Network Operator Specified");
+                }
             }
+
             dataChargePoint.OperatorsReference = simpleChargePoint.OperatorsReference;
 
-            if (simpleChargePoint.UsageType != null && simpleChargePoint.UsageType.ID >= 0) dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
+            if (simpleChargePoint.UsageType != null && simpleChargePoint.UsageType.ID >= 0)
+            {
+                try
+                {
+                    dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
+                }
+                catch (Exception)
+                {
+                    //unknown usage type 
+                    throw new OCMAPIException("Unknown Usage Type Specified");
+                }
+            }
 
             dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo, dataModel);
 
@@ -651,8 +790,9 @@ namespace OCM.API.Common
             }
 
 
-            if (simpleChargePoint.DataQualityLevel != null && (simpleChargePoint.DataQualityLevel >= 0 && simpleChargePoint.DataQualityLevel <= 5))
+            if (simpleChargePoint.DataQualityLevel != null && simpleChargePoint.DataQualityLevel > 0)
             {
+                if (simpleChargePoint.DataQualityLevel > 5) simpleChargePoint.DataQualityLevel = 5;
                 dataChargePoint.DataQualityLevel = simpleChargePoint.DataQualityLevel;
             }
             else
@@ -696,7 +836,14 @@ namespace OCM.API.Common
 
                     if (c.ConnectionType != null && c.ConnectionType.ID >= 0)
                     {
-                        connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == c.ConnectionType.ID);
+                        try
+                        {
+                            connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == c.ConnectionType.ID);
+                        }
+                        catch (Exception)
+                        {
+                            throw new OCMAPIException("Unknown Connection Type Specified");
+                        }
                     }
                     else
                     {
@@ -705,7 +852,14 @@ namespace OCM.API.Common
 
                     if (c.Level != null && c.Level.ID >= 1)
                     {
-                        connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == c.Level.ID);
+                        try
+                        {
+                            connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == c.Level.ID);
+                        }
+                        catch (Exception)
+                        {
+                            throw new OCMAPIException("Unknown Charger Level Specified");
+                        }
                     }
                     else
                     {
@@ -714,7 +868,14 @@ namespace OCM.API.Common
 
                     if (c.CurrentType != null && c.CurrentType.ID >= 10)
                     {
-                        connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == c.CurrentType.ID);
+                        try
+                        {
+                            connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == c.CurrentType.ID);
+                        }
+                        catch (Exception)
+                        {
+                            throw new OCMAPIException("Unknown Current Type Specified");
+                        }
                     }
                     else
                     {
@@ -723,7 +884,14 @@ namespace OCM.API.Common
 
                     if (c.StatusType != null && c.StatusType.ID >= 0)
                     {
-                        connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == c.StatusType.ID);
+                        try
+                        {
+                            connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == c.StatusType.ID);
+                        }
+                        catch (Exception)
+                        {
+                            throw new OCMAPIException("Unknown Status Type Specified");
+                        }
                     }
                     else
                     {

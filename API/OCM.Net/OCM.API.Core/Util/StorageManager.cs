@@ -24,8 +24,8 @@ namespace OCM.Core.Util
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
             // Retrieve a reference to a container. 
-            CloudBlobContainer container = blobClient.GetContainerReference("images");
-
+            CloudBlobContainer container = blobClient.GetContainerReference(ConfigurationManager.AppSettings["AzureMediaItemsContainerName"]); //images
+            
             // Retrieve reference to blob
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
 
