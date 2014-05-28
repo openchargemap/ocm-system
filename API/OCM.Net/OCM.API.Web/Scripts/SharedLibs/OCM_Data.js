@@ -135,13 +135,15 @@ var OCM;
                 if (this.authorizationErrorCallback) {
                     this.authorizationErrorCallback();
                 } else {
-                    alert("Your session has expired. Please sign in again.");
+                    if (console)
+                        console.log("Your session has expired. Please sign in again.");
                 }
             } else {
                 if (this.generalErrorCallback) {
                     this.generalErrorCallback();
                 } else {
-                    alert("There was a problem transferring data. Please check your internet connection.");
+                    if (console)
+                        console.log("There was a problem transferring data. Please check your internet connection.");
                 }
             }
         };
@@ -224,7 +226,7 @@ var OCM;
                     completedCallback(jqXHR, textStatus);
                 },
                 crossDomain: true,
-                error: this.handleGeneralAjaxError
+                error: failureCallback
             });
         };
 
