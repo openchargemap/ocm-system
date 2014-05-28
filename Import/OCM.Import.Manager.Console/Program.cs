@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using OCM.Import;
 using OCM.Import.Providers;
+using OCM.API.Client;
+using System.Threading.Tasks;
 
 namespace OCM.Import.Manager.Console
 {
@@ -15,7 +17,8 @@ namespace OCM.Import.Manager.Console
         enum ActionType
         {
             DataImport,
-            NetworkServices
+            NetworkServices,
+            ClientTest
         }
 
         static void LogEvent(string message)
@@ -46,7 +49,7 @@ namespace OCM.Import.Manager.Console
 
         static void Main(string[] args)
         {
-            bool isAutomaticMode = false;
+            bool isAutomaticMode = true;
             bool isAPIImportMode = false;
 
             string importFolder = "";
@@ -90,7 +93,7 @@ namespace OCM.Import.Manager.Console
             {
                 bool actionPerformed = false;
 
-                ActionType mode = ActionType.DataImport;
+                ActionType mode = ActionType.ClientTest;
 
                 if (mode == ActionType.DataImport && isAPIImportMode == true && OCM_API_Identifier != null && OCM_API_SessionToken != null)
                 {
@@ -98,7 +101,8 @@ namespace OCM.Import.Manager.Console
 
                     ImportManager importManager = new ImportManager();
                     LogEvent("Performing Import, Publishing via API (" + OCM_API_Identifier + ":" + OCM_API_SessionToken + "): " + DateTime.UtcNow.ToShortTimeString());
-                    importManager.PerformImportProcessing(exportType, importFolder, OCM_API_Identifier, OCM_API_SessionToken, true);
+                    Task<bool> processing = importManager.PerformImportProcessing(exportType, importFolder, OCM_API_Identifier, OCM_API_SessionToken, true);
+                    processing.Wait();
                     LogEvent("Import Processed. Exiting. " + DateTime.UtcNow.ToShortTimeString());
 
                     actionPerformed = true;
@@ -110,6 +114,15 @@ namespace OCM.Import.Manager.Console
                     //OCM.API.NetworkServices.ServiceManager serviceManager = new OCM.API.NetworkServices.ServiceManager();
                     //serviceManager.Test(OCM.API.NetworkServices.ServiceProvider.CoulombChargePoint);
                 }
+
+#if DEBUG
+                if (mode ==ActionType.ClientTest)
+                {
+                    OCMClient client = new OCMClient();
+                    client.APITestTiming();
+                    actionPerformed = true;
+                }
+#endif
 
                 if (!actionPerformed)
                 {
