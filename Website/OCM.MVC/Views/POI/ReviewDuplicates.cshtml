@@ -1,50 +1,73 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.Extended.DuplicatePOIGroup>
 
+@{
+    var reviewList = Model.Where(m => m.DuplicatePOIList.Any(d => d.Confidence >= (int)ViewBag.MinConfidenceLevel));
+}
+<h2>Reviewing @reviewList.Count() Duplicate Groups</h2>
 
-@foreach (var item in Model.Where(m => m.DuplicatePOIList.Any(d => d.Confidence >= (int)ViewBag.MinConfidenceLevel)))
+@foreach (var item in reviewList)
 {
     <div class="well well-sm">
 
-        <div class="results-list">
-            @foreach (var dupe in item.DuplicatePOIList.OrderByDescending(d => d.Confidence).ThenBy(d => d.DuplicateOfPOI.ID))
-            {
-                if (dupe.Confidence >= (int)ViewBag.MinConfidenceLevel)
-                {
-                    <div class="result">
-                        <h3>OCM-@dupe.DuplicatePOI.ID : @dupe.DuplicatePOI.AddressInfo.ToString()  [Confidence: @dupe.Confidence]</h3>
-                        <p>
-                            Media: @{if (dupe.DuplicatePOI.MediaItems!=null) {
-                                <span>@dupe.DuplicatePOI.MediaItems.Count</span>
-                            } else {
-                                <span>0</span>
-                            }}
-                            
-                            Comments: @{if (dupe.DuplicatePOI.UserComments!=null) {
-                                <span>@dupe.DuplicatePOI.UserComments.Count</span>
-                            } else {
-                                <span>0</span>
-                            }
-                            }
-                              
-                             Equipment:@dupe.DuplicatePOI.Connections.Count
-                    </p>
-                            <div style="padding:1em;">
-                                Reason:
-                                <ul>
-                                    @foreach (var reason in dupe.Reasons)
-                                {
-                                        <li>@reason</li>
-                                }
-                                </ul>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="results-list">
+                    @foreach (var dupe in item.DuplicatePOIList.OrderByDescending(d => d.Confidence).ThenBy(d => d.DuplicateOfPOI.ID))
+                    {
+                        if (dupe.Confidence >= (int)ViewBag.MinConfidenceLevel)
+                        {
+                            <div class="result">
+                                <h3>OCM-@dupe.DuplicatePOI.ID : @dupe.DuplicatePOI.AddressInfo.ToString()  [Confidence: @dupe.Confidence]</h3>
+                                <p>
+                                    Media: @{if (dupe.DuplicatePOI.MediaItems != null)
+                                    {
+                                        <span>@dupe.DuplicatePOI.MediaItems.Count</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }}
 
-                                <p><a href="@Url.Action("Details", "POI", new {id=dupe.DuplicatePOI.ID })" target="_blank">OCM-@dupe.DuplicatePOI.ID</a> is a suggested duplicate Of: <a href="@Url.Action("Details", "POI", new {id=dupe.DuplicateOfPOI.ID })" target="_blank">OCM-@dupe.DuplicateOfPOI.ID</a></p>
+                                    Comments: @{if (dupe.DuplicatePOI.UserComments != null)
+                                    {
+                                        <span>@dupe.DuplicatePOI.UserComments.Count</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                    }
 
+                                    Equipment:@dupe.DuplicatePOI.Connections.Count
+                                </p>
+                                <div style="padding:1em;">
+                                    Reason:
+                                    <ul>
+                                        @foreach (var reason in dupe.Reasons)
+                                        {
+                                            <li>@reason</li>
+                                        }
+                                    </ul>
+
+                                    <p><a href="@Url.Action("Details", "POI", new {id=dupe.DuplicatePOI.ID })" target="_blank">OCM-@dupe.DuplicatePOI.ID</a> is a suggested duplicate Of: <a href="@Url.Action("Details", "POI", new {id=dupe.DuplicateOfPOI.ID })" target="_blank">OCM-@dupe.DuplicateOfPOI.ID</a></p>
+
+                                </div>
                             </div>
-                        </div>
-                            }
-                            }
-                        </div>
-                    </div>
+                        }
+
+
+                    }
+                   
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("_POIList", item.AllPOI)
+            </div>
+        </div>
+        
+        
+    </div>
 
 }
 

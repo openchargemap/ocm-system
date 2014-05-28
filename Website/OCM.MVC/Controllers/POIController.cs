@@ -34,7 +34,7 @@ namespace OCM.MVC.Controllers
             filter.StatusTypeIDs = this.ConvertNullableSelection(filter.StatusTypeIDs);
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
             filter.DataProviderIDs = this.ConvertNullableSelection(filter.DataProviderIDs);
-
+            filter.IncludeComments = true;
 
             if (!String.IsNullOrWhiteSpace(filter.Country))
             {
@@ -145,6 +145,13 @@ namespace OCM.MVC.Controllers
             POIViewModel viewModel = new POIViewModel();
             viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
             viewModel.POI = poi;
+
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestSettings { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles });
+            viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
 
             ViewBag.ReferenceData = new POIBrowseModel();
 
@@ -507,22 +514,24 @@ namespace OCM.MVC.Controllers
         }
 
 
-        public ActionResult ReviewDuplicates(int countryId)
+        public ActionResult ReviewDuplicates(int? countryId, bool enableCache=true, double maxDupeRange=500,int minConfidence=70)
         {
-            ViewBag.MinConfidenceLevel = 70;
+            if (countryId == null) countryId = 1;//default to UK
+            ViewBag.MinConfidenceLevel = minConfidence;
             string cacheKey = "DupeList_" + countryId;
 
             OCM.API.Common.Model.Extended.POIDuplicates duplicateSummary = null;
-            if (HttpRuntime.Cache[cacheKey] != null)
+            if (HttpRuntime.Cache[cacheKey] != null && enableCache)
             {
                 duplicateSummary = (OCM.API.Common.Model.Extended.POIDuplicates)HttpRuntime.Cache[cacheKey];
             }
             else
             {
-                duplicateSummary = new POIManager().GetAllPOIDuplicates(countryId);
+                duplicateSummary = new POIManager().GetAllPOIDuplicates((int)countryId, maxDupeRange);
                 HttpRuntime.Cache[cacheKey] = duplicateSummary;
             }
 
+            ViewBag.ShowDataProvider = true;
             return View(duplicateSummary.DuplicateSummaryList);
         }
     }

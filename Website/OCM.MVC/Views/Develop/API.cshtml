@@ -1,0 +1,292 @@
+﻿@{
+    ViewBag.Title = "API Documentation";
+
+    var siteBaseUrl = "http://openchargemap.org/site/";
+    var apiBaseUrl = "http://api.openchargemap.io/v2/";
+    var apiSandboxBaseUrl = "http://sandbox.api.openchargemap.io/v2/";
+}
+
+<style>
+    section i.fa {
+        color: #8cc63f;
+        text-shadow: 2px 2px 2px rgba(193, 230, 164, 0.81);
+    }
+
+    h2 {
+        border-bottom-width: 1px;
+        border-bottom-style: dotted;
+    }
+    section {
+        margin-bottom:2em;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-4 hidden-xs"><div id="toc" style="position:fixed;"></div></div>
+    <div class="col-sm-8 col-xs-12">
+        <article>
+            <section>
+                <i class="fa fa-cogs fa-4x pull-left"></i>
+                <h2 id="intro">The Open Charge Map API</h2>
+                <div class="alert alert-danger">Use of the OCM API is subject to <a href="@Url.Action("Terms","About")">terms and conditions</a>. By using the API you indicate acceptance of these terms.</div>
+
+                <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
+
+                <p><em>API V2 (updated May 2014) - Please join the discussion forum to discuss development.</em></p>
+                <h3>Service Base URL: </h3>
+                <p>
+                    <code>@Html.Raw(apiBaseUrl)</code>
+                </p>
+                <p>In addition you can test against a sandboxed copy of the API. Data submitted to the sandbox API is not preserved, making it ideal for testing write operations such as submitting comments or edits:</p>
+                <p><code>@Html.Raw(apiSandboxBaseUrl)</code></p>
+            </section>
+
+            <section>
+                <i class="fa fa-map-marker fa-4x pull-left"></i>
+                <h2 id="POI">Retrieving POI Data</h2>
+                <p>
+                    <code>@Html.Raw(apiBaseUrl + "poi/")</code>
+                </p>
+
+                <h3>Example API Calls: </h3>
+                <p>Return charging location information for the US in JSON format, limited to the first 100 results: <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=json&countrycode=US&maxresults=100">@Html.Raw(apiBaseUrl + "poi/")?output=json&amp;countrycode=US&amp;maxresults=100</a></code></p>
+                <p>Return KML format results suitable for viewing in google earth/maps etc (UK, max 500 locations): <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=kml&countrycode=GB&maxresults=500">@Html.Raw(apiBaseUrl + "poi/")?output=kml&amp;countrycode=GB&amp;maxresults=500</a></code></p>
+
+                <p><div class="alert alert-warning">Data returned by the API has mixed licensing and applicable copyright attribution (included in results as "Data Provider"). If you require <em>Open</em> licensed data you currently must filter by <code>dataproviderid=1</code> to return only original OCM data.</div></p>
+
+                <h3>Service Parameters:</h3>
+
+                <table class="table table-striped table-bordered table-condensed">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr>
+                        <td>output</td>
+                        <td>json, xml, kml <em>JSON format is recommended as highest fidelity</em></td>
+                        <td>json</td>
+                    </tr>
+                    <tr>
+                        <td>maxresults</td>
+                        <td>limit on max number of results returned</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td>countrycode</td>
+                        <td>GB, US etc ISO Country Code.</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>latitude</td>
+                        <td>latitude reference for distance calculation</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>longitude</td>
+                        <td>longitude reference for distance calculation</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>distance</td>
+                        <td>return results based on specified distance from specified latitude/longitude</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>distanceunit</td>
+                        <td>Miles or KM</td>
+                        <td>Miles</td>
+                    </tr>
+                    <tr>
+                        <td>operatorid</td>
+                        <td>exact match on a given EVSE operator id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>connectiontypeid</td>
+                        <td>exact match on a given connection type id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>countryid</td>
+                        <td>exact match on a given country id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>levelid</td>
+                        <td>exact match on a given charging level (1-3) id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>usagetypeid</td>
+                        <td>exact match on a given usage type id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>statustypeid</td>
+                        <td>exact match on a given status type id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>dataproviderid</td>
+                        <td>exact match on a given data provider id id (comma separated list). <span class="label label-warning">Use dataproviderid=1 for only OCM provided ("Open") data.</span></td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>includecomments</td>
+                        <td>true or false. Set to true to also include user comments and media items (photos) per charging location. </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>verbose</td>
+                        <td>true or false. Set to true to get a smaller result set with null items removed. </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>specify the name of the JSONP callback (if required), JSON response type only.</td>
+                        <td>(blank)</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <i class="fa fa-table fa-4x pull-left"></i>
+                <h2 id="referencedata">Retrieving Core Reference Data</h2>
+                <p>Our core list of lookup values is termed Core Reference Data. This is the data you would require in order to present the user with Dropdown lists etc of possible values for Connection Type etc. This only returns content in JSON format.</p>
+                <p>
+                    <code>@Html.Raw(apiBaseUrl + "referencedata/")</code>
+                </p>
+
+                <h3>Example API Calls: </h3>
+                <p>Return all reference data in JSON format: <code><a href="@Html.Raw(apiBaseUrl + "referencedata/")">@Html.Raw(apiBaseUrl + "referencedata/")</a></code></p>
+
+            </section>
+            <section>
+                <i class="fa fa-comment fa-4x pull-left"></i>
+                <h2 id="comments">Add New Comment/Check-In</h2>
+                <p>To submit a new comment or check-in again a specific POI, use the following API endpoint to POST a JSON format comment</p>
+                <p>
+                    <code>@Html.Raw(apiBaseUrl + "?action=comment_submission&format=json")</code>
+                </p>
+                <p>
+                    Your JSON submission should be in the body of your POST and contain the following (for example):
+                </p>
+                <pre>
+                <code>
+{
+    "ChargePointID": 12345,
+    "CommentTypeID": 10,
+    "UserName": "A. Nickname",
+    "Comment": "This place is awesome, free cake for EV owners!",
+    "Rating": 5,
+    "RelatedURL": "http://awesomevplace.com",
+    "CheckinStatusTypeID": 0
+}</code>
+            </pre>
+                <p>
+                    ChargePointID is the numeric OCM-ID of the POI in location. Values for CommentTypeID and CheckinStatusTypeID can be found in <a href="#referencedata">core reference data</a>.
+                </p>
+                <p>
+                    ChargePointID, CommentTypeID and CheckinStatusTypeID are mandatory, all other fields are optional.
+                </p>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3>Comment Types</h3>
+                        <div id="api-comment-types">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <h3>Check-In Status Types</h3>
+                        <div id="api-checkin-types"></div>
+                    </div>
+                </div>
+            </section>
+            <!--<h2 id="odata">Direct database access via OData</h2>
+            <p>
+                In addition to the above services there is a read only <a href="http://odata.org">OData</a> service for browsing our database directly at <code>http://api.openchargemap.io/odata/odata.svc</code> which is provided for direct programmatic access to our live database. The advantage of this is it provides an output which very closely matches our internal database structure so no data is lost in translation. You can view this data using a number of free OData browser tools including:
+                <a href="http://metasapiens.com/sesame/data-browser/preview?cn-provider=OData&cn-Uri=http%3a%2f%2fapi.openchargemap.io%2fodata%2fodata.svc%2f" target="_blank">Sesame Data Browser (beta)</a> (external link)
+            </p>
+                -->
+            <section>
+                <i class="fa fa-external-link fa-4x pull-left"></i>
+                <h2 id="linking">Linking to OCM Content and Features</h2>
+                <p>In addition to the API there are a number of standardised URLs which can be used to initiate certain actions, this can be useful to launch from within an app or for hyperlinking. The user can then sign in/register as required and proceed with the required action:</p>
+                <h3>POI related actions</h3>
+                <table class="table table-striped">
+                    <tr><th>Action</th><th>URL</th></tr>
+                    <tr><td>Add a New POI</td><td><code>@Html.Raw(siteBaseUrl + "poi/add")</code></td></tr>
+                    <tr><td>Add a Comment/Check-In to an existing POI</td><td><code>@Html.Raw(siteBaseUrl + "poi/addcomment/{OCM-ID}")</code> where <code>{OCM-ID}</code> is the numeric ID of the POI to add a comment to.</td></tr>
+                    <tr><td>Add a Photo to an existing POI</td><td><code>@Html.Raw(siteBaseUrl + "poi/addmediaitem/{OCM-ID}")</code></td></tr>
+                </table>
+            </section>
+        </article>
+    </div>
+</div>
+<script type="text/javascript" src="~/scripts/OCM/SharedLibs/OCM_Data.js"></script>
+<script type="text/javascript">
+    $(function () {
+        prepareTableOfContents();
+
+        fetchReferenceData();
+    });
+
+    function prepareTableOfContents() {
+        // from http://css-tricks.com/automatic-table-of-contents/
+        var ToC = "<nav role='navigation'>" +
+            "<h2>Contents:</h2>" +
+            "<ul class='nav nav-pills nav-stacked'>";
+
+        var newLine, el, title, link;
+
+        $("article h2").each(function () {
+
+            el = $(this);
+            title = el.text();
+            link = "#" + el.attr("id");
+
+            newLine =
+              "<li>" +
+                "<a href='" + link + "'>" +
+                  title +
+                "</a>" +
+              "</li>";
+
+            ToC += newLine;
+
+        });
+
+        ToC +=
+           "</ul>" +
+          "</nav>";
+
+        $("#toc").html(ToC);
+    }
+
+    var dataAPI = new OCM.API();
+
+    function fetchReferenceData() {
+        dataAPI.fetchCoreReferenceData("populateCoreReferenceData")
+    }
+    function populateCoreReferenceData(result) {
+        if (result != null) {
+            dataAPI.referenceData = result;
+            dataAPI.sortCoreReferenceData();
+
+            populateRefDataTable("api-comment-types", dataAPI.referenceData.UserCommentTypes);
+            populateRefDataTable("api-checkin-types", dataAPI.referenceData.CheckinStatusTypes);
+        }
+    }
+
+    function populateRefDataTable(elementId, referenceDataCollection) {
+
+        var refDataTable = "<table class=\"table table-condensed table-striped\"><tr><th>ID</th><th>Title</th></tr>";
+        for (var i = 0; i < referenceDataCollection.length; i++) {
+            var item = referenceDataCollection[i];
+            refDataTable += "<tr><td>" + item.ID + "</td><td>" + item.Title + "</td></tr>";
+        }
+        refDataTable += "</table>";
+
+        $("#" + elementId).html(refDataTable);
+
+    }
+</script>

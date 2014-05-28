@@ -24,5 +24,14 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// Show API Docs
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult API()
+        {
+            return View();
+        }
     }
 }

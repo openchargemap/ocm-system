@@ -1,12 +1,11 @@
-﻿/// <reference path="references/jquery.d.ts" />
+﻿/// <reference path="References/jquery.d.ts" />
 
 //external declarations
 declare var google;
-declare var top;
 declare function ocm_getdatasummary();
 
 //OCM.Widgets.GeoSummary
-export module OCM {
+module OCM {
     export module Widgets {
         export class GeoSummary {
 
@@ -50,8 +49,8 @@ export module OCM {
 
                 google.visualization.events.addListener(geochart, "regionClick", function (eventData) {
                     var countryISO = eventData.region;
-                    if (top != null && top.loadCountryMap) {
-                        top.loadCountryMap(countryISO, countryISO);
+                    if (top != null && (<any>top).loadCountryMap) {
+                        (<any>top).loadCountryMap(countryISO, countryISO);
                     }
                 });
 
@@ -78,8 +77,8 @@ export module OCM {
             }
 
             loadCountryMap(countryName, isoCode) {
-                if (top != null && top.loadCountryMap) {
-                    top.loadCountryMap(countryName, isoCode);
+                if (top != null && (<any>top).loadCountryMap) {
+                    (<any>top).loadCountryMap(countryName, isoCode);
                 }
                 //document.getElementById("countrymap").src = "http://api.openchargemap.io/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=nearlocation,distance,country,operator,connectiontype,level,usage";
             }

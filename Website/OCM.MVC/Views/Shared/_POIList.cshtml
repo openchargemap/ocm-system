@@ -1,26 +1,46 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.ChargePoint>
 
 <small>
-    @if (@Model.Count()>=100) {
+    @if (@Model.Count() >= 100)
+    {
         @:Showing a maximum of 100 matching results:
-    } else {
+    }
+    else
+    {
         @:There are @Model.Count() matching results
     }
 </small>
 <div class="results-list">
     @foreach (var item in Model.Take(100))
     {
-        <div class="result">
-            <h3>@Html.DisplayFor(m => item.AddressInfo.Title)</h3>
-            <div class="col-left">
+        <div class="result row">
+            <a href="@Url.Action("Details","POI",new{ID=item.ID})">
+                <h3>
+                    @Html.DisplayFor(m => item.AddressInfo.Title)
+                    <div class="pull-right">
+                        @if (item.UserComments != null)
+                        {
+                            <i class="fa fa-comment-o"></i> @item.UserComments.Count
+
+                        }
+                        &nbsp;
+                        @if (item.MediaItems != null)
+                        {
+                            <i class="fa fa-camera"></i> @item.MediaItems.Count
+                        }
+                    </div>
+
+                </h3>
+            </a>
+            <div class="col-sm-6">
                 @Html.DisplayFor(m => item.AddressInfo)
-                
+
                 @Html.ActionLink("View", "Details", new { id = item.ID })
             </div>
-            <div class="col-right">
+            <div class="col-sm-6">
                 @if (item.AddressInfo.Distance != null)
                 {
-                    @Html.Raw(Math.Round(item.AddressInfo.Distance.Value,2) + " " + item.AddressInfo.DistanceUnit)<br />
+                    @Html.Raw(Math.Round(item.AddressInfo.Distance.Value, 2) + " " + item.AddressInfo.DistanceUnit)<br />
                 }
                 @if (item.UsageType != null)
                 {
@@ -29,17 +49,19 @@
                 }
                 @if (item.StatusType != null)
                 {
-                    if (item.StatusType.IsOperational!=true)
+                    if (item.StatusType.IsOperational != true)
                     {
                         <span class="label label-warning">
                             @item.StatusType.Title
                         </span>
-                    } else {
-                           <span>@item.StatusType.Title</span>
+                    }
+                    else
+                    {
+                        <span>@item.StatusType.Title</span>
                     }
                 }
 
-                @if (item.Connections != null && item.Connections.Count>0)
+                @if (item.Connections != null && item.Connections.Count > 0)
                 {
                     var maxLevel = item.Connections[0];
                     foreach (var c in item.Connections)
@@ -59,15 +81,18 @@
                             }
                         }
                     }
-                    
-                   if (maxLevel.Level!=null)
-                   {
-                       var connectionType = "";
-                       if (maxLevel.ConnectionType != null) { connectionType = maxLevel.ConnectionType.Title; }
-                        <br /><span title="@connectionType">@maxLevel.Level.Title</span>
-                   }
+
+                    if (maxLevel.Level != null)
+                    {
+                        var connectionType = "";
+                        if (maxLevel.ConnectionType != null) { connectionType = maxLevel.ConnectionType.Title; }
+                        <br /><span class="fa fa-bolt" ></span> @maxLevel.Level.Title
+                        <br /><span class="fa fa-link"></span> @connectionType
+                    }
                 }
+
             </div>
-        </div>       
+
+        </div>
     }
 </div>

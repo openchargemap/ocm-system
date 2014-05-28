@@ -143,14 +143,10 @@ h4 {
   font-size: 1.2em;
 }
 .results-list {
-  overflow: auto;
-  margin: 20px 0px 40px 0px;
   background-color: white;
 }
 div.result {
-  overflow: auto;
   margin: 1em;
-  border-radius: 0px 0px 4px 4px;
   -webkit-box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
   box-shadow: -1px 2px 6px rgba(50, 50, 50, 0.38);
 }
@@ -165,19 +161,7 @@ div.result {
   line-height: 1em;
 }
 .result > div {
-  padding: 0.3em;
-}
-.result .col-left {
-  float: left;
-  padding: 1em;
-  min-width: 160px;
-  text-align: left;
-}
-.result .col-right {
-  float: right;
-  padding: 1em;
-  min-width: 160px;
-  text-align: right;
+  padding: 0.8em;
 }
 #details-imageblock {
   width: 100%;
@@ -221,7 +205,6 @@ div.result {
   margin: 0.1em;
   padding: 0.2em;
   border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-  color: white;
 }
 .details-container a,
 .details-container a:visited {
@@ -282,6 +265,11 @@ div.stat {
 .alert-info {
   border-color: #c6e29e;
   background-color: #f4ffe5;
+}
+.alert-danger {
+  color: black;
+  font-weight: normal;
+  border: none;
 }
 #datasummary {
   font-size: 0.8em;

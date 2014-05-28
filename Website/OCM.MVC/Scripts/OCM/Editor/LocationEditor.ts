@@ -1,4 +1,3 @@
-declare var OCM: any;
 declare var google: any;
 declare var $: JQueryStatic;
 declare var poiId: number; //global for current POI
@@ -324,8 +323,8 @@ class LocationEditor {
 
     private beginGeocodingFromPlacename(address) {
         var appContext = this;
-        var geocoding = new OCM.Geolocation();
-        geocoding.ocm_data = new OCM.API();
+        var geocoding = new (<any>OCM).Geolocation();
+        geocoding.ocm_data = new (<any>OCM).API();
         geocoding.determineGeocodedLocation(address, (<any>$).proxy(appContext.setPosFromGeolocation, appContext));
     }
 
@@ -343,8 +342,8 @@ class LocationEditor {
         console.log("Fetching nearby POI list");
         if (this.poiPos != null) {
 
-            var ocm_api = new OCM.API();
-            var params = new OCM.POI_SearchParams();
+            var ocm_api = new (<any>OCM).API();
+            var params = new (<any>OCM).POI_SearchParams();
 
             params.latitude = this.poiPos.lat();
             params.longitude = this.poiPos.lng();

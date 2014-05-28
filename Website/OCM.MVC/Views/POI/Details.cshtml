@@ -259,6 +259,16 @@
                     </div>
                 </div>
                 <div id="tab-nearby" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Other Points Of Interest</h2>
+                            <div id="nearby-poi"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Other Charging Locations</h2>
+                            @Html.Partial("_POIList", Model.POIListNearby)
+                        </div>
+                    </div>                    
                 </div>
                 <div id="tab-media" class="tab-pane">
                     <p>
@@ -383,7 +393,7 @@
                                     "</div>";
                 }
 
-                $("#tab-nearby").html(output);
+                $("#nearby-poi").html(output);
             }
         });
     }

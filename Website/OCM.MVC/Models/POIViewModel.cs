@@ -10,5 +10,6 @@ namespace OCM.MVC.Models
     {
         public ChargePoint POI {get;set;}
         public UserComment NewComment { get; set; }
+        public List<ChargePoint> POIListNearby { get; set; }
     }
 }
