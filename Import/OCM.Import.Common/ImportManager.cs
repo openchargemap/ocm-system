@@ -7,6 +7,7 @@ using OCM.API.Common.Model;
 using OCM.Import.Providers;
 using OCM.Import.Misc;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace OCM.Import
 {
@@ -14,6 +15,7 @@ namespace OCM.Import
     {
         public const int DUPLICATE_DISTANCE_METERS = 25;
         public bool ImportUpdatesOnly { get; set; }
+        public bool IsSandboxedAPIMode { get; set; }
         public string GeonamesAPIUserName { get; set; }
         /**
          * Generic Import Process
@@ -42,11 +44,11 @@ namespace OCM.Import
             Way to remove item (or log items) which no longer exist in data source?
          * */
 
-        public List<ChargePoint> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData)
+        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData)
         {
             //get list of all current POIs including most delisted ones
-            SearchFilters filters = new SearchFilters { MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeIDs = new int[1]{0} };
-            List<ChargePoint> masterList = new OCMClient().GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
+            SearchFilters filters = new SearchFilters { CountryIDs=new int[1]{44}, MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeIDs = new int[1]{0} };
+            List<ChargePoint> masterList = await new OCMClient(IsSandboxedAPIMode).GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
             
             //if we failed to get a master list, quit with no result
             if (masterList.Count == 0) return new List<ChargePoint>();
@@ -127,7 +129,10 @@ namespace OCM.Import
                 cpList.Remove(dupe);
             }
 
+            System.Diagnostics.Debug.WriteLine("Duplicated removed from import:" + duplicateList.Count);
+
             //add updated items (replace duplicates with property changes)
+            
             foreach (var updatedItem in updateList)
             {
                 if (!cpList.Contains(updatedItem))
@@ -135,6 +140,8 @@ namespace OCM.Import
                     cpList.Add(updatedItem);
                 }
             }
+
+            System.Diagnostics.Debug.WriteLine("Updated items to import:" + updateList.Count);
 
             //populate missing location info from geolocation cache if possible
             PopulateLocationFromGeolocationCache(cpList, coreRefData);
@@ -300,13 +307,14 @@ namespace OCM.Import
             return new APICredentials { Identifier = identifier, SessionToken = sessionToken };
         }
 
-        public void PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData)
+        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData)
         {
-            OCMClient client = new OCMClient();
+            OCMClient client = new OCMClient(IsSandboxedAPIMode);
             var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
 
-            CoreReferenceData coreRefData = client.GetCoreReferenceData();
-
+            CoreReferenceData coreRefData = null;
+            coreRefData = await client.GetCoreReferenceData();
+            
             string outputPath = "Data\\";
             List<IImportProvider> providers = new List<IImportProvider>();
 
@@ -315,14 +323,16 @@ namespace OCM.Import
             // providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
 
             //Working - Auto refreshed
-            providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
+           /* providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
             providers.Add(new ImportProvider_CarStations() { InputPath = inputDataPathPrefix + "carstations.com\\jsonresults.txt" });
             providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
             providers.Add(new ImportProvider_UKChargePointRegistry() { InputPath = inputDataPathPrefix + "chargepoints.dft.gov.uk\\data.json" });
             providers.Add(new ImportProvider_Mobie() { InputPath = inputDataPathPrefix + "mobie.pt\\data.json.txt" });
             providers.Add(new ImportProvider_AFDC() { InputPath = inputDataPathPrefix + "afdc\\data.json" });
             providers.Add(new ImportProvider_ESB_eCars() { InputPath = inputDataPathPrefix + "esb_ecars\\data.kml" });
-
+            */
+            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.lecircuitelectrique.json" });
+            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.reseauver.json" });
             //Working -manual refresh
             //providers.Add(new ImportProvider_NobilDotNo() { InputPath = inputDataPathPrefix + "nobil\\nobil.json.txt" });
 
@@ -375,7 +385,7 @@ namespace OCM.Import
 
                         //de-duplicate and clean list based on existing data
                         //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
-                        var finalList = DeDuplicateList(list, true, coreRefData);
+                        var finalList = await DeDuplicateList(list, true, coreRefData);
                         //var finalList = list;
 
                         if (ImportUpdatesOnly)
@@ -410,7 +420,7 @@ namespace OCM.Import
                         {
 
                             //publish list of locations to OCM via API
-                            OCMClient ocmClient = new OCMClient();
+                            OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
                             p.Log("Publishing via API..");
                             foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.Country != null))
                             {
@@ -435,6 +445,8 @@ namespace OCM.Import
                     p.Log("Import Failed:" + provider.GetProviderName() + " ::" + exp.ToString());
                 }
             }
+
+            return true;
         }
 
         /// <summary>
@@ -482,7 +494,7 @@ namespace OCM.Import
 
         public void GeocodingTest()
         {
-            OCMClient client = new OCMClient();
+            OCMClient client = new OCMClient(IsSandboxedAPIMode);
 
             //get a few OCM listings
             SearchFilters filters = new SearchFilters { SubmissionStatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };

@@ -159,19 +159,26 @@ namespace OCM.Import.Providers
         public string APIKeySecondary { get; set; }
         public CommonImportRefData ImportRefData { get; set; }
 
+        protected WebClient webClient = new WebClient();
+         
         public BaseImportProvider()
         {
+           
             ProviderName = "None";
             OutputNamePrefix = "output";
             ExportType = Providers.ExportType.XML;
             IsProductionReady = false;
             SourceEncoding = Encoding.GetEncoding(1252); //default to ANSI 1252 western europe
+
+            webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+            webClient.Encoding = SourceEncoding;
         }
 
         public string GetProviderName()
         {
             return ProviderName;
         }
+        
         public void Log(string message)
         {
             System.Console.WriteLine("[" + ProviderName + "]: " + message);
@@ -233,10 +240,8 @@ namespace OCM.Import.Providers
         {
             try
             {
-                WebClient client = new WebClient();
-                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
-                client.Encoding = SourceEncoding;
-                InputData = client.DownloadString(url);
+               
+                InputData = webClient.DownloadString(url);
 
                 return true;
             }
@@ -381,7 +386,7 @@ namespace OCM.Import.Providers
 
         public bool ExportJSONFile(List<ChargePoint> dataList, string outputPath)
         {
-            var json = JsonConvert.SerializeObject(dataList);
+            var json = JsonConvert.SerializeObject(dataList, Formatting.Indented);
             System.IO.File.WriteAllText(outputPath, json,  new UnicodeEncoding());
             return true;
         }
