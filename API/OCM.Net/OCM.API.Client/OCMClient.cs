@@ -44,14 +44,74 @@ namespace OCM.API.Client
 
     public class OCMClient
     {
-#if DEBUG
-        //public string ServiceBaseURL = "http://localhost:8080/v2/";
-        public string ServiceBaseURL = "http://api.openchargemap.io/v2/";
-#else 
-        public string ServiceBaseURL = "http://api.openchargemap.io/v2/";
-#endif
+        public bool IsSandboxMode { get; set; }
+        public string ServiceBaseURL { get; set; }
 
-        HttpWebResponse response = null;
+        public OCMClient(bool sandBoxMode= false)
+        {
+            this.IsSandboxMode = sandBoxMode;
+
+            if (!IsSandboxMode)
+            {
+#if DEBUG
+                ServiceBaseURL = "http://localhost:8080/v2/";
+                //ServiceBaseURL = "http://api.openchargemap.io/v2/";
+#else 
+                ServiceBaseURL = "http://api.openchargemap.io/v2/";
+#endif
+            }
+            else
+            {
+#if DEBUG
+                ServiceBaseURL = "http://sandbox.api.openchargemap.io/v2/";
+#else
+                ServiceBaseURL = "http://sandbox.api.openchargemap.io/v2/";
+#endif
+            }
+        }
+
+#if DEBUG
+
+        private async Task<bool> RunAPITest(string serviceBaseURL, int testIterations)
+        {
+            this.ServiceBaseURL = serviceBaseURL;
+
+            int lat = 52;
+            int lng = 1;
+
+            SearchFilters filters = new SearchFilters{Distance=100, MaxResults=1000, Latitude=lat, Longitude=lng, EnableCaching=false, IncludeUserComments=false};
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+            for (int i = 1; i < testIterations; i++)
+            {
+                System.Diagnostics.Debug.WriteLine(i);
+                //TODO; pass same sample lat/lng list to tests
+                var r = new Random(DateTime.Now.Second);
+                filters.Latitude = r.Next(50, 55);
+                filters.Longitude = r.Next(-1,1);
+
+                var list = await this.GetLocations(filters);
+                System.Diagnostics.Debug.WriteLine(i+": POIs: "+list.Count);
+            }
+            
+            stopwatch.Stop();
+
+            System.Diagnostics.Debug.WriteLine("total ms "+this.ServiceBaseURL+" : "+stopwatch.Elapsed.TotalMilliseconds +" for "+testIterations+" iterations. avg "+(stopwatch.Elapsed.TotalMilliseconds/testIterations)+"ms per request" );
+            return true;
+        }
+
+        public void APITestTiming()
+        {
+            OCMClient client = new OCMClient();
+
+            Task<bool> test1 = client.RunAPITest("http://localhost:3000/v2", 10000);
+            test1.Wait();
+           // Task<bool> test2 = client.RunAPITest("http://localhost:8080/v2",1000);
+            //test2.Wait();   
+        }
+
+#endif
 
         /// <summary>
         /// Get core reference data such as lookup lists
@@ -78,13 +138,12 @@ namespace OCM.API.Client
 
 
         /// <summary>
-        /// get list of matching items 
+        /// get list of matching POIs via API 
         /// </summary>
         /// <param name="cp"></param>
         /// <returns></returns>
         public async Task<List<ChargePoint>> GetLocations(SearchFilters filters)
         {
-            //TODO: implement proper call to server side
             string url = ServiceBaseURL + "/poi/?output=json&verbose=false";
 
             if (filters.Latitude != null && filters.Longitude != null)
@@ -207,7 +266,11 @@ namespace OCM.API.Client
         {
             HttpClient client = new HttpClient();
             //TODO: error handling
-            return await client.GetStringAsync(url);
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            string value = await response.Content.ReadAsStringAsync();
+            return value;
+            
         }
 
 #if !PORTABLE
