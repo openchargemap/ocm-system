@@ -5,6 +5,7 @@
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 declare var localisation_dictionary: any;
 declare var MarkerClusterer: any;
+declare var MarkerWithLabel: any;
 interface MVCObject {
     visualRefresh: any;
 }

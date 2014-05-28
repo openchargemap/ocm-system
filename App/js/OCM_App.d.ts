@@ -8,9 +8,15 @@
 declare var localisation_dictionary: any;
 interface JQuery {
     fastClick: any;
+    swipebox: any;
+    closeSlide: any;
+}
+interface JQueryStatic {
+    swipebox: any;
 }
 interface HTMLFormElement {
     files: any;
 }
 declare var Historyjs: Historyjs;
+declare var bootbox: any;
 declare function OCM_App(): void;

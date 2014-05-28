@@ -24,7 +24,10 @@ function OCM_CommonUI() {
     this.mapOptions.resultBatchID = 0;
     this.mapOptions.useMarkerIcons = true;
     this.mapOptions.useMarkerAnimation = true;
+    this.mapOptions.enableTrackingMapCentre = false;
+    this.mapOptions.mapCentre = null;
     this.isRunningUnderCordova = false;
+    this.mapsInitialised = false;
 }
 
 OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, isTestMode) {
@@ -288,6 +291,10 @@ OCM_CommonUI.prototype.showPOIListOnMapViewLeaflet = function (mapcanvasID, poiL
 };
 
 OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
+    if (!this.mapsInitialised) {
+        return;
+    }
+
     //if list has changes to results render new markers etc
     if (this.mapOptions.resultBatchID != resultBatchID) {
         this.mapOptions.resultBatchID = resultBatchID;
@@ -327,7 +334,7 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             if (this.mapOptions.iconSet == "SmallPins") {
                                 iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
                             } else {
-                                iconURL = "images/icons/map/level" + poiLevel + ".png";
+                                iconURL = "images/icons/map/set2_level" + poiLevel + ".png";
                                 shadow = new google.maps.MarkerImage("images/icons/map/marker-shadow.png", new google.maps.Size(41.0, 31.0), new google.maps.Point(0, 0), new google.maps.Point(12.0, 15.0));
 
                                 markerImg = new google.maps.MarkerImage(iconURL, new google.maps.Size(25.0, 31.0), new google.maps.Point(0, 0), new google.maps.Point(12.0, 15.0));
@@ -338,15 +345,33 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
                             animation = google.maps.Animation.DROP;
                         }
 
+                        var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                        if (poi.UsageType != null)
+                            markerTooltip += " " + poi.UsageType.Title;
+                        if (poiLevel > 0)
+                            markerTooltip += " Level " + poiLevel;
+                        if (poi.StatusType != null)
+                            markerTooltip += " " + poi.StatusType.Title;
+
                         var newMarker = new google.maps.Marker({
                             position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
                             map: this.mapOptions.enableClustering ? null : map,
                             icon: markerImg != null ? markerImg : iconURL,
                             shadow: shadow,
                             animation: animation,
-                            title: poi.AddressInfo.Title
+                            title: markerTooltip
                         });
 
+                        /*var marker1 = new MarkerWithLabel({
+                        position: homeLatLng,
+                        draggable: true,
+                        raiseOnDrag: true,
+                        map: map,
+                        labelContent: "$425K",
+                        labelAnchor: new google.maps.Point(22, 0),
+                        labelClass: "labels", // the CSS class for the label
+                        labelStyle: { opacity: 0.75 }
+                        });*/
                         newMarker.poi = poi;
 
                         google.maps.event.addListener(newMarker, 'click', function () {
@@ -365,18 +390,74 @@ OCM_CommonUI.prototype.showPOIListOnMapViewGoogle = function (mapcanvasID, poiLi
             this.ocm_markerClusterer.addMarkers(this.ocm_markers);
         }
 
+        if (this.mapOptions.mapCentre != null) {
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude),
+                map: map,
+                title: "Searching From Here",
+                content: 'Your search position'
+            });
+            bounds.extend(marker.getPosition());
+            this.ocm_markers.push(marker);
+        }
+
         //include centre search location in bounds of map zoom
         if (this.ocm_searchmarker != null)
             bounds.extend(this.ocm_searchmarker.position);
-        map.fitBounds(bounds);
+
+        var uiContext = this;
+
+        //zoom to bounds of markers
+        if (poiList != null && poiList.length > 0) {
+            if (console)
+                console.log("Fitting to marker bounds:" + bounds);
+            map.setCenter(bounds.getCenter());
+            if (console)
+                console.log("zoom before fit bounds:" + map.getZoom());
+            map.fitBounds(bounds);
+
+            //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+            var zoom = map.getZoom();
+            map.setZoom(zoom < 6 ? 6 : zoom);
+        }
+
+        //TODO: add marker for current search position
+        if (this.mapOptions.enableTrackingMapCentre == false) {
+            this.mapOptions.enableTrackingMapCentre = true;
+            var uiContext = this;
+            google.maps.event.addListener(map, 'center_changed', function () {
+                // 500ms after the center of the map has changed, update search centre pos
+                window.setTimeout(function () {
+                    //create new latlng from map centre so that values get normalised to 180/-180
+                    var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
+                    if (console)
+                        console.log("Map centre changed, updating search position:" + centrePos);
+
+                    uiContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
+                }, 500);
+            });
+        }
     }
 
-    //map.setCenter(markerLatlng);
     google.maps.event.trigger(this.map, 'resize');
 };
 
+OCM_CommonUI.prototype.updateMapCentrePos = function (lat, lng, moveMap) {
+    //update record of map centre so search results can optionally be refreshed
+    if (moveMap) {
+        //TODO: re-centre map
+        if (this.map) {
+            this.map.setCenter(new google.maps.LatLng(lat, lng));
+        }
+    }
+
+    this.mapOptions.mapCentre = { 'coords': { 'latitude': lat, 'longitude': lng } };
+};
+
 OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
-    if (this.map == null) {
+    if (!this.mapsInitialised)
+        return false;
+    if (this.map == null && google.maps) {
         var mapCanvas = document.getElementById(mapcanvasID);
         if (mapCanvas != null) {
             google.maps.visualRefresh = true;
@@ -390,7 +471,8 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
 
             //create map
             var mapOptions = {
-                zoom: 3,
+                zoom: 10,
+                minZoom: 6,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 mapTypeControl: true,
                 mapTypeControlOptions: {
@@ -422,6 +504,7 @@ OCM_CommonUI.prototype.initMapGoogle = function (mapcanvasID) {
                 this.ocm_markerClusterer = new MarkerClusterer(this.map, this.ocm_markers);
             }
         }
+        return true;
     }
 };
 
@@ -524,8 +607,10 @@ OCM_CommonUI.prototype.formatSystemWebLink = function (linkURL, linkTitle) {
 
 OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
     if (this.isRunningUnderCordova) {
-        if (device.platform == "WinCE") {
+        if (device && device.platform == "WinCE") {
             return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
+        } else if (device && device.platform == "iOS") {
+            return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"http://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
         } else {
             return this.formatSystemWebLink("http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
         }
@@ -692,4 +777,5 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     };
     return output;
 };
+/// End Standard Data Formatting methods ///
 //# sourceMappingURL=OCM_CommonUI.js.map
