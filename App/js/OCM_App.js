@@ -1,8 +1,8 @@
-/*
-OCM charging location browser/editor Mobile App
-Christopher Cook
+/**
+* @overview OCM charging location browser/editor Mobile App
+* @author Christopher Cook
+* @copyright Webprofusion Ltd http://webprofusion.com
 http://openchargemap.org
-See http://www.openchargemap.org/ for more details
 */
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
@@ -18,6 +18,8 @@ var bootbox;
 ////////////////////////////////////////////////////////////////
 function OCM_App() {
     this.ocm_ui = new OCM_CommonUI();
+    this.ocm_ui.mappingManager.setParentAppContext(this);
+
     this.ocm_geo = new OCM.Geolocation();
     this.ocm_data = new OCM.API();
     this.numConnectionEditors = 5;
@@ -41,15 +43,19 @@ function OCM_App() {
     this.appInitialised = false;
     this.renderingMode = "jqm";
     this.isRunningUnderCordova = false;
-    this.mapAPI = "google"; //leaflet
+
     this.ocm_app_context = this;
     this.ocm_data.clientName = "ocm.app.webapp";
     this.languageCode = "en";
+    this.menuDisplayed = false;
 
     this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError, this);
     this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
 
     this.isEmbeddedAppMode = false; //used when app is embedded in another site
+    this.launchMapOnStart = true;
+    this.mapLaunched = false;
+
     this.isLocalDevMode = false;
 
     if (this.isLocalDevMode == true) {
@@ -66,6 +72,10 @@ function OCM_App() {
 
     if (this.getParameter("mode") === "embedded")
         this.isEmbeddedAppMode = true;
+
+    if (this.isEmbeddedAppMode) {
+        this.launchMapOnStart = true;
+    }
 }
 
 OCM_App.prototype.logEvent = function (logMsg) {
@@ -96,8 +106,6 @@ OCM_App.prototype.initApp = function () {
     //wire up button events
     this.setupUIActions();
 
-    $('#intro-section').show();
-
     this.initEditors();
 
     //populate language options
@@ -126,12 +134,35 @@ OCM_App.prototype.initApp = function () {
 OCM_App.prototype.setupUIActions = function () {
     var app = this;
 
-    if (this.isEmbeddedAppMode) {
-        //default to map screen and begin loading closest data to centre of map
-        this.navigateToMap();
+    if (this.launchMapOnStart) {
+        //pages are hidden by default, start by show map screen (once map api ready)
+        //Observe OCM.Mapping.mapAPIReady and render map
+        if (this.ocm_ui.mappingManager.mapAPIReady) {
+            //default to map screen and begin loading closest data to centre of map
+            app.navigateToMap();
 
-        //search nearby on startup
-        app.performSearch(true, false);
+            //search nearby on startup
+            app.performSearch(true, false);
+
+            this.mapLaunched = true;
+        } else {
+            Object.observe(this.ocm_ui.mappingManager, function (changes) {
+                // This asynchronous callback runs
+                changes.forEach(function (change) {
+                    // console.log(change.type, change.name, change.oldValue);
+                    if (!app.mapLaunched && change.name == "mapAPIReady" && app.ocm_ui.mappingManager.mapAPIReady) {
+                        //default to map screen and begin loading closest data to centre of map
+                        app.navigateToMap();
+
+                        //search nearby on startup
+                        app.performSearch(true, false);
+
+                        app.mapLaunched = true;
+                        //TODO prevent this reloading when api == true again - remove observer
+                    }
+                });
+            });
+        }
     } else {
         //pages are hidden by default, show home screen
         this.navigateToHome();
@@ -143,6 +174,11 @@ OCM_App.prototype.setupUIActions = function () {
     //set default back ui buttons handler
     app.setElementAction("a[data-rel='back']", function () {
         Historyjs.back();
+    });
+
+    app.setElementAction("a[data-rel='menu']", function () {
+        //show menu when menu icon activated
+        app.toggleMenu();
     });
 
     //set home page ui link actions
@@ -188,10 +224,35 @@ OCM_App.prototype.setupUIActions = function () {
         app.performSearch(false, true);
     });
 
+    app.setElementAction("#map-toggle-list", function () {
+        //show list, hide map
+        $("#mapview-container").addClass("hidden-xs");
+        $("#mapview-container").addClass("hidden-sm");
+
+        //hide map
+        app.setMapFocus(false);
+
+        $("#listview-container").removeClass("hidden-xs");
+        $("#listview-container").removeClass("hidden-sm");
+    });
+
+    app.setElementAction("#map-toggle-map", function () {
+        //show list, hide map
+        $("#listview-container").addClass("hidden-xs");
+        $("#listview-container").addClass("hidden-sm");
+
+        $("#mapview-container").removeClass("hidden-xs");
+        $("#lmapview-container").removeClass("hidden-sm");
+
+        //hide map
+        app.setMapFocus(true);
+        app.refreshMapView();
+    });
+
     app.setElementAction("#map-refresh", function () {
         //refresh search based on map centre
-        if (app.ocm_ui.mapOptions.mapCentre != null) {
-            app.ocm_app_searchPos = app.ocm_ui.mapOptions.mapCentre;
+        if (app.ocm_ui.mappingManager.mapOptions.mapCentre != null) {
+            app.ocm_app_searchPos = app.ocm_ui.mappingManager.mapOptions.mapCentre;
             app.performSearch(false, false);
         }
     });
@@ -360,8 +421,8 @@ OCM_App.prototype.beginLogin = function () {
                     app.setLoggedInUserInfo(userInfo);
                     app.postLoginInit();
 
-                    //return to home
-                    app.navigateToHome();
+                    //return to default
+                    app.navigateToMap();
                     app.hideProgressIndicator();
                     ref.close();
                 } else {
@@ -395,7 +456,7 @@ OCM_App.prototype.logout = function (navigateToHome) {
     if (navigateToHome == true) {
         app.postLoginInit(); //refresh signed in/out ui
         if (this.isRunningUnderCordova) {
-            app.navigateToHome();
+            app.navigateToMap();
         } else {
             setTimeout(function () {
                 window.location = app.baseURL;
@@ -428,7 +489,6 @@ OCM_App.prototype.storeSettings = function () {
     this.setCookie("optsearchdistunit", $('#search-distance-unit').val());
     this.setCookie("optenableexperiments", $('#option-enable-experiments').val());
 
-    //console.log("Saving language code:" + $('#option-language').val());
     this.setCookie("optlanguagecode", $('#option-language').val());
 };
 
@@ -501,7 +561,7 @@ OCM_App.prototype.submissionCompleted = function (jqXHR, textStatus) {
             this.showDetailsView(document.getElementById("content-placeholder"), this.selectedPOI);
         } else {
             //navigate back to search page
-            this.navigateToHome();
+            this.navigateToMap();
         }
     } else {
         this.showMessage("Sorry, there was a problem accepting your submission. Please try again later. (Status Code: " + textStatus + ").");
@@ -514,12 +574,9 @@ OCM_App.prototype.submissionFailed = function () {
 };
 
 OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation) {
-    //hide intro section if still displayed
-    $("#intro-section").hide();
-
-    //detect if mapping/geolocation available
     this.showProgressIndicator();
 
+    //detect if mapping/geolocation available
     if (useClientLocation == true) {
         //initiate client geolocation (if not already determined)
         if (this.ocm_geo.clientGeolocationPos == null) {
@@ -534,8 +591,7 @@ OCM_App.prototype.performSearch = function (useClientLocation, useManualLocation
     var distance_unit = document.getElementById("search-distance-unit").value;
 
     if (this.ocm_app_searchPos == null || useManualLocation == true) {
-        // search position not set, attempt fetch from location input and
-        // return for now
+        // search position not set, attempt fetch from location input and return for now
         var locationText = document.getElementById("search-location").value;
         if (locationText === null || locationText == "") {
             //try to geolocate via browser location API
@@ -742,7 +798,7 @@ OCM_App.prototype.renderPOIList = function (locationList) {
     }
 };
 
-OCM_App.prototype.showDetailsViewById = function (id) {
+OCM_App.prototype.showDetailsViewById = function (id, forceRefresh) {
     var itemShown = false;
 
     //if id in current result list, show
@@ -750,17 +806,14 @@ OCM_App.prototype.showDetailsViewById = function (id) {
         for (var i = 0; i < this.locationList.length; i++) {
             if (this.locationList[i].ID == id) {
                 this.showDetailsView(document.getElementById("content-placeholder"), this.locationList[i]);
-
-                //if ($.mobile) $.mobile.changePage("#locationdetails-page");
                 itemShown = true;
             }
-
             if (itemShown)
                 break;
         }
     }
 
-    if (!itemShown) {
+    if (!itemShown || forceRefresh == true) {
         //load poi details, then show
         this.logEvent("Location not cached, fetching details:" + id);
         this.ocm_data.fetchLocationById(id, "ocm_app.showDetailsFromList", null);
@@ -941,12 +994,12 @@ OCM_App.prototype.toggleFavouritePOI = function (poi, itineraryName) {
     if (poi != null) {
         if (this.isFavouritePOI(poi, itineraryName)) {
             this.removeFavouritePOI(poi, itineraryName);
-            $("#option-favourite").removeClass("icon-heart");
-            $("#option-favourite").addClass("icon-heart-empty");
+            $("#option-favourite").removeClass("fa-heart");
+            $("#option-favourite").addClass("fa-heart-o");
         } else {
             this.addFavouritePOI(poi, itineraryName);
-            $("#option-favourite").removeClass("icon-heart-empty");
-            $("#option-favourite").addClass("icon-heart");
+            $("#option-favourite").removeClass("fa-heart-o");
+            $("#option-favourite").addClass("fa-heart");
         }
     }
 };
@@ -965,8 +1018,6 @@ OCM_App.prototype.getFavouritePOIList = function (itineraryName) {
 };
 
 OCM_App.prototype.refreshMapView = function () {
-    this.ocm_ui.mapOptions.enableClustering = false;
-
     var $resultcount = $("#map-view-resultcount");
 
     if (this.locationList != null && this.locationList.length > 0) {
@@ -975,36 +1026,18 @@ OCM_App.prototype.refreshMapView = function () {
         $resultcount.html("0 Results");
     }
 
-    if (this.mapAPI == "google") {
-        if (typeof (google) == "undefined") {
-            //no google maps currently available
-            $("#map-view").html("Google maps cannot be loaded. Please check your data connection.");
-            return;
-        }
-
-        if (this.ocm_app_searchPos != null) {
-            this.ocm_ui.updateMapCentrePos(this.ocm_app_searchPos.coords.latitude, this.ocm_app_searchPos.coords.longitude, false);
-        }
-
-        //setup map view if not already initialised
-        this.ocm_ui.initMapGoogle("map-view");
-
-        this.ocm_ui.showPOIListOnMapViewGoogle("map-view", this.locationList, this, $resultcount, this.resultBatchID);
+    if (this.isRunningUnderCordova) {
+        //for cordova, switch over to native google maps
+        this.ocm_ui.mappingManager.setMapAPI("googlenativesdk");
     }
 
-    if (this.mapAPI == "leaflet") {
-        //setup map view, tracking user pos, if not already initialised
-        //TODO: use last search pos as lat/lng, or first item in locationList
-        var centreLat = 50;
-        var centreLng = 50;
-        if (this.locationList != null && this.locationList.length > 0) {
-            centreLat = this.locationList[0].AddressInfo.Latitude;
-            centreLng = this.locationList[0].AddressInfo.Longitude;
-        }
-        this.ocm_ui.initMapLeaflet("map-view", centreLat, centreLng, false);
-
-        this.ocm_ui.showPOIListOnMapViewLeaflet("map-view", this.locationList, this, $resultcount, this.resultBatchID);
+    if (!this.mapLaunched) {
+        //on first showing map, adjust map container height to match page
+        var mapHeight = $("#map-page").height() - 50;
+        if (console)
+            console.log("adjusted map height:" + mapHeight);
     }
+    this.ocm_ui.mappingManager.refreshMapView("map-view", mapHeight, this.locationList, this.ocm_app_searchPos);
 
     this.autoRefreshMapResults = true;
 };
@@ -1095,6 +1128,13 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
         }, 100);
     }
 
+    if (pageId !== "map-page") {
+        //native map needs to be hidden or offscreen
+        this.setMapFocus(false);
+    } else {
+        this.setMapFocus(true);
+    }
+
     this._lastPageId = pageId;
 
     if (skipState) {
@@ -1104,6 +1144,9 @@ OCM_App.prototype.showPage = function (pageId, pageTitle, skipState) {
     }
 
     this.logEvent("leaving app.showPage:" + pageId);
+
+    //hide menu when menu item activated
+    this.toggleMenu(false);
 };
 
 OCM_App.prototype.initStateTracking = function () {
@@ -1167,6 +1210,11 @@ OCM_App.prototype.navigateToMap = function () {
 
     this.showPage("map-page", "Map");
     var app = this;
+
+    //change title of map page to be Search
+    $("#search-title-favourites").hide();
+    $("#search-title-main").show();
+
     setTimeout(function () {
         app.refreshMapView();
     }, 250);
@@ -1184,9 +1232,12 @@ OCM_App.prototype.navigateToFavourites = function () {
     } else {
         app.renderPOIList(favouritesList);
 
-        //TODO: manage favourites in single page?
         //show favourites on search page
-        this.navigateToSearch();
+        app.navigateToMap();
+
+        //change title of map page to be favourites
+        $("#search-title-main").hide();
+        $("#search-title-favourites").show();
     }
 };
 
@@ -1280,6 +1331,31 @@ OCM_App.prototype.showMessage = function (msg) {
     } else {
         bootbox.alert(msg, function () {
         });
+    }
+};
+
+OCM_App.prototype.toggleMenu = function (showMenu) {
+    if (showMenu != null)
+        this.menuDisplayed = !showMenu;
+
+    if (this.menuDisplayed) {
+        //hide app menu
+        this.menuDisplayed = false;
+        $("#app-menu-container").hide();
+        //$("#menu").hide();
+    } else {
+        //show app menu
+        this.menuDisplayed = true;
+        this.setMapFocus(false);
+        $("#app-menu-container").show();
+    }
+};
+
+OCM_App.prototype.setMapFocus = function (hasFocus) {
+    if (hasFocus) {
+        this.ocm_ui.mappingManager.showMap();
+    } else {
+        this.ocm_ui.mappingManager.hideMap();
     }
 };
 //# sourceMappingURL=OCM_App.js.map

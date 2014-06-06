@@ -180,6 +180,7 @@
     <TypeScriptCompile Include="js\OCM_AppBootstrap.ts" />
     <TypeScriptCompile Include="js\OCM_App_LocationEditor.ts" />
     <TypeScriptCompile Include="js\OCM_App_Util.ts" />
+    <TypeScriptCompile Include="js\OCM_Base.ts" />
     <TypeScriptCompile Include="js\OCM_CommonUI.ts" />
     <TypeScriptCompile Include="js\OCM_Data.ts" />
     <TypeScriptCompile Include="js\OCM_Geolocation.ts" />

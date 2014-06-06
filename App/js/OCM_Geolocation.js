@@ -1,6 +1,9 @@
 /// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.ts" />
-//"use strict";
+/**
+* @author Christopher Cook
+* @copyright Webprofusion Ltd http://webprofusion.com
+*/
 var OCM;
 (function (OCM) {
     var Geolocation = (function () {

@@ -1,6 +1,10 @@
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
+/**
+* @author Christopher Cook
+* @copyright Webprofusion Ltd http://webprofusion.com
+*/
 interface JQueryStatic {
     mobile: any;
 }

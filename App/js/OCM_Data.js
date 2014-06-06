@@ -1,4 +1,8 @@
 ﻿/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
+/**
+* @author Christopher Cook
+* @copyright Webprofusion Ltd http://webprofusion.com
+*/
 var OCM;
 (function (OCM) {
     var POI_SearchParams = (function () {

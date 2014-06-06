@@ -1,5 +1,9 @@
 /// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.d.ts" />
+/**
+* @author Christopher Cook
+* @copyright Webprofusion Ltd http://webprofusion.com
+*/
 declare module OCM {
     class Geolocation {
         constructor();

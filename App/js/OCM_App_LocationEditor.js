@@ -59,10 +59,6 @@ OCM_App.prototype.resetEditorForm = function () {
     this.setDropdown("edit_submissionstatus", 1);
     this.setDropdown("edit_statustype", 50); //operational
 
-    //TODO: collapse equipment/connections
-    //this.editorMap = null;
-    //this.editMarker = null;
-    //this.editorMapInitialised = false;
     this.positionAttribution = null;
     $("#editor-map").hide();
 };
@@ -480,7 +476,7 @@ OCM_App.prototype.initEditorMap = function (currentLat, currentLng) {
 
         // Create editor map view
         $("#editor-map").show();
-        this.editorMap = this.ocm_ui.createMapLeaflet("editor-map-canvas", currentLat, currentLng, false, 14);
+        this.editorMap = this.ocm_ui.mappingManager.createMapLeaflet("editor-map-canvas", currentLat, currentLng, false, 14);
 
         var unknownPowerMarker = L.AwesomeMarkers.icon({
             icon: 'bolt',
