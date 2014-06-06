@@ -90,7 +90,7 @@ div[data-role=footer] {
     }
 
 @media screen and (min-width: 0px) and (max-width: 400px) {
-    #home-page * .ui-grid-b * a {
+    #home-page > a {
         font-size: 100%;
     }
 }

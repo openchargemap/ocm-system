@@ -5,6 +5,11 @@
 
 //declare var OCM_App: any;
 
+/**
+* @author Christopher Cook
+* @copyright Webprofusion Ltd http://webprofusion.com
+*/
+
 interface JQueryStatic {
     mobile: any;
 }

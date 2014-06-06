@@ -1,27 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.openchargemap.app" version="4.0.0" versionCode="4.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Open Charge Map</name>
-    <description>
-    Open Charge Map is the world's largest open global registry of electric vehicle charging locations.
+<widget id="com.webprofusion.openchargemap" version="4.2.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Open Charge Map</name>
+  <description>
+    Find electric vehicle charging locations around the world.
   </description>
-    <author email="apps@webprofusion.com" href="http://openchargemap.org">
-    Christopher Cook
+  <author email="apps@webprofusion.com" href="http://webprofusion.com">
+    Webprofusion
   </author>
-    
-	
-    <preference name="webviewbounce" value="false" />
-    <preference name="android-minSdkVersion" value="8" />
-    <icon src="images/icons/AppIcon_114x114.png" />
-    <gap:splash src="images/splashscreen/AppSplashscreen_480x800.png" />
-    <gap:plugin name="ChildBrowser" />
-    <gap:plugin name="GAPlugin" />
-    <access origin="*" />
-    <feature name="http://api.phonegap.com/1.0/geolocation" />
-    <feature name="http://api.phonegap.com/1.0/network" />
-    <feature name="InAppBrowser" />
-    <feature name="NetworkStatus">
-        <param name="android-package" value="org.apache.cordova.NetworkManager" />
-        <param name="ios-package" value="CDVConnection" />
-    </feature>
-    <content src="index.html" />
+  <content src="index.html" />
+  <access origin="*" />
+
+  <preference name="DisallowOverscroll" value="true" />
+  <preference name="SplashScreen" value="screen" />
+  <preference name="SplashScreenDelay" value="4000" />
+  <preference name="fullscreen" value="false" />
+  <preference name="android-windowSoftInputMode" value="stateVisible" />
 </widget>

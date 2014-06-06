@@ -18,12 +18,13 @@
   <ItemGroup>
     <Content Include="build\icons.html" />
     <Content Include="build\jakefile.js" />
-    <Content Include="config.xml" />
-    <Content Include="cordova_index.html" />
+    <Content Include="config.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\FontAwesome\css\font-awesome.css" />
     <Content Include="fonts\FontAwesome\css\font-awesome.min.css" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.svg" />
+    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\Oswald\OFL.txt" />
     <Content Include="fonts\Oswald\oswald-light-webfont.svg" />
     <Content Include="fonts\Oxygen\OFL.txt" />
@@ -56,6 +57,7 @@
     <Content Include="images\icons\map\sm_pin_level2.png" />
     <Content Include="images\icons\map\sm_pin_level3.png" />
     <Content Include="images\icons\map\sm_pin_level_offline.png" />
+    <Content Include="images\icons\menu.png" />
     <Content Include="images\splashscreen\AppSplashscreen_320x460.png" />
     <Content Include="images\splashscreen\AppSplashscreen_480x800.png" />
     <Content Include="images\splashscreen\AppSplashscreen_768x1004.png" />
@@ -63,6 +65,7 @@
     <Content Include="js\Localisation\languagePack.min.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
     <Content Include="js\ThirdParty\analytics.js" />
+    <Content Include="js\ThirdParty\angular\angular.min.js" />
     <Content Include="js\ThirdParty\bootbox.min.js" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.min.css" />
@@ -101,6 +104,7 @@
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.css" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.css" />
     <Content Include="js\ThirdParty\marker.svg" />
+    <Content Include="js\ThirdParty\Object.observe.poly.js" />
     <Content Include="js\ThirdParty\pocketgrid.min.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.min.css" />
@@ -115,8 +119,13 @@
     <Content Include="robots.txt" />
     <Content Include="styles\extended.css" />
     <Content Include="styles\ios.css" />
-    <Content Include="styles\main.css" />
-    <Content Include="styles\reset.css" />
+    <None Include="styles\main.less" />
+    <Content Include="styles\main.css">
+      <DependentUpon>main.less</DependentUpon>
+    </Content>
+    <Content Include="styles\main.min.css">
+      <DependentUpon>main.css</DependentUpon>
+    </Content>
     <Content Include="styles\windows.css" />
     <Content Include="views\about.html" />
     <Content Include="views\add-comment.html" />
@@ -150,17 +159,15 @@
     <Content Include="fonts\Oxygen\oxygen-light-webfont.woff" />
     <Content Include="fonts\Oxygen\Oxygen-Light.ttf" />
     <Content Include="js\ThirdParty\leaflet\awesome-markers\images\Thumbs.db" />
-    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.eot" />
-    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.eot" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.woff" />
-    <Content Include="fonts\FontAwesome\font\fontawesome-webfont.ttf" />
-    <Content Include="fonts\FontAwesome\font\FontAwesome.otf" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap.css.map" />
     <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\FontAwesome\fonts\FontAwesome.otf" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -176,6 +183,8 @@
     <TypeScriptCompile Include="js\OCM_CommonUI.ts" />
     <TypeScriptCompile Include="js\OCM_Data.ts" />
     <TypeScriptCompile Include="js\OCM_Geolocation.ts" />
+    <TypeScriptCompile Include="js\OCM_MapInit.ts" />
+    <TypeScriptCompile Include="js\OCM_Mapping.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\history\history.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\jquery\jquery.d.ts" />

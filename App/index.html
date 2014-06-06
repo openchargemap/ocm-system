@@ -35,7 +35,6 @@
     <link rel="stylesheet" href="js/ThirdParty/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css" />
     <!-- Apply App Styles -->
-    <link rel="stylesheet" href="js/ThirdParty/pocketgrid.min.css" />
     <link rel="stylesheet" href="styles/main.css" />
     <link rel="stylesheet" href="styles/extended.css" />
 
@@ -51,6 +50,7 @@
     <script src="cordova.js"></script>
     <!--JS:Cordova:End-->
     <!-- Third Party Libraries -->
+    <script src="js/ThirdParty/Object.observe.poly.js"></script>
     <script src="js/ThirdParty/jquery-2.1.1.min.js"></script>
     <script src="js/ThirdParty/jQuery.fastClick.js"></script>
     <script src="js/ThirdParty/jquery.validate.min.js"></script>
@@ -72,6 +72,7 @@
     <script src="js/OCM_Data.js"></script>
     <script src="js/OfflineCache/OCM_CoreReferenceData.js"></script>
     <script src="js/OCM_Geolocation.js"></script>
+    <script src="js/OCM_Mapping.js"></script>
     <script src="js/OCM_CommonUI.js"></script>
     <script src="js/OCM_App.js"></script>
     <script src="js/OCM_App_Util.js"></script>
@@ -88,58 +89,58 @@
 <body>
 
     <div id="progress-indicator">
-        <div id="spinningSquaresG">
-            <div id="spinningSquaresG_1" class="spinningSquaresG">
+        <div id="fountainG">
+            <div id="fountainG_1" class="fountainG">
             </div>
-            <div id="spinningSquaresG_2" class="spinningSquaresG">
+            <div id="fountainG_2" class="fountainG">
             </div>
-            <div id="spinningSquaresG_3" class="spinningSquaresG">
+            <div id="fountainG_3" class="fountainG">
             </div>
-            <div id="spinningSquaresG_4" class="spinningSquaresG">
+            <div id="fountainG_4" class="fountainG">
             </div>
-            <div id="spinningSquaresG_5" class="spinningSquaresG">
+            <div id="fountainG_5" class="fountainG">
             </div>
-            <div id="spinningSquaresG_6" class="spinningSquaresG">
+            <div id="fountainG_6" class="fountainG">
             </div>
-            <div id="spinningSquaresG_7" class="spinningSquaresG">
+            <div id="fountainG_7" class="fountainG">
             </div>
-            <div id="spinningSquaresG_8" class="spinningSquaresG">
+            <div id="fountainG_8" class="fountainG">
             </div>
         </div>
     </div>
+
+    <div class="app-menu-container" id="app-menu-container">
+    <nav class="app-menu" id="menu" tabindex="-1" role="navigation">
+       
+        <div id="home-intro" style="">
+            <a href="#" onclick='window.open("http://openchargemap.org");return false;'>
+                <img alt="OCM Logo" src="images/icons/AppIcon_36x36.png" height="36" />
+            </a>
+            <span class="accent">Open Charge Map</span>
+
+        </div>
+        <ul>
+            <li><a href="#map-page" class="ui-link" data-rel="menu-item"><i class="fa fa-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></a></li>
+            <li><a href="#favourites-page" class="ui-link" data-rel="menu-item"><i class="fa fa-heart"></i>&nbsp;<span data-localize="ocm.general.favourites">Favourites</span></a></li>
+            <li><a href="#addlocation-page" class="ui-link" data-rel="menu-item"><i class="fa fa-plus"></i>&nbsp;<span data-localize="ocm.general.addLocation">Add Location</span></a></li>
+            <li><a href="#settings-page" class="ui-link" data-rel="menu-item"><i class="fa fa-filter"></i>&nbsp;<span data-localize="ocm.general.settings">Filter Settings</span></a></li>
+            <li><a href="#about-page" class="ui-link" data-rel="menu-item"><i class="fa fa-question-circle"></i>&nbsp;<span data-localize="ocm.general.about">About</span></a></li>
+            <li><a href="#login-page" id="login-button" class="ui-link" data-rel="menu-item"><i class="fa fa-sign-in"></i>&nbsp;<span data-localize="ocm.general.signIn">Sign In</span></a></li>
+        </ul>
+
+     
+    </nav>
+    </div>
+
     <!--Begin standard OCM app html block -->
     <!--Begin App Page Definitions-->
     <!--INCLUDE:VIEWS-->
     <!--End Page Definitions -->
     <!--End standard OCM app HTML block-->
     <!--Late bound scripts-->
+
     <!--google maps-->
-    <script>
-        function initGoogleMaps() {
-            if (console) console.log("Google Maps initialised");
-            ocm_app.ocm_ui.mapsInitialised = true;
-        };
-
-        function loadGoogleMapsScript() {
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMaps';
-            document.body.appendChild(script);
-
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'js/ThirdParty/google.maps/markerclusterer_compiled.js';
-            document.body.appendChild(script);
-
-            /*var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'js/ThirdParty/google.maps/markerwithlabel_packed.js';
-            document.body.appendChild(script);*/
-        }
-
-        window.onload = loadGoogleMapsScript;
-
-    </script>
+    <script src="js/OCM_MapInit.js"></script>
     <!--end google maps-->
 
     <script>

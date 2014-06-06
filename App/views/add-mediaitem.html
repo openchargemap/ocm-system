@@ -2,25 +2,48 @@
 <div data-role="page" id="submitmediaitem-page" class="ui-page">
     <div data-role="header" data-position="fixed">
         <div>
-            <a href="javascript:void();" data-rel="back"><i class="icon-chevron-left"></i>&nbsp;Back</a>
-            <div style="float: right"><i class="icon-camera"></i>&nbsp;<span>Add Photo</span></div>
+            <a href="javascript:void();" data-rel="back"><i class="fa fa-chevron-circle-left"></i>&nbsp;Back</a>
+            <div style="float: right"><i class="fa fa-camera"></i>&nbsp;<span data-localize="ocm.details.mediaItems.sectionTitle">Add Photo</span></div>
+
         </div>
     </div>
     <div data-role="content" class="container">
+        <h1 data-localize ="ocm.details.mediaItems.sectionTitle">Add Photo</h1>
+            <p>
+                <span data-localize="ocm.details.mediaItems.addPrompt">Upload your own photos for this location</span>
+            </p>
+            <p>
+                This information <strong>will be shared publically</strong>.
+            </p>
 
-        <p style="font-size: 0.8em;">
-            Submit your photo for this location below. <em>This information <strong>will</strong> be shared publically</em>.
-        </p>
-        <form id="mediaitem-form" action="#" enctype="multipart/form-data" style="margin-bottom:60px;">
-            <div class="form-group">
-                <label class="ui-input-text" for="fileupload">Choose Photo</label><input class="form-control" id="fileupload" name="fileupload" accept="image/*" type="file" />
-            </div>
-            <div class="form-group">
-                <label for="comment">Comment</label>
-                <textarea id="comment" class="form-control"></textarea>
-            </div>
-        </form>
-    </div>
+            <form id="mediaitem-form" action="#" enctype="multipart/form-data" style="margin-bottom:60px;">
+                <label>Choose Photo</label>
+                <div class="input-group file-upload">
+                    
+                    <input type="text" class="form-control file-upload-filename" disabled="disabled" />
+                    <span class="input-group-btn">
+
+                        <button type="button" class="btn btn-default file-upload-clear" style="display:none;">
+                            <span class="glyphicon glyphicon-remove"></span> Clear
+                        </button>
+
+                        <div class="btn btn-default file-upload-input">
+                            <span class="glyphicon glyphicon-folder-open"></span>
+                            <span class="file-upload-input-title">Browse</span>
+                            <input type="file" accept="image/*" id="fileupload" name="fileupload" />
+                        </div>
+
+
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Your Comment (optional)</label>
+                    <textarea id="comment" class="form-control"></textarea>
+                </div>
+
+            </form>
+</div>
 
     <div data-role="footer" data-position="fixed">
         <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
@@ -31,4 +54,33 @@
         </nav>
     </div>
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //adapted from http://bootsnipp.com/snippets/featured/input-file-popover-preview-image
+
+        $(".file-upload-input input:file").change(function () {
+
+            var file = this.files[0];
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(".file-upload-input-title").text("Change");
+                $(".file-upload-clear").show();
+                $(".file-upload-filename").val(file.name);
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // Set the clear onclick function
+        $('.file-upload-clear').click(function () {
+            $('.file-upload-filename').val("");
+            $('.file-upload-clear').hide();
+            $('.file-upload-input input:file').val("");
+            $(".file-upload-input-title").text("Browse");
+        });
+    });
+
+</script>
 <!-- Page:UploadMediaItem:End -->
