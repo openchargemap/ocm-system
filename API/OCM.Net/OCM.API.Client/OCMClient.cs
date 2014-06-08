@@ -120,7 +120,7 @@ namespace OCM.API.Client
         public async Task<CoreReferenceData> GetCoreReferenceData()
         {
             //get core reference data
-            string url = ServiceBaseURL + "/referencedata/?output=json";
+            string url = ServiceBaseURL + "/referencedata/?output=json&enablecaching=false";
             try
             {
                 string data = await FetchDataStringFromURLAsync(url);
