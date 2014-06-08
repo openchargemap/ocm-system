@@ -1,8 +1,4 @@
 ﻿/// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
-/**
-* @author Christopher Cook
-* @copyright Webprofusion Ltd http://webprofusion.com
-*/
 declare module OCM {
     class POI_SearchParams {
         constructor();

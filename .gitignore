@@ -111,3 +111,4 @@ UpgradeLog*.XML
 
 #Production Secrets
 *.ProductionWithSecrets.*
+/Localisation/Web.config

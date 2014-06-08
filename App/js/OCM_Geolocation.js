@@ -7,7 +7,7 @@
 var OCM;
 (function (OCM) {
     var Geolocation = (function () {
-        function Geolocation() {
+        function Geolocation(api) {
             //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
 
@@ -15,7 +15,7 @@ var OCM;
             this.geocodingTextInput = null;
             this.geocodingResultPos = null;
 
-            this.ocm_data = null;
+            this.api = api;
         }
         Geolocation.prototype.determineUserLocation = function (successCallback, failureCallback) {
             var appContext = this;
@@ -51,7 +51,7 @@ var OCM;
             this.geocodingTextInput = locationText;
             this.geocodingResultPos = null;
 
-            var geocoder = this.ocm_data;
+            var geocoder = this.api;
             var appContext = this;
 
             geocoder.fetchGeocodeResult(locationText, function (results) {

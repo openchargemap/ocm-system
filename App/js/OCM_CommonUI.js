@@ -15,7 +15,7 @@ var google;
 
 function OCM_CommonUI() {
     this.enablePOIMap = true;
-    this.mappingManager = new OCM.Mapping(this);
+    this.mappingManager = new OCM.Mapping();
     this.isRunningUnderCordova = false;
 }
 

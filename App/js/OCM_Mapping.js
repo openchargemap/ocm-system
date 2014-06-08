@@ -36,6 +36,7 @@ var OCM;
             this.enableTrackingMapCentre = false;
             this.mapCentre = null;
             this.mapAPI = "google";
+            this.searchDistanceKM = 1000 * 100;
         }
         return MapOptions;
     })();
@@ -47,7 +48,7 @@ var OCM;
     var Mapping = (function (_super) {
         __extends(Mapping, _super);
         /** @constructor */
-        function Mapping(commonUI) {
+        function Mapping() {
             _super.call(this);
             this.updateMapCentrePos = function (lat, lng, moveMap) {
                 //update record of map centre so search results can optionally be refreshed
@@ -86,7 +87,6 @@ var OCM;
             this.mapsInitialised = false;
             this.enableLogging = true;
             this.mapAPIReady = false;
-            this.commonUI = commonUI;
         }
         Mapping.prototype.setParentAppContext = function (context) {
             this.parentAppContext = context;
@@ -182,31 +182,32 @@ var OCM;
                         if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
                             var poi = poiList[i];
 
-                            var poiLevel = this.commonUI.getMaxLevelOfPOI(poi);
+                            var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
 
                             var iconURL = null;
                             var animation = null;
                             var shadow = null;
                             var markerImg = null;
 
-                            /*if (this.mapOptions.useMarkerIcons) {
-                            if (this.mapOptions.iconSet == "SmallPins") {
-                            iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
-                            } else {
-                            iconURL = "images/icons/map/set2_level" + poiLevel + ".png";
-                            shadow = new plugin.google.maps.MarkerImage("images/icons/map/marker-shadow.png",
-                            new google.maps.Size(41.0, 31.0),
-                            new google.maps.Point(0, 0),
-                            new google.maps.Point(12.0, 15.0)
-                            );
-                            
-                            markerImg = new plugin.google.maps.MarkerImage(iconURL,
-                            new google.maps.Size(25.0, 31.0),
-                            new google.maps.Point(0, 0),
-                            new google.maps.Point(12.0, 15.0)
-                            );
+                            if (this.mapOptions.useMarkerIcons) {
+                                if (this.mapOptions.iconSet == "SmallPins") {
+                                    iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
+                                } else {
+                                    iconURL = "images/icons/map/set2_level" + poiLevel + "_60x100.png";
+                                    /*shadow = new plugin.google.maps.MarkerImage("images/icons/map/marker-shadow.png",
+                                    new google.maps.Size(41.0, 31.0),
+                                    new google.maps.Point(0, 0),
+                                    new google.maps.Point(12.0, 15.0)
+                                    );
+                                    
+                                    markerImg = new plugin.google.maps.MarkerImage(iconURL,
+                                    new google.maps.Size(25.0, 31.0),
+                                    new google.maps.Point(0, 0),
+                                    new google.maps.Point(12.0, 15.0)
+                                    );*/
+                                }
                             }
-                            }*/
+
                             //if (poiCount < 100 && this.mapOptions.useMarkerAnimation == true) {
                             //    animation = plugin.google.maps.Animation.DROP;
                             //}
@@ -221,10 +222,18 @@ var OCM;
                             var parentContext = this.parentAppContext;
 
                             var markerPos = new plugin.google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);
+
                             map.addMarker({
                                 'position': markerPos,
                                 'title': markerTooltip,
-                                'snippet': "View details"
+                                'snippet': "View details",
+                                'icon': {
+                                    'url': 'www/' + iconURL,
+                                    'size': {
+                                        'width': 30,
+                                        'height': 50
+                                    }
+                                }
                             }, function (marker) {
                                 marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
                                     var markerTitle = marker.getTitle();
@@ -252,21 +261,6 @@ var OCM;
 
             var uiContext = this;
 
-            //zoom to bounds of markers
-            /*if (poiList != null && poiList.length > 0) {
-            this.log("Fitting to marker bounds:" + bounds);
-            map.setCenter(bounds.getCenter());
-            this.log("zoom before fit bounds:" + map.getZoom());
-            map.fitBounds(bounds);
-            
-            //fix incorrect zoom level when fitBounds guesses a zoom level of 0 etc.
-            var zoom = map.getZoom();
-            map.setZoom(zoom < 6 ? 6 : zoom);
-            
-            } else {
-            this.log("Skipping setting bounds");
-            }
-            */
             //TODO: add marker for current search position
             /* if (this.mapOptions.enableTrackingMapCentre == false) {
             this.mapOptions.enableTrackingMapCentre = true;
@@ -290,10 +284,22 @@ var OCM;
             this.map.refreshLayout();
 
             if (this.mapOptions.mapCentre != null) {
+                var gmMapCentre = new plugin.google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude);
+
+                if (this.mapOptions.searchDistanceKM != null) {
+                    map.addCircle({
+                        'center': gmMapCentre,
+                        'radius': this.mapOptions.searchDistanceKM,
+                        'strokeColor': '#AA00FF',
+                        'strokeWidth': 5,
+                        'fillColor': '#009DFF33'
+                    });
+                }
+
                 this.log("Animating camera to map centre:" + this.mapOptions.mapCentre);
 
                 map.animateCamera({
-                    'target': new plugin.google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude),
+                    'target': gmMapCentre,
                     'tilt': 60,
                     'zoom': 12,
                     'bearing': 0
@@ -392,7 +398,7 @@ var OCM;
                             if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
                                 var poi = poiList[i];
 
-                                var poiLevel = this.commonUI.getMaxLevelOfPOI(poi);
+                                var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
 
                                 var iconURL = null;
                                 var animation = null;
@@ -496,7 +502,7 @@ var OCM;
                         window.setTimeout(function () {
                             //create new latlng from map centre so that values get normalised to 180/-180
                             var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
-                            this.log("Map centre changed, updating search position:" + centrePos);
+                            uiContext.log("Map centre changed, updating search position:" + centrePos);
 
                             uiContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
                         }, 500);
@@ -568,7 +574,7 @@ var OCM;
                                     var powerTitle = "";
                                     var usageTitle = "";
 
-                                    var poiLevel = this.commonUI.getMaxLevelOfPOI(poi);
+                                    var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
                                     var markerIcon = unknownPowerMarker;
 
                                     if (poiLevel == 0) {
@@ -708,6 +714,7 @@ var OCM;
                 this.map.refreshLayout();
             }
         };
+
         Mapping.prototype.showMap = function () {
             if (this.mapOptions.mapAPI == "googlenativesdk") {
                 this.log("Debug: Showing Map");
@@ -715,6 +722,29 @@ var OCM;
                 //show/reposition map
                 this.map.setVisible(true);
                 this.map.refreshLayout();
+            }
+        };
+
+        Mapping.prototype.showPOIOnStaticMap = function (mapcanvasID, poi, includeMapLink, isRunningUnderCordova) {
+            if (typeof includeMapLink === "undefined") { includeMapLink = false; }
+            if (typeof isRunningUnderCordova === "undefined") { isRunningUnderCordova = false; }
+            var mapCanvas = document.getElementById(mapcanvasID);
+            if (mapCanvas != null) {
+                var title = poi.AddressInfo.Title;
+                var lat = poi.AddressInfo.Latitude;
+                var lon = poi.AddressInfo.Longitude;
+                var width = 200;
+                var height = 200;
+
+                var mapImageURL = "http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
+                var mapHTML = "";
+                if (includeMapLink == true) {
+                    mapHTML += "<div>" + OCM.Utils.formatMapLink(poi, "<div><img width=\"" + width + "\" height=\"" + height + "\" src=\"" + mapImageURL + "\" /></div>", isRunningUnderCordova) + "</div>";
+                } else {
+                    mapHTML += "<div><img width=\"" + width + "\" height=\"" + height + "\" src=\"" + mapImageURL + "\" /></div>";
+                }
+
+                mapCanvas.innerHTML = mapHTML;
             }
         };
         return Mapping;

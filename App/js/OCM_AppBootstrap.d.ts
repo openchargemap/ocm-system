@@ -12,9 +12,8 @@ interface Window {
     L: any;
     cordova: any;
 }
-declare var ocm_app: any;
+declare var ocm_app: OCM.App;
 declare var _appBootStrapped: boolean;
 declare var gaPlugin: any;
 declare function startApp(): void;
 declare function onDeviceReady(): void;
-declare function bootStrap(): void;

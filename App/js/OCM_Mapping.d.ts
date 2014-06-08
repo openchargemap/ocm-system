@@ -11,6 +11,7 @@ declare module OCM {
     }
     class MapCoords {
         public coords: GeoLatLng;
+        public attribution: string;
     }
     class MapOptions {
         public enableClustering: boolean;
@@ -19,6 +20,7 @@ declare module OCM {
         public useMarkerAnimation: boolean;
         public enableTrackingMapCentre: boolean;
         public mapCentre: MapCoords;
+        public searchDistanceKM: number;
         public iconSet: string;
         public mapAPI: string;
         /** @constructor */
@@ -35,12 +37,11 @@ declare module OCM {
         public markerClusterer: any;
         public markerList: any[];
         public searchMarker: any;
-        private commonUI;
         private enableLogging;
         public errorMessage: string;
         public parentAppContext: any;
         /** @constructor */
-        constructor(commonUI: any);
+        constructor();
         public setParentAppContext(context: any): void;
         public setMapAPI(api: string): void;
         public initMapGoogleNativeSDK(mapcanvasID: string): boolean;
@@ -54,5 +55,6 @@ declare module OCM {
         public refreshMapView(mapCanvasID: string, mapHeight: number, poiList: any[], searchPos: any): boolean;
         public hideMap(): void;
         public showMap(): void;
+        public showPOIOnStaticMap(mapcanvasID: string, poi: any, includeMapLink?: boolean, isRunningUnderCordova?: boolean): void;
     }
 }

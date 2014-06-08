@@ -6,11 +6,11 @@
 */
 declare module OCM {
     class Geolocation {
-        constructor();
-        private clientGeolocationPos;
+        constructor(api: API);
+        public clientGeolocationPos: MapCoords;
         private geocodingTextInput;
         private geocodingResultPos;
-        private ocm_data;
+        private api;
         public determineUserLocation(successCallback: any, failureCallback: any): void;
         public determineUserLocationFailed(failureCallback: any): void;
         public determineGeocodedLocation(locationText: any, successCallback: any): boolean;
