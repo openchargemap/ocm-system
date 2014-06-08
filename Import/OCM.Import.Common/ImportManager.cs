@@ -46,10 +46,14 @@ namespace OCM.Import
 
         public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData)
         {
-            //get list of all current POIs including most delisted ones
-            SearchFilters filters = new SearchFilters { CountryIDs=new int[1]{44}, MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeIDs = new int[1]{0} };
+            //get list of all current POIs (in relevant countries) including most delisted ones
+            int[] countryIds = (from poi in cpList
+                              where poi.AddressInfo.Country != null
+                              select poi.AddressInfo.Country.ID).Distinct().ToArray();
+
+            SearchFilters filters = new SearchFilters { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeIDs = new int[1] { 0 } };
             List<ChargePoint> masterList = await new OCMClient(IsSandboxedAPIMode).GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
-            
+
             //if we failed to get a master list, quit with no result
             if (masterList.Count == 0) return new List<ChargePoint>();
 
@@ -68,7 +72,7 @@ namespace OCM.Import
 
                 //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
                 var dupeList = masterList.Where(c =>
-                        (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)               
+                        (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)
                         ||
                         new System.Device.Location.GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS //meters distance apart
                 );
@@ -102,7 +106,7 @@ namespace OCM.Import
                             //updateList.Add(updatedItem);
                         }
                     }
-                    
+
                     //item has one or more likely duplicates, add it to list of items to remove
                     duplicateList.Add(item);
                 }
@@ -132,7 +136,7 @@ namespace OCM.Import
             System.Diagnostics.Debug.WriteLine("Duplicated removed from import:" + duplicateList.Count);
 
             //add updated items (replace duplicates with property changes)
-            
+
             foreach (var updatedItem in updateList)
             {
                 if (!cpList.Contains(updatedItem))
@@ -172,12 +176,12 @@ namespace OCM.Import
                         }
                     }
                 }
-                
+
                 if (!isDuplicate)
                 {
                     previousCP = cp;
                 }
-                
+
             }
 
             //return final processed list ready for applying as insert/updates
@@ -314,7 +318,7 @@ namespace OCM.Import
 
             CoreReferenceData coreRefData = null;
             coreRefData = await client.GetCoreReferenceData();
-            
+
             string outputPath = "Data\\";
             List<IImportProvider> providers = new List<IImportProvider>();
 
@@ -323,16 +327,19 @@ namespace OCM.Import
             // providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
 
             //Working - Auto refreshed
-           /* providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
-            providers.Add(new ImportProvider_CarStations() { InputPath = inputDataPathPrefix + "carstations.com\\jsonresults.txt" });
-            providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
-            providers.Add(new ImportProvider_UKChargePointRegistry() { InputPath = inputDataPathPrefix + "chargepoints.dft.gov.uk\\data.json" });
-            providers.Add(new ImportProvider_Mobie() { InputPath = inputDataPathPrefix + "mobie.pt\\data.json.txt" });
-            providers.Add(new ImportProvider_AFDC() { InputPath = inputDataPathPrefix + "afdc\\data.json" });
-            providers.Add(new ImportProvider_ESB_eCars() { InputPath = inputDataPathPrefix + "esb_ecars\\data.kml" });
-            */
-            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.lecircuitelectrique.json" });
-            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.reseauver.json" });
+            /* providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
+             providers.Add(new ImportProvider_CarStations() { InputPath = inputDataPathPrefix + "carstations.com\\jsonresults.txt" });
+             providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
+             providers.Add(new ImportProvider_UKChargePointRegistry() { InputPath = inputDataPathPrefix + "chargepoints.dft.gov.uk\\data.json" });
+             providers.Add(new ImportProvider_Mobie() { InputPath = inputDataPathPrefix + "mobie.pt\\data.json.txt" });
+             providers.Add(new ImportProvider_AFDC() { InputPath = inputDataPathPrefix + "afdc\\data.json" });
+             providers.Add(new ImportProvider_ESB_eCars() { InputPath = inputDataPathPrefix + "esb_ecars\\data.kml" });
+             */
+            //providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.lecircuitelectrique.json" });
+            //providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.reseauver.json" });
+
+            providers.Add(new ImportProvider_GenericExcel() { InputPath = inputDataPathPrefix + "catalonia\\catalonia.xlsx" , DefaultDataProvider=coreRefData.DataProviders.First(d=>d.ID==25)});
+
             //Working -manual refresh
             //providers.Add(new ImportProvider_NobilDotNo() { InputPath = inputDataPathPrefix + "nobil\\nobil.json.txt" });
 
@@ -361,8 +368,16 @@ namespace OCM.Import
                     }
                     else
                     {
-                        p.Log("Loading input data from file..");
-                        loadOK = p.LoadInputFromFile(p.InputPath);
+                        if (p.IsStringData)
+                        {
+                            p.Log("Loading input data from file..");
+                            loadOK = p.LoadInputFromFile(p.InputPath);
+                        }
+                        else
+                        {
+                            //binary streams pass as OK by default
+                            loadOK = true;
+                        }
                     }
 
                     if (!loadOK)

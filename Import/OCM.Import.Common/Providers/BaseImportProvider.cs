@@ -145,6 +145,7 @@ namespace OCM.Import.Providers
     {
         public string ProviderName { get; set; }
         public bool IsAutoRefreshed { get; set; }
+        public bool IsStringData { get; set; }
         public string AutoRefreshURL { get; set; }
         public string InputData { get; set; }
         public string InputPath { get; set; }
@@ -158,7 +159,7 @@ namespace OCM.Import.Providers
         public string APIKeyPrimary { get; set; }
         public string APIKeySecondary { get; set; }
         public CommonImportRefData ImportRefData { get; set; }
-
+        public DataProvider DefaultDataProvider { get; set; }
         protected WebClient webClient = new WebClient();
          
         public BaseImportProvider()
@@ -172,6 +173,7 @@ namespace OCM.Import.Providers
 
             webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
             webClient.Encoding = SourceEncoding;
+            this.IsStringData = true;
         }
 
         public string GetProviderName()
