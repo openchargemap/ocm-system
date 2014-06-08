@@ -9,7 +9,7 @@
 module OCM {
     export class Geolocation {
 
-        constructor() {
+        constructor(api: OCM.API) {
 
             //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
@@ -18,14 +18,13 @@ module OCM {
             this.geocodingTextInput = null;
             this.geocodingResultPos = null;
 
-
-            this.ocm_data = null;
+            this.api = api;
         }
 
-        private clientGeolocationPos: any;
+        public clientGeolocationPos: MapCoords;
         private geocodingTextInput: string;
         private geocodingResultPos: any;
-        private ocm_data: OCM.API;
+        private api: OCM.API;
 
         determineUserLocation(successCallback, failureCallback) {
 
@@ -68,7 +67,7 @@ module OCM {
             this.geocodingTextInput = locationText;
             this.geocodingResultPos = null;
 
-            var geocoder = this.ocm_data;
+            var geocoder = this.api;
             var appContext = this;
 
             geocoder.fetchGeocodeResult(locationText,

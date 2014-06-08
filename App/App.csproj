@@ -49,9 +49,13 @@
     <Content Include="images\icons\map\level3.png" />
     <Content Include="images\icons\map\marker-shadow.png" />
     <Content Include="images\icons\map\set2_level0.png" />
+    <Content Include="images\icons\map\set2_level0_60x100.png" />
     <Content Include="images\icons\map\set2_level1.png" />
+    <Content Include="images\icons\map\set2_level1_60x100.png" />
     <Content Include="images\icons\map\set2_level2.png" />
+    <Content Include="images\icons\map\set2_level2_60x100.png" />
     <Content Include="images\icons\map\set2_level3.png" />
+    <Content Include="images\icons\map\set2_level3_60x100.png" />
     <Content Include="images\icons\map\sm_pin_level0.png" />
     <Content Include="images\icons\map\sm_pin_level1.png" />
     <Content Include="images\icons\map\sm_pin_level2.png" />
@@ -177,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="js\OCM_App.ts" />
+    <TypeScriptCompile Include="js\OCM_AppBase.ts" />
     <TypeScriptCompile Include="js\OCM_AppBootstrap.ts" />
     <TypeScriptCompile Include="js\OCM_App_LocationEditor.ts" />
     <TypeScriptCompile Include="js\OCM_App_Util.ts" />
