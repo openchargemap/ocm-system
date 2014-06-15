@@ -6,8 +6,7 @@
 
 <h2>Your Profile and Stats</h2>
 
-<div class="row">
-    <div class="col-md-8">
+<div>
         <fieldset>
             <legend>Your Profile</legend>
             
@@ -19,103 +18,27 @@
                     Note: you can edit your profile image using the popular <a href="http://gravatar.com/" target="_blank">Gravatar</a> service then adding your email address to your profile here (email address is not shared publically).
                 </p>
             </div>
+
+            @Html.Partial("_PublicProfile",Model)
             
 
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.IdentityProvider)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.IdentityProvider)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.Identifier)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.Identifier)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.Username)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.Username)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.Profile)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.Profile)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.Location)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.Location)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.WebsiteURL)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.WebsiteURL)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.DateCreated)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.DateLastLogin)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.DateLastLogin)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.IsProfilePublic)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.IsProfilePublic)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.IsEmergencyChargingProvider)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.IsEmergencyChargingProvider)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.IsPublicChargingProvider)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.IsPublicChargingProvider)
-            </div>
-
-            <div class="display-label">
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </div>
-            <div class="display-field">
-                @Html.DisplayFor(model => model.EmailAddress)
-            </div>
+            <h3>Other Account Details</h3>
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(model => model.IdentityProvider)</dt>
+                <dd>@Html.DisplayFor(model => model.IdentityProvider)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Identifier)</dt>
+                <dd>@Html.DisplayFor(model => model.Identifier)</dd>
+                <dt>@Html.DisplayNameFor(model => model.DateLastLogin)</dt>
+                <dd>@Html.DisplayFor(model => model.DateLastLogin)</dd>
+                <dt>@Html.DisplayNameFor(model => model.IsProfilePublic)</dt>
+                <dd>@Html.DisplayFor(model => model.IsProfilePublic)</dd>
+                <dt>@Html.DisplayNameFor(model => model.IsEmergencyChargingProvider)</dt>
+                <dd>@Html.DisplayFor(model => model.IsEmergencyChargingProvider)</dd>
+                <dt>@Html.DisplayNameFor(model => model.IsPublicChargingProvider)</dt>
+                <dd>@Html.DisplayFor(model => model.IsPublicChargingProvider)</dd>
+                <dt>@Html.DisplayNameFor(model => model.EmailAddress)</dt>
+                <dd>@Html.DisplayFor(model => model.EmailAddress)</dd>
+            </dl>
         </fieldset>
 
-
-    </div>
-    <div class="col-md-4">
-         <fieldset>
-            <legend>Community Stats</legend>
-         <div class="stat">
-             <h2><span id="summary-reputation">@Html.DisplayFor(model => model.ReputationPoints)</span></h2>
-             <p>Reputation Points</p>
-         </div>
-             </fieldset>
-
-    </div>
 </div>

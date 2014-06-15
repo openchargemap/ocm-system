@@ -65,7 +65,8 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td> @(item.EmailAddress!=null?Html.Raw("<img src=\""+OCM.Core.Util.SecurityHelper.GetGravatarURLFromEmailAddress(item.EmailAddress)+"\" />"):Html.Raw(""))
+        <td>
+            @(item.EmailHash != null ? Html.Raw("<img src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />") : Html.Raw(""))
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.IdentityProvider)

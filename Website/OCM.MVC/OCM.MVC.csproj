@@ -204,18 +204,21 @@
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\DevelopController.cs" />
     <Compile Include="Controllers\EditQueueController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginProviderController.cs" />
     <Compile Include="Controllers\POIController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\WidgetController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\POIBrowseModel.cs" />
     <Compile Include="Models\POIViewModel.cs" />
+    <Compile Include="Models\StatsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -311,6 +314,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\Publish Site to Sandbox.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
@@ -431,6 +435,15 @@
     <Content Include="Views\POI\AddComment.cshtml" />
     <Content Include="Views\POI\_POISummary.cshtml" />
     <Content Include="Views\Develop\API.cshtml" />
+    <Content Include="Views\Country\Index.cshtml" />
+    <Content Include="Views\Country\Networks.cshtml" />
+    <Content Include="Views\Stats\Index.cshtml" />
+    <Content Include="Views\Stats\_TopContributors.cshtml" />
+    <Content Include="Views\Stats\_UserRegistrations.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Profile\_PublicProfile.cshtml" />
+    <Content Include="Views\Stats\_EditStatistics.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,47 @@
+﻿@model OCM.API.Common.Model.User
+
+<div class="row">
+    <div class="col-md-8">
+        @Html.Raw("<img class='pull-right img-thumbnail' style='margin-right:1em;' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromEmailAddress(Model.EmailAddress) + "\" />")
+
+
+        <fieldset>
+            <legend>Profile</legend>
+
+            <dl class="dl-horizontal">
+                <dt>Name</dt>
+                <dd>
+                    @if (Model.IdentityProvider == "Twitter")
+                    {
+                        <a href="https://twitter.com/@Model.Identifier" target="_blank">@Html.DisplayFor(model => model.Username)</a>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(model => model.Username)
+                    }
+                </dd>
+                <dt>@Html.DisplayNameFor(model => model.DateCreated)</dt>
+                <dd>@Html.DisplayFor(model => model.DateCreated)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Profile)</dt>
+                <dd>@Html.DisplayFor(model => model.Profile)</dd>
+                <dt>@Html.DisplayNameFor(model => model.Location)</dt>
+                <dd>@Html.DisplayFor(model => model.Location)</dd>
+                <dt>@Html.DisplayNameFor(model => model.WebsiteURL)</dt>
+                <dd>@Html.DisplayFor(model => model.WebsiteURL)</dd>
+            </dl>
+
+        </fieldset>
+
+    </div>
+    <div class="col-md-4">
+        <fieldset>
+            <legend>Community Stats</legend>
+            <div class="stat">
+                <h2><span id="summary-reputation">@Html.DisplayFor(model => model.ReputationPoints)</span></h2>
+                <p>Reputation Points</p>
+            </div>
+        </fieldset>
+
+    </div>
+</div>
+

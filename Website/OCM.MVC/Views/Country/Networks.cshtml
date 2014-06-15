@@ -1,0 +1,85 @@
+﻿@model IEnumerable<OCM.API.Common.Model.OperatorInfo>
+
+@{
+   
+    var country = (OCM.API.Common.Model.Country)ViewBag.Country;
+
+    var countryName = (country.Title.StartsWith("United") ? " the " + country.Title : country.Title);
+    ViewBag.Title = "Charging Networks in "+countryName;
+}
+
+
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li><a href="@Url.Action("Index","Country")">Countries</a></li>
+    <li><a href="#">@country.Title</a></li>
+    <li class="active">Networks</li>
+</ol>
+
+<h1>Charging Networks in @countryName</h1>
+
+
+@if (Model != null && Model.Count() > 0)
+{
+    <p>The following charging networks are known to operate in @countryName. If you can see that one is missing, please @Html.ActionLink("Contact Us", "Contact", "About").</p>
+    
+    <div>
+        @foreach (var item in Model)
+        {
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@Html.DisplayFor(modelItem => item.Title) <small><a href="@Url.Action("Index","POI",new {CountryIds=country.ID, OperatorIds=item.ID})">View <strong>@Html.DisplayFor(modelItem => item.Title)</strong> Charging Locations in @countryName</a></small></h3>
+                </div>
+                <div class="panel-body">
+                    <p class="pull-right">@Html.DisplayFor(modelItem => item.Comments)</p>
+                    <dl class="dl-horizontal">
+                        @if (item.WebsiteURL != null)
+                        {
+                            <dt>Website</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.WebsiteURL)</dd>
+                        }
+                        @if (item.PhonePrimaryContact != null)
+                        {
+                            <dt>Main Phone</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.PhonePrimaryContact)</dd>
+                        }
+
+                        @if (item.BookingURL != null)
+                        {
+                            <dt>Booking/Membership</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.BookingURL)</dd>
+                        }
+
+                        @if (item.ContactEmail != null)
+                        {
+                            <dt>Contact Email</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.ContactEmail)</dd>
+                        }
+
+                        @if (item.FaultReportEmail != null)
+                        {
+                            <dt>Fault Report Email</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.FaultReportEmail)</dd>
+                        }
+
+
+                    </dl>
+
+                </div>
+            </div>
+            
+        }
+
+    </div>
+        
+        
+}
+else
+{
+    <p>There are currently no known charging networks for this country. If you know one is missing, please @Html.ActionLink("Contact Us", "Contact", "About")</p>
+}
+
+<h2>Other Charging Providers</h2>
+<p><a href="@Url.Action("Index", "POI", new { CountryIds = country.ID })">Charging Locations provided by Business Owners or Unknown Networks</a></p>

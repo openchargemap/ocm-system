@@ -323,8 +323,8 @@ class LocationEditor {
 
     private beginGeocodingFromPlacename(address) {
         var appContext = this;
-        var geocoding = new (<any>OCM).Geolocation();
-        geocoding.ocm_data = new (<any>OCM).API();
+        var dataAPI = new (<any>OCM).API();
+        var geocoding = new (<any>OCM).Geolocation(dataAPI);
         geocoding.determineGeocodedLocation(address, (<any>$).proxy(appContext.setPosFromGeolocation, appContext));
     }
 

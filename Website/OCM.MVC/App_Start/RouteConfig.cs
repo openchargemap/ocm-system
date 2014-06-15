@@ -42,6 +42,10 @@ namespace OCM.MVC
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.LowercaseUrls = true;
 
+
+            routes.MapMvcAttributeRoutes();
+ 
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
@@ -53,6 +57,7 @@ namespace OCM.MVC
                 url: "{languagecode}/{controller}/{action}/{id}",
                 defaults: new { languagecode="en", controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
 
            /* routes.MapRoute(
                name: "Browse",

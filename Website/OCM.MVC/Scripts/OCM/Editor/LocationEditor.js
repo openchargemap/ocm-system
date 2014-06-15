@@ -286,8 +286,8 @@ var LocationEditor = (function () {
 
     LocationEditor.prototype.beginGeocodingFromPlacename = function (address) {
         var appContext = this;
-        var geocoding = new OCM.Geolocation();
-        geocoding.ocm_data = new OCM.API();
+        var dataAPI = new OCM.API();
+        var geocoding = new OCM.Geolocation(dataAPI);
         geocoding.determineGeocodedLocation(address, $.proxy(appContext.setPosFromGeolocation, appContext));
     };
 

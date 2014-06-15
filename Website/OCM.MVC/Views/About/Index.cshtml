@@ -24,14 +24,17 @@ data sharing and de-duplication efforts.
 <p>
     The following people provide leadership and coordination for the project:
 </p>
-<h4>Kevin Sharpe</h4>
-<p>
-    Kevin is the founder of the Open Charge Map project. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World (<a href="http://www.zerocarbonworld.org">www.zerocarbonworld.org</a>).
-</p>
+
 <h4>Christopher Cook</h4>
 <p>Christopher is the lead technical architect, database designer and lead developer for the Open Charge Map system. He is a director of the UK software development company Webprofusion Ltd (<a href="http://www.webprofusion.com">www.webprofusion.com</a>) and owner of <a href="http://www.electriccarbuyer.com">electriccarbuyer.com</a></p>
-<h3>OCM Devel Members</h3>
-<p>Our <a href="https://github.com/openchargemap">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our devel mailing list is currently our primary means of exchanging ideas and gathering feedback from interested parties.</p>
+<h4>Jean-Christoph Saint-Pô</h4>
+<p>J-C is the community coordinator for the Open Charge Map project and an OCM Administrator, promoting the uptake of OCM by the public and industry. Links: <a href="https://twitter.com/jcstp">Twitter</a>, <a href="https://plus.google.com/u/0/115943172884477844202/">Google+</a>, <a href="http://home.scarlet.be/jcsaintpo/">Website</a></p>
+<h4>Kevin Sharpe</h4>
+<p>
+    Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World (<a href="http://www.zerocarbonworld.org">www.zerocarbonworld.org</a>) who sponsor the server hosting of Open Charge Map.
+</p>
+<h3>Developers and Contributors</h3>
+<p>Our <a href="https://github.com/openchargemap">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://plus.google.com/u/0/communities/112113799071360649945">google+</a> community is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
 <h4>Project Stats</h4>
 <script type="text/javascript" src="http://www.ohloh.net/p/605311/widgets/project_cocomo.js"></script>
 <h3>API Users</h3>
@@ -44,13 +47,14 @@ data sharing and de-duplication efforts.
 </p>
 <h3>Data Sources</h3>
 <p>Credit and our thanks goes to following major data sources currently included in our database:</p>
-<ul>
-    <li>OpenChargeMap.org Contributors</li>
-    <li>Alternative Fuels Data Center (http://www.afdc.energy.gov/)</li>
-    <li>Carstations.com (http://carstations.com/)</li>
-    <li>Blink Network (http://www.blinknetwork.com)</li>
-    <li>UK National Charge Point Registry (http://chargepoints.dft.gov.uk)</li>
-    <li>Nobil.no (http://www.nobil.no)</li>
-    <li>RWE Mobility (http://www.rwe-mobility.com/)</li>
-    <li>Mobie.pt (http://www.mobie.pt/)</li>
-</ul>
+@{
+    var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData().DataProviders;
+}
+<div>
+    @foreach (var provider in providers.Where(p=>p.IsApprovedImport==true || p.IsOpenDataLicensed==true))
+    {
+        <div><strong>@provider.Title</strong> @(provider.WebsiteURL!=null?" ("+provider.WebsiteURL+") ":"") @(provider.License!=null?" - License: "+@provider.License:"")</div>
+    }
+    
+</div>
+

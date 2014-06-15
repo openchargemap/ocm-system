@@ -1,4 +1,4 @@
-.a-example-palette {
+﻿.a-example-palette {
   color: #8cc63f;
   /*color-a*/
   color: #c6e29e;
@@ -436,4 +436,10 @@ div[data-editormode="advanced"] label {
     float: none;
   }
 }
-/*# sourceMappingURL=OCM.css.map */
+.panel-info {
+  border-color: #EEEEEE;
+}
+.panel-info .panel-heading {
+  border-color: #EEEEEE;
+  background-color: #f8f8f8;
+}

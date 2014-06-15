@@ -134,7 +134,7 @@ namespace OCM.MVC.Controllers
             var poi = cpManager.Get(id, true);
             ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
 
-            var imageList = new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
+            List<OCM.MVC.App_Code.LocationImage> imageList =null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
 
             if (imageList != null)
             {

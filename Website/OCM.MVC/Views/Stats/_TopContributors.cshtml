@@ -1,0 +1,50 @@
+﻿@model IEnumerable<OCM.API.Common.Model.User>
+
+@{
+    var positionCount = 1;
+
+}
+@foreach (var item in Model)
+{
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                @positionCount :
+                @if (item.IsProfilePublic != false)
+                {
+                    <a href="@Url.Action("View", "Profile", new { id=item.ID})">@Html.DisplayFor(modelItem => item.Username)</a>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Username)
+                }
+            </h3>
+        </div>
+        <div class="panel-body">
+            @Html.Raw("<img class='pull-right img-thumbnail' style='margin-right:1em;' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />")
+
+            <dl class="dl-horizontal">
+                @if (item.Location != null)
+                {
+                    <dt>@Html.DisplayNameFor(model => model.Location)</dt>
+                    <dd>@Html.DisplayFor(modelItem => item.Location)</dd>
+                }
+
+                @if (item.WebsiteURL != null)
+                {
+                    <dt>@Html.DisplayNameFor(model => model.WebsiteURL)</dt>
+                    <dd>@Html.DisplayFor(modelItem => item.WebsiteURL)</dd>
+                }
+                @if (item.ReputationPoints != null)
+                {
+                    <dt>@Html.DisplayNameFor(model => model.ReputationPoints)</dt>
+                    <dd>@Html.DisplayFor(modelItem => item.ReputationPoints)</dd>
+                }
+                <dt>@Html.DisplayNameFor(model => model.DateCreated)</dt>
+                <dd>@item.DateCreated.Value.ToShortDateString()</dd>
+            </dl>
+        </div>
+    </div>
+
+                positionCount++;
+}

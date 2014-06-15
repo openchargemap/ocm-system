@@ -1,0 +1,3 @@
+﻿@model bool?
+
+@Html.DropDownList("", new SelectListItem[] { new SelectListItem() { Text = "Yes", Value = "true", Selected = (Model==true) }, new SelectListItem() { Text = "No", Value = "false", Selected = !(Model==true) } },new {@class="form-control"})

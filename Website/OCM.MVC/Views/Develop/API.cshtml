@@ -31,7 +31,7 @@
 
                 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
 
-                <p><em>API V2 (updated May 2014) - Please join the discussion forum to discuss development.</em></p>
+                <p><em>API V2 (documentation last updated June 2014) - Please join the discussion forum to discuss development.</em></p>
                 <h3>Service Base URL: </h3>
                 <p>
                     <code>@Html.Raw(apiBaseUrl)</code>
@@ -144,6 +144,11 @@
                     <tr>
                         <td>callback</td>
                         <td>specify the name of the JSONP callback (if required), JSON response type only.</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>chargepointid</td>
+                        <td>exact match on a given POI id</td>
                         <td>(blank)</td>
                     </tr>
                 </table>

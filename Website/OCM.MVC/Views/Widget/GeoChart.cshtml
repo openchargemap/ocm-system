@@ -2,7 +2,7 @@
     ViewBag.Title = "GeoChart";
     Layout = "~/Views/Shared/_SimpleLayout.cshtml";
 }
-<script type="text/javascript" src="~/scripts/require.js"></script>
+<script type="text/javascript" src="~/Scripts/OCM/GeoSummary.js"></script>
 <script type="text/javascript" src="http://www.openchargemap.org/api/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
@@ -16,13 +16,8 @@
 
 <script type="text/javascript">
    
-    var ocmSummary = null;
-    require.config({ baseUrl: '@Url.Content("~/scripts/")' });
-
-    require(['ocm/geosummary'], function (app) {
-        var OCM = app.OCM;
-        ocmSummary = new OCM.Widgets.GeoSummary("geochart", "datasummary");
-    });
+    var ocmSummary = new OCM.Widgets.GeoSummary("geochart", "datasummary");
+    
    
     function initChart() {
         if (ocmSummary != null) {
