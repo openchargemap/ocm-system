@@ -58,6 +58,8 @@ namespace OCM.API.Common.Model
         [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
         public string EmailAddress { get; set; }
 
+        public string EmailHash { get; set; }
+
         public bool? IsCurrentSessionTokenValid {get;set;}
 
         public string APIKey { get; set; }

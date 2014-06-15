@@ -23,6 +23,7 @@ namespace OCM.Core.Data
         public int ID { get; set; }
         public string Title { get; set; }
         public string ISOCode { get; set; }
+        public string ContinentCode { get; set; }
     
         public virtual ICollection<AddressInfo> AddressInfoes { get; set; }
         public virtual ICollection<OperatorCountry> OperatorCountries { get; set; }

@@ -11,7 +11,19 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (source == null) return null;
 
-            return new Model.Country() { ID = source.ID, Title = source.Title, ISOCode = source.ISOCode };
+            return new Model.Country() { ID = source.ID, Title = source.Title, ISOCode = source.ISOCode, ContinentCode = source.ContinentCode };
+        }
+
+        public static List<Model.Country> FromDataModel(IEnumerable<Core.Data.Country> source)
+        {
+            if (source == null) return null;
+
+            var list = new List<Model.Country>();
+            foreach (var c in source)
+            {
+                list.Add(FromDataModel(c));
+            }
+            return list;
         }
     }
 }

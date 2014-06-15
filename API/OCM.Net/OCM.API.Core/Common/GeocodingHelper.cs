@@ -60,8 +60,8 @@ namespace OCM.MVC.App_Code
                         image.ImageID = i["photo_id"].ToString();
                         image.ImageURL = i["photo_file_url"].ToString();
                         image.DetailsURL = i["photo_url"].ToString();
-                        image.Width = int.Parse(i["width"].ToString());
-                        image.Height = int.Parse(i["height"].ToString());
+                        image.Width = (int)double.Parse(i["width"].ToString());
+                        image.Height = (int)double.Parse(i["height"].ToString());
                         image.Submitter = i["owner_name"].ToString();
                         image.SubmitterURL = i["owner_url"].ToString();
                         image.ImageRepositoryID = "Panoramio.com";

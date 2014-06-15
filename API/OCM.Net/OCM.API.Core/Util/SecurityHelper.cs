@@ -11,7 +11,14 @@ namespace OCM.Core.Util
     {
         public static string GetGravatarURLFromEmailAddress(string email)
         {
-            return "http://www.gravatar.com/avatar/"+GetMd5Hash(email.ToLower().Trim())+"?d=mm";
+            if (email == null) email = "";
+            return GetGravatarURLFromHash(GetMd5Hash(email.Trim().ToLower()));
+        }
+
+        public static string GetGravatarURLFromHash(string hash)
+        {
+            if (hash == null) hash = "";
+            return "http://www.gravatar.com/avatar/" + hash + "?d=mm";
         }
 
         public static string GetMd5Hash(string input)

@@ -115,6 +115,7 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ISOCode" Type="varchar" MaxLength="100" />
+          <Property Name="ContinentCode" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CurrentType">
           <Key>
@@ -1287,6 +1288,7 @@
           <Property Name="ISOCode" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="AddressInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="Country" ToRole="AddressInfo" />
           <NavigationProperty Name="OperatorCountries" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country" FromRole="Country" ToRole="OperatorCountry" />
+          <Property Name="ContinentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CurrentType">
           <Key>
@@ -2143,6 +2145,7 @@
           <EntitySetMapping Name="Countries">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.Country">
               <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="ContinentCode" ColumnName="ContinentCode" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="ISOCode" ColumnName="ISOCode" />

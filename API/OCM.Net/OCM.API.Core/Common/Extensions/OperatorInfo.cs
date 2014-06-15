@@ -26,5 +26,17 @@ namespace OCM.API.Common.Model.Extensions
                 IsRestrictedEdit = source.IsRestrictedEdit
             };
         }
+
+        public static List<Model.OperatorInfo> FromDataModel(IEnumerable<Core.Data.Operator> source)
+        {
+            if (source == null) return null;
+            var list = new List<Model.OperatorInfo>();
+            foreach (var o in source)
+            {
+                list.Add(FromDataModel(o));
+            }
+
+            return list;
+        }
     }
 }

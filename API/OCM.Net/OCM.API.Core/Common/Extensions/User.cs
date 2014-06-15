@@ -24,11 +24,28 @@ namespace OCM.API.Common.Model.Extensions
             };
         }
 
+        public static Model.User PublicProfileFromDataModel(Core.Data.User source)
+        {
+            if (source == null) return null;
+
+            return new Model.User()
+            {
+                ID = source.ID,
+                Username = source.Username,
+                ReputationPoints = source.ReputationPoints,
+                Location = source.Location,
+                Profile = source.Profile,
+                DateCreated = source.DateCreated,
+                DateLastLogin = source.DateLastLogin
+            };
+        }
+
         public static Model.User FromDataModel(Core.Data.User source)
         {
             if (source == null) return null;
 
-            return new Model.User() { 
+            return new Model.User()
+            {
                 ID = source.ID,
                 IdentityProvider = source.IdentityProvider,
                 Identifier = source.Identifier,
@@ -45,7 +62,7 @@ namespace OCM.API.Common.Model.Extensions
                 IsProfilePublic = source.IsProfilePublic,
                 IsPublicChargingProvider = source.IsPublicChargingProvider,
                 IsEmergencyChargingProvider = source.IsEmergencyChargingProvider,
-                Latitude =  source.Latitude,
+                Latitude = source.Latitude,
                 Longitude = source.Longitude,
                 EmailAddress = source.EmailAddress,
                 ReceiveCommentNotifications = source.ReceiveCommentNotifications,
