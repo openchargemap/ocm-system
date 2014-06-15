@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "4.2.4_"+ moment().format('YYYYMMDD');
+var releaseVersion = "5.0.0_beta_"+ moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/webapp";
@@ -64,8 +64,6 @@ task("minify-js", function () {
           minifyScripts(buildDir + "/" + trg + "/");
       });
 
-
-
     // find the scripts in index.html
     function extractScriptNames() {
         console.log("Extracting script file names from index.html");
@@ -83,8 +81,6 @@ task("minify-js", function () {
 
     function minifyScripts(targetPath) {
         console.log("Minifying and concatenating scripts.");
-
-
 
         var regexMinifed = /min.js$/;
         var regexCopyright = /^\/\*![\s\S]*?\*\//m;
@@ -151,7 +147,7 @@ task("remove-debug", function () {
 });
 
 desc("Copy index.html");
-task("copy-index", [ "remove-debug"], function () { //["use-min-js",
+task("copy-index", ["remove-debug"], function () { //"remove-debug","use-min-js"
     console.log("Copying index.html to build targets");
 
     //copy modified index.html to each target

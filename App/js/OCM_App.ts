@@ -51,7 +51,7 @@ module OCM {
             super();
 
             this.mappingManager.setParentAppContext(this);
-            
+
             this.appConfig.maxResults = 100;
 
             this.appConfig.baseURL = "http://openchargemap.org/app/";
@@ -134,7 +134,10 @@ module OCM {
                     //search nearby on startup
                     app.performSearch(true, false);
 
-                    this.appState.mapLaunched = true;
+                    app.appState.mapLaunched = true;
+                    if (app.appState.isRunningUnderCordova) {
+                        if (navigator.splashscreen) navigator.splashscreen.hide();
+                    }
                 } else {
                     (<any>Object).observe(this.mappingManager, function (changes) {
 
@@ -151,6 +154,12 @@ module OCM {
 
                                 app.appState.mapLaunched = true;
                                 //TODO prevent this reloading when api == true again - remove observer
+
+                                if (app.appState.isRunningUnderCordova) {
+                                    setTimeout(function () {
+                                        if (navigator.splashscreen) navigator.splashscreen.hide();
+                                    }, 300);
+                                }
                             }
                         });
                     });
@@ -304,10 +313,6 @@ module OCM {
 
             //check if user signed in etc
             this.postLoginInit();
-
-            if (this.appState.isRunningUnderCordova) {
-                if (navigator.splashscreen) navigator.splashscreen.hide();
-            }
 
             //if cached results exist, render them
             var cachedResults = this.ocm_data.getCachedDataObject("SearchResults");
@@ -1024,7 +1029,7 @@ module OCM {
             //hide last shown page
             if (this.appState._lastPageId && this.appState._lastPageId != null) {
 
-                if (this.appState._lastPageId == "home-page" && pageId == "home-page") {
+                if (this.appState._lastPageId == "map-page" && pageId == "map-page") {
                     this.log("Time to QUIT");
 
                     //double home page request, time to exit on android etc
@@ -1080,7 +1085,7 @@ module OCM {
             var State = Historyjs.getState();
 
             // Log Initial State
-            State.data.view = "home-page";
+            State.data.view = "map-page";
             Historyjs.log('initial:', State.data, State.title, State.url);
 
             // Bind to State Change
@@ -1096,7 +1101,8 @@ module OCM {
                     }
                     app.showPage(State.data.view, State.Title, true);
                 } else {
-                    app.showPage("home-page", "Home");
+                    app.navigateToMap();
+                    //app.showPage("home-page", "Home");
                     app.log("pageid:" + app.appState._lastPageId);
 
                 }
@@ -1114,13 +1120,13 @@ module OCM {
         //methods for use by native build of app to enable navigation via native UI/phonegap
         navigateToSearch() {
             this.log("Navigate To: Search Page", LogLevel.VERBOSE);
-            this.hidePage("home-page");
             this.showPage("search-page", "Search");
         }
 
         navigateToHome() {
-            this.log("Navigate To: Home Page", LogLevel.VERBOSE);
-            this.showPage("home-page", "Home");
+            //this.log("Navigate To: Home Page", LogLevel.VERBOSE);
+            //this.showPage("home-page", "Home");
+            this.navigateToMap();
         }
 
         navigateToMap() {
@@ -1130,8 +1136,8 @@ module OCM {
             var app = this;
 
             //change title of map page to be Search
-            $("#search-title-favourites").hide()
-    $("#search-title-main").show();
+            $("#search-title-favourites").hide();
+            $("#search-title-main").show();
 
             setTimeout(function () { app.refreshMapView(); }, 250);
         }
@@ -1153,21 +1159,21 @@ module OCM {
 
                 //change title of map page to be favourites
                 $("#search-title-main").hide();
-                $("#search-title-favourites").show()
-    }
+                $("#search-title-favourites").show();
+            }
         }
 
         navigateToAddLocation() {
             this.log("Navigate To: Add Location", LogLevel.VERBOSE);
             var app = this;
-            if (app.isUserSignedIn()) {
-                app.isLocationEditMode = false;
-                app.viewModel.selectedPOI = null;
-                app.showLocationEditor();
-                this.showPage("editlocation-page", "Add Location");
 
-            } else {
-                app.showMessage("Please Sign In before adding a location.");
+            app.isLocationEditMode = false;
+            app.viewModel.selectedPOI = null;
+            app.showLocationEditor();
+            this.showPage("editlocation-page", "Add Location");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
             }
         }
 
@@ -1175,12 +1181,12 @@ module OCM {
             this.log("Navigate To: Edit Location", LogLevel.VERBOSE);
             var app = this;
 
-            if (app.isUserSignedIn()) {
-                //show editor
-                app.showLocationEditor();
-                app.showPage("editlocation-page", "Edit Location");
-            } else {
-                app.showMessage("Please Sign In before editing.");
+            //show editor
+            app.showLocationEditor();
+            app.showPage("editlocation-page", "Edit Location");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
             }
         }
 
@@ -1208,11 +1214,11 @@ module OCM {
             (<HTMLFormElement>document.getElementById("comment-form")).reset();
             app.appState.enableCommentSubmit = true;
 
-            if (app.isUserSignedIn()) {
-                //show checkin/comment page
-                this.showPage("submitcomment-page", "Add Comment");
-            } else {
-                app.showMessage("Please Sign In");
+            //show checkin/comment page
+            this.showPage("submitcomment-page", "Add Comment");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit an anonymous comment.");
             }
         }
 
@@ -1221,11 +1227,11 @@ module OCM {
 
             var app = this;
 
-            if (app.isUserSignedIn()) {
-                //show upload page
-                this.showPage("submitmediaitem-page", "Add Media");
-            } else {
-                app.showMessage("Please Sign In");
+            //show upload page
+            this.showPage("submitmediaitem-page", "Add Media");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit anonymously.");
             }
         }
 
@@ -1253,9 +1259,11 @@ module OCM {
                 this.appState.menuDisplayed = true;
                 this.setMapFocus(false);
                 $("#app-menu-container").show();
+
+                //TODO: handle back button from open menu
+                //Historyjs.pushState({ view: "menu", title: "Menu" }, "Menu", "?view=menu");
             }
         }
-
 
     }
 }

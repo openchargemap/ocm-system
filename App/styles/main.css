@@ -34,7 +34,6 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  /*max-height:100%;*/
 }
 #locationdetails-view {
   position: absolute;
@@ -73,7 +72,6 @@ body {
   padding: 8px;
   background-color: #f3f3f3;
   overflow: hidden;
-  /*white-space: nowrap;*/
   width: 98%;
   margin-top: 0.5em;
 }
@@ -96,21 +94,14 @@ body {
 }
 #progress-indicator {
   display: none;
-  border-radius: 0;
   position: absolute;
-  background-color: #5f872a;
-  background-position: center;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-  padding-top: 6px;
-  top: 0px;
-  height: 2em;
-  width: 100%;
-  color: #ffffff;
+  top: 4px;
+  left: 48%;
+  height: 34px;
+  width: 50px;
   font-size: 1.5em;
   z-index: 1100;
-  margin-left: 30%;
-  margin-right: 30%;
+  overflow: hidden;
 }
 .info-section {
   border: 1px solid gainsboro;
@@ -438,6 +429,11 @@ div[data-role=header] > div {
 div[data-role=header] > div > div {
   padding-top: 0.2em;
 }
+div[data-role=header] > div > a > i {
+  padding-top: 0.2em;
+  padding-left: 0.1em;
+  font-size: 1.3em;
+}
 div[data-role=header] > div a,
 div[data-role=header] > div a:visited {
   color: white !important;
@@ -566,139 +562,90 @@ a:focus {
   /*fix for mobile scrolling*/
   margin: 0;
 }
-#fountainG {
+/*progress loader*/
+#bowlG {
   position: relative;
-  width: 132px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }
-.fountainG {
+#bowl_ringG {
   position: absolute;
-  top: 0;
-  background-color: #069E18;
-  width: 16px;
-  height: 16px;
-  -moz-animation-name: bounce_fountainG;
-  -moz-animation-duration: 0.7s;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #FFFFFF;
+  -moz-border-radius: 24px;
+  -webkit-border-radius: 24px;
+  -ms-border-radius: 24px;
+  border-radius: 24px;
+}
+.ball_holderG {
+  position: absolute;
+  width: 6px;
+  height: 24px;
+  left: 9px;
+  top: 0px;
+  -moz-animation-name: ball_moveG;
+  -moz-animation-duration: 0.6s;
   -moz-animation-iteration-count: infinite;
-  -moz-animation-direction: linear;
-  -moz-transform: scale(0.3);
-  -moz-border-radius: 11px;
-  -webkit-animation-name: bounce_fountainG;
-  -webkit-animation-duration: 0.7s;
+  -moz-animation-timing-function: linear;
+  -webkit-animation-name: ball_moveG;
+  -webkit-animation-duration: 0.6s;
   -webkit-animation-iteration-count: infinite;
-  -webkit-animation-direction: linear;
-  -webkit-transform: scale(0.3);
-  -webkit-border-radius: 11px;
-  -ms-animation-name: bounce_fountainG;
-  -ms-animation-duration: 0.7s;
+  -webkit-animation-timing-function: linear;
+  -ms-animation-name: ball_moveG;
+  -ms-animation-duration: 0.6s;
   -ms-animation-iteration-count: infinite;
-  -ms-animation-direction: linear;
-  -ms-transform: scale(0.3);
-  -ms-border-radius: 11px;
-  animation-name: bounce_fountainG;
-  animation-duration: 0.7s;
+  -ms-animation-timing-function: linear;
+  animation-name: ball_moveG;
+  animation-duration: 0.6s;
   animation-iteration-count: infinite;
-  animation-direction: linear;
-  transform: scale(0.3);
-  border-radius: 11px;
+  animation-timing-function: linear;
 }
-#fountainG_1 {
-  left: 0;
-  -moz-animation-delay: 0.28s;
-  -webkit-animation-delay: 0.28s;
-  -ms-animation-delay: 0.28s;
-  animation-delay: 0.28s;
+.ballG {
+  position: absolute;
+  left: 0px;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  background: #8cc63f;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -ms-border-radius: 8px;
+  border-radius: 8px;
 }
-#fountainG_2 {
-  left: 17px;
-  -moz-animation-delay: 0.35s;
-  -webkit-animation-delay: 0.35s;
-  -ms-animation-delay: 0.35s;
-  animation-delay: 0.35s;
-}
-#fountainG_3 {
-  left: 33px;
-  -moz-animation-delay: 0.42s;
-  -webkit-animation-delay: 0.42s;
-  -ms-animation-delay: 0.42s;
-  animation-delay: 0.42s;
-}
-#fountainG_4 {
-  left: 50px;
-  -moz-animation-delay: 0.49s;
-  -webkit-animation-delay: 0.49s;
-  -ms-animation-delay: 0.49s;
-  animation-delay: 0.49s;
-}
-#fountainG_5 {
-  left: 66px;
-  -moz-animation-delay: 0.56s;
-  -webkit-animation-delay: 0.56s;
-  -ms-animation-delay: 0.56s;
-  animation-delay: 0.56s;
-}
-#fountainG_6 {
-  left: 83px;
-  -moz-animation-delay: 0.63s;
-  -webkit-animation-delay: 0.63s;
-  -ms-animation-delay: 0.63s;
-  animation-delay: 0.63s;
-}
-#fountainG_7 {
-  left: 99px;
-  -moz-animation-delay: 0.7s;
-  -webkit-animation-delay: 0.7s;
-  -ms-animation-delay: 0.7s;
-  animation-delay: 0.7s;
-}
-#fountainG_8 {
-  left: 116px;
-  -moz-animation-delay: 0.77s;
-  -webkit-animation-delay: 0.77s;
-  -ms-animation-delay: 0.77s;
-  animation-delay: 0.77s;
-}
-@-moz-keyframes bounce_fountainG {
+@-moz-keyframes ball_moveG {
   0% {
-    -moz-transform: scale(1);
-    background-color: #069E18;
+    -moz-transform: rotate(0deg);
   }
   100% {
-    -moz-transform: scale(0.3);
-    background-color: #FFFFFF;
+    -moz-transform: rotate(360deg);
   }
 }
-@-webkit-keyframes bounce_fountainG {
+@-webkit-keyframes ball_moveG {
   0% {
-    -webkit-transform: scale(1);
-    background-color: #069E18;
+    -webkit-transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: scale(0.3);
-    background-color: #FFFFFF;
+    -webkit-transform: rotate(360deg);
   }
 }
-@-ms-keyframes bounce_fountainG {
+@-ms-keyframes ball_moveG {
   0% {
-    -ms-transform: scale(1);
-    background-color: #069E18;
+    -ms-transform: rotate(0deg);
   }
   100% {
-    -ms-transform: scale(0.3);
-    background-color: #FFFFFF;
+    -ms-transform: rotate(360deg);
   }
 }
-@keyframes bounce_fountainG {
+@keyframes ball_moveG {
   0% {
-    transform: scale(1);
-    background-color: #069E18;
+    transform: rotate(0deg);
   }
   100% {
-    transform: scale(0.3);
-    background-color: #FFFFFF;
+    transform: rotate(360deg);
   }
 }
-/* http://cssload.net/#sthash.qMGemv8X.dpuf */
+/*http://cssload.net/#sthash.HrwrN9G0.dpuf*/
 .well-sm {
   border-radius: 0;
   border: none;
@@ -736,10 +683,10 @@ div#home-page {
 .app-menu {
   z-index: 10001;
   background-color: rgba(12, 17, 5, 0.88);
-  padding: 0.3em;
   width: 240px;
   box-shadow: 5px 5px 5px 3px rgba(102, 102, 102, 0.26);
   position: fixed;
+  padding: 0.3em;
   top: -1px;
   left: -1px;
   height: 101%;
