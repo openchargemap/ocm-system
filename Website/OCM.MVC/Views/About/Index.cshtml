@@ -8,10 +8,10 @@
 <h2>Our Aim</h2>
 <p>Our aim is to provide a public, free, open database of charging equipment locations globally.</p>
 <p>
-    Our goal is to remove the need for a proliferation of independent charging location maps/websites/applications 
-and to provide (as much as possible) a reliable single point of reference for charging equipment location information. 
-Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for 
-data sharing and de-duplication efforts.
+    Our goal is to remove the need for a proliferation of independent charging location maps/websites/applications
+    and to provide (as much as possible) a reliable single point of reference for charging equipment location information.
+    Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for
+    data sharing and de-duplication efforts.
 </p>
 <!--<p>If you have a project or service which needs to use charging location data or you have any questions, please <a href="about/contact/">get in touch.</a></p>-->
 
@@ -33,28 +33,31 @@ data sharing and de-duplication efforts.
 <p>
     Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World (<a href="http://www.zerocarbonworld.org">www.zerocarbonworld.org</a>) who sponsor the server hosting of Open Charge Map.
 </p>
-<h3>Developers and Contributors</h3>
+<h2>Developers and Contributors</h2>
 <p>Our <a href="https://github.com/openchargemap">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://plus.google.com/u/0/communities/112113799071360649945">google+</a> community is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
-<h4>Project Stats</h4>
+<h2>Project Stats</h2>
+<p>General statistics for Open Charge Map <a href="@Url.Action("Index","Stats")">data and usage</a> are available.</p>
+<p>The following is an estimation of the software development costs, if someone were to develop an equivalent project commercially: </p>
 <script type="text/javascript" src="http://www.ohloh.net/p/605311/widgets/project_cocomo.js"></script>
-<h3>API Users</h3>
+<h2>API Users</h2>
 <p>
-    API users who make use of our services in production system have a strong influence on our project as these are effectively the key users of the system. We encourage organisations to join our mailing list so we can keep them up to date with changes and plans, and so they can alert us about their own plans or issues.
+    API users who make use of our services in production system have a strong influence on our project as these are effectively the key users of the system. We encourage organisations to join our community so we can keep them up to date with changes and plans, and so they can alert us about their own plans or issues.
 </p>
 <h2>Data Sources</h2>
 <p>
     The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly ("crowd sourced") by our users and those of apps using our services.
 </p>
-<h3>Data Sources</h3>
 <p>Credit and our thanks goes to following major data sources currently included in our database:</p>
 @{
     var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData().DataProviders;
 }
-<div>
-    @foreach (var provider in providers.Where(p=>p.IsApprovedImport==true || p.IsOpenDataLicensed==true))
+
+    @foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))
     {
-        <div><strong>@provider.Title</strong> @(provider.WebsiteURL!=null?" ("+provider.WebsiteURL+") ":"") @(provider.License!=null?" - License: "+@provider.License:"")</div>
+        <blockquote>
+            <p>@provider.Title @(provider.WebsiteURL != null ? " (" + provider.WebsiteURL + ") " : "")</p>
+            <small>@(provider.License != null ? " - License: " + @provider.License : "")</small>
+        </blockquote>
     }
-    
-</div>
+
 

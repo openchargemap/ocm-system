@@ -51,7 +51,7 @@
                 <p>Return charging location information for the US in JSON format, limited to the first 100 results: <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=json&countrycode=US&maxresults=100">@Html.Raw(apiBaseUrl + "poi/")?output=json&amp;countrycode=US&amp;maxresults=100</a></code></p>
                 <p>Return KML format results suitable for viewing in google earth/maps etc (UK, max 500 locations): <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=kml&countrycode=GB&maxresults=500">@Html.Raw(apiBaseUrl + "poi/")?output=kml&amp;countrycode=GB&amp;maxresults=500</a></code></p>
 
-                <p><div class="alert alert-warning">Data returned by the API has mixed licensing and applicable copyright attribution (included in results as "Data Provider"). If you require <em>Open</em> licensed data you currently must filter by <code>dataproviderid=1</code> to return only original OCM data.</div></p>
+                <p><div class="alert alert-warning">Data returned by the API has mixed licensing and applicable copyright attribution (included in results as "Data Provider"). If you require <em>Open</em> licensed data you currently must filter by <code>opendata=true</code> to return only original OCM data.</div></p>
 
                 <h3>Service Parameters:</h3>
 
@@ -128,7 +128,12 @@
                     </tr>
                     <tr>
                         <td>dataproviderid</td>
-                        <td>exact match on a given data provider id id (comma separated list). <span class="label label-warning">Use dataproviderid=1 for only OCM provided ("Open") data.</span></td>
+                        <td>exact match on a given data provider id id (comma separated list). <span class="label label-warning">Use opendata=true for only OCM provided ("Open") data.</span></td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>opendata</td>
+                        <td>true or false. Set to true to include only Open Data licensed content, false to return only non-open licensed data. <span class="label label-warning">By default all available data is returned. You should refer to the license of the original data provider in each case.</span></td>
                         <td>(blank)</td>
                     </tr>
                     <tr>

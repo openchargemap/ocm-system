@@ -116,7 +116,7 @@ namespace OCM.MVC
             if (ocm_language_code != "en")
             {
                 string output = "<script charset=\"UTF-8\" src=\"" + urlPrefix + "/OCM/Localisation/languagePack.min.js\"></script>";
-                output += "<script charset=\"UTF-8\" src=\"http://openchargemap.org/app/js/OCM_CommonUI.js?v=3.0\"></script>";
+                output += "<script charset=\"UTF-8\" src=\"" +urlPrefix+ "/OCM/SharedLibs/OCM_CommonUI.js?v=4.0\"></script>";
 
                 if (ocm_language_code != "test")
                 {
