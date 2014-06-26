@@ -4,14 +4,24 @@ using System.Linq;
 using System.Web;
 using System.Xml;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace OCM.API.OutputProviders
 {
     public class KMLOutputProvider : OutputProviderBase, IOutputProvider
     {
-        public KMLOutputProvider()
+        public enum KMLVersion
+        {
+            V1,
+            V2
+        }
+
+        private KMLVersion SelectedKMLVersion = KMLVersion.V2;
+
+        public KMLOutputProvider(KMLVersion version)
         {
             ContentType = "application/vnd.google-earth.kml+xml";
+            SelectedKMLVersion = version;
         }
 
 
@@ -38,6 +48,7 @@ namespace OCM.API.OutputProviders
 
             //start xml document
             xml.WriteStartDocument();
+            if (this.SelectedKMLVersion== KMLVersion.V2) xml.WriteStartElement("kml", "http://www.opengis.net/kml/2.2");
             xml.WriteStartElement("Document");
             xml.WriteElementString("name","Open Charge Map - Electric Vehicle Charging Locations");
             xml.WriteElementString("description", "Data from http://openchargemap.org/");
@@ -46,9 +57,14 @@ namespace OCM.API.OutputProviders
                 if (item.AddressInfo != null)
                 {
                     xml.WriteStartElement("Placemark");
+                    xml.WriteAttributeString("id", "OCM-"+item.ID.ToString());
                     xml.WriteElementString("name", item.AddressInfo.Title);
-
-                    xml.WriteElementString("description", item.GetSummaryDescription(true));
+                    
+                    //remove invalid character ranges before serializing to XML
+                    var description = Regex.Replace(item.GetSummaryDescription(true), @"[^\u0009\u000a\u000d\u0020-\uD7FF\uE000-\uFFFD]", string.Empty);
+                    xml.WriteStartElement("description");
+                    xml.WriteCData(description);
+                    xml.WriteEndElement();
                     
                     xml.WriteStartElement("Point");
                     string coords = item.AddressInfo.Longitude.ToString() + "," + item.AddressInfo.Latitude.ToString();
@@ -59,6 +75,7 @@ namespace OCM.API.OutputProviders
                 }
             }
             xml.WriteEndElement();
+            if (this.SelectedKMLVersion == KMLVersion.V2) xml.WriteEndElement(); //</kml>
             xml.WriteEndDocument();
             xml.Flush();
             //xml.Close();

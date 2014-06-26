@@ -75,13 +75,26 @@ namespace OCM.API.Common
         protected bool ParseBool(string val, bool defaultVal)
         {
             if (val == null) return defaultVal;
-            val = val.ToLower();
+            val = val.Trim().ToLower();
 
             if (val == "true") return true;
             if (val == "false") return false;
 
             //none, return default
             return defaultVal;
+        }
+
+        protected bool? ParseBoolNullable(string val)
+        {
+            if (String.IsNullOrEmpty(val)) return null;
+
+            val = val.Trim().ToLower();
+
+            if (val == "true") return true;
+            if (val == "false") return false;
+
+            //value is neither empty, true or false, return null
+            return null;
         }
 
     }

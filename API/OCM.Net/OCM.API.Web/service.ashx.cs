@@ -248,7 +248,7 @@ namespace OCM.API
                     outputProvider = new CSVOutputProvider();
                     break;
                 case "kml":
-                    outputProvider = new KMLOutputProvider();
+                    outputProvider = new KMLOutputProvider(KMLOutputProvider.KMLVersion.V2);
                     break;
                 case "png":
                     outputProvider = new ImageOutputProvider();
@@ -308,6 +308,21 @@ namespace OCM.API
                     this.OutputGeocodingResult(outputProvider, context, filter);
                 }
 
+                if (filter.Action == "refreshmirror")
+                {
+                    try
+                    {
+                        HttpContext.Current.Server.ScriptTimeout = 240;
+                        var poiList = new POIManager().GetChargePoints(new APIRequestSettings { MaxResults = filter.MaxResults, AllowMirrorDB = false, EnableCaching = false, IncludeComments=true });
+                        new OCM.Core.Data.APIProviderMongoDB().PopulatePOIMirror(poiList, new ReferenceDataManager().GetCoreReferenceData());
+                        new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { POICount = poiList.Count, Status = "OK" }, filter);
+                    }
+                    catch (Exception exp)
+                    {
+                        new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { Status = "Error", Message=exp.ToString() }, filter);
+                    }
+                }
+
                 stopwatch.Stop();
                 System.Diagnostics.Debug.WriteLine("Total output time: " + stopwatch.Elapsed.ToString());
 
@@ -322,12 +337,16 @@ namespace OCM.API
         /// <param name="filter"></param>
         private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
         {
+            List<OCM.API.Common.Model.ChargePoint> dataList = null;
+
             //get list of charge points for output:
-            List<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetChargePoints(filter);
+            dataList = new POIManager().GetChargePoints(filter);
+                      
             int numResults = dataList.Count;
 
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, dataList, filter);
+
         }
 
         /// <summary>

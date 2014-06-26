@@ -36,6 +36,8 @@ namespace OCM.API.Common
         public bool IsCompactOutput { get; set; }
         public bool IsCamelCaseOutput { get; set; }
         public bool IsEnvelopedResponse { get; set; }
+        public bool AllowMirrorDB { get; set; } //if true, api will try to use mongodb to read
+        public bool? IsOpenData { get; set; }
         public string Callback { get; set; }
         public double? MinPowerKW { get; set; }
 
@@ -99,6 +101,8 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["usagetypeid"])) settings.UsageTypeIDs = ParseIntList(context.Request["usagetypeid"]);
             if (!String.IsNullOrEmpty(context.Request["statustypeid"])) settings.StatusTypeIDs = ParseIntList(context.Request["statustypeid"]);
             if (!String.IsNullOrEmpty(context.Request["dataproviderid"])) settings.DataProviderIDs = ParseIntList(context.Request["dataproviderid"]);
+            if (!String.IsNullOrEmpty(context.Request["opendata"])) settings.IsOpenData = ParseBoolNullable(context.Request["opendata"]);
+            
             if (!String.IsNullOrEmpty(context.Request["minpowerkw"])) settings.MinPowerKW = ParseDouble(context.Request["minpowerkw"]);
 
             if (!String.IsNullOrEmpty(context.Request["dataprovidername"])) settings.DataProviderName = ParseString(context.Request["dataprovidername"]);
@@ -122,6 +126,7 @@ namespace OCM.API.Common
             
             if (!String.IsNullOrEmpty(context.Request["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(context.Request["submissionstatustypeid"]);
             if (!String.IsNullOrEmpty(context.Request["enablecaching"])) settings.EnableCaching = ParseBool(context.Request["enablecaching"], true);
+            if (!String.IsNullOrEmpty(context.Request["allowmirror"])) settings.AllowMirrorDB = ParseBool(context.Request["allowmirror"], false);
             if (!String.IsNullOrEmpty(context.Request["includecomments"])) settings.IncludeComments = ParseBool(context.Request["includecomments"], false);
             if (!String.IsNullOrEmpty(context.Request["verbose"])) settings.IsVerboseOutput = ParseBool(context.Request["verbose"], false);
             if (!String.IsNullOrEmpty(context.Request["compact"])) settings.IsCompactOutput = ParseBool(context.Request["compact"], false);
@@ -190,6 +195,7 @@ namespace OCM.API.Common
                 if (UsageTypeIDs != null) key += ":usg_id:" + IntArrayToString(UsageTypeIDs);
                 if (StatusTypeIDs != null) key += ":stat_id:" + IntArrayToString(StatusTypeIDs);
                 if (DataProviderIDs != null) key += ":prov_id:" + IntArrayToString(DataProviderIDs);
+                if (IsOpenData != null) key += ":opendata:" + IsOpenData.ToString();
                 if (ChangesFromDate != null) key += ":modified:" +  ChangesFromDate.Value.Ticks.ToString();
 
                 return OCM.Core.Util.SecurityHelper.GetMd5Hash(key);

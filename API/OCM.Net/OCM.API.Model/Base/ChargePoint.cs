@@ -22,12 +22,12 @@ namespace OCM.API.Common.Model
         public int? DataProviderID { get; set; }
         [DisplayName("Data Provider")]
         public DataProvider DataProvider { get; set; }
-        
+
         [DisplayName("Data Providers Reference")]
         [StringLength(100)]
         public string DataProvidersReference { get; set; }
 
-        public int? OperatorID { get; set; } 
+        public int? OperatorID { get; set; }
         [DisplayName("Network/Operator")]
         public OperatorInfo OperatorInfo { get; set; }
 
@@ -119,36 +119,47 @@ namespace OCM.API.Common.Model
 
             address = GetAddressSummary(UseHTML);
 
-            if (!String.IsNullOrEmpty(address)) description = (!String.IsNullOrEmpty(description) ? description + newline : "") + address;
+            if (!String.IsNullOrEmpty(address)) description = (!String.IsNullOrEmpty(description) ? description : "") + "<p>" + address + "</p>";
 
-            if (!String.IsNullOrEmpty(GeneralComments)) description += newline + "<em>" + this.GeneralComments + "</em>";
+            if (!String.IsNullOrEmpty(GeneralComments)) description += "<p><em>" + this.GeneralComments + "</em></p>";
 
             if (this.AddressInfo != null)
             {
-                if (this.AddressInfo.AccessComments != null) description += newline + this.AddressInfo.AccessComments;
+                if (this.AddressInfo.AccessComments != null && this.AddressInfo.AccessComments != this.GeneralComments) description += "<p>" + this.AddressInfo.AccessComments + "</p>";
             }
 
             if (this.Connections != null)
             {
                 if (this.Connections.Count > 0)
                 {
-                    description += newline + "Equipment:";
+                    description += "<ul>";
                     foreach (var c in this.Connections)
                     {
-                        description += newline;
-                        if (c.Level != null) description += c.Level.Title;
-                        if (c.ConnectionType != null) description += " Connection Type:" + c.ConnectionType.Title;
+                        description += "<li>" + c.ToString() + "</li>";
                     }
+                    description += "</ul>";
                 }
             }
 
             if (this.StatusType != null)
             {
-                description += newline + "Status: " + this.StatusType.Title + " Last Updated " + (this.DateLastStatusUpdate.HasValue ? this.DateLastStatusUpdate.Value.ToShortDateString() : "");
+                description += "<p>Status: " + this.StatusType.Title + "</p>";
             }
 
-            description += newline + "<a href=\"http://openchargemap.org/site/poi/details/" + this.ID +
-                           "\">View Details (OCM-" + this.ID + ")</a>";
+            if (this.UsageType != null)
+            {
+                description += "<p>Usage: " + this.UsageType.Title + "</p>";
+            }
+           
+            description += "<a href=\"http://openchargemap.org/site/poi/details/" + this.ID + "\">View More Details (OCM-" + this.ID + ")</a>";
+
+            if (this.DataProvider != null)
+            {
+                var dataProviderText = this.DataProvider.Title;
+                if (!String.IsNullOrEmpty(this.DataProvider.WebsiteURL)) dataProviderText = "<a href\""+this.DataProvider.WebsiteURL+"\">"+this.DataProvider.Title+"</a>";
+                description += "<p><small>Data Provider: " + dataProviderText + (!String.IsNullOrEmpty(this.DataProvider.License) ? " - "+ this.DataProvider.License : "") + "</small></p>";
+            }
+
             return description;
         }
 

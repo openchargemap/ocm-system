@@ -56,7 +56,6 @@ namespace OCM.API.Common.Model
             if (this.CurrentType != null) output += this.CurrentType.Title + ", ";
             if (this.Quantity !=null) output += this.Quantity+" Present, ";
             if (this.StatusType != null) output += "Status: "+this.StatusType.Title + ", ";
-            if (this.CurrentType != null) output += this.CurrentType.Title + ", ";
             if (this.Comments != null) output += "Comment: " + this.Comments + ", ";
 
             if (output.EndsWith(", ")) output = output.Substring(0, output.Length - 2);
