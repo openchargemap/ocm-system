@@ -115,7 +115,11 @@ var OCM;
                     //search nearby on startup
                     app.performSearch(true, false);
 
-                    this.appState.mapLaunched = true;
+                    app.appState.mapLaunched = true;
+                    if (app.appState.isRunningUnderCordova) {
+                        if (navigator.splashscreen)
+                            navigator.splashscreen.hide();
+                    }
                 } else {
                     Object.observe(this.mappingManager, function (changes) {
                         // This asynchronous callback runs
@@ -129,7 +133,14 @@ var OCM;
                                 app.performSearch(true, false);
 
                                 app.appState.mapLaunched = true;
+
                                 //TODO prevent this reloading when api == true again - remove observer
+                                if (app.appState.isRunningUnderCordova) {
+                                    setTimeout(function () {
+                                        if (navigator.splashscreen)
+                                            navigator.splashscreen.hide();
+                                    }, 300);
+                                }
                             }
                         });
                     });
@@ -281,11 +292,6 @@ var OCM;
 
             //check if user signed in etc
             this.postLoginInit();
-
-            if (this.appState.isRunningUnderCordova) {
-                if (navigator.splashscreen)
-                    navigator.splashscreen.hide();
-            }
 
             //if cached results exist, render them
             var cachedResults = this.ocm_data.getCachedDataObject("SearchResults");
@@ -989,7 +995,7 @@ var OCM;
 
             //hide last shown page
             if (this.appState._lastPageId && this.appState._lastPageId != null) {
-                if (this.appState._lastPageId == "home-page" && pageId == "home-page") {
+                if (this.appState._lastPageId == "map-page" && pageId == "map-page") {
                     this.log("Time to QUIT");
 
                     //double home page request, time to exit on android etc
@@ -1047,7 +1053,7 @@ var OCM;
             var State = Historyjs.getState();
 
             // Log Initial State
-            State.data.view = "home-page";
+            State.data.view = "map-page";
             Historyjs.log('initial:', State.data, State.title, State.url);
 
             // Bind to State Change
@@ -1064,7 +1070,9 @@ var OCM;
                     }
                     app.showPage(State.data.view, State.Title, true);
                 } else {
-                    app.showPage("home-page", "Home");
+                    app.navigateToMap();
+
+                    //app.showPage("home-page", "Home");
                     app.log("pageid:" + app.appState._lastPageId);
                 }
 
@@ -1081,13 +1089,13 @@ var OCM;
         //methods for use by native build of app to enable navigation via native UI/phonegap
         App.prototype.navigateToSearch = function () {
             this.log("Navigate To: Search Page", 0 /* VERBOSE */);
-            this.hidePage("home-page");
             this.showPage("search-page", "Search");
         };
 
         App.prototype.navigateToHome = function () {
-            this.log("Navigate To: Home Page", 0 /* VERBOSE */);
-            this.showPage("home-page", "Home");
+            //this.log("Navigate To: Home Page", LogLevel.VERBOSE);
+            //this.showPage("home-page", "Home");
+            this.navigateToMap();
         };
 
         App.prototype.navigateToMap = function () {
@@ -1129,13 +1137,14 @@ var OCM;
         App.prototype.navigateToAddLocation = function () {
             this.log("Navigate To: Add Location", 0 /* VERBOSE */);
             var app = this;
-            if (app.isUserSignedIn()) {
-                app.isLocationEditMode = false;
-                app.viewModel.selectedPOI = null;
-                app.showLocationEditor();
-                this.showPage("editlocation-page", "Add Location");
-            } else {
-                app.showMessage("Please Sign In before adding a location.");
+
+            app.isLocationEditMode = false;
+            app.viewModel.selectedPOI = null;
+            app.showLocationEditor();
+            this.showPage("editlocation-page", "Add Location");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
             }
         };
 
@@ -1143,12 +1152,12 @@ var OCM;
             this.log("Navigate To: Edit Location", 0 /* VERBOSE */);
             var app = this;
 
-            if (app.isUserSignedIn()) {
-                //show editor
-                app.showLocationEditor();
-                app.showPage("editlocation-page", "Edit Location");
-            } else {
-                app.showMessage("Please Sign In before editing.");
+            //show editor
+            app.showLocationEditor();
+            app.showPage("editlocation-page", "Edit Location");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
             }
         };
 
@@ -1176,11 +1185,11 @@ var OCM;
             document.getElementById("comment-form").reset();
             app.appState.enableCommentSubmit = true;
 
-            if (app.isUserSignedIn()) {
-                //show checkin/comment page
-                this.showPage("submitcomment-page", "Add Comment");
-            } else {
-                app.showMessage("Please Sign In");
+            //show checkin/comment page
+            this.showPage("submitcomment-page", "Add Comment");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit an anonymous comment.");
             }
         };
 
@@ -1189,11 +1198,11 @@ var OCM;
 
             var app = this;
 
-            if (app.isUserSignedIn()) {
-                //show upload page
-                this.showPage("submitmediaitem-page", "Add Media");
-            } else {
-                app.showMessage("Please Sign In");
+            //show upload page
+            this.showPage("submitmediaitem-page", "Add Media");
+
+            if (!app.isUserSignedIn()) {
+                app.showMessage("You are not signed in. You should sign in unless you wish to submit anonymously.");
             }
         };
 
@@ -1220,6 +1229,8 @@ var OCM;
                 this.appState.menuDisplayed = true;
                 this.setMapFocus(false);
                 $("#app-menu-container").show();
+                //TODO: handle back button from open menu
+                //Historyjs.pushState({ view: "menu", title: "Menu" }, "Menu", "?view=menu");
             }
         };
         return App;
