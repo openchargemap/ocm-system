@@ -29,6 +29,7 @@
     <Content Include="fonts\Oswald\oswald-light-webfont.svg" />
     <Content Include="fonts\Oxygen\OFL.txt" />
     <Content Include="fonts\Oxygen\oxygen-light-webfont.svg" />
+    <Content Include="images\ajax-loader4.gif" />
     <Content Include="images\ajax-loader3.gif" />
     <Content Include="images\ajax-loader2.gif" />
     <Content Include="images\icons\AppIcon_114x114.png" />

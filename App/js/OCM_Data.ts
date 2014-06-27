@@ -25,7 +25,6 @@ module OCM {
         public additionalParams: string = null;
         public includeComments: boolean = false;
         public enableCaching: boolean = true; //FIXME: need way for user to override cached data
-
     }
 
     export interface ConnectionInfo {
@@ -49,10 +48,11 @@ module OCM {
 
         public ATTRIBUTION_METADATAFIELDID = 4;
         public referenceData: any;
-        public clientName: string = "ocm.webapp";
+        public clientName: string = "ocm.api.default";
 
         public authorizationErrorCallback: any;
         public generalErrorCallback: any;
+        public allowMirror: boolean = false;
 
         fetchLocationDataList(countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
 
@@ -74,7 +74,7 @@ module OCM {
 
         fetchLocationDataListByParam(params: OCM.POI_SearchParams, callbackname, errorcallback) {
 
-            var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json";
+            var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
             var serviceParams = "";
             if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
             if (params.latitude != null) serviceParams += "&latitude=" + params.latitude;
@@ -155,7 +155,7 @@ module OCM {
 
             var ajaxSettings: JQueryAjaxSettings = {
                 type: "GET",
-                url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json&verbose=false&callback=" + callbackname + "&" + authInfoParams,
+                url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&callback=" + callbackname + "&" + authInfoParams,
                 jsonp: "false",
                 contentType: "application/json;",
                 dataType: "jsonp",

@@ -286,6 +286,10 @@ module OCM {
                 app.performMediaItemSubmit();
             });
 
+            //HACK: adjust height of content based on browser window size
+            $(window).resize(function () {
+                app.adjustMainContentHeight();
+            });
         }
 
         postLoginInit() {
@@ -870,6 +874,18 @@ module OCM {
             }
         }
 
+        adjustMainContentHeight() {
+            //HACK: adjust map/list content to main viewport
+            var preferredMapHeight = $(window).height() - 90;
+            if ($("#map-view").height() != preferredMapHeight);
+            this.log("adjusting map height:" + preferredMapHeight, LogLevel.VERBOSE);
+            document.getElementById("map-view").style.height = preferredMapHeight + "px";
+            document.getElementById("listview-container").style.height = preferredMapHeight + "px";
+            document.getElementById("listview-container").style.maxHeight = preferredMapHeight + "px";
+
+            return preferredMapHeight;
+        }
+
         refreshMapView() {
 
             var $resultcount = $("#map-view-resultcount");
@@ -885,11 +901,13 @@ module OCM {
                 this.mappingManager.setMapAPI("googlenativesdk");
             }
 
-            if (!this.appState.mapLaunched) {
-                //on first showing map, adjust map container height to match page
-                var mapHeight = $("#map-page").height() - 50;
-                this.log("adjusted map height:" + mapHeight, LogLevel.VERBOSE);
-            }
+            var appContext = this;
+          
+            //if (!this.appState.mapLaunched) {
+            //on first showing map, adjust map container height to match page
+            var mapHeight = this.adjustMainContentHeight();
+
+            //}
             this.mappingManager.refreshMapView("map-view", mapHeight, this.viewModel.poiList, this.viewModel.searchPosition);
 
             this.appConfig.autoRefreshMapResults = true;

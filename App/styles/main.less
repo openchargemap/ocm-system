@@ -20,11 +20,14 @@
 @ocm-secondary-background: #8dd35f;
 @ocm-tertiary-background: rgba(140, 198, 63, 0.70);
 @ocm-dark-background: #5f872a;
+@ocm-light-background: lighten(@ocm-primary-background, 40%);
 
 .palette {
     color: @ocm-primary-background;
     color: @ocm-secondary-background;
     color: @ocm-tertiary-background;
+    color: @ocm-dark-background;
+    color: @ocm-light-background;
 }
 
 html, body {
@@ -32,6 +35,8 @@ html, body {
 }
 
 body {
+    margin: 0; 
+    padding: 0;
     font-family: 'Oxygen', sans-serif,Arial;
     font-size: 14.4px;
     background-color: white;
@@ -110,14 +115,12 @@ body {
 }
 
 #progress-indicator {
-    
     display: none;
     position: absolute;
-    top: 4px;
+    top: 6px;
     left:48%;
-    height: 34px;
-    width: 50px;
-    font-size: 1.5em;
+    height: 30px;
+    width: 30px;
     z-index: 1100;
     overflow:hidden;    
 }
@@ -132,6 +135,11 @@ body {
 
 #map-view {
     border: none;
+    position: relative;
+    margin-top:0px; 
+    width: 100%; 
+    height:100%;
+    box-shadow: 2px 2px 5px #777777;
 }
 
 .ocm-label {
@@ -200,8 +208,7 @@ body {
 }
 
 .results-list {
-    margin: 20px 0px 40px 0px;
-    background-color: white;
+    
     overflow: auto;
 }
 
@@ -472,6 +479,8 @@ div [data-role="header"] {
     color: white;
     box-shadow: rgba(17, 17, 17, 0.22) 0px 2px 3px;
     position: fixed;
+    left:0px;
+    top:0px;
 }
 
 div[data-role=header] > div {
@@ -655,100 +664,6 @@ a:focus {
 }
 
 
-/*progress loader*/
-#bowlG{
-position:relative;
-width:24px;
-height:24px;
-}
-
-#bowl_ringG{
-position:absolute;
-width:24px;
-height:24px;
-border:2px solid #FFFFFF;
--moz-border-radius:24px;
--webkit-border-radius:24px;
--ms-border-radius:24px;
-border-radius:24px;
-}
-
-.ball_holderG{
-position:absolute;
-width:6px;
-height:24px;
-left:9px;
-top:0px;
--moz-animation-name:ball_moveG;
--moz-animation-duration:0.6s;
--moz-animation-iteration-count:infinite;
--moz-animation-timing-function:linear;
--webkit-animation-name:ball_moveG;
--webkit-animation-duration:0.6s;
--webkit-animation-iteration-count:infinite;
--webkit-animation-timing-function:linear;
--ms-animation-name:ball_moveG;
--ms-animation-duration:0.6s;
--ms-animation-iteration-count:infinite;
--ms-animation-timing-function:linear;
-animation-name:ball_moveG;
-animation-duration:0.6s;
-animation-iteration-count:infinite;
-animation-timing-function:linear;
-}
-
-.ballG{
-position:absolute;
-left:0px;
-top:-6px;
-width:10px;
-height:10px;
-background:#8cc63f;
--moz-border-radius:8px;
--webkit-border-radius:8px;
--ms-border-radius:8px;
-border-radius:8px;
-}
-
-@-moz-keyframes ball_moveG{
-0%{
--moz-transform:rotate(0deg)}
-
-100%{
--moz-transform:rotate(360deg)}
-
-}
-
-@-webkit-keyframes ball_moveG{
-0%{
--webkit-transform:rotate(0deg)}
-
-100%{
--webkit-transform:rotate(360deg)}
-
-}
-
-@-ms-keyframes ball_moveG{
-0%{
--ms-transform:rotate(0deg)}
-
-100%{
--ms-transform:rotate(360deg)}
-
-}
-
-@keyframes ball_moveG{
-0%{
-transform:rotate(0deg)}
-
-100%{
-transform:rotate(360deg)}
-
-} 
-/*http://cssload.net/#sthash.HrwrN9G0.dpuf*/
-
-
-
 .well-sm {
     border-radius: 0;
     border: none;
@@ -906,4 +821,9 @@ a[data-rel="menu"] {
     .form-group {
         margin-bottom: 3px;
     }
+}
+
+#listview-container {
+    padding:1em;
+    overflow-y:scroll;
 }
