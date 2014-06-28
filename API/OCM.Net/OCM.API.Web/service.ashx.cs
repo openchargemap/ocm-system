@@ -244,6 +244,9 @@ namespace OCM.API
                 case "json":
                     outputProvider = new JSONOutputProvider();
                     break;
+                case "geojson":
+                    outputProvider = new GeoJSONOutputProvider();
+                    break;
                 case "csv":
                     outputProvider = new CSVOutputProvider();
                     break;
