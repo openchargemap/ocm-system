@@ -848,6 +848,7 @@ module OCM {
 
                 mediaItemOutput += "</div>";
 
+                $("#details-mediaitems").html("");
                 $("#details-mediaitems-gallery").html(mediaItemOutput);
 
                 //activate swipebox gallery
@@ -855,6 +856,7 @@ module OCM {
 
             } else {
                 $("#details-mediaitems").html("No photos submitted.");
+                $("#details-mediaitems-gallery").html("");
             }
 
             var leftPos = $element.position().left;
