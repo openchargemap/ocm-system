@@ -39,6 +39,8 @@ var OCM;
             this.autoRefreshMapResults = false;
             this.launchMapOnStartup = false;
             this.maxResults = 100;
+            this.searchTimeoutMS = 20000;
+            this.searchFrequencyMinMS = 500;
         }
         return AppConfig;
     })();
@@ -56,6 +58,7 @@ var OCM;
             this.isLocationEditMode = false;
             this.enableCommentSubmit = true;
             this.isSearchInProgress = false;
+            this._appQuitRequestCount = 0;
         }
         return AppState;
     })();
@@ -95,7 +98,6 @@ var OCM;
 
         AppBase.prototype.getCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
-                console.log("getting cookie:" + c_name + "::" + this.ocm_data.getCachedDataObject("_pref_" + c_name));
                 return this.ocm_data.getCachedDataObject("_pref_" + c_name);
             } else {
                 //http://www.w3schools.com/js/js_cookies.asp

@@ -136,7 +136,7 @@ var OCM;
                 var lookupString = ($("#edit_addressinfo_addressline1").val().length > 0 ? $("#edit_addressinfo_addressline1").val() + "," : "") + ($("#edit_addressinfo_addressline2").val().length > 0 ? $("#edit_addressinfo_addressline2").val() + "," : "") + ($("#edit_addressinfo_town").val().length > 0 ? $("#edit_addressinfo_town").val() + "," : "") + ($("#edit_addressinfo_stateorprovince").val().length > 0 ? $("#edit_addressinfo_stateorprovince").val() + "," : "") + ($("#edit_addressinfo_postcode").val().length > 0 ? $("#edit_addressinfo_postcode").val() + "," : "") + appContext.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
 
                 //attempt to geocode address
-                appContext.ocm_geo.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext));
+                appContext.ocm_geo.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext), $.proxy(appContext.determineGeocodedLocationFailed, appContext));
             });
 
             appContext.setElementAction("#editlocation-submit", function () {
@@ -298,34 +298,6 @@ var OCM;
                     connectionInfo.Comments = originalConnection.Comments;
                 }
 
-                /*
-                var $connection = $("#edit_connection" + n);
-                var currentID = null;
-                if ($.mobile) {
-                currentID = $connection.jqmData("_connection_id");
-                } else {
-                currentID = jQuery.data($connection, "_connection_id");
-                }
-                if (currentID > 0) {
-                connectionInfo.ID = parseInt(currentID);
-                }
-                */
-                //add only non-blank connection info
-                /* if (
-                (connectionInfo.Reference != null && connectionInfo.Reference != "")
-                || connectionInfo.Amps != ""
-                || connectionInfo.Voltage != ""
-                || connectionInfo.PowerKW != ""
-                || (connectionInfo.ConnectionType != null && connectionInfo.ConnectionType.ID > 0)
-                || (connectionInfo.StatusType != null && connectionInfo.StatusType.ID > 0)
-                || (connectionInfo.Level != null && connectionInfo.Level.ID > 1)
-                || (connectionInfo.Quantity != null && connectionInfo.Quantity > 1)
-                || (connectionInfo.CurrentType != null && connectionInfo.CurrentType.ID > 0)
-                ) {
-                item.Connections.push(connectionInfo);
-                numConnections++;
-                }
-                */
                 //add new connection or update existing
                 if (item.Connections.length >= n) {
                     item.Connections[n - 1] = connectionInfo;

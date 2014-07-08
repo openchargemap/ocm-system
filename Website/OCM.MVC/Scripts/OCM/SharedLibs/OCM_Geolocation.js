@@ -39,7 +39,7 @@ var OCM;
             failureCallback();
         };
 
-        Geolocation.prototype.determineGeocodedLocation = function (locationText, successCallback) {
+        Geolocation.prototype.determineGeocodedLocation = function (locationText, successCallback, failureCallback) {
             //caller is searching for same (previously geocoded) text again, return last result
             if (locationText === this.geocodingTextInput) {
                 if (this.geocodingResultPos != null) {
@@ -61,8 +61,8 @@ var OCM;
                     "attribution": results.attribution,
                     "resultsAvailable": results.resultsAvailable
                 };
-                appContext.determineGeocodedLocationCompleted(locationPos, successCallback, null);
-            }, null);
+                appContext.determineGeocodedLocationCompleted(locationPos, successCallback, failureCallback);
+            }, null, null);
 
             /*
             geocoder.geocode({ 'address': locationText }, function (results, status) {
@@ -152,22 +152,27 @@ var OCM;
         };
 
         Geolocation.prototype.getDrivingDistanceBetweenPoints = function (startLat, startLng, endLat, endLng, distanceUnit, completedCallback) {
-            if (typeof (google) !== "undefined") {
-                var unitSystem = google.maps.UnitSystem.IMPERIAL;
-                if (distanceUnit === "KM") {
-                    unitSystem = google.maps.UnitSystem.METRIC;
+            try  {
+                if (typeof (google) !== "undefined" && google.maps) {
+                    //FIXME: use native where available
+                    var unitSystem = google.maps.UnitSystem.IMPERIAL;
+                    if (distanceUnit === "KM") {
+                        unitSystem = google.maps.UnitSystem.METRIC;
+                    }
+
+                    var startPos = new google.maps.LatLng(startLat, startLng);
+                    var endPos = new google.maps.LatLng(endLat, endLng);
+
+                    var service = new google.maps.DistanceMatrixService();
+                    service.getDistanceMatrix({
+                        origins: [startPos],
+                        destinations: [endPos],
+                        travelMode: google.maps.TravelMode.DRIVING,
+                        unitSystem: unitSystem
+                    }, completedCallback);
                 }
-
-                var startPos = new google.maps.LatLng(startLat, startLng);
-                var endPos = new google.maps.LatLng(endLat, endLng);
-
-                var service = new google.maps.DistanceMatrixService();
-                service.getDistanceMatrix({
-                    origins: [startPos],
-                    destinations: [endPos],
-                    travelMode: google.maps.TravelMode.DRIVING,
-                    unitSystem: unitSystem
-                }, completedCallback);
+            } catch (exception) {
+                //failed to get distance
             }
         };
         return Geolocation;

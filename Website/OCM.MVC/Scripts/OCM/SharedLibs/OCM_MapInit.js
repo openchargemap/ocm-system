@@ -14,6 +14,7 @@ function loadGoogleMapsScript() {
     if (ocm_app.mappingManager.mapOptions.mapAPI != "google") {
         if (console)
             console.log("Skipping load of Google Maps Web API: ");
+        ocm_app.mappingManager.mapAPIReady = true;
         return false;
     }
 
@@ -24,11 +25,10 @@ function loadGoogleMapsScript() {
     script.type = 'text/javascript';
     script.src = 'https://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initGoogleMapsCompleted';
     document.body.appendChild(script);
-
-    var script = document.createElement('script');
+    /*var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = 'js/ThirdParty/google.maps/markerclusterer_compiled.js';
-    document.body.appendChild(script);
+    document.body.appendChild(script);*/
     /*var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = 'js/ThirdParty/google.maps/markerwithlabel_packed.js';

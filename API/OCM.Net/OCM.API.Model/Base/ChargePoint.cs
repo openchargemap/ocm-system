@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace OCM.API.Common.Model
 {
@@ -20,6 +19,7 @@ namespace OCM.API.Common.Model
         public int? ParentChargePointID { get; set; }
 
         public int? DataProviderID { get; set; }
+
         [DisplayName("Data Provider")]
         public DataProvider DataProvider { get; set; }
 
@@ -28,6 +28,7 @@ namespace OCM.API.Common.Model
         public string DataProvidersReference { get; set; }
 
         public int? OperatorID { get; set; }
+
         [DisplayName("Network/Operator")]
         public OperatorInfo OperatorInfo { get; set; }
 
@@ -36,6 +37,7 @@ namespace OCM.API.Common.Model
         public string OperatorsReference { get; set; }
 
         public int? UsageTypeID { get; set; }
+
         [DisplayName("Usage Type")]
         public UsageType UsageType { get; set; }
 
@@ -60,6 +62,7 @@ namespace OCM.API.Common.Model
         public DateTime? DateLastConfirmed { get; set; }
 
         public int? StatusTypeID { get; set; }
+
         [DisplayName("Operational Status")]
         public StatusType StatusType { get; set; }
 
@@ -77,6 +80,7 @@ namespace OCM.API.Common.Model
         public User Contributor { get; set; }
 
         public int? SubmissionStatusTypeID { get; set; }
+
         [DisplayName("Submission Status")]
         public SubmissionStatusType SubmissionStatus { get; set; }
 
@@ -95,16 +99,18 @@ namespace OCM.API.Common.Model
         [DisplayName("Metadata")]
         public List<MetadataValue> MetadataValues { get; set; }
 
-
         #region deprecated properties
+
         [Obsolete, JsonIgnore]
         public List<ChargerInfo> Chargers { get; set; }
+
         [Obsolete, JsonIgnore]
         public string MetadataTags { get; set; }
-        #endregion
 
+        #endregion deprecated properties
 
 #if !PORTABLE
+
         /// <summary>
         /// Get a simple summary description of the Charge Point including address/access info
         /// </summary>
@@ -114,8 +120,6 @@ namespace OCM.API.Common.Model
         {
             string description = "";
             string address = "";
-            string newline = "\r\n";
-            if (UseHTML) newline = "<br/>";
 
             address = GetAddressSummary(UseHTML);
 
@@ -150,14 +154,14 @@ namespace OCM.API.Common.Model
             {
                 description += "<p>Usage: " + this.UsageType.Title + "</p>";
             }
-           
+
             description += "<a href=\"http://openchargemap.org/site/poi/details/" + this.ID + "\">View More Details (OCM-" + this.ID + ")</a>";
 
             if (this.DataProvider != null)
             {
                 var dataProviderText = this.DataProvider.Title;
-                if (!String.IsNullOrEmpty(this.DataProvider.WebsiteURL)) dataProviderText = "<a href\""+this.DataProvider.WebsiteURL+"\">"+this.DataProvider.Title+"</a>";
-                description += "<p><small>Data Provider: " + dataProviderText + (!String.IsNullOrEmpty(this.DataProvider.License) ? " - "+ this.DataProvider.License : "") + "</small></p>";
+                if (!String.IsNullOrEmpty(this.DataProvider.WebsiteURL)) dataProviderText = "<a href\"" + this.DataProvider.WebsiteURL + "\">" + this.DataProvider.Title + "</a>";
+                description += "<p><small>Data Provider: " + dataProviderText + (!String.IsNullOrEmpty(this.DataProvider.License) ? " - " + this.DataProvider.License : "") + "</small></p>";
             }
 
             return description;

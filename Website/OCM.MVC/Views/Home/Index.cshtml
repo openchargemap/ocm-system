@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "The global public registry of electric vehicle charging locations";
+    ViewBag.Description = "Open Charge Map is the global database of EV charging stations, managed and populated by EV drivers from all over the world.";
     ViewBag.EnableAppMarkeplaceLinks = true;
 }
 
@@ -22,20 +23,19 @@
         <div id="datasummary"></div>
 
         <p>
-            <a class="btn btn-success" href="http://openchargemap.org/app" data-localize="ocm.general.linkWebApp">Search Locations using our Web App <span class="glyphicon glyphicon-search"></span> </a>
             <a class="btn btn-info" href="@Url.Action("Index", "POI")" data-localize="ocm.general.linkBrowsePOI">Browse All Locations <span class="glyphicon glyphicon-list-alt"></span> </a>
             <a class="btn btn-warning" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addPOI">Add A Location <span class="glyphicon glyphicon-pencil"></span></a>
         </p>
     </div>
 </div>
 
-<!--
-    <iframe id="mapapp" style="width: 100%; height: 600px; border:none; box-shadow:0px 0px 3px #333; overflow: hidden;" src="http://openchargemap.org/app?mode=embedded"></iframe>
-    -->
 
-<div style="text-align: center; padding: 1em;" class="map-box hidden-xs">
+    <iframe id="mapapp" style="width: 100%; height: 620px; border:none; box-shadow:0px 0px 3px #333; overflow: hidden" scrolling="no" src="http://openchargemap.org/app?mode=embedded"></iframe>
+
+<!--<div style="text-align: center; padding: 1em;" class="map-box hidden-xs">
     <iframe id="countrymap" style="width: 98%; height: 500px; border:none; overflow: hidden;" src="@Url.Content("~/widget/geochart/")"></iframe>
 </div>
+    -->
 
 <div class="row">
     <div class="col-md-4">

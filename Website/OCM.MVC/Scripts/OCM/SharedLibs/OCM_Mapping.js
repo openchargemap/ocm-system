@@ -37,6 +37,7 @@ var OCM;
             this.mapCentre = null;
             this.mapAPI = "google";
             this.searchDistanceKM = 1000 * 100;
+            this.mapMoveQueryRefreshMS = 300;
         }
         return MapOptions;
     })();
@@ -50,17 +51,6 @@ var OCM;
         /** @constructor */
         function Mapping() {
             _super.call(this);
-            this.updateMapCentrePos = function (lat, lng, moveMap) {
-                //update record of map centre so search results can optionally be refreshed
-                if (moveMap) {
-                    //TODO: re-centre map
-                    if (this.map) {
-                        this.map.setCenter(new google.maps.LatLng(lat, lng));
-                    }
-                }
-
-                this.mapOptions.mapCentre = { 'coords': { 'latitude': lat, 'longitude': lng } };
-            };
             this.createMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
                 // create a map in the "map" div, set the view to a given place and zoom
                 var map = new L.Map(mapcanvasID);
@@ -81,6 +71,17 @@ var OCM;
                 }).addTo(map);
 
                 return map;
+            };
+            this.updateMapCentrePos = function (lat, lng, moveMap) {
+                //update record of map centre so search results can optionally be refreshed
+                if (moveMap) {
+                    //TODO: re-centre map
+                    if (this.map) {
+                        this.map.setCenter(new google.maps.LatLng(lat, lng));
+                    }
+                }
+
+                this.mapOptions.mapCentre = { 'coords': { 'latitude': lat, 'longitude': lng } };
             };
 
             this.mapOptions = new MapOptions();
@@ -103,12 +104,11 @@ var OCM;
             this.log("Using Google Maps Native", 1 /* INFO */);
 
             if (plugin.google && plugin.google.maps) {
+                var mapManagerContext = this;
                 var mapCanvas = document.getElementById(mapcanvasID);
 
-                // mapCanvas.style.width = '100%';
-                // mapCanvas.style.height = $(document).height().toString();
-                //if available, use a native map
                 this.map = plugin.google.maps.Map.getMap(mapCanvas);
+                var map = this.map;
 
                 //set map options
                 this.map.setOptions({
@@ -136,6 +136,42 @@ var OCM;
                     this.markerClusterer = new MarkerClusterer(this.map, this.markerList);
                 }
 
+                this.map.addEventListener(plugin.google.maps.event.MY_LOCATION_BUTTON_CLICK, function () {
+                    map.getMyLocation(function (location) {
+                        var msg = JSON.stringify(location);
+                        mapManagerContext.log("My Location Clicked, updating search position: " + msg);
+                        mapManagerContext.updateMapCentrePos(location.latLng.lat, location.latLng.lng, false);
+                        mapManagerContext.updateSearchPosMarker(new plugin.google.maps.LatLng(location.latLng.lat, location.latLng.lng));
+                        mapManagerContext.mapOptions.requestSearchUpdate = true;
+                    });
+                });
+
+                this.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, function () {
+                    if (mapManagerContext._mapMoveTimer != null) {
+                        clearTimeout(mapManagerContext._mapMoveTimer);
+                        mapManagerContext._mapMoveTimer = null;
+                    }
+
+                    var map = this.map;
+
+                    // after the center of the map centre has stopped changing, update search centre pos
+                    mapManagerContext._mapMoveTimer = window.setTimeout(function () {
+                        try  {
+                            //create new latlng from map centre so that values get normalised to 180/-180
+                            var centrePos = new plugin.google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
+                            mapManagerContext.log("Map centre changed, updating search position:" + centrePos);
+
+                            mapManagerContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
+                            mapManagerContext.updateSearchPosMarker(centrePos);
+                        } catch (exc) {
+                            //failed to update map centre pos
+                        }
+
+                        clearTimeout(mapManagerContext._mapMoveTimer);
+                        mapManagerContext._mapMoveTimer = null;
+                    }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
+                });
+
                 this.map.clear();
                 this.map.refreshLayout();
                 this.map.setVisible(true);
@@ -146,6 +182,7 @@ var OCM;
         };
 
         Mapping.prototype.showPOIListOnMapViewGoogleNativeSDK = function (mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
+            var app = this;
             if (!this.mapsInitialised) {
                 return;
             }
@@ -194,23 +231,9 @@ var OCM;
                                     iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
                                 } else {
                                     iconURL = "images/icons/map/set2_level" + poiLevel + "_60x100.png";
-                                    /*shadow = new plugin.google.maps.MarkerImage("images/icons/map/marker-shadow.png",
-                                    new google.maps.Size(41.0, 31.0),
-                                    new google.maps.Point(0, 0),
-                                    new google.maps.Point(12.0, 15.0)
-                                    );
-                                    
-                                    markerImg = new plugin.google.maps.MarkerImage(iconURL,
-                                    new google.maps.Size(25.0, 31.0),
-                                    new google.maps.Point(0, 0),
-                                    new google.maps.Point(12.0, 15.0)
-                                    );*/
                                 }
                             }
 
-                            //if (poiCount < 100 && this.mapOptions.useMarkerAnimation == true) {
-                            //    animation = plugin.google.maps.Animation.DROP;
-                            //}
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null)
                                 markerTooltip += " " + poi.UsageType.Title;
@@ -235,9 +258,20 @@ var OCM;
                                     }
                                 }
                             }, function (marker) {
+                                //show info window when marker tapped
+                                /* marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
+                                // marker.showInfoWindow();
+                                var markerTitle = marker.getTitle();
+                                var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
+                                
+                                parentContext.showDetailsViewById(poiId);
+                                parentContext.showPage("locationdetails-page");
+                                });*/
+                                //show full details when info window tapped
                                 marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
                                     var markerTitle = marker.getTitle();
                                     var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
+                                    app.hideMap();
 
                                     parentContext.showDetailsViewById(poiId);
                                     parentContext.showPage("locationdetails-page");
@@ -245,7 +279,6 @@ var OCM;
                             });
 
                             bounds.extend(markerPos);
-                            //this.ocm_markers.push(newMarker);
                         }
                     }
                 }
@@ -261,25 +294,6 @@ var OCM;
 
             var uiContext = this;
 
-            //TODO: add marker for current search position
-            /* if (this.mapOptions.enableTrackingMapCentre == false) {
-            this.mapOptions.enableTrackingMapCentre = true;
-            var uiContext = this;
-            
-            map.on(plugin.google.maps.event.CAMERA_CHANGE, function () {
-            
-            // 500ms after the center of the map has changed, update search centre pos
-            window.setTimeout(function () {
-            
-            //create new latlng from map centre so that values get normalised to 180/-180
-            var centrePos = new plugin.google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
-            this.log("Map centre changed, updating search position:" + centrePos);
-            
-            uiContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
-            }, 500);
-            });
-            }*/
-            //}
             this.log("showPOIList: refreshing map layout");
             this.map.refreshLayout();
 
@@ -310,6 +324,8 @@ var OCM;
         Mapping.prototype.initMapGoogle = function (mapcanvasID) {
             if (this.mapsInitialised || !this.mapAPIReady)
                 return false;
+
+            var mapManagerContext = this;
 
             if (this.map == null && google.maps) {
                 this.mapsInitialised = true;
@@ -358,6 +374,38 @@ var OCM;
 
                     if (this.mapOptions.enableClustering) {
                         this.markerClusterer = new MarkerClusterer(this.map, this.markerList);
+                    }
+
+                    //TODO: add marker for current search position
+                    if (this.mapOptions.enableTrackingMapCentre == false) {
+                        this.mapOptions.enableTrackingMapCentre = true;
+                        var map = this.map;
+                        google.maps.event.addListener(this.map, 'dragend', function () {
+                            if (mapManagerContext._mapMoveTimer != null) {
+                                clearTimeout(mapManagerContext._mapMoveTimer);
+                                mapManagerContext._mapMoveTimer = null;
+                            }
+
+                            //after the center of the map centre has stopped changing, update search centre pos
+                            mapManagerContext._mapMoveTimer = window.setTimeout(function () {
+                                try  {
+                                    //create new latlng from map centre so that values get normalised to 180/-180
+                                    var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
+                                    mapManagerContext.log("Map centre changed, updating search position:" + centrePos);
+                                    mapManagerContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
+                                    mapManagerContext.updateSearchPosMarker(centrePos);
+                                } catch (exc) {
+                                    //failed to update map centre pos
+                                }
+
+                                clearTimeout(mapManagerContext._mapMoveTimer);
+                                mapManagerContext._mapMoveTimer = null;
+
+                                setTimeout(function () {
+                                    mapManagerContext.mapOptions.enableTrackingMapCentre = true;
+                                }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS - 200);
+                            }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
+                        });
                     }
                 }
                 return true;
@@ -466,14 +514,24 @@ var OCM;
                 }
 
                 if (this.mapOptions.mapCentre != null) {
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude),
-                        map: map,
-                        title: "Searching From Here",
-                        content: 'Your search position'
-                    });
-                    bounds.extend(marker.getPosition());
-                    this.markerList.push(marker);
+                    var searchMarkerPos = new google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude);
+
+                    if (this.mapCentreMarker != null) {
+                        this.log("Updating search marker position");
+                        this.mapCentreMarker.setPosition(searchMarkerPos);
+                        this.mapCentreMarker.setMap(map);
+                    } else {
+                        this.log("Adding search marker position");
+                        this.mapCentreMarker = new google.maps.Marker({
+                            position: searchMarkerPos,
+                            map: map,
+                            title: "Searching From Here",
+                            content: 'Your search position'
+                        });
+                    }
+
+                    bounds.extend(this.mapCentreMarker.getPosition());
+                    this.markerList.push(this.mapCentreMarker);
                 }
 
                 //include centre search location in bounds of map zoom
@@ -493,27 +551,98 @@ var OCM;
                     var zoom = map.getZoom();
                     map.setZoom(zoom < 6 ? 6 : zoom);
                 }
-
-                //TODO: add marker for current search position
-                if (this.mapOptions.enableTrackingMapCentre == false) {
-                    this.mapOptions.enableTrackingMapCentre = true;
-                    google.maps.event.addListener(map, 'center_changed', function () {
-                        // 500ms after the center of the map has changed, update search centre pos
-                        window.setTimeout(function () {
-                            //create new latlng from map centre so that values get normalised to 180/-180
-                            var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
-                            uiContext.log("Map centre changed, updating search position:" + centrePos);
-
-                            uiContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
-                        }, 500);
-                    });
-                }
             }
 
             /*else {
             if (this.enableLogging && console) console.log("Not rendering markers, batchId is same as last time.");
             }*/
             google.maps.event.trigger(this.map, 'resize');
+        };
+
+        Mapping.prototype.updateSearchPosMarker = function (searchPos) {
+            var mapManagerContext = this;
+            var map = this.map;
+
+            if (this.mapOptions.mapAPI == "googlenativesdk") {
+                this.log("would add/update search pos marker");
+                if (mapManagerContext.mapCentreMarker != null) {
+                    mapManagerContext.log("Updating search marker position");
+                    mapManagerContext.mapCentreMarker.setPosition(searchPos);
+                    map.refreshLayout();
+                    //mapManagerContext.mapCentreMarker.setMap(map);
+                } else {
+                    mapManagerContext.log("Adding search marker position");
+
+                    map.addMarker({
+                        'position': searchPos,
+                        'draggable': true,
+                        title: "Tap to Searching from here, Drag to change position.",
+                        content: 'Your search position'
+                    }, function (marker) {
+                        mapManagerContext.mapCentreMarker = marker;
+
+                        //marker click
+                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
+                            marker.getPosition(function (pos) {
+                                mapManagerContext.log("Search marker tapped, requesting search from current position.");
+
+                                mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                mapManagerContext.mapOptions.requestSearchUpdate = true;
+                            });
+                        });
+
+                        //marker drag
+                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
+                            marker.getPosition(function (pos) {
+                                mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                mapManagerContext.mapOptions.requestSearchUpdate = true;
+                            });
+                        });
+                    });
+                    /*var infowindow = new google.maps.InfoWindow({
+                    content: "Tap marker to search from here, Drag marker to change search position."
+                    });
+                    infowindow.open(map, mapManagerContext.mapCentreMarker);
+                    */
+                }
+            }
+
+            if (this.mapOptions.mapAPI == "google") {
+                if (mapManagerContext.mapCentreMarker != null) {
+                    mapManagerContext.log("Updating search marker position");
+                    mapManagerContext.mapCentreMarker.setPosition(searchPos);
+                    mapManagerContext.mapCentreMarker.setMap(map);
+                } else {
+                    mapManagerContext.log("Adding search marker position");
+                    mapManagerContext.mapCentreMarker = new google.maps.Marker({
+                        position: searchPos,
+                        map: map,
+                        draggable: true,
+                        title: "Tap to Searching from here, Drag to change position.",
+                        content: 'Your search position',
+                        icon: "images/icons/compass.png"
+                    });
+
+                    var infowindow = new google.maps.InfoWindow({
+                        content: "Tap marker to search from here, Drag marker to change search position."
+                    });
+                    infowindow.open(map, mapManagerContext.mapCentreMarker);
+
+                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'click', function () {
+                        mapManagerContext.log("Search markers tapped, requesting search.");
+                        var pos = mapManagerContext.mapCentreMarker.getPosition();
+                        mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                        mapManagerContext.mapOptions.requestSearchUpdate = true;
+                    });
+
+                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'dragend', function () {
+                        mapManagerContext.log("Search marker moved, requesting search.");
+                        var pos = mapManagerContext.mapCentreMarker.getPosition();
+                        mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                        mapManagerContext.mapOptions.requestSearchUpdate = true;
+                    });
+                }
+            }
         };
 
         Mapping.prototype.initMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser) {
@@ -638,6 +767,26 @@ var OCM;
             }
         };
 
+        Mapping.prototype.isNativeMapsAvailable = function () {
+            if (plugin && plugin.google && plugin.google.maps) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        Mapping.prototype.updateMapSize = function () {
+            if (this.map != null) {
+                if (this.mapOptions.mapAPI == "googlenativesdk") {
+                    this.map.refreshLayout();
+                }
+
+                if (this.mapOptions.mapAPI == "googlenativesdk") {
+                    google.maps.event.trigger(this.map, 'resize');
+                }
+            }
+        };
+
         Mapping.prototype.refreshMapView = function (mapCanvasID, mapHeight, poiList, searchPos) {
             document.getElementById(mapCanvasID).style.height = mapHeight + "px";
 
@@ -708,10 +857,11 @@ var OCM;
         Mapping.prototype.hideMap = function () {
             if (this.mapOptions.mapAPI == "googlenativesdk") {
                 this.log("Debug: Hiding Map");
-
-                //hide map otherwise it will stay on top
-                this.map.setVisible(false);
-                this.map.refreshLayout();
+                if (this.map != null) {
+                    //hide map otherwise it will stay on top
+                    this.map.setVisible(false);
+                    this.map.refreshLayout();
+                }
             }
         };
 
@@ -719,9 +869,13 @@ var OCM;
             if (this.mapOptions.mapAPI == "googlenativesdk") {
                 this.log("Debug: Showing Map");
 
-                //show/reposition map
-                this.map.setVisible(true);
-                this.map.refreshLayout();
+                if (this.map != null) {
+                    //show/reposition map
+                    this.map.setVisible(true);
+                    this.map.refreshLayout();
+                } else {
+                    this.log("Map not available to show - check API?", 3 /* ERROR */);
+                }
             }
         };
 
