@@ -33,9 +33,12 @@ var OCM;
     var API = (function () {
         function API() {
             this.serviceBaseURL = "http://api.openchargemap.io/v2";
+            this.serviceBaseURL_Standard = "http://api.openchargemap.io/v2";
+            this.serviceBaseURL_Sandbox = "http://sandbox.api.openchargemap.io/v2";
             this.hasAuthorizationError = false;
             this.ATTRIBUTION_METADATAFIELDID = 4;
-            this.clientName = "ocm.webapp";
+            this.clientName = "ocm.api.default";
+            this.allowMirror = false;
         }
         API.prototype.fetchLocationDataList = function (countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
             if (countrycode === null)
@@ -58,7 +61,7 @@ var OCM;
         };
 
         API.prototype.fetchLocationDataListByParam = function (params, callbackname, errorcallback) {
-            var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json";
+            var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
             var serviceParams = "";
             if (params.countryCode != null)
                 serviceParams += "&countrycode=" + params.countryCode;
@@ -157,7 +160,7 @@ var OCM;
 
             var ajaxSettings = {
                 type: "GET",
-                url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json&verbose=false&callback=" + callbackname + "&" + authInfoParams,
+                url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&callback=" + callbackname + "&" + authInfoParams,
                 jsonp: "false",
                 contentType: "application/json;",
                 dataType: "jsonp",
@@ -168,7 +171,7 @@ var OCM;
             $.ajax(ajaxSettings);
         };
 
-        API.prototype.fetchGeocodeResult = function (address, successCallback, authSessionInfo) {
+        API.prototype.fetchGeocodeResult = function (address, successCallback, authSessionInfo, errorCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             var ajaxSettings = {
@@ -178,7 +181,7 @@ var OCM;
                 dataType: "jsonp",
                 crossDomain: true,
                 success: successCallback,
-                error: this.handleGeneralAjaxError
+                error: (errorCallback != null ? errorCallback : this.handleGeneralAjaxError)
             };
 
             $.ajax(ajaxSettings);
@@ -234,7 +237,7 @@ var OCM;
             });
         };
 
-        API.prototype.submitMediaItem = function (data, authSessionInfo, completedCallback, failureCallback) {
+        API.prototype.submitMediaItem = function (data, authSessionInfo, completedCallback, failureCallback, progressCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             $.ajax({
@@ -243,14 +246,14 @@ var OCM;
                 xhr: function () {
                     var myXhr = $.ajaxSettings.xhr();
                     if (myXhr.upload) {
-                        //myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // for handling the progress of the upload
+                        myXhr.upload.addEventListener('progress', progressCallback, false); // for handling the progress of the upload
                     }
                     return myXhr;
                 },
                 success: function (result, textStatus, jqXHR) {
                     completedCallback(jqXHR, textStatus);
                 },
-                error: this.handleGeneralAjaxError,
+                error: (failureCallback == null ? this.handleGeneralAjaxError : failureCallback),
                 data: data,
                 cache: false,
                 contentType: false,
