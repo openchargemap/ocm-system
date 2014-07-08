@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Runtime.Serialization.Json;
-using System.IO;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace OCM.API.OutputProviders
 {
@@ -88,7 +85,7 @@ namespace OCM.API.OutputProviders
             }
 
             string json = "";
-            
+
             using (var ms = new MemoryStream())
             {
                 jsonSerializer.WriteObject(ms, graph);
@@ -97,16 +94,15 @@ namespace OCM.API.OutputProviders
                 json = sr.ReadToEnd();
                 ms.Close();
             }
-            
+
             s.Write(json);
 
             if (jsCallbackName != null)
             {
                 s.Write(")");
             }
-            
-            s.Flush();
 
+            s.Flush();
         }
 
         public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
@@ -126,7 +122,6 @@ namespace OCM.API.OutputProviders
         {
             if (settings.APIVersion >= 2)
             {
-               
                 PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
             }
             else
@@ -136,7 +131,6 @@ namespace OCM.API.OutputProviders
             }
         }
 
-      
         public void GetOutput(Stream outputStream, Object data, Common.APIRequestSettings settings)
         {
             PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
@@ -160,6 +154,5 @@ namespace OCM.API.OutputProviders
 
             return jsonSettings;
         }
-
     }
 }

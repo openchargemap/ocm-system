@@ -68,9 +68,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="GeoJSON.Net">
-      <HintPath>..\..\..\packages\GeoJSON.Net.0.0.0.5\lib\GeoJSON.Net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.6.1\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -251,6 +248,7 @@
     <Content Include="Docs\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\LocalBuild.pubxml" />
     <None Include="Properties\PublishProfiles\Publish API to Live.pubxml" />
     <Content Include="v1\service.ashx" />

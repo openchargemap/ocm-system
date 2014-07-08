@@ -153,22 +153,46 @@ namespace OCM.API
                 {
                     var p = inputProvider as OCM.API.InputProviders.HTMLFormInputProvider;
                     MediaItem m = new MediaItem();
-                    if (p.ProcessMediaItemSubmission(context, ref m, user.ID))
+                    bool accepted=false;
+                    string msg="";
+                    try {
+                        p.ProcessMediaItemSubmission(context, ref m, user.ID);
+                    } catch(Exception exp){
+                        msg+= exp.ToString();
+                    }
+                    if (accepted)
                     {
                         submissionManager.PerformSubmission(m, user);
-                        context.Response.Write("OK");
+                        OutputSubmissionReceivedMessage(context, "OK :" + m.ID, true);
+                        //context.Response.Write("OK");
+                    }
+                    else
+                    {
+                        OutputBadRequestMessage(context, "Error, could not accept submission: "+msg);
+                        context.Response.Write("Error");
                     }
                 }
-                else
-                {
-                    context.Response.Write("Error");
-                }
+                
             }
         }
 
-        private void SendBadRequestMessage(HttpContext context, string message)
+        private void OutputBadRequestMessage(HttpContext context, string message)
         {
             context.Response.StatusCode = 400;
+            context.Response.Write("{\"status\":\"error\",\"description\":\"" + message + "\"}");
+            context.Response.End();
+        }
+
+        private void OutputSubmissionReceivedMessage(HttpContext context, string message, bool processed)
+        {
+            if (processed)
+            {
+                context.Response.StatusCode = 200;
+            }
+            else {
+                context.Response.StatusCode = 202;
+            }
+            
             context.Response.Write("{\"status\":\"error\",\"description\":\"" + message + "\"}");
             context.Response.End();
         }
@@ -179,6 +203,8 @@ namespace OCM.API
         /// <param name="context"></param>
         private void PerformOutput(HttpContext context)
         {
+            HttpContext.Current.Server.ScriptTimeout = 120; //max script execution time is 2 minutes
+
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
@@ -202,7 +228,7 @@ namespace OCM.API
             if (context.Request.Url.Host.ToLower().StartsWith("api") && filter.APIVersion == null)
             {
                 //API version is mandatory for api V2 onwards via api.openchargemap.* hostname
-                SendBadRequestMessage(context, "mandatory API Version not specified in request");
+                OutputBadRequestMessage(context, "mandatory API Version not specified in request");
                 return;
             }
 
@@ -225,7 +251,7 @@ namespace OCM.API
                 //the following output types are deprecated and will default as JSON
                 if (outputType == "carwings" || outputType == "rss" || outputType == "csv")
                 {
-                    SendBadRequestMessage(context, "specified output type not supported in this API version");
+                    OutputBadRequestMessage(context, "specified output type not supported in this API version");
                     return;
                 }
             }
@@ -265,6 +291,14 @@ namespace OCM.API
             {
                 context.Response.ContentEncoding = Encoding.Default;
                 context.Response.ContentType = outputProvider.ContentType;
+
+                if (!(filter.Action == "getcorereferencedata" && String.IsNullOrEmpty(context.Request["SessionToken"])))
+                {
+                    //by default output is cacheable for 24 hrs, unless requested by a specific user.
+                    context.Response.Cache.SetExpires(DateTime.Now.AddDays(1));
+                    context.Response.Cache.SetCacheability(HttpCacheability.Public);
+                    context.Response.Cache.SetValidUntilExpires(true);
+                }
 
                 if (ConfigurationManager.AppSettings["EnableOutputCompression"] == "true")
                 {
@@ -315,7 +349,6 @@ namespace OCM.API
                 {
                     try
                     {
-                        HttpContext.Current.Server.ScriptTimeout = 240;
                         var poiList = new POIManager().GetChargePoints(new APIRequestSettings { MaxResults = filter.MaxResults, AllowMirrorDB = false, EnableCaching = false, IncludeComments=true });
                         new OCM.Core.Data.APIProviderMongoDB().PopulatePOIMirror(poiList, new ReferenceDataManager().GetCoreReferenceData());
                         new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { POICount = poiList.Count, Status = "OK" }, filter);

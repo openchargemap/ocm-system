@@ -1,17 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Runtime.Serialization.Json;
-using System.IO;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using OCM.API.Common.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace OCM.API.OutputProviders
 {
+    public class GeoJSONGeometry
+    {
+        public GeoJSONGeometry()
+        {
+            this.Coordinates = new double[] { 0, 0 };
+            this.Type = "Point";
+        }
+
+        public string Type { get; set; }
+
+        public double[] Coordinates { get; set; }
+    }
+
+    public class GeoJSONFeature
+    {
+        public GeoJSONFeature()
+        {
+            this.Geometry = new GeoJSONGeometry();
+            this.Properties = new Dictionary<string, object>();
+        }
+
+        public string ID { get; set; }
+
+        public GeoJSONGeometry Geometry { get; set; }
+
+        public Dictionary<string, object> Properties { get; set; }
+    }
+
+    public class GeoJSONFeatureCollection
+    {
+        public GeoJSONFeatureCollection()
+        {
+            this.Features = new List<GeoJSONFeature>();
+        }
+
+        public List<GeoJSONFeature> Features { get; set; }
+    }
+
     public class GeoJSONOutputProvider : OutputProviderBase, IOutputProvider
     {
         public GeoJSONOutputProvider()
@@ -23,17 +57,20 @@ namespace OCM.API.OutputProviders
         {
             if (settings.APIVersion >= 2)
             {
-                var featureList = new List<GeoJSON.Net.Feature.Feature>();
+                var featureCollection = new GeoJSONFeatureCollection();
                 foreach (var poi in dataList)
                 {
-                    var point = new GeoJSON.Net.Geometry.Point(new GeoJSON.Net.Geometry.GeographicPosition(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+                    var feature = new GeoJSONFeature();
+                    feature.ID = poi.ID.ToString();
+                    feature.Geometry.Coordinates = new double[] { poi.AddressInfo.Latitude, poi.AddressInfo.Longitude };
+
                     ConnectionInfo maxConnection = null;
                     if (poi.Connections != null)
                     {
                         maxConnection = poi.Connections.OrderByDescending(p => p.LevelID).FirstOrDefault();
                     }
 
-                    var featureProperties = new Dictionary<string, object> { 
+                    var featureProperties = new Dictionary<string, object> {
                         { "Name", poi.AddressInfo.Title},
                         { "Description", poi.AddressInfo.ToString()},
                         { "URL", "http://openchargemap.org/site/poi/details/"+poi.ID},
@@ -42,14 +79,10 @@ namespace OCM.API.OutputProviders
                     };
 
                     if (settings.IsVerboseOutput) featureProperties.Add("POI", poi);
+                    feature.Properties = featureProperties;
 
-                    var feature = new GeoJSON.Net.Feature.Feature(point, featureProperties, poi.ID.ToString());
-                    featureList.Add(feature);
+                    featureCollection.Features.Add(feature);
                 }
-
-                //convert list ot GeoJSON FeatureCollection
-
-                GeoJSON.Net.Feature.FeatureCollection collection = new GeoJSON.Net.Feature.FeatureCollection(featureList);
 
                 System.IO.StreamWriter s = new StreamWriter(outputStream);
 
@@ -64,7 +97,7 @@ namespace OCM.API.OutputProviders
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 serializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-                string json = JsonConvert.SerializeObject(collection, serializerSettings);
+                string json = JsonConvert.SerializeObject(featureCollection, serializerSettings);
                 s.Write(json);
 
                 if (settings.Callback != null)
@@ -94,7 +127,6 @@ namespace OCM.API.OutputProviders
 
             return jsonSettings;
         }
-
 
         public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestSettings settings)
         {
