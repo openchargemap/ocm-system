@@ -263,8 +263,9 @@ task('concat', function () {
     var output ="";
     files.forEach(function (file) {
         if (file.indexOf(".html") > 0)
-            {
-            output += fs.readFileSync(srcDir+"/views/"+file,"utf8")+"\r\n";
+        {
+            var fileContent = fs.readFileSync(srcDir + "/views/" + file, "utf8");
+            output += fileContent.replace(/^\uFEFF/, '')+"\r\n"; //concat file content, stripped BOM from UTF-8 Files
         }
            
     });

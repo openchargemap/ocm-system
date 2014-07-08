@@ -44,6 +44,9 @@ module OCM {
     export class API {
 
         public serviceBaseURL: string = "http://api.openchargemap.io/v2";
+        public serviceBaseURL_Standard: string = "http://api.openchargemap.io/v2";
+        public serviceBaseURL_Sandbox: string = "http://sandbox.api.openchargemap.io/v2";
+
         public hasAuthorizationError: boolean = false;
 
         public ATTRIBUTION_METADATAFIELDID = 4;
@@ -52,7 +55,7 @@ module OCM {
 
         public authorizationErrorCallback: any;
         public generalErrorCallback: any;
-        public allowMirror: boolean = false;
+        public allowMirror: boolean = false;        
 
         fetchLocationDataList(countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
 
@@ -166,7 +169,7 @@ module OCM {
             $.ajax(ajaxSettings);
         }
 
-        fetchGeocodeResult(address, successCallback, authSessionInfo) {
+        fetchGeocodeResult(address, successCallback, authSessionInfo, errorCallback) {
 
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
@@ -177,7 +180,7 @@ module OCM {
                 dataType: "jsonp",
                 crossDomain: true,
                 success: successCallback,
-                error: this.handleGeneralAjaxError
+                error: (errorCallback!=null? errorCallback:this.handleGeneralAjaxError)
             };
 
             $.ajax(ajaxSettings);
@@ -229,7 +232,7 @@ module OCM {
             });
         }
 
-        submitMediaItem(data, authSessionInfo, completedCallback, failureCallback) {
+        submitMediaItem(data, authSessionInfo, completedCallback, failureCallback, progressCallback) {
 
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
@@ -239,19 +242,18 @@ module OCM {
                 xhr: function () {  // custom xhr
                     var myXhr = $.ajaxSettings.xhr();
                     if (myXhr.upload) { // check if upload property exists
-                        //myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // for handling the progress of the upload
+                        myXhr.upload.addEventListener('progress', progressCallback, false); // for handling the progress of the upload
                     }
                     return myXhr;
                 },
                 success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
-                error: this.handleGeneralAjaxError,
+                error: (failureCallback==null?this.handleGeneralAjaxError: failureCallback),
                 data: data,
                 cache: false,
                 contentType: false,
                 processData: false,
                 crossDomain: true
             });
-
         }
 
         getRefDataByID(refDataList, id) {

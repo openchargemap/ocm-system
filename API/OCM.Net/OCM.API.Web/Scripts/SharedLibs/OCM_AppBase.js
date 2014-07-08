@@ -2,39 +2,26 @@
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
-
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 /// <reference path="OCM_CommonUI.ts" />
 
-declare var escape: any;
-declare var unescape: any; //TODO: replace with newer escaping methods
-declare var bootbox: any;
-
-module OCM {
-
-    export enum AppMode {
-        STANDARD,
-        LOCALDEV,
-        SANDBOXED
-    }
+var OCM;
+(function (OCM) {
+    (function (AppMode) {
+        AppMode[AppMode["STANDARD"] = 0] = "STANDARD";
+        AppMode[AppMode["LOCALDEV"] = 1] = "LOCALDEV";
+        AppMode[AppMode["SANDBOXED"] = 2] = "SANDBOXED";
+    })(OCM.AppMode || (OCM.AppMode = {}));
+    var AppMode = OCM.AppMode;
 
     /** View Model for core functionality */
-    export class AppViewModel {
-
-        /** The current selected POI */
-        public selectedPOI: any;
-
-        /** The current set of POIs from latest search */
-        public poiList: Array<any>;
-
-        /** A set of POIs favourited by the user */
-        public favouritesList: Array<any>;
-
-        /** track changes in result set, avoiding duplicate processing (maps etc) */
-        public resultsBatchID: number;
-
-        public searchPosition: MapCoords;
-
-        constructor() {
+    var AppViewModel = (function () {
+        function AppViewModel() {
             this.selectedPOI = null;
             this.poiList = null;
             this.favouritesList = null;
@@ -42,53 +29,27 @@ module OCM {
 
             this.resultsBatchID = -1;
         }
-    }
+        return AppViewModel;
+    })();
+    OCM.AppViewModel = AppViewModel;
 
     /** App configuration settings */
-    export class AppConfig {
-        public launchMapOnStartup: boolean;
-        public maxResults: number;
-        public baseURL: string;
-        public loginProviderRedirectBaseURL: string;
-        public loginProviderRedirectURL: string;
-        public autoRefreshMapResults: boolean;
-        public newsHomeUrl: string;
-        public searchTimeoutMS: number; //max time allowed before search considered timed out
-        public searchFrequencyMinMS: number; //min ms between search requests
-      
-        constructor() {
+    var AppConfig = (function () {
+        function AppConfig() {
             this.autoRefreshMapResults = false;
             this.launchMapOnStartup = false;
             this.maxResults = 100;
             this.searchTimeoutMS = 20000;
             this.searchFrequencyMinMS = 500;
         }
-    }
+        return AppConfig;
+    })();
+    OCM.AppConfig = AppConfig;
 
     /** App state settings*/
-    export class AppState {
-
-        public appMode: AppMode;
-
-        public isRunningUnderCordova: boolean;
-        public isEmbeddedAppMode: boolean;
-        public appInitialised: boolean;
-        public languageCode: string;
-
-        public isLocationEditMode: boolean;
-        public menuDisplayed: boolean;
-        public mapLaunched: boolean;
-        public enableCommentSubmit: boolean;
-        public isSearchInProgress: boolean;
-        public _lastPageId: string;
-        public _appQuitRequestCount: number;
-        public _appPollForLogin: any;
-        public _appSearchTimer: any;
-        public _appSearchTimestamp: Date; //time of last search
-
-
-        constructor() {
-            this.appMode = AppMode.STANDARD;
+    var AppState = (function () {
+        function AppState() {
+            this.appMode = 0 /* STANDARD */;
             this.isRunningUnderCordova = false;
             this.isEmbeddedAppMode = false;
             this.appInitialised = false;
@@ -99,21 +60,15 @@ module OCM {
             this.isSearchInProgress = false;
             this._appQuitRequestCount = 0;
         }
-    }
+        return AppState;
+    })();
+    OCM.AppState = AppState;
 
     /** Base for App Components */
-    export class AppBase extends Base {
-
-        ocm_geo: OCM.Geolocation;
-        ocm_data: OCM.API;
-        mappingManager: OCM.Mapping;
-
-        viewModel: AppViewModel;
-        appState: AppState;
-        appConfig: AppConfig;
-
-        constructor() {
-            super();
+    var AppBase = (function (_super) {
+        __extends(AppBase, _super);
+        function AppBase() {
+            _super.call(this);
 
             this.appState = new AppState();
             this.appConfig = new AppConfig();
@@ -124,8 +79,7 @@ module OCM {
 
             this.viewModel = new AppViewModel();
         }
-
-        getLoggedInUserInfo() {
+        AppBase.prototype.getLoggedInUserInfo = function () {
             var userInfo = {
                 "Identifier": this.getCookie("Identifier"),
                 "Username": this.getCookie("Username"),
@@ -133,21 +87,19 @@ module OCM {
                 "Permissions": this.getCookie("AccessPermissions")
             };
             return userInfo;
-        }
+        };
 
-        setLoggedInUserInfo(userInfo) {
+        AppBase.prototype.setLoggedInUserInfo = function (userInfo) {
             this.setCookie("Identifier", userInfo.Identifier);
             this.setCookie("Username", userInfo.Username);
             this.setCookie("OCMSessionToken", userInfo.SessionToken);
             this.setCookie("AccessPermissions", userInfo.AccessPermissions);
-        }
+        };
 
-
-        getCookie(c_name: string) {
+        AppBase.prototype.getCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
                 return this.ocm_data.getCachedDataObject("_pref_" + c_name);
             } else {
-
                 //http://www.w3schools.com/js/js_cookies.asp
                 var i, x, y, ARRcookies = document.cookie.split(";");
                 for (i = 0; i < ARRcookies.length; i++) {
@@ -156,20 +108,22 @@ module OCM {
                     x = x.replace(/^\s+|\s+$/g, "");
                     if (x == c_name) {
                         var val = unescape(y);
-                        if (val == "null") val = null;
+                        if (val == "null")
+                            val = null;
                         return val;
                     }
                 }
                 return null;
             }
-        }
+        };
 
-        setCookie(c_name: string, value, exdays: number= 1) {
+        AppBase.prototype.setCookie = function (c_name, value, exdays) {
+            if (typeof exdays === "undefined") { exdays = 1; }
             if (this.appState.isRunningUnderCordova) {
                 this.ocm_data.setCachedDataObject("_pref_" + c_name, value);
             } else {
-
-                if (exdays == null) exdays = 1;
+                if (exdays == null)
+                    exdays = 1;
 
                 //http://www.w3schools.com/js/js_cookies.asp
                 var exdate = new Date();
@@ -177,9 +131,9 @@ module OCM {
                 var c_value = escape(value) + "; expires=" + exdate.toUTCString();
                 document.cookie = c_name + "=" + c_value;
             }
-        }
+        };
 
-        clearCookie(c_name: string) {
+        AppBase.prototype.clearCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
                 this.ocm_data.setCachedDataObject("_pref_" + c_name, null);
             } else {
@@ -187,9 +141,9 @@ module OCM {
                 expires.setUTCFullYear(expires.getUTCFullYear() - 1);
                 document.cookie = c_name + '=; expires=' + expires.toUTCString() + '; path=/';
             }
-        }
+        };
 
-        getParameter(name: string) {
+        AppBase.prototype.getParameter = function (name) {
             //Get a parameter value from the document url
             name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
             var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -199,20 +153,25 @@ module OCM {
                 return "";
             else
                 return results[1];
-        }
+        };
 
-        setDropdown(id, selectedValue) {
-            if (selectedValue == null) selectedValue = "";
+        AppBase.prototype.setDropdown = function (id, selectedValue) {
+            if (selectedValue == null)
+                selectedValue = "";
             var $dropdown = $("#" + id);
             $dropdown.val(selectedValue);
-        }
+        };
 
-        populateDropdown(id: any, refDataList: any, selectedValue: any, defaultToUnspecified: boolean= null, useTitleAsValue: boolean= null, unspecifiedText: string= null) {
+        AppBase.prototype.populateDropdown = function (id, refDataList, selectedValue, defaultToUnspecified, useTitleAsValue, unspecifiedText) {
+            if (typeof defaultToUnspecified === "undefined") { defaultToUnspecified = null; }
+            if (typeof useTitleAsValue === "undefined") { useTitleAsValue = null; }
+            if (typeof unspecifiedText === "undefined") { unspecifiedText = null; }
             var $dropdown = $("#" + id);
             $('option', $dropdown).remove();
 
             if (defaultToUnspecified == true) {
-                if (unspecifiedText == null) unspecifiedText = "Unknown";
+                if (unspecifiedText == null)
+                    unspecifiedText = "Unknown";
                 $dropdown.append($('<option > </option>').val("").html(unspecifiedText));
                 $dropdown.val("");
             }
@@ -220,33 +179,33 @@ module OCM {
             for (var i = 0; i < refDataList.length; i++) {
                 if (useTitleAsValue == true) {
                     $dropdown.append($('<option > </option>').val(refDataList[i].Title).html(refDataList[i].Title));
-                }
-                else {
+                } else {
                     $dropdown.append($('<option > </option>').val(refDataList[i].ID).html(refDataList[i].Title));
                 }
             }
 
-            if (selectedValue != null) $dropdown.val(selectedValue);
-        }
+            if (selectedValue != null)
+                $dropdown.val(selectedValue);
+        };
 
-        showProgressIndicator() {
+        AppBase.prototype.showProgressIndicator = function () {
             $("#progress-indicator").fadeIn('slow');
-        }
+        };
 
-        hideProgressIndicator() {
+        AppBase.prototype.hideProgressIndicator = function () {
             $("#progress-indicator").fadeOut();
-        }
+        };
 
-        setElementAction(elementSelector, actionHandler) {
+        AppBase.prototype.setElementAction = function (elementSelector, actionHandler) {
             $(elementSelector).unbind("click");
             $(elementSelector).unbind("touchstart");
             $(elementSelector).fastClick(function (event) {
                 event.preventDefault();
                 actionHandler();
             });
-        }
+        };
 
-        isUserSignedIn() {
+        AppBase.prototype.isUserSignedIn = function () {
             if (this.ocm_data.hasAuthorizationError == true) {
                 return false;
             }
@@ -255,14 +214,12 @@ module OCM {
 
             if (userInfo.Username !== null && userInfo.Username !== "" && userInfo.SessionToken !== null && userInfo.SessionToken !== "") {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
+        };
 
-
-        getParameterFromURL(name, url) {
+        AppBase.prototype.getParameterFromURL = function (name, url) {
             var sval = "";
 
             if (url.indexOf("?") >= 0) {
@@ -270,7 +227,7 @@ module OCM {
 
                 params = params.split("&");
                 var temp = "";
-                // split param and value into individual pieces
+
                 for (var i = 0; i < params.length; i++) {
                     temp = params[i].split("=");
 
@@ -280,21 +237,21 @@ module OCM {
                 }
             }
             return sval;
-        }
+        };
 
-        showMessage(msg) {
+        AppBase.prototype.showMessage = function (msg) {
             if (this.appState.isRunningUnderCordova && navigator.notification) {
-                navigator.notification.alert(
-                    msg,  // message
-                    function () { ;; },         // callback
-                    'Open Charge Map',            // title
-                    'OK'                  // buttonName
-                    );
+                navigator.notification.alert(msg, function () {
+                    ;
+                    ;
+                }, 'Open Charge Map', 'OK');
             } else {
                 bootbox.alert(msg, function () {
                 });
             }
-        }
-
-    }
-}
+        };
+        return AppBase;
+    })(OCM.Base);
+    OCM.AppBase = AppBase;
+})(OCM || (OCM = {}));
+//# sourceMappingURL=OCM_AppBase.js.map

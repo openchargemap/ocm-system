@@ -2,7 +2,7 @@
 <div data-role="page" id="submitmediaitem-page" class="ui-page">
     <div data-role="header" data-position="fixed">
         <div>
-            <a href="javascript:void();" data-rel="back"><i class="fa fa-chevron-circle-left"></i>&nbsp;Back</a>
+            <a href="javascript:void();" data-rel="back"><i class="fa fa-chevron-circle-left"></i>&nbsp;</a>
             <div style="float: right"><i class="fa fa-camera"></i>&nbsp;<span data-localize="ocm.details.mediaItems.sectionTitle">Add Photo</span></div>
 
         </div>
@@ -42,6 +42,14 @@
                     <textarea id="comment" class="form-control"></textarea>
                 </div>
 
+                <p id="file-info"></p>
+
+                <div class="progress" id="file-upload-progress-bar" style="display:none;">
+                    <div class="progress-bar" id="file-upload-progress" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    </div>
+                </div>
+
+                <canvas id="file-upload-preview"></canvas>
             </form>
 </div>
 
@@ -57,6 +65,7 @@
 
 <script type="text/javascript">
 
+    /*
     $(document).ready(function () {
         //adapted from http://bootsnipp.com/snippets/featured/input-file-popover-preview-image
 
@@ -71,7 +80,21 @@
                 $(".file-upload-filename").val(file.name);
             }
             reader.readAsDataURL(file);
+
+            var maxSizeBytes = 1024 * 1024 * 1;
+            var fileSizeMB = file.size / 1024 / 1024;
+            var maxSizeMB = maxSizeBytes / 1024 / 1024;
+
+            if (file.size < maxSizeBytes) {
+                
+                
+                alert("The file you have selected is too big for upload (" + Math.round(fileSizeMB*100)/100 + "MB, max size is "+maxSizeMB+"MB).");
+            } else {
+                $("#file-info").html("Selected file is "+Math.round(fileSizeMB*100)/100+"MB in size.");
+            }
         });
+
+     
 
         // Set the clear onclick function
         $('.file-upload-clear').click(function () {
@@ -81,6 +104,7 @@
             $(".file-upload-input-title").text("Browse");
         });
     });
-
+    */
+    
 </script>
 <!-- Page:UploadMediaItem:End -->

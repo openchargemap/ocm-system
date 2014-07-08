@@ -1,26 +1,18 @@
 /* palette: OCM green #8dd35f rgb (141,211,95)   */
 
-@font-face {
-    font-family: 'Oxygen';
-    src: url('../fonts/Oxygen/oxygen-light-webfont.eot');
-    src: url('../fonts/Oxygen/oxygen-light-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/Oxygen/oxygen-light-webfont.woff') format('woff'), url('../fonts/Oxygen/oxygen-light-webfont.ttf') format('truetype'), url('../fonts/Oxygen/oxygen-light-webfont.svg#oxygenlight') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Oswald';
-    src: url('../fonts/Oswald/oswald-light-webfont.eot');
-    src: url('../fonts/Oswald/oswald-light-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/Oswald/oswald-light-webfont.woff') format('woff'), url('../fonts/Oswald/oswald-light-webfont.ttf') format('truetype'), url('../fonts/Oswald/oswald-light-webfont.svg#oswaldlight') format('svg');
-    font-weight: 300;
-    font-style: normal;
-}
-
 @ocm-primary-background: #8cc63f;
 @ocm-secondary-background: #8dd35f;
 @ocm-tertiary-background: rgba(140, 198, 63, 0.70);
 @ocm-dark-background: #5f872a;
 @ocm-light-background: lighten(@ocm-primary-background, 40%);
+@ocm-light-layer: rgba(112, 165, 43, 0.49);
+@ocm-body-font: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
+@ocm-heading-font:  Roboto, "Segoe UI Light", Helvetica,  Arial, sans-serif;
+
+.ocm-material-shadow(){
+    /*box-shadow: -1px 1px 6px rgba(50, 50, 50, 0.38);*/
+    box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);
+}
 
 .palette {
     color: @ocm-primary-background;
@@ -28,6 +20,7 @@
     color: @ocm-tertiary-background;
     color: @ocm-dark-background;
     color: @ocm-light-background;
+    color: @ocm-light-layer;
 }
 
 html, body {
@@ -35,9 +28,10 @@ html, body {
 }
 
 body {
-    margin: 0; 
+    font-family: segoe
+    margin: 0;
     padding: 0;
-    font-family: 'Oxygen', sans-serif,Arial;
+    font-family: @ocm-body-font;
     font-size: 14.4px;
     background-color: white;
     line-height: normal;
@@ -49,6 +43,9 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+p {
+    margin: 1em 0 1em 0;
+}
 
 #locationdetails-view {
     position: absolute;
@@ -57,7 +54,7 @@ body {
     width: 90%;
     border: 2px solid gainsboro;
     border-top: 5px solid gainsboro;
-    box-shadow: 10px 10px 5px #888;
+   .ocm-material-shadow();
     display: none;
     background-color: #F2F7F3;
     padding: 8px;
@@ -87,16 +84,15 @@ body {
 }
 
 #details-contact-container {
-    font-size: 80%;
-    border: 1px solid gainsboro;
-    padding: 8px;
-    background-color: #f3f3f3;
+    padding: 1em;
+    background-color: rgba(243, 243, 243, 0.3);
     overflow: hidden;
-    width: 98%;
-    margin-top: 0.5em;
+    margin:1em;
 }
 
 #details-contact-container * a, #details-contact-container a:visited, #details-contact-container a:link {
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     max-width: 90%;
 }
@@ -115,14 +111,17 @@ body {
 }
 
 #progress-indicator {
+    color: #ffffff;
     display: none;
+    font-size: 16px;
     position: absolute;
-    top: 6px;
-    left:48%;
+    margin-top:4px;
+    top: 4px;
+    left: 48%;
     height: 30px;
     width: 30px;
     z-index: 1100;
-    overflow:hidden;    
+    overflow:visible;
 }
 
 .info-section {
@@ -136,14 +135,15 @@ body {
 #map-view {
     border: none;
     position: relative;
-    margin-top:0px; 
-    width: 100%; 
-    height:100%;
-    box-shadow: 2px 2px 5px #777777;
+    margin-top: 0px;
+    width: 100%;
+    height: 100%;
+    .ocm-material-shadow();
 }
 
 .ocm-label {
     display: inline-block;
+    color:#8f8f8f;
 }
 
 .footer {
@@ -159,6 +159,8 @@ body {
 }
 
 #details-usercomments p {
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     overflow: visible;
     white-space: normal;
@@ -194,21 +196,27 @@ body {
 }
 
 .result {
+    border: 1px solid rgb(230, 230, 230);
     border-radius: 4px;
     margin: 0 0.3em 1em 0.3em;
 }
 
+.result .badge {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 300;
+    color: #666666;
+}
+
 .result:hover {
-    background-color: rgb(237, 255, 211);
-    -webkit-transition: background-color 1s linear, box-shadow ease-in 1s;
-    -moz-transition: background-color 1s linear, box-shadow ease-in 1s;
-    -ms-transition: background-color 1s linear, box-shadow ease-in 1s;
-    transition: background-color 1s linear, box-shadow ease-in 1s;
-    box-shadow: -1px 1px 6px rgba(50, 50, 50, 0.38);
+    -webkit-transition: background-color 1s linear, box-shadow ease-in 0.5s;
+    -moz-transition: background-color 1s linear, box-shadow ease-in 0.5s;
+    -ms-transition: background-color 1s linear, box-shadow ease-in 0.5s;
+    -o-transition: background-color 1s linear, box-shadow ease-in 0.5s;
+    transition: background-color 1s linear, box-shadow ease-in 0.5s;
+    .ocm-material-shadow();
 }
 
 .results-list {
-    
     overflow: auto;
 }
 
@@ -220,7 +228,7 @@ body {
 .result-item-a, .result-item-b {
     width: 40%;
     font-weight: 300;
-    font-family: 'Oxygen',Arial;
+    font-family: @ocm-body-font;
     padding: 8px;
     font-size: 0.8em;
 }
@@ -281,6 +289,7 @@ body {
 }
 
 .direction-S {
+    -o-transform: rotate(180deg);
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
@@ -288,6 +297,7 @@ body {
 }
 
 .direction-W {
+    -o-transform: rotate(-90deg);
     transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
@@ -295,6 +305,7 @@ body {
 }
 
 .direction-E {
+    -o-transform: rotate(90deg);
     transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -302,6 +313,7 @@ body {
 }
 
 .direction-NW {
+    -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -309,6 +321,7 @@ body {
 }
 
 .direction-NE {
+    -o-transform: rotate(45deg);
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
@@ -316,6 +329,7 @@ body {
 }
 
 .direction-SW {
+    -o-transform: rotate(225deg);
     transform: rotate(225deg);
     -webkit-transform: rotate(225deg);
     -moz-transform: rotate(225deg);
@@ -323,121 +337,61 @@ body {
 }
 
 .direction-SE {
+    -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
     -webkit-transform: rotate(135deg);
     -moz-transform: rotate(135deg);
     -ms-transform: rotate(135deg);
 }
 
-#home-page {
-    padding: 16px;
-}
-
-#home-page * a {
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 1em;
-    margin-bottom: 1em;
-    text-shadow: 1px 1px 8px rgba(131, 125, 125, 0.70);
-    transition: color 500ms linear;
-}
-
-#home-page * a:hover {
-    text-decoration: none;
-    color: greenyellow;
-    transition: color 500ms linear;
-}
-
 .accent {
     color: greenyellow;
 }
 
-@media screen and (min-width: 0px) and (max-width: 400px) {
-    #home-menu-container > a {
-        font-size: 80%;
-    }
-}
-
-@media screen and (min-width: 400px) and (max-width: 700px) {
-    #home-menu-container > a {
-        font-size: 90%;
-    }
-}
-
-@media screen and (min-width: 600px) and (max-width: 800px) {
-    #home-menu-container > a {
-        font-size: 100%;
-    }
-}
-
-@media screen and (min-width: 801px) {
-    #home-menu-container > a {
-        font-size: 110%;
-        margin-bottom: 2em;
-    }
-}
-
-#home-intro {
-    margin-top: 1em;
-    font-size: 0.8em;
-    color: white;
-}
-
 #user-profile-info {
-    font-size: 0.8em;
-    min-height: 64px;
-    margin-left: 10%;
-    margin-right: 10%;
-    text-align: right;
-    color: white;
-}
-
-.home-menu-container {
-    background-color: rgba(0, 0, 0, 0.20);
-    margin-top: 64px;
-    padding: 1em;
-    border-radius: 1em;
+    font-size: 0.6em;
+    margin-left: 0.4em;
+    color: rgb(133, 133, 133);
 }
 
 .disabled-item {
     -webkit-filter: blur(2px);
+    filter: blur(2px);
 }
 
-.content-subsection {
-    box-shadow: 0px 4px 8px rgba(50, 50, 50, 0.2);
+.card, .content-subsection {
+    .ocm-material-shadow();
     margin: 0.2em;
     border-radius: 4px;
-    padding: 0.3em;
+    padding: 0.6em;
+    margin-bottom:0.4em;
+    background-color:#FCFCFC;
 }
 
 #locationdetails-page .ui-content {
     padding: 0.5em;
 }
 
-.section-heading, .result h3 {
-    padding: 0.5em;
-    background-color: @ocm-primary-background;
-    color: white;
-    font-size: 0.9em;
-    font-weight: 300;
-    font-family: 'Oswald',Arial;
+.card-heading, .section-heading {
+    color: rgb(60, 60, 60);
+    font-family: @ocm-heading-font;
+    font-size:1.2em;
+    font-weight:300;
+    margin-bottom:0.3em;
 }
 
 .result h3 {
     margin-top: 0;
-}
-
-.section-heading {
-    margin-bottom: 0.5em;
+    padding: 0.6em;
+    color: rgb(60, 60, 60);
+    font-family: @ocm-heading-font;
+    font-weight:300;
 }
 
 #details-options {
-    padding: 0.2em;
+    
     display: inline;
-    margin: 0.1em;
-    float: right;
-    background-color: @ocm-primary-background;
-    font-size: 1.5em;
+    background-color: rgba(0, 0, 0, 0.06);
     border-radius: 0.2em;
 }
 
@@ -446,44 +400,43 @@ body {
     padding: 0.4em;
 }
 
-body, .ui-body-b, .ui-body-d, a, a:visited {
-    font-family: 'Oxygen', sans-serif;
-}
-
-h1, h2, h3, h4, .result h3, #home-page .ui-link, a.ui-link, #home-intro, .ui-bar-d, .ui-bar-b, .ui-header, .ui-header a, #progress-indicator {
-    font-family: 'Oswald', sans-serif;
+h1, h2, h3, h4 {
+    font-family: @ocm-body-font;
     font-weight: 300 !important;
-    font-size: 1em;
+    font-size: 1.3em;
 }
 
 h1 {
-    font-size: 1.2em;
+    font-size: 2em;
 }
 
 h2 {
-    font-size: 1.1em;
+    font-size: 1.4em;
 }
 
 h3 {
-    font-size: 0.9em;
+     font-size: 1.3em;
 }
-
 h4 {
-    font-size: 0.8em;
+    font-size: 1.2em;
 }
 
 /*page heading bar*/
 div [data-role="header"] {
-    margin-top: -1px;
+    margin-top: 0px;
     background-color: @ocm-dark-background;
     color: white;
     box-shadow: rgba(17, 17, 17, 0.22) 0px 2px 3px;
     position: fixed;
-    left:0px;
-    top:0px;
+    left: 0px;
+    top: 0px;
+    padding-top:0;
+    font-weight:300;
+    margin-top:-1px;
 }
 
 div[data-role=header] > div {
+    padding-top:2px;
     margin-right: 1em;
     font-size: 1.4em;
 }
@@ -510,6 +463,8 @@ blockquote {
     border-left: 6px solid @ocm-primary-background;
     margin: 1.5em 10px;
     padding: .5em 10px;
+    overflow: auto;
+    font-size:1em;
 }
 
 blockquote:before {
@@ -539,7 +494,6 @@ blockquote small {
 
 
 div[data-role=page] {
-    display: none;
     /*margin-top: 38px;*/
     padding-top: 38px;
     min-height: 100%;
@@ -602,18 +556,34 @@ a:focus {
     */
 
 .ui-link:hover {
+    -moz-transition: color 500ms linear;
+    -o-transition: color 500ms linear;
+    -webkit-transition: color 500ms linear;
     transition: color 500ms linear;
 }
 
 .btn-default {
+    -moz-transition: background-color 500ms linear;
+    -o-transition: background-color 500ms linear;
+    -webkit-transition: background-color 500ms linear;
     transition: background-color 500ms linear;
+    
 }
 
 .btn-default:hover {
     background-color: rgb(237, 255, 211);
+    -moz-transition: background-color 500ms linear;
+    -o-transition: background-color 500ms linear;
+    -webkit-transition: background-color 500ms linear;
     transition: background-color 500ms linear;
 }
 
+div[data-role="footer"] .btn {
+    border:none;
+}
+div[data-role="footer"] .btn-default {
+    background-color: transparent;
+}
 /*basic responsive grid styles : 2 columns*/
 .item {
     width: 50%;
@@ -676,12 +646,12 @@ div#home-page {
 }
 
 .navbar {
-    background-color: #8cc63f;
+    background-color: rgba(252, 252, 252, 0.76);
 }
 
 .btn-primary {
     background-color: @ocm-dark-background;
-    border-color: @ocm-primary-background;
+    border-color: #76885D;
 }
 
 
@@ -691,9 +661,17 @@ div#home-page {
     width: 100%;
     height: 100%;
     position: fixed;
+    left: 0;
+    top: 0;
     background-color: rgba(51, 51, 51, 0.61);
     -webkit-animation: fadein 0.3s forwards;
+    -moz-animation: fadein 0.3s forwards;
+    -o-animation: fadein 0.3s forwards;
+    animation: fadein 0.3s forwards;
     -webkit-animation-delay: 0s;
+    -moz-animation-delay: 0s;
+    -o-animation-delay: 0s;
+    animation-delay: 0s;
 }
 
 @-webkit-keyframes fadein {
@@ -709,18 +687,16 @@ div#home-page {
 .app-menu {
     z-index: 10001;
     background-color: rgba(12, 17, 5, 0.88);
-    
     width: 240px;
     box-shadow: 5px 5px 5px 3px rgba(102, 102, 102, 0.26);
     position: fixed;
-
     padding: 0.3em;
     top: -1px;
     left: -1px;
     height: 101%;
-        
-    font-size: 1.4em;
-    
+    font-size: 1.2em;
+    font-weight:300;
+
     ul {
         margin: 0;
         padding-left: 0;
@@ -736,11 +712,12 @@ div#home-page {
         background-color: rgba(17, 17, 17, 0.40);
     }
 
-    li > a {
+    li > a, li > a:visited, li > a:hover {
         color: white;
         text-decoration: none;
+        display:block;
     }
-
+   
     i {
         min-width: 1em;
         margin-right: 0.3em;
@@ -752,7 +729,11 @@ div#home-page {
     left: -200px;
     -webkit-animation: slide 0.1s forwards;
     -webkit-animation-delay: 0s;
+    -moz-animation: slide 0.1s forwards;
+    -o-animation: slide 0.1s forwards;
     animation: slide 0.1s forwards;
+    -moz-animation-delay: 0s;
+    -o-animation-delay: 0s;
     animation-delay: 0s;
 }
 
@@ -773,8 +754,8 @@ a[data-rel="menu"] {
     background-repeat: no-repeat;
     background-image: url(../images/icons/menu.png);
     background-size: contain;
-    background-position-y: 3px;
-    height: 32px;
+    background-position-y: 1px;
+    height: 36px;
     min-width: 120px;
     display: inline-block;
 }
@@ -808,7 +789,7 @@ a[data-rel="menu"] {
 
 
 #search-form {
-    
+
     .col-xs-8 {
         padding-left: 0;
         padding-right: 0;
@@ -817,13 +798,29 @@ a[data-rel="menu"] {
     .col-xs-4 {
         padding-right: 0;
     }
-        
+
     .form-group {
-        margin-bottom: 3px;
+        margin-top: 2px;
+        margin-bottom: 2px;
     }
 }
 
 #listview-container {
+    padding: 1em;
+    overflow-y: scroll;
+}
+
+.prompt {
+    color:#999999;
     padding:1em;
-    overflow-y:scroll;
+}
+
+i.subtle {
+    color:rgba(255, 255, 255, 0.79);
+}
+i.subtle:hover {
+    color:rgb(255, 255, 255);
+}
+.jumbotron{
+    color:#a1a1a1;
 }

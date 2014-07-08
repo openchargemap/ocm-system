@@ -8,21 +8,13 @@
     </div>
     <div data-role="content" style="padding-bottom:50px;">
         <div id="details-content">
-            <div class="section-heading">
-
-                <div id="details-options">
-                    <div class="option-item"><i id="option-favourite" title="Toggle Favourite" class="fa fa-heart-o"></i></div>
-                    <div class="option-item"><i id="option-checkin" title="Comment or Checkin" class="fa fa-comment-o"></i></div>
-                    <div class="option-item"><i id="option-uploadphoto" title="Upload Photo" class="fa fa-camera"></i></div>
-                    <div class="option-item"><i id="option-edit" title="Edit" class="fa fa-edit"></i></div>
-
-                </div>
-                <div id="details-locationtitle"></div>
-            </div>
+            <h3 class="card-heading">
+                <div id="details-locationtitle" style="margin-left:1em;"></div>
+            </h3>
             <div class="row">
                 <div class="col-sm-6">
 
-                    <div id="details-general" class="content-subsection">
+                    <div id="details-general" class="card">
 
                         <div class="row">
                             <div class="col-md-6">
@@ -39,41 +31,32 @@
 
                     </div>
 
-                    <div id="details-additional-container" class="content-subsection">
-                        <div class="section-heading" data-localize="ocm.details.equipment.sectionTitle">Equipment Details</div>
-                        <div id="details-additional"></div>
-                    </div>
+                 
                 </div>
                 <div class="col-sm-6">
-                    <div id="details-usercomments-container" class="content-subsection">
-                        <div class="section-heading" data-localize="ocm.details.commentsAndRatings.sectionTitle">Comments and Ratings</div>
-
-                        <p>
-                            <a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a> <span data-localize="ocm.details.commentsAndRatings.addPrompt">Add Comment</span>
-                        </p>
+                    <div id="details-additional-container" class="card">
+                        <div class="card-heading"><i class="fa fa-bolt fa-square"></i> <span data-localize ="ocm.details.equipment.sectionTitle">Equipment Details</span></div>
+                        <div id="details-additional"></div>
+                    </div>
+                    <div id="details-usercomments-container" class="card">
+                        <div class="card-heading"><i class="fa fa-comment"></i> <span data-localize="ocm.details.commentsAndRatings.sectionTitle">comments and ratings</span> <div class="pull-right"><a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i>  <span data-localize="ocm.general.addItem">Add</span></a></div></div>
 
                         <div id="details-usercomments">
                             <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
                         </div>
                     </div>
 
-                    <div id="details-mediaitems-container" class="content-subsection">
-                        <div class="section-heading" data-localize="ocm.details.mediaItems.sectionTitle">Photos</div>
-                        <p>
-                            <a id="btn-uploadphoto" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a> <span data-localize="ocm.details.mediaItems.addPrompt">Add Photos</span>
-                        </p>
-
+                    <div id="details-mediaitems-container" class="card">
+                        <div class="card-heading"><i class="fa fa-camera"></i> <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> <div class="pull-right"><a id="btn-uploadphoto" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a></div></div>
                         <div id="details-mediaitems">
                             No photos submitted.
                         </div>
                         <link href="js/ThirdParty/swipebox/css/swipebox.css" type="text/css" rel="stylesheet" />
-                        <div id="details-mediaitems-gallery">
-
-                         
+                        <div id="details-mediaitems-gallery">                      
                         </div>
                     </div>
-                    <div id="details-advanced-container" class="content-subsection">
-                        <div class="section-heading" data-localize="ocm.details.advancedDetails">Additional Information</div>
+                    <div id="details-advanced-container" class="card">
+                        <div class="card-heading" data-localize="ocm.details.advancedDetails">Additional Information</div>
                         <div id="details-advanced" style="font-size:smaller;">
                             None.
                         </div>
@@ -85,8 +68,11 @@
 
     <div data-role="footer" data-position="fixed">
         <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-            <div class="form-options pull-right">
-                <a id="details-edit" class="btn btn-primary" data-role="button" data-icon="edit">Edit</a>
+            <div class="btn-group pull-right" style="margin-top:0.4em;">
+                <button type="button" id="option-favourite" class="btn btn-default btn-lg" title="Toggle Favourite"><i id="option-favourite-icon" class="fa fa-heart-o"></i><span class="hidden-xs"> Favourite</span></button>
+                <button type="button" id="option-checkin" class="btn btn-default btn-lg" title="Add Comment or Checkin"><i class="fa fa-comment-o"></i><span class="hidden-xs"> Add Comment/Check-In</span></button>
+                <button type="button" id="option-uploadphoto" class="btn btn-default btn-lg" title="Add Photo"><i class="fa fa-camera"></i><span class="hidden-xs"> Add Photo</span></button>
+                <button type="button" id="option-edit" class="btn btn-default btn-lg" title="Edit Details"><i class="fa fa-edit"></i><span class="hidden-xs"> Edit Details</span></button>
             </div>
         </nav>
     </div>

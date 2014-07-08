@@ -106,7 +106,7 @@ module OCM {
             return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
         }
 
-        static formatURL(url, title:string = null) {
+        static formatURL(url, title: string = null) {
             if (url == null || url == "") return "";
             if (url.indexOf("http") == -1) url = "http://" + url;
             return '<a target="_blank" href="' + url + '">' + (title != null ? title : url) + '</a>';
@@ -172,9 +172,9 @@ module OCM {
             if (poi.AddressInfo.Distance != null) {
                 var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
                 contactInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
-                contactInfo += " <br/><i class='fa fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
-            }
 
+            }
+            contactInfo += "<p><i class='fa fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone1);
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone2);
             contactInfo += this.formatEmailAddress(poi.AddressInfo.ContactEmail);
@@ -185,8 +185,10 @@ module OCM {
                 displayUrl = displayUrl.replace(/.*?:\/\//g, "");
                 //shorten url if over 40 characters
                 if (displayUrl.length > 40) displayUrl = displayUrl.substr(0, 40) + "..";
-                contactInfo += "<i class='fa fa-external-link'></i>  " + this.formatURL(poi.AddressInfo.RelatedURL, "<span data-localize='ocm.details.addressRelatedURL'>" + displayUrl + "</span>");
+                contactInfo += "<i class='fa fa-external-link'></i>  " + this.formatSystemWebLink(poi.AddressInfo.RelatedURL, "<span data-localize='ocm.details.addressRelatedURL'>" + displayUrl + "</span>");
             }
+
+            contactInfo += "</p>";
 
             var comments = this.formatTextField(poi.GeneralComments, "Comments", true, true, "ocm.details.generalComments") +
                 this.formatTextField(poi.AddressInfo.AccessComments, "Access", true, true, "ocm.details.accessComments");
@@ -227,8 +229,8 @@ module OCM {
             if (poi.Connections != null) {
                 if (poi.Connections.length > 0) {
 
-                    equipmentInfo += "<table class='datatable'>";
-                    equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th><th data-localize='ocm.details.equipment.quantity'>Qty</th></tr>";
+                    equipmentInfo += "<table class='table table-st'>";
+                    equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th></tr>";
 
                     for (var c = 0; c < poi.Connections.length; c++) {
                         var con = poi.Connections[c];
@@ -243,10 +245,10 @@ module OCM {
                         (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
                         (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
                         (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
-                        (con.CurrentType != null ? con.CurrentType.Title : "") +
+                        (con.CurrentType != null ? con.CurrentType.Title : "") + "<br/>"+
+                        (con.Quantity != null ? this.formatString(con.Quantity) : "1") + " Present" +
                         "</td>" +
                         "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
-                        "<td>" + (con.Quantity != null ? this.formatString(con.Quantity) : "1") + "</td>" +
                         "</tr>";
                     }
                     equipmentInfo += "</table>";

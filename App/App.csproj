@@ -25,10 +25,6 @@
     <Content Include="fonts\FontAwesome\css\font-awesome.css" />
     <Content Include="fonts\FontAwesome\css\font-awesome.min.css" />
     <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.svg" />
-    <Content Include="fonts\Oswald\OFL.txt" />
-    <Content Include="fonts\Oswald\oswald-light-webfont.svg" />
-    <Content Include="fonts\Oxygen\OFL.txt" />
-    <Content Include="fonts\Oxygen\oxygen-light-webfont.svg" />
     <Content Include="images\ajax-loader4.gif" />
     <Content Include="images\ajax-loader3.gif" />
     <Content Include="images\ajax-loader2.gif" />
@@ -70,7 +66,6 @@
     <Content Include="js\Localisation\languagePack.min.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
     <Content Include="js\ThirdParty\analytics.js" />
-    <Content Include="js\ThirdParty\angular\angular.min.js" />
     <Content Include="js\ThirdParty\bootbox.min.js" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.min.css" />
@@ -104,6 +99,9 @@
     <Content Include="js\ThirdParty\leaflet\leaflet-src.js" />
     <Content Include="js\ThirdParty\leaflet\leaflet.css" />
     <Content Include="js\ThirdParty\leaflet\leaflet.js" />
+    <Content Include="js\ThirdParty\leaflet\leaflet.min.css">
+      <DependentUpon>leaflet.css</DependentUpon>
+    </Content>
     <Content Include="js\ThirdParty\leaflet\markerclusterer\leaflet.markercluster-src.js" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\leaflet.markercluster.js" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.css" />
@@ -132,17 +130,16 @@
       <DependentUpon>main.css</DependentUpon>
     </Content>
     <Content Include="styles\windows.css" />
+    <Content Include="views\startup.html" />
+    <Content Include="views\news.html" />
     <Content Include="views\about.html" />
     <Content Include="views\add-comment.html" />
     <Content Include="views\add-mediaitem.html" />
-    <Content Include="views\debug.html" />
     <Content Include="views\details.html" />
     <Content Include="views\edit-location.html" />
-    <Content Include="views\experiments.html" />
     <Content Include="views\favourites.html" />
     <Content Include="views\feedback.html" />
-    <Content Include="views\home.html" />
-    <Content Include="views\login.html" />
+    <Content Include="views\profile.html" />
     <Content Include="views\map.html" />
     <Content Include="views\README.txt" />
     <Content Include="views\search.html" />
@@ -155,14 +152,6 @@
     <Content Include="README.md" />
     <Content Include="build\CordovaNotes.md" />
     <Content Include="build\readme.md" />
-    <Content Include="fonts\Oswald\oswald-light-webfont.eot" />
-    <Content Include="fonts\Oswald\oswald-light-webfont.ttf" />
-    <Content Include="fonts\Oswald\oswald-light-webfont.woff" />
-    <Content Include="fonts\Oswald\Oswald-Light.ttf" />
-    <Content Include="fonts\Oxygen\oxygen-light-webfont.eot" />
-    <Content Include="fonts\Oxygen\oxygen-light-webfont.ttf" />
-    <Content Include="fonts\Oxygen\oxygen-light-webfont.woff" />
-    <Content Include="fonts\Oxygen\Oxygen-Light.ttf" />
     <Content Include="js\ThirdParty\leaflet\awesome-markers\images\Thumbs.db" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap.css.map" />
@@ -181,6 +170,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="js\OCM_FileUpload.ts" />
     <TypeScriptCompile Include="js\OCM_App.ts" />
     <TypeScriptCompile Include="js\OCM_AppBase.ts" />
     <TypeScriptCompile Include="js\OCM_AppBootstrap.ts" />
@@ -215,16 +205,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>63798</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:63798/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

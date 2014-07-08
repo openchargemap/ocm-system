@@ -35,13 +35,14 @@
     <link rel="stylesheet" href="js/ThirdParty/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css" />
     <!-- Apply App Styles -->
-    <link rel="stylesheet" href="styles/main.css" />
-    <link rel="stylesheet" href="styles/extended.css" />
+    <link rel="stylesheet" href="styles/main.css" />    
 
-    <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.min.css" />
+    <!--
     <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.css" />
-    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.css" />-->
     <link rel="stylesheet" href="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.css">
+     
 
     <!--CSS:WINDOWS:BEGIN-->
     <!--<link rel="stylesheet" href="styles/windows.css" />-->
@@ -60,9 +61,10 @@
     <script src="js/ThirdParty/bootbox.min.js"></script>
     <script src="js/ThirdParty/swipebox/js/jquery.swipebox.js"></script>
     <script src="js/ThirdParty/leaflet/leaflet.js"></script>
-    <script src="js/ThirdParty/leaflet/markerclusterer/leaflet.markercluster.js"></script>
+    <!--
+    <script src="js/ThirdParty/leaflet/markerclusterer/leaflet.markercluster.js"></script>-->
     <script src="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.js"></script>
-
+    
 
     <!--JS:IOS:BEGIN-->
     <!--<link rel="stylesheet" href="styles/ios.css" />-->
@@ -76,6 +78,7 @@
     <script src="js/OCM_AppBase.js"></script>
     <script src="js/OCM_Geolocation.js"></script>
     <script src="js/OCM_Mapping.js"></script>
+    <script src="js/OCM_FileUpload.js"></script>
     <script src="js/OCM_App_LocationEditor.js"></script>
     <script src="js/OCM_App.js"></script>
     <script src="js/OCM_AppBootstrap.js"></script>
@@ -86,35 +89,47 @@
         ocm_app.ocm_data.languageList = languageList;
     </script>
     <!-- Localisation:End -->
+
+    <style>
+        div[data-role=page] {
+            display: none; /*all pages start hidden*/
+        }
+        .jumbotron{
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
 
     <div id="progress-indicator">
-       
-       <img src="images/ajax-loader4.gif" width="24" height="24" />
+        <i class="fa fa-circle-o-notch fa-spin fa-lg fa-fw"></i>
     </div>
 
     <div class="app-menu-container" id="app-menu-container">
-    <nav class="app-menu" id="menu" tabindex="-1" role="navigation">
-       
-        <div id="home-intro" style="">
-            <a href="#" onclick='window.open("http://openchargemap.org");return false;'>
-                <img alt="OCM Logo" src="images/icons/AppIcon_36x36.png" height="36" />
-            </a>
-            <span class="accent">Open Charge Map</span>
+        <nav class="app-menu" id="menu" tabindex="-1" role="navigation">
 
-        </div>
-        <ul>
-            <li><a href="#map-page" class="ui-link" data-rel="menu-item"><i class="fa fa-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></a></li>
-            <li><a href="#favourites-page" class="ui-link" data-rel="menu-item"><i class="fa fa-heart"></i>&nbsp;<span data-localize="ocm.general.favourites">Favourites</span></a></li>
-            <li><a href="#addlocation-page" class="ui-link" data-rel="menu-item"><i class="fa fa-plus"></i>&nbsp;<span data-localize="ocm.general.addLocation">Add Location</span></a></li>
-            <li><a href="#settings-page" class="ui-link" data-rel="menu-item"><i class="fa fa-filter"></i>&nbsp;<span data-localize="ocm.general.settings">Filter Settings</span></a></li>
-            <li><a href="#about-page" class="ui-link" data-rel="menu-item"><i class="fa fa-question-circle"></i>&nbsp;<span data-localize="ocm.general.about">About</span></a></li>
-            <li><a href="#login-page" id="login-button" class="ui-link" data-rel="menu-item"><i class="fa fa-sign-in"></i>&nbsp;<span data-localize="ocm.general.signIn">Sign In</span></a></li>
-        </ul>
+            <div id="home-intro" style="">
+                <a href="#" onclick='window.open("http://openchargemap.org");return false;'>
+                    <img alt="OCM Logo" src="images/icons/AppIcon_36x36.png" height="36" />
+                </a>
+                <span class="accent">Open Charge Map</span>
 
-     
-    </nav>
+            </div>
+            <ul>
+                <li><a href="#map-page" class="ui-link" data-rel="menu-item"><i class="fa fa-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></a></li>
+                <li><a href="#favourites-page" class="ui-link" data-rel="menu-item"><i class="fa fa-heart"></i>&nbsp;<span data-localize="ocm.general.favourites">Favourites</span></a></li>
+                <li><a href="#addlocation-page" class="ui-link" data-rel="menu-item"><i class="fa fa-plus"></i>&nbsp;<span data-localize="ocm.general.addLocation">Add Location</span></a></li>
+                <li><a href="#settings-page" class="ui-link" data-rel="menu-item"><i class="fa fa-filter"></i>&nbsp;<span data-localize="ocm.general.settings">Filter Settings</span></a></li>
+                <!--<li><a href="#news-page" class="ui-link" data-rel="menu-item"><i class="fa fa-leaf"></i>&nbsp;<span data-localize="ocm.general.news">News</span></a></li>-->
+                <li><a href="#about-page" class="ui-link" data-rel="menu-item"><i class="fa fa-question-circle"></i>&nbsp;<span data-localize="ocm.general.about">About</span></a></li>
+                <li id="menu-signin"><a href="#" id="signin-button" class="ui-link" data-rel="menu-item"><i class="fa fa-sign-in"></i>&nbsp;<span data-localize="ocm.general.signIn">Sign In</span></a></li>
+                <li id="menu-signout"><a href="#" id="signout-button" class="ui-link" data-rel="menu-item"><i class="fa fa-sign-out"></i>&nbsp;<span data-localize="ocm.general.signOut">Sign Out</span></a></li>
+            </ul>
+
+            <div id="user-profile-info">
+                
+            </div>
+        </nav>
     </div>
 
     <!--Begin standard OCM app html block -->
@@ -123,7 +138,6 @@
     <!--End Page Definitions -->
     <!--End standard OCM app HTML block-->
     <!--Late bound scripts-->
-
     <!--google maps-->
     <script src="js/OCM_MapInit.js"></script>
     <!--end google maps-->
