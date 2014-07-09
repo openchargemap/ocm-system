@@ -254,7 +254,7 @@ var OCM;
                 item.DataProvider = null;
                 item.DataProviderID = null;
 
-                //if user is editor for this location, set to publish on submit
+                //if user is editor for this new location, set to publish on submit
                 if (this.hasUserPermissionForPOI(item, "Edit")) {
                     item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, 200);
                     item.SubmissionStatusTypeID = null;
@@ -263,8 +263,8 @@ var OCM;
                 //in edit mode use submission status from form
                 item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
                 item.SubmissionStatusTypeID = null;
-                item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
-                item.DataProviderID = null;
+                /*item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
+                item.DataProviderID = null;*/
             }
 
             if (item.Connections == null)
@@ -335,8 +335,18 @@ var OCM;
             //show progress indicator
             this.showProgressIndicator();
 
+            var app = this;
+
             //submit
-            this.ocm_data.submitLocation(item, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), $.proxy(this.submissionFailed, this));
+            this.ocm_data.submitLocation(item, this.getLoggedInUserInfo(), function (jqXHR, textStatus) {
+                app.submissionCompleted(jqXHR, textStatus);
+
+                //refresh POI details via API
+                if (item.ID > 0) {
+                    app.showDetailsViewById(item.ID, true);
+                    app.navigateToLocationDetails();
+                }
+            }, $.proxy(app.submissionFailed, app));
         };
 
         LocationEditor.prototype.showLocationEditor = function () {
@@ -386,10 +396,10 @@ var OCM;
                 this.setDropdown("edit_dataprovider", poi.DataProvider != null ? poi.DataProvider.ID : "1");
 
                 //show edit-only mode dropdowns
-                $("#edit-submissionstatus-container").show();
                 $("#edit-operator-container").show();
-                $("#edit-dataprovider-container").show();
+                $("#edit-submissionstatus-container").show();
 
+                /*$("#edit-dataprovider-container").show();*/
                 //populate connection editor(s)
                 if (poi.Connections != null) {
                     for (var n = 1; n <= this.numConnectionEditors; n++) {

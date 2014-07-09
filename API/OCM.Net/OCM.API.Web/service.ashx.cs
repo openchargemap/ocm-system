@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using OCM.API.OutputProviders;
-using OCM.API.Common;
+﻿using OCM.API.Common;
 using OCM.API.Common.Model;
-using System.Text;
-using System.IO.Compression;
-using System.Web.Caching;
-using System.Configuration;
-using OCM.API.InputProviders;
 using OCM.API.Common.Model.Extended;
+using OCM.API.InputProviders;
+using OCM.API.OutputProviders;
 using OCM.MVC.App_Code;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO.Compression;
+using System.Text;
+using System.Web;
+using System.Web.Caching;
 
 namespace OCM.API
 {
@@ -21,6 +20,7 @@ namespace OCM.API
     public class APICoreHTTPHandler : ServiceParameterParser, IHttpHandler
     {
         protected int APIBehaviourVersion { get; set; }
+
         protected string DefaultAction { get; set; }
 
         public APICoreHTTPHandler()
@@ -153,12 +153,15 @@ namespace OCM.API
                 {
                     var p = inputProvider as OCM.API.InputProviders.HTMLFormInputProvider;
                     MediaItem m = new MediaItem();
-                    bool accepted=false;
-                    string msg="";
-                    try {
-                        p.ProcessMediaItemSubmission(context, ref m, user.ID);
-                    } catch(Exception exp){
-                        msg+= exp.ToString();
+                    bool accepted = false;
+                    string msg = "";
+                    try
+                    {
+                        accepted = p.ProcessMediaItemSubmission(context, ref m, user.ID);
+                    }
+                    catch (Exception exp)
+                    {
+                        msg += exp.ToString();
                     }
                     if (accepted)
                     {
@@ -168,11 +171,10 @@ namespace OCM.API
                     }
                     else
                     {
-                        OutputBadRequestMessage(context, "Error, could not accept submission: "+msg);
+                        OutputBadRequestMessage(context, "Error, could not accept submission: " + msg);
                         context.Response.Write("Error");
                     }
                 }
-                
             }
         }
 
@@ -189,12 +191,18 @@ namespace OCM.API
             {
                 context.Response.StatusCode = 200;
             }
-            else {
+            else
+            {
                 context.Response.StatusCode = 202;
             }
+
+            try
+            {
+                context.Response.Write("{\"status\":\"OK\",\"description\":\"" + message + "\"}");
+                context.Response.End();
+            } catch (Exception){
             
-            context.Response.Write("{\"status\":\"error\",\"description\":\"" + message + "\"}");
-            context.Response.End();
+            }
         }
 
         /// <summary>
@@ -262,26 +270,33 @@ namespace OCM.API
                 case "xml":
                     outputProvider = new XMLOutputProvider();
                     break;
+
                 case "carwings":
                 case "rss":
                     outputProvider = new RSSOutputProvider();
                     if (outputType == "carwings") ((RSSOutputProvider)outputProvider).EnableCarwingsMode = true;
                     break;
+
                 case "json":
                     outputProvider = new JSONOutputProvider();
                     break;
+
                 case "geojson":
                     outputProvider = new GeoJSONOutputProvider();
                     break;
+
                 case "csv":
                     outputProvider = new CSVOutputProvider();
                     break;
+
                 case "kml":
                     outputProvider = new KMLOutputProvider(KMLOutputProvider.KMLVersion.V2);
                     break;
+
                 case "png":
                     outputProvider = new ImageOutputProvider();
                     break;
+
                 default:
                     outputProvider = new XMLOutputProvider();
                     break;
@@ -311,7 +326,7 @@ namespace OCM.API
 
                         if (encodings.ToLower().Contains("gzip"))
                         {
-                            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionLevel.Optimal,false);
+                            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionLevel.Optimal, false);
                             context.Response.AppendHeader("Content-Encoding", "gzip");
                             //context.Trace.Warn("GZIP Compression on");
                         }
@@ -322,7 +337,6 @@ namespace OCM.API
                             //context.Trace.Warn("Deflate Compression on");
                         }
                     }
-
                 }
                 if (filter.Action == "getchargepoints" || filter.Action == "getpoilist")
                 {
@@ -349,19 +363,18 @@ namespace OCM.API
                 {
                     try
                     {
-                        var poiList = new POIManager().GetChargePoints(new APIRequestSettings { MaxResults = filter.MaxResults, AllowMirrorDB = false, EnableCaching = false, IncludeComments=true });
+                        var poiList = new POIManager().GetChargePoints(new APIRequestSettings { MaxResults = filter.MaxResults, AllowMirrorDB = false, EnableCaching = false, IncludeComments = true });
                         new OCM.Core.Data.APIProviderMongoDB().PopulatePOIMirror(poiList, new ReferenceDataManager().GetCoreReferenceData());
                         new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { POICount = poiList.Count, Status = "OK" }, filter);
                     }
                     catch (Exception exp)
                     {
-                        new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { Status = "Error", Message=exp.ToString() }, filter);
+                        new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { Status = "Error", Message = exp.ToString() }, filter);
                     }
                 }
 
                 stopwatch.Stop();
                 System.Diagnostics.Debug.WriteLine("Total output time: " + stopwatch.Elapsed.ToString());
-
             }
         }
 
@@ -377,12 +390,11 @@ namespace OCM.API
 
             //get list of charge points for output:
             dataList = new POIManager().GetChargePoints(filter);
-                      
+
             int numResults = dataList.Count;
 
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, dataList, filter);
-
         }
 
         /// <summary>
@@ -410,7 +422,6 @@ namespace OCM.API
                     Postcode = c.AddressInfo.Postcode,
                     UsageTypeID = c.UsageType != null ? c.UsageType.ID : 0,
                     StatusTypeID = c.StatusType != null ? c.StatusType.ID : 0
-
                 };
                 poiList.Add(poi);
             }
@@ -451,7 +462,6 @@ namespace OCM.API
 
         private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
         {
-
             GeocodingResult result = null;
 
             //get or get and cache result
@@ -480,7 +490,6 @@ namespace OCM.API
             {
                 outputProvider.GetOutput(context.Response.OutputStream, result, filter);
             }
-
         }
 
         /// <summary>
@@ -489,7 +498,6 @@ namespace OCM.API
         /// <param name="context"></param>
         public void ProcessRequest(HttpContext context)
         {
-
             if (context.Request.HttpMethod == "POST" && context.Request["action"].EndsWith("_submission"))
             {
                 //process input request

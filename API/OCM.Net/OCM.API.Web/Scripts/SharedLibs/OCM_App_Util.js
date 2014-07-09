@@ -143,7 +143,7 @@ var OCM;
 
         Utils.formatEmailAddress = function (email) {
             if (email != undefined && email != null && email != "") {
-                return "<i class='fa fa-envelope'></i> <a href=\"mailto:" + email + "\">" + email + "</a><br/>";
+                return "<i class='fa fa-envelope fa-fw'></i> <a href=\"mailto:" + email + "\">" + email + "</a><br/>";
             } else {
                 return "";
             }
@@ -153,7 +153,7 @@ var OCM;
             if (typeof labeltitle === "undefined") { labeltitle = null; }
             if (phone != undefined && phone != null && phone != "") {
                 if (labeltitle == null) {
-                    labeltitle = "<i class='fa fa-phone'></i> ";
+                    labeltitle = "<i class='fa fa-phone fa-fw '></i> ";
                 } else {
                     labeltitle += ": ";
                 }
@@ -179,7 +179,7 @@ var OCM;
                 var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
                 contactInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
             }
-            contactInfo += "<p><i class='fa fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
+            contactInfo += "<p><i class='fa fa-fw fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone1);
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone2);
             contactInfo += this.formatEmailAddress(poi.AddressInfo.ContactEmail);
@@ -193,7 +193,7 @@ var OCM;
                 //shorten url if over 40 characters
                 if (displayUrl.length > 40)
                     displayUrl = displayUrl.substr(0, 40) + "..";
-                contactInfo += "<i class='fa fa-external-link'></i>  " + this.formatSystemWebLink(poi.AddressInfo.RelatedURL, "<span data-localize='ocm.details.addressRelatedURL'>" + displayUrl + "</span>");
+                contactInfo += "<i class='fa fa-fw fa-external-link'></i>  " + this.formatSystemWebLink(poi.AddressInfo.RelatedURL, "<span data-localize='ocm.details.addressRelatedURL'>" + displayUrl + "</span>");
             }
 
             contactInfo += "</p>";

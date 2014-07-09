@@ -113,8 +113,10 @@ var OCM;
             $.ajax(ajaxSettings);
         };
 
-        API.prototype.fetchLocationById = function (id, callbackname, errorcallback) {
+        API.prototype.fetchLocationById = function (id, callbackname, errorcallback, disableCaching) {
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
+            if (disableCaching)
+                serviceURL += "&enablecaching=false";
             if (!errorcallback)
                 errorcallback = this.handleGeneralAjaxError;
 

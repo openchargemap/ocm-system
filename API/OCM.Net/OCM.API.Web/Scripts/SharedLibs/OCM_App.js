@@ -194,11 +194,11 @@ var OCM;
                     setTimeout(function () {
                         if (!app.mappingManager.mapAPIReady) {
                             //map still not ready
-                            app.showMessage("Map could not load, please try again or check network connection.");
+                            //app.showMessage("Map could not load, please try again or check network connection.");
                             app.navigateToHome();
                             app.toggleMapView(); //switch from default map to list view
                         }
-                    }, 5000); //map api load timeout
+                    }, 10000); //map api load timeout
                 }
             } else {
                 //pages are hidden by default, show home screen
@@ -232,6 +232,16 @@ var OCM;
             app.setElementAction("#app-menu-container", function () {
                 //hide menu if menu container tapped
                 app.toggleMenu(false);
+
+                //if map page is the most recent view, need to re-show (native) map which was hidden when menu was shown
+                if (app.appState.isRunningUnderCordova) {
+                    if (app.appState._lastPageId == "map-page") {
+                        app.log("menu dismissed, showing map again");
+                        app.mappingManager.showMap();
+                    } else {
+                        app.log("menu dismissed resuming page:" + app.appState._lastPageId);
+                    }
+                }
             });
 
             //set home page ui link actions
@@ -438,6 +448,9 @@ var OCM;
             }
 
             this.switchLanguage($("#option-language").val());
+
+            //lazy update of favourite POI details (if any)
+            setTimeout(app.syncFavourites(), 10000);
         };
 
         App.prototype.beginLogin = function () {
@@ -592,7 +605,15 @@ var OCM;
                 this.showProgressIndicator();
 
                 //submit
-                this.ocm_data.submitUserComment(item, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), $.proxy(this.submissionFailed, this));
+                this.ocm_data.submitUserComment(item, this.getLoggedInUserInfo(), function (jqXHR, textStatus) {
+                    app.submissionCompleted(jqXHR, textStatus);
+
+                    //refresh POI details via API
+                    if (item.ChargePointID > 0) {
+                        app.showDetailsViewById(item.ChargePointID, true);
+                        app.navigateToLocationDetails();
+                    }
+                }, $.proxy(this.submissionFailed, this));
             } else {
                 this.log("Comment submit not enabled");
             }
@@ -625,7 +646,16 @@ var OCM;
             this.showProgressIndicator();
 
             //submit
-            this.ocm_data.submitMediaItem(formData, this.getLoggedInUserInfo(), $.proxy(this.submissionCompleted, this), function () {
+            this.ocm_data.submitMediaItem(formData, this.getLoggedInUserInfo(), function (jqXHR, textStatus) {
+                app.submissionCompleted(jqXHR, textStatus);
+
+                //refresh POI details via API
+                if (app.viewModel.selectedPOI.ID > 0) {
+                    app.showDetailsViewById(app.viewModel.selectedPOI.ID, true);
+                    app.navigateToLocationDetails();
+                }
+            }, function () {
+                app.hideProgressIndicator();
                 app.showMessage("Sorry, your submission could not be processed. Please check your network connection or try again later.");
             }, $.proxy(this.mediaSubmissionProgress, this));
         };
@@ -980,8 +1010,8 @@ var OCM;
 
             if (!itemShown || forceRefresh == true) {
                 //load poi details, then show
-                this.log("Location not cached, fetching details:" + id);
-                this.ocm_data.fetchLocationById(id, "ocm_app.showDetailsFromList", null);
+                this.log("Location not cached or forced refresh, fetching details:" + id);
+                this.ocm_data.fetchLocationById(id, "ocm_app.showDetailsFromList", null, true);
             }
         };
 
@@ -1189,7 +1219,15 @@ var OCM;
 
                     this.ocm_data.setCachedDataObject("favouritePOIList", favouriteLocations);
                 } else {
-                    this.log("Already exists: Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
+                    var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
+                    if (favouriteLocations != null) {
+                        for (var i = 0; i < favouriteLocations.length; i++) {
+                            if (favouriteLocations[i].poi.ID == poi.ID) {
+                                favouriteLocations[i] = poi;
+                                this.log("Updated Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -1249,6 +1287,34 @@ var OCM;
             return poiList;
         };
 
+        App.prototype.syncFavourites = function () {
+            var app = this;
+
+            //refresh info for all favourites
+            var favourites = this.getFavouritePOIList();
+
+            if (favourites != null) {
+                for (var i = 0; i < favourites.length; i++) {
+                    var poi = favourites[i];
+                    this.log("Refreshing data for favourite POI: OCM-" + poi.ID);
+                    this.ocm_data.fetchLocationById(poi.ID, "ocm_app.updateCachedFavourites", function (error) {
+                        if (error.status != 200) {
+                            app.log("Failed to refresh favourite POI." + JSON.stringify(error));
+                        }
+                    }, true);
+                }
+            }
+        };
+
+        App.prototype.updateCachedFavourites = function (poiList) {
+            if (poiList != null) {
+                for (var i = 0; i < poiList.length; i++) {
+                    //add/update favourites POI details
+                    this.addFavouritePOI(poiList[i]);
+                }
+            }
+        };
+
         App.prototype.switchLanguage = function (languageCode) {
             this.log("Switching UI language: " + languageCode);
 
@@ -1286,7 +1352,9 @@ var OCM;
                         //double home page request, time to exit on android etc
                         this.log("Multiple Home Requests, Time to Quit");
                         if (this.appState.isRunningUnderCordova) {
-                            navigator.app.exitApp();
+                            if (confirm("Quit Open Charge Map?")) {
+                                navigator.app.exitApp();
+                            }
                         }
                     }
                 }
@@ -1441,6 +1509,13 @@ var OCM;
             }
         };
 
+        App.prototype.navigateToLocationDetails = function () {
+            this.log("Navigate To: Location Details", 0 /* VERBOSE */);
+
+            //show location details for currently selected POI
+            this.showPage("locationdetails-page", "Charging Location");
+        };
+
         App.prototype.navigateToProfile = function () {
             this.log("Navigate To: Profile", 0 /* VERBOSE */);
             this.showPage("profile-page", "Sign In");
@@ -1458,6 +1533,22 @@ var OCM;
 
         App.prototype.navigateToAbout = function () {
             this.log("Navigate To: About", 0 /* VERBOSE */);
+
+            try  {
+                var dataProviders = this.ocm_data.referenceData.DataProviders;
+                var summary = "<ul>";
+                for (var i = 0; i < dataProviders.length; i++) {
+                    if (dataProviders[i].IsApprovedImport == true || dataProviders[i].IsOpenDataLicensed == true) {
+                        summary += "<li>" + dataProviders[i].Title + (dataProviders[i].License != null ? ": <small class='subtle'>" + dataProviders[i].License : "") + "</small></li>";
+                    }
+                }
+                summary += "</ul>";
+                $("#about-data").html(summary);
+            } catch (exception) {
+                ;
+                ;
+            }
+
             this.showPage("about-page", "About");
         };
 
