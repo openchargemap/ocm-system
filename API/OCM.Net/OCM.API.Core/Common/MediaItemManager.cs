@@ -104,14 +104,24 @@ namespace OCM.API.Common
                     attemptCount++;
                     try
                     {
-                        urls[0] = storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
-                        urls[1] =
-                          storage.UploadImage(tempFolder + thumbFileName,
-                                              destFolderPrefix + thumbFileName, metadataTags);
-                        urls[2] =
-                            storage.UploadImage(tempFolder + mediumFileName,
-                                                destFolderPrefix + mediumFileName, metadataTags);
-                        success = true;
+                        if (urls[0] == null)
+                        {
+                            urls[0] = storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
+                        }
+
+                        if (urls[1] == null)
+                        {
+                            urls[1] = storage.UploadImage(tempFolder + thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
+                        }
+
+                        if (urls[2] == null)
+                        {
+                            urls[2] = storage.UploadImage(tempFolder + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
+                        }
+                        if (urls[0] != null && urls[1] != null && urls[2] != null)
+                        {
+                            success = true;
+                        }
                     }
                     catch (Exception)
                     {
