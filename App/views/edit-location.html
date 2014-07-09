@@ -114,7 +114,7 @@
                         </div>
                         <div class="form-group">
                             <label for="edit_statustype" data-localize="ocm.details.operationalStatus">Status (if known)</label>
-                            <select id="edit_statustype" class="form-control" name="edit_statustype">
+                            <select id="edit_statustype" class="form-control operational-status-list" name="edit_statustype">
                                 <option value="0">Unknown</option>
                                 <option value="50">Operational</option>
                                 <option value="100">Not Operational</option>
@@ -144,6 +144,7 @@
                             <select id="edit_submissionstatus" name="edit_submissionstatus" class="form-control">
                                 <option value="1">Submission Under Review</option>
                             </select>
+                            <p class="help-block">Before delisting a location as a Duplicate, ensure you are not removing the listing with the most complete information, photos or useful comments.</p>
                         </div>
                     </div>
                 </div>
@@ -198,7 +199,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="edit_connection1_status" data-localize="ocm.details.operationalStatus">Status</label>
-                                <select id="edit_connection1_status" class="form-control" name="edit_connection1_status">
+                                <select id="edit_connection1_status" class="form-control operational-status-list" name="edit_connection1_status">
                                     <option value="" data-placeholder="false">Unknown</option>
                                 </select>
                             </div>

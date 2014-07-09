@@ -1,4 +1,3 @@
-
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
@@ -29,48 +28,46 @@ var _appBootStrapped = false;
 var gaPlugin;
 
 function startApp() {
-	'use strict';
-	if (_appBootStrapped == false) {
-		_appBootStrapped = true;
-		ocm_app.log("Starting app....");
-		ocm_app.initApp();
-	}
+    'use strict';
+    if (_appBootStrapped == false) {
+        _appBootStrapped = true;
+        ocm_app.log("Starting app....");
+        ocm_app.initApp();
+    }
 }
 
 function onDeviceReady() {
     'use strict';
     ocm_app.appState.isRunningUnderCordova = true;
-	ocm_app.log("OCM: Cordova Loaded, onDeviceReady Fired.");
-	
+    ocm_app.log("OCM: Cordova Loaded, onDeviceReady Fired.");
+
     try {
         if (navigator.connection.type == Connection.NONE) {
             ocm_app.log("OCM: No Network status: " + navigator.connection.type.toString());
             document.getElementById("network-error").style.display = "block";
         }
-
     } catch (err) {
         ocm_app.log("OCM: error checkin for connection status");
     }
 
-	
-	/*
-	//phonegap analytics plugin
-	
-	gaPlugin = window.plugins.gaPlugin;
-	gaPlugin.init(successHandler, errorHandler, "UA-76936-12", 10);
-	*/
+    /*
+    //phonegap analytics plugin
 
-	if (window.L) {
-	    ocm_app.log("Leaflet ready");
-	} else {
-	    ocm_app.log("Leaflet not ready");
-	}
-	
-	startApp();
+    gaPlugin = window.plugins.gaPlugin;
+    gaPlugin.init(successHandler, errorHandler, "UA-76936-12", 10);
+    */
+
+    if (window.L) {
+        ocm_app.log("Leaflet ready");
+    } else {
+        ocm_app.log("Leaflet not ready");
+    }
+
+    startApp();
 }
 
 //startup for non-jquerymobile version
-$(function() {
+$(function () {
     if (_appBootStrapped == false) {
         ocm_app.log("There can be only one.");
 
@@ -82,7 +79,6 @@ $(function() {
             ocm_app.log("Phonegap not enabled. Operating as desktop browser.");
             startApp();
         }
-
     } else {
         ocm_app.log("Ignoring additional bootstrap call.");
     }

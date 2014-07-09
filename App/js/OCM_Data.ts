@@ -112,8 +112,9 @@ module OCM {
             $.ajax(ajaxSettings);
         }
 
-        fetchLocationById(id, callbackname, errorcallback) {
+        fetchLocationById(id, callbackname, errorcallback, disableCaching) {
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
+            if (disableCaching) serviceURL += "&enablecaching=false";
             if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
             var ajaxSettings: JQueryAjaxSettings = {

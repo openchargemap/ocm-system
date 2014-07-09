@@ -14,7 +14,6 @@ interface JQuery {
 
 module OCM {
     export class LocationEditor extends OCM.AppBase {
-
         editorMapInitialised: boolean;
         editorMap: any;
         editMarker: any;
@@ -82,7 +81,6 @@ module OCM {
         }
 
         populateEditor(refData) {
-
             this.hideProgressIndicator();
 
             //todo:move this into OCM_Data then pass to here from callback
@@ -138,7 +136,6 @@ module OCM {
             //setup geocoding lookup of address in editor
             var appContext = this;
             appContext.setElementAction("#edit-location-lookup", function (event, ui) {
-
                 //format current address as string
                 var lookupString =
                     ($("#edit_addressinfo_addressline1").val().length > 0 ? $("#edit_addressinfo_addressline1").val() + "," : "") +
@@ -151,7 +148,6 @@ module OCM {
                 //attempt to geocode address
                 appContext.ocm_geo.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext), $.proxy((<OCM.App>appContext).determineGeocodedLocationFailed, appContext));
             });
-
 
             appContext.setElementAction("#editlocation-submit", function () {
                 if (appContext.validateLocationEditor() === true) {
@@ -175,7 +171,6 @@ module OCM {
             this.populateDropdown("filter-operator", refData.Operators, "", true, false, "(All)");
             this.populateDropdown("filter-usagetype", refData.UsageTypes, "", true, false, "(All)");
             this.populateDropdown("filter-statustype", refData.StatusTypes, "", true, false, "(All)");
-
 
             this.resetEditorForm();
 
@@ -224,7 +219,6 @@ module OCM {
         }
 
         performLocationSubmit() {
-
             var refData = this.ocm_data.referenceData;
             var item = this.ocm_data.referenceData.ChargePoint;
 
@@ -269,7 +263,7 @@ module OCM {
                 item.DataProvider = null;
                 item.DataProviderID = null;
 
-                //if user is editor for this location, set to publish on submit
+                //if user is editor for this new location, set to publish on submit
                 if (this.hasUserPermissionForPOI(item, "Edit")) {
                     item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, 200);
                     item.SubmissionStatusTypeID = null;
@@ -278,8 +272,8 @@ module OCM {
                 //in edit mode use submission status from form
                 item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
                 item.SubmissionStatusTypeID = null;
-                item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
-                item.DataProviderID = null;
+                /*item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
+                item.DataProviderID = null;*/
             }
 
             if (item.Connections == null) item.Connections = new Array();
@@ -348,12 +342,25 @@ module OCM {
             //show progress indicator
             this.showProgressIndicator();
 
+            var app = (<OCM.App>this);
             //submit
-            this.ocm_data.submitLocation(item, this.getLoggedInUserInfo(), $.proxy((<any>this).submissionCompleted, this), $.proxy((<any>this).submissionFailed, this));
+            this.ocm_data.submitLocation(item,
+                this.getLoggedInUserInfo(),
+                function (jqXHR, textStatus) {
+                    app.submissionCompleted(jqXHR, textStatus);
+
+                    //refresh POI details via API
+                    if (item.ID > 0) {
+                        app.showDetailsViewById(item.ID, true);
+                        app.navigateToLocationDetails();
+                    }
+                }
+                ,
+                $.proxy(app.submissionFailed, app)
+                );
         }
 
         showLocationEditor() {
-
             this.resetEditorForm();
 
             //populate editor with currently selected poi
@@ -365,7 +372,6 @@ module OCM {
 
                 //load existing position attribution (if any)
                 if (poi.MetadataValues != null) {
-
                     var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(poi.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
                     if (attributionMetadata != null) {
                         this.positionAttribution = attributionMetadata.ItemValue;
@@ -380,7 +386,6 @@ module OCM {
                 this.setDropdown("edit_addressinfo_countryid", poi.AddressInfo.Country.ID);
                 $("#edit_addressinfo_latitude").val(poi.AddressInfo.Latitude);
                 $("#edit_addressinfo_longitude").val(poi.AddressInfo.Longitude);
-
 
                 //show map based on current position
                 this.refreshEditorMap();
@@ -402,21 +407,20 @@ module OCM {
                 this.setDropdown("edit_dataprovider", poi.DataProvider != null ? poi.DataProvider.ID : "1");
 
                 //show edit-only mode dropdowns
-                $("#edit-submissionstatus-container").show();
                 $("#edit-operator-container").show();
-                $("#edit-dataprovider-container").show();
+                $("#edit-submissionstatus-container").show();
+
+                /*$("#edit-dataprovider-container").show();*/
 
                 //populate connection editor(s)
                 if (poi.Connections != null) {
                     for (var n = 1; n <= this.numConnectionEditors; n++) {
-
                         var $connection = ($("#edit_connection" + n));
 
                         $connection.removeClass("panel-primary");
                         $connection.removeClass("panel-default");
 
                         if (poi.Connections.length >= n) {
-
                             //create editor section
                             var con = poi.Connections[n - 1];
                             if (con != null) {
@@ -445,11 +449,9 @@ module OCM {
                     }
                 }
             }
-
         }
 
         refreshEditorMap() {
-
             var lat = parseFloat($("#edit_addressinfo_latitude").val());
             var lng = parseFloat($("#edit_addressinfo_longitude").val());
 
@@ -462,14 +464,10 @@ module OCM {
             } else {
                 this.initEditorMap(lat, lng);
             }
-
-
         }
 
         initEditorMap(currentLat, currentLng) {
-
             if (this.editorMapInitialised === false) {
-
                 this.editorMapInitialised = true;
                 var app = this;
                 //listen for changes to lat/lng input boxes
@@ -498,7 +496,6 @@ module OCM {
                 $("#editor-map-canvas").show();
 
                 this.editMarker.on("dragend", function () {
-
                     //move map to new map centre
                     var point = app.editMarker.getLatLng();
                     app.editorMap.panTo(point);
@@ -513,18 +510,13 @@ module OCM {
                 //refresh map rendering
                 var map = this.editorMap;
                 setTimeout(function () { map.invalidateSize(false); }, 300);
-
-
             } else {
-
                 var point = app.editMarker.getLatLng();
                 app.editorMap.panTo(point);
             }
-
         }
 
         hasUserPermissionForPOI(poi, permissionLevel) {
-
             var userInfo = this.getLoggedInUserInfo();
             if (userInfo.Permissions != null) {
                 if (userInfo.Permissions.indexOf("[Administrator=true]") != -1) {
@@ -545,6 +537,5 @@ module OCM {
             }
             return false;
         }
-
     }
 }

@@ -12,8 +12,7 @@ body {
   height: 100%;
 }
 body {
-  font-family: segoe
-    margin: 0;
+  font-family: segoe margin: 0;
   padding: 0;
   font-family: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
   font-size: 14.4px;
@@ -490,6 +489,9 @@ a:focus {
   -webkit-transition: background-color 500ms linear;
   transition: background-color 500ms linear;
 }
+div[data-role="content"] {
+  padding-bottom: 50px;
+}
 div[data-role="footer"] .btn {
   border: none;
 }
@@ -696,4 +698,29 @@ i.subtle:hover {
 }
 .jumbotron {
   color: #a1a1a1;
+}
+small.subtle {
+  color: #a1a1a1;
+}
+/*select styling*/
+select#edit_submissionstatus option {
+  font-weight: normal;
+  color: #DDDDDD;
+}
+select#edit_submissionstatus option[value="200"],
+select#edit_submissionstatus option[value="1001"],
+select#edit_submissionstatus option[value="1010"] {
+  font-weight: bold;
+  color: green;
+}
+select.operational-status-list option {
+  font-weight: normal;
+  color: #DDDDDD;
+}
+select.operational-status-list option[value="0"],
+select.operational-status-list option[value="50"],
+select.operational-status-list option[value="100"],
+select.operational-status-list option[value="200"] {
+  font-weight: bold;
+  color: green;
 }

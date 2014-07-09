@@ -7,9 +7,9 @@
 @ocm-light-background: lighten(@ocm-primary-background, 40%);
 @ocm-light-layer: rgba(112, 165, 43, 0.49);
 @ocm-body-font: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
-@ocm-heading-font:  Roboto, "Segoe UI Light", Helvetica,  Arial, sans-serif;
+@ocm-heading-font: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
 
-.ocm-material-shadow(){
+.ocm-material-shadow() {
     /*box-shadow: -1px 1px 6px rgba(50, 50, 50, 0.38);*/
     box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);
 }
@@ -28,8 +28,7 @@ html, body {
 }
 
 body {
-    font-family: segoe
-    margin: 0;
+    font-family: segoe margin: 0;
     padding: 0;
     font-family: @ocm-body-font;
     font-size: 14.4px;
@@ -43,6 +42,7 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+
 p {
     margin: 1em 0 1em 0;
 }
@@ -54,7 +54,7 @@ p {
     width: 90%;
     border: 2px solid gainsboro;
     border-top: 5px solid gainsboro;
-   .ocm-material-shadow();
+    .ocm-material-shadow();
     display: none;
     background-color: #F2F7F3;
     padding: 8px;
@@ -87,7 +87,7 @@ p {
     padding: 1em;
     background-color: rgba(243, 243, 243, 0.3);
     overflow: hidden;
-    margin:1em;
+    margin: 1em;
 }
 
 #details-contact-container * a, #details-contact-container a:visited, #details-contact-container a:link {
@@ -115,13 +115,13 @@ p {
     display: none;
     font-size: 16px;
     position: absolute;
-    margin-top:4px;
+    margin-top: 4px;
     top: 4px;
     left: 48%;
     height: 30px;
     width: 30px;
     z-index: 1100;
-    overflow:visible;
+    overflow: visible;
 }
 
 .info-section {
@@ -143,7 +143,7 @@ p {
 
 .ocm-label {
     display: inline-block;
-    color:#8f8f8f;
+    color: #8f8f8f;
 }
 
 .footer {
@@ -364,8 +364,8 @@ p {
     margin: 0.2em;
     border-radius: 4px;
     padding: 0.6em;
-    margin-bottom:0.4em;
-    background-color:#FCFCFC;
+    margin-bottom: 0.4em;
+    background-color: #FCFCFC;
 }
 
 #locationdetails-page .ui-content {
@@ -375,9 +375,9 @@ p {
 .card-heading, .section-heading {
     color: rgb(60, 60, 60);
     font-family: @ocm-heading-font;
-    font-size:1.2em;
-    font-weight:300;
-    margin-bottom:0.3em;
+    font-size: 1.2em;
+    font-weight: 300;
+    margin-bottom: 0.3em;
 }
 
 .result h3 {
@@ -385,11 +385,10 @@ p {
     padding: 0.6em;
     color: rgb(60, 60, 60);
     font-family: @ocm-heading-font;
-    font-weight:300;
+    font-weight: 300;
 }
 
 #details-options {
-    
     display: inline;
     background-color: rgba(0, 0, 0, 0.06);
     border-radius: 0.2em;
@@ -415,8 +414,9 @@ h2 {
 }
 
 h3 {
-     font-size: 1.3em;
+    font-size: 1.3em;
 }
+
 h4 {
     font-size: 1.2em;
 }
@@ -430,17 +430,16 @@ div [data-role="header"] {
     position: fixed;
     left: 0px;
     top: 0px;
-    padding-top:0;
-    font-weight:300;
-    margin-top:-1px;
+    padding-top: 0;
+    font-weight: 300;
+    margin-top: -1px;
 }
 
 div[data-role=header] > div {
-    padding-top:2px;
+    padding-top: 2px;
     margin-right: 1em;
     font-size: 1.4em;
 }
-
 
 div[data-role=header] > div > div {
     padding-top: 0.2em;
@@ -457,14 +456,13 @@ div[data-role=header] > div a, div[data-role=header] > div a:visited {
     text-decoration: none;
 }
 
-
 blockquote {
     background: #f9f9f9;
     border-left: 6px solid @ocm-primary-background;
     margin: 1.5em 10px;
     padding: .5em 10px;
     overflow: auto;
-    font-size:1em;
+    font-size: 1em;
 }
 
 blockquote:before {
@@ -486,12 +484,10 @@ blockquote small {
     font-size: 0.8em;
 }
 
-
 /*font awesome/jqm icon pack fixes*/
 .ui-icon-cog:before {
     margin-top: 0;
 }
-
 
 div[data-role=page] {
     /*margin-top: 38px;*/
@@ -567,7 +563,6 @@ a:focus {
     -o-transition: background-color 500ms linear;
     -webkit-transition: background-color 500ms linear;
     transition: background-color 500ms linear;
-    
 }
 
 .btn-default:hover {
@@ -578,9 +573,14 @@ a:focus {
     transition: background-color 500ms linear;
 }
 
-div[data-role="footer"] .btn {
-    border:none;
+div[data-role="content"] {
+    padding-bottom: 50px;
 }
+
+div[data-role="footer"] .btn {
+    border: none;
+}
+
 div[data-role="footer"] .btn-default {
     background-color: transparent;
 }
@@ -605,7 +605,6 @@ div[data-role="footer"] .btn-default {
     }
     /* 4 columns */
 }
-
 
 /*app test styles*/
 #map-legend {
@@ -633,7 +632,6 @@ div[data-role="footer"] .btn-default {
     margin: 0;
 }
 
-
 .well-sm {
     border-radius: 0;
     border: none;
@@ -653,7 +651,6 @@ div#home-page {
     background-color: @ocm-dark-background;
     border-color: #76885D;
 }
-
 
 .app-menu-container {
     display: none;
@@ -695,7 +692,7 @@ div#home-page {
     left: -1px;
     height: 101%;
     font-size: 1.2em;
-    font-weight:300;
+    font-weight: 300;
 
     ul {
         margin: 0;
@@ -715,9 +712,9 @@ div#home-page {
     li > a, li > a:visited, li > a:hover {
         color: white;
         text-decoration: none;
-        display:block;
+        display: block;
     }
-   
+
     i {
         min-width: 1em;
         margin-right: 0.3em;
@@ -748,7 +745,6 @@ div#home-page {
         left: 0;
     }
 }
-
 
 a[data-rel="menu"] {
     background-repeat: no-repeat;
@@ -787,9 +783,7 @@ a[data-rel="menu"] {
 }
 /*end file upload styles*/
 
-
 #search-form {
-
     .col-xs-8 {
         padding-left: 0;
         padding-right: 0;
@@ -811,16 +805,48 @@ a[data-rel="menu"] {
 }
 
 .prompt {
-    color:#999999;
-    padding:1em;
+    color: #999999;
+    padding: 1em;
 }
 
 i.subtle {
-    color:rgba(255, 255, 255, 0.79);
+    color: rgba(255, 255, 255, 0.79);
 }
+
 i.subtle:hover {
-    color:rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
 }
-.jumbotron{
-    color:#a1a1a1;
+
+.jumbotron {
+    color: #a1a1a1;
+}
+
+small.subtle {
+    color: #a1a1a1;
+}
+
+/*select styling*/
+select#edit_submissionstatus option {
+    font-weight: normal;
+    color: #DDDDDD;
+}
+
+select#edit_submissionstatus option[value="200"],
+select#edit_submissionstatus option[value="1001"],
+select#edit_submissionstatus option[value="1010"] {
+    font-weight: bold;
+    color: green;
+}
+
+select.operational-status-list option {
+    font-weight: normal;
+    color: #DDDDDD;
+}
+
+select.operational-status-list option[value="0"],
+select.operational-status-list option[value="50"],
+select.operational-status-list option[value="100"],
+select.operational-status-list option[value="200"] {
+    font-weight: bold;
+    color: green;
 }
