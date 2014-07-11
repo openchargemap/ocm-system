@@ -166,12 +166,12 @@ namespace OCM.API
                     if (accepted)
                     {
                         submissionManager.PerformSubmission(m, user);
-                        OutputSubmissionReceivedMessage(context, "OK :" + m.ID, true);
-                        //context.Response.Write("OK");
+                        //OutputSubmissionReceivedMessage(context, "OK :" + m.ID, true);
+                        context.Response.Write("OK");
                     }
                     else
                     {
-                        OutputBadRequestMessage(context, "Error, could not accept submission: " + msg);
+                        //OutputBadRequestMessage(context, "Error, could not accept submission: " + msg);
                         context.Response.Write("Error");
                     }
                 }

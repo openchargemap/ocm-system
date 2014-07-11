@@ -38,6 +38,7 @@ var OCM;
             this.mapAPI = "google";
             this.searchDistanceKM = 1000 * 100;
             this.mapMoveQueryRefreshMS = 300;
+            this.enableSearchRadiusIndicator = false;
         }
         return MapOptions;
     })();
@@ -258,15 +259,6 @@ var OCM;
                                     }
                                 }
                             }, function (marker) {
-                                //show info window when marker tapped
-                                /* marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
-                                // marker.showInfoWindow();
-                                var markerTitle = marker.getTitle();
-                                var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
-                                
-                                parentContext.showDetailsViewById(poiId);
-                                parentContext.showPage("locationdetails-page");
-                                });*/
                                 //show full details when info window tapped
                                 marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
                                     var markerTitle = marker.getTitle();
@@ -300,7 +292,7 @@ var OCM;
             if (this.mapOptions.mapCentre != null) {
                 var gmMapCentre = new plugin.google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude);
 
-                if (this.mapOptions.searchDistanceKM != null) {
+                if (this.mapOptions.searchDistanceKM != null && this.mapOptions.enableSearchRadiusIndicator) {
                     map.addCircle({
                         'center': gmMapCentre,
                         'radius': this.mapOptions.searchDistanceKM,
