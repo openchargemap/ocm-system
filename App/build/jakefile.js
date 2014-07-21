@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.0.1_"+ moment().format('YYYYMMDD');
+var releaseVersion = "5.0.4_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/webapp";
@@ -94,7 +94,6 @@ task("minify-js", function () {
 
             // check if file is already minified
             if (!regexMinifed.test(script)) {
-
                 var ast = UglifyJS.parse(scriptFile);
                 ast.figure_out_scope();
                 var compressor = UglifyJS.Compressor();
@@ -116,7 +115,6 @@ task("minify-js", function () {
         var scriptOutputPath = targetPath + scriptDir + scriptFilename;
         console.log("Combining all scripts into " + scriptOutputPath);
         fs.writeFileSync(scriptOutputPath, combined);
-
     }
 });
 
@@ -125,7 +123,6 @@ task("use-min-js", ["minify-js"], function () {
     console.log("Replacing script files with minified version in index.html");
     indexFile = indexFile.replace(regexScriptSection, "<script src=\"js/"
         + scriptFilename + "\"></script>");
-
 });
 
 desc("Remove debug statements from HTML");
@@ -143,7 +140,6 @@ task("remove-debug", function () {
     // remove all comments
     // var regexComments = /<!--[\s\S]*?-->/gmi;
     // indexFile = indexFile.replace(regexComments, "");
-
 });
 
 desc("Copy index.html");
@@ -168,14 +164,13 @@ task("copy-index", ["remove-debug"], function () { //"remove-debug","use-min-js"
           //update version info
           finalIndexFile = finalIndexFile.replace(/(APPVERSION)/gmi, releaseVersion);
 
-          finalIndexFile = finalIndexFile.replace(/(TARGETNAME)/gmi, trg.replace("mobile/",""));
+          finalIndexFile = finalIndexFile.replace(/(TARGETNAME)/gmi, trg.replace("mobile/", ""));
 
           //copy index.html to target
           console.log("Copying to Target: " + trg);
 
           fs.writeFileSync(buildDir + "/" + trg + "/" + indexFileName, finalIndexFile);
       });
-
 });
 
 desc("Copy all other files");
@@ -201,8 +196,6 @@ task("copy-files", ["minify-js"], function () {
     }
 
     var regexExcludeFiles = createExludeRegex();
-
-
 
     //copy current files to each build target folder
     targetList.forEach(
@@ -234,7 +227,6 @@ task("copy-files", ["minify-js"], function () {
     }
 });
 
-
 desc("Update cache manifest");
 task("update-manifest", function () {
     /*
@@ -258,21 +250,16 @@ task("build-mobile", ["create-dir", "copy-index", "copy-files", "update-manifest
 
 desc("Concatenates all html page templates files into body for use in index.html");
 task('concat', function () {
-    
-    var files = fs.readdirSync(srcDir+"/views/");
-    var output ="";
+    var files = fs.readdirSync(srcDir + "/views/");
+    var output = "";
     files.forEach(function (file) {
-        if (file.indexOf(".html") > 0)
-        {
+        if (file.indexOf(".html") > 0) {
             var fileContent = fs.readFileSync(srcDir + "/views/" + file, "utf8");
-            output += fileContent.replace(/^\uFEFF/, '')+"\r\n"; //concat file content, stripped BOM from UTF-8 Files
+            output += fileContent.replace(/^\uFEFF/, '') + "\r\n"; //concat file content, stripped BOM from UTF-8 Files
         }
-           
     });
-    
 
     indexFile = indexFile.replace("<!--INCLUDE:VIEWS-->", output);
-    
 });
 
 desc("default");

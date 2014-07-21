@@ -7,9 +7,9 @@
 */
 
 module OCM {
-    export class Geolocation {
-
+    export class Geolocation extends OCM.Base {
         constructor(api: OCM.API) {
+            super();
 
             //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
@@ -21,18 +21,46 @@ module OCM {
             this.api = api;
         }
 
-        public clientGeolocationPos: MapCoords;
+        public clientGeolocationPos: GeoPosition;
         private geocodingTextInput: string;
         private geocodingResultPos: any;
         private api: OCM.API;
+        private positionWatcherID: any;
+
+        startWatchingUserLocation() {
+            var app = this;
+            var geoOptions = {
+                enableHighAccuracy: true,
+                maximumAge: 30000,
+                timeout: 27000
+            };
+
+            //begin watching position (with high accuracy)
+            this.positionWatcherID = navigator.geolocation.watchPosition(
+                function (position: GeoPosition) {
+                    //got position update
+                    app.log("Got GPS position update." + position.coords.accuracy + " " + position.coords.latitude + " " + position.coords.longitude);
+                    app.clientGeolocationPos = position;
+                },
+                function () {
+                    //got error
+                    app.log("Could not watch GPS position.", LogLevel.ERROR);
+                },
+                geoOptions
+                );
+        }
+
+        stopWatchingUserLocation() {
+            if (this.positionWatcherID != null) {
+                navigator.geolocation.clearWatch(this.positionWatcherID);
+            }
+        }
 
         determineUserLocation(successCallback, failureCallback) {
-
             var appContext = this;
 
             //determine user location automatically if enabled & supported
             if (navigator.geolocation) {
-
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
                         this.clientGeolocationPos = position;
@@ -43,7 +71,6 @@ module OCM {
                         appContext.determineUserLocationFailed(failureCallback);
                     }
                     );
-
             } else {
                 appContext.determineUserLocationFailed(failureCallback);
             }
@@ -55,7 +82,6 @@ module OCM {
         }
 
         determineGeocodedLocation(locationText, successCallback, failureCallback) {
-
             //caller is searching for same (previously geocoded) text again, return last result
             if (locationText === this.geocodingTextInput) {
                 if (this.geocodingResultPos != null) {
@@ -86,7 +112,7 @@ module OCM {
             geocoder.geocode({ 'address': locationText }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     var locationPos = results[0].geometry.location;
-           
+
                     appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
                 } else {
                     alert("Sorry, we could not identify this location: " + status);
@@ -97,7 +123,6 @@ module OCM {
         }
 
         determineGeocodedLocationCompleted(pos, successCallback, failureCallback) {
-
             if (pos.resultsAvailable === true) {
                 //convert geocoding service lat/lng result into browser coords, including position source data attribution
                 var geoPosition = {
@@ -177,6 +202,7 @@ module OCM {
                 }
             } catch (exception) {
                 //failed to get distance
+                return null;
             }
         }
     }

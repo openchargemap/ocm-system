@@ -43,10 +43,10 @@ module OCM {
             });
 
             //fetch editor reference data
-            this.ocm_data.referenceData = this.ocm_data.getCachedDataObject("CoreReferenceData");
-            if (this.ocm_data.referenceData == null) {
+            this.apiClient.referenceData = this.apiClient.getCachedDataObject("CoreReferenceData");
+            if (this.apiClient.referenceData == null) {
                 //no cached reference data, fetch from service
-                this.ocm_data.fetchCoreReferenceData("ocm_app.populateEditor", this.getLoggedInUserInfo());
+                this.apiClient.fetchCoreReferenceData("ocm_app.populateEditor", this.getLoggedInUserInfo());
             } else {
                 //cached ref data exists, use that
                 this.log("Using cached reference data..");
@@ -54,7 +54,7 @@ module OCM {
                 setTimeout(function () { _app.populateEditor(null); }, 50);
 
                 //attempt to fetch fresh data later (wait 1 second)
-                setTimeout(function () { _app.ocm_data.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo()); }, 1000);
+                setTimeout(function () { _app.apiClient.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo()); }, 1000);
             }
         }
 
@@ -86,18 +86,18 @@ module OCM {
             //todo:move this into OCM_Data then pass to here from callback
             if (refData == null) {
                 //may be loaded from cache
-                refData = this.ocm_data.referenceData;
+                refData = this.apiClient.referenceData;
             } else {
                 //store cached ref data
                 if (refData != null) {
-                    this.ocm_data.setCachedDataObject("CoreReferenceData", refData);
+                    this.apiClient.setCachedDataObject("CoreReferenceData", refData);
                     this.log("Updated cached CoreReferenceData.");
                 }
             }
 
-            this.ocm_data.referenceData = refData;
-            this.ocm_data.sortCoreReferenceData();
-            refData = this.ocm_data.referenceData;
+            this.apiClient.referenceData = refData;
+            this.apiClient.sortCoreReferenceData();
+            refData = this.apiClient.referenceData;
             //
 
             this.isLocationEditMode = false;
@@ -134,7 +134,7 @@ module OCM {
             }
 
             //setup geocoding lookup of address in editor
-            var appContext = this;
+            var appContext = (<OCM.App>this);
             appContext.setElementAction("#edit-location-lookup", function (event, ui) {
                 //format current address as string
                 var lookupString =
@@ -143,10 +143,10 @@ module OCM {
                     ($("#edit_addressinfo_town").val().length > 0 ? $("#edit_addressinfo_town").val() + "," : "") +
                     ($("#edit_addressinfo_stateorprovince").val().length > 0 ? $("#edit_addressinfo_stateorprovince").val() + "," : "") +
                     ($("#edit_addressinfo_postcode").val().length > 0 ? $("#edit_addressinfo_postcode").val() + "," : "") +
-                    appContext.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
+                    appContext.apiClient.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
 
                 //attempt to geocode address
-                appContext.ocm_geo.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext), $.proxy((<OCM.App>appContext).determineGeocodedLocationFailed, appContext));
+                appContext.geolocationManager.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext), $.proxy((<OCM.App>appContext).determineGeocodedLocationFailed, appContext));
             });
 
             appContext.setElementAction("#editlocation-submit", function () {
@@ -167,25 +167,28 @@ module OCM {
             $("#edit-dataprovider-container").hide();
 
             //populate lists in filter/prefs/about page
-            this.populateDropdown("filter-connectiontype", refData.ConnectionTypes, "", true, false, "(All)");
-            this.populateDropdown("filter-operator", refData.Operators, "", true, false, "(All)");
-            this.populateDropdown("filter-usagetype", refData.UsageTypes, "", true, false, "(All)");
-            this.populateDropdown("filter-statustype", refData.StatusTypes, "", true, false, "(All)");
+
+            //TODO: refresh of core ref data wipe settings load from prefs
+            this.appState.suppressSettingsSave = true;
+            this.populateDropdown("filter-connectiontype", refData.ConnectionTypes, this.getMultiSelectionAsArray($("#filter-connectiontype"),""), true, false, "(All)");
+            this.populateDropdown("filter-operator", refData.Operators, this.getMultiSelectionAsArray($("#filter-operator"),""), true, false, "(All)");
+            this.populateDropdown("filter-usagetype", refData.UsageTypes, this.getMultiSelectionAsArray($("#filter-usagetype"),""), true, false, "(All)");
+            this.populateDropdown("filter-statustype", refData.StatusTypes, this.getMultiSelectionAsArray($("#filter-statustype"),""), true, false, "(All)");
+            this.appState.suppressSettingsSave = false
+            appContext.loadSettings();
 
             this.resetEditorForm();
 
             if (refData.UserProfile && refData.UserProfile != null && refData.UserProfile.IsCurrentSessionTokenValid == false) {
                 //login info is stale, logout user
                 if (this.isUserSignedIn()) {
-                    this.log("Login info is stale, logging out user.");
-                    (<any>this).logout(false);
+                    this.log("Sign In token is stale, logging out user.");
+                    appContext.logout(false);
                 }
-            } else {
-                this.log("No user profile in reference data.");
             }
         }
 
-        populateEditorLatLon(result: MapCoords) {
+        populateEditorLatLon(result: GeoPosition) {
             var lat = result.coords.latitude;
             var lng = result.coords.longitude;
 
@@ -219,8 +222,9 @@ module OCM {
         }
 
         performLocationSubmit() {
-            var refData = this.ocm_data.referenceData;
-            var item = this.ocm_data.referenceData.ChargePoint;
+            var app = (<OCM.App>this);
+            var refData = this.apiClient.referenceData;
+            var item = this.apiClient.referenceData.ChargePoint;
 
             if (this.isLocationEditMode == true) item = this.viewModel.selectedPOI;
 
@@ -234,7 +238,7 @@ module OCM {
             item.AddressInfo.Latitude = $("#edit_addressinfo_latitude").val();
             item.AddressInfo.Longitude = $("#edit_addressinfo_longitude").val();
 
-            var country = this.ocm_data.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val());
+            var country = this.apiClient.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val());
             item.AddressInfo.Country = country;
             item.AddressInfo.CountryID = null;
 
@@ -246,17 +250,17 @@ module OCM {
 
             item.NumberOfPoints = $("#edit_numberofpoints").val();
 
-            item.UsageType = this.ocm_data.getRefDataByID(refData.UsageTypes, $("#edit_usagetype").val());
+            item.UsageType = this.apiClient.getRefDataByID(refData.UsageTypes, $("#edit_usagetype").val());
             item.UsageTypeID = null;
 
             item.UsageCost = $("#edit_usagecost").val();
 
-            item.StatusType = this.ocm_data.getRefDataByID(refData.StatusTypes, $("#edit_statustype").val());
+            item.StatusType = this.apiClient.getRefDataByID(refData.StatusTypes, $("#edit_statustype").val());
             item.StatusTypeID = null;
 
             item.GeneralComments = $("#edit_generalcomments").val();
 
-            item.OperatorInfo = this.ocm_data.getRefDataByID(refData.Operators, $("#edit_operator").val());
+            item.OperatorInfo = this.apiClient.getRefDataByID(refData.Operators, $("#edit_operator").val());
             item.OperatorID = null;
 
             if (this.isLocationEditMode != true) {
@@ -265,12 +269,12 @@ module OCM {
 
                 //if user is editor for this new location, set to publish on submit
                 if (this.hasUserPermissionForPOI(item, "Edit")) {
-                    item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, 200);
+                    item.SubmissionStatus = this.apiClient.getRefDataByID(refData.SubmissionStatusTypes, 200);
                     item.SubmissionStatusTypeID = null;
                 }
             } else {
                 //in edit mode use submission status from form
-                item.SubmissionStatus = this.ocm_data.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
+                item.SubmissionStatus = this.apiClient.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
                 item.SubmissionStatusTypeID = null;
                 /*item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
                 item.DataProviderID = null;*/
@@ -289,10 +293,10 @@ module OCM {
                 var connectionInfo: OCM.ConnectionInfo = {
                     "ID": -1,
                     "Reference": null,
-                    "ConnectionType": this.ocm_data.getRefDataByID(refData.ConnectionTypes, $("#edit_connection" + n + "_connectiontype").val()),
-                    "StatusType": this.ocm_data.getRefDataByID(refData.StatusTypes, $("#edit_connection" + n + "_status").val()),
-                    "Level": this.ocm_data.getRefDataByID(refData.ChargerTypes, $("#edit_connection" + n + "_level").val()),
-                    "CurrentType": this.ocm_data.getRefDataByID(refData.CurrentTypes, $("#edit_connection" + n + "_currenttype").val()),
+                    "ConnectionType": this.apiClient.getRefDataByID(refData.ConnectionTypes, $("#edit_connection" + n + "_connectiontype").val()),
+                    "StatusType": this.apiClient.getRefDataByID(refData.StatusTypes, $("#edit_connection" + n + "_status").val()),
+                    "Level": this.apiClient.getRefDataByID(refData.ChargerTypes, $("#edit_connection" + n + "_level").val()),
+                    "CurrentType": this.apiClient.getRefDataByID(refData.CurrentTypes, $("#edit_connection" + n + "_currenttype").val()),
                     "Amps": $("#edit_connection" + n + "_amps").val(),
                     "Voltage": $("#edit_connection" + n + "_volts").val(),
                     "PowerKW": $("#edit_connection" + n + "_powerkw").val(),
@@ -318,23 +322,23 @@ module OCM {
             if (this.positionAttribution != null) {
                 //add/update position attributiom
                 if (item.MetadataValues == null) item.MetadataValues = new Array();
-                var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
+                var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(item.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
                 if (attributionMetadata != null) {
                     attributionMetadata.ItemValue = this.positionAttribution;
                 } else {
                     attributionMetadata = {
-                        MetadataFieldID: this.ocm_data.ATTRIBUTION_METADATAFIELDID,
+                        MetadataFieldID: this.apiClient.ATTRIBUTION_METADATAFIELDID,
                         ItemValue: this.positionAttribution
                     };
                     item.MetadataValues.push(attributionMetadata);
                 }
             } else {
                 //clear position attribution if required
-                var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(item.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
+                var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(item.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
                 if (attributionMetadata != null) {
                     //remove existing item from array
                     item.MetadataValues = jQuery.grep(item.MetadataValues, function (a: any, i: number) {
-                        return a.MetadataFieldID !== this.ocm_data.ATTRIBUTION_METADATAFIELDID;
+                        return a.MetadataFieldID !== app.apiClient.ATTRIBUTION_METADATAFIELDID;
                     });
                 }
             }
@@ -342,9 +346,8 @@ module OCM {
             //show progress indicator
             this.showProgressIndicator();
 
-            var app = (<OCM.App>this);
             //submit
-            this.ocm_data.submitLocation(item,
+            this.apiClient.submitLocation(item,
                 this.getLoggedInUserInfo(),
                 function (jqXHR, textStatus) {
                     app.submissionCompleted(jqXHR, textStatus);
@@ -372,7 +375,7 @@ module OCM {
 
                 //load existing position attribution (if any)
                 if (poi.MetadataValues != null) {
-                    var attributionMetadata = this.ocm_data.getMetadataValueByMetadataFieldID(poi.MetadataValues, this.ocm_data.ATTRIBUTION_METADATAFIELDID);
+                    var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(poi.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
                     if (attributionMetadata != null) {
                         this.positionAttribution = attributionMetadata.ItemValue;
                     }

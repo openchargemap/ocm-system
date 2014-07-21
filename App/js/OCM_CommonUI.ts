@@ -26,7 +26,7 @@ module google.maps {
 
 function OCM_CommonUI() {
     this.enablePOIMap = true;
-    if (typeof OCM !== 'undefined'){
+    if (typeof OCM !== 'undefined') {
         if (typeof OCM.Mapping !== 'undefined') {
             this.mappingManager = new OCM.Mapping();
         }
@@ -60,7 +60,7 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
                     var localisedText;
 
                     if (isTestMode == true) {
-                        //in test mode the resource key is displayed as the localised text 
+                        //in test mode the resource key is displayed as the localised text
                         localisedText = "[" + resourceKey + "] " + eval("localisation_dictionary." + resourceKey);
                     } else {
                         localisedText = eval("localisation_dictionary." + resourceKey);
@@ -89,7 +89,6 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
     }
 };
 
-
 OCM_CommonUI.prototype.fixJSONDate = function (val) {
     if (val == null) return null;
     if (val.indexOf("/") == 0) {
@@ -103,7 +102,6 @@ OCM_CommonUI.prototype.fixJSONDate = function (val) {
 };
 
 OCM_CommonUI.prototype.showPOIOnStaticMap = function (mapcanvasID, poi, includeMapLink) {
-
     var mapCanvas = document.getElementById(mapcanvasID);
     if (mapCanvas != null) {
         var title = poi.AddressInfo.Title;
@@ -125,7 +123,6 @@ OCM_CommonUI.prototype.showPOIOnStaticMap = function (mapcanvasID, poi, includeM
 };
 
 OCM_CommonUI.prototype.showPOIOnMap = function (mapcanvasID, poi) {
-
     var mapCanvas = document.getElementById(mapcanvasID);
     if (mapCanvas != null) {
         var title = poi.AddressInfo.Title;
@@ -149,7 +146,6 @@ OCM_CommonUI.prototype.showPOIOnMap = function (mapcanvasID, poi) {
 
         map.setCenter(markerLatlng);
         google.maps.event.trigger(map, 'resize');
-
     }
 };
 
@@ -178,12 +174,9 @@ OCM_CommonUI.prototype.getMaxLevelOfPOI = function (poi) {
     return level;
 };
 
-
 OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcontext, anchorElement) {
-
     var mapCanvas = document.getElementById(mapcanvasID);
     if (mapCanvas != null) {
-
         //if (this.isMobileBrowser()) {
         mapCanvas.style.width = '90%';
         mapCanvas.style.height = '80%';
@@ -213,7 +206,6 @@ OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcon
             for (var i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
                     if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-
                         var poi = poiList[i];
 
                         this.ocm_markers[i] = new google.maps.Marker({
@@ -251,9 +243,7 @@ OCM_CommonUI.prototype.formatSystemWebLink = function (linkURL, linkTitle) {
 };
 
 OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
-
     if (this.isRunningUnderCordova) {
-
         if (device && device.platform == "WinCE") {
             return this.formatSystemWebLink("maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
             //return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
@@ -266,7 +256,6 @@ OCM_CommonUI.prototype.formatMapLink = function (poi, linkContent) {
     }
     //default to google maps online link
     return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
-
 };
 
 OCM_CommonUI.prototype.formatURL = function (url, title) {
@@ -320,7 +309,6 @@ OCM_CommonUI.prototype.formatPhone = function (phone, labeltitle) {
 };
 
 OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
-
     var dayInMilliseconds = 86400000;
     var currentDate = new Date();
 
@@ -387,7 +375,6 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     //output table of connection info
     if (poi.Connections != null) {
         if (poi.Connections.length > 0) {
-
             equipmentInfo += "<table class='datatable'>";
             equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th><th data-localize='ocm.details.equipment.quantity'>Qty</th></tr>";
 

@@ -15,7 +15,6 @@ http://openchargemap.org
 ////////////////////////////////////////////////////////////////
 
 module OCM {
-
     export class FileUpload extends OCM.Base {
         private img: HTMLImageElement;
         private ctx: CanvasRenderingContext2D;
@@ -52,17 +51,16 @@ module OCM {
             }
         }
 
-        rotatePreview(angle,x,y) {
+        rotatePreview(angle, x, y) {
             var TO_RADIANS = Math.PI / 180;
             var context = this.ctx;
-            var image = this.img;            
-               
+            var image = this.img;
+
             context.save();
             context.translate(x, y);
-            context.rotate(angle * TO_RADIANS);                
+            context.rotate(angle * TO_RADIANS);
             context.drawImage(image, -(image.width / 2), -(image.height / 2));
             context.restore();
-            
         }
 
         preprocessImageUpload(file) {
@@ -75,7 +73,7 @@ module OCM {
                 app.img.src = e.target.result;
 
                 app.canvas = <HTMLCanvasElement>document.getElementById("file-upload-preview");
-                
+
                 var MAX_WIDTH = 280;
                 var MAX_HEIGHT = 100;
                 var width = app.img.width;
@@ -92,9 +90,9 @@ module OCM {
                         height = MAX_HEIGHT;
                     }
                 }
-                app.canvas .width = width;
-                app.canvas .height = height;
-                app.ctx = app.canvas .getContext("2d");
+                app.canvas.width = width;
+                app.canvas.height = height;
+                app.ctx = app.canvas.getContext("2d");
                 app.ctx.drawImage(app.img, 0, 0, width, height);
 
                 //rotate
@@ -103,8 +101,6 @@ module OCM {
                 app.rotatePreview(90, width / 2, height / 2);*/
             }
             reader.readAsDataURL(file);
-
-           
         }
 
         getImageData() {

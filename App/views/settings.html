@@ -8,109 +8,125 @@
     </div>
     <div data-role="content" class="container">
 
-
         <form id="options-form" action="#">
-            <div>
-                <h3>Preferences</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Preferences</h3>
 
-                <div id="search-advanced">
-                    <div class="form-group">
-                        <label for="search-distance">Max Distance</label>
-                        <select id="search-distance" class="form-control">
-                            <option value="">(Any Distance)</option>
-                            <option value="5">Up to 5</option>
-                            <option value="10">Up to 10</option>
-                            <option value="20">Up to 20</option>
-                            <option value="30">Up to 30</option>
-                            <option value="50">Up to 50</option>
-                            <option value="100" selected="selected">Up to 100</option>
-                            <option value="200">Up to 200</option>
-                            <option value="500">Up to 500</option>
-                            <option value="1000">Up to 1000</option>
-                            <option value="3000">Up to 3000</option>
-                            <option value="10000">Up to 10000</option>
-                            <option value="20000">Up to 20000</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="search-distance-unit">Distance Units</label>
-                        <select name="search-distance-unit" id="search-distance-unit" class="form-control">
-                            <option selected="selected">Miles</option>
-                            <option>KM</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="option-language">Language</label>
-                        <select name="option-language" id="option-language" class="form-control">
-                            <option value="en" selected="selected">English</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="display:none;">
-                        <label for="option-enable-experiments">Experimental Features</label>
-                        <select name="option-enable-experiments" id="option-enable-experiments" class="form-control">
-                            <option value="off" selected="selected">Off</option>
-                            <option value="on">On</option>
-                        </select>
+                    <div id="search-advanced">
+                        <div class="form-group">
+                            <label for="pref-basemap-type">Map Type</label>
+                            <select name="pref-basemap-type" id="pref-basemap-type" class="form-control">
+                                <option selected="selected" value="ROADMAP">Roadmap</option>
+                                <option value="HYBRID">Hybrid (Roads and Satellite)</option>
+                                <option value="SATELLITE">Satellite</option>
+                                <option value="TERRAIN">Terrain</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pref-search-behaviour">Search Position</label>
+                            <select name="pref-search-behaviour" id="pref-search-behaviour" class="form-control">
+                                <option selected="selected" value="Manual">Manual Searching</option>
+                                <option value="Auto">Auto (Watch My GPS Location)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="search-distance">Max Distance</label>
+                            <select id="search-distance" class="form-control">
+                                <option value="">(Any Distance)</option>
+                                <option value="5">Up to 5</option>
+                                <option value="10">Up to 10</option>
+                                <option value="20">Up to 20</option>
+                                <option value="30">Up to 30</option>
+                                <option value="50">Up to 50</option>
+                                <option value="100" selected="selected">Up to 100</option>
+                                <option value="200">Up to 200</option>
+                                <option value="500">Up to 500</option>
+                                <option value="1000">Up to 1000</option>
+                                <option value="3000">Up to 3000</option>
+                                <option value="10000">Up to 10000</option>
+                                <option value="20000">Up to 20000</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="search-distance-unit">Distance Units</label>
+                            <select name="search-distance-unit" id="search-distance-unit" class="form-control">
+                                <option selected="selected">Miles</option>
+                                <option>KM</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="option-language">Language</label>
+                            <select name="option-language" id="option-language" class="form-control">
+                                <option value="en" selected="selected">English</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <h3>Filters</h3>
+                    <p class="info">The following filters reduce the amount of results returned, so use these if you have too many results when searching.</p>
+                    <div class="form-group">
+                        <label for="filter-operator">Operator</label>
+                        <select name="filter-operator" id="filter-operator" multiple="multiple" class="form-control">
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-connectiontype">Connection Type</label>
+                        <select name="filter-connectiontype" id="filter-connectiontype" multiple="multiple" class="form-control">
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-connectionlevel">Charging Levels</label>
+                        <select name="filter-connectionlevel" id="filter-connectionlevel" multiple="multiple" class="form-control">
+                            <option value="" selected="selected">(All)</option>
+                            <option value="1">Level 1 (Low Power)</option>
+                            <option value="2">Level 2 (Medium Power)</option>
+                            <option value="3">Level 3 (High Power)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-usagetype">Usage Type</label>
+                        <select name="filter-usagetype" id="filter-usagetype" multiple="multiple" class="form-control">                            
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+                        
+
+                </div>
+
+
             </div>
-            <div data-role="collapsible" data-collapsed="false" data-content-theme="d">
-                <h3>Filters</h3>
-                <div class="form-group">
-                    <label for="filter-submissionstatus">Submission Status</label>
-                    <select id="filter-submissionstatus" class="form-control">
-                        <option value="200" selected="selected">Published</option>
-                        <option value="1">Awaiting Approval</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-operator">Operator</label>
-                    <select name="filter-operator" id="filter-operator" multiple="multiple" class="form-control">
-                        <option>Choose options</option>
-                        <option value="" selected="selected">(All)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-connectiontype">Connection Type</label>
-                    <select name="filter-connectiontype" id="filter-connectiontype" multiple="multiple" class="form-control">
-                        <option>Choose options</option>
-                        <option value="" selected="selected">(All)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-connectionlevel">Charging Levels</label>
-                    <select name="filter-connectionlevel" id="filter-connectionlevel" multiple="multiple" class="form-control">
-                        <option>Choose options</option>
-                        <option value="" selected="selected">(All)</option>
-                        <option value="1">Level 1 (Low Power)</option>
-                        <option value="1">Level 2 (Medium Power)</option>
-                        <option value="3">Level 3 (High Power)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-usagetype">Usage Type</label>
-                    <select name="filter-usagetype" id="filter-usagetype" multiple="multiple" class="form-control">
-                        <option>Choose options</option>
-                        <option value="" selected="selected">(All)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-statustype">Status Type</label>
-                    <select name="filter-statustype" id="filter-statustype" multiple="multiple" class="form-control">
-                        <option>Choose options</option>
-                        <option value="" selected="selected">(All)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filter-apimode">API Mode</label>
-                    <select name="filter-apimode" id="filter-apimode"class="form-control">
-                        <option value="standard" selected="selected">Standard</option>
-                        <option value="sandbox">Sandbox (Testing)</option>
-                    </select>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Advanced Options</h3>
+                    <div class="form-group">
+                        <label for="filter-submissionstatus">Submission Status</label>
+                        <select id="filter-submissionstatus" class="form-control">
+                            <option value="200" selected="selected">Published</option>
+                            <option value="1">Awaiting Approval</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filter-statustype">Operational Status</label>
+                        <select name="filter-statustype" id="filter-statustype" multiple="multiple" class="form-control">
+                            <option value="" selected="selected">(All)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filter-apimode">API Mode</label>
+                        <select name="filter-apimode" id="filter-apimode" class="form-control">
+                            <option value="standard" selected="selected">Standard</option>
+                            <option value="sandbox">Sandbox (Testing)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </form>
-
     </div>
 </div>
 <!-- Page:Settings:End -->

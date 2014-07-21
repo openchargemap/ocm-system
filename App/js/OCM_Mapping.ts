@@ -7,13 +7,21 @@
 */
 
 module OCM {
-    export class GeoLatLng {
-        public latitude: number;
+    export class GeoLatLng implements Coordinates {
+        //based on HTML Geolocation "Coordinates"
+        public altitudeAccuracy: number;
         public longitude: number;
+        public latitude: number;
+        public speed: number;
+        public heading: number;
+        public altitude: number;
+        public accuracy: number;
     }
 
-    export class MapCoords {
+    export class GeoPosition {
+        //based on HTML Geolocation "Position"
         public coords: GeoLatLng;
+        public timestamp: number;
         public attribution: string;
     }
 
@@ -24,13 +32,15 @@ module OCM {
         public useMarkerIcons: boolean;
         public useMarkerAnimation: boolean;
         public enableTrackingMapCentre: boolean;
-        public mapCentre: MapCoords;
+        public enableSearchByWatchingLocation: boolean;
+        public mapCentre: GeoPosition;
         public searchDistanceKM: number;
         public iconSet: string;
         public mapAPI: string;
         public mapMoveQueryRefreshMS: number; //time to wait before recognising map centre has changed
         public requestSearchUpdate: boolean;
         public enableSearchRadiusIndicator: boolean;
+        public mapType: string;
 
         /** @constructor */
         constructor() {
@@ -39,8 +49,10 @@ module OCM {
             this.useMarkerIcons = true;
             this.useMarkerAnimation = true;
             this.enableTrackingMapCentre = false;
+            this.enableSearchByWatchingLocation = false;
             this.mapCentre = null;
             this.mapAPI = "google";
+            this.mapType = "ROADMAP";
             this.searchDistanceKM = 1000 * 100;
             this.mapMoveQueryRefreshMS = 300;
             this.enableSearchRadiusIndicator = false;
@@ -60,21 +72,17 @@ module OCM {
         public markerList: Array<any>;
         public searchMarker: any;
 
-        private enableLogging: boolean;
         public errorMessage: string;
-        public parentAppContext: any;
+        public parentAppContext: OCM.App;
         private _mapMoveTimer: any;
 
         /** @constructor */
         constructor() {
-
             super();
 
             this.mapOptions = new MapOptions();
             this.mapsInitialised = false;
-            this.enableLogging = true;
             this.mapAPIReady = false;
-
         }
 
         setParentAppContext(context: any) {
@@ -134,10 +142,7 @@ module OCM {
                         );
                 });
 
-
-
                 this.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, function () {
-
                     if (mapManagerContext._mapMoveTimer != null) {
                         clearTimeout(mapManagerContext._mapMoveTimer);
                         mapManagerContext._mapMoveTimer = null;
@@ -147,7 +152,6 @@ module OCM {
 
                     // after the center of the map centre has stopped changing, update search centre pos
                     mapManagerContext._mapMoveTimer = window.setTimeout(function () {
-
                         try {
                             //create new latlng from map centre so that values get normalised to 180/-180
                             var centrePos = new plugin.google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
@@ -162,9 +166,7 @@ module OCM {
                         clearTimeout(mapManagerContext._mapMoveTimer);
                         mapManagerContext._mapMoveTimer = null;
                     }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
-
                 });
-
 
                 this.map.clear();
                 this.map.refreshLayout();
@@ -173,7 +175,6 @@ module OCM {
             }
 
             return true;
-
         }
 
         showPOIListOnMapViewGoogleNativeSDK(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
@@ -183,7 +184,6 @@ module OCM {
             }
             //if list has changes to results render new markers etc
             //  if (this.mapOptions.resultBatchID != resultBatchID) {
-
             //this.mapOptions.resultBatchID = resultBatchID;
 
             var map = this.map;
@@ -213,7 +213,6 @@ module OCM {
                 for (var i = 0; i < poiList.length; i++) {
                     if (poiList[i].AddressInfo != null) {
                         if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-
                             var poi = poiList[i];
 
                             var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
@@ -252,18 +251,15 @@ module OCM {
                                     }
                                 }
                             }, function (marker) {
-
                                     //show full details when info window tapped
                                     marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
                                         var markerTitle = marker.getTitle();
                                         var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
                                         app.hideMap();
 
-                                        parentContext.showDetailsViewById(poiId);
-                                        parentContext.showPage("locationdetails-page");
+                                        parentContext.showDetailsViewById(poiId, false);
+                                        parentContext.showPage("locationdetails-page", "Location Details");
                                     });
-
-
                                 });
 
                             bounds.extend(markerPos);
@@ -275,8 +271,6 @@ module OCM {
             if (this.mapOptions.enableClustering && this.markerClusterer) {
                 this.markerClusterer.addMarkers(this.markerList);
             }
-
-
 
             //include centre search location in bounds of map zoom
             if (this.searchMarker != null) bounds.extend(this.searchMarker.position);
@@ -307,12 +301,10 @@ module OCM {
                     'zoom': 12,
                     'bearing': 0
                 });
-
             }
         }
 
         initMapGoogle(mapcanvasID) {
-
             if (this.mapsInitialised || !this.mapAPIReady) return false;
 
             var mapManagerContext = this;
@@ -322,7 +314,6 @@ module OCM {
                 var mapCanvas = document.getElementById(mapcanvasID);
 
                 if (mapCanvas != null) {
-
                     (<any>google.maps).visualRefresh = true;
 
                     mapCanvas.style.width = '99.5%';
@@ -369,11 +360,9 @@ module OCM {
 
                     //TODO: add marker for current search position
                     if (this.mapOptions.enableTrackingMapCentre == false) {
-
                         this.mapOptions.enableTrackingMapCentre = true;
                         var map = this.map;
                         google.maps.event.addListener(this.map, 'dragend', function () {
-
                             if (mapManagerContext._mapMoveTimer != null) {
                                 clearTimeout(mapManagerContext._mapMoveTimer);
                                 mapManagerContext._mapMoveTimer = null;
@@ -381,14 +370,12 @@ module OCM {
 
                             //after the center of the map centre has stopped changing, update search centre pos
                             mapManagerContext._mapMoveTimer = window.setTimeout(function () {
-
                                 try {
                                     //create new latlng from map centre so that values get normalised to 180/-180
                                     var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
                                     mapManagerContext.log("Map centre changed, updating search position:" + centrePos);
                                     mapManagerContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
                                     mapManagerContext.updateSearchPosMarker(centrePos);
-
                                 } catch (exc) {
                                     //failed to update map centre pos
                                 }
@@ -400,17 +387,14 @@ module OCM {
                                     mapManagerContext.mapOptions.enableTrackingMapCentre = true;
                                 }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS - 200);
                             }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
-
                         });
                     }
-
                 }
                 return true;
             }
         }
 
         showPOIListOnMapViewGoogle(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
-
             if (!this.mapsInitialised) {
                 this.log("showPOIList; cannot show google map, not initialised.");
                 return;
@@ -419,7 +403,6 @@ module OCM {
             //if list has changes to results render new markers etc
             //if (this.mapOptions.resultBatchID != resultBatchID)
             {
-
                 this.mapOptions.resultBatchID = resultBatchID;
 
                 var map = this.map;
@@ -445,7 +428,6 @@ module OCM {
                     for (var i = 0; i < poiList.length; i++) {
                         if (poiList[i].AddressInfo != null) {
                             if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-
                                 var poi = poiList[i];
 
                                 var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
@@ -487,7 +469,6 @@ module OCM {
                                     map: this.mapOptions.enableClustering ? null : map,
                                     icon: markerImg != null ? markerImg : iconURL,
                                     shadow: shadow,
-                                    animation: animation,
                                     title: markerTooltip
                                 });
 
@@ -506,7 +487,7 @@ module OCM {
 
                                 google.maps.event.addListener(newMarker, 'click', function () {
                                     parentContext.showDetailsView(anchorElement, this.poi);
-                                    parentContext.showPage("locationdetails-page");
+                                    parentContext.showPage("locationdetails-page", "Location Details");
                                 });
 
                                 bounds.extend(newMarker.getPosition());
@@ -521,7 +502,6 @@ module OCM {
                 }
 
                 if (this.mapOptions.mapCentre != null) {
-
                     var searchMarkerPos = new google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude);
 
                     if (this.mapCentreMarker != null) {
@@ -556,17 +536,13 @@ module OCM {
                     //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
                     var zoom = map.getZoom();
                     map.setZoom(zoom < 6 ? 6 : zoom);
-
                 }
-
-
             }
             /*else {
                     if (this.enableLogging && console) console.log("Not rendering markers, batchId is same as last time.");
                 }*/
 
             google.maps.event.trigger(this.map, 'resize');
-
         }
 
         updateSearchPosMarker(searchPos) {
@@ -611,20 +587,15 @@ module OCM {
                             });
                         });
 
-
                     /*var infowindow = new google.maps.InfoWindow({
                         content: "Tap marker to search from here, Drag marker to change search position."
                     });
                     infowindow.open(map, mapManagerContext.mapCentreMarker);
 */
-
-
                 }
             }
 
             if (this.mapOptions.mapAPI == "google") {
-
-
                 if (mapManagerContext.mapCentreMarker != null) {
                     mapManagerContext.log("Updating search marker position");
                     mapManagerContext.mapCentreMarker.setPosition(searchPos);
@@ -669,12 +640,10 @@ module OCM {
         }
 
         showPOIListOnMapViewLeaflet(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
-
             var map = this.map;
 
             //if list has changes to results render new markers etc
             if (this.mapOptions.resultBatchID != resultBatchID) {
-
                 this.mapOptions.resultBatchID = resultBatchID;
 
                 this.log("Setting up map markers:" + resultBatchID);
@@ -707,8 +676,6 @@ module OCM {
                     prefix: "fa"
                 });
 
-
-
                 if (this.mapOptions.enableClustering) {
                     var markerClusterGroup = new L.MarkerClusterGroup();
 
@@ -718,8 +685,6 @@ module OCM {
                         for (var i = 0; i < poiList.length; i++) {
                             if (poiList[i].AddressInfo != null) {
                                 if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-
-
                                     var poi = poiList[i];
 
                                     var markerTitle = poi.AddressInfo.Title;
@@ -773,7 +738,6 @@ module OCM {
                                         });
 
                                     markerClusterGroup.addLayer(marker);
-
                                 }
                             }
                         }
@@ -784,14 +748,11 @@ module OCM {
 
                     //refresh map view
                     setTimeout(function () { map.invalidateSize(false); }, 300);
-
                 }
             }
-
         }
 
         createMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
-
             // create a map in the "map" div, set the view to a given place and zoom
             var map = new L.Map(mapcanvasID);
             if (currentLat != null && currentLng != null) {
@@ -803,7 +764,6 @@ module OCM {
                 map.locate({ setView: true, watch: true, enableHighAccuracy: true });
             } else {
                 //use a default view
-
             }
 
             // add an OpenStreetMap tile layer
@@ -812,7 +772,6 @@ module OCM {
             }).addTo(map);
 
             return map;
-
         };
 
         isNativeMapsAvailable(): boolean {
@@ -848,11 +807,9 @@ module OCM {
         };
 
         refreshMapView(mapCanvasID: string, mapHeight: number, poiList: Array<any>, searchPos: any): boolean {
-
             document.getElementById(mapCanvasID).style.height = mapHeight + "px";
 
             if (this.mapOptions.mapAPI == "googlenativesdk") {
-
                 this.log("Refreshing map using API: googlenativesdk");
 
                 var appcontext = this;
@@ -863,11 +820,9 @@ module OCM {
                             appcontext.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
                         }
 
-
                         //setup map view if not already initialised
                         appcontext.initMapGoogleNativeSDK(mapCanvasID);
                         appcontext.showPOIListOnMapViewGoogleNativeSDK(mapCanvasID, poiList, this.parentAppContext, document.getElementById(mapCanvasID), appcontext.mapOptions.resultBatchID);
-
                     } else {
                         this.log("Native Maps not available");
                     }
@@ -901,7 +856,6 @@ module OCM {
             }
 
             if (this.mapOptions.mapAPI == "leaflet") {
-
                 //setup map view, tracking user pos, if not already initialised
                 //TODO: use last search pos as lat/lng, or first item in locationList
                 var centreLat = 50;
@@ -918,11 +872,31 @@ module OCM {
             return true;
         }
 
+        setMapType(maptype: string) {
+            this.mapOptions.mapType = maptype;
+            this.log("Changing map type:" + maptype);
+
+            if (this.mapOptions.mapAPI == "googlenativesdk") {
+                try {
+                    this.map.setMapTypeId(eval("plugin.google.maps.MapTypeId." + maptype));
+                } catch (exception) {
+                    this.log("Failed to set map type:" + maptype);
+                }
+            }
+
+            if (this.mapOptions.mapAPI == "google") {
+                try {
+                    this.map.setMapTypeId(eval("google.maps.MapTypeId." + maptype));
+                } catch (exception) {
+                    this.log("Failed to set map type:" + maptype);
+                }
+            }
+        }
+
         hideMap() {
             if (this.mapOptions.mapAPI == "googlenativesdk") {
                 this.log("Debug: Hiding Map");
                 if (this.map != null) {
-
                     //hide map otherwise it will stay on top
                     this.map.setVisible(false);
                     this.map.refreshLayout();
@@ -939,13 +913,12 @@ module OCM {
                     this.map.setVisible(true);
                     this.map.refreshLayout();
                 } else {
-                    this.log("Map not available to show - check API?", LogLevel.ERROR);
+                    this.log("Map not available - check API?", LogLevel.ERROR);
                 }
             }
         }
 
         showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean= false, isRunningUnderCordova: boolean= false) {
-
             var mapCanvas = document.getElementById(mapcanvasID);
             if (mapCanvas != null) {
                 var title = poi.AddressInfo.Title;

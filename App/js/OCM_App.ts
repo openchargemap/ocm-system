@@ -37,6 +37,10 @@ interface HTMLFormElement {
     files: any;
 }
 
+interface Object {
+    observe: any;
+}
+
 var Historyjs: Historyjs = <any>History;
 
 ////////////////////////////////////////////////////////////////
@@ -58,12 +62,12 @@ module OCM {
             this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             this.appConfig.newsHomeUrl = null;
 
-            this.ocm_data.clientName = "ocm.app.webapp";
+            this.apiClient.clientName = "ocm.app.webapp";
             this.appState.languageCode = "en";
             this.appState.menuDisplayed = false;
 
-            this.ocm_data.generalErrorCallback = $.proxy(this.showConnectionError, this);
-            this.ocm_data.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
+            this.apiClient.generalErrorCallback = $.proxy(this.showConnectionError, this);
+            this.apiClient.authorizationErrorCallback = $.proxy(this.showAuthorizationError, this);
 
             this.appState.isEmbeddedAppMode = false; //used when app is embedded in another site
 
@@ -77,14 +81,14 @@ module OCM {
                 this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
                 //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
                 //this.ocm_data.serviceBaseURL_Standard = "http://localhost:8080/v2";
-                this.ocm_data.serviceBaseURL = "http://localhost:81/api/v2";
-                this.ocm_data.serviceBaseURL_Standard = "http://localhost:81/api/v2";
+                this.apiClient.serviceBaseURL = "http://localhost:81/api/v2";
+                this.apiClient.serviceBaseURL_Standard = "http://localhost:81/api/v2";
                 this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             }
 
             if (this.appState.appMode == AppMode.SANDBOXED) {
                 this.appConfig.baseURL = "http://localhost:81/app";
-                this.ocm_data.serviceBaseURL = "http://sandbox.api.openchargemap.io/v2";
+                this.apiClient.serviceBaseURL = "http://sandbox.api.openchargemap.io/v2";
                 this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             }
 
@@ -118,41 +122,74 @@ module OCM {
             //when options change, store settings
             $('#search-distance').change(function () { app.storeSettings(); });
             $('#search-distance-unit').change(function () { app.storeSettings(); });
-            $('#option-enable-experiments').change(function () { app.storeSettings(); });
             $('#option-language').change(function () {
                 app.switchLanguage($("#option-language").val());
             });
+            $('#filter-operator').change(function () { app.storeSettings(); });
+            $('#filter-connectiontype').change(function () { app.storeSettings(); });
+            $('#filter-connectionlevel').change(function () { app.storeSettings(); });
+            $('#filter-usagetype').change(function () { app.storeSettings(); });
+            $('#filter-statustype').change(function () { app.storeSettings(); });
 
-            app.initDeferredUI();
-        }
-
-        startupMap() {
             var app = this;
 
-            //default to map screen and begin loading closest data to centre of map
-            app.navigateToMap();
-            if (app.viewModel.poiList != null && app.viewModel.poiList.length > 0) {
-                //app has cached results from last launch
-            } else {
-                //search nearby on startup
-                app.performSearch(true, false);
-            }
+            //check if user signed in etc
+            this.postLoginInit();
 
-            app.appState.mapLaunched = true;
-            //TODO prevent this reloading when api == true again - remove observer
+            //if cached results exist, render them
+            var cachedResults = this.apiClient.getCachedDataObject("SearchResults");
+            var cachedResult_Location = this.apiClient.getCachedDataObject("SearchResults_Location");
 
-            if (app.appState.isRunningUnderCordova) {
+            if (cachedResults !== null) {
+                if (cachedResult_Location !== null) {
+                    (<HTMLInputElement>document.getElementById("search-location")).value = cachedResult_Location;
+                }
                 setTimeout(function () {
-                    if (navigator.splashscreen) navigator.splashscreen.hide();
-                }, 300);
+                    app.viewModel.poiList = cachedResults;
+                    //app.renderPOIList(cachedResults);
+                }, 50);
+            } else {
+                app.navigateToStartup();
             }
+
+            //if ID of location passed in, show details view
+            var idParam = app.getParameter("id");
+            if (idParam !== null && idParam !== "") {
+                var poiId = parseInt(app.getParameter("id"), 10);
+                setTimeout(function () {
+                    app.showDetailsViewById(poiId, true);
+                }, 100);
+            }
+
+            this.switchLanguage($("#option-language").val());
+
+            //lazy update of favourite POI details (if any)
+            setTimeout(app.syncFavourites(), 10000);
         }
 
         beginObservingAppModelChanges() {
             var app = this;
 
+            //observe viewModel changes
+            Object.observe(this.viewModel, function (changes) {
+                changes.forEach(function (change) {
+                    //app.log("changed: app.viewModel." + change.name);
+
+                    //if viewModel.poiList changes, update the rendered list and refresh map markers
+                    if (change.name == "poiList") {
+                        app.renderPOIList(app.viewModel.poiList);
+
+                        //after initial load subsequent queries auto refresh the map markers
+                        if (app.appConfig.autoRefreshMapResults) {
+                            app.log("Auto refreshing map view");
+                            app.refreshMapView();
+                        }
+                    }
+                });
+            });
+
             // observe mapping model changes
-            (<any>Object).observe(this.mappingManager, function (changes) {
+            Object.observe(this.mappingManager, function (changes) {
                 changes.forEach(function (change) {
                     //app.log(change.type + ':' + change.name + ':' + change.oldValue, OCM.LogLevel.VERBOSE);
 
@@ -163,9 +200,9 @@ module OCM {
             });
 
             // observe map option changes
-            (<any>Object).observe(this.mappingManager.mapOptions, function (changes) {
+            Object.observe(this.mappingManager.mapOptions, function (changes) {
                 changes.forEach(function (change) {
-                    //app.log(change.type + ':' + change.name + ':' + change.oldValue, OCM.LogLevel.VERBOSE);
+                    //app.log("changed: app.mappingManager.mapOptions." + change.name);
 
                     if (change.name == "mapCentre") {
                         if (app.mappingManager.mapOptions.requestSearchUpdate) {
@@ -184,6 +221,26 @@ module OCM {
                             //disable tracking map centre until search/rendering has completed
                             app.mappingManager.mapOptions.enableTrackingMapCentre = false;
                         }*/
+                    }
+
+                    if (change.name == "enableSearchByWatchingLocation") {
+                        app.refreshLocationWatcherStatus();
+                    }
+                });
+            });
+
+            // observe map option changes
+            Object.observe(this.geolocationManager, function (changes) {
+                changes.forEach(function (change) {
+                    //app.log("changed: app.geolocationManager." + change.name);
+                    if (change.name == "clientGeolocationPos") {
+                        //geolocation position has changed, if watching location is enabled perform a new search if different from last time
+                        if (!app.appState.isSearchInProgress) {
+                            app.log("watching position, searching POIs again..");
+                            app.performSearch(true, false);
+                        } else {
+                            app.log("search still in progress, not updating results");
+                        }
                     }
                 });
             });
@@ -237,6 +294,13 @@ module OCM {
                 app.toggleMenu(true);
             });
 
+            //toggle menu on native menu button
+            if (app.appState.isRunningUnderCordova) {
+                document.addEventListener("menubutton", function () {
+                    app.toggleMenu(null);
+                }, false);
+            }
+
             if (app.appState.isEmbeddedAppMode) {
                 $("#option-expand").show();
                 app.setElementAction("#option-expand", function () {
@@ -261,10 +325,7 @@ module OCM {
             });
 
             //set home page ui link actions
-            app.setElementAction("a[href='#search-page'],#map-listview", function () {
-                app.navigateToSearch();
-            });
-
+     
             app.setElementAction("a[href='#map-page'],#search-map", function () {
                 app.navigateToMap();
             });
@@ -328,6 +389,26 @@ module OCM {
                 }
             });
 
+            //if map type selection changes, update map
+            $("#pref-basemap-type").on("change", function () {
+                app.mappingManager.setMapType($("#pref-basemap-type").val());
+                app.storeSettings();
+            });
+
+            //if search behaviour option changed, update mapping manager mode
+            $("#pref-search-behaviour").on("change", function () {
+                var selectedVal = $("#pref-search-behaviour").val();
+                app.log("Changing search behaviour:" + selectedVal);
+                if (selectedVal == "Auto") {
+                    app.mappingManager.mapOptions.enableSearchByWatchingLocation = true;
+                }
+                else {
+                    app.mappingManager.mapOptions.enableSearchByWatchingLocation = false;
+                }
+
+                app.storeSettings();
+            });
+
             //details page ui actions
             app.setElementAction("#option-favourite", function () {
                 app.toggleFavouritePOI(app.viewModel.selectedPOI, null);
@@ -361,13 +442,47 @@ module OCM {
             });
         }
 
+        startupMap() {
+            var app = this;
+
+            //default to map screen and begin loading closest data to centre of map
+            app.navigateToMap();
+            if (app.viewModel.poiList != null && app.viewModel.poiList.length > 0) {
+                //app has cached results from last launch
+            } else {
+                //search nearby on startup
+                app.performSearch(true, false);
+            }
+
+            app.appState.mapLaunched = true;
+            //TODO prevent this reloading when api == true again - remove observer
+
+            if (app.appState.isRunningUnderCordova) {
+                setTimeout(function () {
+                    if (navigator.splashscreen) navigator.splashscreen.hide();
+                }, 300);
+            }
+        }
+
+        refreshLocationWatcherStatus() {
+            var app = this;
+            //start or stop watching user location for searches
+            if (app.mappingManager.mapOptions.enableSearchByWatchingLocation) {
+                app.log("Starting to watch user location");
+                app.geolocationManager.startWatchingUserLocation();
+            } else {
+                app.log("Stop watching user location");
+                app.geolocationManager.stopWatchingUserLocation();
+            }
+        }
+
         checkSelectedAPIMode() {
             if ($("#filter-apimode").val() == "standard") {
-                this.ocm_data.serviceBaseURL = this.ocm_data.serviceBaseURL_Standard;
+                this.apiClient.serviceBaseURL = this.apiClient.serviceBaseURL_Standard;
             }
 
             if ($("#filter-apimode").val() == "sandbox") {
-                this.ocm_data.serviceBaseURL = this.ocm_data.serviceBaseURL_Sandbox;
+                this.apiClient.serviceBaseURL = this.apiClient.serviceBaseURL_Sandbox;
             }
         }
 
@@ -429,50 +544,11 @@ module OCM {
             }
         }
 
-        initDeferredUI() {
-            //TODO: deferred UI loaded based on observed property
-            this.log("Init of deferred UI..", LogLevel.VERBOSE);
-
-            var app = this;
-
-            //check if user signed in etc
-            this.postLoginInit();
-
-            //if cached results exist, render them
-            var cachedResults = this.ocm_data.getCachedDataObject("SearchResults");
-            var cachedResult_Location = this.ocm_data.getCachedDataObject("SearchResults_Location");
-
-            if (cachedResults !== null) {
-                if (cachedResult_Location !== null) {
-                    (<HTMLInputElement>document.getElementById("search-location")).value = cachedResult_Location;
-                }
-                setTimeout(function () {
-                    app.renderPOIList(cachedResults);
-                }, 50);
-            } else {
-                app.navigateToStartup();
-            }
-
-            //if ID of location passed in, show details view
-            var idParam = app.getParameter("id");
-            if (idParam !== null && idParam !== "") {
-                var poiId = parseInt(app.getParameter("id"), 10);
-                setTimeout(function () {
-                    app.showDetailsViewById(poiId, true);
-                }, 100);
-            }
-
-            this.switchLanguage($("#option-language").val());
-
-            //lazy update of favourite POI details (if any)
-            setTimeout(app.syncFavourites(), 10000);
-        }
-
         beginLogin() {
             this.showProgressIndicator();
 
             //reset previous authorization warnings
-            this.ocm_data.hasAuthorizationError = false;
+            this.apiClient.hasAuthorizationError = false;
             var app = this;
 
             if (this.appState.isRunningUnderCordova) {
@@ -576,22 +652,49 @@ module OCM {
         }
 
         storeSettings() {
-            //save option settings to cookies
-            this.setCookie("optsearchdist", $('#search-distance').val());
-            this.setCookie("optsearchdistunit", $('#search-distance-unit').val());
-            this.setCookie("optenableexperiments", $('#option-enable-experiments').val());
+            if (this.appState.suppressSettingsSave == false) {
+                //save option settings to cookies
+                this.setCookie("optsearchdist", $('#search-distance').val());
+                this.setCookie("optsearchdistunit", $('#search-distance-unit').val());
 
-            this.setCookie("optlanguagecode", $('#option-language').val());
-            this.setCookie("filterapimode", $('#filter-apimode').val());
+                this.setCookie("optlanguagecode", $('#option-language').val());
+                this.setCookie("filterapimode", $('#filter-apimode').val());
+
+                this.setCookie("optbasemaptype", $('#pref-basemap-type').val());
+                this.setCookie("optsearchbehaviour", $('#pref-search-behaviour').val());
+
+                this.setCookie("filteroperator", $('#filter-operator').val());
+                this.setCookie("filterconnectiontype", $('#filter-connectiontype').val());
+                this.setCookie("filterconnectionlevel", $('#filter-connectionlevel').val());
+                this.setCookie("filterusagetype", $('#filter-usagetype').val());
+                this.setCookie("filterstatustype", $('#filter-statustype').val());
+            }
         }
 
         loadSettings() {
-            if (this.getCookie("optsearchdist") != null) $('#search-distance').val(this.getCookie("optsearchdist"));
-            if (this.getCookie("optsearchdistunit") != null) $('#search-distance-unit').val(this.getCookie("optsearchdistunit"));
-            if (this.getCookie("optenableexperiments") != null) $('#option-enable-experiments').val(this.getCookie("optenableexperiments"));
-            if (this.getCookie("optlanguagecode") != null) $('#option-language').val(this.getCookie("optlanguagecode"));
+            this.loadPref("optsearchdist", $("#search-distance"), false);
+            this.loadPref("optsearchdistunit", $("#search-distance-unit"), false);
+            this.loadPref("optlanguagecode", $("#option-language"), false);
+            this.loadPref("filterapimode", $("#filter-apimode"), false);
+            this.loadPref("optbasemaptype", $("#pref-basemap-type"), false);
+            this.loadPref("optsearchbehaviour", $("#pref-search-behaviour"), false);
+           
+            this.loadPref("filteroperator", $("#filter-operator"), true);
+            this.loadPref("filterconnectiontype", $("#filter-connectiontype"), true);
+            this.loadPref("filterconnectionlevel", $("#filter-connectionlevel"), true);
+            this.loadPref("filterusagetype", $("#filter-usagetype"), true);
+            this.loadPref("filterstatustype", $("#filter-statustype"), true);
+        }
 
-            if (this.getCookie("filterapimode") != null) $('#filter-apimode').val(this.getCookie("filterapimode"));
+        loadPref(settingName: string, $boundFormElement: JQuery, isMultiSelect: boolean) {
+            if (this.getCookie(settingName) != null) {
+                this.log("Loading pref " + settingName + " (" + isMultiSelect + "):" + this.getCookie(settingName));
+                if (isMultiSelect) {
+                    $boundFormElement.val(this.getCookie(settingName).toString().split(","));
+                } else {
+                    $boundFormElement.val(this.getCookie(settingName));
+                }
+            }
         }
 
         performCommentSubmit() {
@@ -601,13 +704,13 @@ module OCM {
 
             if (app.appState.enableCommentSubmit === true) {
                 app.appState.enableCommentSubmit = false;
-                var refData = this.ocm_data.referenceData;
-                var item = this.ocm_data.referenceData.UserComment;
+                var refData = this.apiClient.referenceData;
+                var item = this.apiClient.referenceData.UserComment;
 
                 //collect form values
                 item.ChargePointID = this.viewModel.selectedPOI.ID;
-                item.CheckinStatusType = this.ocm_data.getRefDataByID(refData.CheckinStatusTypes, $("#checkin-type").val());
-                item.CommentType = this.ocm_data.getRefDataByID(refData.UserCommentTypes, $("#comment-type").val());
+                item.CheckinStatusType = this.apiClient.getRefDataByID(refData.CheckinStatusTypes, $("#checkin-type").val());
+                item.CommentType = this.apiClient.getRefDataByID(refData.UserCommentTypes, $("#comment-type").val());
                 item.UserName = $("#comment-username").val();
                 item.Comment = $("#comment-text").val();
                 item.Rating = $("#comment-rating").val();
@@ -616,7 +719,7 @@ module OCM {
                 this.showProgressIndicator();
 
                 //submit
-                this.ocm_data.submitUserComment(item,
+                this.apiClient.submitUserComment(item,
                     this.getLoggedInUserInfo(),
                     function (jqXHR, textStatus) {
                         app.submissionCompleted(jqXHR, textStatus);
@@ -661,7 +764,7 @@ module OCM {
             this.showProgressIndicator();
 
             //submit
-            this.ocm_data.submitMediaItem(
+            this.apiClient.submitMediaItem(
                 formData,
                 this.getLoggedInUserInfo(),
                 function (jqXHR, textStatus) {
@@ -761,13 +864,13 @@ module OCM {
                 //detect if mapping/geolocation available
                 if (useClientLocation == true) {
                     //initiate client geolocation (if not already determined)
-                    if (this.ocm_geo.clientGeolocationPos == null) {
-                        this.ocm_geo.determineUserLocation($.proxy(
+                    if (this.geolocationManager.clientGeolocationPos == null) {
+                        this.geolocationManager.determineUserLocation($.proxy(
                             this.determineUserLocationCompleted, this), $.proxy(
                                 this.determineUserLocationFailed, this));
                         return;
                     } else {
-                        this.viewModel.searchPosition = this.ocm_geo.clientGeolocationPos;
+                        this.viewModel.searchPosition = this.geolocationManager.clientGeolocationPos;
                     }
                 }
 
@@ -779,14 +882,14 @@ module OCM {
                     var locationText = (<HTMLInputElement>document.getElementById("search-location")).value;
                     if (locationText === null || locationText == "") {
                         //try to geolocate via browser location API
-                        this.ocm_geo.determineUserLocation($.proxy(
+                        this.geolocationManager.determineUserLocation($.proxy(
                             this.determineUserLocationCompleted, this), $.proxy(
                                 this.determineUserLocationFailed, this));
                         return;
                     } else {
                         // try to gecode text location name, if new lookup not
                         // attempted, continue to rendering
-                        var lookupAttempted = this.ocm_geo.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this), $.proxy(this.determineGeocodedLocationFailed, this));
+                        var lookupAttempted = this.geolocationManager.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this), $.proxy(this.determineGeocodedLocationFailed, this));
                         if (lookupAttempted == true) {
                             return;
                         }
@@ -816,7 +919,7 @@ module OCM {
                     this.checkSelectedAPIMode();
 
                     this.log("Performing search..");
-                    this.ocm_data.fetchLocationDataListByParam(params, "ocm_app.handleSearchCompleted", "ocm_app.handleSearchError");
+                    this.apiClient.fetchLocationDataListByParam(params, "ocm_app.handleSearchCompleted", "ocm_app.handleSearchError");
                 }
             } else {
                 this.log("Search still in progress, ignoring search request..")
@@ -835,7 +938,7 @@ module OCM {
 
         determineUserLocationCompleted(pos) {
             this.viewModel.searchPosition = pos;
-            this.ocm_geo.clientGeolocationPos = pos;
+            this.geolocationManager.clientGeolocationPos = pos;
 
             this.clearSearchRequest();
 
@@ -847,7 +950,7 @@ module OCM {
             this.showMessage("Could not automatically determine your location. Search by location name instead.");
         }
 
-        determineGeocodedLocationCompleted(pos: MapCoords) {
+        determineGeocodedLocationCompleted(pos: GeoPosition) {
             this.viewModel.searchPosition = pos;
 
             this.clearSearchRequest();
@@ -857,26 +960,27 @@ module OCM {
 
         determineGeocodedLocationFailed() {
             this.clearSearchRequest();
-
             this.showMessage("The position of this address could not be determined. You may wish to try starting with a simpler address.");
         }
 
         handleSearchCompleted(poiList: Array<any>) {
             this.appState._appSearchTimestamp = new Date();
 
+            //indicate search has completed
             this.clearSearchRequest();
 
-            this.renderPOIList(poiList);
+            //inform viewmodel of changes
+            this.viewModel.resultsBatchID++; //indicates that results have changed and need reprocessed (maps etc)
+            this.viewModel.poiList = poiList;
         }
 
         renderPOIList(locationList: Array<any>) {
-            this.viewModel.resultsBatchID++; //indicates that results have changed and need reprocessed (maps etc)
-            this.viewModel.poiList = locationList;
+            //this.viewModel.poiList = locationList;
 
             if (locationList != null && locationList.length > 0) {
                 this.log("Caching search results..");
-                this.ocm_data.setCachedDataObject("SearchResults", locationList);
-                this.ocm_data.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
+                this.apiClient.setCachedDataObject("SearchResults", locationList);
+                this.apiClient.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
             } else {
                 this.log("No search results, will not overwrite cached search results.");
             }
@@ -922,12 +1026,15 @@ module OCM {
                     var locTitle = poi.AddressInfo.Title;
 
                     locTitle += "<div class='pull-right'>";
+
                     if (poi.UserComments && poi.UserComments != null) {
                         locTitle += "<span class='badge'><i class=\"fa fa-comment-o\" ></i> " + poi.UserComments.length + "</span>";
                     }
+
                     if (poi.MediaItems && poi.MediaItems != null) {
                         locTitle += "<span class='badge'><i class=\"fa fa-camera\" ></i> " + poi.MediaItems.length + "</span>";
                     }
+
                     locTitle += "</div>";
 
                     if (poi.AddressInfo.Town != null && poi.AddressInfo.Town != "") locTitle = poi.AddressInfo.Town + " - " + locTitle;
@@ -938,7 +1045,7 @@ module OCM {
 
                     var direction = "";
 
-                    if (this.viewModel.searchPosition != null) direction = this.ocm_geo.getCardinalDirectionFromBearing(this.ocm_geo.getBearing(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+                    if (this.viewModel.searchPosition != null) direction = this.geolocationManager.getCardinalDirectionFromBearing(this.geolocationManager.getBearing(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
 
                     itemTemplate = itemTemplate.replace("{distance}", distance.toFixed(1));
                     itemTemplate = itemTemplate.replace("{distanceunit}", distance_unit + (direction != "" ? " <span title='" + direction + "' class='direction-" + direction + "'>&nbsp;&nbsp;</span>" : ""));
@@ -999,12 +1106,6 @@ module OCM {
             //show hidden results ui
             $('#results-list').replaceWith($listContent);
             $("#results-list").css("display", "block");
-
-            //after initial load subsequent queries auto refresh the map markers
-            if (this.appConfig.autoRefreshMapResults) {
-                this.log("Auto refreshing map view");
-                this.refreshMapView();
-            }
         }
 
         showDetailsViewById(id, forceRefresh) {
@@ -1024,7 +1125,7 @@ module OCM {
             if (!itemShown || forceRefresh == true) {
                 //load poi details, then show
                 this.log("Location not cached or forced refresh, fetching details:" + id);
-                this.ocm_data.fetchLocationById(id, "ocm_app.showDetailsFromList", null, true);
+                this.apiClient.fetchLocationById(id, "ocm_app.showDetailsFromList", null, true);
             }
         }
 
@@ -1120,15 +1221,16 @@ module OCM {
                 $("#details-mediaitems-gallery").html("");
             }
 
+            /*
             var leftPos = $element.position().left;
             var topPos = $element.position().top;
             $detailsView.css("left", leftPos);
-            $detailsView.css("top", topPos);
+            $detailsView.css("top", topPos);*/
 
             //once displayed, try fetching a more accurate distance estimate
             if (this.viewModel.searchPosition != null) {
                 //TODO: observe property to update UI
-                this.ocm_geo.getDrivingDistanceBetweenPoints(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updatePOIDistanceDetails);
+                this.geolocationManager.getDrivingDistanceBetweenPoints(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, $("#search-distance-unit").val(), this.updatePOIDistanceDetails);
             }
 
             //apply translations (if required)
@@ -1187,6 +1289,9 @@ module OCM {
             //}
             this.mappingManager.refreshMapView("map-view", mapHeight, this.viewModel.poiList, this.viewModel.searchPosition);
 
+            //set map type based on pref
+            this.mappingManager.setMapType($("#pref-basemap-type").val());
+
             this.appConfig.autoRefreshMapResults = true;
         }
 
@@ -1211,7 +1316,7 @@ module OCM {
 
         isFavouritePOI(poi, itineraryName: string= null) {
             if (poi != null) {
-                var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
+                var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
                 if (favouriteLocations != null) {
                     for (var i = 0; i < favouriteLocations.length; i++) {
                         if (favouriteLocations[i].poi.ID == poi.ID && (favouriteLocations[i].itineraryName == itineraryName || (itineraryName == null && favouriteLocations[i].itineraryName == null))) {
@@ -1226,7 +1331,7 @@ module OCM {
         addFavouritePOI(poi, itineraryName: string= null) {
             if (poi != null) {
                 if (!this.isFavouritePOI(poi, itineraryName)) {
-                    var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
+                    var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
                     if (favouriteLocations == null) {
                         favouriteLocations = new Array();
                     }
@@ -1238,9 +1343,9 @@ module OCM {
 
                     this.log("Added Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
 
-                    this.ocm_data.setCachedDataObject("favouritePOIList", favouriteLocations);
+                    this.apiClient.setCachedDataObject("favouritePOIList", favouriteLocations);
                 } else {
-                    var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
+                    var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
                     if (favouriteLocations != null) {
                         for (var i = 0; i < favouriteLocations.length; i++) {
                             if (favouriteLocations[i].poi.ID == poi.ID) {
@@ -1256,7 +1361,7 @@ module OCM {
         removeFavouritePOI(poi, itineraryName: string= null) {
             if (poi != null) {
                 if (this.isFavouritePOI(poi, itineraryName)) {
-                    var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
+                    var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
                     if (favouriteLocations == null) {
                         favouriteLocations = new Array();
                     }
@@ -1269,7 +1374,7 @@ module OCM {
                             newFavList.push(favouriteLocations[i]);
                         }
                     }
-                    this.ocm_data.setCachedDataObject("favouritePOIList", newFavList);
+                    this.apiClient.setCachedDataObject("favouritePOIList", newFavList);
                     this.log("Removed Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
                 } else {
                     this.log("Cannot remove: Not a Favourite POI OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
@@ -1293,7 +1398,7 @@ module OCM {
         }
 
         getFavouritePOIList(itineraryName: string= null) {
-            var favouriteLocations = this.ocm_data.getCachedDataObject("favouritePOIList");
+            var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
             var poiList = new Array();
             if (favouriteLocations != null) {
                 for (var i = 0; i < favouriteLocations.length; i++) {
@@ -1314,7 +1419,7 @@ module OCM {
                 for (var i = 0; i < favourites.length; i++) {
                     var poi = favourites[i];
                     this.log("Refreshing data for favourite POI: OCM-" + poi.ID);
-                    this.ocm_data.fetchLocationById(poi.ID, "ocm_app.updateCachedFavourites",
+                    this.apiClient.fetchLocationById(poi.ID, "ocm_app.updateCachedFavourites",
                         function (error) {
                             if (error.status != 200) {
                                 app.log("Failed to refresh favourite POI." + JSON.stringify(error));
@@ -1365,7 +1470,7 @@ module OCM {
                 if (this.appState._lastPageId == "map-page" && pageId == "map-page") {
                     this.appState._appQuitRequestCount++;
                     if (this.appState._appQuitRequestCount >= 3) {
-                        //double home page request, time to exit on android etc
+                        //triple home page request, time to exit on android etc
                         this.log("Multiple Home Requests, Time to Quit");
                         if (this.appState.isRunningUnderCordova) {
                             if (confirm("Quit Open Charge Map?")) {
@@ -1373,6 +1478,9 @@ module OCM {
                             }
                         }
                     }
+                } else {
+                    //reset quit request counter
+                    this.appState._appQuitRequestCount = 0;
                 }
                 this.hidePage(this.appState._lastPageId);
             }
@@ -1399,8 +1507,6 @@ module OCM {
             } else {
                 Historyjs.pushState({ view: pageId, title: pageTitle }, pageTitle, "?view=" + pageId);
             }
-
-            this.log("leaving app.showPage:" + pageId, LogLevel.VERBOSE);
 
             //hide menu when menu item activated
             this.toggleMenu(false);
@@ -1446,12 +1552,6 @@ module OCM {
                     $(window).trigger('resize');
                 }
             });
-        }
-
-        //methods for use by native build of app to enable navigation via native UI/phonegap
-        navigateToSearch() {
-            this.log("Navigate To: Search Page", LogLevel.VERBOSE);
-            this.showPage("search-page", "Search");
         }
 
         navigateToHome() {
@@ -1545,7 +1645,7 @@ module OCM {
             this.log("Navigate To: About", LogLevel.VERBOSE);
 
             try {
-                var dataProviders = this.ocm_data.referenceData.DataProviders;
+                var dataProviders = this.apiClient.referenceData.DataProviders;
                 var summary = "<ul>";
                 for (var i = 0; i < dataProviders.length; i++) {
                     if (dataProviders[i].IsApprovedImport == true || dataProviders[i].IsOpenDataLicensed == true) {

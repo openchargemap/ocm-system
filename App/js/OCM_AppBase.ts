@@ -10,7 +10,6 @@ declare var unescape: any; //TODO: replace with newer escaping methods
 declare var bootbox: any;
 
 module OCM {
-
     export enum AppMode {
         STANDARD,
         LOCALDEV,
@@ -19,7 +18,6 @@ module OCM {
 
     /** View Model for core functionality */
     export class AppViewModel {
-
         /** The current selected POI */
         public selectedPOI: any;
 
@@ -32,7 +30,7 @@ module OCM {
         /** track changes in result set, avoiding duplicate processing (maps etc) */
         public resultsBatchID: number;
 
-        public searchPosition: MapCoords;
+        public searchPosition: GeoPosition;
 
         constructor() {
             this.selectedPOI = null;
@@ -55,7 +53,7 @@ module OCM {
         public newsHomeUrl: string;
         public searchTimeoutMS: number; //max time allowed before search considered timed out
         public searchFrequencyMinMS: number; //min ms between search requests
-      
+
         constructor() {
             this.autoRefreshMapResults = false;
             this.launchMapOnStartup = false;
@@ -67,7 +65,6 @@ module OCM {
 
     /** App state settings*/
     export class AppState {
-
         public appMode: AppMode;
 
         public isRunningUnderCordova: boolean;
@@ -80,12 +77,12 @@ module OCM {
         public mapLaunched: boolean;
         public enableCommentSubmit: boolean;
         public isSearchInProgress: boolean;
+        public suppressSettingsSave: boolean;
         public _lastPageId: string;
         public _appQuitRequestCount: number;
         public _appPollForLogin: any;
         public _appSearchTimer: any;
         public _appSearchTimestamp: Date; //time of last search
-
 
         constructor() {
             this.appMode = AppMode.STANDARD;
@@ -103,9 +100,8 @@ module OCM {
 
     /** Base for App Components */
     export class AppBase extends Base {
-
-        ocm_geo: OCM.Geolocation;
-        ocm_data: OCM.API;
+        geolocationManager: OCM.Geolocation;
+        apiClient: OCM.API;
         mappingManager: OCM.Mapping;
 
         viewModel: AppViewModel;
@@ -118,8 +114,8 @@ module OCM {
             this.appState = new AppState();
             this.appConfig = new AppConfig();
 
-            this.ocm_data = new OCM.API();
-            this.ocm_geo = new OCM.Geolocation(this.ocm_data);
+            this.apiClient = new OCM.API();
+            this.geolocationManager = new OCM.Geolocation(this.apiClient);
             this.mappingManager = new OCM.Mapping();
 
             this.viewModel = new AppViewModel();
@@ -142,12 +138,10 @@ module OCM {
             this.setCookie("AccessPermissions", userInfo.AccessPermissions);
         }
 
-
         getCookie(c_name: string) {
             if (this.appState.isRunningUnderCordova) {
-                return this.ocm_data.getCachedDataObject("_pref_" + c_name);
+                return this.apiClient.getCachedDataObject("_pref_" + c_name);
             } else {
-
                 //http://www.w3schools.com/js/js_cookies.asp
                 var i, x, y, ARRcookies = document.cookie.split(";");
                 for (i = 0; i < ARRcookies.length; i++) {
@@ -166,9 +160,8 @@ module OCM {
 
         setCookie(c_name: string, value, exdays: number= 1) {
             if (this.appState.isRunningUnderCordova) {
-                this.ocm_data.setCachedDataObject("_pref_" + c_name, value);
+                this.apiClient.setCachedDataObject("_pref_" + c_name, value);
             } else {
-
                 if (exdays == null) exdays = 1;
 
                 //http://www.w3schools.com/js/js_cookies.asp
@@ -181,7 +174,7 @@ module OCM {
 
         clearCookie(c_name: string) {
             if (this.appState.isRunningUnderCordova) {
-                this.ocm_data.setCachedDataObject("_pref_" + c_name, null);
+                this.apiClient.setCachedDataObject("_pref_" + c_name, null);
             } else {
                 var expires = new Date();
                 expires.setUTCFullYear(expires.getUTCFullYear() - 1);
@@ -229,6 +222,16 @@ module OCM {
             if (selectedValue != null) $dropdown.val(selectedValue);
         }
 
+        getMultiSelectionAsArray($dropdown: JQuery, defaultVal: any) {
+            //convert multi select values to string array
+            if ($dropdown.val() != null) {
+                var selectedVals = $dropdown.val().toString();
+                return selectedVals.split(",");
+            } else {
+                return defaultVal;
+            }
+        }
+
         showProgressIndicator() {
             $("#progress-indicator").fadeIn('slow');
         }
@@ -247,7 +250,7 @@ module OCM {
         }
 
         isUserSignedIn() {
-            if (this.ocm_data.hasAuthorizationError == true) {
+            if (this.apiClient.hasAuthorizationError == true) {
                 return false;
             }
 
@@ -260,7 +263,6 @@ module OCM {
                 return false;
             }
         }
-
 
         getParameterFromURL(name, url) {
             var sval = "";
@@ -295,6 +297,5 @@ module OCM {
                 });
             }
         }
-
     }
 }

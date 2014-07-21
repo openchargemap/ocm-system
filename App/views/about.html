@@ -8,13 +8,65 @@
     </div>
     <div data-role="content" class="container" style="margin-top:1em;">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab-about" data-toggle="tab"><span data-localize="ocm.general.about">About</span></a></li>
+            <li class="active"><a href="#tab-help" data-toggle="tab">Help</a></li>
+            <li><a href="#tab-about" data-toggle="tab"><span data-localize="ocm.general.about">About</span></a></li>
             <li><a href="#tab-credits" data-toggle="tab">Credits</a></li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="tab-about">
+            <div class="tab-pane active" id="tab-help">
+                <h1>Searching</h1>
+                <p>
+                    This app can help you find charging locations nearby or at a destination of your choice. On the main search page you will see the main search options:
+                </p>
+                <p>
+                    <button class="btn btn-default disabled" type="button"><i class="fa fa-location-arrow"></i></button> <span data-localize="ocm.search.useMyLocation">Find Near Me</span>. Use to search nearby using your current position.
+                </p>
+                <p>
+                    <button class="btn btn-default disabled" type="button"><i class="fa fa-filter"></i></button> <span data-localize="ocm.general.settings">Settings</span>. Use to change preferences and search filters.
+                </p>
+
+                <p>
+                    <button class="btn btn-default disabled" type="button"><i class="fa fa-search"></i></button> Search by (well known) place name. You should include a country when searching as place names are matched globally.
+                </p>
+
+                <p>
+                    <button class="btn btn-info disabled" type="button"><i class="fa fa-list fa-fw"></i></button> Switch to List view. Only shown on small displays.
+                </p>
+                <p>
+                    <button class="btn btn-info disabled" type="button"><i class="fa fa-map-marker fa-fw"></i></button> Switch to Map view. Only shown on small displays.
+                </p>
+                <h1>Map</h1>
+                <p>You can use Settings to switch the Map view from Roads to Satellite via etc, you can also choose to have the Map search results update as your GPS position changes.</p>
+                <h2>Map Marker Legend</h2>
+                <p>Map markers are coloured according to their "Level", which is a broad category used to group equipment by power levels. Not every charging location has this information available.</p>
+                <p>
+                    <img src="images/icons/map/set2_level0.png" /> Unknown Level<br />
+                    <img src="images/icons/map/set2_level1.png" /> Level 1 - Very low power<br />
+                    <img src="images/icons/map/set2_level2.png" /> Level 2 - Low to medium power<br />
+                    <img src="images/icons/map/set2_level3.png" /> Level 3 - High power (Rapid)<br />
+                </p>
+                <h1>Adding Information</h1>
+                <p>Open Charge Map is a community run effort to provide as much detailed information as possible about charging locations globally. If you think an addition or update is required we want you to be the one to provide the information. You can do this either while you are charging at the location or when you have time later.</p>
+                <p><strong>Everything you submit is shared openly and publically for others to see and use.</strong></p>
+                <h2><i class="fa fa-sign-in"></i> Sign In</h2>
+                <p>We recommend you Sign In to Open Charge Map (from the menu) before adding or editing information, this helps us attribute the changes to you and is required for certain actions.</p>
+                <p>Sign In currently requires either a Twitter, Google/Gmail or Facebook account to verify your credentials. </p>
+                <h2><i class="fa fa-comment fa-fw"></i> Comments and Check-Ins</h2>
+                <p>Adding a Comment or a Check-In helps other users when they look at the same charging location later.</p>
+                <p>Telling people about a good or bad experience whilst using the equipment can be invaluable when others are planning their journey.</p>
+                <p>You can add a simple 'Check-In' without a comment just to update others on the status of the equipment. Alternatively you can also add a comment to describe how you got on in detail. Whilst you can note errors in the information, edits are preferred if you know what changes should be made (see below).</p>
+                <h2><i class="fa fa-camera-retro fa-fw"></i> Photos</h2>
+                <p>Adding a photo for a location provides invaluable information for other users who can see the state of the equipment and get an idea of how to identify it.</p>
+                <p>If possible please enable GPS location for images on your phone before taking the photo you want to upload. In the future we may use that information to help correct the equipment location.</p>
+                <h3><i class="fa fa-pencil fa-fw"></i> Edit Location</h3>
+                <p>Instead of commenting when you see information that's not accurate you can directly edit the listing yourself. You can access the Edit option when you are viewing the full details of a location. You can change the address, update the map marker position and add/edit the Equipment Details (including which Network Operator runs the equipment).</p>
+                <h3><i class="fa fa-plus fa-fw"></i> Add Location</h3>
+                <p>If you find that a location you know about is not listed then you should go ahead and submit the location and equipment details yourself. These submissions are then reviewed by Open Charge Map editors and appear for everyone once they have been approved.</p>
+                <p>You <strong>should not</strong> submit details about a private residence such as your own home as all of the charging location information submitted to Open Charge Map is shared publically and openly in a manner which is not appropriate for private residences (distribution of the information is not controlled or protected). If you wish to share the charging at your home with members of the public you should check out other third party services which provide that functionality.</p>
+            </div>
+            <div class="tab-pane" id="tab-about">
 
                 <h3>Open Charge Map <small>APPVERSION</small></h3>
                 <p>
@@ -47,6 +99,7 @@
                 <p><em>Translations:</em> User interface translations supplied by the OCM community, please contribute your own translations using our <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map">webtranslateit</a> project.</p>
                 <p><em>Open Source Libraries &amp; Frameworks Used:</em> Open Charge Map API, jQuery + jQuery.History + jQuery.fastClick, SwipeBox, BootBox, https://github.com/jdarling/Object.observe, Twitter Bootstrap, FontAwesome, LeafletJS + Awesome Markers + MarkerClusterer + Open Street Map,  Google Maps, ASP.NET MVC, TypeScript, NuGet, NodeJS, Inkscape, Jake, Grunt, Oswald + Oxygen Fonts, Phonegap/Apache Cordova, https://github.com/wf9a5m75/phonegap-googlemaps-plugin</p>
             </div>
+
         </div>
     </div>
 </div>

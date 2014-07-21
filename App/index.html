@@ -71,22 +71,22 @@
     <!--JS:IOS:END-->
     <!-- JS:LIB:BEGIN -->
     <!-- App JS -->
-    <script src="js/OCM_Data.js"></script>
+    <script src="js/Compiled/OCM_Data.js"></script>
     <script src="js/OfflineCache/OCM_CoreReferenceData.js"></script>
-    <script src="js/OCM_App_Util.js"></script>
-    <script src="js/OCM_Base.js"></script>
-    <script src="js/OCM_AppBase.js"></script>
-    <script src="js/OCM_Geolocation.js"></script>
-    <script src="js/OCM_Mapping.js"></script>
-    <script src="js/OCM_FileUpload.js"></script>
-    <script src="js/OCM_App_LocationEditor.js"></script>
-    <script src="js/OCM_App.js"></script>
-    <script src="js/OCM_AppBootstrap.js"></script>
+    <script src="js/Compiled/OCM_App_Util.js"></script>
+    <script src="js/Compiled/OCM_Base.js"></script>
+    <script src="js/Compiled/OCM_AppBase.js"></script>
+    <script src="js/Compiled/OCM_Geolocation.js"></script>
+    <script src="js/Compiled/OCM_Mapping.js"></script>
+    <script src="js/Compiled/OCM_FileUpload.js"></script>
+    <script src="js/Compiled/OCM_App_LocationEditor.js"></script>
+    <script src="js/Compiled/OCM_App.js"></script>
+    <script src="js/Compiled/OCM_AppBootstrap.js"></script>
     <!-- JS:LIB:END -->
     <!-- Localisation:Begin -->
     <script charset="UTF-8" src="js/Localisation/languagePack.min.js"></script>
     <script>
-        ocm_app.ocm_data.languageList = languageList;
+        ocm_app.apiClient.languageList = languageList;
     </script>
     <!-- Localisation:End -->
 
@@ -139,11 +139,11 @@
     <!--End standard OCM app HTML block-->
     <!--Late bound scripts-->
     <!--google maps-->
-    <script src="js/OCM_MapInit.js"></script>
+    <script src="js/Compiled/OCM_MapInit.js"></script>
     <!--end google maps-->
 
     <script>
-        ocm_app.ocm_data.clientName = "ocm.app.TARGETNAME.APPVERSION";
+        ocm_app.apiClient.clientName = "ocm.app.TARGETNAME.APPVERSION";
     </script>
 </body>
 

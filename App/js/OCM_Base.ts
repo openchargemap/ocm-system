@@ -11,12 +11,13 @@ module OCM {
         ERROR
     }
     export class Base {
-
+        public enableLogging: boolean;
         constructor() {
+            this.enableLogging = true;
         }
 
         public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {
-            if (console) {
+            if (this.enableLogging && console) {
                 console.log("[" + LogLevel[level] + "] " + msg);
             }
         }

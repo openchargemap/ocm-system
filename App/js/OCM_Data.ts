@@ -42,7 +42,6 @@ module OCM {
     };
 
     export class API {
-
         public serviceBaseURL: string = "http://api.openchargemap.io/v2";
         public serviceBaseURL_Standard: string = "http://api.openchargemap.io/v2";
         public serviceBaseURL_Sandbox: string = "http://sandbox.api.openchargemap.io/v2";
@@ -55,10 +54,9 @@ module OCM {
 
         public authorizationErrorCallback: any;
         public generalErrorCallback: any;
-        public allowMirror: boolean = false;        
+        public allowMirror: boolean = false;
 
         fetchLocationDataList(countrycode, lat, lon, distance, distanceunit, maxresults, includecomments, callbackname, additionalparams, errorcallback) {
-
             if (countrycode === null) countrycode = "";
             if (additionalparams === null) additionalparams = "";
 
@@ -76,7 +74,6 @@ module OCM {
         }
 
         fetchLocationDataListByParam(params: OCM.POI_SearchParams, callbackname, errorcallback) {
-
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
             var serviceParams = "";
             if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
@@ -154,7 +151,6 @@ module OCM {
         }
 
         fetchCoreReferenceData(callbackname, authSessionInfo) {
-
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             var ajaxSettings: JQueryAjaxSettings = {
@@ -171,7 +167,6 @@ module OCM {
         }
 
         fetchGeocodeResult(address, successCallback, authSessionInfo, errorCallback) {
-
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             var ajaxSettings: JQueryAjaxSettings = {
@@ -181,7 +176,7 @@ module OCM {
                 dataType: "jsonp",
                 crossDomain: true,
                 success: successCallback,
-                error: (errorCallback!=null? errorCallback:this.handleGeneralAjaxError)
+                error: (errorCallback != null ? errorCallback : this.handleGeneralAjaxError)
             };
 
             $.ajax(ajaxSettings);
@@ -200,7 +195,6 @@ module OCM {
         }
 
         submitLocation(data, authSessionInfo, completedCallback, failureCallback) {
-
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             var jsonString = JSON.stringify(data);
@@ -218,7 +212,6 @@ module OCM {
         }
 
         submitUserComment(data, authSessionInfo, completedCallback, failureCallback) {
-
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             var jsonString = JSON.stringify(data);
@@ -234,7 +227,6 @@ module OCM {
         }
 
         submitMediaItem(data, authSessionInfo, completedCallback, failureCallback, progressCallback) {
-
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
 
             $.ajax({
@@ -248,7 +240,7 @@ module OCM {
                     return myXhr;
                 },
                 success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
-                error: (failureCallback==null?this.handleGeneralAjaxError: failureCallback),
+                error: (failureCallback == null ? this.handleGeneralAjaxError : failureCallback),
                 data: data,
                 cache: false,
                 contentType: false,
@@ -285,7 +277,6 @@ module OCM {
             sourceList.sort(this.sortListByTitle);
         }
 
-
         getMetadataValueByMetadataFieldID(metadataValues, id) {
             if (id != "") id = parseInt(id);
 
@@ -320,7 +311,6 @@ module OCM {
                 else {
                     localStorage.setItem(itemName, JSON.stringify(itemValue));
                 }
-
             }
         }
 

@@ -142,7 +142,6 @@
     <Content Include="views\profile.html" />
     <Content Include="views\map.html" />
     <Content Include="views\README.txt" />
-    <Content Include="views\search.html" />
     <Content Include="views\settings.html" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -216,6 +215,7 @@
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptOutDir>C:\Temp\GIT\ocm-system\App\js\Compiled</TypeScriptOutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
@@ -228,7 +228,7 @@
     <PostBuildEvent>jake --jakefile $(ProjectDir)\build\jakefile.js</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Y  $(ProjectDir)\js\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
-xcopy /Y  $(ProjectDir)\js\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs</PreBuildEvent>
+    <PreBuildEvent>xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
+xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs</PreBuildEvent>
   </PropertyGroup>
 </Project>

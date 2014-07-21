@@ -7,7 +7,6 @@
 
 module OCM {
     export class Utils {
-
         static getMaxLevelOfPOI(poi) {
             var level = 0;
 
@@ -24,7 +23,6 @@ module OCM {
             return level;
         }
 
-
         static applyLocalisation(isTestMode: boolean) {
             try {
                 if (isTestMode == true || localisation_dictionary != null) {
@@ -38,7 +36,7 @@ module OCM {
                             var localisedText;
 
                             if (isTestMode == true) {
-                                //in test mode the resource key is displayed as the localised text 
+                                //in test mode the resource key is displayed as the localised text
                                 localisedText = "[" + resourceKey + "] " + eval("localisation_dictionary." + resourceKey);
                             } else {
                                 localisedText = eval("localisation_dictionary." + resourceKey);
@@ -89,9 +87,7 @@ module OCM {
         }
 
         static formatMapLink(poi, linkContent, isRunningUnderCordova: boolean) {
-
             if (isRunningUnderCordova) {
-
                 if (device && device.platform == "WinCE") {
                     return this.formatSystemWebLink("maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
                     //return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
@@ -159,7 +155,6 @@ module OCM {
         }
 
         static formatPOIDetails(poi, fullDetailsMode: boolean) {
-
             var dayInMilliseconds = 86400000;
             var currentDate = new Date();
 
@@ -172,7 +167,6 @@ module OCM {
             if (poi.AddressInfo.Distance != null) {
                 var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
                 contactInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
-
             }
             contactInfo += "<p><i class='fa fa-fw fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone1);
@@ -228,7 +222,6 @@ module OCM {
             //output table of connection info
             if (poi.Connections != null) {
                 if (poi.Connections.length > 0) {
-
                     equipmentInfo += "<table class='table table-st'>";
                     equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th></tr>";
 
@@ -245,7 +238,7 @@ module OCM {
                         (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
                         (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
                         (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
-                        (con.CurrentType != null ? con.CurrentType.Title : "") + "<br/>"+
+                        (con.CurrentType != null ? con.CurrentType.Title : "") + "<br/>" +
                         (con.Quantity != null ? this.formatString(con.Quantity) : "1") + " Present" +
                         "</td>" +
                         "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
@@ -262,6 +255,8 @@ module OCM {
                 if (poi.DataProvider.WebsiteURL != null) {
                     advancedInfo += this.formatTextField(this.formatURL(poi.DataProvider.WebsiteURL), "Website", false, false, "ocm.details.dataProviderWebsite");
                 }
+                advancedInfo += this.formatTextField(poi.AddressInfo.Latitude, "Latitude", false, false, null);
+                advancedInfo += this.formatTextField(poi.AddressInfo.Longitude, "Longitude", false, false, null);
             }
 
             var output = {
