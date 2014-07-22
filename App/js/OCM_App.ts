@@ -102,6 +102,9 @@ module OCM {
         initApp() {
             var app = this;
 
+            //Begin observing app model changes such as poiList and other state
+            this.beginObservingAppModelChanges();
+
             this.appState.appInitialised = true;
 
             //wire up state tracking
@@ -144,12 +147,16 @@ module OCM {
                 if (cachedResult_Location !== null) {
                     (<HTMLInputElement>document.getElementById("search-location")).value = cachedResult_Location;
                 }
-                setTimeout(function () {
-                    app.viewModel.poiList = cachedResults;
-                    //app.renderPOIList(cachedResults);
-                }, 50);
+                //use cached POI results, observer will then render the results
+                app.viewModel.poiList = cachedResults;
             } else {
+                //navigate to startup page while we wait for results
+
                 app.navigateToStartup();
+                app.viewModel.poiList = [];
+
+                //search nearby on startup
+                app.performSearch(true, false);
             }
 
             //if ID of location passed in, show details view
@@ -161,10 +168,21 @@ module OCM {
                 }, 100);
             }
 
+            //switch to preferred language
             this.switchLanguage($("#option-language").val());
 
             //lazy update of favourite POI details (if any)
             setTimeout(app.syncFavourites(), 10000);
+
+            //hide splashscreen if present
+            if (app.appState.isRunningUnderCordova) {
+                setTimeout(function () {
+                    if (navigator.splashscreen) navigator.splashscreen.hide();
+                }, 2000);
+            }
+
+            //show main page
+            app.navigateToMap();
         }
 
         beginObservingAppModelChanges() {
@@ -180,10 +198,10 @@ module OCM {
                         app.renderPOIList(app.viewModel.poiList);
 
                         //after initial load subsequent queries auto refresh the map markers
-                        if (app.appConfig.autoRefreshMapResults) {
-                            app.log("Auto refreshing map view");
-                            app.refreshMapView();
-                        }
+                        //if (app.appConfig.autoRefreshMapResults) {
+                        app.log("Auto refreshing map view");
+                        app.refreshMapView();
+                        //}
                     }
                 });
             });
@@ -191,10 +209,12 @@ module OCM {
             // observe mapping model changes
             Object.observe(this.mappingManager, function (changes) {
                 changes.forEach(function (change) {
-                    //app.log(change.type + ':' + change.name + ':' + change.oldValue, OCM.LogLevel.VERBOSE);
+                    //app.log(change.type + ':' + change.name, OCM.LogLevel.VERBOSE);
 
-                    if (!app.appState.mapLaunched && change.name == "mapAPIReady" && app.mappingManager.mapAPIReady) {
-                        app.startupMap();
+                    //!app.appState.mapLaunched &&
+                    if (change.name == "mapAPIReady" && app.mappingManager.mapAPIReady) {
+                        //can start mapping now
+                        app.refreshMapView();
                     }
                 });
             });
@@ -229,7 +249,7 @@ module OCM {
                 });
             });
 
-            // observe map option changes
+            // observe geolocation model changes
             Object.observe(this.geolocationManager, function (changes) {
                 changes.forEach(function (change) {
                     //app.log("changed: app.geolocationManager." + change.name);
@@ -252,17 +272,13 @@ module OCM {
 
             if (this.appConfig.launchMapOnStartup) {
                 //pages are hidden by default, start by show map screen (once map api ready)
-                if (app.appState.isRunningUnderCordova) {
+
+                if (app.appState.isRunningUnderCordova && app.mappingManager.isNativeMapsAvailable()) {
                     app.mappingManager.mapAPIReady = true;
                 }
 
-                //Observe OCM.Mapping.mapAPIReady and render map
-                this.beginObservingAppModelChanges();
-
-                if (app.mappingManager.mapAPIReady) {
-                    app.startupMap();
-                } else {
-                    app.log("Map API not ready. Waiting for map API via model observer.");
+                if (!app.mappingManager.mapAPIReady) {
+                    app.log("Map API not ready yet. Waiting for map API via model observer.");
 
                     setTimeout(function () {
                         if (!app.mappingManager.mapAPIReady) {
@@ -325,7 +341,7 @@ module OCM {
             });
 
             //set home page ui link actions
-     
+
             app.setElementAction("a[href='#map-page'],#search-map", function () {
                 app.navigateToMap();
             });
@@ -391,7 +407,9 @@ module OCM {
 
             //if map type selection changes, update map
             $("#pref-basemap-type").on("change", function () {
-                app.mappingManager.setMapType($("#pref-basemap-type").val());
+                if (app.mappingManager.isMappingInitialised()) {
+                    app.mappingManager.setMapType($("#pref-basemap-type").val());
+                }
                 app.storeSettings();
             });
 
@@ -440,28 +458,6 @@ module OCM {
             $(window).resize(function () {
                 app.adjustMainContentHeight();
             });
-        }
-
-        startupMap() {
-            var app = this;
-
-            //default to map screen and begin loading closest data to centre of map
-            app.navigateToMap();
-            if (app.viewModel.poiList != null && app.viewModel.poiList.length > 0) {
-                //app has cached results from last launch
-            } else {
-                //search nearby on startup
-                app.performSearch(true, false);
-            }
-
-            app.appState.mapLaunched = true;
-            //TODO prevent this reloading when api == true again - remove observer
-
-            if (app.appState.isRunningUnderCordova) {
-                setTimeout(function () {
-                    if (navigator.splashscreen) navigator.splashscreen.hide();
-                }, 300);
-            }
         }
 
         refreshLocationWatcherStatus() {
@@ -678,7 +674,7 @@ module OCM {
             this.loadPref("filterapimode", $("#filter-apimode"), false);
             this.loadPref("optbasemaptype", $("#pref-basemap-type"), false);
             this.loadPref("optsearchbehaviour", $("#pref-search-behaviour"), false);
-           
+
             this.loadPref("filteroperator", $("#filter-operator"), true);
             this.loadPref("filterconnectiontype", $("#filter-connectiontype"), true);
             this.loadPref("filterconnectionlevel", $("#filter-connectionlevel"), true);
@@ -985,7 +981,7 @@ module OCM {
                 this.log("No search results, will not overwrite cached search results.");
             }
 
-            this.log("Rendering search results..");
+            this.log("Rendering " + locationList.length + " search results..");
             $("#search-no-data").hide();
 
             this.hideProgressIndicator();
@@ -1257,36 +1253,27 @@ module OCM {
         }
 
         refreshMapView() {
-            var $resultcount = $("#map-view-resultcount");
-
-            if (this.viewModel.poiList != null && this.viewModel.poiList.length > 0) {
-                $resultcount.html(this.viewModel.poiList.length + " Results");
-            } else {
-                $resultcount.html("0 Results");
-            }
-
             if (this.appState.isRunningUnderCordova) {
                 var app = this;
 
-                //for cordova, switch over to native google maps, if available
-                if (plugin && plugin.google && plugin.google.maps) {
-                    plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
-                        if (isAvailable) {
-                            app.mappingManager.setMapAPI("googlenativesdk");
-                        } else {
-                            app.log("Google Play Services not available, fallback to web maps API");
-                        }
-                    });
+                if (app.mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_NATIVE) {
+                    //for cordova, switch over to native google maps, if available
+                    if (plugin && plugin.google && plugin.google.maps) {
+                        plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
+                            if (isAvailable) {
+                                app.log("Native maps available, switching API.");
+                                app.mappingManager.setMapAPI(OCM.MappingAPI.GOOGLE_NATIVE);
+                            } else {
+                                app.log("Google Play Services not available, fallback to web maps API");
+                            }
+                        });
+                    }
                 }
             }
 
-            var appContext = this;
-
-            //if (!this.appState.mapLaunched) {
-            //on first showing map, adjust map container height to match page
+            //on showing map, adjust map container height to match page
             var mapHeight = this.adjustMainContentHeight();
 
-            //}
             this.mappingManager.refreshMapView("map-view", mapHeight, this.viewModel.poiList, this.viewModel.searchPosition);
 
             //set map type based on pref
@@ -1569,7 +1556,7 @@ module OCM {
             $("#search-title-favourites").hide();
             $("#search-title-main").show();
 
-            setTimeout(function () { app.refreshMapView(); }, 250);
+            //setTimeout(function () { app.refreshMapView(); }, 250);
         }
 
         navigateToFavourites() {
@@ -1638,7 +1625,7 @@ module OCM {
 
         navigateToStartup() {
             this.log("Navigate To: Startup", LogLevel.VERBOSE);
-            this.showPage("startup-page", "Open Charge Map");
+            this.showPage("startup-page", "Open Charge Map", true);
         }
 
         navigateToAbout() {

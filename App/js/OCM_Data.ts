@@ -62,9 +62,15 @@ module OCM {
 
             if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
+            var apiCallURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams;
+
+            if (console) {
+                console.log("API Call:" + apiCallURL);
+            }
+
             $.ajax({
                 type: "GET",
-                url: this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams + "&callback=" + callbackname,
+                url: apiCallURL + "&callback=" + callbackname,
                 jsonp: "false",
                 contentType: "application/json;",
                 dataType: "jsonp",
@@ -96,9 +102,15 @@ module OCM {
 
             if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
+            var apiCallURL = serviceURL + serviceParams
+
+            if (console) {
+                console.log("API Call:" + apiCallURL);
+            }
+
             var ajaxSettings: JQueryAjaxSettings = {
                 type: "GET",
-                url: serviceURL + serviceParams + "&callback=" + callbackname,
+                url: apiCallURL + "&callback=" + callbackname,
                 jsonp: "false",
                 contentType: "application/json;",
                 dataType: "jsonp",

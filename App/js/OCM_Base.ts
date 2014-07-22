@@ -13,7 +13,7 @@ module OCM {
     export class Base {
         public enableLogging: boolean;
         constructor() {
-            this.enableLogging = true;
+            this.enableLogging = false;
         }
 
         public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {

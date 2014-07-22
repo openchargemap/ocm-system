@@ -36,7 +36,7 @@ module OCM {
         public mapCentre: GeoPosition;
         public searchDistanceKM: number;
         public iconSet: string;
-        public mapAPI: string;
+        public mapAPI: MappingAPI;
         public mapMoveQueryRefreshMS: number; //time to wait before recognising map centre has changed
         public requestSearchUpdate: boolean;
         public enableSearchRadiusIndicator: boolean;
@@ -51,7 +51,7 @@ module OCM {
             this.enableTrackingMapCentre = false;
             this.enableSearchByWatchingLocation = false;
             this.mapCentre = null;
-            this.mapAPI = "google";
+            this.mapAPI = MappingAPI.GOOGLE_WEB;
             this.mapType = "ROADMAP";
             this.searchDistanceKM = 1000 * 100;
             this.mapMoveQueryRefreshMS = 300;
@@ -59,6 +59,11 @@ module OCM {
         }
     }
 
+    export enum MappingAPI {
+        GOOGLE_WEB,
+        GOOGLE_NATIVE,
+        LEAFLET
+    }
     /** Mapping - provides a way to render to various mapping APIs
      * @module OCM.Mapping
      */
@@ -89,8 +94,26 @@ module OCM {
             this.parentAppContext = context;
         }
 
-        setMapAPI(api: string) {
+        setMapAPI(api: OCM.MappingAPI) {
             this.mapOptions.mapAPI = api;
+        }
+
+        isMappingInitialised() {
+            if (this.mapAPIReady && this.map != null) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        initMap(mapcanvasID: string) {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+                this.initMapGoogleNativeSDK(mapcanvasID);
+            }
+
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
+                this.initMapGoogleWeb(mapcanvasID);
+            }
         }
 
         initMapGoogleNativeSDK(mapcanvasID: string) {
@@ -107,7 +130,7 @@ module OCM {
 
                 //set map options
                 this.map.setOptions({
-                    'mapType': plugin.google.maps.MapTypeId.HYBRID,
+                    'mapType': plugin.google.maps.MapTypeId.ROADMAP,
                     'controls': {
                         'compass': true,
                         'myLocationButton': true,
@@ -120,7 +143,6 @@ module OCM {
                          'rotate': false   //Disable changing the bearing
                      },*/
                     'camera': {
-                        //'latLng': GORYOKAKU_JAPAN,
                         // 'tilt': 30,
                         'zoom': 15,
                         'bearing': 50
@@ -277,7 +299,7 @@ module OCM {
 
             var uiContext = this;
 
-            this.log("showPOIList: refreshing map layout");
+            this.log("Native Maps: refreshing map layout");
             this.map.refreshLayout();
 
             if (this.mapOptions.mapCentre != null) {
@@ -304,13 +326,20 @@ module OCM {
             }
         }
 
-        initMapGoogle(mapcanvasID) {
-            if (this.mapsInitialised || !this.mapAPIReady) return false;
+        initMapGoogleWeb(mapcanvasID) {
+            if (this.mapsInitialised) {
+                this.log("google web maps: map already initialised");
+                return false;
+            }
+
+            if (!this.mapAPIReady) {
+                this.log("init google maps web - API not ready, cannot proceed");
+                return false;
+            }
 
             var mapManagerContext = this;
 
             if (this.map == null && google.maps) {
-                this.mapsInitialised = true;
                 var mapCanvas = document.getElementById(mapcanvasID);
 
                 if (mapCanvas != null) {
@@ -390,11 +419,13 @@ module OCM {
                         });
                     }
                 }
+
+                this.mapsInitialised = true;
                 return true;
             }
         }
 
-        showPOIListOnMapViewGoogle(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
+        showPOIListOnMapViewGoogleWeb(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
             if (!this.mapsInitialised) {
                 this.log("showPOIList; cannot show google map, not initialised.");
                 return;
@@ -549,7 +580,7 @@ module OCM {
             var mapManagerContext = this;
             var map = this.map;
 
-            if (this.mapOptions.mapAPI == "googlenativesdk") {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.log("would add/update search pos marker");
                 if (mapManagerContext.mapCentreMarker != null) {
                     mapManagerContext.log("Updating search marker position");
@@ -595,7 +626,7 @@ module OCM {
                 }
             }
 
-            if (this.mapOptions.mapAPI == "google") {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
                 if (mapManagerContext.mapCentreMarker != null) {
                     mapManagerContext.log("Updating search marker position");
                     mapManagerContext.mapCentreMarker.setPosition(searchPos);
@@ -784,11 +815,11 @@ module OCM {
 
         updateMapSize() {
             if (this.map != null) {
-                if (this.mapOptions.mapAPI == "googlenativesdk") {
+                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                     this.map.refreshLayout();
                 }
 
-                if (this.mapOptions.mapAPI == "googlenativesdk") {
+                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
                     google.maps.event.trigger(this.map, 'resize');
                 }
             }
@@ -797,7 +828,7 @@ module OCM {
         updateMapCentrePos = function (lat: number, lng: number, moveMap: boolean) {
             //update record of map centre so search results can optionally be refreshed
             if (moveMap) {
-                //TODO: re-centre map
+                //TODO: NATIVE/Web
                 if (this.map) {
                     this.map.setCenter(new google.maps.LatLng(lat, lng));
                 }
@@ -809,7 +840,7 @@ module OCM {
         refreshMapView(mapCanvasID: string, mapHeight: number, poiList: Array<any>, searchPos: any): boolean {
             document.getElementById(mapCanvasID).style.height = mapHeight + "px";
 
-            if (this.mapOptions.mapAPI == "googlenativesdk") {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.log("Refreshing map using API: googlenativesdk");
 
                 var appcontext = this;
@@ -821,7 +852,7 @@ module OCM {
                         }
 
                         //setup map view if not already initialised
-                        appcontext.initMapGoogleNativeSDK(mapCanvasID);
+                        appcontext.initMap(mapCanvasID);
                         appcontext.showPOIListOnMapViewGoogleNativeSDK(mapCanvasID, poiList, this.parentAppContext, document.getElementById(mapCanvasID), appcontext.mapOptions.resultBatchID);
                     } else {
                         this.log("Native Maps not available");
@@ -835,27 +866,27 @@ module OCM {
                 }
             }
 
-            if (this.mapOptions.mapAPI == "google") {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
                 if (typeof (google) == "undefined") {
                     //no google maps currently available
                     this.errorMessage = "Google maps cannot be loaded. Please check your data connection.";
                     return false;
                 }
 
-                this.log("Refreshing map using API: google");
+                this.log("Refreshing map using API: google web");
 
                 if (searchPos != null) {
                     this.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
                 }
                 //setup map view if not already initialised
-                this.initMapGoogle(mapCanvasID);
+                this.initMap(mapCanvasID);
 
-                this.showPOIListOnMapViewGoogle(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
+                this.showPOIListOnMapViewGoogleWeb(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
 
                 return true;
             }
 
-            if (this.mapOptions.mapAPI == "leaflet") {
+            if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
                 //setup map view, tracking user pos, if not already initialised
                 //TODO: use last search pos as lat/lng, or first item in locationList
                 var centreLat = 50;
@@ -873,28 +904,34 @@ module OCM {
         }
 
         setMapType(maptype: string) {
+            if (this.mapOptions.mapType == maptype) return;
+
             this.mapOptions.mapType = maptype;
             this.log("Changing map type:" + maptype);
 
-            if (this.mapOptions.mapAPI == "googlenativesdk") {
-                try {
-                    this.map.setMapTypeId(eval("plugin.google.maps.MapTypeId." + maptype));
-                } catch (exception) {
-                    this.log("Failed to set map type:" + maptype);
+            if (this.isMappingInitialised()) {
+                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+                    try {
+                        this.map.setMapTypeId(eval("plugin.google.maps.MapTypeId." + maptype));
+                    } catch (exception) {
+                        this.log("Failed to set map type:" + maptype + " : " + exception.toString());
+                    }
                 }
-            }
 
-            if (this.mapOptions.mapAPI == "google") {
-                try {
-                    this.map.setMapTypeId(eval("google.maps.MapTypeId." + maptype));
-                } catch (exception) {
-                    this.log("Failed to set map type:" + maptype);
+                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
+                    try {
+                        this.map.setMapTypeId(eval("google.maps.MapTypeId." + maptype));
+                    } catch (exception) {
+                        this.log("Failed to set map type:" + maptype + " : " + exception.toString());
+                    }
                 }
+            } else {
+                this.log("Map type set, maps not initialised yet.");
             }
         }
 
         hideMap() {
-            if (this.mapOptions.mapAPI == "googlenativesdk") {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.log("Debug: Hiding Map");
                 if (this.map != null) {
                     //hide map otherwise it will stay on top
@@ -905,7 +942,7 @@ module OCM {
         }
 
         showMap() {
-            if (this.mapOptions.mapAPI == "googlenativesdk") {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.log("Debug: Showing Map");
 
                 if (this.map != null) {
@@ -938,6 +975,5 @@ module OCM {
                 mapCanvas.innerHTML = mapHTML;
             }
         }
-
     }
 } 

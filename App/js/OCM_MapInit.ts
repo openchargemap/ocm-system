@@ -5,14 +5,18 @@
 
 function initGoogleMapsCompleted() {
     ocm_app.mappingManager.mapAPIReady = true;
-    if (console) console.log("Google Maps Web API Loaded");
+    if (console) console.log("Google Maps Web API Loaded:" + ocm_app.mappingManager.mapAPIReady);
 };
 
 function loadGoogleMapsScript() {
     //load google maps script async, if google API is selected
-    if (ocm_app.mappingManager.mapOptions.mapAPI != "google") {
-        if (console) console.log("Skipping load of Google Maps Web API: ");
-        ocm_app.mappingManager.mapAPIReady = true
+    if (ocm_app.mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_WEB) {
+        if (console) console.log("Google Maps Web API not selected.");
+        setTimeout(
+            function () {
+                ocm_app.mappingManager.mapAPIReady = true;
+            }, 1000);
+
         return false;
     }
 
