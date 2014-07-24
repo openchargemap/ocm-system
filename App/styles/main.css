@@ -26,6 +26,26 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+h1,
+h2,
+h3,
+h4 {
+  font-family: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 1.3em;
+}
+h1 {
+  font-size: 2em;
+}
+h2 {
+  font-size: 1.4em;
+}
+h3 {
+  font-size: 1.3em;
+}
+h4 {
+  font-size: 1.2em;
+}
 p {
   margin: 1em 0 1em 0;
 }
@@ -324,7 +344,7 @@ p {
 .card-heading,
 .section-heading {
   color: #3c3c3c;
-  font-family: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
+  font-family: "robotolight", "roboto", "Segoe UI Light", Helvetica, Arial, sans-serif;
   font-size: 1.2em;
   font-weight: 300;
   margin-bottom: 0.3em;
@@ -333,7 +353,7 @@ p {
   margin-top: 0;
   padding: 0.6em;
   color: #3c3c3c;
-  font-family: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
+  font-family: "robotolight", "roboto", "Segoe UI Light", Helvetica, Arial, sans-serif;
   font-weight: 300;
 }
 #details-options {
@@ -344,26 +364,6 @@ p {
 #details-options .option-item {
   display: inline;
   padding: 0.4em;
-}
-h1,
-h2,
-h3,
-h4 {
-  font-family: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
-  font-weight: 300 !important;
-  font-size: 1.3em;
-}
-h1 {
-  font-size: 2em;
-}
-h2 {
-  font-size: 1.4em;
-}
-h3 {
-  font-size: 1.3em;
-}
-h4 {
-  font-size: 1.2em;
 }
 /*page heading bar*/
 div [data-role="header"] {
@@ -376,6 +376,7 @@ div [data-role="header"] {
   top: 0px;
   padding-top: 0;
   font-weight: 300;
+  font-family: "robotolight", "roboto", "Segoe UI Light", Helvetica, Arial, sans-serif;
   margin-top: -1px;
 }
 div[data-role=header] > div {
@@ -598,6 +599,7 @@ div#home-page {
   top: -1px;
   left: -1px;
   height: 101%;
+  font-family: "robotolight", "roboto", "Segoe UI Light", Helvetica, Arial, sans-serif;
   font-size: 1.2em;
   font-weight: 300;
 }

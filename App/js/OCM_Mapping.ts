@@ -23,6 +23,12 @@ module OCM {
         public coords: GeoLatLng;
         public timestamp: number;
         public attribution: string;
+
+        constructor(lat:number=null,lng:number=null) {
+            this.coords = new GeoLatLng();
+            this.coords.latitude = lat;
+            this.coords.longitude = lng;
+        }
     }
 
     export class MapOptions {
@@ -317,12 +323,17 @@ module OCM {
 
                 this.log("Animating camera to map centre:" + this.mapOptions.mapCentre);
 
-                map.animateCamera({
-                    'target': gmMapCentre,
-                    'tilt': 60,
-                    'zoom': 12,
-                    'bearing': 0
-                });
+                setTimeout(function () {
+                    map.animateCamera({
+                        'target': gmMapCentre,
+                        'tilt': 60,
+                        'zoom': 12,
+                        'bearing': 0
+                    });
+                }, 500);
+                
+            } else {
+                this.log("map centre not set, not setting camera");
             }
         }
 
@@ -829,12 +840,18 @@ module OCM {
             //update record of map centre so search results can optionally be refreshed
             if (moveMap) {
                 //TODO: NATIVE/Web
-                if (this.map) {
+                if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
                     this.map.setCenter(new google.maps.LatLng(lat, lng));
+                }
+
+                if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+                    this.map.setCenter(new plugin.google.maps.LatLng(lat, lng));
                 }
             }
 
-            this.mapOptions.mapCentre = { 'coords': { 'latitude': lat, 'longitude': lng } };
+            this.mapOptions.mapCentre = new GeoPosition(lat,lng);
+        
+            if (console) console.log("Map centre pos updated");
         };
 
         refreshMapView(mapCanvasID: string, mapHeight: number, poiList: Array<any>, searchPos: any): boolean {
@@ -847,15 +864,21 @@ module OCM {
 
                 var isAvailable = plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
                     if (isAvailable) {
-                        if (searchPos != null) {
-                            appcontext.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
+
+                        if (appcontext.parentAppContext != null && appcontext.parentAppContext.viewModel.searchPosition != null) {
+                            var searchPos = appcontext.parentAppContext.viewModel.searchPosition;
+                            if (searchPos != null) {
+                                appcontext.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
+                            }
+                        } else {
+                            appcontext.log("Map centre cannot be updated");
                         }
 
                         //setup map view if not already initialised
                         appcontext.initMap(mapCanvasID);
                         appcontext.showPOIListOnMapViewGoogleNativeSDK(mapCanvasID, poiList, this.parentAppContext, document.getElementById(mapCanvasID), appcontext.mapOptions.resultBatchID);
                     } else {
-                        this.log("Native Maps not available");
+                        appcontext.log("Native Maps not available");
                     }
                     return isAvailable;
                 });
@@ -875,12 +898,13 @@ module OCM {
 
                 this.log("Refreshing map using API: google web");
 
-                if (searchPos != null) {
-                    this.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
-                }
-                //setup map view if not already initialised
+              //setup map view if not already initialised
                 this.initMap(mapCanvasID);
 
+                if (searchPos != null) {
+                    //this.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
+                }
+               
                 this.showPOIListOnMapViewGoogleWeb(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
 
                 return true;

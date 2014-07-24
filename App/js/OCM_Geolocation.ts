@@ -39,8 +39,10 @@ module OCM {
             this.positionWatcherID = navigator.geolocation.watchPosition(
                 function (position: GeoPosition) {
                     //got position update
-                    app.log("Got GPS position update." + position.coords.accuracy + " " + position.coords.latitude + " " + position.coords.longitude);
-                    app.clientGeolocationPos = position;
+                    if (position != null) {
+                        app.log("Got GPS position update." + position.coords.accuracy + " " + position.coords.latitude + " " + position.coords.longitude);
+                        app.clientGeolocationPos = position;
+                    }
                 },
                 function () {
                     //got error
@@ -63,7 +65,9 @@ module OCM {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
-                        this.clientGeolocationPos = position;
+                        if (position != null) {
+                            this.clientGeolocationPos = position;
+                        }
                         successCallback(this.clientGeolocationPos);
                     },
                     function () {

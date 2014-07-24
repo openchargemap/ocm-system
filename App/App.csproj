@@ -25,6 +25,8 @@
     <Content Include="fonts\FontAwesome\css\font-awesome.css" />
     <Content Include="fonts\FontAwesome\css\font-awesome.min.css" />
     <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\Roboto\roboto-light-webfont.svg" />
+    <Content Include="fonts\Roboto\robotolight.css" />
     <Content Include="images\ajax-loader4.gif" />
     <Content Include="images\ajax-loader3.gif" />
     <Content Include="images\ajax-loader2.gif" />
@@ -122,6 +124,9 @@
     <Content Include="robots.txt" />
     <Content Include="styles\extended.css" />
     <Content Include="styles\ios.css" />
+    <Content Include="fonts\Roboto\roboto-light-webfont.eot" />
+    <Content Include="fonts\Roboto\roboto-light-webfont.ttf" />
+    <Content Include="fonts\Roboto\roboto-light-webfont.woff" />
     <None Include="styles\main.less" />
     <Content Include="styles\main.css">
       <DependentUpon>main.less</DependentUpon>

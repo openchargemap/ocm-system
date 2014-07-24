@@ -223,144 +223,147 @@ module OCM {
 
         performLocationSubmit() {
             var app = (<OCM.App>this);
-            var refData = this.apiClient.referenceData;
-            var item = this.apiClient.referenceData.ChargePoint;
+            if (!app.appState.isSubmissionInProgress) {
+                var refData = this.apiClient.referenceData;
+                var item = this.apiClient.referenceData.ChargePoint;
 
-            if (this.isLocationEditMode == true) item = this.viewModel.selectedPOI;
+                if (this.isLocationEditMode == true) item = this.viewModel.selectedPOI;
 
-            //collect form values
-            item.AddressInfo.Title = $("#edit_addressinfo_title").val();
-            item.AddressInfo.AddressLine1 = $("#edit_addressinfo_addressline1").val();
-            item.AddressInfo.AddressLine2 = $("#edit_addressinfo_addressline2").val();
-            item.AddressInfo.Town = $("#edit_addressinfo_town").val();
-            item.AddressInfo.StateOrProvince = $("#edit_addressinfo_stateorprovince").val();
-            item.AddressInfo.Postcode = $("#edit_addressinfo_postcode").val();
-            item.AddressInfo.Latitude = $("#edit_addressinfo_latitude").val();
-            item.AddressInfo.Longitude = $("#edit_addressinfo_longitude").val();
+                //collect form values
+                item.AddressInfo.Title = $("#edit_addressinfo_title").val();
+                item.AddressInfo.AddressLine1 = $("#edit_addressinfo_addressline1").val();
+                item.AddressInfo.AddressLine2 = $("#edit_addressinfo_addressline2").val();
+                item.AddressInfo.Town = $("#edit_addressinfo_town").val();
+                item.AddressInfo.StateOrProvince = $("#edit_addressinfo_stateorprovince").val();
+                item.AddressInfo.Postcode = $("#edit_addressinfo_postcode").val();
+                item.AddressInfo.Latitude = $("#edit_addressinfo_latitude").val();
+                item.AddressInfo.Longitude = $("#edit_addressinfo_longitude").val();
 
-            var country = this.apiClient.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val());
-            item.AddressInfo.Country = country;
-            item.AddressInfo.CountryID = null;
+                var country = this.apiClient.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val());
+                item.AddressInfo.Country = country;
+                item.AddressInfo.CountryID = null;
 
-            item.AddressInfo.AccessComments = $("#edit_addressinfo_accesscomments").val();
-            item.AddressInfo.ContactTelephone1 = $("#edit_addressinfo_contacttelephone1").val();
-            item.AddressInfo.ContactTelephone2 = $("#edit_addressinfo_contacttelephone2").val();
-            item.AddressInfo.ContactEmail = $("#edit_addressinfo_contactemail").val();
-            item.AddressInfo.RelatedURL = $("#edit_addressinfo_relatedurl").val();
+                item.AddressInfo.AccessComments = $("#edit_addressinfo_accesscomments").val();
+                item.AddressInfo.ContactTelephone1 = $("#edit_addressinfo_contacttelephone1").val();
+                item.AddressInfo.ContactTelephone2 = $("#edit_addressinfo_contacttelephone2").val();
+                item.AddressInfo.ContactEmail = $("#edit_addressinfo_contactemail").val();
+                item.AddressInfo.RelatedURL = $("#edit_addressinfo_relatedurl").val();
 
-            item.NumberOfPoints = $("#edit_numberofpoints").val();
+                item.NumberOfPoints = $("#edit_numberofpoints").val();
 
-            item.UsageType = this.apiClient.getRefDataByID(refData.UsageTypes, $("#edit_usagetype").val());
-            item.UsageTypeID = null;
+                item.UsageType = this.apiClient.getRefDataByID(refData.UsageTypes, $("#edit_usagetype").val());
+                item.UsageTypeID = null;
 
-            item.UsageCost = $("#edit_usagecost").val();
+                item.UsageCost = $("#edit_usagecost").val();
 
-            item.StatusType = this.apiClient.getRefDataByID(refData.StatusTypes, $("#edit_statustype").val());
-            item.StatusTypeID = null;
+                item.StatusType = this.apiClient.getRefDataByID(refData.StatusTypes, $("#edit_statustype").val());
+                item.StatusTypeID = null;
 
-            item.GeneralComments = $("#edit_generalcomments").val();
+                item.GeneralComments = $("#edit_generalcomments").val();
 
-            item.OperatorInfo = this.apiClient.getRefDataByID(refData.Operators, $("#edit_operator").val());
-            item.OperatorID = null;
+                item.OperatorInfo = this.apiClient.getRefDataByID(refData.Operators, $("#edit_operator").val());
+                item.OperatorID = null;
 
-            if (this.isLocationEditMode != true) {
-                item.DataProvider = null;
-                item.DataProviderID = null;
+                if (this.isLocationEditMode != true) {
+                    item.DataProvider = null;
+                    item.DataProviderID = null;
 
-                //if user is editor for this new location, set to publish on submit
-                if (this.hasUserPermissionForPOI(item, "Edit")) {
-                    item.SubmissionStatus = this.apiClient.getRefDataByID(refData.SubmissionStatusTypes, 200);
+                    //if user is editor for this new location, set to publish on submit
+                    if (this.hasUserPermissionForPOI(item, "Edit")) {
+                        item.SubmissionStatus = this.apiClient.getRefDataByID(refData.SubmissionStatusTypes, 200);
+                        item.SubmissionStatusTypeID = null;
+                    }
+                } else {
+                    //in edit mode use submission status from form
+                    item.SubmissionStatus = this.apiClient.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
                     item.SubmissionStatusTypeID = null;
-                }
-            } else {
-                //in edit mode use submission status from form
-                item.SubmissionStatus = this.apiClient.getRefDataByID(refData.SubmissionStatusTypes, $("#edit_submissionstatus").val());
-                item.SubmissionStatusTypeID = null;
-                /*item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
-                item.DataProviderID = null;*/
-            }
-
-            if (item.Connections == null) item.Connections = new Array();
-
-            //read settings from connection editors
-            var numConnections = 0;
-            for (var n = 1; n <= this.numConnectionEditors; n++) {
-                var originalConnection = null;
-                if (item.Connections.length >= n) {
-                    originalConnection = item.Connections[n - 1];
+                    /*item.DataProvider = this.ocm_data.getRefDataByID(refData.DataProviders, $("#edit_dataprovider").val());
+                    item.DataProviderID = null;*/
                 }
 
-                var connectionInfo: OCM.ConnectionInfo = {
-                    "ID": -1,
-                    "Reference": null,
-                    "ConnectionType": this.apiClient.getRefDataByID(refData.ConnectionTypes, $("#edit_connection" + n + "_connectiontype").val()),
-                    "StatusType": this.apiClient.getRefDataByID(refData.StatusTypes, $("#edit_connection" + n + "_status").val()),
-                    "Level": this.apiClient.getRefDataByID(refData.ChargerTypes, $("#edit_connection" + n + "_level").val()),
-                    "CurrentType": this.apiClient.getRefDataByID(refData.CurrentTypes, $("#edit_connection" + n + "_currenttype").val()),
-                    "Amps": $("#edit_connection" + n + "_amps").val(),
-                    "Voltage": $("#edit_connection" + n + "_volts").val(),
-                    "PowerKW": $("#edit_connection" + n + "_powerkw").val(),
-                    "Quantity": $("#edit_connection" + n + "_quantity").val()
-                };
+                if (item.Connections == null) item.Connections = new Array();
 
-                //preserve original connection info not editable in this editor
-                if (originalConnection != null) {
-                    connectionInfo.ID = originalConnection.ID;
-                    connectionInfo.Reference = originalConnection.Reference;
-                    connectionInfo.Comments = originalConnection.Comments;
-                }
+                //read settings from connection editors
+                var numConnections = 0;
+                for (var n = 1; n <= this.numConnectionEditors; n++) {
+                    var originalConnection = null;
+                    if (item.Connections.length >= n) {
+                        originalConnection = item.Connections[n - 1];
+                    }
 
-                //add new connection or update existing
-                if (item.Connections.length >= n) {
-                    item.Connections[n - 1] = connectionInfo;
-                } else {
-                    item.Connections.push(connectionInfo);
-                }
-            }
-
-            //stored attribution metadata if any
-            if (this.positionAttribution != null) {
-                //add/update position attributiom
-                if (item.MetadataValues == null) item.MetadataValues = new Array();
-                var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(item.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
-                if (attributionMetadata != null) {
-                    attributionMetadata.ItemValue = this.positionAttribution;
-                } else {
-                    attributionMetadata = {
-                        MetadataFieldID: this.apiClient.ATTRIBUTION_METADATAFIELDID,
-                        ItemValue: this.positionAttribution
+                    var connectionInfo: OCM.ConnectionInfo = {
+                        "ID": -1,
+                        "Reference": null,
+                        "ConnectionType": this.apiClient.getRefDataByID(refData.ConnectionTypes, $("#edit_connection" + n + "_connectiontype").val()),
+                        "StatusType": this.apiClient.getRefDataByID(refData.StatusTypes, $("#edit_connection" + n + "_status").val()),
+                        "Level": this.apiClient.getRefDataByID(refData.ChargerTypes, $("#edit_connection" + n + "_level").val()),
+                        "CurrentType": this.apiClient.getRefDataByID(refData.CurrentTypes, $("#edit_connection" + n + "_currenttype").val()),
+                        "Amps": $("#edit_connection" + n + "_amps").val(),
+                        "Voltage": $("#edit_connection" + n + "_volts").val(),
+                        "PowerKW": $("#edit_connection" + n + "_powerkw").val(),
+                        "Quantity": $("#edit_connection" + n + "_quantity").val()
                     };
-                    item.MetadataValues.push(attributionMetadata);
-                }
-            } else {
-                //clear position attribution if required
-                var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(item.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
-                if (attributionMetadata != null) {
-                    //remove existing item from array
-                    item.MetadataValues = jQuery.grep(item.MetadataValues, function (a: any, i: number) {
-                        return a.MetadataFieldID !== app.apiClient.ATTRIBUTION_METADATAFIELDID;
-                    });
-                }
-            }
 
-            //show progress indicator
-            this.showProgressIndicator();
+                    //preserve original connection info not editable in this editor
+                    if (originalConnection != null) {
+                        connectionInfo.ID = originalConnection.ID;
+                        connectionInfo.Reference = originalConnection.Reference;
+                        connectionInfo.Comments = originalConnection.Comments;
+                    }
 
-            //submit
-            this.apiClient.submitLocation(item,
-                this.getLoggedInUserInfo(),
-                function (jqXHR, textStatus) {
-                    app.submissionCompleted(jqXHR, textStatus);
-
-                    //refresh POI details via API
-                    if (item.ID > 0) {
-                        app.showDetailsViewById(item.ID, true);
-                        app.navigateToLocationDetails();
+                    //add new connection or update existing
+                    if (item.Connections.length >= n) {
+                        item.Connections[n - 1] = connectionInfo;
+                    } else {
+                        item.Connections.push(connectionInfo);
                     }
                 }
-                ,
-                $.proxy(app.submissionFailed, app)
-                );
+
+                //stored attribution metadata if any
+                if (this.positionAttribution != null) {
+                    //add/update position attributiom
+                    if (item.MetadataValues == null) item.MetadataValues = new Array();
+                    var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(item.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
+                    if (attributionMetadata != null) {
+                        attributionMetadata.ItemValue = this.positionAttribution;
+                    } else {
+                        attributionMetadata = {
+                            MetadataFieldID: this.apiClient.ATTRIBUTION_METADATAFIELDID,
+                            ItemValue: this.positionAttribution
+                        };
+                        item.MetadataValues.push(attributionMetadata);
+                    }
+                } else {
+                    //clear position attribution if required
+                    var attributionMetadata = this.apiClient.getMetadataValueByMetadataFieldID(item.MetadataValues, this.apiClient.ATTRIBUTION_METADATAFIELDID);
+                    if (attributionMetadata != null) {
+                        //remove existing item from array
+                        item.MetadataValues = jQuery.grep(item.MetadataValues, function (a: any, i: number) {
+                            return a.MetadataFieldID !== app.apiClient.ATTRIBUTION_METADATAFIELDID;
+                        });
+                    }
+                }
+
+                //show progress indicator
+                this.showProgressIndicator();
+
+                this.appState.isSubmissionInProgress = true;
+                //submit
+                this.apiClient.submitLocation(item,
+                    this.getLoggedInUserInfo(),
+                    function (jqXHR, textStatus) {
+                        app.submissionCompleted(jqXHR, textStatus);
+
+                        //refresh POI details via API
+                        if (item.ID > 0) {
+                            app.showDetailsViewById(item.ID, true);
+                            app.navigateToLocationDetails();
+                        }
+                    }
+                    ,
+                    $.proxy(app.submissionFailed, app)
+                    );
+            }
         }
 
         showLocationEditor() {

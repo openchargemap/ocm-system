@@ -21,8 +21,11 @@ module OCM {
         /** The current selected POI */
         public selectedPOI: any;
 
-        /** The current set of POIs from latest search */
+        /** The currently viewed set of POIs from latest search/favourites view */
         public poiList: Array<any>;
+
+        /** last set of POIs from recent search */
+        public searchPOIList: Array<any>;
 
         /** A set of POIs favourited by the user */
         public favouritesList: Array<any>;
@@ -77,7 +80,9 @@ module OCM {
         public mapLaunched: boolean;
         public enableCommentSubmit: boolean;
         public isSearchInProgress: boolean;
+        public isSearchRequested: boolean;
         public suppressSettingsSave: boolean;
+        public isSubmissionInProgress: boolean;
         public _lastPageId: string;
         public _appQuitRequestCount: number;
         public _appPollForLogin: any;

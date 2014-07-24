@@ -100,6 +100,19 @@ module OCM {
         }
 
         initApp() {
+
+            /*
+            App startup workflow:
+                - Begin Observing Model Changes
+                - Setup page history tracking for back/forwards navigation
+                - Setup UI actions (button/link actions)
+                - Load stored settings
+                - Check if user already signed in
+                - Load cached results from last search (if any)
+                - If no cached results, show startup page and wait for an initial search to complete
+                - kick off lazy refresh of favourites
+                - show map/search page
+            */
             var app = this;
 
             //Begin observing app model changes such as poiList and other state
@@ -142,18 +155,24 @@ module OCM {
             //if cached results exist, render them
             var cachedResults = this.apiClient.getCachedDataObject("SearchResults");
             var cachedResult_Location = this.apiClient.getCachedDataObject("SearchResults_Location");
+            var cachedResult_SearchPos = this.apiClient.getCachedDataObject("SearchResults_SearchPos");
 
             if (cachedResults !== null) {
                 if (cachedResult_Location !== null) {
                     (<HTMLInputElement>document.getElementById("search-location")).value = cachedResult_Location;
                 }
+                if (cachedResult_SearchPos != null) {
+                    app.viewModel.searchPosition = cachedResult_SearchPos;
+                }
                 //use cached POI results, observer will then render the results
                 app.viewModel.poiList = cachedResults;
+                app.viewModel.searchPOIList = cachedResults;
             } else {
                 //navigate to startup page while we wait for results
 
                 app.navigateToStartup();
                 app.viewModel.poiList = [];
+                app.viewModel.searchPOIList = [];
 
                 //search nearby on startup
                 app.performSearch(true, false);
@@ -222,9 +241,10 @@ module OCM {
             // observe map option changes
             Object.observe(this.mappingManager.mapOptions, function (changes) {
                 changes.forEach(function (change) {
-                    //app.log("changed: app.mappingManager.mapOptions." + change.name);
+                    app.log("changed: app.mappingManager.mapOptions." + change.name);
 
                     if (change.name == "mapCentre") {
+
                         if (app.mappingManager.mapOptions.requestSearchUpdate) {
                             app.mappingManager.mapOptions.requestSearchUpdate = false;
                             var pos = app.mappingManager.mapOptions.mapCentre;
@@ -252,14 +272,15 @@ module OCM {
             // observe geolocation model changes
             Object.observe(this.geolocationManager, function (changes) {
                 changes.forEach(function (change) {
-                    //app.log("changed: app.geolocationManager." + change.name);
+                    app.log("changed: app.geolocationManager." + change.name + "::" + JSON.stringify(change.oldValue));
                     if (change.name == "clientGeolocationPos") {
+                        
                         //geolocation position has changed, if watching location is enabled perform a new search if different from last time
-                        if (!app.appState.isSearchInProgress) {
-                            app.log("watching position, searching POIs again..");
+                        if (!app.appState.isSearchInProgress && app.mappingManager.mapOptions.enableSearchByWatchingLocation) {
+                            app.log("Position watcher update, searching POIs again..");
                             app.performSearch(true, false);
                         } else {
-                            app.log("search still in progress, not updating results");
+                            //app.log("search still in progress, not updating results");
                         }
                     }
                 });
@@ -696,88 +717,96 @@ module OCM {
         performCommentSubmit() {
             var app = this;
 
-            app.checkSelectedAPIMode();
+            if (!app.appState.isSubmissionInProgress) {
+                app.checkSelectedAPIMode();
 
-            if (app.appState.enableCommentSubmit === true) {
-                app.appState.enableCommentSubmit = false;
-                var refData = this.apiClient.referenceData;
-                var item = this.apiClient.referenceData.UserComment;
+                if (app.appState.enableCommentSubmit === true) {
+                    app.appState.enableCommentSubmit = false;
+                    var refData = this.apiClient.referenceData;
+                    var item = this.apiClient.referenceData.UserComment;
 
-                //collect form values
-                item.ChargePointID = this.viewModel.selectedPOI.ID;
-                item.CheckinStatusType = this.apiClient.getRefDataByID(refData.CheckinStatusTypes, $("#checkin-type").val());
-                item.CommentType = this.apiClient.getRefDataByID(refData.UserCommentTypes, $("#comment-type").val());
-                item.UserName = $("#comment-username").val();
-                item.Comment = $("#comment-text").val();
-                item.Rating = $("#comment-rating").val();
+                    //collect form values
+                    item.ChargePointID = this.viewModel.selectedPOI.ID;
+                    item.CheckinStatusType = this.apiClient.getRefDataByID(refData.CheckinStatusTypes, $("#checkin-type").val());
+                    item.CommentType = this.apiClient.getRefDataByID(refData.UserCommentTypes, $("#comment-type").val());
+                    item.UserName = $("#comment-username").val();
+                    item.Comment = $("#comment-text").val();
+                    item.Rating = $("#comment-rating").val();
 
-                //show progress
-                this.showProgressIndicator();
+                    //show progress
+                    this.showProgressIndicator();
 
-                //submit
-                this.apiClient.submitUserComment(item,
-                    this.getLoggedInUserInfo(),
-                    function (jqXHR, textStatus) {
-                        app.submissionCompleted(jqXHR, textStatus);
+                    this.appState.isSubmissionInProgress = true;
 
-                        //refresh POI details via API
-                        if (item.ChargePointID > 0) {
-                            app.showDetailsViewById(item.ChargePointID, true);
-                            app.navigateToLocationDetails();
-                        }
-                    },
-                    $.proxy(this.submissionFailed, this)
-                    );
-            } else {
-                this.log("Comment submit not enabled");
+                    //submit
+                    this.apiClient.submitUserComment(item,
+                        this.getLoggedInUserInfo(),
+                        function (jqXHR, textStatus) {
+                            app.submissionCompleted(jqXHR, textStatus);
+
+                            //refresh POI details via API
+                            if (item.ChargePointID > 0) {
+                                app.showDetailsViewById(item.ChargePointID, true);
+                                app.navigateToLocationDetails();
+                            }
+                        },
+                        $.proxy(this.submissionFailed, this)
+                        );
+                } else {
+                    this.log("Comment submit not enabled");
+                }
             }
         }
 
         performMediaItemSubmit() {
             var app = this;
-            this.checkSelectedAPIMode();
+            if (!app.appState.isSubmissionInProgress) {
+                this.checkSelectedAPIMode();
 
-            var $fileupload = $(':file');
-            var mediafile = (<HTMLFormElement>$fileupload[0]).files[0];
-            var name, size, type;
-            if (mediafile) {
-                name = mediafile.name;
-                size = mediafile.size;
-                type = mediafile.type;
+                var $fileupload = $(':file');
+                var mediafile = (<HTMLFormElement>$fileupload[0]).files[0];
+                var name, size, type;
+                if (mediafile) {
+                    name = mediafile.name;
+                    size = mediafile.size;
+                    type = mediafile.type;
+                }
+
+                var formData = new FormData();
+
+                formData.append("id", this.viewModel.selectedPOI.ID);
+                formData.append("comment", $("#comment").val());
+                formData.append("mediafile", mediafile);
+                /*var imageData = this.fileUploadManager.getImageData();
+                formData.append("mediafile", imageData);
+                formData.append("contenttype", "Base64,[Image/PNG]");
+                */
+
+                //show progress
+                this.showProgressIndicator();
+                this.appState.isSubmissionInProgress = true;
+
+                //submit
+                this.apiClient.submitMediaItem(
+                    formData,
+                    this.getLoggedInUserInfo(),
+                    function (jqXHR, textStatus) {
+                        app.submissionCompleted(jqXHR, textStatus);
+
+                        //refresh POI details via API
+                        if (app.viewModel.selectedPOI.ID > 0) {
+                            app.showDetailsViewById(app.viewModel.selectedPOI.ID, true);
+                            app.navigateToLocationDetails();
+                        }
+                    },
+                    function () {
+                        app.appState.isSubmissionInProgress = false;
+                        app.hideProgressIndicator();
+                        app.showMessage("Sorry, your submission could not be processed. Please check your network connection or try again later.");
+                    },
+                    $.proxy(this.mediaSubmissionProgress, this)
+                    );
             }
-
-            var formData = new FormData();
-
-            formData.append("id", this.viewModel.selectedPOI.ID);
-            formData.append("comment", $("#comment").val());
-            formData.append("mediafile", mediafile);
-            /*var imageData = this.fileUploadManager.getImageData();
-            formData.append("mediafile", imageData);
-            formData.append("contenttype", "Base64,[Image/PNG]");
-            */
-
-            //show progress
-            this.showProgressIndicator();
-
-            //submit
-            this.apiClient.submitMediaItem(
-                formData,
-                this.getLoggedInUserInfo(),
-                function (jqXHR, textStatus) {
-                    app.submissionCompleted(jqXHR, textStatus);
-
-                    //refresh POI details via API
-                    if (app.viewModel.selectedPOI.ID > 0) {
-                        app.showDetailsViewById(app.viewModel.selectedPOI.ID, true);
-                        app.navigateToLocationDetails();
-                    }
-                },
-                function () {
-                    app.hideProgressIndicator();
-                    app.showMessage("Sorry, your submission could not be processed. Please check your network connection or try again later.");
-                },
-                $.proxy(this.mediaSubmissionProgress, this)
-                );
         }
 
         mediaSubmissionProgress(progressEvent: any) {
@@ -794,6 +823,7 @@ module OCM {
             this.log("submission::" + textStatus, LogLevel.VERBOSE);
 
             this.hideProgressIndicator();
+            this.appState.isSubmissionInProgress = false;
             if (textStatus != "error") {
                 this.showMessage("Thank you for your contribution, you may need to refresh your search for changes to appear. If approval is required your change may take 1 or more days to show up. (Status Code: " + textStatus + ")");
 
@@ -819,10 +849,13 @@ module OCM {
                 app.hideProgressIndicator();
             }
             app.appState._appSearchTimestamp = null;
+            app.appState.isSearchInProgress = false;
+            app.appState.isSearchRequested = false;
         }
 
         submissionFailed() {
             this.hideProgressIndicator();
+            this.appState.isSubmissionInProgress = false;
             this.showMessage("Sorry, there was an unexpected problem accepting your contribution. Please check your internet connection and try again later.");
         }
 
@@ -856,6 +889,7 @@ module OCM {
 
                 //begin new search
                 this.showProgressIndicator();
+                this.appState.isSearchRequested = true; //used to signal that geolocation updates etc should continue a search after they complete
 
                 //detect if mapping/geolocation available
                 if (useClientLocation == true) {
@@ -933,11 +967,11 @@ module OCM {
         }
 
         determineUserLocationCompleted(pos) {
-            this.viewModel.searchPosition = pos;
-            this.geolocationManager.clientGeolocationPos = pos;
-
+           
             this.clearSearchRequest();
 
+            this.viewModel.searchPosition = pos;
+            //this.geolocationManager.clientGeolocationPos = pos;
             this.performSearch();
         }
 
@@ -968,18 +1002,21 @@ module OCM {
             //inform viewmodel of changes
             this.viewModel.resultsBatchID++; //indicates that results have changed and need reprocessed (maps etc)
             this.viewModel.poiList = poiList;
+            this.viewModel.searchPOIList = poiList;
+
+            if (poiList != null && poiList.length > 0) {
+                this.log("Caching search results..");
+                this.apiClient.setCachedDataObject("SearchResults", poiList);
+                this.apiClient.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
+                this.apiClient.setCachedDataObject("SearchResults_SearchPos", this.viewModel.searchPosition);
+            } else {
+                this.log("No search results, will not overwrite cached search results.");
+            }
         }
 
         renderPOIList(locationList: Array<any>) {
             //this.viewModel.poiList = locationList;
 
-            if (locationList != null && locationList.length > 0) {
-                this.log("Caching search results..");
-                this.apiClient.setCachedDataObject("SearchResults", locationList);
-                this.apiClient.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
-            } else {
-                this.log("No search results, will not overwrite cached search results.");
-            }
 
             this.log("Rendering " + locationList.length + " search results..");
             $("#search-no-data").hide();
@@ -1546,7 +1583,7 @@ module OCM {
             this.navigateToMap();
         }
 
-        navigateToMap() {
+        navigateToMap(showLatestSearchResults: boolean = true) {
             this.log("Navigate To: Map Page", LogLevel.VERBOSE);
 
             this.showPage("map-page", "Map");
@@ -1556,7 +1593,10 @@ module OCM {
             $("#search-title-favourites").hide();
             $("#search-title-main").show();
 
-            //setTimeout(function () { app.refreshMapView(); }, 250);
+            if (showLatestSearchResults) {
+                app.viewModel.poiList = app.viewModel.searchPOIList;
+            }
+            setTimeout(function () { app.refreshMapView(); }, 250);
         }
 
         navigateToFavourites() {
@@ -1565,13 +1605,13 @@ module OCM {
             //get list of favourites as POI list and render in standard search page
             var favouritesList = app.getFavouritePOIList();
             if (favouritesList === null || favouritesList.length === 0) {
-                $("#favourites-list").html("<p>You have no favourite locations set. To add or remove a favourite, tap the <i title=\"Toggle Favourite\" class=\"icon-heart-empty\"></i> icon when viewing a location.</p>");
+                $("#favourites-list").html("<p>You have no favourite locations set. To add or remove a favourite, select the <i title=\"Toggle Favourite\" class=\"fa fa-heart-o\"></i> icon when viewing a location.</p>");
                 this.showPage("favourites-page", "Favourites");
             } else {
-                app.renderPOIList(favouritesList);
-
+                app.viewModel.poiList = favouritesList;
+                
                 //show favourites on search page
-                app.navigateToMap();
+                app.navigateToMap(false);
 
                 //change title of map page to be favourites
                 $("#search-title-main").hide();
