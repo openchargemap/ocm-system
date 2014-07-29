@@ -18,11 +18,11 @@ namespace OCM.API.Common.DataSummary
         public string ItemType { get; set; }
     }
 
-    public class UserRegistrationStats
+    public class GeneralStats
     {
         public int Year { get; set; }
         public int Month { get; set; }
-        public int NumberOfUsers { get; set; }
+        public int Quantity { get; set; }
     }
 
      public class UserEditStats
@@ -136,12 +136,12 @@ namespace OCM.API.Common.DataSummary
             return results;
         }
 
-        public List<UserRegistrationStats> GetUserRegistrationStats(DateTime dateFrom, DateTime dateTo)
+        public List<GeneralStats> GetUserRegistrationStats(DateTime dateFrom, DateTime dateTo)
         {
             var stats = from p in DataModel.Users
                         where p.DateCreated >= dateFrom && p.DateCreated <= dateTo
                         group p by new { month = p.DateCreated.Month, year = p.DateCreated.Year } into d
-                        select new UserRegistrationStats { Month = d.Key.month, Year = d.Key.year, NumberOfUsers = d.Count() };
+                        select new GeneralStats { Month = d.Key.month, Year = d.Key.year, Quantity = d.Count() };
 
             return stats.OrderBy(s=>s.Year).ThenBy(s=>s.Month).ToList();
         }
@@ -156,5 +156,16 @@ namespace OCM.API.Common.DataSummary
 
             return stats.OrderBy(s=>s.Year).ThenBy(s=>s.Month).ToList();
         }
+
+        public List<GeneralStats> GetUserCommentStats(DateTime dateFrom, DateTime dateTo)
+        {
+            var stats = from p in DataModel.UserComments
+                        where p.DateCreated >= dateFrom && p.DateCreated <= dateTo
+                        group p by new { month = p.DateCreated.Month, year = p.DateCreated.Year } into d
+                        select new GeneralStats { Month = d.Key.month, Year = d.Key.year, Quantity = d.Count() };
+
+            return stats.OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
+        }
+
     }
 }

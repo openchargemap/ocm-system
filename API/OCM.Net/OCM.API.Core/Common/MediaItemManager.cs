@@ -1,18 +1,15 @@
-﻿using System.Configuration;
+﻿using ImageResizer;
+using OCM.Core.Data;
+using OCM.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ImageResizer;
-using OCM.Core.Data;
-using OCM.Core.Util;
 using System.Threading;
 
 namespace OCM.API.Common
 {
-
     public class MediaItemManager
     {
-
         public MediaItem AddPOIMediaItem(string tempFolder, string sourceImageFile, int chargePointId, string comment, bool isVideo, int userId)
         {
             var dataModel = new OCMEntities();
@@ -24,7 +21,7 @@ namespace OCM.API.Common
             if (urls == null)
             {
                 //failed to upload, preserve submission data
-                System.IO.File.WriteAllText(tempFolder+"//OCM_"+chargePointId+"_"+(DateTime.Now.ToFileTimeUtc().ToString())+".json", "{userId:"+userId+",comment:\""+comment+"\"}");
+                System.IO.File.WriteAllText(tempFolder + "//OCM_" + chargePointId + "_" + (DateTime.Now.ToFileTimeUtc().ToString()) + ".json", "{userId:" + userId + ",comment:\"" + comment + "\"}");
                 return null;
             }
             else
@@ -47,13 +44,11 @@ namespace OCM.API.Common
 
                 return mediaItem;
             }
-
-            
         }
 
         private void GenerateImageThumbnails(string sourceFile, string destFile, int maxWidth)
         {
-            ImageBuilder.Current.Build(sourceFile, destFile, new ResizeSettings("width=" + maxWidth));
+            ImageBuilder.Current.Build(sourceFile, destFile, new ResizeSettings("width=" + maxWidth + "&autorotate=true"));
         }
 
         public string[] UploadPOIImageToStorage(string tempFolder, string sourceImageFile, Model.ChargePoint poi)
@@ -94,7 +89,6 @@ namespace OCM.API.Common
                     AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to generate image upload thumbnails : OCM-" + poi.ID, "");
                     return null;
                 }
-
 
                 //attempt upload
                 bool success = false;
@@ -156,7 +150,6 @@ namespace OCM.API.Common
 
                 return null;
             }
-
         }
 
         public List<OCM.API.Common.Model.MediaItem> GetUserMediaItems(int userId)
@@ -190,7 +183,6 @@ namespace OCM.API.Common
                 var user = new UserManager().GetUser(userId);
                 AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\", EntityID:" + mediaItemId + ",ChargePointID:" + cpID + "}", "User deleted media item");
             }
-
         }
     }
 }
