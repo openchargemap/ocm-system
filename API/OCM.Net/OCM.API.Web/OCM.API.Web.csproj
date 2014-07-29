@@ -109,12 +109,15 @@
     <Content Include="Global.asax" />
     <Content Include="OData\OData.svc" />
     <Content Include="Scripts\SharedLibs\OCM_App.js" />
+    <Content Include="Scripts\SharedLibs\OCM_AppBase.js" />
     <Content Include="Scripts\SharedLibs\OCM_AppBootstrap.js" />
     <Content Include="Scripts\SharedLibs\OCM_App_LocationEditor.js" />
     <Content Include="Scripts\SharedLibs\OCM_App_Util.js" />
+    <Content Include="Scripts\SharedLibs\OCM_Base.js" />
     <Content Include="Scripts\SharedLibs\OCM_CommonUI.js" />
     <Content Include="Scripts\SharedLibs\OCM_Data.js" />
     <Content Include="Scripts\SharedLibs\OCM_Geolocation.js" />
+    <Content Include="Scripts\SharedLibs\OCM_Mapping.js" />
     <Content Include="Styles\StyleSheet.css" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />

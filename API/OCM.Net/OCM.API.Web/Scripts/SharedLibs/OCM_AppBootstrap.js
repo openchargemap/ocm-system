@@ -2,6 +2,7 @@
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 
+
 //Set iOS App Splashscreen depending on device size
 //var filename = navigator.platform === 'iPad' ? 'images/splashscreen/AppSplashscreen_768x1004.png' : 'images/splashscreen/AppSplashscreen_320x460.png';
 //document.write('<link rel="apple-touch-startup-image" href="' + filename + '" />');
@@ -31,6 +32,10 @@ function onDeviceReady() {
         }
     } catch (err) {
         ocm_app.log("OCM: error checkin for connection status");
+    }
+
+    if (StatusBar) {
+        StatusBar.overlaysWebView(false);
     }
 
     /*

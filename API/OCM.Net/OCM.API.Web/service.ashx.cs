@@ -257,7 +257,7 @@ namespace OCM.API
             if (filter.APIVersion >= 2)
             {
                 //the following output types are deprecated and will default as JSON
-                if (outputType == "carwings" || outputType == "rss" || outputType == "csv")
+                if (outputType == "carwings" || outputType == "rss")
                 {
                     OutputBadRequestMessage(context, "specified output type not supported in this API version");
                     return;

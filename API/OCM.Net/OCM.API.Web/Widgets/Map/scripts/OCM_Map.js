@@ -28,7 +28,7 @@ function OCM_MapOptions() {
 function OCM_Map() {
     this.ocm_ui = new OCM_CommonUI();
     this.ocm_data = new OCM.API();
-    this.ocm_geo = new OCM.Geolocation();
+    this.ocm_geo = new OCM.Geolocation(this.ocm_data);
     this.ocm_geo.ocm_data = this.ocm_data;
     this.mapOptions = new OCM_MapOptions();
 

@@ -13,7 +13,8 @@ namespace OCM.API.OutputProviders
 
         public CSVOutputProvider()
         {
-            ContentType = "text/csv";
+            ContentType = "text/csv; header=present; charset=UTF-8;";
+           
         }
 
         private void AppendText(string val)
@@ -31,7 +32,7 @@ namespace OCM.API.OutputProviders
 
         public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
         {
-            output = new StreamWriter(outputStream);
+            output = new StreamWriter(outputStream, System.Text.Encoding.UTF8);
 
             System.Web.HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename=ocm.csv");
 

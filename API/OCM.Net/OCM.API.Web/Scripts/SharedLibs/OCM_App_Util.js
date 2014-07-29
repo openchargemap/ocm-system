@@ -262,6 +262,8 @@ var OCM;
                 if (poi.DataProvider.WebsiteURL != null) {
                     advancedInfo += this.formatTextField(this.formatURL(poi.DataProvider.WebsiteURL), "Website", false, false, "ocm.details.dataProviderWebsite");
                 }
+                advancedInfo += this.formatTextField(poi.AddressInfo.Latitude, "Latitude", false, false, null);
+                advancedInfo += this.formatTextField(poi.AddressInfo.Longitude, "Longitude", false, false, null);
             }
 
             var output = {

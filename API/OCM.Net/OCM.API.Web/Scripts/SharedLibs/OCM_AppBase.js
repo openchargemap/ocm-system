@@ -73,8 +73,8 @@ var OCM;
             this.appState = new AppState();
             this.appConfig = new AppConfig();
 
-            this.ocm_data = new OCM.API();
-            this.ocm_geo = new OCM.Geolocation(this.ocm_data);
+            this.apiClient = new OCM.API();
+            this.geolocationManager = new OCM.Geolocation(this.apiClient);
             this.mappingManager = new OCM.Mapping();
 
             this.viewModel = new AppViewModel();
@@ -98,7 +98,7 @@ var OCM;
 
         AppBase.prototype.getCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
-                return this.ocm_data.getCachedDataObject("_pref_" + c_name);
+                return this.apiClient.getCachedDataObject("_pref_" + c_name);
             } else {
                 //http://www.w3schools.com/js/js_cookies.asp
                 var i, x, y, ARRcookies = document.cookie.split(";");
@@ -120,7 +120,7 @@ var OCM;
         AppBase.prototype.setCookie = function (c_name, value, exdays) {
             if (typeof exdays === "undefined") { exdays = 1; }
             if (this.appState.isRunningUnderCordova) {
-                this.ocm_data.setCachedDataObject("_pref_" + c_name, value);
+                this.apiClient.setCachedDataObject("_pref_" + c_name, value);
             } else {
                 if (exdays == null)
                     exdays = 1;
@@ -135,7 +135,7 @@ var OCM;
 
         AppBase.prototype.clearCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
-                this.ocm_data.setCachedDataObject("_pref_" + c_name, null);
+                this.apiClient.setCachedDataObject("_pref_" + c_name, null);
             } else {
                 var expires = new Date();
                 expires.setUTCFullYear(expires.getUTCFullYear() - 1);
@@ -188,6 +188,16 @@ var OCM;
                 $dropdown.val(selectedValue);
         };
 
+        AppBase.prototype.getMultiSelectionAsArray = function ($dropdown, defaultVal) {
+            //convert multi select values to string array
+            if ($dropdown.val() != null) {
+                var selectedVals = $dropdown.val().toString();
+                return selectedVals.split(",");
+            } else {
+                return defaultVal;
+            }
+        };
+
         AppBase.prototype.showProgressIndicator = function () {
             $("#progress-indicator").fadeIn('slow');
         };
@@ -206,7 +216,7 @@ var OCM;
         };
 
         AppBase.prototype.isUserSignedIn = function () {
-            if (this.ocm_data.hasAuthorizationError == true) {
+            if (this.apiClient.hasAuthorizationError == true) {
                 return false;
             }
 
