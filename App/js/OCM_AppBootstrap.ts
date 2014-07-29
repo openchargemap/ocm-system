@@ -3,7 +3,7 @@
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 
 //declare var OCM_App: any;
-
+declare var StatusBar: any;
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
@@ -48,6 +48,10 @@ function onDeviceReady() {
         }
     } catch (err) {
         ocm_app.log("OCM: error checkin for connection status");
+    }
+
+    if (StatusBar) {
+        StatusBar.overlaysWebView(false);
     }
 
     /*

@@ -960,7 +960,7 @@ module OCM {
                 if (this.map != null) {
                     //hide map otherwise it will stay on top
                     this.map.setVisible(false);
-                    this.map.refreshLayout();
+                    //this.map.refreshLayout();
                 }
             }
         }
@@ -971,8 +971,9 @@ module OCM {
 
                 if (this.map != null) {
                     //show/reposition map
-                    this.map.setVisible(true);
+                    
                     this.map.refreshLayout();
+                    this.map.setVisible(true);
                 } else {
                     this.log("Map not available - check API?", LogLevel.ERROR);
                 }
