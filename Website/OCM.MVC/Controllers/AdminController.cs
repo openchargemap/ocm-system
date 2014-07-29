@@ -73,5 +73,25 @@ namespace OCM.MVC.Controllers
             }
             return View(operatorInfo);
         }
+
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult CommentDelete(int id)
+        {
+            var commentManager = new UserCommentManager();
+            var user = new UserManager().GetUser(int.Parse(Session["UserID"].ToString()));
+            commentManager.DeleteComment(user.ID, id);
+            return RedirectToAction("Index");
+        }
+
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult MediaDelete(int id)
+        {
+            var itemManager = new MediaItemManager();
+            var user = new UserManager().GetUser(int.Parse(Session["UserID"].ToString()));
+            itemManager.DeleteMediaItem(user.ID, id);
+            return RedirectToAction("Details","POI");
+        }
     }
 }

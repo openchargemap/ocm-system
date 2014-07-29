@@ -18,9 +18,14 @@ namespace OCM.MVC.Controllers
         {
             var dataSummary = new DataSummaryManager();
             StatsModel model = new StatsModel();
+            
+            var dateTo = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddDays(-1);
+            var dateFrom = dateTo.AddYears(-1);
+
             model.TopContributors = dataSummary.GetTopNContributors(15, null);
-            model.UserRegistrations = dataSummary.GetUserRegistrationStats(DateTime.UtcNow.AddYears(-1), DateTime.UtcNow);
-            model.UserEdits = dataSummary.GetUserEditSummary(DateTime.UtcNow.AddYears(-1), DateTime.UtcNow);
+            model.UserRegistrations = dataSummary.GetUserRegistrationStats(dateFrom, dateTo);
+            model.UserEdits = dataSummary.GetUserEditSummary(dateFrom, dateTo);
+            model.UserComments = dataSummary.GetUserCommentStats(dateFrom, dateTo);
 
             return View(model);
         }

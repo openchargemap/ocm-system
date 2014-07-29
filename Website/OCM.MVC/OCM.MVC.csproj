@@ -444,6 +444,7 @@
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
     <Content Include="Views\Profile\_PublicProfile.cshtml" />
     <Content Include="Views\Stats\_EditStatistics.cshtml" />
+    <Content Include="Views\Stats\_UserComments.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

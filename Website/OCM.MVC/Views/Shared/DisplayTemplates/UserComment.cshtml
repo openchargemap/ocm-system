@@ -1,4 +1,8 @@
 ﻿@model OCM.API.Common.Model.UserComment
+@{
+    var isUserAdmin = (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
+}
+
 <div>
     @if (ViewBag.ShowPOILink == true)
     {
@@ -35,7 +39,12 @@
             }                                             
             </cite> @Html.DisplayFor(m => m.DateCreated)</small>
 
-       
+        @if (isUserAdmin)
+        {
+            <p>
+                <a class="btn btn-danger" href="@Url.Action("CommentDelete", "Admin", new { id=Model.ID})" target="_blank"><span class="glyphicon glyphicon-remove"></span> Delete (as Admin)</a>
+            </p>
+        }
     </blockquote>
 
   

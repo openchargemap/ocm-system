@@ -1,13 +1,22 @@
 /// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 var OCM;
 (function (OCM) {
-    var Geolocation = (function () {
+    var Geolocation = (function (_super) {
+        __extends(Geolocation, _super);
         function Geolocation(api) {
+            _super.call(this);
+
             //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
 
@@ -17,13 +26,42 @@ var OCM;
 
             this.api = api;
         }
+        Geolocation.prototype.startWatchingUserLocation = function () {
+            var app = this;
+            var geoOptions = {
+                enableHighAccuracy: true,
+                maximumAge: 30000,
+                timeout: 27000
+            };
+
+            //begin watching position (with high accuracy)
+            this.positionWatcherID = navigator.geolocation.watchPosition(function (position) {
+                //got position update
+                if (position != null) {
+                    app.log("Got GPS position update." + position.coords.accuracy + " " + position.coords.latitude + " " + position.coords.longitude);
+                    app.clientGeolocationPos = position;
+                }
+            }, function () {
+                //got error
+                app.log("Could not watch GPS position.", 3 /* ERROR */);
+            }, geoOptions);
+        };
+
+        Geolocation.prototype.stopWatchingUserLocation = function () {
+            if (this.positionWatcherID != null) {
+                navigator.geolocation.clearWatch(this.positionWatcherID);
+            }
+        };
+
         Geolocation.prototype.determineUserLocation = function (successCallback, failureCallback) {
             var appContext = this;
 
             //determine user location automatically if enabled & supported
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    this.clientGeolocationPos = position;
+                    if (position != null) {
+                        this.clientGeolocationPos = position;
+                    }
                     successCallback(this.clientGeolocationPos);
                 }, function () {
                     // could not geolocate
@@ -173,10 +211,11 @@ var OCM;
                 }
             } catch (exception) {
                 //failed to get distance
+                return null;
             }
         };
         return Geolocation;
-    })();
+    })(OCM.Base);
     OCM.Geolocation = Geolocation;
 })(OCM || (OCM = {}));
 //# sourceMappingURL=OCM_Geolocation.js.map

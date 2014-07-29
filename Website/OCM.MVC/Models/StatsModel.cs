@@ -9,7 +9,8 @@ namespace OCM.MVC.Models
     public class StatsModel
     {
         public List<OCM.API.Common.Model.User> TopContributors { get; set; }
-        public List<UserRegistrationStats> UserRegistrations { get; set; }
+        public List<GeneralStats> UserRegistrations { get; set; }
+        public List<GeneralStats> UserComments { get; set; }
         public List<UserEditStats> UserEdits { get; set; }
     }
 }

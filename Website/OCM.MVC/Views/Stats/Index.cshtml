@@ -15,6 +15,9 @@
 
     </div>
     <div class="col-md-6">
+
+        <script src="~/Scripts/Chart.min.js"></script>
+
         <h2><i class="fa fa-users"></i> New Users Per Month</h2>
 
         @Html.Partial("_UserRegistrations", Model.UserRegistrations)
@@ -22,6 +25,10 @@
         <h2><i class="fa fa-map-marker"></i> User Added Locations Per Month</h2>
 
         @Html.Partial("_EditStatistics", Model.UserEdits)
+
+        <h2><i class="fa fa-comments"></i> User Comments/Check-Ins</h2>
+
+        @Html.Partial("_UserComments", Model.UserComments)
     </div>
 </div>
 

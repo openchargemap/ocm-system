@@ -1,6 +1,4 @@
-﻿@model IEnumerable<OCM.API.Common.DataSummary.UserRegistrationStats>
-
-<script src="~/Scripts/Chart.min.js"></script>
+﻿@model IEnumerable<OCM.API.Common.DataSummary.GeneralStats>
 
 <canvas id="userRegistrationsChart" width="280" height="200"></canvas>
 <script>
@@ -20,7 +18,7 @@
                 pointStrokeColor: "#fff",
                 data: [
                    @foreach (var stat in Model){
-                        @Html.Raw(stat.NumberOfUsers)
+                        @Html.Raw(stat.Quantity)
                         @Html.Raw(",")
                     }
                 ]

@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.MediaItem>
-
+@{
+    var isUserAdmin = (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
+}
 <div class="row">
 
     @foreach (var item in Model.Where(i => i.IsEnabled))
@@ -7,10 +9,7 @@
         <div class="col-sm-6 col-md-3">
             <div class="img-thumbnail">
 
-                
-                    <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" onclick="showLightBox('@item.ItemURL');" />
-                
-
+                <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" onclick="showLightBox('@item.ItemURL');" />
 
                 <blockquote>
                     <p>@Html.DisplayFor(modelItem => item.Comment)</p>
@@ -24,17 +23,19 @@
                             {
                                 @Html.DisplayFor(m => item.User.Username)
                             }
-                    </cite> on @item.DateCreated.ToString("yyyy-MM-dd")
-                </small>
-            </blockquote>
-
+                        </cite> on @item.DateCreated.ToString("yyyy-MM-dd")
+                    </small>
+                    @if (isUserAdmin)
+                    {
+                        <p>
+                            <a class="btn btn-danger" href="@Url.Action("MediaDelete", "Admin", new { id=item.ID})" target="_blank"><span class="glyphicon glyphicon-remove"></span> Delete (as Admin)</a>
+                        </p>
+                    }
+                </blockquote>
+            </div>
         </div>
-
-    </div>
     }
-
 </div>
-
 
 <!-- Modal -->
 <div class="modal fade" id="modal-lightbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -56,9 +57,8 @@
 
 <script>
 
-    function showLightBox(imgUrl)
-    {
-        $("#modal-lightbox-content").html("<img src='"+imgUrl+"' class='img-responsive' />");
+    function showLightBox(imgUrl) {
+        $("#modal-lightbox-content").html("<img src='" + imgUrl + "' class='img-responsive' />");
         $('#modal-lightbox').modal("show");
     }
 </script>
