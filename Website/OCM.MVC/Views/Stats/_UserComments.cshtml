@@ -1,0 +1,29 @@
+﻿@model IEnumerable<OCM.API.Common.DataSummary.GeneralStats>
+
+<canvas id="userCommentsChart" width="280" height="200"></canvas>
+<script>
+    //Get the context of the canvas element we want to select
+    var ctx = document.getElementById("userCommentsChart").getContext("2d");
+    var data = {
+        labels: [
+             @foreach (var stat in Model){
+                @Html.Raw("'"+stat.Month.ToString().PadLeft(2,'0')+"/"+stat.Year+"',")
+            }
+        ],
+        datasets: [
+            {
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                data: [
+                   @foreach (var stat in Model){
+                        @Html.Raw(stat.Quantity)
+                        @Html.Raw(",")
+                    }
+                ]
+            }
+        ]
+    }
+    var userCommentsChart = new Chart(ctx).Line(data, {});
+</script>
