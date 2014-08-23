@@ -76,9 +76,6 @@ namespace OCM.API.Common.Model
         [DisplayName("Data Added")]
         public DateTime? DateCreated { get; set; }
 
-        [DisplayName("Contributor")]
-        public User Contributor { get; set; }
-
         public int? SubmissionStatusTypeID { get; set; }
 
         [DisplayName("Submission Status")]
