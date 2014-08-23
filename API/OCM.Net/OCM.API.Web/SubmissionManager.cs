@@ -424,6 +424,7 @@ namespace OCM.API.Common
             {
                 //prepare notification
                 NotificationManager notification = new NotificationManager();
+                
                 Hashtable msgParams = new Hashtable();
                 msgParams.Add("Description", "");
                 msgParams.Add("ChargePointID", comment.ChargePointID);
