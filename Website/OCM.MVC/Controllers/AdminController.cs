@@ -1,9 +1,6 @@
 ﻿using OCM.API.Common;
 using OCM.API.Common.Model;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace OCM.MVC.Controllers
@@ -17,10 +14,11 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
+
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult Users()
         {
-            var userList = new UserManager().GetUsers().OrderByDescending(u=>u.DateCreated);
+            var userList = new UserManager().GetUsers().OrderByDescending(u => u.DateCreated);
             return View(userList);
         }
 
@@ -33,20 +31,26 @@ namespace OCM.MVC.Controllers
 
         [AuthSignedInOnly(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult EditUser(User userDetails )
+        public ActionResult EditUser(User userDetails)
         {
-            var userManager = new UserManager();
+            if (ModelState.IsValid)
+            {
+                var userManager = new UserManager();
 
-            //save
-            userManager.UpdateUserProfile(userDetails, true);
-            
+                //save
+                if (userManager.UpdateUserProfile(userDetails, true))
+                {
+                    return RedirectToAction("Users");
+                }
+            }
+
             return View(userDetails);
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult Operators()
         {
-            var operatorInfoManager=  new OperatorInfoManager();
+            var operatorInfoManager = new OperatorInfoManager();
 
             return View(operatorInfoManager.GetOperators());
         }
@@ -64,8 +68,8 @@ namespace OCM.MVC.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditOperator(OperatorInfo operatorInfo)
         {
-            if(ModelState.IsValid)
-            { 
+            if (ModelState.IsValid)
+            {
                 var operatorInfoManager = new OperatorInfoManager();
 
                 operatorInfo = operatorInfoManager.UpdateOperatorInfo(operatorInfo);
@@ -73,7 +77,6 @@ namespace OCM.MVC.Controllers
             }
             return View(operatorInfo);
         }
-
 
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult CommentDelete(int id)
@@ -84,14 +87,24 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult MediaDelete(int id)
         {
             var itemManager = new MediaItemManager();
             var user = new UserManager().GetUser(int.Parse(Session["UserID"].ToString()));
             itemManager.DeleteMediaItem(user.ID, id);
-            return RedirectToAction("Details","POI");
+            return RedirectToAction("Details", "POI");
+        }
+
+        public JsonResult PollForTasks(string key)
+        {
+            int notificationsSent = 0;
+            //poll for periodic tasks (subscription notifications etc)
+            if (key == System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"])
+            {
+               notificationsSent = new UserSubscriptionManager().SendAllPendingSubscriptionNotifications();
+            }
+            return Json(new { NotificationsSent = notificationsSent }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -18,7 +18,6 @@
 
     @Styles.Render("~/Content/css")
 
-
     @Scripts.Render("~/bundles/jquery")
     <!--fav and touch icons -->
     <link rel="shortcut icon" href="/favicon.ico">
@@ -87,8 +86,6 @@
                         </ul>
                     </li>
 
-
-
                     @if (Session["Username"] != null)
                     {
                         <li class="dropdown">
@@ -97,12 +94,12 @@
                                 <li><p class="navbar-text">@Html.Encode(Session["Username"])</p></li>
                                 <li class="nav-divider"></li>
                                 <li>@Html.ActionLink("my profile", "Index", "Profile")</li>
+                                <!--<li>@Html.ActionLink("my subscriptions", "Subscriptions", "Profile")</li>-->
                                 <li>@Html.ActionLink("my comments", "Comments", "Profile")</li>
                                 <li>@Html.ActionLink("my uploads", "Media", "Profile")</li>
                                 <li class="nav-divider"></li>
                                 <li><a href="@Url.Action("SignOut", "Profile")">sign out</a></li>
                             </ul>
-
                         </li>
 
                     }
@@ -110,8 +107,6 @@
                     {
                         <li><a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Request.Url.AbsoluteUri })">sign in</a></li>
                     }
-
-
 
                     <li class="dropdown ">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="_langTitle">language</span> <b class="caret"></b></a>
@@ -132,17 +127,15 @@
                                 <li><a href="@Url.Action("Index", "EditQueue")">edit queue</a></li>
                                 <li><a href="@Url.Action("Users", "Admin")">users</a></li>
                                 <li><a href="@Url.Action("Operators", "Admin")">operators</a></li>
+                                <li class="nav-divider"></li>
+                                <li><a href="@Url.Action("PollForTasks", "Admin", new { key = System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"] })">poll for system tasks</a></li>
                             </ul>
                         </li>
                     }
-
                 </ul>
             </div>
         </div>
-
     </div>
-
-
 
     <div class="container">
         <div class="content">

@@ -13,10 +13,11 @@ var OCM;
     var LogLevel = OCM.LogLevel;
     var Base = (function () {
         function Base() {
+            this.enableLogging = true;
         }
         Base.prototype.log = function (msg, level) {
             if (typeof level === "undefined") { level = 0 /* VERBOSE */; }
-            if (console) {
+            if (this.enableLogging && console) {
                 console.log("[" + LogLevel[level] + "] " + msg);
             }
         };

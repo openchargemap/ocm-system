@@ -1,0 +1,10 @@
+﻿@model IEnumerable<OCM.API.Common.Model.UserSubscription>
+
+@{
+    ViewBag.Title = "Subscriptions";
+}
+
+<h2>Subscriptions</h2>
+<p>You can use Subscriptions to keep track of charging locations you're interested in. You can setup or modify subscriptions here and you will be notified whenever relevant changes happen.</p>
+<p>For example: "Notify me daily, when charging locations within 5 miles of london are added, updated or have new comments."</p>
+@Html.Partial("_UserSubscriptions", Model)

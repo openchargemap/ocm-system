@@ -1,0 +1,347 @@
+﻿@model OCM.API.Common.Model.UserSubscription
+
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+
+@using (Html.BeginForm("SubscriptionEdit","Profile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.FilterSettings)
+        @Html.HiddenFor(model => model.DateCreated)
+        @Html.HiddenFor(model => model.DateLastNotified)
+        @Html.HiddenFor(model => model.UserID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.NotificationFrequencyMins, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                
+                    @Html.DropDownListFor(model => model.NotificationFrequencyMins, (SelectList)ViewBag.NotificationFrequencyOptions, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NotificationFrequencyMins, "", new { @class = "text-danger" })
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsEnabled, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.IsEnabled)
+                    @Html.ValidationMessageFor(model => model.IsEnabled, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Notify Me When:</h3>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyPOIAdditions, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyPOIAdditions)
+                            @Html.ValidationMessageFor(model => model.NotifyPOIAdditions, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyPOIEdits, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyPOIEdits)
+                            @Html.ValidationMessageFor(model => model.NotifyPOIEdits, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyComments, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyComments)
+                            @Html.ValidationMessageFor(model => model.NotifyComments, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyMedia, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyMedia)
+                            @Html.ValidationMessageFor(model => model.NotifyMedia, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyEmergencyChargingRequests, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyEmergencyChargingRequests)
+                            @Html.ValidationMessageFor(model => model.NotifyEmergencyChargingRequests, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyGeneralChargingRequests, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyGeneralChargingRequests)
+                            @Html.ValidationMessageFor(model => model.NotifyGeneralChargingRequests, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-6">
+                <h3>Area Of Interest:</h3>
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CountryID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, new { @class="form-control"})
+                        @Html.ValidationMessageFor(model => model.CountryID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <p>You can optionally filter results to a specific geographic area:</p>
+                <div id="map" class="map-container" style="height: 300px;"></div>
+                <p>Address: <span id="full-address"></span></p>
+
+                @Html.HiddenFor(model => model.Latitude)
+                @Html.HiddenFor(model => model.Longitude)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DistanceKM, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DistanceKM, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DistanceKM, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+        <div class="form-actions">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script src="~/Scripts/OCM/Subscriptions/distancewidget.js"></script>
+@if (Model.Latitude != null)
+{
+
+    var scriptVars = "var lat = " + Model.Latitude + "; var lng = " + Model.Longitude + ";  var radius = " + Model.DistanceKM + ";";
+    <script>
+        @scriptVars
+
+        var map, marker, geocoder, distanceWidget, geocodeTimer;
+        var centerPos = null;
+        var MAX_RADIUS = 10000;
+        var mapInitialised = false;
+
+        function setPositionViaGeolocation()
+        {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                if (position != null) {
+                    centrePos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    if (!mapInitialised) {
+                        //TODO: set country
+                        lat = centerPos.coords.latitude;
+                        lng = centrePos.coords.longitude;
+                        initializeMap();
+                    }
+                } else {
+                    //nothing doing
+                }
+                        
+            }, function () {
+                // could not geolocate
+                       
+            });
+        }
+
+        function initializeMap() {
+            if (lat != null) {
+                centrePos = new google.maps.LatLng(lat, lng);
+                //setup a geocoder to use when location address at marker pos
+                geocoder = new google.maps.Geocoder();
+
+                //setup map options
+                var mapOptions = {
+                    center: centerPos,
+                    zoom: 14,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+
+                //create map
+                map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+                distanceWidget = new DistanceWidget({
+                    map: map,
+                    distance: radius, // Starting distance in km.
+                    maxDistance: MAX_RADIUS,
+                    color: '#000000',
+                    activeColor: '#5599bb',
+                    sizerIcon: '/scripts/ocm/subscriptions/resize-off.png',
+                    activeSizerIcon: '/scripts/ocm/subscriptions/resize.png'
+                });
+
+                google.maps.event.addListener(distanceWidget, 'distance_changed',
+                    updateDistanceListeners);
+
+                google.maps.event.addListener(distanceWidget, 'position_changed',
+                    updatePosition);
+
+                map.fitBounds(distanceWidget.get('bounds'));
+
+                updateDistanceListeners();
+                updatePosition();
+                addActions();
+            } else {
+                //attempt geolocation then init map
+            }
+        }
+
+        function updatePosition() {
+
+            var pos = distanceWidget.get('position');
+            if (pos != null) {
+                $("#Latitude").val(pos.lat());
+                $("#Longitude").val(pos.lng());
+            }
+
+            //perform address lookup from lat/lng
+            /*if (geocodeTimer) {
+                window.clearTimeout(geocodeTimer);
+            }
+
+            // Throttle the geo query so we don't hit the limit
+            geocodeTimer = window.setTimeout(function () {
+                reverseGeocodePosition();
+            }, 500);*/
+        }
+
+        function reverseGeocodePosition() {
+            var pos = distanceWidget.get('position');
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'latLng': pos }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        //got an address for this location
+                        var addressResult = results[0];
+                        var addressComponents = addressResult.address_components;
+                        $("#full-address").html(addressResult.formatted_address);
+
+                        //find address component in result with type 'postal_code'
+
+                        for (var i = addressComponents.length - 1; i >= 0; i--) {
+                            for (var t = 0; t < addressComponents[i].types.length; t++) {
+                                if (addressComponents[i].types[t] == "postal_code") {
+                                    //$("#@Html.IdFor(model => model.ID)").val(addressComponents[i].short_name);
+                                    break;
+                                }
+                            }
+                        }
+
+
+                    } else {
+                        //no result
+                    }
+
+                }
+            });
+        }
+
+        function updateDistanceListeners() {
+            //fires when search widget distance changes
+            var distance = parseFloat(distanceWidget.get('distance'));
+            $('#DistanceKM').val(distance.toFixed(2));
+            $('#distance-range').val(distance.toFixed(2));
+        }
+
+        function addActions() {
+            /*var s = $('#s').submit(search);
+
+            $('#close').click(function () {
+                $('#cols').removeClass('has-cols');
+                google.maps.event.trigger(map, 'resize');
+                map.fitBounds(distanceWidget.get('bounds'));
+                $('#results-wrapper').hide();
+
+                return false;
+            });*/
+        }
+
+
+        google.maps.event.addDomListener(window, 'load', initializeMap);
+
+    </script>
+}
+<script>
+
+    $(document).ready(function () {
+        if (!Modernizr.inputtypes.range) {
+            document.getElementById("distance-range").style.display = "none";
+        } else {
+            //if distance range control changes, update text value and
+            $("#distance-range").change(
+                function () {
+                    var newDistance = $("#distance-range").val();
+
+                    //update widget distance, and text value of distance:
+                    distanceWidget.set('distance', newDistance);
+
+                    //get updated distance from widget and use for text box value
+                    var distance = parseFloat(distanceWidget.get('distance'));
+                    $('#DistanceKM').val(distance.toFixed(2));
+                });
+        }
+
+        //if distance textbox changes, update other related items
+        $('#DistanceKM').keyup(
+                function () {
+                    var newDistance = $("#@Html.IdFor(model => model.DistanceKM)").val();
+
+                    //update widget distance, and range value of distance:
+                    distanceWidget.set('distance', newDistance);
+
+                    var distance = parseFloat(distanceWidget.get('distance'));
+                    $('#distance-range').val(distance.toFixed(2));
+                }
+            );
+    });
+
+
+</script>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -27,9 +27,15 @@
                 }
                 else
                 {
-                    @Html.DisplayFor(modelItem => item.User.Username)
+
+                    <a target="_blank" href="@Url.Action("View", "Profile", new {id=item.User.ID })">
+                        @Html.DisplayFor(modelItem => item.User.Username)
+                    </a>
                 }
             </td>
+
+
+
             <td>
                 @Html.DisplayFor(modelItem => item.DateSubmitted)
             </td>

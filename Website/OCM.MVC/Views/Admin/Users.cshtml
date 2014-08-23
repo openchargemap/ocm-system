@@ -9,6 +9,7 @@
 <table class="table table-striped">
     <tr>
         <th></th>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.IdentityProvider)
         </th>
@@ -17,6 +18,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailAddress)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Profile)
@@ -57,16 +61,17 @@
         <th>
             @Html.DisplayNameFor(model => model.Longitude)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </th>
-        <th></th>
+    
+        
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
             @(item.EmailHash != null ? Html.Raw("<img src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />") : Html.Raw(""))
+        </td>
+        <td>
+            @Html.ActionLink("Details", "EditUser", new { id = item.ID })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.IdentityProvider)
@@ -83,6 +88,9 @@
             {
                 @Html.DisplayFor(modelItem => item.Username)
             }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmailAddress)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Profile)
@@ -123,12 +131,8 @@
         <td>
             @Html.DisplayFor(modelItem => item.Longitude)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailAddress)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "EditUser", new { id=item.ID })
-        </td>
+       
+   
     </tr>
 }
 

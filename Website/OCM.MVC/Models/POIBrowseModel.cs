@@ -78,7 +78,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.DataProviders), null);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData.DataProviders.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true)), null);
             }
         }
 

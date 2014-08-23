@@ -15,6 +15,14 @@
         <p>This user profile is not public.</p>
     }
 
+   
+    var isUserAdmin = (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
+    
+    if (isUserAdmin)
+    {
+        <h2>Admin Options</h2>
+        <a class="btn btn-danger" href="@Url.Action("EditUser", "Admin", new { id=Model.ID})">Edit User Details</a>
+    }
 }
 else
 {

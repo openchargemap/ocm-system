@@ -25,7 +25,7 @@
 
             <label class="control-label col-md-2">Distance</label>
 
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <select id="distance" name="distance" class="form-control">
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -40,7 +40,7 @@
                     <option value="20000">20000</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <select id="distanceunit" name="distanceunit" class="form-control">
                     <option value="miles">Miles</option>
                     <option value="km">KM</option>
@@ -48,8 +48,8 @@
             </div>
         </div>
 
+        <div id="advanced" class="hidden-xs hidden-sm">
 
-        <div id="search-advanced">
             <div class="form-group">
 
                 <label class="control-label col-md-2" for="locationtitle">Title</label>
@@ -76,7 +76,7 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label col-md-2" >Network/Operator</label>
+                <label class="control-label col-md-2">Network / Operator</label>
 
                 <div class="col-md-8">
                     @Html.DropDownList("operatorids", Model.OperatorList, new { @class = "form-control" })
@@ -105,39 +105,20 @@
                 </div>
             </div>
         </div>
-
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-7">
 
                 <input type="submit" value="Search" class="btn btn-primary" />
-                <input id="toggle-search-advanced" type="button" value="Show/Hide Advanced Search" class="btn btn-info" />
                 <a class="btn btn-warning" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addPOI">Add A Location <span class="glyphicon glyphicon-pencil"></span></a>
             </div>
-
         </div>
     </div>
 
-    @Html.HiddenFor(model=>model.ShowAdvancedOptions)
+    @Html.HiddenFor(model => model.ShowAdvancedOptions)
 }
 
 <script>
     $(document).ready(function () {
-
-        var showAdvanced = @Html.Raw(Model.ShowAdvancedOptions.ToString().ToLower() + ";")
-
-        if (!showAdvanced)
-        {
-            $("#search-advanced").hide();
-        }
-
-        $("#toggle-search-advanced").on("click", function () {
-            //toggle advanced
-            $("#search-advanced").toggle();
-
-            var advId= "@Html.IdFor(model => model.ShowAdvancedOptions)";
-            var advVisible = $("#search-advanced").is(":visible");
-            $("#"+advId).val(advVisible);
-        });
 
         $("#search-nearme").on("click", function () {
             getUserLocation();

@@ -24,7 +24,11 @@ namespace OCM.MVC.Controllers
 
         public ActionResult Index(POIBrowseModel filter)
         {
-            if (filter == null) filter = new POIBrowseModel();
+            if (filter == null)
+            {
+                filter = new POIBrowseModel();
+                filter.ShowAdvancedOptions = true;
+            }
             var cpManager = new API.Common.POIManager();
 
             //dropdown selections of -1 represent an intended null selection, fix this by nulling relevant items
@@ -70,7 +74,7 @@ namespace OCM.MVC.Controllers
                 else
                 {
                     //attempt to geocode
-                    var geocode = new OCM.MVC.App_Code.GeocodingHelper();
+                    var geocode = new GeocodingHelper();
                     string searchCountryName = null;
                     if (filter.CountryIDs != null && filter.CountryIDs.Count() > 0)
                     {
@@ -134,7 +138,7 @@ namespace OCM.MVC.Controllers
             var poi = cpManager.Get(id, true);
             ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
 
-            List<OCM.MVC.App_Code.LocationImage> imageList =null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
+            List<LocationImage> imageList =null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
 
             if (imageList != null)
             {

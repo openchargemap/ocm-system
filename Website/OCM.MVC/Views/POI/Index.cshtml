@@ -11,13 +11,22 @@
     <strong>Tip:</strong> If you just need a quick way to find your nearest charging location you can also try our <a href="http://openchargemap.org/app/">Web App</a>, especially on mobile devices. You can also search your device App Store for a version you can carry around.
 </div>
 
-<div class="well well-sm">
-    @Html.Partial("_POISearch", (OCM.MVC.Models.POIBrowseModel)Model)
+<div class="row">
+    <div class="col-md-6">
+        <div class="well well-sm">
+            @Html.Partial("_POISearch", (OCM.MVC.Models.POIBrowseModel)Model)
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        @if (ViewBag.FormattedAddress != null)
+        {
+            <div><strong>Searching location: @ViewBag.FormattedAddress</strong></div>
+        }
+
+        @Html.Partial("_POIList", Model.POIList)
+
+
+    </div>
+
 </div>
-
-@if (ViewBag.FormattedAddress != null)
-{
-    <div><strong>Searching location: @ViewBag.FormattedAddress</strong></div>
-}
-
-@Html.Partial("_POIList", Model.POIList)
