@@ -12,13 +12,17 @@ namespace OCM.Core.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class OperatorCountry
+    public partial class UserChargingRequest
     {
         public int ID { get; set; }
-        public int OperatorID { get; set; }
-        public int CountryID { get; set; }
+        public int UserID { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public System.DateTime DateCreated { get; set; }
+        public string Comment { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsEmergency { get; set; }
     
-        public virtual Country Country { get; set; }
-        public virtual Operator Operator { get; set; }
+        public virtual User User { get; set; }
     }
 }

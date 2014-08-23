@@ -53,6 +53,7 @@ namespace OCM.Core.Data
         public virtual DbSet<MediaItem> MediaItems { get; set; }
         public virtual DbSet<MetadataFieldOption> MetadataFieldOptions { get; set; }
         public virtual DbSet<RegisteredApplication> RegisteredApplications { get; set; }
-        public virtual DbSet<OperatorCountry> OperatorCountries { get; set; }
+        public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }
+        public virtual DbSet<UserChargingRequest> UserChargingRequests { get; set; }
     }
 }

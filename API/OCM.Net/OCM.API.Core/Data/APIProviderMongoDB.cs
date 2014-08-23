@@ -27,7 +27,6 @@ namespace OCM.Core.Data
             poi.AddressInfo = cp.AddressInfo;
             poi.Chargers = cp.Chargers;
             poi.Connections = cp.Connections;
-            poi.Contributor = cp.Contributor;
             poi.DataProvider = cp.DataProvider;
             poi.DataProviderID = cp.DataProviderID;
             poi.DataProvidersReference = cp.DataProvidersReference;

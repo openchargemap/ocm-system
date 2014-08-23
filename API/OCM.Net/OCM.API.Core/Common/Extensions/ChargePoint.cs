@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace OCM.API.Common.Model.Extensions
@@ -21,7 +20,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.UUID = source.UUID;
 
             //populate data provider info (full object or id only)
-            if (isVerboseMode && source.DataProvider!=null)
+            if (isVerboseMode && source.DataProvider != null)
             {
                 poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
                 poi.DataProviderID = source.DataProvider.ID;
@@ -30,12 +29,11 @@ namespace OCM.API.Common.Model.Extensions
             {
                 poi.DataProviderID = source.DataProviderID;
             }
-            
 
             poi.DataProvidersReference = source.DataProvidersReference;
 
             //populate Operator (full object or id only)
-            if (isVerboseMode && source.Operator!=null)
+            if (isVerboseMode && source.Operator != null)
             {
                 poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
                 poi.OperatorID = source.Operator.ID;
@@ -44,21 +42,20 @@ namespace OCM.API.Common.Model.Extensions
             {
                 poi.OperatorID = source.OperatorID;
             }
-      
 
             poi.OperatorsReference = source.OperatorsReference;
 
             //populate usage type (full object or id only)
-            if (isVerboseMode && source.UsageType!=null)
+            if (isVerboseMode && source.UsageType != null)
             {
                 poi.UsageType = UsageType.FromDataModel(source.UsageType);
                 poi.UsageTypeID = source.UsageType.ID;
-            } 
+            }
             else
             {
                 poi.UsageTypeID = source.UsageTypeID;
             }
-            
+
             poi.UsageCost = source.UsageCost;
 
             //populate address info
@@ -74,7 +71,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.DateLastConfirmed = source.DateLastConfirmed;
 
             //populate status type (full object or id only)
-            if (isVerboseMode && source.StatusType!=null)
+            if (isVerboseMode && source.StatusType != null)
             {
                 poi.StatusType = StatusType.FromDataModel(source.StatusType);
                 poi.StatusTypeID = source.StatusType.ID;
@@ -83,13 +80,13 @@ namespace OCM.API.Common.Model.Extensions
             {
                 poi.StatusTypeID = source.StatusTypeID;
             }
-            
+
             poi.DateLastStatusUpdate = source.DateLastStatusUpdate;
             poi.DataQualityLevel = source.DataQualityLevel;
             poi.DateCreated = source.DateCreated;
 
             //populate submission status type (full object or id only)
-            if (isVerboseMode && source.SubmissionStatusType!=null)
+            if (isVerboseMode && source.SubmissionStatusType != null)
             {
                 poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
                 poi.SubmissionStatusTypeID = source.SubmissionStatusType.ID;
@@ -98,29 +95,12 @@ namespace OCM.API.Common.Model.Extensions
             {
                 poi.SubmissionStatusTypeID = source.SubmissionStatusTypeID;
             }
-            
-            //load contributor details (basic not sensitive info)
-            if (isVerboseMode && source.Contributor!=null)
+
+            poi.Connections = new List<Model.ConnectionInfo>();
+            foreach (var conn in source.Connections)
             {
-                poi.Contributor = User.BasicFromDataModel(source.Contributor);
+                poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode));
             }
-          
-
-            /*if (source.Connections != null)
-            {
-                if (source.Connections.Any())
-                {*/
-
-                    poi.Connections = new List<Model.ConnectionInfo>();
-                    foreach (var conn in source.Connections)
-                    {
-                        poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode));
-                    }
-
-                /*}
-
-            }*/
-
 
             //loadUserComments = true;
             //loadMetadataValues = true;
@@ -146,7 +126,7 @@ namespace OCM.API.Common.Model.Extensions
                 }
             }
 
-            if (loadMetadataValues )
+            if (loadMetadataValues)
             {
                 foreach (var metadataValue in source.MetadataValues)
                 {

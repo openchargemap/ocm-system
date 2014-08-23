@@ -17,12 +17,13 @@ namespace OCM.Core.Data
         public User()
         {
             this.AuditLogs = new HashSet<AuditLog>();
-            this.ChargePoints = new HashSet<ChargePoint>();
             this.EditQueueItems = new HashSet<EditQueueItem>();
             this.EditQueueItems1 = new HashSet<EditQueueItem>();
             this.UserComments = new HashSet<UserComment>();
             this.MediaItems = new HashSet<MediaItem>();
             this.RegisteredApplications = new HashSet<RegisteredApplication>();
+            this.UserSubscriptions = new HashSet<UserSubscription>();
+            this.UserChargingRequests = new HashSet<UserChargingRequest>();
         }
     
         public int ID { get; set; }
@@ -45,16 +46,16 @@ namespace OCM.Core.Data
         public Nullable<double> Latitude { get; set; }
         public Nullable<double> Longitude { get; set; }
         public string APIKey { get; set; }
-        public bool ReceiveEditNotifications { get; set; }
-        public bool ReceiveCommentNotifications { get; set; }
         public string SyncedSettings { get; set; }
+        public bool IsReadOnly { get; set; }
     
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
-        public virtual ICollection<ChargePoint> ChargePoints { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItems { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItems1 { get; set; }
         public virtual ICollection<UserComment> UserComments { get; set; }
         public virtual ICollection<MediaItem> MediaItems { get; set; }
         public virtual ICollection<RegisteredApplication> RegisteredApplications { get; set; }
+        public virtual ICollection<UserSubscription> UserSubscriptions { get; set; }
+        public virtual ICollection<UserChargingRequest> UserChargingRequests { get; set; }
     }
 }

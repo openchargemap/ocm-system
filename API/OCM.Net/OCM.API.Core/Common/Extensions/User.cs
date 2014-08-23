@@ -65,8 +65,6 @@ namespace OCM.API.Common.Model.Extensions
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
                 EmailAddress = source.EmailAddress,
-                ReceiveCommentNotifications = source.ReceiveCommentNotifications,
-                ReceiveEditNotifications = source.ReceiveEditNotifications,
                 SyncedSettings = source.SyncedSettings
             };
         }

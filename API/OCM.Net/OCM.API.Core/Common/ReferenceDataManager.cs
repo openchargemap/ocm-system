@@ -19,6 +19,17 @@ namespace OCM.API.Common
             return OCM.API.Common.Model.Extensions.Country.FromDataModel(selectedCountry);
         }
 
+        public Country GetCountryByISO(string countryISO)
+        {
+            if (countryISO == null) return null;
+
+            countryISO = countryISO.Trim().ToUpper();
+
+            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+            var selectedCountry = dataModel.Countries.FirstOrDefault(c => c.ISOCode == countryISO);
+            return OCM.API.Common.Model.Extensions.Country.FromDataModel(selectedCountry);
+        }
+
         public List<Country> GetCountries(bool withPOIOnly)
         {
             OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();

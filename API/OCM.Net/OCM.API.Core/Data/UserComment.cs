@@ -25,6 +25,7 @@ namespace OCM.Core.Data
         public Nullable<int> UserID { get; set; }
         public Nullable<byte> CheckinStatusTypeID { get; set; }
         public Nullable<bool> IsActionedByEditor { get; set; }
+        public string AttachedData { get; set; }
         public Nullable<double> Latitude { get; set; }
         public Nullable<double> Longitude { get; set; }
     

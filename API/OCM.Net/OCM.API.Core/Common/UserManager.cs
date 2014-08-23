@@ -1,8 +1,7 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
@@ -15,10 +14,10 @@ namespace OCM.API.Common
 
     public class UserManager
     {
+        private OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+
         public User GetUser(int id)
         {
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
-
             var userDetails = dataModel.Users.FirstOrDefault(u => u.ID == id);
             if (userDetails != null)
             {
@@ -33,8 +32,6 @@ namespace OCM.API.Common
         public User GetUserFromIdentifier(string Identifier, string SessionToken)
         {
             if (Identifier == null || SessionToken == null) return null;
-
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
 
             var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier == Identifier);
             if (userDetails != null)
@@ -55,9 +52,8 @@ namespace OCM.API.Common
 
         public void AddReputationPoints(int userId, int amount)
         {
-             OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
-             var user = Model.Extensions.User.FromDataModel(dataModel.Users.FirstOrDefault(u => u.ID == userId));
-             this.AddReputationPoints(user, amount);
+            var user = Model.Extensions.User.FromDataModel(dataModel.Users.FirstOrDefault(u => u.ID == userId));
+            this.AddReputationPoints(user, amount);
         }
 
         /// <summary>
@@ -73,8 +69,6 @@ namespace OCM.API.Common
                 {
                     if (user.ID > 0)
                     {
-                        OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
-
                         var userData = dataModel.Users.First(u => u.ID == user.ID);
                         if (userData != null)
                         {
@@ -93,8 +87,6 @@ namespace OCM.API.Common
 
         public void AssignNewSessionToken(int userId)
         {
-            var dataModel = new Core.Data.OCMEntities();
-
             var user = dataModel.Users.FirstOrDefault(u => u.ID == userId);
             if (user != null)
             {
@@ -116,8 +108,6 @@ namespace OCM.API.Common
                 {
                     if (updatedProfile.ID > 0)
                     {
-                        var dataModel = new Core.Data.OCMEntities();
-
                         var userData = dataModel.Users.First(u => u.ID == updatedProfile.ID);
                         if (userData != null)
                         {
@@ -132,11 +122,11 @@ namespace OCM.API.Common
                             userData.EmailAddress = updatedProfile.EmailAddress;
                             userData.Latitude = updatedProfile.Latitude;
                             userData.Longitude = updatedProfile.Longitude;
-                            userData.ReceiveCommentNotifications = updatedProfile.ReceiveEditNotifications;
-                            userData.ReceiveEditNotifications = updatedProfile.ReceiveEditNotifications;
+
                             //TODO: SyncedSettings
                             if (allowAdminChanges)
                             {
+                                userData.ReputationPoints = updatedProfile.ReputationPoints;
                                 userData.Identifier = updatedProfile.Identifier;
                                 userData.Permissions = updatedProfile.Permissions;
                                 userData.IdentityProvider = updatedProfile.IdentityProvider;
@@ -166,8 +156,6 @@ namespace OCM.API.Common
         /// <returns></returns>
         public bool HasUserSessionExpired(string Identifier, string SessionToken)
         {
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
-
             var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier == Identifier);
             if (userDetails != null)
             {
@@ -179,8 +167,6 @@ namespace OCM.API.Common
 
         public List<User> GetUsers()
         {
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
-
             List<User> list = new List<User>();
             var userList = dataModel.Users.Where(u => u.Identifier != null).OrderBy(u => u.Username);
             foreach (var user in userList)
@@ -212,7 +198,6 @@ namespace OCM.API.Common
 
         public bool GrantPermission(User administrator, User user, StandardPermissionAttributes permissionAttribute, string attributeValue, bool removeOnly)
         {
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
             if (IsUserAdministrator(administrator))
             {
                 string attributeTag = "[" + permissionAttribute.ToString() + "=" + attributeValue + "];";

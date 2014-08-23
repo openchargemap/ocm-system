@@ -42,7 +42,6 @@ namespace OCM.Core.Data
         public Nullable<System.DateTime> DateCreated { get; set; }
         public Nullable<int> SubmissionStatusTypeID { get; set; }
         public string UsageCost { get; set; }
-        public Nullable<int> ContributorUserID { get; set; }
     
         public virtual AddressInfo AddressInfo { get; set; }
         public virtual ICollection<ChargePoint> ChildChargePoints { get; set; }
@@ -52,7 +51,6 @@ namespace OCM.Core.Data
         public virtual StatusType StatusType { get; set; }
         public virtual SubmissionStatusType SubmissionStatusType { get; set; }
         public virtual UsageType UsageType { get; set; }
-        public virtual User Contributor { get; set; }
         public virtual ICollection<ConnectionInfo> Connections { get; set; }
         public virtual ICollection<MetadataValue> MetadataValues { get; set; }
         public virtual ICollection<UserComment> UserComments { get; set; }

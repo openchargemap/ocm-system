@@ -60,7 +60,6 @@
           <Property Name="DateCreated" Type="smalldatetime" />
           <Property Name="SubmissionStatusTypeID" Type="int" />
           <Property Name="UsageCost" Type="nvarchar" MaxLength="200" />
-          <Property Name="ContributorUserID" Type="int" />
         </EntityType>
         <EntityType Name="ChargerType">
           <Key>
@@ -248,14 +247,6 @@
           <Property Name="FaultReportEmail" Type="nvarchar" MaxLength="500" />
           <Property Name="IsRestrictedEdit" Type="bit" />
         </EntityType>
-        <EntityType Name="OperatorCountry">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="OperatorID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="RegisteredApplication">
           <Key>
             <PropertyRef Name="ID" />
@@ -333,9 +324,21 @@
           <Property Name="APIKey" Type="nvarchar" MaxLength="100" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
-          <Property Name="ReceiveCommentNotifications" Type="bit" Nullable="false" />
-          <Property Name="ReceiveEditNotifications" Type="bit" Nullable="false" />
+          <Property Name="IsReadOnly" Type="bit" Nullable="false" />
           <Property Name="SyncedSettings" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserChargingRequest">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Latitude" Type="float" Nullable="false" />
+          <Property Name="Longitude" Type="float" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsEmergency" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -354,6 +357,7 @@
           <Property Name="IsActionedByEditor" Type="bit" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
+          <Property Name="AttachedData" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="UserCommentType">
           <Key>
@@ -361,6 +365,30 @@
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserSubscription">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CountryID" Type="int" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="Longitude" Type="float" />
+          <Property Name="DistanceKM" Type="float" />
+          <Property Name="FilterSettings" Type="nvarchar(max)" />
+          <Property Name="DateLastNotified" Type="datetime" />
+          <Property Name="IsEnabled" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="NotifyPOIAdditions" Type="bit" Nullable="false" />
+          <Property Name="NotifyPOIEdits" Type="bit" Nullable="false" />
+          <Property Name="NotifyPOIUpdates" Type="bit" Nullable="false" />
+          <Property Name="NotifyComments" Type="bit" Nullable="false" />
+          <Property Name="NotifyMedia" Type="bit" Nullable="false" />
+          <Property Name="NotifyEmergencyChargingRequests" Type="bit" Nullable="false" />
+          <Property Name="NotifyGeneralChargingRequests" Type="bit" Nullable="false" />
+          <Property Name="NotificationFrequencyMins" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_AddressInfo_Country">
           <End Role="Country" Type="Self.Country" Multiplicity="1" />
@@ -467,18 +495,6 @@
             </Principal>
             <Dependent Role="ChargePoint">
               <PropertyRef Name="UsageTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ChargePoint_User">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="Self.ChargePoint" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ChargePoint">
-              <PropertyRef Name="ContributorUserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -698,30 +714,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OperatorCountry_Country">
-          <End Role="Country" Type="Self.Country" Multiplicity="1" />
-          <End Role="OperatorCountry" Type="Self.OperatorCountry" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="OperatorCountry">
-              <PropertyRef Name="CountryID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OperatorCountry_Operator">
-          <End Role="Operator" Type="Self.Operator" Multiplicity="1" />
-          <End Role="OperatorCountry" Type="Self.OperatorCountry" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Operator">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="OperatorCountry">
-              <PropertyRef Name="OperatorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_RegisteredApplication_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="RegisteredApplication" Type="Self.RegisteredApplication" Multiplicity="*" />
@@ -743,6 +735,18 @@
             </Principal>
             <Dependent Role="SystemConfig">
               <PropertyRef Name="DataTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserChargingRequest_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserChargingRequest" Type="Self.UserChargingRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserChargingRequest">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -794,6 +798,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserSubscription_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="UserSubscription" Type="Self.UserSubscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserSubscription">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserSubscription_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserSubscription" Type="Self.UserSubscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserSubscription">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="OCMCoreDataOCMEntitiesStoreContainer">
           <EntitySet Name="AddressInfo" EntityType="Self.AddressInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" store:Type="Tables" />
@@ -815,15 +843,16 @@
           <EntitySet Name="MetadataGroup" EntityType="Self.MetadataGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MetadataValue" EntityType="Self.MetadataValue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Operator" EntityType="Self.Operator" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="OperatorCountry" EntityType="Self.OperatorCountry" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegisteredApplication" EntityType="Self.RegisteredApplication" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusType" EntityType="Self.StatusType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubmissionStatusType" EntityType="Self.SubmissionStatusType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SystemConfig" EntityType="Self.SystemConfig" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsageType" EntityType="Self.UsageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserChargingRequest" EntityType="Self.UserChargingRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserComment" EntityType="Self.UserComment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserCommentType" EntityType="Self.UserCommentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserSubscription" EntityType="Self.UserSubscription" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_AddressInfo_Country" Association="Self.FK_AddressInfo_Country">
             <End Role="Country" EntitySet="Country" />
             <End Role="AddressInfo" EntitySet="AddressInfo" />
@@ -858,10 +887,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_ChargePoint_UsageType" Association="Self.FK_ChargePoint_UsageType">
             <End Role="UsageType" EntitySet="UsageType" />
-            <End Role="ChargePoint" EntitySet="ChargePoint" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_User" Association="Self.FK_ChargePoint_User">
-            <End Role="User" EntitySet="User" />
             <End Role="ChargePoint" EntitySet="ChargePoint" />
           </AssociationSet>
           <AssociationSet Name="FK_ConnectionInfo_ChargePoint" Association="Self.FK_ConnectionInfo_ChargePoint">
@@ -936,14 +961,6 @@
             <End Role="AddressInfo" EntitySet="AddressInfo" />
             <End Role="Operator" EntitySet="Operator" />
           </AssociationSet>
-          <AssociationSet Name="FK_OperatorCountry_Country" Association="Self.FK_OperatorCountry_Country">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="OperatorCountry" EntitySet="OperatorCountry" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OperatorCountry_Operator" Association="Self.FK_OperatorCountry_Operator">
-            <End Role="Operator" EntitySet="Operator" />
-            <End Role="OperatorCountry" EntitySet="OperatorCountry" />
-          </AssociationSet>
           <AssociationSet Name="FK_RegisteredApplication_User" Association="Self.FK_RegisteredApplication_User">
             <End Role="User" EntitySet="User" />
             <End Role="RegisteredApplication" EntitySet="RegisteredApplication" />
@@ -951,6 +968,10 @@
           <AssociationSet Name="FK_SystemConfig_DataType" Association="Self.FK_SystemConfig_DataType">
             <End Role="DataType" EntitySet="DataType" />
             <End Role="SystemConfig" EntitySet="SystemConfig" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserChargingRequest_User" Association="Self.FK_UserChargingRequest_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserChargingRequest" EntitySet="UserChargingRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_UserComment_ChargePoint" Association="Self.FK_UserComment_ChargePoint">
             <End Role="ChargePoint" EntitySet="ChargePoint" />
@@ -967,6 +988,14 @@
           <AssociationSet Name="FK_UserComment_UserCommentType" Association="Self.FK_UserComment_UserCommentType">
             <End Role="UserCommentType" EntitySet="UserCommentType" />
             <End Role="UserComment" EntitySet="UserComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSubscription_Country" Association="Self.FK_UserSubscription_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="UserSubscription" EntitySet="UserSubscription" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSubscription_User" Association="Self.FK_UserSubscription_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserSubscription" EntitySet="UserSubscription" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -1039,10 +1068,7 @@
             <End Role="UsageType" EntitySet="UsageTypes" />
             <End Role="ChargePoint" EntitySet="ChargePoints" />
           </AssociationSet>
-          <AssociationSet Name="FK_ChargePoint_User" Association="OCM.Core.Data.OCMEntities.FK_ChargePoint_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="ChargePoint" EntitySet="ChargePoints" />
-          </AssociationSet>
+         
           <AssociationSet Name="FK_ConnectionInfo_ChargePoint" Association="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargePoint">
             <End Role="ChargePoint" EntitySet="ChargePoints" />
             <End Role="ConnectionInfo" EntitySet="ConnectionInfoList" />
@@ -1142,16 +1168,21 @@
             <End Role="User" EntitySet="Users" />
             <End Role="RegisteredApplication" EntitySet="RegisteredApplications" />
           </AssociationSet>
-          <EntitySet Name="OperatorCountries" EntityType="OCM.Core.Data.OCMEntities.OperatorCountry" />
-          <AssociationSet Name="FK_OperatorCountry_Country" Association="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country">
+          <EntitySet Name="UserSubscriptions" EntityType="OCM.Core.Data.OCMEntities.UserSubscription" />
+          <AssociationSet Name="FK_UserSubscription_Country" Association="OCM.Core.Data.OCMEntities.FK_UserSubscription_Country">
             <End Role="Country" EntitySet="Countries" />
-            <End Role="OperatorCountry" EntitySet="OperatorCountries" />
+            <End Role="UserSubscription" EntitySet="UserSubscriptions" />
           </AssociationSet>
-          <AssociationSet Name="FK_OperatorCountry_Operator" Association="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Operator">
-            <End Role="Operator" EntitySet="Operators" />
-            <End Role="OperatorCountry" EntitySet="OperatorCountries" />
+          <AssociationSet Name="FK_UserSubscription_User" Association="OCM.Core.Data.OCMEntities.FK_UserSubscription_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserSubscription" EntitySet="UserSubscriptions" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="UserChargingRequests" EntityType="OCM.Core.Data.OCMEntities.UserChargingRequest" />
+          <AssociationSet Name="FK_UserChargingRequest_User" Association="OCM.Core.Data.OCMEntities.FK_UserChargingRequest_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserChargingRequest" EntitySet="UserChargingRequests" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="AddressInfo">
           <Key>
             <PropertyRef Name="ID" />
@@ -1211,7 +1242,6 @@
           <Property Name="DateCreated" Type="DateTime" Precision="0" />
           <Property Name="SubmissionStatusTypeID" Type="Int32" />
           <Property Name="UsageCost" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
-          <Property Name="ContributorUserID" Type="Int32" />
           <NavigationProperty Name="AddressInfo" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_AddressInfo" FromRole="ChargePoint" ToRole="AddressInfo" />
           <NavigationProperty Name="ChildChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_ChargePoint" FromRole="ChargePoint" ToRole="ChargePoint1" />
           <NavigationProperty Name="ParentChargePoint" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_ChargePoint" FromRole="ChargePoint1" ToRole="ChargePoint" />
@@ -1220,7 +1250,6 @@
           <NavigationProperty Name="StatusType" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_StatusType" FromRole="ChargePoint" ToRole="StatusType" />
           <NavigationProperty Name="SubmissionStatusType" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_SubmissionStatusType" FromRole="ChargePoint" ToRole="SubmissionStatusType" />
           <NavigationProperty Name="UsageType" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_UsageType" FromRole="ChargePoint" ToRole="UsageType" />
-          <NavigationProperty Name="Contributor" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_User" FromRole="ChargePoint" ToRole="User" />
           <NavigationProperty Name="Connections" Relationship="OCM.Core.Data.OCMEntities.FK_ConnectionInfo_ChargePoint" FromRole="ChargePoint" ToRole="ConnectionInfo" />
           <NavigationProperty Name="MetadataValues" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_ChargePoint" FromRole="ChargePoint" ToRole="MetadataValue" />
           <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_ChargePoint" FromRole="ChargePoint" ToRole="UserComment" />
@@ -1287,8 +1316,8 @@
           <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="ISOCode" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="AddressInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="Country" ToRole="AddressInfo" />
-          <NavigationProperty Name="OperatorCountries" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country" FromRole="Country" ToRole="OperatorCountry" />
           <Property Name="ContinentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserSubscriptions" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_Country" FromRole="Country" ToRole="UserSubscription" />
         </EntityType>
         <EntityType Name="CurrentType">
           <Key>
@@ -1417,7 +1446,6 @@
           <NavigationProperty Name="AddressInfo" Relationship="OCM.Core.Data.OCMEntities.FK_Operator_AddressInfo" FromRole="Operator" ToRole="AddressInfo" />
           <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_Operator" FromRole="Operator" ToRole="ChargePoint" />
           <Property Type="Boolean" Name="IsRestrictedEdit" />
-          <NavigationProperty Name="OperatorCountries" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Operator" FromRole="Operator" ToRole="OperatorCountry" />
         </EntityType>
         <EntityType Name="StatusType">
           <Key>
@@ -1482,7 +1510,6 @@
           <Property Name="IsPublicChargingProvider" Type="Boolean" Nullable="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="AuditLogs" Relationship="OCM.Core.Data.OCMEntities.FK_AuditLog_User" FromRole="User" ToRole="AuditLog" />
-          <NavigationProperty Name="ChargePoints" Relationship="OCM.Core.Data.OCMEntities.FK_ChargePoint_User" FromRole="User" ToRole="ChargePoint" />
           <NavigationProperty Name="EditQueueItems" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User" FromRole="User" ToRole="EditQueueItem" />
           <NavigationProperty Name="EditQueueItems1" Relationship="OCM.Core.Data.OCMEntities.FK_EditQueue_User1" FromRole="User" ToRole="EditQueueItem" />
           <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_User" FromRole="User" ToRole="UserComment" />
@@ -1490,10 +1517,11 @@
           <Property Type="Double" Name="Longitude" />
           <Property Type="String" Name="APIKey" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MediaItems" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_User" FromRole="User" ToRole="MediaItem" />
-          <Property Name="ReceiveEditNotifications" Type="Boolean" Nullable="false" />
-          <Property Name="ReceiveCommentNotifications" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="RegisteredApplications" Relationship="OCM.Core.Data.OCMEntities.FK_RegisteredApplication_User" FromRole="User" ToRole="RegisteredApplication" />
           <Property Name="SyncedSettings" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserSubscriptions" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_User" FromRole="User" ToRole="UserSubscription" />
+          <Property Name="IsReadOnly" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserChargingRequests" Relationship="OCM.Core.Data.OCMEntities.FK_UserChargingRequest_User" FromRole="User" ToRole="UserChargingRequest" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -1514,6 +1542,7 @@
           <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_User" FromRole="UserComment" ToRole="User" />
           <NavigationProperty Name="UserCommentType" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_UserCommentType" FromRole="UserComment" ToRole="UserCommentType" />
           <Property Type="Boolean" Name="IsActionedByEditor" />
+          <Property Name="AttachedData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Latitude" Type="Double" />
           <Property Name="Longitude" Type="Double" />
         </EntityType>
@@ -1645,18 +1674,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ChargePoint_User">
-          <End Role="User" Type="OCM.Core.Data.OCMEntities.User" Multiplicity="0..1" />
-          <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ChargePoint">
-              <PropertyRef Name="ContributorUserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        
         <Association Name="FK_ConnectionInfo_ChargePoint">
           <End Role="ChargePoint" Type="OCM.Core.Data.OCMEntities.ChargePoint" Multiplicity="1" />
           <End Role="ConnectionInfo" Type="OCM.Core.Data.OCMEntities.ConnectionInfo" Multiplicity="*" />
@@ -1992,41 +2010,83 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="OperatorCountry">
+        <EntityType Name="UserSubscription">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OperatorID" Type="Int32" Nullable="false" />
-          <Property Name="CountryID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Country" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Country" FromRole="OperatorCountry" ToRole="Country" />
-          <NavigationProperty Name="Operator" Relationship="OCM.Core.Data.OCMEntities.FK_OperatorCountry_Operator" FromRole="OperatorCountry" ToRole="Operator" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CountryID" Type="Int32" />
+          <Property Name="Latitude" Type="Double" />
+          <Property Name="Longitude" Type="Double" />
+          <Property Name="DistanceKM" Type="Double" />
+          <Property Name="FilterSettings" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateLastNotified" Type="DateTime" Precision="3" />
+          <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Country" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_Country" FromRole="UserSubscription" ToRole="Country" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_User" FromRole="UserSubscription" ToRole="User" />
+          <Property Name="NotifyPOIAdditions" Type="Boolean" Nullable="false" />
+          <Property Name="NotifyPOIEdits" Type="Boolean" Nullable="false" />
+          <Property Name="NotifyComments" Type="Boolean" Nullable="false" />
+          <Property Name="NotifyMedia" Type="Boolean" Nullable="false" />
+          <Property Name="NotifyEmergencyChargingRequests" Type="Boolean" Nullable="false" />
+          <Property Name="NotifyGeneralChargingRequests" Type="Boolean" Nullable="false" />
+          <Property Name="NotifyPOIUpdates" Type="Boolean" Nullable="false" />
+          <Property Name="NotificationFrequencyMins" Type="Int32" Nullable="false" />
         </EntityType>
-        <Association Name="FK_OperatorCountry_Country">
-          <End Type="OCM.Core.Data.OCMEntities.Country" Role="Country" Multiplicity="1" />
-          <End Type="OCM.Core.Data.OCMEntities.OperatorCountry" Role="OperatorCountry" Multiplicity="*" />
+        <Association Name="FK_UserSubscription_Country">
+          <End Type="OCM.Core.Data.OCMEntities.Country" Role="Country" Multiplicity="0..1" />
+          <End Type="OCM.Core.Data.OCMEntities.UserSubscription" Role="UserSubscription" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Country">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="OperatorCountry">
+            <Dependent Role="UserSubscription">
               <PropertyRef Name="CountryID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OperatorCountry_Operator">
-          <End Type="OCM.Core.Data.OCMEntities.Operator" Role="Operator" Multiplicity="1" />
-          <End Type="OCM.Core.Data.OCMEntities.OperatorCountry" Role="OperatorCountry" Multiplicity="*" />
+        <Association Name="FK_UserSubscription_User">
+          <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.UserSubscription" Role="UserSubscription" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Operator">
+            <Principal Role="User">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="OperatorCountry">
-              <PropertyRef Name="OperatorID" />
+            <Dependent Role="UserSubscription">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="UserChargingRequest">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Latitude" Type="Double" Nullable="false" />
+          <Property Name="Longitude" Type="Double" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsEmergency" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_UserChargingRequest_User" FromRole="UserChargingRequest" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserChargingRequest_User">
+          <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="1" />
+          <End Type="OCM.Core.Data.OCMEntities.UserChargingRequest" Role="UserChargingRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserChargingRequest">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -2088,7 +2148,6 @@
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="SubmissionStatusTypeID" ColumnName="SubmissionStatusTypeID" />
                 <ScalarProperty Name="UsageCost" ColumnName="UsageCost" />
-                <ScalarProperty Name="ContributorUserID" ColumnName="ContributorUserID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2311,9 +2370,8 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsReadOnly" ColumnName="IsReadOnly" />
                 <ScalarProperty Name="SyncedSettings" ColumnName="SyncedSettings" />
-                <ScalarProperty Name="ReceiveCommentNotifications" ColumnName="ReceiveCommentNotifications" />
-                <ScalarProperty Name="ReceiveEditNotifications" ColumnName="ReceiveEditNotifications" />
                 <ScalarProperty Name="APIKey" ColumnName="APIKey" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
@@ -2342,6 +2400,7 @@
               <MappingFragment StoreEntitySet="UserComment">
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="AttachedData" ColumnName="AttachedData" />
                 <ScalarProperty Name="IsActionedByEditor" ColumnName="IsActionedByEditor" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ChargePointID" ColumnName="ChargePointID" />
@@ -2409,11 +2468,41 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OperatorCountries">
-            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.OperatorCountry">
-              <MappingFragment StoreEntitySet="OperatorCountry">
+          <EntitySetMapping Name="UserSubscriptions">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.UserSubscription">
+              <MappingFragment StoreEntitySet="UserSubscription">
+                <ScalarProperty Name="NotificationFrequencyMins" ColumnName="NotificationFrequencyMins" />
+                <ScalarProperty Name="NotifyPOIUpdates" ColumnName="NotifyPOIUpdates" />
+                <ScalarProperty Name="NotifyGeneralChargingRequests" ColumnName="NotifyGeneralChargingRequests" />
+                <ScalarProperty Name="NotifyEmergencyChargingRequests" ColumnName="NotifyEmergencyChargingRequests" />
+                <ScalarProperty Name="NotifyMedia" ColumnName="NotifyMedia" />
+                <ScalarProperty Name="NotifyComments" ColumnName="NotifyComments" />
+                <ScalarProperty Name="NotifyPOIEdits" ColumnName="NotifyPOIEdits" />
+                <ScalarProperty Name="NotifyPOIAdditions" ColumnName="NotifyPOIAdditions" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="DateLastNotified" ColumnName="DateLastNotified" />
+                <ScalarProperty Name="FilterSettings" ColumnName="FilterSettings" />
+                <ScalarProperty Name="DistanceKM" ColumnName="DistanceKM" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="CountryID" ColumnName="CountryID" />
-                <ScalarProperty Name="OperatorID" ColumnName="OperatorID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserChargingRequests">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.UserChargingRequest">
+              <MappingFragment StoreEntitySet="UserChargingRequest">
+                <ScalarProperty Name="IsEmergency" ColumnName="IsEmergency" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

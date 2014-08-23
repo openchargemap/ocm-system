@@ -156,18 +156,14 @@ namespace OCM.API.Common
                             poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
                         }
 
-                        if (poiData.ID == 0)
-                        {
-                            //new item, set contributor on poi details
-                            if (queueItem.User != null)
-                            {
-                                poiData.Contributor = DataModel.Users.First(u => u.ID == queueItem.User.ID);
-                            }
-                        }
-
                         //publish edit
                         DataModel.SaveChanges();
 
+                         //attribute submitter with reputation points
+                        if (queueItem.UserID!=null){
+                            new UserManager().AddReputationPoints((int)queueItem.UserID, 1);
+                        }
+                        
                     }
 
                     //update edit queue item as processed

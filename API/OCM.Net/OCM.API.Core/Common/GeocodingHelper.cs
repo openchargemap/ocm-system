@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using System;
@@ -7,28 +8,67 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 using System.Web.Script.Serialization;
 
-namespace OCM.MVC.App_Code
+namespace OCM.API.Common
 {
+    [Serializable]
+    public class LatLon
+    {
+        public double? Latitude { get; set; }
+
+        public double? Longitude { get; set; }
+    }
+
+    [Serializable]
+    public class LocationLookupResult : LatLon
+    {
+        public string IP { get; set; }
+
+        public string Country_Code { get; set; }
+
+        public string Country_Name { get; set; }
+
+        public string Region_Code { get; set; }
+
+        public string Region_Name { get; set; }
+
+        public string City { get; set; }
+
+        public string ZipCode { get; set; }
+
+        public bool SuccessfulLookup { get; set; }
+
+        public int? CountryID { get; set; }
+
+        public int? LocationID { get; set; }
+    }
 
     public class LocationImage
     {
         public string ImageRepositoryID { get; set; }
+
         public string ImageID { get; set; }
+
         public string Title { get; set; }
+
         public string Submitter { get; set; }
+
         public string SubmitterURL { get; set; }
+
         public string DetailsURL { get; set; }
+
         public string ImageURL { get; set; }
+
         public int Width { get; set; }
+
         public int Height { get; set; }
     }
 
     public class GeocodingHelper
     {
         public bool IncludeExtendedData { get; set; }
+
         public bool IncludeQueryURL { get; set; }
 
         public List<LocationImage> GetGeneralLocationImages(double latitude, double longitude)
@@ -68,7 +108,6 @@ namespace OCM.MVC.App_Code
 
                         imageList.Add(image);
                     }
-
                 }
                 catch (Exception)
                 {
@@ -94,7 +133,6 @@ namespace OCM.MVC.App_Code
 
             if (!String.IsNullOrWhiteSpace(address))
             {
-
                 string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=" + address;
 
                 if (IncludeQueryURL) result.QueryURL = url;
@@ -106,7 +144,6 @@ namespace OCM.MVC.App_Code
                     try
                     {
                         string queryResult = wc.DownloadString(url);
-
 
                         if (IncludeExtendedData) result.ExtendedData = queryResult;
 
@@ -122,7 +159,6 @@ namespace OCM.MVC.App_Code
                         result.Address = desc;
 
                         result.ResultsAvailable = true;
-
                     }
                     catch (Exception)
                     {
@@ -130,7 +166,6 @@ namespace OCM.MVC.App_Code
                         result.ResultsAvailable = false;
                     }
                 }
-
             }
 
             return result;
@@ -176,7 +211,7 @@ namespace OCM.MVC.App_Code
                         var item = o["results"][0]["locations"][0]["latLng"];
                         result.Latitude = double.Parse(item["lat"].ToString());
                         result.Longitude = double.Parse(item["lng"].ToString());
-                        
+
                         result.ResultsAvailable = true;
                     }
                     else
@@ -212,9 +247,8 @@ namespace OCM.MVC.App_Code
             }
             else
             {
-
                 string url = "http://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationManager.AppSettings["OSM_API_Key"];
-                
+
                 if (IncludeQueryURL) result.QueryURL = url;
 
                 string data = "";
@@ -243,16 +277,54 @@ namespace OCM.MVC.App_Code
                         result.Attribution = o.First["licence"].ToString();
                         result.ResultsAvailable = true;
                     }
-
                 }
                 catch (Exception)
                 {
                     //oops
                 }
-
             }
             return result;
         }
 
+        public static LocationLookupResult GetLocationFromIP_FreegeoIP(string ipAddress)
+        {
+            if (!ipAddress.StartsWith("::"))
+            {
+                try
+                {
+                    WebClient url = new WebClient();
+
+                    //http://freegeoip.net/json/{ip}
+                    string urlString = "http://freegeoip.net/json/" + ipAddress;
+
+                    string result = url.DownloadString(urlString);
+                    LocationLookupResult lookup = JsonConvert.DeserializeObject<LocationLookupResult>(result);
+                    lookup.SuccessfulLookup = true;
+
+                    /* -- example result:
+                      {
+                       "ip":"116.240.210.146",
+                       "country_code":"AU",
+                       "country_name":"Australia",
+                       "region_code":"08",
+                       "region_name":"Western Australia",
+                       "city":"Perth",
+                       "zipcode":"",
+                       "latitude":-31.9522,
+                       "longitude":115.8614,
+                       "metro_code":"",
+                       "area_code":""
+                    }
+                     */
+                    return lookup;
+                }
+                catch (Exception)
+                {
+                    ; ;//failed
+                }
+            }
+
+            return new LocationLookupResult { SuccessfulLookup = false };
+        }
     }
 }

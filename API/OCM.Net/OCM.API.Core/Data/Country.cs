@@ -17,7 +17,7 @@ namespace OCM.Core.Data
         public Country()
         {
             this.AddressInfoes = new HashSet<AddressInfo>();
-            this.OperatorCountries = new HashSet<OperatorCountry>();
+            this.UserSubscriptions = new HashSet<UserSubscription>();
         }
     
         public int ID { get; set; }
@@ -26,6 +26,6 @@ namespace OCM.Core.Data
         public string ContinentCode { get; set; }
     
         public virtual ICollection<AddressInfo> AddressInfoes { get; set; }
-        public virtual ICollection<OperatorCountry> OperatorCountries { get; set; }
+        public virtual ICollection<UserSubscription> UserSubscriptions { get; set; }
     }
 }
