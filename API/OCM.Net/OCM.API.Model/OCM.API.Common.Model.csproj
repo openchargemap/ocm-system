@@ -49,7 +49,7 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -76,6 +76,7 @@
     <Compile Include="Extended\ContactSubmission.cs" />
     <Compile Include="Base\MediaItem.cs" />
     <Compile Include="Base\DataType.cs" />
+    <Compile Include="Extended\CountryExtendedInfo.cs" />
     <Compile Include="Extended\DiffItem.cs" />
     <Compile Include="Base\EntityType.cs" />
     <Compile Include="Base\EditQueueItem.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Base\OperatorInfo.cs" />
     <Compile Include="Extended\EditQueueFilter.cs" />
     <Compile Include="Extended\GeocodingResult.cs" />
+    <Compile Include="Extended\POIDetailsCache.cs" />
     <Compile Include="Extended\POIDuplicates.cs" />
     <Compile Include="Extended\POIRecentActivity.cs" />
     <Compile Include="Extended\POISearchResult.cs" />

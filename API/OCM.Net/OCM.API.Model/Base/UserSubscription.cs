@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,7 +14,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Subscription Title"), Required]
         public string Title { get; set; }
 
-        [DisplayName("Country"), Required]
+        [DisplayName("Country")]
         public Nullable<int> CountryID { get; set; }
 
         public Country Country { get; set; }
@@ -25,10 +26,10 @@ namespace OCM.API.Common.Model
         public Nullable<double> Longitude { get; set; }
 
         [Range(0, 100000)]
-        [DisplayName("Distance (KM)"), Required]
+        [DisplayName("Distance (KM)")]
         public Nullable<double> DistanceKM { get; set; }
 
-        public string FilterSettings { get; set; }
+        public UserSubscriptionFilter FilterSettings { get; set; }
 
         [DisplayName("Date Last Notified")]
         public Nullable<System.DateTime> DateLastNotified { get; set; }
@@ -54,13 +55,36 @@ namespace OCM.API.Common.Model
         [DisplayName("New photos/media items added"), Required]
         public bool NotifyMedia { get; set; }
 
-        [DisplayName("Emergency charging requests in area"), Required]
+        [DisplayName("Emergency charging requested in area"), Required]
         public bool NotifyEmergencyChargingRequests { get; set; }
 
-        [DisplayName("General charging requests in area"), Required]
+        [DisplayName("General charging requested in area"), Required]
         public bool NotifyGeneralChargingRequests { get; set; }
 
         [DisplayName("Notification Frequency"), Required]
         public int NotificationFrequencyMins { get; set; }
     }
+
+    public class UserSubscriptionFilter
+    {
+        public List<int> ConnectionTypeIDs { get; set; }
+
+        public List<int> OperatorIDs { get; set; }
+
+        public List<int> LevelIDs { get; set; }
+
+        public List<int> UsageTypeIDs { get; set; }
+
+        public List<int> StatusTypeIDs { get; set; }
+
+        public UserSubscriptionFilter()
+        {
+            ConnectionTypeIDs = new List<int>();
+            OperatorIDs = new List<int>();
+            LevelIDs = new List<int>();
+            UsageTypeIDs = new List<int>();
+            StatusTypeIDs = new List<int>();
+        }
+    }
+
 }
