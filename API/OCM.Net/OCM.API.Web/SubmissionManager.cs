@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Newtonsoft.Json;
 using OCM.API.Common.Model;
+using OCM.Core.Data;
+using System;
 using System.Collections;
 using System.Configuration;
-using Newtonsoft.Json;
-using OCM.Core.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace OCM.API.Common
 {
@@ -61,7 +61,7 @@ namespace OCM.API.Common
                 if (user != null)
                 {
                     if (user.ID == (int)StandardUsers.System) isSystemUser = true;
-                    
+
                     //if user is system user, edits/updates are not recorded in edit queue
                     if (isSystemUser)
                     {
@@ -91,7 +91,6 @@ namespace OCM.API.Common
                         //update does not correctly identify an existing poi
                         return -1;
                     }
- 
                 }
 
                 //validate if minimal required data is present
@@ -104,8 +103,8 @@ namespace OCM.API.Common
                 updatedPOI = PopulateFullPOI(updatedPOI);
                 Model.ChargePoint oldPOI = null;
 
-                if (updatedPOI.ID>0)
-                { 
+                if (updatedPOI.ID > 0)
+                {
                     //get json snapshot of current cp data to store as 'previous'
                     oldPOI = poiManager.Get(updatedPOI.ID);
                 }
@@ -131,7 +130,6 @@ namespace OCM.API.Common
 
                     if (updatedPOI.ID > 0)
                     {
-                    
                         //check if poi will change with this edit, if not we discard it completely
                         if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
@@ -166,7 +164,6 @@ namespace OCM.API.Common
                             editQueueItem.ProcessedByUser = dataModel.Users.FirstOrDefault(u => u.ID == (int)StandardUsers.System);
                         }
                         previousEdit.DateProcessed = DateTime.UtcNow;
-
                     }
                     //save updated edit queue items
                     dataModel.SaveChanges();
@@ -176,7 +173,7 @@ namespace OCM.API.Common
                 if (isUpdate && !AllowUpdates)
                 {
                     //user has submitted an edit but is not an approved editor
-                    SendEditSubmissionNotification(updatedPOI, user);
+                    //SendEditSubmissionNotification(updatedPOI, user);
 
                     //user is not an editor, item is now pending in edit queue for approval.
                     return updatedPOI.ID;
@@ -206,7 +203,7 @@ namespace OCM.API.Common
                 poiManager.PopulateChargePoint_SimpleToData(updatedPOI, cpData, dataModel);
 
                 //if item has no submission status and user permitted to edit, set to published
-                if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)
+               if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)
                 {
                     cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
                     cpData.SubmissionStatusTypeID = cpData.SubmissionStatusType.ID; //hack due to conflicting state change for SubmissionStatusType
@@ -217,16 +214,14 @@ namespace OCM.API.Common
                     if (cpData.SubmissionStatusType == null) cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
                 }
 
+                cpData.DateLastStatusUpdate = DateTime.UtcNow;
+
                 if (!isUpdate)
                 {
                     //new data objects need added to data model before save
                     if (cpData.AddressInfo != null) dataModel.AddressInfoList.Add(cpData.AddressInfo);
 
                     dataModel.ChargePoints.Add(cpData);
-                }
-                else
-                {
-                    cpData.DateLastStatusUpdate = DateTime.UtcNow;
                 }
 
                 //finally - save poi update
@@ -253,8 +248,6 @@ namespace OCM.API.Common
 
                     //save edit queue item changes
                     dataModel.SaveChanges();
-
-                    
                 }
                 else
                 {
@@ -280,16 +273,24 @@ namespace OCM.API.Common
                 updatedPOI.ID = cpData.ID;
 
                 //if new item added, send notification
-                if (!isUpdate)
+                /*if (!isUpdate)
                 {
                     SendNewPOISubmissionNotification(updatedPOI, user, cpData);
-                }
+                }*/
+
+                var cacheTask = Task.Run(async () =>
+                {
+                    return await CacheManager.RefreshCachedPOIList();
+                });
+                cacheTask.Wait();
 
                 return updatedPOI.ID;
             }
             catch (Exception exp)
             {
+                
                 System.Diagnostics.Debug.WriteLine(exp.ToString());
+                AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorWeb);
                 //throw exp;
                 //error performing submission
                 return -1;
@@ -356,7 +357,6 @@ namespace OCM.API.Common
             }
         }
 
-        
         /// <summary>
         /// Submit a new comment against a given charge equipment id
         /// </summary>
@@ -397,7 +397,9 @@ namespace OCM.API.Common
 
             try
             {
+                dataComment.ChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
                 dataModel.UserComments.Add(dataComment);
+                
                 dataModel.SaveChanges();
 
                 if (user != null)
@@ -407,7 +409,9 @@ namespace OCM.API.Common
                     new UserManager().AddReputationPoints(user, 1);
                 }
 
-                SendPOICommentSubmissionNotifications(comment, user, dataComment);
+                //SendPOICommentSubmissionNotifications(comment, user, dataComment);
+
+                CacheManager.RefreshCachedPOIList();
 
                 return dataComment.ID;
             }
@@ -415,7 +419,6 @@ namespace OCM.API.Common
             {
                 return -2; //error saving
             }
-
         }
 
         private static void SendPOICommentSubmissionNotifications(Common.Model.UserComment comment, Model.User user, Core.Data.UserComment dataComment)
@@ -424,7 +427,7 @@ namespace OCM.API.Common
             {
                 //prepare notification
                 NotificationManager notification = new NotificationManager();
-                
+
                 Hashtable msgParams = new Hashtable();
                 msgParams.Add("Description", "");
                 msgParams.Add("ChargePointID", comment.ChargePointID);
@@ -470,7 +473,6 @@ namespace OCM.API.Common
                     //notify default system recipients
                     notification.SendNotification(NotificationType.LocationCommentReceived);
                 }
-
             }
             catch (Exception)
             {

@@ -208,7 +208,7 @@ namespace OCM.API
         /// Handle output from API
         /// </summary>
         /// <param name="context"></param>
-        private void PerformOutput(HttpContext context)
+        private async void PerformOutput(HttpContext context)
         {
             HttpContext.Current.Server.ScriptTimeout = 120; //max script execution time is 2 minutes
 
@@ -362,9 +362,9 @@ namespace OCM.API
                 {
                     try
                     {
-                        var poiList = new POIManager().GetChargePoints(new APIRequestSettings { MaxResults = filter.MaxResults, AllowMirrorDB = false, EnableCaching = false, IncludeComments = true });
-                        new OCM.Core.Data.APIProviderMongoDB().PopulatePOIMirror(poiList, new ReferenceDataManager().GetCoreReferenceData());
-                        new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { POICount = poiList.Count, Status = "OK" }, filter);
+                        
+                        var itemsUpdated = await new OCM.Core.Data.CacheProviderMongoDB().PopulatePOIMirror(Core.Data.CacheProviderMongoDB.CacheUpdateStrategy.Modified);
+                        new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { POICount = itemsUpdated, Status = "OK" }, filter);
                     }
                     catch (Exception exp)
                     {
@@ -448,7 +448,9 @@ namespace OCM.API
             }
             else
             {
+                
                 data = refDataManager.GetCoreReferenceData();
+                
                 HttpContext.Current.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
 
