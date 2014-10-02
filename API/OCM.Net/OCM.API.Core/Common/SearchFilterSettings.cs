@@ -62,6 +62,7 @@ namespace OCM.API.Common
             APIVersion = null;
             IsVerboseOutput = true;
             IsCompactOutput = false;
+            AllowMirrorDB = true;
         }
 
         public bool IsLegacyAPICall

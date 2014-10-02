@@ -67,7 +67,14 @@ namespace OCM.API.Common
 
         public CoreReferenceData GetCoreReferenceData()
         {
-            CoreReferenceData data = new CoreReferenceData();
+
+            CoreReferenceData data = OCM.Core.Data.CacheManager.GetCoreReferenceData();
+
+            if (data != null) return data;
+
+
+            //can't get cached data, get fresh from database
+            data = new CoreReferenceData();
 
             OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
 

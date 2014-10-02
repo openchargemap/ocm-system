@@ -1,17 +1,16 @@
+using KellermanSoftware.CompareNetObjects;
+using Newtonsoft.Json;
+using OCM.API.Common.Model;
+using OCM.API.Common.Model.Extended;
+using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using OCM.Core.Data;
-using OCM.API.Common.Model;
-using KellermanSoftware.CompareNetObjects;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Data.Entity.Core.Objects.DataClasses;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using OCM.API.Common.Model.Extended;
-using System.Transactions;
+using System.Diagnostics;
+using System.Linq;
+using System.Web;
 
 namespace OCM.API.Common
 {
@@ -20,7 +19,6 @@ namespace OCM.API.Common
         public OCMAPIException(string message)
             : base(message)
         {
-
         }
     }
 
@@ -33,16 +31,87 @@ namespace OCM.API.Common
             LoadUserComments = false;
         }
 
+        public POIDetailsCache GetFromCache(int id)
+        {
+            try
+            {
+                string cachePath = System.Configuration.ConfigurationManager.AppSettings["CachePath"] + "\\POI_" + id + ".json";
+                if (System.IO.File.Exists(cachePath))
+                {
+                    POIDetailsCache cachedPOI = JsonConvert.DeserializeObject<POIDetailsCache>(System.IO.File.ReadAllText(cachePath));
+                    TimeSpan timeSinceCache = DateTime.UtcNow - cachedPOI.DateCached;
+                    if (timeSinceCache.TotalDays > 14) return null;
+                    return cachedPOI;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return null;
+        }
+
+        public void CachePOIDetails(Model.ChargePoint poi, List<Model.ChargePoint> nearbyPOI = null)
+        {
+            try
+            {
+                string cachePath = System.Configuration.ConfigurationManager.AppSettings["CachePath"] + "\\POI_" + poi.ID + ".json";
+                if (!System.IO.File.Exists(cachePath))
+                {
+                    POIDetailsCache cachedPOI = new POIDetailsCache { POI = poi, DateCached = DateTime.UtcNow, POIListNearby = nearbyPOI };
+                    System.IO.File.WriteAllText(cachePath, JsonConvert.SerializeObject(cachedPOI));
+                }
+            }
+            catch (Exception)
+            {
+                ; ;//caching failed
+            }
+        }
+
         public Model.ChargePoint Get(int id)
         {
             return this.Get(id, false);
         }
 
-        public Model.ChargePoint Get(int id, bool includeExtendedInfo)
+        public Model.ChargePoint Get(int id, bool includeExtendedInfo, bool allowDiskCache = false, bool allowMirrorDB = false)
         {
-            var dataModel = new OCMEntities();
-            var item = dataModel.ChargePoints.FirstOrDefault(c => c.ID == id);
-            return Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
+            if (allowMirrorDB)
+            {
+                var p = new CacheProviderMongoDB().GetPOI(id);
+                if (p != null)
+                {
+                    return p;
+                }
+            }
+
+            try
+            {
+                var dataModel = new OCMEntities();
+                var item = dataModel.ChargePoints.Find(id);
+
+                if (allowDiskCache)
+                {
+                    var poiCache = GetFromCache(id);
+                    if (poiCache != null && poiCache.POI.DateLastStatusUpdate == item.DateLastStatusUpdate)
+                    {
+                        //found a cached version of POI which is up to date
+                        return poiCache.POI;
+                    }
+                }
+
+                var poi = Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
+
+                if (allowDiskCache && poi != null)
+                {
+                    //cache results
+                    CachePOIDetails(poi);
+                }
+                return poi;
+            }
+            catch (Exception)
+            {
+                //POI not found matching id
+                return null;
+            }
         }
 
         /// <summary>
@@ -59,6 +128,7 @@ namespace OCM.API.Common
 
             return Model.Extensions.ChargePoint.FromDataModel(dataPreviewPOI);
         }
+
         /// <summary>
         /// Check if user can edit given POI with review/approval from another editor
         /// </summary>
@@ -86,7 +156,6 @@ namespace OCM.API.Common
         {
             //implements dummy call for entity framework mapping to corresponding SQL function
             throw new NotSupportedException("Direct calls are not supported.");
-
         }
 
         /// <summary>
@@ -96,9 +165,11 @@ namespace OCM.API.Common
         /// <returns></returns>
         public List<Model.ChargePoint> GetChargePoints(APIRequestSettings settings)
         {
-
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+
+            bool cachingConfigEnabled = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableInMemoryCaching"]);
+            if (cachingConfigEnabled == false) settings.EnableCaching = false;
 
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
@@ -109,7 +180,7 @@ namespace OCM.API.Common
                 {
                     try
                     {
-                        dataList = new APIProviderMongoDB().GetPOIList(settings);
+                        dataList = new CacheProviderMongoDB().GetPOIList(settings);
                     }
                     catch (Exception exp)
                     {
@@ -117,10 +188,10 @@ namespace OCM.API.Common
                         //TODO: send error notification
                     }
                 }
-                
-                if (dataList==null)
-                {
 
+                //if dataList is null we didn't get any cache DB results, use SQL DB
+                if (dataList == null)
+                {
                     int maxResults = settings.MaxResults;
                     this.LoadUserComments = settings.IncludeComments;
                     bool requiresDistance = false;
@@ -128,7 +199,7 @@ namespace OCM.API.Common
                     if (settings.Latitude != null && settings.Longitude != null)
                     {
                         requiresDistance = true;
-                        maxResults = 10000; //TODO find way to prefilter on distance.
+                        //maxResults = 10000; //TODO find way to prefilter on distance.
                     }
 
                     dataList = new List<Model.ChargePoint>();
@@ -243,7 +314,7 @@ namespace OCM.API.Common
                                        select new
                                        {
                                            c,
-                                           //    DistanceKM = GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) 
+                                           //    DistanceKM = GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude)
                                            DistanceKM = c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000
                                        };
 
@@ -256,7 +327,6 @@ namespace OCM.API.Common
                     {
                         filteredList = filteredList.OrderByDescending(p => p.c.DateCreated);
                     }
-
 
                     //query is of type IQueryable
 #if DEBUG
@@ -331,7 +401,6 @@ namespace OCM.API.Common
             }
 
             System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.Elapsed.ToString());
-
 
             return dataList.Take(settings.MaxResults).ToList();
         }
@@ -439,7 +508,6 @@ namespace OCM.API.Common
                         allDuplicates.Add(dupePoi);
                     }
                 }
-
             }
 
             //arrange all duplicates into groups
@@ -499,7 +567,6 @@ namespace OCM.API.Common
 
         private bool OtherDuplicationPOIGroupListHasReference(POIDuplicates duplicates, int poiId, DuplicatePOIGroup currentGroup)
         {
-
             var mentionedGroups = duplicates.DuplicateSummaryList.Where(d => d.DuplicatePOIList.Any(p => p.DuplicateOfPOI.ID == poiId || p.DuplicatePOI.ID == poiId));
             if (mentionedGroups.Any(m => m != currentGroup))
             {
@@ -511,8 +578,8 @@ namespace OCM.API.Common
                 //POI not mentioned in any other group
                 return false;
             }
-
         }
+
         /// <summary>
         /// Recursive grouping of duplicates into groups, removing unused/redundant groups
         /// </summary>
@@ -615,7 +682,6 @@ namespace OCM.API.Common
 
         public List<DiffItem> CheckDifferences(Model.ChargePoint poiA, Model.ChargePoint poiB)
         {
-
             var diffList = new List<DiffItem>();
 
             if (poiA == null && poiB == null)
@@ -783,7 +849,7 @@ namespace OCM.API.Common
                 }
                 catch (Exception)
                 {
-                    //unknown usage type 
+                    //unknown usage type
                     throw new OCMAPIException("Unknown Usage Type Specified");
                 }
             }
@@ -803,7 +869,6 @@ namespace OCM.API.Common
             {
                 dataChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
             }
-
 
             if (simpleChargePoint.DataQualityLevel != null && simpleChargePoint.DataQualityLevel > 0)
             {
@@ -1011,8 +1076,6 @@ namespace OCM.API.Common
 
             //TODO:clean up unused metadata values
 
-
-
             if (simpleChargePoint.StatusTypeID != null || simpleChargePoint.StatusType != null)
             {
                 if (simpleChargePoint.StatusTypeID == null && simpleChargePoint.StatusType != null) simpleChargePoint.StatusTypeID = simpleChargePoint.StatusType.ID;
@@ -1036,7 +1099,6 @@ namespace OCM.API.Common
                 dataChargePoint.SubmissionStatusTypeID = null;
                 dataChargePoint.SubmissionStatusType = null; // dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
             }
-
         }
 
         /// <summary>
@@ -1080,5 +1142,4 @@ namespace OCM.API.Common
             return supersededPOIData.ID;
         }
     }
-
 }

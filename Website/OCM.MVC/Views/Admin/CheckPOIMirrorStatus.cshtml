@@ -1,0 +1,53 @@
+﻿@model OCM.Core.Data.MirrorStatus
+
+<div>
+    <h4>POI Mirror Status</h4>
+    <p>The following is a summary of the MongoDB POI Cache maintained in this server. This cache is used to service read only API requests in order to minimise SQL database queries.</p>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusCode)
+        </dd>
+       
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPOI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPOI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastUpdated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastUpdated)
+        </dd>
+
+    </dl>
+    <p>
+        Update recently modified POI in cache:
+        <br />
+        <a href="@Url.Action("RefreshPOIMirror", "Admin", new { mode="modified"})" class="btn btn-success">Refresh Cache (Modified)</a>
+        <br />
+        Force cache refresh (all):<br />
+        <a href="@Url.Action("RefreshPOIMirror", "Admin", new { mode="all"})" class="btn btn-danger">Refresh Cache (All)</a>
+
+    </p>
+    
+</div>
+

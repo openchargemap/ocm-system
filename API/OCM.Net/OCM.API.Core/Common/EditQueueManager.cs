@@ -1,6 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 using OCM.API.Common.Model;
+using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,6 +157,8 @@ namespace OCM.API.Common
                             poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
                         }
 
+                        poiData.DateLastStatusUpdate = DateTime.UtcNow;
+                        
                         //publish edit
                         DataModel.SaveChanges();
 
@@ -171,6 +174,8 @@ namespace OCM.API.Common
                     queueItem.ProcessedByUser = DataModel.Users.FirstOrDefault(u => u.ID == userId);
                     queueItem.DateProcessed = DateTime.UtcNow;
                     DataModel.SaveChanges();
+
+                    CacheManager.RefreshCachedPOIList();
                 }
             }
         }

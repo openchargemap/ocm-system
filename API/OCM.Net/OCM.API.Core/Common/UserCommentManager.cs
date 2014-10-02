@@ -1,4 +1,5 @@
 ﻿using OCM.API.Common;
+using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,13 @@ namespace OCM.API.Common
             if (comment!=null){
                 var cpID = comment.ChargePointID;
                 DataModel.UserComments.Remove(comment);
+                DataModel.ChargePoints.Find(cpID).DateLastStatusUpdate = DateTime.UtcNow;
                 DataModel.SaveChanges();
 
                 var user = new UserManager().GetUser(userId);
                 AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\",EntityID:" + commentId + ",ChargePointID:" + cpID + "}", "User deleted comment");
+
+                CacheManager.RefreshCachedPOIList();
             }
             
         }

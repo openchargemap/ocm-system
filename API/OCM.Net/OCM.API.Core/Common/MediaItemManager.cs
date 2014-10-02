@@ -38,6 +38,8 @@ namespace OCM.API.Common
                 mediaItem.IsVideo = isVideo;
 
                 dataModel.MediaItems.Add(mediaItem);
+
+                dataModel.ChargePoints.Find(chargePointId).DateLastStatusUpdate = DateTime.UtcNow;
                 dataModel.SaveChanges();
 
                 new UserManager().AddReputationPoints(userId, 1);
@@ -177,6 +179,7 @@ namespace OCM.API.Common
             {
                 var cpID = item.ChargePointID;
                 dataModel.MediaItems.Remove(item);
+                dataModel.ChargePoints.Find(cpID).DateLastStatusUpdate = DateTime.UtcNow;
                 dataModel.SaveChanges();
 
                 //TODO: delete from underlying storage
