@@ -1,0 +1,32 @@
+﻿@model OCM.API.Common.Model.UserSubscriptionFilter
+<p>Note: Enabling specific filters means all non-matching results will be excluded, especially if the equipment/location data is incomplete or inaccurate. You may be accidentally excluding results you would like to see.</p>
+<div class="form-group">
+
+    <label for="FilterSettings_OperatorTypeIDs" class="col-md-3">Network / Operator</label>
+
+    @Html.ListBoxFor(model => model.OperatorIDs, (MultiSelectList)ViewBag.OperatorList)
+</div>
+<div class="form-group">
+
+    <label for="FilterSettings_UsageTypeIDs" class="col-md-3">Usage Types</label>
+
+    @Html.ListBoxFor(model => model.UsageTypeIDs, (MultiSelectList)ViewBag.UsageTypeList)
+</div>
+<div class="form-group">
+
+    <label for="FilterSettings_ConnectionTypeIDs" class="col-md-3">Connection Types</label>
+
+    @Html.ListBoxFor(model => model.ConnectionTypeIDs, (MultiSelectList)ViewBag.ConnectionTypeList)
+</div>
+<div class="form-group">
+
+    <label for="FilterSettings_LevelIDs" class="col-md-3">Levels</label>
+
+    @Html.ListBoxFor(model => model.LevelIDs, (MultiSelectList)ViewBag.LevelList)
+</div>
+<div class="form-group">
+
+    <label for="FilterSettings_StatusTypeIDs" class="col-md-3">Status Types</label>
+
+    @Html.ListBoxFor(model => model.StatusTypeIDs, (MultiSelectList)ViewBag.StatusTypeList)
+</div>

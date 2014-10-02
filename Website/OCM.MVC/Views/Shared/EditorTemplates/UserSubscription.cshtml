@@ -1,10 +1,15 @@
 ﻿@model OCM.API.Common.Model.UserSubscription
 
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<style type="text/css">
+    html, body, #map {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
 
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
-
-@using (Html.BeginForm("SubscriptionEdit","Profile", FormMethod.Post))
+@using (Html.BeginForm("SubscriptionEdit", "Profile", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -12,7 +17,6 @@
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
-        @Html.HiddenFor(model => model.FilterSettings)
         @Html.HiddenFor(model => model.DateCreated)
         @Html.HiddenFor(model => model.DateLastNotified)
         @Html.HiddenFor(model => model.UserID)
@@ -27,10 +31,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.NotificationFrequencyMins, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                
-                    @Html.DropDownListFor(model => model.NotificationFrequencyMins, (SelectList)ViewBag.NotificationFrequencyOptions, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.NotificationFrequencyMins, "", new { @class = "text-danger" })
-                
+
+                @Html.DropDownListFor(model => model.NotificationFrequencyMins, (SelectList)ViewBag.NotificationFrequencyOptions, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.NotificationFrequencyMins, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -57,7 +60,15 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyPOIUpdates, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyPOIUpdates)
+                            @Html.ValidationMessageFor(model => model.NotifyPOIUpdates, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.NotifyPOIEdits, htmlAttributes: new { @class = "control-label col-md-10" })
                     <div class="col-md-2">
@@ -88,59 +99,72 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.NotifyEmergencyChargingRequests, htmlAttributes: new { @class = "control-label col-md-10" })
-                    <div class="col-md-2">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(model => model.NotifyEmergencyChargingRequests)
-                            @Html.ValidationMessageFor(model => model.NotifyEmergencyChargingRequests, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.NotifyGeneralChargingRequests, htmlAttributes: new { @class = "control-label col-md-10" })
-                    <div class="col-md-2">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(model => model.NotifyGeneralChargingRequests)
-                            @Html.ValidationMessageFor(model => model.NotifyGeneralChargingRequests, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-
+                @Html.HiddenFor(model => model.NotifyEmergencyChargingRequests)
+                @Html.HiddenFor(model => model.NotifyGeneralChargingRequests)
             </div>
             <div class="col-md-6">
                 <h3>Area Of Interest:</h3>
-                
-                <div class="form-group">
-                    @Html.LabelFor(model => model.CountryID, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, new { @class="form-control"})
-                        @Html.ValidationMessageFor(model => model.CountryID, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Filter By Country</label>
+                        <div class="col-md-2">
+                            <div class="checkbox">
+                                <input type="checkbox" name="FilterByCountry" id="filterByCountry" @(Model.CountryID != null ? "checked='checked'" : "")>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <p>You can optionally filter results to a specific geographic area:</p>
-                <div id="map" class="map-container" style="height: 300px;"></div>
-                <p>Address: <span id="full-address"></span></p>
+                <div id="locationFilterPanel">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CountryID, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("CountryCode", (SelectList)ViewBag.CountryList, new { @class = "form-control", onchange = "updateSelectedCountry(this);" })
+                        </div>
+                    </div>
 
-                @Html.HiddenFor(model => model.Latitude)
-                @Html.HiddenFor(model => model.Longitude)
+                    <p>You can optionally filter results to a specific geographic area within the selected country. Select 'Match Locations Near Me' then drag the search circle to set the search position:</p>
+                    <p>
+                        <div class="form-group">
+                            <button id="initPositionSelectedCountry" type="button" class="btn btn-default">Match Specific Location In Country</button>
+                            <button id="initPositionNearMe" type="button" class="btn btn-success">Match Locations Near Me</button>
+                            <button id="clearPositionFilter" type="button" class="btn btn-warning">Clear Location Filter</button>
+                        </div>
+                    </p>
+                    <div id="map" class="map-canvas" style="height: 300px;"></div>
+                    <p>Address: <span id="full-address"></span></p>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.DistanceKM, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.DistanceKM, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.DistanceKM, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.CountryID)
+                    @Html.HiddenFor(model => model.Latitude)
+                    @Html.HiddenFor(model => model.Longitude)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DistanceKM, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.DistanceKM, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DistanceKM, "", new { @class = "text-danger" })
+                        </div>
                     </div>
                 </div>
             </div>
-            
         </div>
 
-
-
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#advancedFilters">
+                            Advanced Filters
+                        </a>
+                    </h4>
+                </div>
+                <div id="advancedFilters" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        @Html.EditorFor(model => model.FilterSettings)
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-actions">
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -151,194 +175,301 @@
     </div>
 }
 
-
-
-<script src="~/Scripts/OCM/Subscriptions/distancewidget.js"></script>
-@if (Model.Latitude != null)
-{
-
-    var scriptVars = "var lat = " + Model.Latitude + "; var lng = " + Model.Longitude + ";  var radius = " + Model.DistanceKM + ";";
-    <script>
-        @scriptVars
-
-        var map, marker, geocoder, distanceWidget, geocodeTimer;
-        var centerPos = null;
-        var MAX_RADIUS = 10000;
-        var mapInitialised = false;
-
-        function setPositionViaGeolocation()
-        {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                if (position != null) {
-                    centrePos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    if (!mapInitialised) {
-                        //TODO: set country
-                        lat = centerPos.coords.latitude;
-                        lng = centrePos.coords.longitude;
-                        initializeMap();
-                    }
-                } else {
-                    //nothing doing
-                }
-                        
-            }, function () {
-                // could not geolocate
-                       
-            });
-        }
-
-        function initializeMap() {
-            if (lat != null) {
-                centrePos = new google.maps.LatLng(lat, lng);
-                //setup a geocoder to use when location address at marker pos
-                geocoder = new google.maps.Geocoder();
-
-                //setup map options
-                var mapOptions = {
-                    center: centerPos,
-                    zoom: 14,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-
-                //create map
-                map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-                distanceWidget = new DistanceWidget({
-                    map: map,
-                    distance: radius, // Starting distance in km.
-                    maxDistance: MAX_RADIUS,
-                    color: '#000000',
-                    activeColor: '#5599bb',
-                    sizerIcon: '/scripts/ocm/subscriptions/resize-off.png',
-                    activeSizerIcon: '/scripts/ocm/subscriptions/resize.png'
-                });
-
-                google.maps.event.addListener(distanceWidget, 'distance_changed',
-                    updateDistanceListeners);
-
-                google.maps.event.addListener(distanceWidget, 'position_changed',
-                    updatePosition);
-
-                map.fitBounds(distanceWidget.get('bounds'));
-
-                updateDistanceListeners();
-                updatePosition();
-                addActions();
-            } else {
-                //attempt geolocation then init map
-            }
-        }
-
-        function updatePosition() {
-
-            var pos = distanceWidget.get('position');
-            if (pos != null) {
-                $("#Latitude").val(pos.lat());
-                $("#Longitude").val(pos.lng());
-            }
-
-            //perform address lookup from lat/lng
-            /*if (geocodeTimer) {
-                window.clearTimeout(geocodeTimer);
-            }
-
-            // Throttle the geo query so we don't hit the limit
-            geocodeTimer = window.setTimeout(function () {
-                reverseGeocodePosition();
-            }, 500);*/
-        }
-
-        function reverseGeocodePosition() {
-            var pos = distanceWidget.get('position');
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ 'latLng': pos }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-                        //got an address for this location
-                        var addressResult = results[0];
-                        var addressComponents = addressResult.address_components;
-                        $("#full-address").html(addressResult.formatted_address);
-
-                        //find address component in result with type 'postal_code'
-
-                        for (var i = addressComponents.length - 1; i >= 0; i--) {
-                            for (var t = 0; t < addressComponents[i].types.length; t++) {
-                                if (addressComponents[i].types[t] == "postal_code") {
-                                    //$("#@Html.IdFor(model => model.ID)").val(addressComponents[i].short_name);
-                                    break;
-                                }
-                            }
-                        }
-
-
-                    } else {
-                        //no result
-                    }
-
-                }
-            });
-        }
-
-        function updateDistanceListeners() {
-            //fires when search widget distance changes
-            var distance = parseFloat(distanceWidget.get('distance'));
-            $('#DistanceKM').val(distance.toFixed(2));
-            $('#distance-range').val(distance.toFixed(2));
-        }
-
-        function addActions() {
-            /*var s = $('#s').submit(search);
-
-            $('#close').click(function () {
-                $('#cols').removeClass('has-cols');
-                google.maps.event.trigger(map, 'resize');
-                map.fitBounds(distanceWidget.get('bounds'));
-                $('#results-wrapper').hide();
-
-                return false;
-            });*/
-        }
-
-
-        google.maps.event.addDomListener(window, 'load', initializeMap);
-
-    </script>
+@{
+    var scriptVars = "var lat = " + (Model.Latitude != null ? "" + Model.Latitude : "null") + "; var lng = " + (Model.Longitude != null ? "" + Model.Longitude : "null") + ";  var radius = " + (Model.DistanceKM != null ? "" + Model.DistanceKM : "null") + ";";
 }
 <script>
+        @scriptVars
+
+    var map, marker, geocoder, geocodeTimer;
+    var searchRadiusCircle;
+    var centerPos = null;
+    var MAX_RADIUS = 10000;
+    var defaultSearchRadiusKM=100;
+    var mapInitialised = false;
+
+    var countryExtendedInfo = @Html.Raw(ViewBag.CountryExtendedInfo);
+    ;
+
+    function setPositionViaGeolocation()
+    {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            if (position != null) {
+                centerPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                updateDistance(defaultSearchRadiusKM);
+                initializeMap();
+                updatePosition(centerPos, true);
+            }
+
+        }, function () {
+            // could not geolocate, use avg country position instead
+            if(centerPos==null){
+                centerPos= getPositionForSelectedCountry();
+            }
+            if(centerPos!=null) {
+                updateDistance(defaultSearchRadiusKM);
+                initializeMap();
+                updatePosition(centerPos,true);
+            }
+        });
+    }
+
+    function initEditor(){
+
+        if (radius==null) updateDistance(defaultSearchRadiusKM); //default to 100KM
+
+        initializeMap();
+
+        $("#filterByCountry").change(
+            function(){
+                if($(this).is(":checked")) {
+                    //filter by country enabled
+                    $("#locationFilterPanel").show();
+                    setPositionViaGeolocation();
+
+                } else {
+                    //filter by country disabled
+
+                    $("#locationFilterPanel").hide();
+                    $("#CountryID").val("");
+                    $("#CountryCode").val("");
+                    clearPositionFilter();
+
+                }
+
+            });
+
+        //hide location filtering if not currently selected
+        if ($("#CountryCode").val()=="" && $("#Latitude").val()=="") {
+            $("#locationFilterPanel").hide();
+        }
+
+        $("#initPositionSelectedCountry").click(function(){
+            if ($("#CountryCode").val!=""){
+                //edit location specific filtering based on selected country
+                centerPos = getPositionForSelectedCountry();
+
+                if(centerPos!=null) {
+                    updateDistance(defaultSearchRadiusKM);
+                    initializeMap();
+                    updatePosition(centerPos,true);
+                }
+
+            }
+
+        });
+
+        $("#initPositionNearMe").click(function(){
+            //edit nearby location specific filtering
+            setPositionViaGeolocation();
+        });
+
+        $("#clearPositionFilter").click(function(){
+            //reset location specific filtering
+            clearPositionFilter();
+        });
+    }
+
+    function clearPositionFilter(){
+        $("#Latitude").val("");
+        $("#Longitude").val("");
+        $("#DistanceKM").val("");
+        if (searchRadiusCircle){
+            searchRadiusCircle.setVisible(false);
+        }
+    }
+
+    function initializeMap() {
+
+        if (centerPos==null){
+            if (lat==null || lng==null){
+                //use country default
+                centerPos = getPositionForSelectedCountry();
+            } else {
+                centerPos = new google.maps.LatLng(lat, lng);
+            }
+        }
+        if (centerPos==null) return;
+
+        //setup a geocoder to use when location address at marker pos
+        geocoder = new google.maps.Geocoder();
+        if (map==null){
+            //setup map options
+            var mapOptions = {
+                center: centerPos,
+                zoom: 6
+            };
+
+            //create map
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        }
+        if (searchRadiusCircle==null){
+            //search radius circle
+            var searchRadius = parseFloat($("#DistanceKM").val());
+
+            var searchCircleOptions = {
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35,
+                map: map,
+                center: centerPos,
+                radius: searchRadius * 1000,
+                draggable:true
+            };
+            // Add the circle for this city to the map.
+
+            searchRadiusCircle = new google.maps.Circle(searchCircleOptions);
+            //when search circle dragged, update search centre pos
+            google.maps.event.addListener(searchRadiusCircle, 'dragend', function() {
+                updatePosition(searchRadiusCircle.getCenter());
+            });
+
+        }
+
+        updatePosition(centerPos);
+    }
+
+    function updatePosition(newPos, moveSearchCircle) {
+
+        //var pos = distanceWidget.get('position');
+        centerPos = newPos;
+        pos = newPos;
+        if (pos != null) {
+            $("#Latitude").val(pos.lat());
+            $("#Longitude").val(pos.lng());
+        }
+
+        //perform address lookup from lat/lng
+        if (geocodeTimer) {
+            window.clearTimeout(geocodeTimer);
+        }
+
+        // Throttle the geo query so we don't hit the limit
+        geocodeTimer = window.setTimeout(function () {
+            reverseGeocodePosition();
+        }, 1000);
+
+        if(moveSearchCircle==true)
+        {
+            //set maps centre
+            if (map) map.setCenter(centerPos);
+            if (searchRadiusCircle) {
+                searchRadiusCircle.setCenter(centerPos);
+                searchRadiusCircle.setVisible(true);
+            }
+        }
+    }
+
+    function reverseGeocodePosition() {
+        var pos = centerPos;
+
+        geocoder.geocode({ 'latLng': pos }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results!=null && results.length>1) {
+                    //got an address for this location
+                    //TODO: set country dropdown from geocoding
+
+                    var addressResult = results[0];
+                    var addressComponents = addressResult.address_components;
+                    $("#full-address").html(addressResult.formatted_address);
+
+                    //find address component in result with type 'postal_code'
+
+                    for (var i = addressComponents.length - 1; i >= 0; i--) {
+                        for (var t = 0; t < addressComponents[i].types.length; t++) {
+                            if (addressComponents[i].types[t] == "country") {
+                                var countryCode = addressComponents[i].short_name;
+                                $("#CountryCode").val(countryCode);
+                            }
+                        }
+                    }
+
+                } else {
+                    //no result
+                }
+
+            }
+        });
+
+    }
+
+    function updateDistance(distanceKM){
+        if (searchRadiusCircle!=null){
+            searchRadiusCircle.setRadius(distanceKM*1000);
+        }
+
+        $('#DistanceKM').val(distanceKM.toFixed(0));
+    }
+
+    function updateDistanceListeners() {
+        //fires when search widget distance changes
+        /* var distance = parseFloat(distanceWidget.get('distance'));
+         $('#DistanceKM').val(distance.toFixed(2));
+         $('#distance-range').val(distance.toFixed(2));*/
+    }
+
+    function getCountryExtendedInfo(countryCode){
+        for(i=0;i<countryExtendedInfo.length;i++)
+        {
+            if (countryExtendedInfo[i].CountryCode==countryCode){
+                return countryExtendedInfo[i];
+            }
+        }
+
+        return null;
+    }
+
+    function updateSelectedCountry(){
+        var countryCode = $("#CountryCode").val();
+
+        if (countryCode!=""){
+            var countryInfo = getCountryExtendedInfo(countryCode);
+            if (countryInfo!=null){
+                clearPositionFilter();
+                var countryCenterPos = new google.maps.LatLng( countryInfo.Latitude, countryInfo.Longitude);
+                if (map) map.setCenter(countryCenterPos);
+
+            }
+        }
+    }
+
+    function getPositionForSelectedCountry(){
+        var countryCode = $("#CountryCode").val();
+
+        if (countryCode!=""){
+            var countryInfo = getCountryExtendedInfo(countryCode);
+            if (countryInfo!=null){
+                //set maps centre
+                return new google.maps.LatLng( countryInfo.Latitude, countryInfo.Longitude);
+            }
+        }
+    }
+
+    google.maps.event.addDomListener(window, 'load', initEditor);
 
     $(document).ready(function () {
-        if (!Modernizr.inputtypes.range) {
+        /*if (!Modernizr.inputtypes.range) {
             document.getElementById("distance-range").style.display = "none";
         } else {
             //if distance range control changes, update text value and
             $("#distance-range").change(
                 function () {
                     var newDistance = $("#distance-range").val();
-
-                    //update widget distance, and text value of distance:
-                    distanceWidget.set('distance', newDistance);
-
-                    //get updated distance from widget and use for text box value
-                    var distance = parseFloat(distanceWidget.get('distance'));
-                    $('#DistanceKM').val(distance.toFixed(2));
+                    $('#DistanceKM').val(newDistance.toFixed(2));
                 });
-        }
+        }*/
 
         //if distance textbox changes, update other related items
         $('#DistanceKM').keyup(
                 function () {
-                    var newDistance = $("#@Html.IdFor(model => model.DistanceKM)").val();
-
-                    //update widget distance, and range value of distance:
-                    distanceWidget.set('distance', newDistance);
-
-                    var distance = parseFloat(distanceWidget.get('distance'));
-                    $('#distance-range').val(distance.toFixed(2));
+                    var newDistance = parseFloat($("#@Html.IdFor(model => model.DistanceKM)").val());
+                    updateDistance(newDistance.toFixed(2));
                 }
             );
     });
-
-
 </script>
 
 @section Scripts {

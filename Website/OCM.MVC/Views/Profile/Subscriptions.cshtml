@@ -5,6 +5,14 @@
 }
 
 <h2>Subscriptions</h2>
-<p>You can use Subscriptions to keep track of charging locations you're interested in. You can setup or modify subscriptions here and you will be notified whenever relevant changes happen.</p>
-<p>For example: "Notify me daily, when charging locations within 5 miles of london are added, updated or have new comments."</p>
+<p>You can use Subscriptions as a "saved search" to keep track of charging locations you're interested in. You can setup or modify subscriptions here and you will be notified whenever relevant changes happen.</p>
+<p>For example: "Notify me daily, when charging locations within 5 miles of London, UK are added, updated or have new comments."</p>
+
+@if (ViewBag.UserProfile != null)
+{
+    if (String.IsNullOrEmpty(((OCM.API.Common.Model.User)ViewBag.UserProfile).EmailAddress))
+    {
+        <div class="alert alert-danger">Your profile does not have an email address set. Subscriptions require your email address in order to notify you about matching changes. <a href="@Url.Action("Edit","Profile")">Edit Your Profile</a></div>
+    }
+}
 @Html.Partial("_UserSubscriptions", Model)

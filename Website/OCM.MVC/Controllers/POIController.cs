@@ -1,22 +1,21 @@
-﻿using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-using OCM.API.Common;
+﻿using OCM.API.Common;
 using OCM.API.Common.DataSummary;
 using OCM.API.Common.Model;
+using OCM.MVC.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Helpers;
-using OCM.MVC.Models;
+using System.Web.Mvc;
 
 namespace OCM.MVC.Controllers
 {
-
     public class POIController : BaseController
     {
         //
@@ -39,6 +38,12 @@ namespace OCM.MVC.Controllers
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
             filter.DataProviderIDs = this.ConvertNullableSelection(filter.DataProviderIDs);
             filter.IncludeComments = true;
+
+            if (IsRequestByRobot)
+            {
+                //force mirror db when browser is a robot
+                filter.AllowMirrorDB = true;
+            }
 
             if (!String.IsNullOrWhiteSpace(filter.Country))
             {
@@ -98,10 +103,8 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-
             filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestSettings)filter);
             return View(filter);
-
         }
 
         private int[] ConvertNullableSelection(int[] selectedItems)
@@ -118,7 +121,7 @@ namespace OCM.MVC.Controllers
             return (int[])null;
         }
 
-        bool IsNumeric(string text)
+        private bool IsNumeric(string text)
         {
             Regex regex = new Regex(@"^[-+]?[0-9]*\.?[0-9]+$");
             return regex.IsMatch(text);
@@ -135,10 +138,11 @@ namespace OCM.MVC.Controllers
             if (status != null) ViewBag.Status = status;
 
             OCM.API.Common.POIManager cpManager = new API.Common.POIManager();
-            var poi = cpManager.Get(id, true);
+
+            var poi = cpManager.Get(id, true, allowDiskCache: false, allowMirrorDB: true);
             ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
 
-            List<LocationImage> imageList =null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
+            List<LocationImage> imageList = null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
 
             if (imageList != null)
             {
@@ -147,17 +151,25 @@ namespace OCM.MVC.Controllers
             }
 
             POIViewModel viewModel = new POIViewModel();
-            viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
             viewModel.POI = poi;
 
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-            viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestSettings { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles });
-            viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
-            sw.Stop();
-            System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
+            if (!IsRequestByRobot)
+            {
+                viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
 
-            ViewBag.ReferenceData = new POIBrowseModel();
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestSettings { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
+                viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
+                sw.Stop();
+                System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
+
+                ViewBag.ReferenceData = new POIBrowseModel();
+            }
+            else
+            {
+                viewModel.POIListNearby = new List<ChargePoint>();
+            }
 
             if (layout == "simple")
             {
@@ -168,7 +180,6 @@ namespace OCM.MVC.Controllers
             {
                 return View(viewModel);
             }
-
         }
 
         public ActionResult AddMediaItem(int id)
@@ -195,7 +206,6 @@ namespace OCM.MVC.Controllers
                 ViewBag.PoiId = id;
                 ViewBag.UploadCompleted = true;
                 return View();
-
             }
 
             return View();
@@ -220,7 +230,6 @@ namespace OCM.MVC.Controllers
             coreReferenceData.ChargePoint.SubmissionStatusTypeID = null;
             return View("Edit", coreReferenceData.ChargePoint);
         }
-
 
         //
         // GET: /POI/Edit/5
@@ -311,8 +320,7 @@ namespace OCM.MVC.Controllers
 
                     if (IsUserSignedIn) user = new UserManager().GetUser((int)Session["UserID"]);
 
-
-                    //reset any values provided as -1 to a standard default (unknown etc) 
+                    //reset any values provided as -1 to a standard default (unknown etc)
                     //the binding method varies between hidden fields and dropdown values (FIXME)
                     if (poi.DataProvider != null && poi.DataProvider.ID > 0)
                     {
@@ -408,13 +416,11 @@ namespace OCM.MVC.Controllers
                     {
                         ViewBag.ValidationFailed = true;
                     }
-
                 }
                 catch
                 {
                     //return View(poi);
                 }
-
             }
             else
             {
@@ -428,7 +434,6 @@ namespace OCM.MVC.Controllers
             }
 
             ViewBag.ReferenceData = new POIBrowseModel();
-
 
             return View(poi);
         }
@@ -476,7 +481,7 @@ namespace OCM.MVC.Controllers
                 try
                 {
                     var user = new UserManager().GetUser((int)Session["UserID"]);
-                    if (comment.Rating==0) comment.Rating=null;
+                    if (comment.Rating == 0) comment.Rating = null;
                     if (new SubmissionManager().PerformSubmission(comment, user) > 0)
                     {
                         if (comment.ChargePointID > 0)
@@ -488,7 +493,6 @@ namespace OCM.MVC.Controllers
                             return RedirectToAction("Index");
                         }
                     }
-
                 }
                 catch
                 {
@@ -517,8 +521,7 @@ namespace OCM.MVC.Controllers
             return View(summary);
         }
 
-
-        public ActionResult ReviewDuplicates(int? countryId, bool enableCache=true, double maxDupeRange=500,int minConfidence=70)
+        public ActionResult ReviewDuplicates(int? countryId, bool enableCache = true, double maxDupeRange = 500, int minConfidence = 70)
         {
             if (countryId == null) countryId = 1;//default to UK
             ViewBag.MinConfidenceLevel = minConfidence;

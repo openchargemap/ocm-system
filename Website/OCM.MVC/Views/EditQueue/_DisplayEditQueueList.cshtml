@@ -54,18 +54,26 @@
 
             </td>
             <td>
-                <div class="btn-group">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Action
-                    <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        @if (!item.IsProcessed)
-                        {
-                            <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
-                        }
-                        <li>@Html.ActionLink("Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
-                    </ul>
-                </div>
+                @if (ViewBag.IsUserAdmin == true)
+                {
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            Action
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @if (!item.IsProcessed)
+                            {
+                                <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
+                            }
+                            <li>@Html.ActionLink("Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <text>Awaiting Administrator</text>
+                }
 
             </td>
         </tr>

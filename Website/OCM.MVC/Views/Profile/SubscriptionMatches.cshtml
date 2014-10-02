@@ -1,0 +1,22 @@
+﻿@model OCM.MVC.Models.SubscriptionBrowseModel
+
+@{
+    ViewBag.Title = "Subscription Matches for \""+Model.Subscription.Title+"\"";
+}
+
+<h2>Subscription Matches</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(m => m.SubscriptionID)
+
+    <div class="form-actions">
+        @Html.LabelFor(m => m.DateFrom)
+        @Html.EditorFor(m => m.DateFrom)
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+}
+@Html.Raw(Model.SummaryHTML)

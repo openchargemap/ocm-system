@@ -12,4 +12,5 @@ namespace OCM.MVC.Models
         public UserComment NewComment { get; set; }
         public List<ChargePoint> POIListNearby { get; set; }
     }
+
 }

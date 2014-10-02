@@ -1,10 +1,31 @@
 ﻿using OCM.API.Common;
+using System;
 using System.Web.Mvc;
 
 namespace OCM.MVC.Controllers
 {
     public class BaseController : Controller
     {
+        public bool IsRequestByRobot
+        {
+            get
+            {
+                try
+                {
+                    var userAgent = Request.UserAgent.ToLower();
+                    if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot"))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+        }
+
         public bool IsUserSignedIn
         {
             get
@@ -33,10 +54,10 @@ namespace OCM.MVC.Controllers
                 locationGuess = (LocationLookupResult)Session["locationGuess"];
             }
 
-            if (locationGuess == null || (locationGuess!=null && (locationGuess.Country_Code==null || includeCountryID && locationGuess.CountryID==0)))
+            if (locationGuess == null || (locationGuess != null && (locationGuess.Country_Code == null || includeCountryID && locationGuess.CountryID == 0)))
             {
                 var clientIP = Request.ServerVariables["REMOTE_ADDR"];
-               
+
                 locationGuess = GeocodingHelper.GetLocationFromIP_FreegeoIP(clientIP);
 
                 if (includeCountryID)

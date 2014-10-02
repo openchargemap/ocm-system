@@ -9,10 +9,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="@ViewBag.Description" />
     <meta name="author" content="openchargemap.org" />
-    @if (ViewBag.EnableAppMarkeplaceLinks == true)
-    {
-        <meta name="apple-itunes-app" content="app-id=528951115">
-    }
 
     <link href="~/content/bootstrap.min.css" rel="stylesheet" />
 
@@ -28,6 +24,7 @@
     <link rel="icon" type="image/png" href="/app/images/icons/AppIcon_57x57.png" />
     <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/animate.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -94,7 +91,7 @@
                                 <li><p class="navbar-text">@Html.Encode(Session["Username"])</p></li>
                                 <li class="nav-divider"></li>
                                 <li>@Html.ActionLink("my profile", "Index", "Profile")</li>
-                                <!--<li>@Html.ActionLink("my subscriptions", "Subscriptions", "Profile")</li>-->
+                                <li>@Html.ActionLink("my subscriptions", "Subscriptions", "Profile")</li>
                                 <li>@Html.ActionLink("my comments", "Comments", "Profile")</li>
                                 <li>@Html.ActionLink("my uploads", "Media", "Profile")</li>
                                 <li class="nav-divider"></li>
@@ -137,7 +134,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container @if(ViewBag.WideContainer==true){<text>container-wide</text>}">
         <div class="content">
             @RenderBody()
         </div>

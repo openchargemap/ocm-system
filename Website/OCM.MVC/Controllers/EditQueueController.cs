@@ -19,7 +19,8 @@ namespace OCM.MVC.Controllers
             {
                 var list = editQueueManager.GetEditQueueItems(filter);
                 ViewBag.EditFilter = filter;
-
+                ViewBag.IsUserAdmin = (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
+                
                 return View(list);
             }
         }

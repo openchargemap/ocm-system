@@ -5,11 +5,11 @@
   /*color-a-light*/
   color: #f4ffe5;
   /*color-a-pale*/
-  color: #2c3e50;
+  color: #5f872a;
   /*color-b*/
-  color: #3d4f61;
+  color: #70983b;
   /*color-b-light*/
-  color: rgba(44, 62, 80, 0.5);
+  color: rgba(95, 135, 42, 0.5);
   /*color-b-semitrans*/
   color: #b9ff28;
   /*color-c-pale*/
@@ -44,7 +44,7 @@ div.content {
   margin: 0;
   padding: 0 0 1em 0;
 }
-.container {
+.container-wide {
   margin-top: 0;
   margin-right: 1em;
   margin-left: 1em;
@@ -66,7 +66,7 @@ div.footer {
   margin: 16px;
   padding: 16px;
   border-top: 1px dotted #8cc63f;
-  color: #2c3e50;
+  color: #464646;
   text-align: center;
   font-size: 8pt;
   background-color: #f8fbf7;
@@ -126,7 +126,7 @@ h2 {
   margin-top: 0em;
   padding: 0.3em 0 0.2em 0;
   border-bottom: 0.1em solid #c6e29e;
-  color: #2c3e50;
+  color: #464646;
 }
 h1 {
   font-size: 2.2em;
@@ -227,8 +227,8 @@ div.result {
   color: #c6e29e;
 }
 .details-container .nearby-place {
-  border: 1px solid #2c3e50;
-  background-color: rgba(44, 62, 80, 0.5);
+  border: 1px solid #5f872a;
+  background-color: rgba(95, 135, 42, 0.5);
   color: white;
 }
 div.stat {
@@ -295,7 +295,7 @@ div.stat {
   height: 42px;
 }
 .navbar-inverse {
-  background-color: #2c3e50;
+  background-color: #5f872a;
   background-image: none;
 }
 .navbar-inverse .nav > li > a {
@@ -303,21 +303,31 @@ div.stat {
   text-transform: lowercase;
 }
 .navbar .nav li.dropdown.open > .dropdown-toggle {
-  background-color: #3d4f61;
+  background-color: #70983b;
+}
+@media (max-width: 767px) {
+  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+    color: white;
+  }
 }
 .ocm-backdrop {
   margin: 0em -1em 1em -1em;
   border-radius: 0;
-  background-color: #3d4f61;
-  /*background-image: url('images/world.jpg');*/
+  background-color: #70983b;
+  background-image: url('images/world2.jpg');
   color: white;
   overflow: auto;
 }
 .ocm-backdrop a,
 .ocm-backdrop a:visited {
   color: white;
-  -webkit-text-shadow: 0 0 8px #c0c0ff;
-  text-shadow: 0 0 8px #c0c0ff;
+}
+.ocm-backdrop h2 > small {
+  font-size: 0.5em;
+  color: white;
+}
+.ocm-backdrop h3 > small {
+  color: rgba(255, 255, 255, 0.92);
 }
 .attribution {
   margin-top: -10px;
@@ -396,6 +406,7 @@ div.details-plain {
 .form-actions {
   padding: 1em;
   background-color: #f8f8f8;
+  overflow: auto;
 }
 .display-group {
   display: block;
@@ -413,13 +424,13 @@ div.details-plain {
   border: 3px solid green;
 }
 div[data-editormode="core"] label {
-  color: #2c3e50;
+  color: #5f872a;
 }
 div[data-editormode="extended"] label {
   color: #8cc63f;
 }
 div[data-editormode="advanced"] label {
-  color: #3d4f61;
+  color: #70983b;
 }
 .social {
   display: inline;
@@ -429,7 +440,7 @@ div[data-editormode="advanced"] label {
 .social a:link,
 .social a:hover,
 .social a:visited {
-  color: #3d4f61;
+  color: #70983b;
 }
 @media (max-width: 480px) {
   .nav-tabs > li {
@@ -442,4 +453,11 @@ div[data-editormode="advanced"] label {
 .panel-info .panel-heading {
   border-color: #EEEEEE;
   background-color: #f8f8f8;
+}
+.applinks {
+  float: right;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1em;
+  border-bottom-left-radius: 8px;
+  margin-left: 4em;
 }

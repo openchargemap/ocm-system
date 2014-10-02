@@ -14,30 +14,40 @@
             <strong>Rating: @Html.Raw(Model.Rating) out of 5</strong>
         }
         [
-         @if (Model.CommentType != null)
+        @if (Model.CommentType != null)
         {
-            <strong>@Model.CommentType.Title</strong> 
+            <strong>@Model.CommentType.Title</strong>
         }
-        
+
         @if (Model.CheckinStatusType != null)
         {
             <strong>, @Model.CheckinStatusType.Title</strong>
         }
-       
+
         ]
         <p>@Html.DisplayFor(m => m.Comment)</p>
         @if (Model.RelatedURL != null)
         {
             @Html.DisplayFor(m => m.RelatedURL)
         }
-        <small>Comment by 
+        <small>
+            Comment by
             <cite title="Source Title">
-            @if (Model.User!=null) {
-               <a href="@Url.Action("View", "Profile", new {id=Model.User.ID })">@Html.DisplayFor(m => m.User.Username)</a>
-            } else {
-                @Html.DisplayFor(m => m.UserName)
-            }                                             
-            </cite> @Html.DisplayFor(m => m.DateCreated)</small>
+                @if (Model.User != null)
+                {
+                    <a href="@Url.Action("View", "Profile", new {id=Model.User.ID })">@Html.DisplayFor(m => m.User.Username)</a>
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(Model.UserName))
+                    {
+                        @Html.DisplayFor(m => m.UserName)
+                    }
+                    else
+                    {<text>(Anonymous)</text> }
+                }
+            </cite> @Html.DisplayFor(m => m.DateCreated)
+        </small>
 
         @if (isUserAdmin)
         {
@@ -46,6 +56,4 @@
             </p>
         }
     </blockquote>
-
-  
 </div>
