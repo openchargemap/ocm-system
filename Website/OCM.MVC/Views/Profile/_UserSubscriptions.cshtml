@@ -38,7 +38,7 @@
                             <h4>Filter By</h4>
                             if (item.FilterSettings.OperatorIDs != null && item.FilterSettings.OperatorIDs.Any())
                             {
-                                <div>Operators: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).Operators,item.FilterSettings.OperatorIDs )</div>
+                                <div>Operators: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).Operators, item.FilterSettings.OperatorIDs)</div>
                             }
                             if (item.FilterSettings.UsageTypeIDs != null && item.FilterSettings.UsageTypeIDs.Any())
                             {
@@ -154,12 +154,13 @@
     var output = "";
     foreach (var itemId in itemIds)
     {
-        try { 
-        var refItem = refData.FirstOrDefault(r=>r.ID==itemId);
-        output += (output!=""?", "+ refItem.Title:refItem.Title);
+        try
+        {
+            var refItem = refData.FirstOrDefault(r => r.ID == itemId);
+            output += (output != "" ? ", " + refItem.Title : refItem.Title);
         }
         catch (Exception) { }
     }
-    
+
     <text>@output</text>
 }

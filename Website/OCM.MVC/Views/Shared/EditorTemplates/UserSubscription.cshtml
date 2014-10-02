@@ -99,8 +99,25 @@
                     </div>
                 </div>
 
-                @Html.HiddenFor(model => model.NotifyEmergencyChargingRequests)
-                @Html.HiddenFor(model => model.NotifyGeneralChargingRequests)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyEmergencyChargingRequests, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyEmergencyChargingRequests)
+                            @Html.ValidationMessageFor(model => model.NotifyEmergencyChargingRequests, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NotifyGeneralChargingRequests, htmlAttributes: new { @class = "control-label col-md-10" })
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.NotifyGeneralChargingRequests)
+                            @Html.ValidationMessageFor(model => model.NotifyGeneralChargingRequests, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
                 <h3>Area Of Interest:</h3>
