@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace OCM.API.Common.Model.Extensions
                 Title = source.Title,
                 CountryID = source.CountryID,
                 DistanceKM = source.DistanceKM,
-                FilterSettings = source.FilterSettings,
+                
                 IsEnabled = source.IsEnabled,
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
@@ -32,6 +33,10 @@ namespace OCM.API.Common.Model.Extensions
                 DateLastNotified = source.DateLastNotified,
                 UserID = source.UserID
             };
+
+            if (source.FilterSettings!=null){
+                item.FilterSettings = JsonConvert.DeserializeObject<UserSubscriptionFilter>(source.FilterSettings);
+            }
 
             if (isVerboseMode)
             {
