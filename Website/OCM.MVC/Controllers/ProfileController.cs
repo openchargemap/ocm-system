@@ -74,6 +74,8 @@ namespace OCM.MVC.Controllers
         {
             UserManager userManager = new UserManager();
             var user = userManager.GetUser(id);
+
+            ViewBag.CountryList = new SelectList(new ReferenceDataManager().GetCountries(true), "ID", "Title");
             return View(user);
         }
 

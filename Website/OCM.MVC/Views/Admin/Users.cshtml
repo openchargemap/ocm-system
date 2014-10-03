@@ -11,17 +11,15 @@
         <th></th>
         <th></th>
         <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.IdentityProvider)
         </th>
         <th>
            @Html.DisplayNameFor(model => model.Identifier)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Username)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </th>
+       
         <th>
             @Html.DisplayNameFor(model => model.ReputationPoints)
         </th>
@@ -34,7 +32,7 @@
         <th>
             @Html.DisplayNameFor(model => model.DateLastLogin)
         </th>
- 
+ <th></th>
         
     </tr>
 
@@ -44,13 +42,7 @@
             @(item.EmailHash != null ? Html.Raw("<img src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />") : Html.Raw(""))
         </td>
         <td>
-            @Html.ActionLink("Details", "EditUser", new { id = item.ID })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdentityProvider)
-        </td>
-        <td>
-            <a href="@Url.Action("EditUser", "Admin", new {id=item.ID })"> @Html.DisplayFor(modelItem => item.Identifier)</a>
+            <a href="@Url.Action("View","Profile", new { id = item.ID })">Profile</a>
         </td>
         <td>
             @if (item.IdentityProvider == "Twitter")
@@ -61,10 +53,16 @@
             {
                 @Html.DisplayFor(modelItem => item.Username)
             }
+            <br />@Html.DisplayFor(modelItem => item.EmailAddress)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.EmailAddress)
+            @Html.DisplayFor(modelItem => item.IdentityProvider)
         </td>
+        <td style="overflow:hidden; max-width:120px;">
+            <a href="@Url.Action("EditUser", "Admin", new {id=item.ID })"> @Html.DisplayFor(modelItem => item.Identifier)</a>
+        </td>
+       
+        
         <td>
             @Html.DisplayFor(modelItem => item.ReputationPoints)
         </td>
@@ -76,6 +74,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DateLastLogin)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditUser", new { id = item.ID })
         </td>
     </tr>
 }

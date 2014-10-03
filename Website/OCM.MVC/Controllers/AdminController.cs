@@ -50,6 +50,15 @@ namespace OCM.MVC.Controllers
             return View(userDetails);
         }
 
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult PromoteUserToEditor(int userId, int countryId, bool autoCreateSubscriptions, bool removePermission)
+        {
+
+            new UserManager().PromoteUserToCountryEditor(int.Parse(Session["UserID"].ToString()), userId, countryId, autoCreateSubscriptions, removePermission);
+            return RedirectToAction("View", "Profile", new { id = userId });
+        }
+
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult Operators()
         {

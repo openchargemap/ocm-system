@@ -8,7 +8,7 @@ namespace OCM.API.Common
 {
     public class ManagerBase : IDisposable
     {
-        private OCM.Core.Data.OCMEntities dataModel = null;
+        protected OCM.Core.Data.OCMEntities dataModel = null;
 
         public OCM.Core.Data.OCMEntities DataModel
         {

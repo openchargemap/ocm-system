@@ -196,10 +196,9 @@ namespace OCM.API.Common
             return HasUserPermission(user, StandardPermissionAttributes.Administrator, "true");
         }
 
-        public bool GrantPermission(User administrator, User user, StandardPermissionAttributes permissionAttribute, string attributeValue, bool removeOnly)
+        public bool GrantPermission(User user, StandardPermissionAttributes permissionAttribute, string attributeValue, bool removeOnly, User administrator )
         {
-            if (IsUserAdministrator(administrator))
-            {
+           
                 string attributeTag = "[" + permissionAttribute.ToString() + "=" + attributeValue + "];";
 
                 var userDetails = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
@@ -209,8 +208,8 @@ namespace OCM.API.Common
 
                     //append permission attribute for user
                     //format is [AttributeName1=Value];[AttributeName2=Value];
-
-                    if (!userDetails.Permissions.Contains(permissionAttribute.ToString()))
+                    //TODO: migrate legacy format to JSON, include legacy format for older apps
+                    if (!userDetails.Permissions.Contains(attributeTag))
                     {
                         if (!userDetails.Permissions.EndsWith(";") && userDetails.Permissions != "") userDetails.Permissions += ";";
                         userDetails.Permissions += attributeTag;
@@ -220,7 +219,7 @@ namespace OCM.API.Common
                     {
                         if (removeOnly)
                         {
-                            userDetails.Permissions.Replace(attributeTag, "");
+                            userDetails.Permissions =  userDetails.Permissions.Replace(attributeTag, "");
                             AuditLogManager.Log(administrator, AuditEventType.PermissionRemoved, "User: " + user.ID + "; Permission:" + permissionAttribute.ToString(), null);
                         }
                     }
@@ -238,11 +237,46 @@ namespace OCM.API.Common
                 {
                     return false;
                 }
+           
+        }
+
+        public void PromoteUserToCountryEditor(int authorizingUserId, int userId,int countryID, bool autoCreateSubscriptions, bool removePermission)
+        {
+            List<int> countryIds = new List<int>();
+            countryIds.Add(countryID);
+            PromoteUserToCountryEditor(authorizingUserId, userId, countryIds, autoCreateSubscriptions, removePermission);
+        }
+
+        public void PromoteUserToCountryEditor(int authorizingUserId, int userId, List<int>CountryIDs, bool autoCreateSubscriptions, bool removePermission)
+        {
+            var authorisingUser = GetUser(authorizingUserId);
+            var user = GetUser(userId);
+
+            foreach(var countryId in CountryIDs){
+                //grant country editor permissions for each country
+                GrantPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString(), removePermission, authorisingUser);
             }
-            else
+
+            if (!removePermission && autoCreateSubscriptions)
             {
-                return false;
+                var subscriptionManager = new UserSubscriptionManager();
+                var refDataManager = new ReferenceDataManager();
+                var allSubscriptions = subscriptionManager.GetUserSubscriptions(userId);
+                
+                foreach (var countryId in CountryIDs)
+                {
+                    
+                    //if no subscription exists for this country for this user, create one
+                    if (!allSubscriptions.Any(s => s.CountryID == countryId))
+                    {
+                        var country = refDataManager.GetCountry(countryId);
+                        subscriptionManager.UpdateUserSubscription(new UserSubscription { Title="All Updates For "+country.Title, IsEnabled=true, DateCreated=DateTime.UtcNow, CountryID=countryId, NotificationFrequencyMins=720, NotifyComments=true, NotifyMedia=true, NotifyPOIAdditions=true, NotifyPOIEdits=true, NotifyPOIUpdates=true, UserID=userId});
+                    }
+                }
             }
         }
+
+       
+
     }
 }

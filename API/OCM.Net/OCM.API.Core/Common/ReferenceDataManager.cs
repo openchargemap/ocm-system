@@ -1,20 +1,17 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
-    public class ReferenceDataManager
+    public class ReferenceDataManager : ManagerBase
     {
         public Country GetCountryByName(string country)
         {
             if (country == null) return null;
-
             country = country.ToLower();
-
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
             var selectedCountry = dataModel.Countries.FirstOrDefault(c => c.Title.ToLower() == country.ToLower() || c.Title.ToLower().Replace(" ", "") == country.Replace(" ", ""));
             return OCM.API.Common.Model.Extensions.Country.FromDataModel(selectedCountry);
         }
@@ -25,22 +22,23 @@ namespace OCM.API.Common
 
             countryISO = countryISO.Trim().ToUpper();
 
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
             var selectedCountry = dataModel.Countries.FirstOrDefault(c => c.ISOCode == countryISO);
             return OCM.API.Common.Model.Extensions.Country.FromDataModel(selectedCountry);
         }
 
+        public Country GetCountry(int countryId)
+        {
+            return OCM.API.Common.Model.Extensions.Country.FromDataModel(dataModel.Countries.Find(countryId));
+        }
+
         public List<Country> GetCountries(bool withPOIOnly)
         {
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
             if (withPOIOnly)
             {
-
                 //determine all countries with live POI
                 var allPOICountries = (from cp in dataModel.ChargePoints
                                        where cp.SubmissionStatusType.IsLive == true
                                        select cp.AddressInfo.CountryID).Distinct();
-
 
                 return OCM.API.Common.Model.Extensions.Country.FromDataModel(dataModel.Countries.Where(c => allPOICountries.Contains(c.ID)).OrderBy(c => c.Title));
             }
@@ -52,7 +50,6 @@ namespace OCM.API.Common
 
         public List<OperatorInfo> GetOperators(int? countryId)
         {
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
             if (countryId != null)
             {
                 return OCM.API.Common.Model.Extensions.OperatorInfo.FromDataModel(
@@ -67,16 +64,12 @@ namespace OCM.API.Common
 
         public CoreReferenceData GetCoreReferenceData()
         {
-
             CoreReferenceData data = OCM.Core.Data.CacheManager.GetCoreReferenceData();
 
             if (data != null) return data;
 
-
             //can't get cached data, get fresh from database
             data = new CoreReferenceData();
-
-            OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
 
             //list of Levels (ChargerTypes)
             data.ChargerTypes = new List<Model.ChargerType>();
