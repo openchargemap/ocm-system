@@ -165,12 +165,18 @@ namespace OCM.API.Common
             }
         }
 
-        private bool IsPOISubscriptionFilterMatch(ChargePoint poi, UserSubscriptionFilter filter)
+        private bool IsPOISubscriptionFilterMatch(ChargePoint poi, UserSubscriptionFilter filter, OCM.Core.Data.UserSubscription subscription)
         {
             if (filter == null) return true;
             if (poi == null) return false;
 
             bool isMatch = true;
+
+            if (subscription.CountryID != null)
+            {
+                if (poi.AddressInfo.CountryID != subscription.CountryID) isMatch = false;
+            }
+
             if (filter.ConnectionTypeIDs != null && filter.ConnectionTypeIDs.Any())
             {
                 //if no matching connection types, poi is not a match
@@ -264,6 +270,7 @@ namespace OCM.API.Common
 
             if (subscription.NotifyGeneralChargingRequests)
             {
+                //TODO: subscription not filtered on lat/long will return global charging requests
                 var generalCharging = dataModel.UserChargingRequests.Where(c => c.DateCreated >= checkFromDate && c.IsActive == true && c.IsEmergency == false);
                 var subscriptionMatch = new SubscriptionMatch { Category = SubscriptionMatchCategory.ChargingRequestGeneral, Description = "New Charging Requests" };
                 //filter on location
@@ -297,7 +304,7 @@ namespace OCM.API.Common
                         try
                         {
                             var updatedPOI = JsonConvert.DeserializeObject<ChargePoint>(p.EditData);
-                            if (IsPOISubscriptionFilterMatch(updatedPOI, filter))
+                            if (IsPOISubscriptionFilterMatch(updatedPOI, filter, subscription))
                             {
                                 if (searchPos != null)
                                 {
@@ -337,7 +344,7 @@ namespace OCM.API.Common
                     foreach (var p in newPOIs)
                     {
                         var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(p);
-                        if (IsPOISubscriptionFilterMatch(poi, filter))
+                        if (IsPOISubscriptionFilterMatch(poi, filter, subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { POI = poi });
                         }
@@ -358,7 +365,7 @@ namespace OCM.API.Common
                         try
                         {
                             var updatedPOI = JsonConvert.DeserializeObject<ChargePoint>(p.EditData);
-                            if (IsPOISubscriptionFilterMatch(updatedPOI, filter))
+                            if (IsPOISubscriptionFilterMatch(updatedPOI, filter, subscription))
                             {
                                 if (searchPos != null)
                                 {
@@ -397,7 +404,7 @@ namespace OCM.API.Common
                     foreach (var c in newComments)
                     {
                         var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint);
-                        if (IsPOISubscriptionFilterMatch(poi, filter))
+                        if (IsPOISubscriptionFilterMatch(poi, filter,subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = OCM.API.Common.Model.Extensions.UserComment.FromDataModel(c, true), POI = poi });
                         }
@@ -421,7 +428,7 @@ namespace OCM.API.Common
                     foreach (var c in newMedia)
                     {
                         var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint);
-                        if (IsPOISubscriptionFilterMatch(poi, filter))
+                        if (IsPOISubscriptionFilterMatch(poi, filter,subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = OCM.API.Common.Model.Extensions.MediaItem.FromDataModel(c), POI = poi });
                         }
