@@ -43,7 +43,7 @@
                     <script>
                         function toggleCountryEditor(removePermission) {
                             var countryId = $("#CountryCode").val();
-                            var url = "/admin/PromoteUserToEditor?userId=@Model.ID&autoCreateSubscriptions=true&removePermission=" + removePermission + "&countryID=" + countryId;
+                            var url = "@Url.Action("PromoteUserToEditor","Admin")?userId=@Model.ID&autoCreateSubscriptions=true&removePermission=" + removePermission + "&countryID=" + countryId;
 
                             window.location.href = url;
                         }

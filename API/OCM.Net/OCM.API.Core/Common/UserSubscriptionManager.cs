@@ -167,7 +167,7 @@ namespace OCM.API.Common
 
         private bool IsPOISubscriptionFilterMatch(ChargePoint poi, UserSubscriptionFilter filter, OCM.Core.Data.UserSubscription subscription)
         {
-            if (filter == null) return true;
+            
             if (poi == null) return false;
 
             bool isMatch = true;
@@ -176,6 +176,8 @@ namespace OCM.API.Common
             {
                 if (poi.AddressInfo.CountryID != subscription.CountryID) isMatch = false;
             }
+
+            if (filter == null) return isMatch; //no more filtering to do
 
             if (filter.ConnectionTypeIDs != null && filter.ConnectionTypeIDs.Any())
             {
@@ -356,7 +358,7 @@ namespace OCM.API.Common
             //check if any POI Updates match this subscription
             if (subscription.NotifyPOIUpdates)
             {
-                var poiUpdates = dataModel.EditQueueItems.Where(c => c.DateProcessed >= checkFromDate && c.IsProcessed == true);
+                var poiUpdates = dataModel.EditQueueItems.Where(c => c.DateProcessed >= checkFromDate && c.IsProcessed == true && c.PreviousData!=null);
                 if (poiUpdates.Any())
                 {
                     var subscriptionMatch = new SubscriptionMatch { Category = SubscriptionMatchCategory.UpdatedPOI, Description = "POIs Updated" };
@@ -521,7 +523,7 @@ namespace OCM.API.Common
                         {
                             var item = (Core.Data.EditQueueItem)i.Item;
                             var poi = (ChargePoint)i.POI;
-                            summaryHTML += "<li> " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
+                            summaryHTML += "<li>OCM-" + poi.ID + ": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
                         }
                         summaryHTML += "</ul>";
                     }
@@ -534,7 +536,7 @@ namespace OCM.API.Common
                         foreach (var p in match.ItemList)
                         {
                             var poi = (ChargePoint)p.POI;
-                            summaryHTML += "<li>" + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
+                            summaryHTML += "<li>OCM-" + poi.ID + ": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
                         }
                         summaryHTML += "</ul>";
                     }
@@ -547,7 +549,7 @@ namespace OCM.API.Common
                         {
                             var item = (Core.Data.EditQueueItem)i.Item;
                             var poi = (ChargePoint)i.POI;
-                            summaryHTML += "<li>" + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
+                            summaryHTML += "<li>OCM-"+poi.ID+": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
                         }
                         summaryHTML += "</ul>";
                     }
@@ -561,7 +563,7 @@ namespace OCM.API.Common
                         {
                             var comment = (UserComment)i.Item;
                             var poi = (ChargePoint)i.POI;
-                            summaryHTML += "<div class='result'>" + FormatPOIHeading(poi) + "<p>" + (!String.IsNullOrEmpty(comment.UserName) ? comment.UserName : "(Anonymous)") + " - " + comment.DateCreated.ToShortDateString() + "<div style='padding:1em;'>";
+                            summaryHTML += "<div class='result'>" + FormatPOIHeading(poi) + "<div style='padding:0.2em;'>" + (!String.IsNullOrEmpty(comment.UserName) ? comment.UserName : "(Anonymous)") + " - " + comment.DateCreated.ToShortDateString() + "<br/>";
                             if (!String.IsNullOrEmpty(comment.Comment))
                             {
                                 summaryHTML += "<blockquote>";
@@ -589,7 +591,7 @@ namespace OCM.API.Common
                         {
                             var item = (MediaItem)i.Item;
                             var poi = (ChargePoint)i.POI;
-                            summaryHTML += "<div class='result'>" + FormatPOIHeading(poi) + "<div style='padding:1em;'>" + (item.User != null ? item.User.Username : "(Anonymous)") + " - " + item.DateCreated.ToShortDateString() + "<br/><blockquote><img src='" + item.ItemThumbnailURL + "'/>" + item.Comment + "</blockquote></div></div>";
+                            summaryHTML += "<div class='result'>" + FormatPOIHeading(poi) + "<div style='padding:0.2em;'>" + (item.User != null ? item.User.Username : "(Anonymous)") + " - " + item.DateCreated.ToShortDateString() + "<br/><blockquote><img src='" + item.ItemThumbnailURL + "'/>" + item.Comment + "</blockquote></div></div>";
                         }
                         summaryHTML += "</div>";
                     }
@@ -602,7 +604,7 @@ namespace OCM.API.Common
         private string FormatPOIHeading(ChargePoint poi)
         {
             string siteUrl = "http://openchargemap.org/site";
-            var html = "<h3><a style='color:white;' href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + "</a></h3>";
+            var html = "<h3><a href='" + siteUrl + "/poi/details/" + poi.ID + "'>OCM-"+poi.ID+": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + "</a></h3>";
             return html;
         }
 
