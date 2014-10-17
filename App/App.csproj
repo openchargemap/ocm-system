@@ -65,6 +65,7 @@
     <Content Include="images\splashscreen\AppSplashscreen_480x800.png" />
     <Content Include="images\splashscreen\AppSplashscreen_768x1004.png" />
     <Content Include="index.html" />
+    <Content Include="js\Compiled\readme.txt" />
     <Content Include="js\Localisation\languagePack.min.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
     <Content Include="js\ThirdParty\analytics.js" />
@@ -220,7 +221,7 @@
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
-    <TypeScriptOutDir>C:\Temp\GIT\ocm-system\App\js\Compiled</TypeScriptOutDir>
+    <TypeScriptOutDir>js\Compiled</TypeScriptOutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
