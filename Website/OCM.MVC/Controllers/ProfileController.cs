@@ -247,10 +247,10 @@ namespace OCM.MVC.Controllers
             var coreRefData = refDataManager.GetCoreReferenceData();
 
             var allCountries = coreRefData.Countries;
-            
-            allCountries.Insert(0, new Country { ID=0, ISOCode="", Title= "(All Countries)"});
 
-            ViewBag.CountryList = new SelectList(allCountries, "ISOCode", "Title", (subscription.Country!=null?subscription.Country.ISOCode:null));
+            allCountries.Insert(0, new Country { ID = 0, ISOCode = "", Title = "(All Countries)" });
+
+            ViewBag.CountryList = new SelectList(allCountries, "ISOCode", "Title", (subscription.Country != null ? subscription.Country.ISOCode : null));
 
             var NotificationFrequencyOptions = new[]{
                 new { ID = 5, Title = "Every 5 Minutes"},
@@ -269,8 +269,8 @@ namespace OCM.MVC.Controllers
 
             ViewBag.CountryExtendedInfo = JsonConvert.SerializeObject(OCM.Core.Data.CacheManager.GetExtendedCountryInfo());
 
-            if (subscription.FilterSettings==null) subscription.FilterSettings = new UserSubscriptionFilter();
-            ViewBag.OperatorList = new MultiSelectList(refDataManager.GetOperators(subscription.CountryID), "ID","Title", subscription.FilterSettings.OperatorIDs);
+            if (subscription.FilterSettings == null) subscription.FilterSettings = new UserSubscriptionFilter();
+            ViewBag.OperatorList = new MultiSelectList(refDataManager.GetOperators(subscription.CountryID), "ID", "Title", subscription.FilterSettings.OperatorIDs);
             ViewBag.LevelList = new MultiSelectList(coreRefData.ChargerTypes, "ID", "Title", subscription.FilterSettings.LevelIDs);
             ViewBag.ConnectionTypeList = new MultiSelectList(coreRefData.ConnectionTypes, "ID", "Title", subscription.FilterSettings.ConnectionTypeIDs);
             ViewBag.StatusTypeList = new MultiSelectList(coreRefData.StatusTypes, "ID", "Title", subscription.FilterSettings.StatusTypeIDs);

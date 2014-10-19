@@ -25,22 +25,25 @@ namespace OCM.Import.Providers
             this.SelectedNetworkType = network;
 
             ServiceUserName = "OpenChargeMap";
+            ProviderName = "AddEnergie";
 
             if (network == NetworkType.ReseauVER)
             {
                 ServiceBaseURL = "https://admin.reseauver.com";    
                 ServicePassword = "EfDxsrgf_R5462Sz";
+                ProviderName += " [ReseauVER]";
             }
 
             if (network == NetworkType.LeCircuitElectrique)
             {
                 ServiceBaseURL = "https://lecircuitelectrique.co";
                 ServicePassword = "Gtrf67_21g_cEkP3";
+                ProviderName += " [LeCircuitElectrique]";
             }
 
             AutoRefreshURL = ServiceBaseURL + "/Network/StationsList";
 
-            ProviderName = "AddEnergie";
+           
             OutputNamePrefix = "AddEnergie_"+network.ToString();
             
             IsAutoRefreshed = false;

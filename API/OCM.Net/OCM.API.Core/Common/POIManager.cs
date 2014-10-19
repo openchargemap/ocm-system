@@ -141,7 +141,7 @@ namespace OCM.API.Common
 
             int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
 
-            if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, "All") || (countryId != null && UserManager.HasUserPermission(user, StandardPermissionAttributes.CountryLevel_Editor, countryId.ToString())))
+            if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, null, PermissionLevel.Editor) || (countryId != null && UserManager.HasUserPermission(user, countryId, PermissionLevel.Editor)))
             {
                 return true;
             }
@@ -330,10 +330,10 @@ namespace OCM.API.Common
 
                     //query is of type IQueryable
 #if DEBUG
-                string sql = filteredList.ToString();
+                    string sql = filteredList.ToString();
 
-                //writes to output window
-                System.Diagnostics.Debug.WriteLine(sql);
+                    //writes to output window
+                    System.Diagnostics.Debug.WriteLine(sql);
 #endif
                     var additionalFilteredList = filteredList.Take(maxResults).ToList();
 
@@ -462,7 +462,9 @@ namespace OCM.API.Common
 
             //TODO: better method for large number of POIs
             //grab all live POIs (30-100,000 items)
-            var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
+            //var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
+            var allPOIs = GetChargePoints(new APIRequestSettings { CountryIDs = new int[] { countryId } });
+
             foreach (var poi in allPOIs)
             {
                 //find pois which duplicate the given poi
@@ -475,12 +477,12 @@ namespace OCM.API.Common
 
                 if (dupePOIs.Any())
                 {
-                    var poiModel = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poi, true, true, true, true);
+                    var poiModel = poi;// OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poi, true, true, true, true);
 
                     foreach (var dupe in dupePOIs)
                     {
                         //poi has duplicates
-                        DuplicatePOIItem dupePoi = new DuplicatePOIItem { DuplicatePOI = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(dupe), DuplicateOfPOI = poiModel };
+                        DuplicatePOIItem dupePoi = new DuplicatePOIItem { DuplicatePOI = dupe, DuplicateOfPOI = poiModel };
                         dupePoi.Reasons = new List<string>();
                         if (dupe.AddressInfo.Latitude == poi.AddressInfo.Latitude && dupe.AddressInfo.Longitude == poi.AddressInfo.Longitude)
                         {

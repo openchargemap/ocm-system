@@ -1,22 +1,37 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using OCM.API.Client;
+using OCM.API.Common.Model;
+using OCM.Import.Misc;
+using OCM.Import.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OCM.API.Client;
-using OCM.API.Common.Model;
-using OCM.Import.Providers;
-using OCM.Import.Misc;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace OCM.Import
 {
+    public class ImportReport
+    {
+        public BaseImportProvider ProviderDetails { get; set; }
+        public List<ChargePoint> Added { get; set; }
+        public List<ChargePoint> Updated { get; set; }
+        public List<ChargePoint> Delisted { get; set; }
+        public List<ChargePoint> Duplicates { get; set; }
+        
+    }
+
     public class ImportManager
     {
         public const int DUPLICATE_DISTANCE_METERS = 25;
+
         public bool ImportUpdatesOnly { get; set; }
+
         public bool IsSandboxedAPIMode { get; set; }
+
         public string GeonamesAPIUserName { get; set; }
+
+        public string TempFolder { get; set; }
         /**
          * Generic Import Process
 
@@ -35,7 +50,7 @@ namespace OCM.Import
                     Prepare update, if provider supports live status, set that
                         What if item updated manually on OCM?
                     Send Update
-                End 
+                End
             Loop
 
             Log Exceptions
@@ -44,12 +59,12 @@ namespace OCM.Import
             Way to remove item (or log items) which no longer exist in data source?
          * */
 
-        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData)
+        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report)
         {
             //get list of all current POIs (in relevant countries) including most delisted ones
             int[] countryIds = (from poi in cpList
-                              where poi.AddressInfo.Country != null
-                              select poi.AddressInfo.Country.ID).Distinct().ToArray();
+                                where poi.AddressInfo.Country != null
+                                select poi.AddressInfo.Country.ID).Distinct().ToArray();
 
             SearchFilters filters = new SearchFilters { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeIDs = new int[1] { 0 } };
             List<ChargePoint> masterList = await new OCMClient(IsSandboxedAPIMode).GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
@@ -111,7 +126,6 @@ namespace OCM.Import
                     duplicateList.Add(item);
                 }
 
-
                 //mark item as duplicate if location/title exactly matches previous entry or lat/long is within DuplicateDistance meters
                 if (previousCP != null)
                 {
@@ -133,7 +147,7 @@ namespace OCM.Import
                 cpList.Remove(dupe);
             }
 
-            System.Diagnostics.Debug.WriteLine("Duplicated removed from import:" + duplicateList.Count);
+            System.Diagnostics.Debug.WriteLine("Duplicate removed from import:" + duplicateList.Count);
 
             //add updated items (replace duplicates with property changes)
 
@@ -181,8 +195,9 @@ namespace OCM.Import
                 {
                     previousCP = cp;
                 }
-
             }
+
+            report.Duplicates = duplicateList; //TODO: add additional pass of duplicates ffrom above
 
             //return final processed list ready for applying as insert/updates
             return cpList;
@@ -227,10 +242,9 @@ namespace OCM.Import
             bool hasDifferences = true;
             //var diffs = GetDifferingProperties(sourceItem, destItem);
 
-            //merge changes in sourceItem into destItem, preserving destItem ID's 
+            //merge changes in sourceItem into destItem, preserving destItem ID's
             if (!statusOnly)
             {
-
                 //update addressinfo
                 destItem.AddressInfo.Title = sourceItem.AddressInfo.Title;
                 destItem.AddressInfo.AddressLine1 = sourceItem.AddressInfo.AddressLine1;
@@ -290,7 +304,6 @@ namespace OCM.Import
                                 existingConnection.PowerKW = conn.PowerKW;
                                 existingConnection.Comments = conn.Comments;
                                 if (conn.CurrentType != null) existingConnection.CurrentType = conn.CurrentType;
-
                             }
                             else
                             {
@@ -311,6 +324,23 @@ namespace OCM.Import
             return new APICredentials { Identifier = identifier, SessionToken = sessionToken };
         }
 
+        public List<IImportProvider> GetImportProviders()
+        {
+            List<IImportProvider> providers = new List<IImportProvider>();
+            providers.Add(new ImportProvider_UKChargePointRegistry());
+            //providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
+            providers.Add(new ImportProvider_CarStations());
+            //providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
+
+            providers.Add(new ImportProvider_Mobie());
+            providers.Add(new ImportProvider_AFDC());
+            providers.Add(new ImportProvider_ESB_eCars());
+            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique));
+            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
+
+            return providers;
+        }
+
         public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData)
         {
             OCMClient client = new OCMClient(IsSandboxedAPIMode);
@@ -327,10 +357,11 @@ namespace OCM.Import
             // providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
 
             //Working - Auto refreshed
+            //providers.Add(new ImportProvider_UKChargePointRegistry() { InputPath = inputDataPathPrefix + "chargepoints.dft.gov.uk\\data.json" });
             /* providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
              providers.Add(new ImportProvider_CarStations() { InputPath = inputDataPathPrefix + "carstations.com\\jsonresults.txt" });
              providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
-             providers.Add(new ImportProvider_UKChargePointRegistry() { InputPath = inputDataPathPrefix + "chargepoints.dft.gov.uk\\data.json" });
+
              providers.Add(new ImportProvider_Mobie() { InputPath = inputDataPathPrefix + "mobie.pt\\data.json.txt" });
              providers.Add(new ImportProvider_AFDC() { InputPath = inputDataPathPrefix + "afdc\\data.json" });
              providers.Add(new ImportProvider_ESB_eCars() { InputPath = inputDataPathPrefix + "esb_ecars\\data.kml" });
@@ -338,7 +369,7 @@ namespace OCM.Import
             //providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.lecircuitelectrique.json" });
             //providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER) { InputPath = inputDataPathPrefix + "addenergie\\StationsList.reseauver.json" });
 
-            providers.Add(new ImportProvider_GenericExcel() { InputPath = inputDataPathPrefix + "catalonia\\catalonia.xlsx" , DefaultDataProvider=coreRefData.DataProviders.First(d=>d.ID==25)});
+            //providers.Add(new ImportProvider_GenericExcel() { InputPath = inputDataPathPrefix + "catalonia\\catalonia.xlsx" , DefaultDataProvider=coreRefData.DataProviders.First(d=>d.ID==25)});
 
             //Working -manual refresh
             //providers.Add(new ImportProvider_NobilDotNo() { InputPath = inputDataPathPrefix + "nobil\\nobil.json.txt" });
@@ -351,117 +382,129 @@ namespace OCM.Import
             //providers.Add(new ImportProvider_PODPoint() { InputPath = inputDataPathPrefix + "pod-point.com\\export.htm" });
             //providers.Add(new ImportProvider_ChargeYourCar() { InputPath = inputDataPathPrefix + "chargeyourcar.org.uk\\data.htm" });
 
-
             foreach (var provider in providers)
             {
-                var p = ((BaseImportProvider)provider);
-                p.ExportType = exportType;
-                try
+                await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider);
+            }
+            return true;
+        }
+
+        public async Task<ImportReport> PerformImport(ExportType exportType, bool fetchLiveData, APICredentials credentials, CoreReferenceData coreRefData, string outputPath, IImportProvider provider)
+        {
+            
+            var p = ((BaseImportProvider)provider);
+            p.ExportType = exportType;
+
+            ImportReport resultReport = new ImportReport();
+            resultReport.ProviderDetails = p;
+
+            try
+            {
+                bool loadOK = false;
+
+                if (fetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
                 {
-                    bool loadOK = false;
-
-
-                    if (fetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
+                    p.Log("Loading input data from URL..");
+                    loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
+                }
+                else
+                {
+                    if (p.IsStringData)
                     {
-                        p.Log("Loading input data from URL..");
-                        loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
+                        p.Log("Loading input data from file..");
+                        loadOK = p.LoadInputFromFile(p.InputPath);
                     }
                     else
                     {
-                        if (p.IsStringData)
-                        {
-                            p.Log("Loading input data from file..");
-                            loadOK = p.LoadInputFromFile(p.InputPath);
-                        }
-                        else
-                        {
-                            //binary streams pass as OK by default
-                            loadOK = true;
-                        }
+                        //binary streams pass as OK by default
+                        loadOK = true;
+                    }
+                }
+
+                if (!loadOK)
+                {
+                    //failed to load
+                    p.Log("Failed to load input data.");
+                    throw new Exception("Failed to fetch input data");
+                }
+                List<ChargePoint> duplicatesList = new List<ChargePoint>();
+
+                p.Log("Processing input..");
+
+                var list = provider.Process(coreRefData);
+                int numAdded = 0;
+                int numUpdated = 0;
+
+                if (list.Count > 0)
+                {
+                    p.Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
+
+                    //de-duplicate and clean list based on existing data
+                    //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
+                    var finalList = await DeDuplicateList(list, true, coreRefData, resultReport);
+                    //var finalList = list;
+
+                    if (ImportUpdatesOnly)
+                    {
+                        finalList = finalList.Where(l => l.ID > 0).ToList();
+                    }
+                    //finalList = client.GetLocations(new SearchFilters { MaxResults = 10000 });
+
+                    //export/apply updates
+                    if (p.ExportType == ExportType.XML)
+                    {
+                        p.Log("Exporting XML..");
+
+                        //output xml
+                        p.ExportXMLFile(finalList, outputPath + p.OutputNamePrefix + ".xml");
                     }
 
-                    if (!loadOK)
+                    if (p.ExportType == ExportType.CSV)
                     {
-                        //failed to load
-                        p.Log("Failed to load input data.");
-                        throw new Exception("Failed to fetch input data");
+                        p.Log("Exporting CSV..");
+                        //output csv
+                        p.ExportCSVFile(finalList, outputPath + p.OutputNamePrefix + ".csv");
                     }
-                    List<ChargePoint> duplicatesList = new List<ChargePoint>();
 
-                    p.Log("Processing input..");
-
-                    var list = provider.Process(coreRefData);
-                    int numAdded = 0;
-                    int numUpdated = 0;
-
-                    if (list.Count > 0)
+                    if (p.ExportType == ExportType.JSON)
                     {
-                        p.Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
-
-                        //de-duplicate and clean list based on existing data
-                        //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
-                        var finalList = await DeDuplicateList(list, true, coreRefData);
-                        //var finalList = list;
-
-                        if (ImportUpdatesOnly)
+                        p.Log("Exporting JSON..");
+                        //output json
+                        p.ExportJSONFile(finalList, outputPath + p.OutputNamePrefix + ".json");
+                    }
+                    if (p.ExportType == ExportType.API && p.IsProductionReady)
+                    {
+                        //publish list of locations to OCM via API
+                        OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
+                        p.Log("Publishing via API..");
+                        foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.Country != null))
                         {
-                            finalList = finalList.Where(l => l.ID > 0).ToList();
-                        }
-                        //finalList = client.GetLocations(new SearchFilters { MaxResults = 10000 });
-
-                        //export/apply updates
-                        if (p.ExportType == ExportType.XML)
-                        {
-                            p.Log("Exporting XML..");
-
-                            //output xml
-                            p.ExportXMLFile(finalList, outputPath + p.OutputNamePrefix + ".xml");
-                        }
-
-                        if (p.ExportType == ExportType.CSV)
-                        {
-                            p.Log("Exporting CSV..");
-                            //output csv
-                            p.ExportCSVFile(finalList, outputPath + p.OutputNamePrefix + ".csv");
-                        }
-
-                        if (p.ExportType == ExportType.JSON)
-                        {
-                            p.Log("Exporting JSON..");
-                            //output json
-                            p.ExportJSONFile(finalList, outputPath + p.OutputNamePrefix + ".json");
-                        }
-                        if (p.ExportType == ExportType.API && p.IsProductionReady)
-                        {
-
-                            //publish list of locations to OCM via API
-                            OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
-                            p.Log("Publishing via API..");
-                            foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.Country != null))
+                            ocmClient.UpdateItem(cp, credentials);
+                            if (cp.ID == 0)
                             {
-
-                                ocmClient.UpdateItem(cp, credentials);
-                                if (cp.ID == 0)
-                                {
-                                    numAdded++;
-                                }
-                                else
-                                {
-                                    numUpdated++;
-                                }
+                                numAdded++;
+                            }
+                            else
+                            {
+                                numUpdated++;
                             }
                         }
                     }
+                    if (p.ExportType == ExportType.POIModelList)
+                    {
+                        resultReport.Added = finalList.Where(cp=>cp.ID==0).ToList();
+                        resultReport.Updated = finalList.Where(cp => cp.ID > 0).ToList();
+                    }
+                }
 
-                    p.Log("Import Processed:" + provider.GetProviderName() + " Added:" + numAdded + " Updated:" + numUpdated);
-                }
-                catch (Exception exp)
-                {
-                    p.Log("Import Failed:" + provider.GetProviderName() + " ::" + exp.ToString());
-                }
+                p.Log("Import Processed:" + provider.GetProviderName() + " Added:" + numAdded + " Updated:" + numUpdated);
+            }
+            catch (Exception exp)
+            {
+                p.Log("Import Failed:" + provider.GetProviderName() + " ::" + exp.ToString());
             }
 
-            return true;
+            return resultReport;
         }
 
         /// <summary>
@@ -471,7 +514,7 @@ namespace OCM.Import
         /// <param name="coreRefData"></param>
         public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
-            GeolocationCacheManager geolocationCacheManager = new GeolocationCacheManager();
+            GeolocationCacheManager geolocationCacheManager = new GeolocationCacheManager(TempFolder);
             geolocationCacheManager.GeonamesAPIUserName = GeonamesAPIUserName;
             geolocationCacheManager.LoadCache();
 
@@ -535,7 +578,6 @@ namespace OCM.Import
                     var mpq = g.GeolocateAddressInfo_MapquestOSM(poi.AddressInfo);
                     System.Diagnostics.Debug.WriteLine("MPQ : LL: " + mpq.Latitude + "," + mpq.Longitude);
                     list.Add(mpq);
-
                 }
                 catch (Exception exp)
                 {

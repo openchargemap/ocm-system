@@ -27,17 +27,20 @@ namespace OCM.Import.Misc
         public string GeonamesAPIUserName = "demo";
         public string GeolocationCacheDataFile = "GeolocationCache.json";
         public List<GelocationCacheItem> GeolocationCache = null;
-        
-        public GeolocationCacheManager()
+
+        private string tempFolder = "";
+
+        public GeolocationCacheManager(string tmpPath)
         {
             GeolocationCache = new List<GelocationCacheItem>();
+            tempFolder = tmpPath;
         }
 
         public bool LoadCache()
         {
             if (System.IO.File.Exists(GeolocationCacheDataFile))
             {
-                string cacheJSON = System.IO.File.ReadAllText("GeolocationCache.json");
+                string cacheJSON = System.IO.File.ReadAllText(tempFolder+"\\GeolocationCache.json");
                 GeolocationCache = (List<GelocationCacheItem>)JsonConvert.DeserializeObject(cacheJSON, GeolocationCache.GetType());
                 return true;
             }
@@ -51,7 +54,7 @@ namespace OCM.Import.Misc
             {
                 var output = GeolocationCache.OrderBy(c => c.CountryName).ThenBy(c => c.Latitude).ThenBy(c => c.Longitude);
                 string json = JsonConvert.SerializeObject(output);
-                System.IO.File.WriteAllText("GeolocationCache.json", json);
+                System.IO.File.WriteAllText(tempFolder+"\\GeolocationCache.json", json);
                 return true;
             }
             catch (Exception exp)

@@ -112,3 +112,5 @@ UpgradeLog*.XML
 #Production Secrets
 *.ProductionWithSecrets.*
 /Localisation/Web.config
+/App/js/Compiled
+/Website/OCM.MVC/Temp/

@@ -71,6 +71,7 @@
     <Compile Include="Base\ConnectionType.cs" />
     <Compile Include="Base\CheckinStatusType.cs" />
     <Compile Include="Base\MetadataFieldOption.cs" />
+    <Compile Include="Base\UserPermission.cs" />
     <Compile Include="Base\UserSubscription.cs" />
     <Compile Include="Extended\APIResponse.cs" />
     <Compile Include="Extended\ContactSubmission.cs" />

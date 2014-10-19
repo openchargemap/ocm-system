@@ -1,0 +1,14 @@
+﻿@model OCM.MVC.Models.ImportManager
+
+
+<h2>Import Manager</h2>
+<ul>
+    @foreach (var item in Model.ImportProviders)
+    {
+        <li>
+            @item.GetProviderName() 
+            @Html.ActionLink("Begin Import", "Import", new { providerName = item.GetProviderName() })
+        </li>
+    
+    }
+</ul>

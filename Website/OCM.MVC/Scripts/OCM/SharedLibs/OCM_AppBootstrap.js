@@ -26,24 +26,18 @@ function onDeviceReady() {
     ocm_app.log("OCM: Cordova Loaded, onDeviceReady Fired.");
 
     try  {
-        if (navigator.connection) {
-            if (navigator.connection.type == Connection.NONE) {
-                ocm_app.log("OCM: No Network status: " + navigator.connection.type.toString());
-                var networkErrorElement = document.getElementById("network-error");
-                if (networkErrorElement) {
-                    networkErrorElement.style.display = "block";
-                }
-            }
-        } else {
-            ocm_app.log("Cordova connection status not available");
+        if (navigator.connection.type == Connection.NONE) {
+            ocm_app.log("OCM: No Network status: " + navigator.connection.type.toString());
+            document.getElementById("network-error").style.display = "block";
         }
     } catch (err) {
         ocm_app.log("OCM: error checkin for connection status");
     }
 
-    //if (StatusBar) {
-    //StatusBar.overlaysWebView(false);
-    //}
+    if (StatusBar) {
+        StatusBar.overlaysWebView(false);
+    }
+
     /*
     //phonegap analytics plugin
     

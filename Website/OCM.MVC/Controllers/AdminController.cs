@@ -60,6 +60,14 @@ namespace OCM.MVC.Controllers
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult ConvertPermissions()
+        {
+            //convert all user permission to new format where applicable
+            new UserManager().ConvertUserPermissions();
+            return RedirectToAction("Index", "Admin", new { result="processed" });
+        }
+
+        [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult Operators()
         {
             var operatorInfoManager = new OperatorInfoManager();
@@ -212,6 +220,28 @@ namespace OCM.MVC.Controllers
             }
 
             return Json(status, JsonRequestBehavior.AllowGet);
+        }
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult ImportManager()
+        {
+            var importManager = new Import.ImportManager();
+            var providers = importManager.GetImportProviders();
+            var model = new Models.ImportManager() { ImportProviders = providers };
+
+            return View(model);
+        }
+        [AuthSignedInOnly(Roles = "Admin")]
+        public async Task<ActionResult> Import(string providerName)
+        {
+            var importManager = new Import.ImportManager();
+            importManager.TempFolder = Server.MapPath("~/Temp");
+            var providers = importManager.GetImportProviders();
+            var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
+            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
+            var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, true, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider);
+            
+            return View(result);
         }
 
     }

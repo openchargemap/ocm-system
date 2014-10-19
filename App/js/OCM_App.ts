@@ -1295,7 +1295,7 @@ module OCM {
 
                 if (app.mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_NATIVE) {
                     //for cordova, switch over to native google maps, if available
-                    if (plugin && plugin.google && plugin.google.maps) {
+                    if ((<any>window).plugin && plugin.google && plugin.google.maps) {
                         plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
                             if (isAvailable) {
                                 app.log("Native maps available, switching API.");
@@ -1304,6 +1304,8 @@ module OCM {
                                 app.log("Google Play Services not available, fallback to web maps API");
                             }
                         });
+                    } else {
+                        app.log("Running under cordova but no native maps plugin available.");
                     }
                 }
             }

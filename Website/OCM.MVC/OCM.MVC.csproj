@@ -215,6 +215,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ImportManager.cs" />
     <Compile Include="Models\POIBrowseModel.cs" />
     <Compile Include="Models\POIViewModel.cs" />
     <Compile Include="Models\StatsModel.cs" />
@@ -434,6 +435,8 @@
     <Content Include="Views\Admin\CheckPOIMirrorStatus.cshtml" />
     <Content Include="Views\Profile\SubscriptionMatches.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\UserSubscriptionFilter.cshtml" />
+    <Content Include="Views\Admin\ImportManager.cshtml" />
+    <Content Include="Views\Admin\Import.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -452,6 +455,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Client\OCM.API.Client.csproj">
+      <Project>{fb8cc59f-b6e7-49da-8d89-f6bb1bd4254c}</Project>
+      <Name>OCM.API.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj">
       <Project>{ac9dbd28-f8b3-4e2e-a2c6-6a7f6a65b160}</Project>
       <Name>OCM.API.Core</Name>
@@ -463,6 +470,10 @@
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Web\OCM.API.Web.csproj">
       <Project>{d59550ef-227c-48cb-b97a-200bb2aee27c}</Project>
       <Name>OCM.API.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Import\OCM.Import.Common\OCM.Import.Common.csproj">
+      <Project>{c65726e4-1154-4a3d-b3ab-b1dd50590e34}</Project>
+      <Name>OCM.Import.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

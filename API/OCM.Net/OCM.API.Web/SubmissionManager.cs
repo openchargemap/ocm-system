@@ -203,7 +203,7 @@ namespace OCM.API.Common
                 poiManager.PopulateChargePoint_SimpleToData(updatedPOI, cpData, dataModel);
 
                 //if item has no submission status and user permitted to edit, set to published
-               if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)
+                if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)
                 {
                     cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
                     cpData.SubmissionStatusTypeID = cpData.SubmissionStatusType.ID; //hack due to conflicting state change for SubmissionStatusType
@@ -288,7 +288,6 @@ namespace OCM.API.Common
             }
             catch (Exception exp)
             {
-                
                 System.Diagnostics.Debug.WriteLine(exp.ToString());
                 AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorWeb);
                 //throw exp;
@@ -399,7 +398,7 @@ namespace OCM.API.Common
             {
                 dataComment.ChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
                 dataModel.UserComments.Add(dataComment);
-                
+
                 dataModel.SaveChanges();
 
                 if (user != null)

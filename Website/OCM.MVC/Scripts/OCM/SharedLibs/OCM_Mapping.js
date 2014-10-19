@@ -932,7 +932,8 @@ var OCM;
                 this.log("Debug: Hiding Map");
                 if (this.map != null) {
                     //hide map otherwise it will stay on top
-                    //this.map.setVisible(false);
+                    this.map.setVisible(false);
+                    //this.map.refreshLayout();
                 }
             }
         };

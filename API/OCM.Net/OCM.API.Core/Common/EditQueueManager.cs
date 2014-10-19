@@ -1,5 +1,4 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using OCM.Core.Data;
 using System;
@@ -10,7 +9,6 @@ namespace OCM.API.Common
 {
     public class EditQueueManager : ManagerBase
     {
-
         private Model.ChargePoint DeserializePOIFromJSON(string json)
         {
             Model.ChargePoint poi = null;
@@ -76,7 +74,6 @@ namespace OCM.API.Common
 
         public List<Model.EditQueueItem> GetEditQueueItems(EditQueueFilter filter)
         {
-
             var sourceList =
                 DataModel.EditQueueItems.Where(
                     i => (
@@ -96,7 +93,6 @@ namespace OCM.API.Common
             }
 
             return outputList.Where(i => i.Differences.Count >= filter.MinimumDifferences).Take(filter.MaxResults).ToList();
-
         }
 
         public void ProcessEditQueueItem(int id, bool publishEdit, int userId)
@@ -109,14 +105,13 @@ namespace OCM.API.Common
 
             if (queueItem != null && queueItem.IsProcessed == false)
             {
-
                 if (queueItem.EntityType.ID == (int)StandardEntityTypes.POI)
                 {
                     //processing a POI add/edit
 
                     if (publishEdit)
                     {
-                        //get diff between previous and edit    
+                        //get diff between previous and edit
 
                         POIManager poiManager = new POIManager();
                         Model.ChargePoint poiA = DeserializePOIFromJSON(queueItem.PreviousData);
@@ -158,15 +153,15 @@ namespace OCM.API.Common
                         }
 
                         poiData.DateLastStatusUpdate = DateTime.UtcNow;
-                        
+
                         //publish edit
                         DataModel.SaveChanges();
 
-                         //attribute submitter with reputation points
-                        if (queueItem.UserID!=null){
+                        //attribute submitter with reputation points
+                        if (queueItem.UserID != null)
+                        {
                             new UserManager().AddReputationPoints((int)queueItem.UserID, 1);
                         }
-                        
                     }
 
                     //update edit queue item as processed

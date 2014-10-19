@@ -1,0 +1,15 @@
+﻿@model OCM.Import.ImportReport
+
+<div>
+    <h4>Import Report</h4>
+    <hr />
+    Added: @Model.Added.Count
+    Updated: @Model.Updated.Count
+    Duplicates: @Model.Duplicates.Count
+    <dl class="dl-horizontal">
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
