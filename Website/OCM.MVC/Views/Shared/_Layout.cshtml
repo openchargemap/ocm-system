@@ -50,7 +50,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
                             <li><a href="@Url.Action("Index", "Country")">browse by country</a></li>
-                            <li><a href="@Url.Action("Add", "POI")">add a location</a></li>
+                            <li><a href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a></li>
                             <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
                             <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
                             <li class="nav-divider"></li>
@@ -75,9 +75,9 @@
                     <li><a href="http://openchargemap.org/forum/">discuss</a></li>
 
                     <li class="dropdown">
-                        <a href="@Url.Action("Index", "About")" class="dropdown-toggle" data-toggle="dropdown">about <b class="caret"></b></a>
+                        <a href="@Url.Action("Index", "About")" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.general.about">about</span> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("Index", "About")">about</a></li>
+                            <li><a href="@Url.Action("Index", "About")" data-localize="ocm.general.about">about</a></li>
                             <li><a href="@Url.Action("Terms", "About")">terms &amp; privacy</a></li>
                             <li><a href="@Url.Action("Contact", "About")">contact</a></li>
                         </ul>
@@ -95,14 +95,14 @@
                                 <li>@Html.ActionLink("my comments", "Comments", "Profile")</li>
                                 <li>@Html.ActionLink("my uploads", "Media", "Profile")</li>
                                 <li class="nav-divider"></li>
-                                <li><a href="@Url.Action("SignOut", "Profile")">sign out</a></li>
+                                <li><a href="@Url.Action("SignOut", "Profile")" data-localize="ocm.general.signOut">sign out</a></li>
                             </ul>
                         </li>
 
                     }
                     else
                     {
-                        <li><a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Request.Url.AbsoluteUri })">sign in</a></li>
+                        <li><a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Request.Url.AbsoluteUri })" data-localize="ocm.general.signIn">sign in</a></li>
                     }
 
                     <li class="dropdown ">
