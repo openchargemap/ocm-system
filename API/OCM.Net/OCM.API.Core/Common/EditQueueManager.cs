@@ -4,6 +4,7 @@ using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
@@ -170,7 +171,8 @@ namespace OCM.API.Common
                     queueItem.DateProcessed = DateTime.UtcNow;
                     DataModel.SaveChanges();
 
-                    CacheManager.RefreshCachedPOIList();
+                    Task<MirrorStatus> statusRefresh = CacheManager.RefreshCachedPOIList();
+                    statusRefresh.Start();
                 }
             }
         }
