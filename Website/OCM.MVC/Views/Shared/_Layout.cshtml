@@ -43,7 +43,10 @@
             <div class="collapse navbar-collapse">
 
                 <ul class="nav navbar-nav">
-                    <li><a id="nav_home" href="@Url.Action("Index", "Home")">home</a></li>
+                    <li><a id="nav_home" href="@Url.Action("Index", "Home")" data-localize="website.topMenu.home">home</a></li>
+                    @*<li><a id="nav_home" href="@Url.Action("Index", "Home")" data-localize="ocm.search.progress">home</a></li>*@
+                    @*<li><a id="nav_home" href="@Url.Action("Index", "Home")" data-localize="website.menu.home">home</a></li>*@
+                    @*<li><a id="nav_home" href="@Url.Action("Index", "Home")">home</a></li>*@
 
                     <li class="dropdown">
                         <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown">browse <b class="caret"></b></a>
@@ -51,6 +54,7 @@
                             <li><a href="@Url.Action("Index", "POI")">browse all locations</a></li>
                             <li><a href="@Url.Action("Index", "Country")">browse by country</a></li>
                             <li><a href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a></li>
+                            @*<li><a href="@Url.Action("Add", "POI")"> <span data-localize="ocm.general.addLocation">add a location</span> </a></li>*@
                             <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">awaiting review</a></li>
                             <li><a href="@Url.Action("Activity", "POI")">recent activity</a></li>
                             <li class="nav-divider"></li>
