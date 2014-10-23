@@ -176,7 +176,7 @@ namespace OCM.API.Common
 
             if (HttpContext.Current.Cache[cacheKey] == null || settings.EnableCaching == false)
             {
-                if (settings.AllowMirrorDB)
+                if (settings.AllowMirrorDB && settings.ChargePointID==null) //mongodb api provider can't currently match by ChargePointID
                 {
                     try
                     {
