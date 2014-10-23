@@ -99,11 +99,32 @@
             "operationalStatusTypes": "Status",
             "performSearch": "Search",
             "progress": "Searching.."
-        }
-    },
-    "website": {
-        "topMenu": { 
-            "home": "Home"
+        },
+        "navigation": {
+            "home": "Home",
+            "browse": {
+                "sectionTitle": "Browse",
+                "allLocations": "All Locations",
+                "byCountry": "By Country",
+                "avaitingReview": "Awaiting Review",
+                "recentActivity": "Recent Activity",
+                "webApp": "Web App for Mobile",
+                "statistics": "Statistics"
+            },
+            "develop": {
+                "sectionTitle": "Develop",
+                "api": "API",
+                "htmlWidgets": "HTML Widgets",
+                "examples": "Examples",
+                "getInvolved": "Get Involved",
+                "code": "See the Code (on GitHub)",
+                "translate": "Help Translate"
+            },
+            "discuss": "Discuss",
+            "about": {
+                "termsPrivacy": "Terms & Privacy",
+                "contact": "Contact"
+            }
         }
     }
 }

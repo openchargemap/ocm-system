@@ -100,11 +100,32 @@
             "performSearch": "Hľadať",
             "progress": "Hľadám...",
             "experiment": "Pokus"
-        }
-    },
-    "website": {
-        "topMenu": { 
-            "home": "Domov"
+        },
+        "navigation": {
+            "home": "Domov",
+            "browse": {
+                "sectionTitle": "Prezerať",
+                "allLocations": "Všetky umiestnenia",
+                "byCountry": "Podľa krajiny",
+                "avaitingReview": "Nepotvrdené umiestnenia",
+                "recentActivity": "Nedávnu činnosť",
+                "webApp": "Mobilnú aplikáciu",
+                "statistics": "Štatistiky"
+            },
+            "develop": {
+                "sectionTitle": "Vývoj",
+                "api": "API",
+                "htmlWidgets": "HTML Widgety",
+                "examples": "Príklady",
+                "getInvolved": "Zapoj sa",
+                "code": "Kódu (na GitHube)",
+                "translate": "Pomôž s prekladom"
+            },
+            "discuss": "Diskutuj",
+            "about": {
+                "termsPrivacy": "Podmienky a ochrana súkromia",
+                "contact": "Kontakt"
+            }
         }
     }
 }
