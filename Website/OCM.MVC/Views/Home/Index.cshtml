@@ -8,7 +8,7 @@
 
 <div class="ocm-backdrop">
     <div class="applinks animated fadeInDown">
-        Get the app:
+        <span data-localize="ocm.infoText.getApp">Get the app</span>:
         <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
         <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
         <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
@@ -18,7 +18,7 @@
     <div style="float: left; display: inline; margin-right: 2em;" class=" animated fadeInDown">
         <a href="@Url.Action("Index", "POI")">
             <div class="stat">
-                <h2><span id="summary-locationcount">-----</span><br /><small>Locations</small></h2>
+                <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
               
             </div>
         </a>
@@ -48,30 +48,28 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Get Involved</h2>
-        <p>You can <a href="@Url.Action("Index","POI")">browse for locations near you</a> and add your own comments and photos.</p>
+        <h2 data-localize="ocm.navigation.develop.getInvolved">Get Involved</h2>
+        <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
         <p>
-            Can't see a charging location you know exists? <a class="btn btn-warning" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">Add A Location <span class="glyphicon glyphicon-pencil"></span></a>
+            <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-warning" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">Add A Location <span class="glyphicon glyphicon-pencil"></span></a>
         </p>
         
     </div>
     <div class="col-md-4">
-        <h2>Get Charging Station Data</h2>
+        <h2 data-localize="ocm.infoText.getStations.sectionTitle">Get Charging Station Data</h2>
         <p>
-            <em>Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> You can access and download
-            our latest charging locations using our <a href="@Url.Action("Index", "Develop")">API</a>.
+            <em data-localize="ocm.infoText.getStations.who">Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> <span data-localize="ocm.infoText.getStations.what">You can access and download
+            our latest charging locations using our</span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.navigation.develop.api">API</a>.
         </p>
-        <p>If you operate a website and would like to include a charging location map, you can <a href="@Url.Action("Index", "Develop")">embed a map on your own website</a></p>
+        <p> <span data-localize="ocm.infoText.getStations.websiteOperators">If you operate a website and would like to include a charging location map, you can</span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.infoText.getStations.embedMap">embed a map on your own website</a>.</p>
     </div>
     <div class="col-md-4">
-        <h2>Operators and Data Providers</h2>
+        <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
         <p>
-            <em>EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
+            <em data-localize="ocm.infoText.supplyData.who">EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
         </p>
         <p>
-            <strong>We need your data.</strong> You can supply us with your latest charging location
-            information regardless of whether your organisation owns, operates or simply catalogs
-            the available charging locations. Please <a href="@Url.Action("Contact", "About")">contact us</a> to get started.
+            <strong data-localize="ocm.infoText.supplyData.needData">We need your data.</strong> <span data-localize="ocm.infoText.supplyData.what">You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please</span> <a href="@Url.Action("Contact", "About")" data-localize="ocm.infoText.supplyData.contactUs">contact us</a> <span data-localize="ocm.infoText.supplyData.getStarted">to get started</span>.
         </p>
     </div>
 </div>
@@ -93,7 +91,8 @@
 
         document.getElementById("summary-locationcount").innerHTML = totalLocations;
 
-        summaryContent += "<strong>"+totalStations + "</strong> charging stations across <strong>" + totalLocations + "</strong> locations.";
+        //summaryContent += "<strong>"+totalStations + "</strong> <span data-localize="ocm.infoText.stats.stations">charging stations across</span> <strong>" + totalLocations + "</strong> <span data-localize="ocm.infoText.stats.acrossLocations">locations</span>.";
+        summaryContent += "<strong>" + totalStations + "</strong> charging stations across <strong>" + totalLocations + "</strong> locations.";
         document.getElementById("datasummary").innerHTML = summaryContent;
         $("#datasummary").fadeIn();
     }

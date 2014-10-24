@@ -125,6 +125,36 @@
                 "termsPrivacy": "Terms & Privacy",
                 "contact": "Contact"
             }
+        },
+        "infoText": {
+            "getInvolved": {
+                "youCan": "You can",
+                "browseLocations": "browse for locations near you",
+                "commentsPhotos": "and add your own comments and photos",
+                "dontSeePOI": "Can't see a charging location you know exists?"
+            },
+            "getStations": {
+                "sectionTitle": "Get Charging Station Data",
+                "who": "Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:",
+                "what": "You can access and download our latest charging locations using our",
+                "websiteOperators": "If you operate a website and would like to include a charging location map, you can",
+                "embedMap": "embed a map on your own website"
+            },
+            "supplyData": {
+                "sectionTitle": "Operators and Data Providers",
+                "who": "EVSE Suppliers, Network operators, national registries, local charging info apps & sites:",
+                "needData": "We need your data.",
+                "what": "You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please",
+                "contactUs": "contact us",
+                "getStarted": "to get started"
+            },
+            "stats": {
+                "stations": "charging stations across",
+                "acrossLocations": "locations",
+                "locations": "Locations"
+            },
+            "mediumDescription": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
+            "getApp": "Get the app"
         }
     }
 }
