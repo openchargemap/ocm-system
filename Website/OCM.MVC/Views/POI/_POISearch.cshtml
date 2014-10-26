@@ -7,7 +7,7 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
         <div class="form-group">
-            <label class="control-label col-md-2" for="search-location">Location</label>
+            <label class="control-label col-md-2" for="search-location" data-localize="ocm.search.locationInput">Location</label>
             <div class="col-md-8">
                 <div class="input-group">
                     <input type="text" class="form-control" value="@Model.SearchLocation" id="search-location" name="searchlocation" placeholder="Place name or Post/Zip Code" data-toggle="tooltip" title="Enter the place name or part of the address to search for locations near a particular place" />
@@ -16,14 +16,14 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-md-2" for="countryids">Country</label>
+            <label class="control-label col-md-2" for="countryids" data-localize="ocm.search.countries">Country</label>
             <div class="col-md-8">
                 @Html.DropDownList("countryids", Model.CountryList, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
 
-            <label class="control-label col-md-2">Distance</label>
+            <label class="control-label col-md-2" data-localize="ocm.search.distance">Distance</label>
 
             <div class="col-md-4">
                 <select id="distance" name="distance" class="form-control">
@@ -52,7 +52,7 @@
 
             <div class="form-group">
 
-                <label class="control-label col-md-2" for="locationtitle">Title</label>
+                <label class="control-label col-md-2" for="locationtitle" data-localize="ocm.details.location.title">Title</label>
 
                 <div class="col-md-8">
                     <input type="text" value="@Model.LocationTitle" class="form-control" name="locationtitle" placeholder="Title of place or business" data-toggle="tooltip" title="You can optionally search location titles for a business name etc. " />
@@ -60,7 +60,7 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label col-md-2">Level</label>
+                <label class="control-label col-md-2" data-localize="ocm.search.chargingLevels">Level</label>
 
                 <div class="col-md-8">
                     @Html.DropDownList("levelids", Model.LevelList, new { @class = "form-control" })
@@ -68,7 +68,7 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label col-md-2">Usage</label>
+                <label class="control-label col-md-2" data-localize="ocm.search.usageTypes">Usage</label>
 
                 <div class="col-md-8">
                     @Html.DropDownList("usagetypeids", Model.UsageTypeList, new { @class = "form-control" })
@@ -76,7 +76,7 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label col-md-2">Network / Operator</label>
+                <label class="control-label col-md-2" data-localize="ocm.search.networkOperators">Network / Operator</label>
 
                 <div class="col-md-8">
                     @Html.DropDownList("operatorids", Model.OperatorList, new { @class = "form-control" })
@@ -84,7 +84,7 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label col-md-2">Status Type</label>
+                <label class="control-label col-md-2" data-localize="ocm.search.operationalStatusTypes">Status Type</label>
 
                 <div class="col-md-8">
                     @Html.DropDownList("statustypeids", Model.StatusTypeList, new { @class = "form-control" })
@@ -92,14 +92,14 @@
             </div>
             <div class="form-group">
 
-                <label class="control-label col-md-2">Data Provider</label>
+                <label class="control-label col-md-2" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</label>
 
                 <div class="col-md-8">
                     @Html.DropDownList("dataproviderids", Model.DataProviderList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-2">Submission Status</label>
+                <label class="control-label col-md-2" data-localize="ocm.search.submissionStatus">Submission Status</label>
                 <div class="col-md-8">
                     @Html.DropDownList("submissionstatustypeid", Model.SubmissionTypeList, new { @class = "form-control" })
                 </div>
@@ -109,7 +109,7 @@
             <div class="col-sm-offset-3 col-sm-7">
 
                 <input type="submit" value="Search" class="btn btn-primary" />
-                <a class="btn btn-warning" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addPOI">Add A Location <span class="glyphicon glyphicon-pencil"></span></a>
+                <a class="btn btn-warning" href="@Url.Action("Add", "POI")"> <span data-localize="ocm.general.addLocation">Add A Location</span> <span class="glyphicon glyphicon-pencil"></span></a>
             </div>
         </div>
     </div>

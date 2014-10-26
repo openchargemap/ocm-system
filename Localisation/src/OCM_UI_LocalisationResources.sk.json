@@ -16,20 +16,20 @@
             "signOut": "Odhlásiť sa"
         },
         "details": {
-            "sectionTitle": null,
+        "sectionTitle": "Poloha nabíjacej stanice",
             "location": {
                 "sectionTitle": "Detaily umiestnenia",
                 "title": "Názov umiestnenia",
                 "address": "Najbližšia adresa",
-                "addressLine1": null,
-                "addressLine2": null,
+                "addressLine1": "Adresa, 1. riadok",
+                "addressLine2": "Adresa, druhý riadok",
                 "town": "Mesto",
                 "stateOrProvince": "Štát",
                 "postcode": "PSČ",
                 "country": "Krajina",
                 "contactTelephone1": "Primárny telefónny kontakt",
                 "contactTelephone2": "Sekundárny telefónny kontakt",
-                "contactEmail": "Email kontakt",
+                "contactEmail": "Emailový kontakt",
                 "map": "Mapa",
                 "streetView": "Street View",
                 "addressRelatedURL": "Webová stránka"
@@ -39,15 +39,15 @@
             "advancedDetails": "Dodatočné informácie",
             "numberOfPoints": "Počet staníc",
             "usageType": "Využitie",
-            "usageCost": null,
-            "operationalStatus": null,
-            "datePlanned": null,
-            "dateLastConfirmed": null,
+            "usageCost": "Cena za použitie",
+            "operationalStatus": "Stav funkčnosti",
+            "datePlanned": "Plánovaný dátum",
+            "dateLastConfirmed": "Dátum posledného potvrdenia (údajov)",
             "lastUpdated": "Posledná aktualizácia",
-            "refNumber": null,
+            "refNumber": "Referenčné číslo OpenChargeMap",
             "dataQualityLevel": "Úroveň kvality dát",
-            "importedDataNotice": null,
-            "submissionStatus": null,
+             "importedDataNotice": "Poznámka: Tieto údaje sa získavajú automaticky, zmeny by mali byť predložené priamo poskytovateľovi údajov.",
+             "submissionStatus": "Stav položky",
             "placesNearby": {
                 "sectionTitle": "Miesta v blízskosti"
             },
@@ -60,12 +60,12 @@
             },
             "commentsAndRatings": {
                 "sectionTitle": "Komentáre a hodnotenia",
-                "zeroComments": null,
-                "addPrompt": null
+                "zeroComments": "Zatiaľ neboli pridané žiadne užívateľské komentáre",
+                "addPrompt": "Pridať komentár alebo rýchlu aktualizáciu stavu"
             },
             "equipment": {
-                "sectionTitle": null,
-                "connectionType": "Typ spojenia",
+            "sectionTitle": "Detaily zariadenia",
+            "connectionType": "Typ konektora",
                 "powerKW": "Maximálny výkon (kW)",
                 "powerLevel": "Úroveň",
                 "quantity": "Množstvo",
@@ -73,16 +73,16 @@
                 "voltage": "Napätie",
                 "current": "Maximálny prúd",
                 "comment": "Komentáre",
-                "reference": null
+               "reference": "Odkaz"
             },
             "dataProvider": {
                 "sectionTitle": "Poskytovateľ dát",
-                "website": "Webova stránka",
-                "providersReference": null
+                "website": "Webová stránka",
+                "providersReference": "Referenčné číslo poskytovateľa"
             },
             "operator": {
-                "sectionTitle": null,
-                "operatorsReference": null
+                "sectionTitle": "Sieť-Operátor",
+                "operatorsReference": "Referenčné číslo operátora"
             }
         },
         "search": {
@@ -91,10 +91,10 @@
             "useMyLocation": "Hľadať v mojej blízkosti",
             "distance": "Vzdialenosť",
             "chargingLevels": "Úroveň nabíjania",
-            "connectionTypes": null,
-            "networkOperators": null,
+            "connectionTypes": "Typy konektorov",
+            "networkOperators": "Sieť/Operátor",
             "countries": "Krajina",
-            "submissionStatus": null,
+            "submissionStatus": "Stav položky",
             "usageTypes": "Využitie",
             "operationalStatusTypes": "Stav",
             "performSearch": "Hľadať",
@@ -125,6 +125,12 @@
             "about": {
                 "termsPrivacy": "Podmienky a ochrana súkromia",
                 "contact": "Kontakt"
+            },
+            "profile": {
+                "sectionTitle": "Môj Profil",
+                "subscriptions": "Moje Predplatné",
+                "comments": "Moje Komentáre",
+                "uploads": "Nahraté fotky"
             }
         },
         "infoText": {
@@ -150,8 +156,6 @@
                 "getStarted": "pre pokračovanie"
             },
             "stats": {
-                "stations": "nabíjacích staníc na",
-                "acrossLocations": "miestach",
                 "locations": "Umiestnení"
             },
             "mediumDescription": "Open Charge Map je nekomerčná a nezisková služba udržovaná a podporovaná komunitou firiem, charít, vývojárov a záujmových skupín z celého sveta.",

@@ -44,8 +44,6 @@
 
                 <ul class="nav navbar-nav">
                     <li><a id="nav_home" href="@Url.Action("Index", "Home")" data-localize="ocm.navigation.home">home</a></li>
-                    @*<li><a id="nav_home" href="@Url.Action("Index", "Home")" data-localize="ocm.search.progress">home</a></li>*@
-                    @*<li><a id="nav_home" href="@Url.Action("Index", "Home")">home</a></li>*@
 
                     <li class="dropdown">
                         <a href="@Url.Action("Index", "POI")" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.navigation.browse.sectionTitle">browse</span> <b class="caret"></b></a>
@@ -88,7 +86,7 @@
                     @if (Session["Username"] != null)
                     {
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">my profile<b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span data-localize="ocm.navigation.profile.sectionTitle">my profile</span> <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><p class="navbar-text">@Html.Encode(Session["Username"])</p></li>
                                 <li class="nav-divider"></li>
@@ -144,7 +142,6 @@
         <footer>
             <div class="social"><a href="https://plus.google.com/u/0/communities/112113799071360649945" title="Google+ Community"><i class="fa fa-google-plus"></i></a></div>
             <div class="social"><a href="https://www.facebook.com/openchargemap" title="Like us on Facebook"><i class="fa fa-facebook"></i></a></div>
-            @*<div class="social"><a href="https://www.facebook.com/openchargemap" title=data-localize="ocm.general.signIn"><i class="fa fa-facebook"></i></a></div>*@
             <div class="social"><a href="https://twitter.com/#!/open_charge_map" title="Follow us on Twitter"><i class="fa fa-twitter"></i></a></div>
             <div class="social"><a href="https://github.com/openchargemap/" title="Get involved on Github"><i class="fa fa-github"></i></a></div>
             <div class="social"><a href="@Url.Action("Contact","About")" title="Contact Us"><i class="fa fa-comments"></i></a></div>

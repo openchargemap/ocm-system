@@ -27,6 +27,8 @@
                 "stateOrProvince": "State/Province",
                 "postcode": "Postal/Zip Code",
                 "country": "Country",
+                "latitude": "Latitude",
+                "longitude": "Longitude",
                 "contactTelephone1": "Primary Contact Phone",
                 "contactTelephone2": "Secondary Contact Phone",
                 "contactEmail": "Contact Email",
@@ -124,6 +126,12 @@
             "about": {
                 "termsPrivacy": "Terms & Privacy",
                 "contact": "Contact"
+            },
+            "profile": {
+                "sectionTitle": "My Profile",
+                "subscriptions": "My Subscriptions",
+                "comments": "My Comments",
+                "uploads": "My uploads"
             }
         },
         "infoText": {
@@ -149,8 +157,6 @@
                 "getStarted": "to get started"
             },
             "stats": {
-                "stations": "charging stations across",
-                "acrossLocations": "locations",
                 "locations": "Locations"
             },
             "mediumDescription": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
