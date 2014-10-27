@@ -930,6 +930,7 @@ namespace OCM.API.Common
                     else
                     {
                         connectionInfo.ConnectionType = null;
+                        connectionInfo.ConnectionTypeID = 0;
                     }
 
                     if (c.Level != null && c.Level.ID >= 1)
@@ -946,6 +947,7 @@ namespace OCM.API.Common
                     else
                     {
                         connectionInfo.ChargerType = null;
+                        connectionInfo.LevelTypeID = null;
                     }
 
                     if (c.CurrentType != null && c.CurrentType.ID >= 10)
@@ -962,6 +964,7 @@ namespace OCM.API.Common
                     else
                     {
                         connectionInfo.CurrentType = null;
+                        connectionInfo.CurrentTypeID = null;
                     }
 
                     if (c.StatusType != null && c.StatusType.ID >= 0)
@@ -978,6 +981,7 @@ namespace OCM.API.Common
                     else
                     {
                         connectionInfo.StatusType = null;
+                        connectionInfo.StatusTypeID = null;
                     }
 
                     bool addConnection = false;

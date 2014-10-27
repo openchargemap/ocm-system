@@ -37,6 +37,7 @@ namespace OCM.API.Common
                 AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\",EntityID:" + commentId + ",ChargePointID:" + cpID + "}", "User deleted comment");
 
                 CacheManager.RefreshCachedPOIList();
+                
             }
             
         }

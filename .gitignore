@@ -114,3 +114,6 @@ UpgradeLog*.XML
 /Localisation/Web.config
 /App/js/Compiled
 /Website/OCM.MVC/Temp/
+*.pubxml
+/API/OCM.Net/OCM.API.Web/Web.Sandbox.config
+/Website/OCM.MVC/Web.Sandbox.config

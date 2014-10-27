@@ -171,8 +171,8 @@ namespace OCM.API.Common
                     queueItem.DateProcessed = DateTime.UtcNow;
                     DataModel.SaveChanges();
 
-                    Task<MirrorStatus> statusRefresh = CacheManager.RefreshCachedPOIList();
-                    statusRefresh.Start();
+                    CacheManager.RefreshCachedPOIList();
+                    
                 }
             }
         }
