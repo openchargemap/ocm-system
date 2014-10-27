@@ -93,6 +93,8 @@ namespace OCM.MVC.Controllers
                 var operatorInfoManager = new OperatorInfoManager();
 
                 operatorInfo = operatorInfoManager.UpdateOperatorInfo(operatorInfo);
+
+                CacheManager.RefreshCachedPOIList();
                 return RedirectToAction("Operators", "Admin");
             }
             return View(operatorInfo);
