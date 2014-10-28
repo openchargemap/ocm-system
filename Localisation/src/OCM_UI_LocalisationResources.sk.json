@@ -6,6 +6,7 @@
             "shortDescription": "Globálny register nabíjacích staníc pre elektromobily",
             "linkWebApp": "Hľadania umiestnenia pomocou našej Web App",
             "linkBrowsePOI": "Zobraziť všetky umiestnenia",
+            "browsePOI": "Prezerať umiestnenia nabíjacích staníc",
             "loadingProgress": "Načítavam...",
             "addLocation": "Pridať umiestnenie",
             "addItem": "Pridať",
@@ -158,8 +159,14 @@
             "stats": {
                 "locations": "Umiestnení"
             },
-            "mediumDescription": "Open Charge Map je nekomerčná a nezisková služba udržovaná a podporovaná komunitou firiem, charít, vývojárov a záujmových skupín z celého sveta.",
-            "getApp": "Stiahni si aplikáciu"
+            "shortProjectSummary": "Open Charge Map je nekomerčná a nezisková služba udržovaná a podporovaná komunitou firiem, charít, vývojárov a záujmových skupín z celého sveta.",
+            "getApp": "Stiahni si aplikáciu",
+            "tip": "Tip:",
+            "searching": {
+                "quickWay": "Ak iba potrebujete rýchly spôsob, ako nájsť najbližšiu nabíjaciu stanicu, môžete tiež vyskúšať našu",
+                "webApp": "webovú aplikáciu",
+                "searchAppStore": "hlavne na mobilných zariadeniach. V obchode s aplikáciami na Vašom zariadení nájdete aj verziu, ktorú môžete mať stále so sebou."
+            }
         }
     }
 }

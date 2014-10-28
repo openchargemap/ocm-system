@@ -6,6 +6,7 @@
             "shortDescription": "the global public registry of electric vehicle charging locations",
             "linkWebApp": "Search Locations using our Web App",
             "linkBrowsePOI": "Browse All Locations",
+            "browsePOI": "Browse Charging Locations",
             "loadingProgress": "Loading...",
             "addLocation": "Add Location",
             "addItem": "Add",
@@ -159,8 +160,14 @@
             "stats": {
                 "locations": "Locations"
             },
-            "mediumDescription": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
-            "getApp": "Get the app"
+            "shortProjectSummary": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
+            "getApp": "Get the app",
+            "tip": "Tip:",
+            "searching": {
+                "quickWay": "If you just need a quick way to find your nearest charging location you can also try our",
+                "webApp": "Web App",
+                "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
+            }
         }
     }
 }
