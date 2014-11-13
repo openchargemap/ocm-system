@@ -6,6 +6,7 @@
       "shortDescription": "Globálny register nabíjacích staníc pre elektromobily",
       "linkWebApp": "Hľadania umiestnenia pomocou našej Web App",
       "linkBrowsePOI": "Zobraziť všetky umiestnenia",
+      "browsePOI": "Prezerať umiestnenia nabíjacích staníc",
       "loadingProgress": "Načítavam...",
       "addLocation": "Pridať umiestnenie",
       "addItem": "Pridať",
@@ -99,6 +100,72 @@
       "operationalStatusTypes": "Stav",
       "performSearch": "Hľadať",
       "progress": "Hľadám..."
+        },
+        "navigation": {
+            "home": "Domov",
+            "browse": {
+                "sectionTitle": "Prezerať",
+                "allLocations": "Všetky umiestnenia",
+                "byCountry": "Podľa krajiny",
+                "avaitingReview": "Nepotvrdené umiestnenia",
+                "recentActivity": "Nedávnu činnosť",
+                "webApp": "Mobilnú aplikáciu",
+                "statistics": "Štatistiky"
+            },
+            "develop": {
+                "sectionTitle": "Vývoj",
+                "api": "API",
+                "htmlWidgets": "HTML Widgety",
+                "examples": "Príklady",
+                "getInvolved": "Zapoj sa",
+                "code": "Kódu (na GitHube)",
+                "translate": "Pomôž s prekladom"
+            },
+            "discuss": "Diskutuj",
+            "about": {
+                "termsPrivacy": "Podmienky a ochrana súkromia",
+                "contact": "Kontakt"
+            },
+            "profile": {
+                "sectionTitle": "Môj Profil",
+                "subscriptions": "Moje Predplatné",
+                "comments": "Moje Komentáre",
+                "uploads": "Nahraté fotky"
+            }
+        },
+        "infoText": {
+            "getInvolved": {
+                "youCan": "Môžeš",
+                "browseLocations": "prezerať stanice blízko Teba",
+                "commentsPhotos": "a pridať svoje vlastné komentáre a fotky",
+                "dontSeePOI": "Nevidíš nabíjaciu stanicu o ktorej vieš, že existuje?"
+            },
+            "getStations": {
+                "sectionTitle": "Stiahni si dáta o nabíjacích staniciach",
+                "who": "Výrobcovia áut, predajcovia navigácií, vývojári aplikácií, vlastníci webov:",
+                "what": "Môžete si stiahnuť alebo pristupovať k naším najnovším dátam o nabíjacích staniciach vďaka nášmu",
+                "websiteOperators": "Ak prevádzkujete webovú stránku a chcete do nej pridať mapu nabíjacích staníc, môžete",
+                "embedMap": "vložiť mapu na Vašu vlastnú stránku"
+            },
+            "supplyData": { 
+                "sectionTitle": "Operátori a poskytovatelia dát",
+                "who": "Dodávatelia nabíjacích staníc, operátori, národné registre, lokálne stránky a aplikácie o nabíjacích staniciach:",
+                "needData": "Potrebujeme Vaše dáta.",
+                "what": "Môžete nám dodať vaše najnovšie informácie o nabíjacích staniciach bez ohľadu na to, či Vaša organizácia vlastní, prevádzkuje alebo kataloguje dostupné nabíjacie stanice. Prosíme",
+                "contactUs": "kontaktujte nás",
+                "getStarted": "pre pokračovanie"
+            },
+            "stats": {
+                "locations": "Umiestnení"
+            },
+            "shortProjectSummary": "Open Charge Map je nekomerčná a nezisková služba udržovaná a podporovaná komunitou firiem, charít, vývojárov a záujmových skupín z celého sveta.",
+            "getApp": "Stiahni si aplikáciu",
+            "tip": "Tip:",
+            "searching": {
+                "quickWay": "Ak iba potrebujete rýchly spôsob, ako nájsť najbližšiu nabíjaciu stanicu, môžete tiež vyskúšať našu",
+                "webApp": "webovú aplikáciu",
+                "searchAppStore": "hlavne na mobilných zariadeniach. V obchode s aplikáciami na Vašom zariadení nájdete aj verziu, ktorú môžete mať stále so sebou."
+            }
     }
   }
 }
