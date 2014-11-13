@@ -6,14 +6,15 @@ var localisation_dictionary_lt ={
       "shortDescription": "pasaulinis elektromobilių įkrovimo stotelių registras",
       "linkWebApp": "Ieškoti įkrovimo stoteles naudojant mūsų web aplikaciją",
       "linkBrowsePOI": "Peržiūrėti visas įkrovimo stoteles",
-      "loadingProgress": null,
-      "addLocation": null,
-      "addItem": null,
-      "favourites": null,
-      "settings": null,
-      "about": null,
-      "signIn": null,
-      "signOut": null
+      "browsePOI": "Naršyti įkrovimo vietas",
+      "loadingProgress": "Įkeliama…",
+      "addLocation": "Pridėti vietą",
+      "addItem": "Pridėti",
+      "favourites": "Mėgiamos",
+      "settings": "Nustatymai",
+      "about": "Apie",
+      "signIn": "Prisijungti",
+      "signOut": "Atsijungti"
     },
     "details": {
       "sectionTitle": "Įkrovimo vieta",
@@ -27,6 +28,8 @@ var localisation_dictionary_lt ={
         "stateOrProvince": "Rajonas/apskritis",
         "postcode": "Pašto kodas",
         "country": "Šalis",
+        "latitude": "Platuma",
+        "longitude": "Ilguma",
         "contactTelephone1": "Pagrindinio kontaktinio telefono numeris",
         "contactTelephone2": "Atsarginio kontaktinio telefono numeris",
         "contactEmail": "El. pašto adresas",
@@ -99,6 +102,72 @@ var localisation_dictionary_lt ={
       "operationalStatusTypes": "Būsena",
       "performSearch": "Ieškoti",
       "progress": "Ieškoma..."
+    },
+    "navigation": {
+      "home": "Namo",
+      "browse": {
+        "sectionTitle": "Naršyti",
+        "allLocations": "Visos vietos",
+        "byCountry": "Pagal šalį",
+        "avaitingReview": "Laukia peržiūros",
+        "recentActivity": "Neseniai atlikti veiksmai",
+        "webApp": "Web aplikacija mobliam įrenginiui",
+        "statistics": "Statistika"
+      },
+      "develop": {
+        "sectionTitle": "Plėtoti",
+        "api": "API",
+        "htmlWidgets": "HTML valdikliai",
+        "examples": "Pavyzdžiai",
+        "getInvolved": "Prisidėkite",
+        "code": "Pamatyti kodą (GitHub)",
+        "translate": "Padėkite išversti"
+      },
+      "discuss": "Aptarti",
+      "about": {
+        "termsPrivacy": "Sąlygos ir privatumas",
+        "contact": "Susisiekti"
+      },
+      "profile": {
+        "sectionTitle": "Mano profilis",
+        "subscriptions": "Mano prenumeratos",
+        "comments": "Mano atsiliepimai",
+        "uploads": "Mano įkelimai"
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": "Jūs galite",
+        "browseLocations": "naršyti netoliese esančias vietas",
+        "commentsPhotos": "ir pridėti savo pastabas ir nuotraukas",
+        "dontSeePOI": "Nematote jūms žinomos įkrovimo vietos?"
+      },
+      "getStations": {
+        "sectionTitle": "Įkrovimo vietų duomenys",
+        "who": "Transporto priemonių gamintojai, palydovinės navigacijos tiekėjai, programų kūrėjai, svetainių savininkai:",
+        "what": "Galite atsisiųskite naujausias įkrovimo vietas naudojant mūsų",
+        "websiteOperators": "Jei turite interneto svetainę ir norėtumėte įkelti įkrovimo vietų žemėlapį, jūs galite",
+        "embedMap": "įdėti žemėlapį į savo svetainę"
+      },
+      "supplyData": {
+        "sectionTitle": "Operatoriai ir duomenų tiekėjai",
+        "who": "EVSE tiekėjų, tinklo operatoriai, nacionaliniai registrai, vietinės įkrovimo informacijos aplikacijos ir svetaines:",
+        "needData": "Mums reikia jūsu duomenų.",
+        "what": "Jūs galite nurodyti naujausią įkrovimo vietos informaciją nežiūrint į tai ar jūsų organizacijai priklauso įkrovimo vietą. Prašome",
+        "contactUs": "parašykite mums",
+        "getStarted": "kad pradėtumėte"
+      },
+      "stats": {
+        "locations": "Vietos"
+      },
+      "shortProjectSummary": "Open Charge Map yra nekomerciniė, ne pelno siekianti paslauga, kurią remiama įmonių bendruomenės, labdaros organizacijos ir kitos suinteresuotosios šalys visame pasaulyje.",
+      "getApp": "Gauti programą",
+      "tip": "Patarimas:",
+      "searching": {
+        "quickWay": "Jei jums tereikia greitai rasti savo artimiausią įkrovimo vietą, galite pabandyti mūsų",
+        "webApp": "Web aplikacija",
+        "searchAppStore": "ypač mobiliuose įrenginiuose. Taip pat galite ieškoti įrenginio aplikacijų naršyklėj."
+      }
     }
   }
 };

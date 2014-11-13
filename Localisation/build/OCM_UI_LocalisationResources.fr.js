@@ -6,6 +6,7 @@ var localisation_dictionary_fr ={
       "shortDescription": "le registre public mondial d'emplacements de recharge pour véhicules électriques",
       "linkWebApp": "Recherchez des Emplacements à l'aide de notre application Web",
       "linkBrowsePOI": "Feuilletez Tout les Emplacements",
+      "browsePOI": null,
       "loadingProgress": "Chargement...",
       "addLocation": "Ajouter un lieu",
       "addItem": "Ajouter",
@@ -27,6 +28,8 @@ var localisation_dictionary_fr ={
         "stateOrProvince": "État/Province",
         "postcode": "Code postal/Zip Code",
         "country": "Pays",
+        "latitude": "Latitude :",
+        "longitude": "Longitude :",
         "contactTelephone1": "Numéro de téléphone Principale",
         "contactTelephone2": "Numéro de téléphone Secondaire",
         "contactEmail": "Email de contact",
@@ -99,6 +102,72 @@ var localisation_dictionary_fr ={
       "operationalStatusTypes": "Disponibilité",
       "performSearch": "Cherche",
       "progress": "Recherche..."
+    },
+    "navigation": {
+      "home": "Accueil",
+      "browse": {
+        "sectionTitle": "Parcourir",
+        "allLocations": "Tous les Emplacements",
+        "byCountry": "Par Pays",
+        "avaitingReview": "Attends Considération",
+        "recentActivity": "Activité Récente",
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": "Aidez nous à traduire"
+      },
+      "discuss": "Discuter",
+      "about": {
+        "termsPrivacy": "Termes & Confidentialité",
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": "Mon profil",
+        "subscriptions": "Mes Abonnements",
+        "comments": "Mes Commentaires",
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 };

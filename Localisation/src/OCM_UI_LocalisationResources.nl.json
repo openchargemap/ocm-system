@@ -6,7 +6,7 @@
       "shortDescription": "Het globale openbare register van oplaadlocaties voor elektrische voertuigen",
       "linkWebApp": "Zoek Locaties met behulp van onze Web App",
       "linkBrowsePOI": "Blader door alle Locaties",
-      "browsePOI": null,
+      "browsePOI": "Oplaadlocaties Doorbladeren",
       "loadingProgress": "Laden...",
       "addLocation": "Locatie Toevoegen",
       "addItem": "Toevoegen",
@@ -28,9 +28,9 @@
         "stateOrProvince": "Staat/Provincie",
         "postcode": "Postcode/Zip Code",
         "country": "Land",
-        "latitude": null,
-        "longitude": null,
-        "contactTelephone1": "Primaire Telefoonnummer",
+        "latitude": "Breedtegraad",
+        "longitude": "Lengtegraad",
+        "contactTelephone1": "Primair Telefoonnummer",
         "contactTelephone2": "Secondaire Telefoonnummer",
         "contactEmail": "Contact E-mail",
         "map": "Kaart",
@@ -104,69 +104,69 @@
       "progress": "Opzoeken.."
     },
     "navigation": {
-      "home": null,
+      "home": "Home",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "Doorbladeren",
+        "allLocations": "Alle Locaties",
+        "byCountry": "Per Land",
+        "avaitingReview": "Wachtend op Beoordeling",
+        "recentActivity": "Recente Activiteit",
+        "webApp": "Web App voor Mobiel",
+        "statistics": "Statistieken"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "Ontwikkelen",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Voorbeelden",
+        "getInvolved": "Doe mee",
+        "code": "Zie de Code (op GitHub)",
+        "translate": "Help Vertalen"
       },
-      "discuss": null,
+      "discuss": "Bespreken",
       "about": {
-        "termsPrivacy": null,
-        "contact": null
+        "termsPrivacy": "Voorwaarden & Privacy",
+        "contact": "Contakt"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "Mijn Profiel",
+        "subscriptions": "Mijn Abonnementen",
+        "comments": "Mijn Reacties",
+        "uploads": "Mijn Uploads"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "U kunt",
+        "browseLocations": "zoeken naar locaties in uw buurt",
+        "commentsPhotos": "en uw eigen opmerkingen en foto 's toevoegen",
+        "dontSeePOI": "Ziet U niet een oplaadlocatie die U weet bestaat?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "Krijg Laadstation Gegevens",
+        "who": "Voertuigfabrikanten, Sat Nav leveranciers, App ontwikkelaars, Website-eigenaren:",
+        "what": "U kunt toegang hebben tot of downloaden van onze nieuwste oplaad-locaties met behulp van onze",
+        "websiteOperators": "Als u een website beheert en graag een Oplaad locatie kaart wilt bevatten, dan kan U",
+        "embedMap": "een kaart op uw eigen website insluiten"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "Operatoren en Gegevens Leveranciers",
+        "who": "EVSE leveranciers, Netwerk exploitanten, nationale registers, lokale oplaad info apps & sites:",
+        "needData": "Wij hebben uw gegevens nodig",
+        "what": "U kunt ons uw meest recente informatie leveren over de oplaadlocaties ongeacht of uw organisatie de beschikbare oplaadlocaties.bezit, exploiteert of gewoon catalogeert.  Alstublieft",
+        "contactUs": "contacteer ons",
+        "getStarted": "om te starten"
       },
       "stats": {
-        "locations": null
+        "locations": "Locaties"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map is een niet-commerciële, non-profit service gehost en ondersteund door een Gemeenschap van bedrijven, liefdadigheidsinstellingen, ontwikkelaars en belanghebbende partijen over de hele wereld.",
+      "getApp": "Verkrijg de app",
+      "tip": "Tip:",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "Als je alleen maar een snelle manier nodig hebt om uw dichtstbijzijnde oplaadlocatie te vinden probeert U onze",
+        "webApp": "Web App",
+        "searchAppStore": "vooral op mobiele apparaten. U kunt ook zoeken op uw apparaat s' App Store voor een versie die u kunt rond dragen."
       }
     }
   }

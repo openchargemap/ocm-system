@@ -6,6 +6,7 @@ var localisation_dictionary_en ={
       "shortDescription": "the global public registry of electric vehicle charging locations",
       "linkWebApp": "Search Locations using our Web App",
       "linkBrowsePOI": "Browse All Locations",
+      "browsePOI": "Browse Charging Locations",
       "loadingProgress": "Loading...",
       "addLocation": "Add Location",
       "addItem": "Add",
@@ -27,6 +28,8 @@ var localisation_dictionary_en ={
         "stateOrProvince": "State/Province",
         "postcode": "Postal/Zip Code",
         "country": "Country",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
         "contactTelephone1": "Primary Contact Phone",
         "contactTelephone2": "Secondary Contact Phone",
         "contactEmail": "Contact Email",
@@ -99,6 +102,72 @@ var localisation_dictionary_en ={
       "operationalStatusTypes": "Status",
       "performSearch": "Search",
       "progress": "Searching.."
+    },
+    "navigation": {
+      "home": "Home",
+      "browse": {
+        "sectionTitle": "Browse",
+        "allLocations": "All Locations",
+        "byCountry": "By Country",
+        "avaitingReview": "Awaiting Review",
+        "recentActivity": "Recent Activity",
+        "webApp": "Web App for Mobile",
+        "statistics": "Statistics"
+      },
+      "develop": {
+        "sectionTitle": "Develop",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Examples",
+        "getInvolved": "Get Involved",
+        "code": "See the Code (on GitHub)",
+        "translate": "Help Translate"
+      },
+      "discuss": "Discuss",
+      "about": {
+        "termsPrivacy": "Terms & Privacy",
+        "contact": "Contact"
+      },
+      "profile": {
+        "sectionTitle": "My Profile",
+        "subscriptions": "My Subscriptions",
+        "comments": "My Comments",
+        "uploads": "My uploads"
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": "You can",
+        "browseLocations": "browse for locations near you",
+        "commentsPhotos": "and add your own comments and photos",
+        "dontSeePOI": "Can't see a charging location you know exists?"
+      },
+      "getStations": {
+        "sectionTitle": "Get Charging Station Data",
+        "who": "Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:",
+        "what": "You can access and download our latest charging locations using our",
+        "websiteOperators": "If you operate a website and would like to include a charging location map, you can",
+        "embedMap": "embed a map on your own website"
+      },
+      "supplyData": {
+        "sectionTitle": "Operators and Data Providers",
+        "who": "EVSE Suppliers, Network operators, national registries, local charging info apps & sites:",
+        "needData": "We need your data.",
+        "what": "You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please",
+        "contactUs": "contact us",
+        "getStarted": "to get started"
+      },
+      "stats": {
+        "locations": "Locations"
+      },
+      "shortProjectSummary": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
+      "getApp": "Get the app",
+      "tip": "Tip:",
+      "searching": {
+        "quickWay": "If you just need a quick way to find your nearest charging location you can also try our",
+        "webApp": "Web App",
+        "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
+      }
     }
   }
 };

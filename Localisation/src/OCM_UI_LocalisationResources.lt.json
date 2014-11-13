@@ -6,15 +6,15 @@
       "shortDescription": "pasaulinis elektromobilių įkrovimo stotelių registras",
       "linkWebApp": "Ieškoti įkrovimo stoteles naudojant mūsų web aplikaciją",
       "linkBrowsePOI": "Peržiūrėti visas įkrovimo stoteles",
-      "browsePOI": null,
-      "loadingProgress": null,
-      "addLocation": null,
-      "addItem": null,
-      "favourites": null,
-      "settings": null,
-      "about": null,
-      "signIn": null,
-      "signOut": null
+      "browsePOI": "Naršyti įkrovimo vietas",
+      "loadingProgress": "Įkeliama…",
+      "addLocation": "Pridėti vietą",
+      "addItem": "Pridėti",
+      "favourites": "Mėgiamos",
+      "settings": "Nustatymai",
+      "about": "Apie",
+      "signIn": "Prisijungti",
+      "signOut": "Atsijungti"
     },
     "details": {
       "sectionTitle": "Įkrovimo vieta",
@@ -28,8 +28,8 @@
         "stateOrProvince": "Rajonas/apskritis",
         "postcode": "Pašto kodas",
         "country": "Šalis",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "Platuma",
+        "longitude": "Ilguma",
         "contactTelephone1": "Pagrindinio kontaktinio telefono numeris",
         "contactTelephone2": "Atsarginio kontaktinio telefono numeris",
         "contactEmail": "El. pašto adresas",
@@ -104,69 +104,69 @@
       "progress": "Ieškoma..."
     },
     "navigation": {
-      "home": null,
+      "home": "Namo",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "Naršyti",
+        "allLocations": "Visos vietos",
+        "byCountry": "Pagal šalį",
+        "avaitingReview": "Laukia peržiūros",
+        "recentActivity": "Neseniai atlikti veiksmai",
+        "webApp": "Web aplikacija mobliam įrenginiui",
+        "statistics": "Statistika"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "Plėtoti",
+        "api": "API",
+        "htmlWidgets": "HTML valdikliai",
+        "examples": "Pavyzdžiai",
+        "getInvolved": "Prisidėkite",
+        "code": "Pamatyti kodą (GitHub)",
+        "translate": "Padėkite išversti"
       },
-      "discuss": null,
+      "discuss": "Aptarti",
       "about": {
-        "termsPrivacy": null,
-        "contact": null
+        "termsPrivacy": "Sąlygos ir privatumas",
+        "contact": "Susisiekti"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "Mano profilis",
+        "subscriptions": "Mano prenumeratos",
+        "comments": "Mano atsiliepimai",
+        "uploads": "Mano įkelimai"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "Jūs galite",
+        "browseLocations": "naršyti netoliese esančias vietas",
+        "commentsPhotos": "ir pridėti savo pastabas ir nuotraukas",
+        "dontSeePOI": "Nematote jūms žinomos įkrovimo vietos?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "Įkrovimo vietų duomenys",
+        "who": "Transporto priemonių gamintojai, palydovinės navigacijos tiekėjai, programų kūrėjai, svetainių savininkai:",
+        "what": "Galite atsisiųskite naujausias įkrovimo vietas naudojant mūsų",
+        "websiteOperators": "Jei turite interneto svetainę ir norėtumėte įkelti įkrovimo vietų žemėlapį, jūs galite",
+        "embedMap": "įdėti žemėlapį į savo svetainę"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "Operatoriai ir duomenų tiekėjai",
+        "who": "EVSE tiekėjų, tinklo operatoriai, nacionaliniai registrai, vietinės įkrovimo informacijos aplikacijos ir svetaines:",
+        "needData": "Mums reikia jūsu duomenų.",
+        "what": "Jūs galite nurodyti naujausią įkrovimo vietos informaciją nežiūrint į tai ar jūsų organizacijai priklauso įkrovimo vietą. Prašome",
+        "contactUs": "parašykite mums",
+        "getStarted": "kad pradėtumėte"
       },
       "stats": {
-        "locations": null
+        "locations": "Vietos"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map yra nekomerciniė, ne pelno siekianti paslauga, kurią remiama įmonių bendruomenės, labdaros organizacijos ir kitos suinteresuotosios šalys visame pasaulyje.",
+      "getApp": "Gauti programą",
+      "tip": "Patarimas:",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "Jei jums tereikia greitai rasti savo artimiausią įkrovimo vietą, galite pabandyti mūsų",
+        "webApp": "Web aplikacija",
+        "searchAppStore": "ypač mobiliuose įrenginiuose. Taip pat galite ieškoti įrenginio aplikacijų naršyklėj."
       }
     }
   }

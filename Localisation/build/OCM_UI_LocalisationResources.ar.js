@@ -6,6 +6,7 @@ var localisation_dictionary_ar ={
       "shortDescription": "التسجيل العامة العالمية للمركبات الكهربائية تقاضي المواقع",
       "linkWebApp": "مواقع البحث باستخدام \"التطبيق ويب\" لدينا",
       "linkBrowsePOI": "تصفح جميع المواقع",
+      "browsePOI": null,
       "loadingProgress": null,
       "addLocation": null,
       "addItem": null,
@@ -27,6 +28,8 @@ var localisation_dictionary_ar ={
         "stateOrProvince": "الولاية/المقاطعة",
         "postcode": "الرمز البريدي/الرمز البريدي",
         "country": "البلد",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "هاتف جهة الاتصال الأساسية",
         "contactTelephone2": "هاتف جهة الاتصال الثانوية",
         "contactEmail": "الاتصال بالبريد الإلكتروني",
@@ -99,6 +102,72 @@ var localisation_dictionary_ar ={
       "operationalStatusTypes": "مركز",
       "performSearch": "البحث",
       "progress": "البحث..."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 };

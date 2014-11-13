@@ -6,6 +6,7 @@ var localisation_dictionary_ja ={
       "shortDescription": "電気自動車の充電の場所グローバル公共のレジストリ",
       "linkWebApp": "Web アプリを使用して検索場所",
       "linkBrowsePOI": "すべての場所を参照します。",
+      "browsePOI": null,
       "loadingProgress": "読み込んでいます.",
       "addLocation": "場所を追加します。",
       "addItem": null,
@@ -27,6 +28,8 @@ var localisation_dictionary_ja ={
         "stateOrProvince": "都道府県/州",
         "postcode": "郵便/郵便番号",
         "country": "国",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "第 1 連絡先電話",
         "contactTelephone2": "セカンダリ連絡先電話番号",
         "contactEmail": "連絡先メール アドレス",
@@ -99,6 +102,72 @@ var localisation_dictionary_ja ={
       "operationalStatusTypes": "ステータス",
       "performSearch": "検索",
       "progress": "検索."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 };

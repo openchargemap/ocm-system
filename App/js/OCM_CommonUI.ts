@@ -61,7 +61,7 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
 
                     if (isTestMode == true) {
                         //in test mode the resource key is displayed as the localised text
-                        localisedText = "[" + resourceKey + "] " + eval("localisation_dictionary." + resourceKey);
+                        localisedText = "[" + resourceKey + "]";
                     } else {
                         localisedText = eval("localisation_dictionary." + resourceKey);
                     }

@@ -4,7 +4,7 @@
 @if (ViewBag.EnableEditView == false)
 {
     ViewBag.Title = "Add Charging Location";
-    <h2>Add a Charging Location</h2>
+    <h2 data-localize="ocm.general.addLocation">Add a Charging Location</h2>
     <script>var enableEditMode = false; var poiId = 0;</script>
 }
 else
@@ -196,7 +196,7 @@ else
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#wizardsteps" href="#step1">
-                        <span class="glyphicon glyphicon-map-marker"></span> Step 1 - Location Details
+                        <span class="glyphicon glyphicon-map-marker"></span> Step 1 - <span data-localize="ocm.details.location.sectionTitle">Location Details</span>
                     </a>
                 </h4>
             </div>

@@ -28,8 +28,8 @@
         "stateOrProvince": "État/Province",
         "postcode": "Code postal/Zip Code",
         "country": "Pays",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "Latitude :",
+        "longitude": "Longitude :",
         "contactTelephone1": "Numéro de téléphone Principale",
         "contactTelephone2": "Numéro de téléphone Secondaire",
         "contactEmail": "Email de contact",
@@ -104,13 +104,13 @@
       "progress": "Recherche..."
     },
     "navigation": {
-      "home": null,
+      "home": "Accueil",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
+        "sectionTitle": "Parcourir",
+        "allLocations": "Tous les Emplacements",
+        "byCountry": "Par Pays",
+        "avaitingReview": "Attends Considération",
+        "recentActivity": "Activité Récente",
         "webApp": null,
         "statistics": null
       },
@@ -121,17 +121,17 @@
         "examples": null,
         "getInvolved": null,
         "code": null,
-        "translate": null
+        "translate": "Aidez nous à traduire"
       },
-      "discuss": null,
+      "discuss": "Discuter",
       "about": {
-        "termsPrivacy": null,
+        "termsPrivacy": "Termes & Confidentialité",
         "contact": null
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
+        "sectionTitle": "Mon profil",
+        "subscriptions": "Mes Abonnements",
+        "comments": "Mes Commentaires",
         "uploads": null
       }
     },

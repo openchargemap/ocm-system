@@ -6,7 +6,7 @@
       "shortDescription": "it globale publike register fan oplaadlokaasjes foar elektryske weinen",
       "linkWebApp": "Sykje nei Lokaasjes mei ús Web Tapassing",
       "linkBrowsePOI": "Troch alle lokaasjes blêdzje",
-      "browsePOI": null,
+      "browsePOI": "Troch oplaadlokaasjes blêdzje",
       "loadingProgress": "Lade...",
       "addLocation": "Lokaasje taheakje",
       "addItem": "Taheakje",
@@ -28,8 +28,8 @@
         "stateOrProvince": "Steat/Provinsje",
         "postcode": "Postkoade/ZIP-koade",
         "country": "Lân",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "Breedtegraad",
+        "longitude": "Lingtegraad",
         "contactTelephone1": "Primêr tillefoannûmer",
         "contactTelephone2": "Sekundêr tillefoannûmer",
         "contactEmail": "E-post kontakt",
@@ -104,69 +104,69 @@
       "progress": "Sykjen..."
     },
     "navigation": {
-      "home": null,
+      "home": "Thús",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "Blêdzje",
+        "allLocations": "Alle lokaasjes",
+        "byCountry": "Op lân",
+        "avaitingReview": "Wachtsje op skôging",
+        "recentActivity": "Resinte aktiviteit",
+        "webApp": "Webtapassing foar mobyl",
+        "statistics": "Statistiken"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "Ûntwikkeljen",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Foarbylden",
+        "getInvolved": "Doch mei",
+        "code": "Toan de koade (op GitHub)",
+        "translate": "Helpe mei oersetten"
       },
-      "discuss": null,
+      "discuss": "Diskusjearje",
       "about": {
-        "termsPrivacy": null,
-        "contact": null
+        "termsPrivacy": "Betingsten & privacy",
+        "contact": "Kontakt"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "Myn profyl",
+        "subscriptions": "Myn abonneminten",
+        "comments": "Myn reaksjes",
+        "uploads": "Myn oplaads"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "Do kinst",
+        "browseLocations": "blêdzje foar lokaasjes yn 'e buert",
+        "commentsPhotos": "jo eigen reaksjes en foto's taheakje",
+        "dontSeePOI": "Kinne jo in oplaadlokaasje net fine, dy't wol bestiet?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "Krij oplaadstasjonynformaasje",
+        "who": "Autofabrikanten, Sat Nav-ferkeapers, Tapassingûntwikkelders, Webside eigeners:",
+        "what": "Jo kinne tagong krije ta ús hjoeddeistige oplaadlokaasjes fia ús",
+        "websiteOperators": "At jo in webside hawwe en graach in oplaadlokaasjemap taheakje wolle, dan kinne jo",
+        "embedMap": "in map ynslute op jo eigen webside"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "Operators en dataoanbieders",
+        "who": "EVSE-leveransiers, Netwurk operators, nasjonale registers, lokale oplaadynformaasjetapassingen & siden:",
+        "needData": "Wy hawwe dyn data nedich.",
+        "what": "Jo kinne ús jim hjoeddeistige oplaadlokaasjeynformaasje jaan, nettsjinsteande of't jim bedriuw beskikbere oplaadlokaasjes yn besit hat, betsjinnet of ienfâldichwei katalogisearet. Asjebleaft,",
+        "contactUs": "nim kontakt mei ús op",
+        "getStarted": "om te begjinnen"
       },
       "stats": {
-        "locations": null
+        "locations": "Lokaasjes"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map is in net-kommersjele-, sûnder winsteachmerk-service organisearre en stipe troch in mienskip fan bedriuwen, woldiedigensorganisaasjes, ûntwikkelders en ynteresearre partijen oer de hiele wrâld.",
+      "getApp": "Krij de tapassing",
+      "tip": "Tip:",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "At jo in snelle manier noadich hawwe om oplaadlokaasjes yn 'e buert te finen, kinne jo ek gebrûk makke fan ús",
+        "webApp": "Webtapassing",
+        "searchAppStore": "foaral op mobyle apparaten. Jo kinne ek sykje yn 'e Tapassings Winkel fan jo apparaat foar in ferzje dy't jo brûken kinne."
       }
     }
   }
