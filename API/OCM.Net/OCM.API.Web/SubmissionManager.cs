@@ -504,8 +504,7 @@ namespace OCM.API.Common
                 notification.PrepareNotification(NotificationType.ContactUsMessage, msgParams);
 
                 //notify default system recipients
-                notification.SendNotification(NotificationType.ContactUsMessage);
-                return true;
+                return notification.SendNotification(NotificationType.ContactUsMessage);
             }
             catch (Exception)
             {

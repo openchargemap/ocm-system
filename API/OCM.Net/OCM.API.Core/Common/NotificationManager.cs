@@ -116,8 +116,11 @@ namespace OCM.API.Common
                 {
                     foreach (string key in templateParams.Keys)
                     {
-                        Subject = Subject.Replace("{" + key + "}", templateParams[key].ToString());
-                        MessageBody = MessageBody.Replace("{" + key + "}", templateParams[key].ToString());
+                        if (templateParams[key] != null)
+                        {
+                            Subject = Subject.Replace("{" + key + "}", templateParams[key].ToString());
+                            MessageBody = MessageBody.Replace("{" + key + "}", templateParams[key].ToString());
+                        }
                     }
                 }
             }
@@ -240,23 +243,44 @@ namespace OCM.API.Common
                         var result = api.SendMessage(message);
                         if (result != null && result.Any())
                         {
+                            //optional notification result logging
+                            logEvent(JSON.Serialize(new { eventDate = DateTime.UtcNow, result = result }));
+
                             var r = result.First();
                             if (r.Status == EmailResultStatus.Invalid || r.Status == EmailResultStatus.Rejected)
                             {
                                 return false;
                             }
                         }
+                        else
+                        {
+                            logEvent(JSON.Serialize(new { eventDate = DateTime.UtcNow, result = result }));
+                        }
 
                         return true;
                     }
+                   
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex.Message);
+                logEvent(JSON.Serialize(new { eventDate = DateTime.UtcNow, result = ex }));
             }
 
             return false;
+        }
+
+        private void logEvent(string content)
+        {
+            try
+            {
+                if (bool.Parse(ConfigurationManager.AppSettings["EnableNotificationLogging"]) == true)
+                {
+                    string logPath = ConfigurationManager.AppSettings["CachePath"] + "\\notifications.log";
+                    System.IO.File.AppendAllText(logPath, content);
+                }
+            }
+            catch (Exception) { }
         }
     }
 }
