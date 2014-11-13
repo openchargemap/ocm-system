@@ -6,6 +6,7 @@
       "shortDescription": "le registre public mondial d'emplacements de recharge pour véhicules électriques",
       "linkWebApp": "Recherchez des Emplacements à l'aide de notre application Web",
       "linkBrowsePOI": "Feuilletez Tout les Emplacements",
+      "browsePOI": null,
       "loadingProgress": "Chargement...",
       "addLocation": "Ajouter un lieu",
       "addItem": "Ajouter",
@@ -27,6 +28,8 @@
         "stateOrProvince": "État/Province",
         "postcode": "Code postal/Zip Code",
         "country": "Pays",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "Numéro de téléphone Principale",
         "contactTelephone2": "Numéro de téléphone Secondaire",
         "contactEmail": "Email de contact",
@@ -99,6 +102,72 @@
       "operationalStatusTypes": "Disponibilité",
       "performSearch": "Cherche",
       "progress": "Recherche..."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 }

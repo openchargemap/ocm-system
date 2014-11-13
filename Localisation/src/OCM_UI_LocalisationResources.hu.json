@@ -6,6 +6,7 @@
       "shortDescription": "a globális nyilvános nyilvántartásba az elektromos jármű töltőállomásokon helyek",
       "linkWebApp": "Keresési helyek a Web App alkalmazással",
       "linkBrowsePOI": "Keresse minden fekvések",
+      "browsePOI": null,
       "loadingProgress": "Betöltése...",
       "addLocation": "Hely hozzáadása",
       "addItem": "Add hozzá",
@@ -27,6 +28,8 @@
         "stateOrProvince": "Állam/megye",
         "postcode": "Postai/Zip Code",
         "country": "Ország",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "Elsődleges telefonszám",
         "contactTelephone2": "Másodlagos telefonszám",
         "contactEmail": "Lépjen kapcsolatba e-mailben",
@@ -99,6 +102,72 @@
       "operationalStatusTypes": "Állapot",
       "performSearch": "Szálláshelyek keresése",
       "progress": "Keres..."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 }

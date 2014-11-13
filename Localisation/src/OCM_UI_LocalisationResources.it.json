@@ -6,6 +6,7 @@
       "shortDescription": "Il registro pubblico globale delle infrastrutture di ricarica",
       "linkWebApp": "Cerca le colonnine utilizzando la nostra Web App",
       "linkBrowsePOI": "Elenca tutte le colonnine",
+      "browsePOI": null,
       "loadingProgress": "Caricamento in corso...",
       "addLocation": "Aggiungi colonnina",
       "addItem": "Aggiungi",
@@ -27,6 +28,8 @@
         "stateOrProvince": "Provincia",
         "postcode": "CAP",
         "country": "Stato",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "Numero di telefono principale",
         "contactTelephone2": "Numero di telefono secondario",
         "contactEmail": "Contatto E-mail",
@@ -99,6 +102,72 @@
       "operationalStatusTypes": "Stato",
       "performSearch": "Cerca",
       "progress": "Sto cercando..."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 }

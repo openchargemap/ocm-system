@@ -6,6 +6,7 @@
       "shortDescription": "ülemailmne avalik elektriauto laadijate register",
       "linkWebApp": "Otsi Asukohti Kasutades Meie Veebi Appi",
       "linkBrowsePOI": "Otsi Kõiki Asukohti",
+      "browsePOI": null,
       "loadingProgress": "Laadin...",
       "addLocation": "Lisa Asukoht",
       "addItem": "Lisa",
@@ -27,6 +28,8 @@
         "stateOrProvince": "Maakond",
         "postcode": "Postikood/ZIP",
         "country": "Riik",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "Telefon 1",
         "contactTelephone2": "Telefon 2",
         "contactEmail": "E-post",
@@ -99,6 +102,72 @@
       "operationalStatusTypes": "Olek",
       "performSearch": "Otsi",
       "progress": "Otsin..."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 }

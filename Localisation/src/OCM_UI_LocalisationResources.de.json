@@ -6,6 +6,7 @@
       "shortDescription": "Das weltweite und öffentliche Verzeichnis für Ladestationen für elektrische Fahrzeuge",
       "linkWebApp": "Suche nach Ladestationen mit unserer Web App",
       "linkBrowsePOI": "Alle Standorte anzeigen",
+      "browsePOI": null,
       "loadingProgress": "Laden …",
       "addLocation": "Standort hinzufügen",
       "addItem": "Hinzufügen",
@@ -27,6 +28,8 @@
         "stateOrProvince": "Bundesland/Kanton",
         "postcode": "Postleitzahl",
         "country": "Land",
+        "latitude": null,
+        "longitude": null,
         "contactTelephone1": "Kontakt Telefonnummer",
         "contactTelephone2": "Weitere Kontakt Telefonnummer",
         "contactEmail": "Kontakt Emailadresse",
@@ -99,6 +102,72 @@
       "operationalStatusTypes": "Status",
       "performSearch": "Suche",
       "progress": "Bitte warten.."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": null,
+        "browseLocations": null,
+        "commentsPhotos": null,
+        "dontSeePOI": null
+      },
+      "getStations": {
+        "sectionTitle": null,
+        "who": null,
+        "what": null,
+        "websiteOperators": null,
+        "embedMap": null
+      },
+      "supplyData": {
+        "sectionTitle": null,
+        "who": null,
+        "needData": null,
+        "what": null,
+        "contactUs": null,
+        "getStarted": null
+      },
+      "stats": {
+        "locations": null
+      },
+      "shortProjectSummary": null,
+      "getApp": null,
+      "tip": null,
+      "searching": {
+        "quickWay": null,
+        "webApp": null,
+        "searchAppStore": null
+      }
     }
   }
 }
