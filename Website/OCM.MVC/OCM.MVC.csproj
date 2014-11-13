@@ -99,7 +99,11 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\RestSharp.105.0.0\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -277,11 +281,11 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="humans.txt" />
     <Content Include="Scripts\analytics.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
@@ -293,11 +297,11 @@
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui-1.11.1.js" />
-    <Content Include="Scripts\jquery-ui.min-1.11.1.js" />
+    <Content Include="Scripts\jquery-ui-1.11.2.js" />
+    <Content Include="Scripts\jquery-ui-1.11.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -317,6 +321,7 @@
       <DependentUpon>leaflet.js</DependentUpon>
     </Content>
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\OCM\Editor\LocationEditor.js" />
     <Content Include="Scripts\OCM\Localisation\languagePack.min.js" />
     <Content Include="Scripts\OCM\SharedLibs\OCM_Base.js" />
@@ -437,6 +442,7 @@
     <Content Include="Views\Shared\EditorTemplates\UserSubscriptionFilter.cshtml" />
     <Content Include="Views\Admin\ImportManager.cshtml" />
     <Content Include="Views\Admin\Import.cshtml" />
+    <Content Include="Views\Admin\ConfigCheck.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
