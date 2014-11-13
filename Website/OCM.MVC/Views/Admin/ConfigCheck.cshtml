@@ -1,0 +1,23 @@
+﻿@using System.Configuration;
+@{
+    ViewBag.Title = "ConfigCheck";
+}
+
+<h2>Config Check</h2>
+
+<h3>Notifications</h3>
+<dl class="dl-horizontal">
+    <dt>Debug Email</dt>
+    <dd><code>@ConfigurationManager.AppSettings["DebugEmailAddress"]</code></dd>
+    
+    <dt>Default Sender</dt>
+    <dd><code>@ConfigurationManager.AppSettings["DefaultSenderEmailAddress"]</code></dd>
+    <dt>Email API Key</dt>
+    <dd><code>@ConfigurationManager.AppSettings["MandrillAPIKey"]</code></dd>
+    <dt>Using Email API</dt>
+    <dd>@ConfigurationManager.AppSettings["Notifications_SendViaAPI"]</dd>
+    <dt>Notification Logging</dt>
+    <dd>@ConfigurationManager.AppSettings["EnableNotificationLogging"]</dd>
+    
+</dl>
+

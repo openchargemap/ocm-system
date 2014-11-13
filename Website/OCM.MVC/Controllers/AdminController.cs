@@ -246,5 +246,11 @@ namespace OCM.MVC.Controllers
             return View(result);
         }
 
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult ConfigCheck()
+        {
+            return View();
+        }
+
     }
 }

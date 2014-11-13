@@ -18,31 +18,37 @@ namespace OCM.API.OutputProviders
 
         public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
         {
-            
-            foreach (var item in dataList)
+            if (dataList != null)
             {
-                if (item.AddressInfo != null)
+                foreach (var item in dataList)
                 {
-                    
-                   /* xml.WriteStartElement("Placemark");
-                    xml.WriteElementString("name", item.AddressInfo.Title);
-
-                    xml.WriteElementString("description", item.GetSummaryDescription(true));
-                    if (item.AddressInfo.Latitude != null)
+                    if (item.AddressInfo != null)
                     {
-                        xml.WriteStartElement("Point");
-                        string coords = item.AddressInfo.Longitude.ToString() + "," + item.AddressInfo.Latitude.ToString();
-                        xml.WriteElementString("coordinates", coords);
-                        xml.WriteEndElement();
-                    }
+
+                        /* xml.WriteStartElement("Placemark");
+                         xml.WriteElementString("name", item.AddressInfo.Title);
+
+                         xml.WriteElementString("description", item.GetSummaryDescription(true));
+                         if (item.AddressInfo.Latitude != null)
+                         {
+                             xml.WriteStartElement("Point");
+                             string coords = item.AddressInfo.Longitude.ToString() + "," + item.AddressInfo.Latitude.ToString();
+                             xml.WriteElementString("coordinates", coords);
+                             xml.WriteEndElement();
+                         }
 
                     
-                    * */
+                         * */
+                    }
                 }
             }
 
             Image outputImage = null;
-            outputImage.Save(outputStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+            if (outputImage != null)
+            {
+                outputImage.Save(outputStream, System.Drawing.Imaging.ImageFormat.Png);
+            }
         }
 
 
