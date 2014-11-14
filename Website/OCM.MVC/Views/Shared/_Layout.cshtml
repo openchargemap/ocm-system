@@ -1,5 +1,11 @@
 ﻿@using OCM.API.Common.Model
 @using OCM.MVC
+
+
+@{
+    //test for language code preference, add to Session if present
+    CommonUtil.DetermineLanguageCode(true, this.ViewContext.RouteData.Values["languagecode"] as string);
+}
 <!DOCTYPE html>
 <html>
 <head>

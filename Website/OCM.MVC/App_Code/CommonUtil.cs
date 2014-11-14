@@ -46,7 +46,7 @@ namespace OCM.MVC
             }
         }
 
-        private static string DetermineLanguageCode(bool allowTestMode = false, string routeLanguageCode = null)
+        public static string DetermineLanguageCode(bool allowTestMode = false, string routeLanguageCode = null)
         {
             var Request = HttpContext.Current.Request;
             var Session = HttpContext.Current.Session;

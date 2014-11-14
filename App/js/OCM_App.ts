@@ -92,7 +92,13 @@ module OCM {
                 this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             }
 
-            if (this.getParameter("mode") === "embedded") this.appState.isEmbeddedAppMode = true;
+            if (this.getParameter("mode") === "embedded") {
+                this.appState.isEmbeddedAppMode = true;
+            }
+
+            if (this.getParameter("languagecode") != "") {
+                this.appState.languageCode = this.getParameter("languagecode");
+            }
 
             if (this.appState.isEmbeddedAppMode) {
                 this.appConfig.launchMapOnStartup = true;
