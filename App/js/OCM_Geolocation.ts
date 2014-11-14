@@ -37,11 +37,11 @@ module OCM {
 
             //begin watching position (with high accuracy)
             this.positionWatcherID = navigator.geolocation.watchPosition(
-                function (position: GeoPosition) {
+                function (position: Position) {
                     //got position update
                     if (position != null) {
                         app.log("Got GPS position update." + position.coords.accuracy + " " + position.coords.latitude + " " + position.coords.longitude);
-                        app.clientGeolocationPos = position;
+                        app.clientGeolocationPos = GeoPosition.fromPosition(position);
                     }
                 },
                 function () {

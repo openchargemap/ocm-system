@@ -85,6 +85,7 @@ OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
         }
     } catch (exp) {
         //localisation attempt failed
+        //if (console) console.log(exp.toString());
     } finally {
     }
 };

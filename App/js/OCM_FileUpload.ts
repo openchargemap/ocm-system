@@ -70,7 +70,7 @@ module OCM {
             this.img = document.createElement("img");
             var reader = new FileReader();
             reader.onload = function (e) {
-                app.img.src = e.target.result;
+                app.img.src = (<any>e.target).result;
 
                 app.canvas = <HTMLCanvasElement>document.getElementById("file-upload-preview");
 

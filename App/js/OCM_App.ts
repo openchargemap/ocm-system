@@ -100,7 +100,6 @@ module OCM {
         }
 
         initApp() {
-
             /*
             App startup workflow:
                 - Begin Observing Model Changes
@@ -244,7 +243,6 @@ module OCM {
                     app.log("changed: app.mappingManager.mapOptions." + change.name);
 
                     if (change.name == "mapCentre") {
-
                         if (app.mappingManager.mapOptions.requestSearchUpdate) {
                             app.mappingManager.mapOptions.requestSearchUpdate = false;
                             var pos = app.mappingManager.mapOptions.mapCentre;
@@ -274,7 +272,6 @@ module OCM {
                 changes.forEach(function (change) {
                     app.log("changed: app.geolocationManager." + change.name + "::" + JSON.stringify(change.oldValue));
                     if (change.name == "clientGeolocationPos") {
-                        
                         //geolocation position has changed, if watching location is enabled perform a new search if different from last time
                         if (!app.appState.isSearchInProgress && app.mappingManager.mapOptions.enableSearchByWatchingLocation) {
                             app.log("Position watcher update, searching POIs again..");
@@ -866,8 +863,8 @@ module OCM {
                 if (this.appState._appSearchTimestamp != null) {
                     var timeSinceLastSearchMS = <any>new Date() - <any>this.appState._appSearchTimestamp;
                     if (timeSinceLastSearchMS < this.appConfig.searchFrequencyMinMS) {
-                        this.log("Search too soon since last results. Skipping.")
-                    return;
+                        this.log("Search too soon since last results. Skipping.");
+                        return;
                     }
                 }
 
@@ -952,7 +949,7 @@ module OCM {
                     this.apiClient.fetchLocationDataListByParam(params, "ocm_app.handleSearchCompleted", "ocm_app.handleSearchError");
                 }
             } else {
-                this.log("Search still in progress, ignoring search request..")
+                this.log("Search still in progress, ignoring search request..");
             }
         }
 
@@ -967,7 +964,6 @@ module OCM {
         }
 
         determineUserLocationCompleted(pos) {
-           
             this.clearSearchRequest();
 
             this.viewModel.searchPosition = pos;
@@ -1016,7 +1012,6 @@ module OCM {
 
         renderPOIList(locationList: Array<any>) {
             //this.viewModel.poiList = locationList;
-
 
             this.log("Rendering " + locationList.length + " search results..");
             $("#search-no-data").hide();
@@ -1611,7 +1606,7 @@ module OCM {
                 this.showPage("favourites-page", "Favourites");
             } else {
                 app.viewModel.poiList = favouritesList;
-                
+
                 //show favourites on search page
                 app.navigateToMap(false);
 

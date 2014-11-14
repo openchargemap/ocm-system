@@ -29,6 +29,10 @@ module OCM {
             this.coords.latitude = lat;
             this.coords.longitude = lng;
         }
+
+        static fromPosition(pos:Position):GeoPosition {
+            return new GeoPosition(pos.coords.latitude, pos.coords.longitude);
+        }
     }
 
     export class MapOptions {

@@ -231,10 +231,12 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
-    <PostBuildEvent>jake --jakefile $(ProjectDir)\build\jakefile.js</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
+xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
+jake --jakefile $(ProjectDir)\build\jakefile.js</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
-xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
