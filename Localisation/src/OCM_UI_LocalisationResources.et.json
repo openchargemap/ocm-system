@@ -5,10 +5,10 @@
     "general": {
       "shortDescription": "ülemailmne avalik elektriauto laadijate register",
       "linkWebApp": "Otsi Asukohti Kasutades Meie Veebi Appi",
-      "linkBrowsePOI": "Otsi Kõiki Asukohti",
-      "browsePOI": null,
+      "linkBrowsePOI": "Otsi laadijat",
+      "browsePOI": "Sirvi Laadijate Asukohti",
       "loadingProgress": "Laadin...",
-      "addLocation": "Lisa Asukoht",
+      "addLocation": "Lisa laadija",
       "addItem": "Lisa",
       "favourites": "Lemmikud",
       "settings": "Seaded",
@@ -28,8 +28,8 @@
         "stateOrProvince": "Maakond",
         "postcode": "Postikood/ZIP",
         "country": "Riik",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "Laiuskraad",
+        "longitude": "Pikkuskraad",
         "contactTelephone1": "Telefon 1",
         "contactTelephone2": "Telefon 2",
         "contactEmail": "E-post",
@@ -104,69 +104,69 @@
       "progress": "Otsin..."
     },
     "navigation": {
-      "home": null,
+      "home": "Avaleht",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "Sirvi",
+        "allLocations": "Kõik asukohad",
+        "byCountry": "Riigi järgi",
+        "avaitingReview": "Ootab tagasisidet",
+        "recentActivity": "Viimased tegevused",
+        "webApp": "APP mobiilile",
+        "statistics": "Statistika"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "Arenda",
+        "api": "API rakendused",
+        "htmlWidgets": "HTML lisad",
+        "examples": "Näited",
+        "getInvolved": "Löö kaasa!",
+        "code": "Vaata koodi (GitHub)",
+        "translate": "Aita tõlkida"
       },
-      "discuss": null,
+      "discuss": "Arutle",
       "about": {
-        "termsPrivacy": null,
-        "contact": null
+        "termsPrivacy": "Tingimused & privaatsus",
+        "contact": "Kontakt"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "Minu profiil",
+        "subscriptions": "Minu arvustused",
+        "comments": "Minu kommentaarid",
+        "uploads": "Minu üleslaadimised"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "Sa saad",
+        "browseLocations": "Asukohad sinu lähedal",
+        "commentsPhotos": "anda tagasisidet ja lisada pilte",
+        "dontSeePOI": "Sa tead laadijat, mida pole kaardil?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "Vaata laadija andmeid",
+        "who": "Sõidukite valmistajad, programmeerijad, veebilehtede arendajad.",
+        "what": "Sa saad alla laadida laadijate asukohtad kasutades meie",
+        "websiteOperators": "Kui sa haldad kodulehte ja soovid seal näidata laadijate kaarti, saad sa",
+        "embedMap": "integreerida meie kaardi oma kodulehele"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "Laadimisjaamada operaatorid ja andmete haldajad",
+        "who": "Laadijate (EVSE) pakkujad, laadimsvõrkude operaatorid, autoregistrid, kohalikud laadimispunktide info programmid ja lehed:",
+        "needData": "Me sooviksime teie andmeid.",
+        "what": "Te saate jagada meiega laadijate asukoha andmeid olenemata sellest, kas te omate, opereetite laadijaid või lihtsalt olete kogunud nende asukoha andmeid.",
+        "contactUs": "Kontakt",
+        "getStarted": "Alusta siit"
       },
       "stats": {
-        "locations": null
+        "locations": "Asukohad"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map on mitteäriline ning mittetulunduslik ettevõtmine, mis on toetatud ettevõtete, heategevuse, arendajate ja huvitatud osapoolte poolt üle maailma.",
+      "getApp": "Lae rakendus/App",
+      "tip": "Soovitus:",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "Kui sa tahad kiiresti leida lähima laadijat, siis proovi meie",
+        "webApp": "Veebirakedust",
+        "searchAppStore": "eriti mobiilsideseadmetes. Saate otsida oma seadme App Store'ist oma seadmele sobivat versiooni."
       }
     }
   }

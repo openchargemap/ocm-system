@@ -140,7 +140,7 @@ var localisation_dictionary_nl ={
         "youCan": "U kunt",
         "browseLocations": "zoeken naar locaties in uw buurt",
         "commentsPhotos": "en uw eigen opmerkingen en foto 's toevoegen",
-        "dontSeePOI": "Ziet U niet een oplaadlocatie die U weet bestaat?"
+        "dontSeePOI": "Kan U een oplaadlocatie niet zien die U weet bestaat?"
       },
       "getStations": {
         "sectionTitle": "Krijg Laadstation Gegevens",

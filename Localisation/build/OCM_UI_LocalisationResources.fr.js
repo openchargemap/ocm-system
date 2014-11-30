@@ -6,7 +6,7 @@ var localisation_dictionary_fr ={
       "shortDescription": "le registre public mondial d'emplacements de recharge pour véhicules électriques",
       "linkWebApp": "Recherchez des Emplacements à l'aide de notre application Web",
       "linkBrowsePOI": "Feuilletez Tout les Emplacements",
-      "browsePOI": null,
+      "browsePOI": "Explorer Emplacements de Chargement",
       "loadingProgress": "Chargement...",
       "addLocation": "Ajouter un lieu",
       "addItem": "Ajouter",
@@ -111,16 +111,16 @@ var localisation_dictionary_fr ={
         "byCountry": "Par Pays",
         "avaitingReview": "Attends Considération",
         "recentActivity": "Activité Récente",
-        "webApp": null,
-        "statistics": null
+        "webApp": "App Web pour Mobile",
+        "statistics": "Statistiques"
       },
       "develop": {
-        "sectionTitle": null,
+        "sectionTitle": "Dévelopez",
         "api": null,
         "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
+        "examples": "Exemples",
+        "getInvolved": "Participez",
+        "code": "Voir le Code (sur GitHub)",
         "translate": "Aidez nous à traduire"
       },
       "discuss": "Discuter",
@@ -132,7 +132,7 @@ var localisation_dictionary_fr ={
         "sectionTitle": "Mon profil",
         "subscriptions": "Mes Abonnements",
         "comments": "Mes Commentaires",
-        "uploads": null
+        "uploads": "Mes téléchargements"
       }
     },
     "infoText": {

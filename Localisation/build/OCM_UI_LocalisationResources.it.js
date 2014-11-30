@@ -6,7 +6,7 @@ var localisation_dictionary_it ={
       "shortDescription": "Il registro pubblico globale delle infrastrutture di ricarica",
       "linkWebApp": "Cerca le colonnine utilizzando la nostra Web App",
       "linkBrowsePOI": "Elenca tutte le colonnine",
-      "browsePOI": null,
+      "browsePOI": "cerca le colonnine di ricarica",
       "loadingProgress": "Caricamento in corso...",
       "addLocation": "Aggiungi colonnina",
       "addItem": "Aggiungi",
@@ -28,8 +28,8 @@ var localisation_dictionary_it ={
         "stateOrProvince": "Provincia",
         "postcode": "CAP",
         "country": "Stato",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "latitudine",
+        "longitude": "longitudine",
         "contactTelephone1": "Numero di telefono principale",
         "contactTelephone2": "Numero di telefono secondario",
         "contactEmail": "Contatto E-mail",
@@ -104,69 +104,69 @@ var localisation_dictionary_it ={
       "progress": "Sto cercando..."
     },
     "navigation": {
-      "home": null,
+      "home": "home",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "cerca",
+        "allLocations": "tutte le colonnine",
+        "byCountry": "per nazione",
+        "avaitingReview": "In corso di verifica",
+        "recentActivity": "ultimi aggiornamenti",
+        "webApp": "Web App per cellulare",
+        "statistics": "statistiche"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "collabora al progetto",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "esempi",
+        "getInvolved": "collabora",
+        "code": "vedi il codice sorgente (su GitHub)",
+        "translate": "aiutaci a tradurre"
       },
-      "discuss": null,
+      "discuss": "forum",
       "about": {
-        "termsPrivacy": null,
-        "contact": null
+        "termsPrivacy": "termini di utilizzo e norme sulla privacy",
+        "contact": "contatti"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "il mio profilo",
+        "subscriptions": "le mie notifiche",
+        "comments": "i miei commenti",
+        "uploads": "le mie foto"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "tu puoi",
+        "browseLocations": "cerca le colonnine più vicine",
+        "commentsPhotos": "aggiungi un tuo commento o una foto",
+        "dontSeePOI": "non vedi una colonnina di cui conosci l'esistenza?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "visualizza le informazioni di una colonnina",
+        "who": "costruttori di veicoli, fornitori di navigatori satellitari, sviluppatori di App, proprietari di siti Web:",
+        "what": "È possibile accedere e scaricare le più recenti colonnine di ricarica utilizzando",
+        "websiteOperators": "Se gestisci un sito Web e vuoi includere una mappa delle colonnine di ricarica, è possibile",
+        "embedMap": "incorporare una mappa nel tuo sito Web"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "operatori e fornitori di dati",
+        "who": "fornitori di EVSE , gestori delle reti, registri nazionali, app & siti di informazioni su reti di ricarica locali:",
+        "needData": "abbiamo bisogno dei tuoi dati",
+        "what": "Ci potete fornire gli aggiornamenti sulle colonnine di ricarica indipendentemente dal fatto che la vostra organizzazione sia proprietaria, gestisca o semplicemente cataloghi le colonnine di ricarica disponibili. Per favore",
+        "contactUs": "contattateci",
+        "getStarted": "per iniziare"
       },
       "stats": {
-        "locations": null
+        "locations": "posizione"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map è un servizio non-profit, non commerciale, ospitato e supportato da una comunità di imprese, enti di beneficenza, sviluppatori e appassionati di tutto il mondo.",
+      "getApp": "scarica l'App",
+      "tip": "suggerimento:",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "se avete semplicemente bisogno di un modo rapido per trovare la colonnina di ricarica più vicina potete provare la nostra",
+        "webApp": "Web App",
+        "searchAppStore": "specialmente sui cellulari. È anche possibile cercare nell'App Store la versione più adatta al tuo smartphone."
       }
     }
   }
