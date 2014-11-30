@@ -16,12 +16,13 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "https://www.esb.ie/electric-cars/kml/all.kml";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            DataProviderID = 23;//ESB
         }
 
         public override void SetDataProviderDetails(ChargePoint cp, XmlNode item)
         {
             //ESB eCars
-            cp.DataProvider = new DataProvider() { ID = 23 };
+            cp.DataProvider = new DataProvider() { ID = this.DataProviderID };
 
             //invent unique id by hashing location title
             cp.DataProvidersReference = CalculateMD5Hash(RemoveFormattingCharacters(item["name"].InnerText));

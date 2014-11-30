@@ -197,7 +197,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubmissionManager.cs" />
     <Compile Include="Test\JSONSubmissionTest.aspx.cs">
       <DependentUpon>JSONSubmissionTest.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

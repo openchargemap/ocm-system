@@ -31,7 +31,7 @@ namespace Import
 
         private async void btnProcessImports_Click(object sender, EventArgs e)
         {
-            ImportManager importManager = new ImportManager();
+            ImportManager importManager = new ImportManager(txtDataFolderPath.Text);
             importManager.IsSandboxedAPIMode = false;
 
             ExportType exportType = ExportType.JSON;
@@ -74,7 +74,7 @@ namespace Import
             //string jsonResult = networkSVCManager.GetAllResultsAsJSON(ServiceProvider.CoulombChargePoint, txtAPIKey_Coulomb.Text, txtAPIPwd_Coulomb.Text);
 
 
-            new ImportManager().GeocodingTest();
+            new ImportManager("").GeocodingTest();
         }
     }
 }

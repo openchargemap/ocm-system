@@ -1,17 +1,7 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.ChargePoint>
 
-<small>
-    @if (@Model.Count() >= 100)
-    {
-        @:Showing a maximum of 100 matching results:
-    }
-    else
-    {
-        @:There are @Model.Count() matching results
-    }
-</small>
 <div class="results-list">
-    @foreach (var item in Model.Take(100))
+    @foreach (var item in Model.Take(500))
     {
         <div class="result row">
             <a href="@Url.Action("Details","POI",new{ID=item.ID})">
@@ -33,6 +23,10 @@
                 </h3>
             </a>
             <div class="col-sm-6">
+                <div class="text-info">
+                    <p>@Html.DisplayFor(m => item.SubmissionStatus.Title)</p>
+                    <p>@Html.DisplayFor(m => item.GeneralComments)</p>
+                </div>
                 @Html.DisplayFor(m => item.AddressInfo)
 
                 @Html.ActionLink("View", "Details", new { id = item.ID })
@@ -86,7 +80,7 @@
                     {
                         var connectionType = "";
                         if (maxLevel.ConnectionType != null) { connectionType = maxLevel.ConnectionType.Title; }
-                        <br /><span class="fa fa-bolt"></span> @maxLevel.Level.Title
+                        <br /><span class="fa fa-bolt" ></span> @maxLevel.Level.Title
                         <br /><span class="fa fa-link"></span> @connectionType
                     }
                 }

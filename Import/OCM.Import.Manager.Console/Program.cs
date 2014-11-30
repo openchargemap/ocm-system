@@ -99,7 +99,7 @@ namespace OCM.Import.Manager.Console
                 {
                     ExportType exportType = ExportType.API;
 
-                    ImportManager importManager = new ImportManager();
+                    ImportManager importManager = new ImportManager(importFolder);
                     LogEvent("Performing Import, Publishing via API (" + OCM_API_Identifier + ":" + OCM_API_SessionToken + "): " + DateTime.UtcNow.ToShortTimeString());
                     Task<bool> processing = importManager.PerformImportProcessing(exportType, importFolder, OCM_API_Identifier, OCM_API_SessionToken, true);
                     processing.Wait();

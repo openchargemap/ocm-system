@@ -29,6 +29,7 @@ namespace OCM.Core.Data
         public Nullable<bool> IsOpenDataLicensed { get; set; }
         public Nullable<bool> IsApprovedImport { get; set; }
         public string License { get; set; }
+        public Nullable<System.DateTime> DateLastImported { get; set; }
     
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
         public virtual DataProviderStatusType DataProviderStatusType { get; set; }

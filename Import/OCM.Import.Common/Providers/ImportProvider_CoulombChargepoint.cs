@@ -19,6 +19,7 @@ namespace OCM.Import.Providers
             //AutoRefreshURL = "https://webservices.chargepointportal.net:8081/coulomb_api_1.1.wsdl";
             IsAutoRefreshed = false;
             IsProductionReady = false;
+            DataProviderID = 20;//coulomb;
         }
 
         
@@ -57,7 +58,7 @@ namespace OCM.Import.Providers
 
                     cp.OperatorInfo = networkOperator;
                     cp.OperatorsReference = item["StationID"].ToString();
-                    cp.DataProvider = new DataProvider() { ID = 20 }; //couloumb
+                    cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //couloumb
                     cp.DataProvidersReference = item["StationID"].ToString();
                     cp.DateLastStatusUpdate = DateTime.UtcNow;
 

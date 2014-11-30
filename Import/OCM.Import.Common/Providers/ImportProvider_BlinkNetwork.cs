@@ -16,6 +16,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://www.blinknetwork.com/locator/locations?lat=0&lng=0&latd=180&lngd=360&mode=avail&n=100000&admin=false";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            DataProviderID = 17;
         }
 
         List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
@@ -53,7 +54,7 @@ namespace OCM.Import.Providers
 
                     cp.OperatorInfo = networkOperator;
                     cp.OperatorsReference = item["encid"].ToString();
-                    cp.DataProvider = new DataProvider() { ID = 17 }; //blinknetwork.com
+                    cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //blinknetwork.com
                     cp.DataProvidersReference = item["id"].ToString();
                     cp.DateLastStatusUpdate = DateTime.UtcNow;
 

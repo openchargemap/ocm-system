@@ -18,6 +18,7 @@ namespace OCM.Import.Providers
             IsAutoRefreshed = false;
             IsProductionReady = true;
             SourceEncoding = Encoding.GetEncoding("UTF-8");
+            DataProviderID = 19;//nobil.no
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -91,7 +92,7 @@ namespace OCM.Import.Providers
             foreach (var item in dataList)
             {
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = 19 }; //nobil.no
+                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //nobil.no
                 cp.DataProvidersReference = item["id"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();

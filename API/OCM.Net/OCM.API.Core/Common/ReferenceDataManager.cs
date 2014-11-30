@@ -62,6 +62,16 @@ namespace OCM.API.Common
             }
         }
 
+        public List<DataProvider> GetDataProviders()
+        {
+            var dataProviders = new List<Model.DataProvider>();
+            foreach (var provider in dataModel.DataProviders.ToList())
+            {
+                dataProviders.Add(Model.Extensions.DataProvider.FromDataModel(provider));
+            }
+            return dataProviders;
+        }
+
         public CoreReferenceData GetCoreReferenceData()
         {
             CoreReferenceData data = OCM.Core.Data.CacheManager.GetCoreReferenceData();

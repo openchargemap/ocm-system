@@ -16,6 +16,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key=df771c4ffab663f91428bc63224c9e266357179d&download=true&fuel_type=ELEC&status=all";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            DataProviderID = 2; //ADFC
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -51,7 +52,7 @@ namespace OCM.Import.Providers
 
                 var item = dataItem;
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = 2 }; //AFDC
+                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //AFDC
                 cp.DataProvidersReference = item["id"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -68,7 +69,10 @@ namespace OCM.Import.Providers
                 if (item["latitude"] != null) cp.AddressInfo.Latitude = double.Parse(item["latitude"].ToString());
                 if (item["longitude"] != null) cp.AddressInfo.Longitude = double.Parse(item["longitude"].ToString());
                 if (item["access_days_time"] != null) cp.AddressInfo.AccessComments = item["access_days_time"].ToString().Replace("<br>", ", ");
-                if (item["date_last_confirmed"] != null) cp.DateLastConfirmed = DateTime.Parse(item["date_last_confirmed"].ToString());
+                if (item["date_last_confirmed"]!=null && !String.IsNullOrEmpty(item["date_last_confirmed"].ToString()) && item["date_last_confirmed"].ToString() != "{}")
+                {
+                    cp.DateLastConfirmed = DateTime.Parse(item["date_last_confirmed"].ToString());
+                }
                 if (item["station_phone"] != null) cp.AddressInfo.ContactTelephone1 = item["station_phone"].ToString();
 
 

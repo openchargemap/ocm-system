@@ -1,6 +1,7 @@
 ﻿using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.Core.Data;
+using OCM.Import.Providers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -191,7 +192,7 @@ namespace OCM.MVC.Controllers
                         status = await mirrorManager.PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Incremental);
                         while (status.NumPOILastUpdated > 0)
                         {
-                            System.Diagnostics.Debug.WriteLine("Mirror Update:" + status.LastUpdated + " updated, " + status.TotalPOI + " total");
+                            System.Diagnostics.Debug.WriteLine("Mirror Update:" + status.LastUpdated + " updated, " + status.TotalPOIInCache + " total");
                             status = await mirrorManager.PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Incremental);
                         }
                     }
@@ -208,7 +209,7 @@ namespace OCM.MVC.Controllers
                 }
                 catch (Exception exp)
                 {
-                    status.TotalPOI = 0;
+                    status.TotalPOIInCache = 0;
                     status.Description = "Cache update error:"+exp.ToString();
                     status.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 }
@@ -227,22 +228,29 @@ namespace OCM.MVC.Controllers
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult ImportManager()
         {
-            var importManager = new Import.ImportManager();
-            var providers = importManager.GetImportProviders();
+            var importManager = new Import.ImportManager(Server.MapPath("~/Temp"));
+            var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var model = new Models.ImportManager() { ImportProviders = providers };
 
             return View(model);
         }
         [AuthSignedInOnly(Roles = "Admin")]
-        public async Task<ActionResult> Import(string providerName)
+        public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport =false)
         {
-            var importManager = new Import.ImportManager();
-            importManager.TempFolder = Server.MapPath("~/Temp");
-            var providers = importManager.GetImportProviders();
+            var importManager = new Import.ImportManager(Server.MapPath("~/Temp"));
+            
+            var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
             var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
-            var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, true, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider);
-            
+            ((BaseImportProvider)provider).InputPath = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
+            var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, fetchLiveData, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider, true);
+
+            var systemUser = new UserManager().GetUser((int)StandardUsers.System);
+            if (performImport)
+            {
+                //add/update/delist POIs
+                importManager.UpdateImportedPOIList(result, systemUser);
+            }
             return View(result);
         }
 

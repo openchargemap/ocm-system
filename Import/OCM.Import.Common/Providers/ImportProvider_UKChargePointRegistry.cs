@@ -18,6 +18,7 @@ namespace OCM.Import.Providers
             IsProductionReady = true;
             MergeDuplicatePOIEquipment = true;
             DataAttribution = "Contains public sector information licensed under the Open Government Licence v2.0. http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/";
+            DataProviderID = 18;//UK Chargepoint Registry
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -47,7 +48,7 @@ namespace OCM.Import.Providers
             {
                 var item = dataItem;
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = 18 }; //UK National Charge Point Registry
+                cp.DataProvider = new DataProvider() { ID = this.DataProviderID}; //UK National Charge Point Registry
                 cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -62,6 +63,7 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? cp.AddressInfo.AddressLine1 : locationDetails["LocationShortDescription"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ");
+                if (cp.AddressInfo.Title.Length > 100) cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 64) + "..";
                 cp.AddressInfo.Town = addressDetails["PostTown"].ToString();
                 cp.AddressInfo.StateOrProvince = addressDetails["DependantLocality"].ToString();
                 cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString();
@@ -166,6 +168,12 @@ namespace OCM.Import.Providers
                             cp.UsageType = usageTypePublic;
                         }
                     }
+                }
+
+                //special usage cases detected from text
+                if (cp.AddressInfo.ToString().ToLower().Contains("no public access"))
+                {
+                    cp.UsageType = usageTypePrivate;
                 }
 
                 //add connections

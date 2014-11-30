@@ -6,6 +6,43 @@
 
 <h2><i class="fa fa-bar-chart-o"></i> Statistics</h2>
 
+<a href="@Url.Action("Index", "POI")">
+    <div class="stat">
+        <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
+
+    </div>
+</a>
+<div id="datasummary"></div>
+<script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
+<script type="text/javascript">
+
+    function refreshDataSummary() {
+        // <!--data summary-->
+        var ocm_summary = ocm_getdatasummary();
+        var summaryContent = "";
+        var totalLocations = 0;
+        var totalStations = 0;
+        for (i = 0; i < ocm_summary.length; i++) {
+            //summaryContent += " <a title='"+ocm_summary[i].stationcount + " charging stations across "+ocm_summary[i].locationcount+" locations.' href='javascript:loadCountryMap(\"" + ocm_summary[i].country + "\",\"" + ocm_summary[i].isocode + "\");'><strong>" + ocm_summary[i].country + ":</strong> " + ocm_summary[i].locationcount + "</a>";
+            totalLocations += ocm_summary[i].locationcount;
+            totalStations += ocm_summary[i].stationcount;
+        }
+
+        document.getElementById("summary-locationcount").innerHTML = totalLocations;
+
+        //summaryContent += "<strong>"+totalStations + "</strong> <span data-localize="ocm.infoText.stats.stations">charging stations across</span> <strong>" + totalLocations + "</strong> <span data-localize="ocm.infoText.stats.acrossLocations">locations</span>.";
+        summaryContent += "<strong>" + totalStations + "</strong> charging stations across <strong>" + totalLocations + "</strong> locations.";
+        document.getElementById("datasummary").innerHTML = summaryContent;
+        $("#datasummary").fadeIn();
+    }
+
+    function loadCountryMap(countryName, isoCode) {
+            document.getElementById("countrymap").src = "http://openchargemap.org/api/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage,status&clustering=true";
+    }
+
+    refreshDataSummary();
+
+</script>
 <div class="row">
     <div class="col-md-6">
         <h2><i class="fa fa-star"></i> Top 15 Contributors</h2>

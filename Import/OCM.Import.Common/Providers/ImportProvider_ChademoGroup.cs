@@ -25,11 +25,12 @@ namespace OCM.Import.Providers
             IsAutoRefreshed = false;
             IsProductionReady = true;
             ImportType = ChademoImportType.Western;
+            DataProviderID = 22;//chademo
         }
 
         public override void SetDataProviderDetails(ChargePoint cp, XmlNode item)
         {
-            cp.DataProvider = new DataProvider() { ID = 22 }; //CHAdeMO.com
+            cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //CHAdeMO.com
             //invent unique id by hashing location title
             cp.DataProvidersReference = CalculateMD5Hash(RemoveFormattingCharacters(item["name"].InnerText));
         }

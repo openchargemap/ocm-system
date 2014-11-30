@@ -14,6 +14,7 @@ namespace OCM.Import.Providers
         protected string ServiceUserName = null;
         protected string ServicePassword = null;
         protected NetworkType SelectedNetworkType = NetworkType.ReseauVER;
+        public bool IsInitialised { get; set; }
 
         public enum NetworkType{
             ReseauVER,
@@ -32,6 +33,7 @@ namespace OCM.Import.Providers
                 ServiceBaseURL = "https://admin.reseauver.com";    
                 ServicePassword = "EfDxsrgf_R5462Sz";
                 ProviderName += " [ReseauVER]";
+                DataProviderID = 24;
             }
 
             if (network == NetworkType.LeCircuitElectrique)
@@ -39,6 +41,7 @@ namespace OCM.Import.Providers
                 ServiceBaseURL = "https://lecircuitelectrique.co";
                 ServicePassword = "Gtrf67_21g_cEkP3";
                 ProviderName += " [LeCircuitElectrique]";
+                DataProviderID = 24;
             }
 
             AutoRefreshURL = ServiceBaseURL + "/Network/StationsList";
@@ -51,13 +54,24 @@ namespace OCM.Import.Providers
 
             SourceEncoding = Encoding.GetEncoding("UTF-8");
 
-            InitImportProvider();
+            //this provider requires InitImportProvider to be called
+            ImportInitialisationRequired = true;
         }
 
         public void InitImportProvider()
         {
             //login and get authentications cookie headers
-            webClient.DownloadString(ServiceBaseURL + "/default.aspx?username=" + ServiceUserName + "&password=" + ServicePassword);
+            try
+            {
+                webClient.DownloadString(ServiceBaseURL + "/default.aspx?username=" + ServiceUserName + "&password=" + ServicePassword);
+
+                IsInitialised = true;
+                ImportInitialisationRequired = false;
+            }
+            catch (Exception)
+            {
+                IsInitialised = false;
+            }
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -82,7 +96,7 @@ namespace OCM.Import.Providers
             foreach (var item in dataList)
             {
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = 24 }; //AddEnergie
+                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //AddEnergie
                 cp.DataProvidersReference = item["StationID"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
 

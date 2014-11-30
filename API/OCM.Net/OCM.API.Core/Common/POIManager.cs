@@ -176,7 +176,8 @@ namespace OCM.API.Common
 
             if (HttpContext.Current.Cache[cacheKey] == null || settings.EnableCaching == false)
             {
-                if (settings.AllowMirrorDB && settings.ChargePointID==null) //mongodb api provider can't currently match by ChargePointID
+                bool enableNoSQLCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]);
+                if (enableNoSQLCaching && settings.AllowMirrorDB && settings.ChargePointID == null) //mongodb api provider can't currently match by ChargePointID
                 {
                     try
                     {
@@ -234,7 +235,7 @@ namespace OCM.API.Common
                     //either filter by named country code or by country id list
                     if (settings.CountryCode != null)
                     {
-                        var filterCountry = dataModel.Countries.FirstOrDefault(c => c.ISOCode == settings.CountryCode);
+                        var filterCountry = dataModel.Countries.FirstOrDefault(c => c.ISOCode.ToUpper() == settings.CountryCode.ToUpper());
                         if (filterCountry != null)
                         {
                             filterByCountries = true;
@@ -248,7 +249,7 @@ namespace OCM.API.Common
                     }
                     else
                     {
-                        if (settings.CountryIDs != null) { filterByCountries = true; }
+                        if (settings.CountryIDs != null && settings.CountryIDs.Any()) { filterByCountries = true; }
                         else { settings.CountryIDs = new int[] { -1 }; }
                     }
 
@@ -707,13 +708,19 @@ namespace OCM.API.Common
 
             var exclusionList = new string[]
                 {
+                    "UUID",
+                    "MediaItems",
+                    "UserComments",
                     "DateCreated",
                     "DateLastStatusUpdate",
+                    ".DataProvider.DateLastImported",
                     ".DataProvider.WebsiteURL",
                     ".DataProvider.DataProviderStatusType",
                     ".StatusType.IsOperational",
                     ".ConnectionType.FormalName",
                     ".Level.Comments",
+                    ".AddressInfoID",
+                    ".AddressInfo.ID",
                     ".AddressInfo.Distance",
                     ".AddressInfo.DistanceUnit",
                     ".AddressInfo.DistanceUnit.DistanceUnit",
@@ -840,6 +847,11 @@ namespace OCM.API.Common
                     throw new OCMAPIException("Unknown Network Operator Specified");
                 }
             }
+            else
+            {
+                dataChargePoint.Operator = null;
+                dataChargePoint.OperatorID = null;
+            }
 
             dataChargePoint.OperatorsReference = simpleChargePoint.OperatorsReference;
 
@@ -855,7 +867,16 @@ namespace OCM.API.Common
                     throw new OCMAPIException("Unknown Usage Type Specified");
                 }
             }
-
+            else
+            {
+                dataChargePoint.UsageType = null;
+                dataChargePoint.UsageTypeID = null;
+            }
+            if (dataChargePoint.AddressInfo == null && simpleChargePoint.AddressInfo.ID > 0)
+            {
+                var addressInfo = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == simpleChargePoint.ID).AddressInfo;
+                if (addressInfo.ID == simpleChargePoint.AddressInfo.ID) dataChargePoint.AddressInfo = addressInfo;
+            }
             dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo, dataModel);
 
             dataChargePoint.NumberOfPoints = simpleChargePoint.NumberOfPoints;
@@ -901,7 +922,7 @@ namespace OCM.API.Common
                     var connectionInfo = new Core.Data.ConnectionInfo();
 
                     //edit existing, if required
-                    if (c.ID > 0) connectionInfo = dataChargePoint.Connections.FirstOrDefault(con => con.ID == c.ID && con.ChargePointID == dataChargePoint.ID);
+                    if (c.ID > 0) connectionInfo = dataModel.ConnectionInfoList.FirstOrDefault(con => con.ID == c.ID && con.ChargePointID == dataChargePoint.ID);
                     if (connectionInfo == null)
                     {
                         //connection is stale info, start new
@@ -972,6 +993,7 @@ namespace OCM.API.Common
                         try
                         {
                             connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == c.StatusType.ID);
+                            connectionInfo.StatusTypeID = connectionInfo.StatusType.ID;
                         }
                         catch (Exception)
                         {
@@ -1007,7 +1029,7 @@ namespace OCM.API.Common
                     if (addConnection)
                     {
                         //if adding a new connection (not an update) add to model
-                        if (c.ID <= 0)
+                        if (c.ID <= 0 || dataChargePoint.Connections.Count == 0)
                         {
                             dataChargePoint.Connections.Add(connectionInfo);
                         }

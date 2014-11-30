@@ -137,6 +137,7 @@
           <Property Name="IsOpenDataLicensed" Type="bit" />
           <Property Name="IsApprovedImport" Type="bit" />
           <Property Name="License" Type="nvarchar" MaxLength="250" />
+          <Property Name="DateLastImported" Type="datetime" />
         </EntityType>
         <EntityType Name="DataProviderStatusType">
           <Key>
@@ -324,8 +325,8 @@
           <Property Name="APIKey" Type="nvarchar" MaxLength="100" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
-          <Property Name="IsReadOnly" Type="bit" Nullable="false" />
           <Property Name="SyncedSettings" Type="nvarchar(max)" />
+          <Property Name="IsReadOnly" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="UserChargingRequest">
           <Key>
@@ -1344,6 +1345,7 @@
           <Property Name="IsOpenDataLicensed" Type="Boolean" />
           <Property Name="IsApprovedImport" Type="Boolean" />
           <Property Name="License" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="DateLastImported" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="DataProviderStatusType">
           <Key>
@@ -2223,6 +2225,7 @@
           <EntitySetMapping Name="DataProviders">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.DataProvider">
               <MappingFragment StoreEntitySet="DataProvider">
+                <ScalarProperty Name="DateLastImported" ColumnName="DateLastImported" />
                 <ScalarProperty Name="License" ColumnName="License" />
                 <ScalarProperty Name="IsApprovedImport" ColumnName="IsApprovedImport" />
                 <ScalarProperty Name="IsOpenDataLicensed" ColumnName="IsOpenDataLicensed" />

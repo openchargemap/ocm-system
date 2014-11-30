@@ -42,12 +42,23 @@ namespace OCM.API.Common
             return modelPOI;
         }
 
+        private string PerformSerialisationToString(object graph, JsonSerializerSettings serializerSettings)
+        {
+            if (serializerSettings != null)
+            {
+                return JsonConvert.SerializeObject(graph, serializerSettings);
+            }
+            else
+            {
+                return JsonConvert.SerializeObject(graph);
+            }
+        }
         /// <summary>
         /// Consumers should prepare a new/updated ChargePoint with as much info populated as possible
         /// </summary>
         /// <param name="submission">ChargePoint info for submission, if ID and UUID set will be treated as an update</param>
         /// <returns>false on error or not enough data supplied</returns>
-        public int PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user)
+        public int PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding= false)
         {
             try
             {
@@ -118,13 +129,12 @@ namespace OCM.API.Common
                     //charging point location entity type id
 
                     //serialize cp as json
-                    var jsonOutput = new OutputProviders.JSONOutputProvider();
-
+                   
                     //null extra data we don't want to serialize/compare
                     updatedPOI.UserComments = null;
                     updatedPOI.MediaItems = null;
 
-                    string editData = jsonOutput.PerformSerialisationToString(updatedPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    string editData = PerformSerialisationToString(updatedPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                     editQueueItem.EditData = editData;
 
@@ -138,7 +148,7 @@ namespace OCM.API.Common
                         }
                         else
                         {
-                            editQueueItem.PreviousData = jsonOutput.PerformSerialisationToString(oldPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                            editQueueItem.PreviousData = PerformSerialisationToString(oldPOI, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                         }
                     }
 
@@ -186,13 +196,17 @@ namespace OCM.API.Common
                 }
                 else
                 {
-                    int? supersedesID = null;
-                    //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
-                    if (isUpdate && !isSystemUser && oldPOI.DataProviderID != (int)StandardDataProviders.OpenChargeMapContrib)
+                    //if poi being updated exists from an imported source we supersede the old POI with the new version, unless we're doing a fresh import from same data provider
+                    if (!disablePOISuperseding)
                     {
-                        //move old poi to new id, set status of new item to superseded
-                        supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);
-                    }
+                        int? supersedesID = null;
+                        //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
+                        if (isUpdate && !isSystemUser && oldPOI.DataProviderID != (int)StandardDataProviders.OpenChargeMapContrib)
+                        {
+                            //move old poi to new id, set status of new item to superseded
+                            supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);
+                        }
+                    } 
                 }
 
                 //user is an editor, go ahead and store the addition/update
@@ -272,17 +286,14 @@ namespace OCM.API.Common
                 //preserve new POI Id for caller
                 updatedPOI.ID = cpData.ID;
 
-                //if new item added, send notification
-                /*if (!isUpdate)
+                if (performCacheRefresh)
                 {
-                    SendNewPOISubmissionNotification(updatedPOI, user, cpData);
-                }*/
-
-                var cacheTask = Task.Run(async () =>
-                {
-                    return await CacheManager.RefreshCachedPOIList();
-                });
-                cacheTask.Wait();
+                    var cacheTask = Task.Run(async () =>
+                    {
+                        return await CacheManager.RefreshCachedPOIList();
+                    });
+                    cacheTask.Wait();
+                }
 
                 return updatedPOI.ID;
             }

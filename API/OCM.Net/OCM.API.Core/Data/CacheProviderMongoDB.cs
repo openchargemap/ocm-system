@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Options;
-using MongoDB.Bson.Serialization.Serializers;
+﻿using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.GeoJsonObjectModel;
@@ -25,7 +22,8 @@ namespace OCM.Core.Data
     {
         public HttpStatusCode StatusCode { get;  set; }
         public string Description { get; set; }
-        public long TotalPOI { get; set; }
+        public long TotalPOIInCache { get; set; }
+        public long TotalPOIInDB { get; set; }
         public DateTime LastUpdated { get; set; }
         public int NumPOILastUpdated { get; set; }
     }
@@ -187,6 +185,7 @@ namespace OCM.Core.Data
         {
             using (server.RequestStart(database))
             {
+                var mongoDBPoiList = new List<POIMongoDB>();
                 foreach (var poi in poiList)
                 {
                     var newPoi = POIMongoDB.FromChargePoint(poi);
@@ -194,8 +193,9 @@ namespace OCM.Core.Data
                     {
                         newPoi.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(newPoi.AddressInfo.Longitude, newPoi.AddressInfo.Latitude));
                     }
-                    poiCollection.Insert(newPoi);
+                    mongoDBPoiList.Add(newPoi);
                 }
+                poiCollection.InsertBatch(mongoDBPoiList);
             }
         }
       
@@ -247,7 +247,7 @@ namespace OCM.Core.Data
             }
             if (updateStrategy == CacheUpdateStrategy.All)
             {
-                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo").OrderBy(o => o.ID);
+                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo").OrderBy(o => o.ID).ToList();
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
@@ -320,7 +320,8 @@ namespace OCM.Core.Data
             status.Description = "MongoDB Cache of Open Charge Map POI Database";
             status.LastUpdated = DateTime.UtcNow;
 
-            status.TotalPOI = poiCollection.Count();
+            status.TotalPOIInCache = poiCollection.Count();
+            status.TotalPOIInDB = new OCMEntities().ChargePoints.LongCount();
             status.StatusCode = HttpStatusCode.OK;
             if (poiList != null)
             {
@@ -341,7 +342,9 @@ namespace OCM.Core.Data
             try
             {
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
-                return statusCollection.FindOne();
+                var currentStatus= statusCollection.FindOne();
+                currentStatus.TotalPOIInDB = new OCMEntities().ChargePoints.LongCount();
+                return currentStatus;
             }
             catch (Exception exp)
             {
@@ -461,7 +464,7 @@ namespace OCM.Core.Data
             {
                 var referenceData = database.GetCollection<OCM.API.Common.Model.CoreReferenceData>("reference").FindOne();
 
-                var filterCountry = referenceData.Countries.FirstOrDefault(c => c.ISOCode == settings.CountryCode);
+                var filterCountry = referenceData.Countries.FirstOrDefault(c => c.ISOCode.ToUpper() == settings.CountryCode.ToUpper());
                 if (filterCountry != null)
                 {
                     filterByCountries = true;
@@ -475,7 +478,7 @@ namespace OCM.Core.Data
             }
             else
             {
-                if (settings.CountryIDs != null) { filterByCountries = true; }
+                if (settings.CountryIDs != null && settings.CountryIDs.Any()) { filterByCountries = true; }
                 else { settings.CountryIDs = new int[] { -1 }; }
             }
 
@@ -504,7 +507,7 @@ namespace OCM.Core.Data
                 poiList = (from c in poiList
                           where
 
-                                     // (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
+                                      (c.AddressInfo != null) && //c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
                                       ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
                                             || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
                                             || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)

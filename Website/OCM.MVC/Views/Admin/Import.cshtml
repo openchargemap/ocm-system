@@ -1,15 +1,40 @@
 ﻿@model OCM.Import.ImportReport
 
-<div>
-    <h4>Import Report</h4>
-    <hr />
-    Added: @Model.Added.Count
-    Updated: @Model.Updated.Count
-    Duplicates: @Model.Duplicates.Count
-    <dl class="dl-horizontal">
-    </dl>
+
+<h4>Import Report: @Model.ProviderDetails.ProviderName</h4>
+@if (Model.Added == null && Model.Updated == null)
+{
+    <p>Import failed to complete.</p>
+}
+else
+{
+<div role="tabpanel">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#added" aria-controls="added" role="tab" data-toggle="tab"> Added: @Model.Added.Count</a></li>
+        <li role="presentation"><a href="#updated" aria-controls="updated" role="tab" data-toggle="tab">Updated: @Model.Updated.Count</a></li>
+        <li role="presentation"><a href="#unchanged" aria-controls="unchanged" role="tab" data-toggle="tab">Unchanged: @Model.Unchanged.Count</a></li>
+        <li role="presentation"><a href="#duplicates" aria-controls="duplicates" role="tab" data-toggle="tab">Duplicates: @Model.Duplicates.Count</a></li>
+        <li role="presentation"><a href="#deleted" aria-controls="deleted" role="tab" data-toggle="tab"> Deleted: @Model.Delisted.Count</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="added">
+            @Html.Partial("_POIList", Model.Added)
+        </div>
+        <div role="tabpanel" class="tab-pane" id="updated">
+            @Html.Partial("_POIList", Model.Updated)
+        </div>
+        <div role="tabpanel" class="tab-pane" id="unchanged">
+            @Html.Partial("_POIList", Model.Unchanged)
+        </div>
+        <div role="tabpanel" class="tab-pane" id="duplicates">
+            @Html.Partial("_POIList", Model.Duplicates)
+        </div>
+        <div role="tabpanel" class="tab-pane" id="deleted">
+            @Html.Partial("_POIList", Model.Delisted)
+        </div>
+    </div>
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+}

@@ -333,12 +333,12 @@ namespace OCM.API.Common
             //check if any new POIs
             if (subscription.NotifyPOIAdditions)
             {
-                var newPOIs = dataModel.ChargePoints.Where(c => c.DateCreated >= checkFromDate &&
+                var newPOIs = dataModel.ChargePoints.Where(c => c.DateCreated >= checkFromDate && c.SubmissionStatusType.IsLive == true &&
                      (searchPos == null ||
                         (searchPos != null &&
                             c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < subscription.DistanceKM
                         ))
-                      );
+                      ).ToList();
 
                 if (newPOIs.Any())
                 {
@@ -472,6 +472,7 @@ namespace OCM.API.Common
 
         public string GetSubscriptionMatchHTMLSummary(SubscriptionMatchGroup subscriptionResults)
         {
+            int maxItemsShown = 20;
             var summaryHTML = "";
             string siteUrl = "http://openchargemap.org/site";
             string poiLinkText = "View POI Details";
@@ -533,25 +534,35 @@ namespace OCM.API.Common
                         //POI list
 
                         summaryHTML += "<ul>";
-                        foreach (var p in match.ItemList)
+                        foreach (var p in match.ItemList.Take(maxItemsShown))
                         {
                             var poi = (ChargePoint)p.POI;
                             summaryHTML += "<li>OCM-" + poi.ID + ": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
                         }
                         summaryHTML += "</ul>";
+
+                        if (match.ItemList.Count > maxItemsShown)
+                        {
+                            summaryHTML += "<p>In addition there were " + (match.ItemList.Count - maxItemsShown) + " more items added.</p>";
+                        }
                     }
 
                     if (match.Category == SubscriptionMatchCategory.UpdatedPOI)
                     {
                         //updates
                         summaryHTML += "<ul>";
-                        foreach (var i in match.ItemList)
+                        foreach (var i in match.ItemList.Take(maxItemsShown))
                         {
                             var item = (Core.Data.EditQueueItem)i.Item;
                             var poi = (ChargePoint)i.POI;
                             summaryHTML += "<li>OCM-"+poi.ID+": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
                         }
                         summaryHTML += "</ul>";
+
+                        if (match.ItemList.Count > maxItemsShown)
+                        {
+                            summaryHTML += "<p>In addition there were " + (match.ItemList.Count - maxItemsShown) + " more items updated.</p>";
+                        }
                     }
 
                     if (match.Category == SubscriptionMatchCategory.NewComment)

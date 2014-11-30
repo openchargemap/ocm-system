@@ -20,7 +20,8 @@ namespace OCM.API.Common.Model.Extensions
                 IsRestrictedEdit = source.IsRestrictedEdit,
                 IsOpenDataLicensed = source.IsOpenDataLicensed,
                 IsApprovedImport = source.IsApprovedImport,
-                License = source.License
+                License = source.License,
+                DateLastImported = source.DateLastImported
             };
         }
     }

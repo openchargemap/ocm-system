@@ -1,9 +1,8 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
 using System.Web.Script.Serialization;
 
 namespace OCM.Import.Providers
@@ -15,10 +14,11 @@ namespace OCM.Import.Providers
             ProviderName = "mobie.pt";
             OutputNamePrefix = "mobie";
             AutoRefreshURL = "http://www.mobie.pt/en/postos-de-carregamento?p_p_id=googlemaps_WAR_mobiebusinessportlet_INSTANCE_SsJ4&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=searchPoles&p_p_cacheability=cacheLevelPage&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&searchString=";
-                      
+
             IsAutoRefreshed = true;
             IsProductionReady = true;
             SourceEncoding = Encoding.GetEncoding("UTF-8");
+            DataProviderID = 7;//mobie.pt
         }
 
         List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
@@ -37,7 +37,6 @@ namespace OCM.Import.Providers
             JavaScriptSerializer jss = new JavaScriptSerializer();
             jss.RegisterConverters(new JavaScriptConverter[] { new DynamicJsonConverter() });
 
-
             dynamic glossaryEntry = jss.Deserialize(InputData, typeof(object)) as dynamic;
             var dataList = glossaryEntry.response.data;
 
@@ -49,14 +48,13 @@ namespace OCM.Import.Providers
             {
                 try
                 {
-
                     ChargePoint cp = new ChargePoint();
                     cp.AddressInfo = new AddressInfo();
 
                     cp.AddressInfo.Title = item["street"] != null ? item["street"].ToString() : item["chargingStationId"].ToString();
                     cp.AddressInfo.RelatedURL = "http://www.mobie.pt";
 
-                    cp.DataProvider = new DataProvider() { ID = 7 }; //mobie.pt
+                    cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //mobie.pt
                     cp.DataProvidersReference = item["chargingStationId"].ToString();
                     cp.DateLastStatusUpdate = DateTime.UtcNow;
 
@@ -72,16 +70,15 @@ namespace OCM.Import.Providers
                     cp.StatusType = status_operational;
                     string status = item["status"].ToString().ToLower();
 
-                    if (status == "Unavailable" || status == "Reserved" || status == "In Use")
+                    if (status == "unavailable" || status == "reserved" || status == "in use")
                     {
-                        cp.StatusType = status_inuse;
+                        cp.StatusType = status_operational;
                     }
 
-                    if (status == "Disconnected" || status == "Inactive" || status == "Suspended")
+                    if (status == "disconnected" || status == "inactive" || status == "suspended")
                     {
                         cp.StatusType = status_notoperational;
                     }
-
 
                     string type = item["type"].ToString();//fast or normal
                     if (type.ToLower() == "fast" || type.ToLower() == "normal")
@@ -90,21 +87,33 @@ namespace OCM.Import.Providers
                         cp.Connections = new List<ConnectionInfo>();
 
                         ConnectionInfo con = new ConnectionInfo();
-                        if (type.ToString() == "fast")
+                        if (String.Equals(type, "fast", StringComparison.CurrentCultureIgnoreCase))
                         {
                             con.Level = new ChargerType { ID = 3 };
+                            con.Voltage = 400;
+                            con.Amps = 75;
+                            con.PowerKW = con.Voltage * con.Amps / 1000;
+                            con.StatusType = cp.StatusType;
+                            con.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                         }
 
-                        if (type.ToString() == "normal")
+                        if (String.Equals(type, "normal", StringComparison.CurrentCultureIgnoreCase))
                         {
                             con.Level = new ChargerType { ID = 2 };
+                            //based on http://www.mobie.pt/en/o-carregamento
+                            con.Voltage = 220;
+                            con.Amps = 16;
+                            con.PowerKW = con.Voltage * con.Amps / 1000;
+                            con.StatusType = cp.StatusType;
+                            con.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
                         }
+                        cp.Connections.Add(con);
                     }
 
                     cp.DataQualityLevel = 3; //avg, higher than default
 
                     cp.SubmissionStatus = submissionStatus;
-                    
+
                     outputList.Add(cp);
                 }
                 catch (Exception)

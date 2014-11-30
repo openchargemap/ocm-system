@@ -72,7 +72,7 @@ namespace OCM.Import.Providers
 
                 if (countryID == null)
                 {
-                    this.Log("Country Not Matched, will require Geolocation:" + cp.AddressInfo.AddressLine1.ToString());
+                    this.Log("Country Not Matched, will require Geolocation:" + cp.AddressInfo.ToString());
                 }
                 else
                 {

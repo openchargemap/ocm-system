@@ -2,13 +2,38 @@
 
 
 <h2>Import Manager</h2>
-<ul>
+<p class="alert alert-danger">This feature is still under development and is not ready for general use.</p>
+<table class="table table-bordered table-striped">
+    <tr><th>Data Provider</th><th>License</th><th>Import Provider</th><th>Date Last Imported</th><th></th></tr>
     @foreach (var item in Model.ImportProviders)
     {
-        <li>
-            @item.GetProviderName() 
-            @Html.ActionLink("Begin Import", "Import", new { providerName = item.GetProviderName() })
-        </li>
+        var itemDetails = (OCM.Import.Providers.BaseImportProvider)item;
+        
+        <tr>
+            <td>
+                @(itemDetails.DefaultDataProvider != null ? itemDetails.DefaultDataProvider.Title : "Data Provider Not Set")
+            </td>
+
+            <td>
+                @(itemDetails.DefaultDataProvider!=null? itemDetails.DefaultDataProvider.License: "")
+            </td>
+            <td>@itemDetails.ProviderName</td>
+            <td>@(itemDetails.DefaultDataProvider != null ? (itemDetails.DefaultDataProvider.DateLastImported.HasValue?itemDetails.DefaultDataProvider.DateLastImported.ToString():"Unknown") : "")</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cloud-download"></i> Import <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("Preview Import (Live Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = true, performImport = false })</li>
+                        <li>@Html.ActionLink("Preview Import (Cached Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = false, performImport = false })</li>
+                        <li class="divider"></li>
+                        <li>@Html.ActionLink("Perform Import (Live Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = true, performImport = true })</li>
+                        <li>@Html.ActionLink("Perform Import (Cached Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = false, performImport = true })</li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
     
     }
-</ul>
+</table>

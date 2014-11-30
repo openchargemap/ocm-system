@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OCM.API.Common.Model;
-using Newtonsoft.Json.Linq;
 
 namespace OCM.Import.Providers
 {
@@ -17,6 +17,7 @@ namespace OCM.Import.Providers
             IsAutoRefreshed = true;
             IsProductionReady = true;
             SourceEncoding = Encoding.GetEncoding("UTF-8");
+            DataProviderID = 15; //carstations.com
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -40,7 +41,7 @@ namespace OCM.Import.Providers
             foreach (var item in dataList)
             {
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = 15 }; //carstations.com
+                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //carstations.com
                 cp.DataProvidersReference = item["post_id"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -82,7 +83,6 @@ namespace OCM.Import.Providers
                     if (countryID == null)
                     {
                         this.Log("Country Not Matched, will require Geolocation:" + item["country"].ToString());
-
                     }
                     else
                     {
@@ -147,7 +147,6 @@ namespace OCM.Import.Providers
                     {
                         Log("Operator not matched:" + operatorName);
                     }
-
                 }
                 else
                 {
@@ -204,7 +203,11 @@ namespace OCM.Import.Providers
 
                 cp.SubmissionStatus = submissionStatus;
 
-                outputList.Add(cp);
+                if (IsPOIValidForImport(cp))
+                {
+                    outputList.Add(cp);
+                }
+
                 itemCount++;
             }
 

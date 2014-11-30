@@ -1,12 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Web
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3CC82B5C-7EA9-484D-9C6E-791BD2E55563}"
 	ProjectSection(SolutionItems) = preProject
 		BuildPrerequisites.md = BuildPrerequisites.md
-		..\..\localhost.xml = ..\..\localhost.xml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -21,9 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{61
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{7A6121E1-A031-4631-82F5-065FBF51D584}"
-	ProjectSection(SolutionItems) = preProject
-		API\API_Changelog.txt = API\API_Changelog.txt
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.0 to 1.1", "1.0 to 1.1", "{79887E64-70D4-45F2-9CDF-BACCB58D9FBD}"
 	ProjectSection(SolutionItems) = preProject

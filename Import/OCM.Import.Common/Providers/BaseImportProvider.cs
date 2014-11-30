@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
-using System.Net;
-using System.Dynamic;
+using System;
 using System.Collections;
-using System.Web.Script.Serialization;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
 using System.Globalization;
-using System.Threading;
-using System.Security.Cryptography;
 using System.IO;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Web.Script.Serialization;
 
 namespace OCM.Import.Providers
 {
@@ -25,7 +25,6 @@ namespace OCM.Import.Providers
         JSON,
         POIModelList
     }
-
 
     #region dynamic javascript JSON objects http://www.drowningintechnicaldebt.com/ShawnWeisfeld/archive/2010/08/22/using-c-4.0-and-dynamic-to-parse-json.aspx
 
@@ -84,32 +83,47 @@ namespace OCM.Import.Providers
             get { return new ReadOnlyCollection<Type>(new List<Type>(new Type[] { typeof(object) })); }
         }
     }
-    #endregion
+
+    #endregion dynamic javascript JSON objects http://www.drowningintechnicaldebt.com/ShawnWeisfeld/archive/2010/08/22/using-c-4.0-and-dynamic-to-parse-json.aspx
 
     public class CommonImportRefData
     {
         public SubmissionStatusType SubmissionStatus_Imported { get; set; }
+
         public SubmissionStatusType SubmissionStatus_DelistedDupe { get; set; }
+
         public StatusType Status_Operational { get; set; }
+
         public StatusType Status_NonOperational { get; set; }
+
         public StatusType Status_Unknown { get; set; }
+
         public StatusType Status_PlannedForFuture { get; set; }
 
         public UsageType UsageType_Public { get; set; }
+
         public UsageType UsageType_Private { get; set; }
+
         public UsageType UsageType_PublicPayAtLocation { get; set; }
+
         public UsageType UsageType_PublicMembershipRequired { get; set; }
+
         public UsageType UsageType_PublicNoticeRequired { get; set; }
 
         public OperatorInfo Operator_Unknown { get; set; }
 
         public ChargerType ChrgLevel_1 { get; set; }
+
         public ChargerType ChrgLevel_2 { get; set; }
+
         public ChargerType ChrgLevel_3 { get; set; }
 
         public ConnectionType ConnectionType_Unknown { get; set; }
+
         public ConnectionType ConnectionType_J1772 { get; set; }
+
         public ConnectionType ConnectionType_CHADEMO { get; set; }
+
         public ConnectionType ConnectionType_Type2Mennekes { get; set; }
 
         public CommonImportRefData(CoreReferenceData coreRefData)
@@ -121,7 +135,6 @@ namespace OCM.Import.Providers
             Status_Operational = coreRefData.StatusTypes.First(os => os.ID == 50);
             Status_NonOperational = coreRefData.StatusTypes.First(os => os.ID == 100);
             Status_PlannedForFuture = coreRefData.StatusTypes.First(os => os.ID == 150);
-
 
             UsageType_Public = coreRefData.UsageTypes.First(u => u.ID == 1);
             UsageType_Private = coreRefData.UsageTypes.First(u => u.ID == 2);
@@ -144,35 +157,65 @@ namespace OCM.Import.Providers
 
     public class BaseImportProvider
     {
+        public int DataProviderID { get; set; }
+
         public string ProviderName { get; set; }
+
         public bool IsAutoRefreshed { get; set; }
+
         public bool IsStringData { get; set; }
+
         public string AutoRefreshURL { get; set; }
+
         public string InputData { get; set; }
+
         public string InputPath { get; set; }
+
         public string OutputNamePrefix { get; set; }
+
         public ExportType ExportType { get; set; }
+
         public bool IsProductionReady { get; set; }
+
         public bool MergeDuplicatePOIEquipment { get; set; }
+
         public string DataAttribution { get; set; }
-        public Encoding SourceEncoding { get; set; }
+
+        private Encoding _sourceEncoding = null;
+
+        public Encoding SourceEncoding
+        {
+            get { return _sourceEncoding; }
+            set
+            {
+                _sourceEncoding = value;
+                if (webClient != null) webClient.Encoding = _sourceEncoding;
+            }
+        }
+
         public string HTTPPostVariables { get; set; }
+
         public string APIKeyPrimary { get; set; }
+
         public string APIKeySecondary { get; set; }
+
         public CommonImportRefData ImportRefData { get; set; }
+
         public DataProvider DefaultDataProvider { get; set; }
+
         protected WebClient webClient = new WebClient();
-         
+
+        public bool ImportInitialisationRequired { get; set; }
+
         public BaseImportProvider()
         {
-           
             ProviderName = "None";
             OutputNamePrefix = "output";
             ExportType = Providers.ExportType.XML;
             IsProductionReady = false;
             SourceEncoding = Encoding.GetEncoding(1252); //default to ANSI 1252 western europe
 
-            webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+            webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
             webClient.Encoding = SourceEncoding;
             this.IsStringData = true;
         }
@@ -181,7 +224,7 @@ namespace OCM.Import.Providers
         {
             return ProviderName;
         }
-        
+
         public void Log(string message)
         {
             System.Console.WriteLine("[" + ProviderName + "]: " + message);
@@ -243,7 +286,6 @@ namespace OCM.Import.Providers
         {
             try
             {
-               
                 InputData = webClient.DownloadString(url);
 
                 return true;
@@ -273,6 +315,18 @@ namespace OCM.Import.Providers
             }
         }
 
+        public void SaveInputFile(string path)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(path, this.InputData);
+            }
+            catch (Exception)
+            {
+                Log("Failed to saev input file:" + path);
+            }
+        }
+
         public bool ExportXMLFile(List<ChargePoint> dataList, string outputPath)
         {
             //not implemented
@@ -284,6 +338,7 @@ namespace OCM.Import.Providers
             //not implemented
             return false;
         }
+
         public bool ExportXMLFile(List<EVSE> dataList, string outputPath)
         {
             string output = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
@@ -390,7 +445,7 @@ namespace OCM.Import.Providers
         public bool ExportJSONFile(List<ChargePoint> dataList, string outputPath)
         {
             var json = JsonConvert.SerializeObject(dataList, Formatting.Indented);
-            System.IO.File.WriteAllText(outputPath, json,  new UnicodeEncoding());
+            System.IO.File.WriteAllText(outputPath, json, new UnicodeEncoding());
             return true;
         }
 
@@ -455,76 +510,112 @@ namespace OCM.Import.Providers
                     {
                         case "ID": output += item.DataProvidersReference;
                             break;
+
                         case "LocationTitle": output += GetNullableStringOutput(item.AddressInfo.Title);
                             break;
+
                         case "AddressLine1": output += GetNullableStringOutput(item.AddressInfo.AddressLine1);
                             break;
+
                         case "AddressLine2": output += GetNullableStringOutput(item.AddressInfo.AddressLine2);
                             break;
+
                         case "Town": output += GetNullableStringOutput(item.AddressInfo.Town);
                             break;
+
                         case "StateOrProvince": output += GetNullableStringOutput(item.AddressInfo.StateOrProvince);
                             break;
+
                         case "Postcode": output += GetNullableStringOutput(item.AddressInfo.Postcode);
                             break;
+
                         case "Country": output += (item.AddressInfo.Country != null ? item.AddressInfo.Country.Title : "");
                             break;
+
                         case "Latitude": output += item.AddressInfo.Latitude.ToString();
                             break;
+
                         case "Longitude": output += item.AddressInfo.Longitude.ToString();
                             break;
+
                         case "Addr_ContactTelephone1": output += GetNullableStringOutput(item.AddressInfo.ContactTelephone1);
                             break;
+
                         case "Addr_ContactTelephone2": output += GetNullableStringOutput(item.AddressInfo.ContactTelephone2);
                             break;
+
                         case "Addr_ContactEmail": output += GetNullableStringOutput(item.AddressInfo.ContactEmail);
                             break;
+
                         case "Addr_AccessComments": output += GetNullableStringOutput(item.AddressInfo.AccessComments);
                             break;
+
                         case "Addr_GeneralComments": output += GetNullableStringOutput(item.AddressInfo.GeneralComments);
                             break;
+
                         case "Addr_RelatedURL": output += GetNullableStringOutput(item.AddressInfo.RelatedURL);
                             break;
+
                         case "NumberOfPoints": output += item.NumberOfPoints;
                             break;
+
                         case "GeneralComments": output += item.GeneralComments;
                             break;
+
                         case "DateLastConfirmed": output += item.DateLastConfirmed.ToString();
                             break;
+
                         case "StatusType": output += (item.StatusType != null ? item.StatusType.Title : "");
                             break;
+
                         case "DateLastStatusUpdate": output += item.DateLastStatusUpdate.ToString();
                             break;
+
                         case "UsageCost": output += GetNullableStringOutput(item.UsageCost);
                             break;
+
                         case "Connection1_Type": output += GetConnectionFieldOutput(item.Connections, "_Type", 1);
                             break;
+
                         case "Connection1_Amps": output += GetConnectionFieldOutput(item.Connections, "_Amps", 1);
                             break;
+
                         case "Connection1_Volts": output += GetConnectionFieldOutput(item.Connections, "_Volts", 1);
                             break;
+
                         case "Connection1_Level": output += GetConnectionFieldOutput(item.Connections, "_Level", 1);
                             break;
+
                         case "Connection1_Quantity": output += GetConnectionFieldOutput(item.Connections, "_Quantity", 1);
                             break;
+
                         case "Connection2_Type": output += GetConnectionFieldOutput(item.Connections, "_Type", 2);
                             break;
+
                         case "Connection2_Amps": output += GetConnectionFieldOutput(item.Connections, "_Amps", 2);
                             break;
+
                         case "Connection2_Volts": output += GetConnectionFieldOutput(item.Connections, "_Volts", 2);
                             break;
+
                         case "Connection2_Level": output += GetConnectionFieldOutput(item.Connections, "_Level", 2);
                             break;
+
                         case "Connection2_Quantity": output += GetConnectionFieldOutput(item.Connections, "_Quantity", 2);
                             break;
+
                         case "Connection3_Type": output += GetConnectionFieldOutput(item.Connections, "_Type", 3);
                             break;
+
                         case "Connection3_Amps": output += GetConnectionFieldOutput(item.Connections, "_Amps", 3);
                             break;
+
                         case "Connection3_Volts": output += GetConnectionFieldOutput(item.Connections, "_Volts", 3);
                             break;
+
                         case "Connection3_Level": output += GetConnectionFieldOutput(item.Connections, "_Level", 3);
                             break;
+
                         case "Connection3_Quantity": output += GetConnectionFieldOutput(item.Connections, "_Quantity", 3);
                             break;
                     }
@@ -544,6 +635,23 @@ namespace OCM.Import.Providers
                 return true;
             }
             return false;
+        }
+
+        public static bool IsPOIValidForImport(ChargePoint poi, bool includeCountryValidation=false)
+        {
+            if (poi == null) return false;
+            if (poi.AddressInfo == null) return false;
+            if (String.IsNullOrEmpty(poi.AddressInfo.Title)) return false;
+            if (String.IsNullOrEmpty(poi.AddressInfo.AddressLine1) && String.IsNullOrEmpty(poi.AddressInfo.Postcode)) return false;
+            if (poi.AddressInfo.Latitude == null || poi.AddressInfo.Longitude == null) return false;
+
+            if (poi.AddressInfo.Latitude < -90 || poi.AddressInfo.Latitude > 90) return false;
+            if (poi.AddressInfo.Longitude < -180 || poi.AddressInfo.Longitude > 180) return false;
+
+            if (poi.Connections == null || !poi.Connections.Any()) return false;
+            if (poi.AddressInfo.Title.Contains("????")) return false; //imports with invalid character encoding
+            if (includeCountryValidation && poi.AddressInfo.Country == null) return false;
+            return true;
         }
     }
 }
