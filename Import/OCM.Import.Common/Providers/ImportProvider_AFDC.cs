@@ -115,32 +115,32 @@ namespace OCM.Import.Providers
                 cp.UsageType = usageTypePrivate;
                 if (item["groups_with_access_code"] != null)
                 {
-                    string accessDesc = item["groups_with_access_code"].ToString();
-                    if (accessDesc.StartsWith("Public - see hours"))
+                    string accessDesc = item["groups_with_access_code"].ToString().ToLower();
+                    if (accessDesc.StartsWith("public - see hours"))
                     {
                         cp.UsageType = usageTypePublic;
                     }
-                    else if (accessDesc.StartsWith("Private access only"))
+                    else if (accessDesc.StartsWith("private access only"))
                     {
                         cp.UsageType = usageTypePrivate;
                     }
-                    else if (accessDesc.StartsWith("Public - card key at all times"))
+                    else if (accessDesc.StartsWith("public - card key at all times"))
                     {
                         cp.UsageType = usageTypePublicMembershipRequired;
                     }
-                    else if (accessDesc.StartsWith("Public - call ahead"))
+                    else if (accessDesc.StartsWith("public - call ahead"))
                     {
                         cp.UsageType = usageTypePublicNoticeRequired;
                     }
-                    else if (accessDesc.StartsWith("Public - credit card at all times"))
+                    else if (accessDesc.StartsWith("public - credit card at all times"))
                     {
                         cp.UsageType = usageTypePublicPayAtLocation;
                     }   
-                    else if (accessDesc.StartsWith("Private"))
+                    else if (accessDesc.StartsWith("private"))
                     {
                         cp.UsageType = usageTypePrivate;
                     }
-                    else if (accessDesc.StartsWith("PLANNED"))
+                    else if (accessDesc.StartsWith("planned"))
                     {
                         cp.UsageType = usageTypePrivate;
                         cp.StatusType = nonoperationalStatus;
@@ -161,7 +161,7 @@ namespace OCM.Import.Providers
                 int numLevel1 = String.IsNullOrEmpty(item["ev_level1_evse_num"].ToString())==false ? int.Parse(item["ev_level1_evse_num"].ToString()):0;
                 int numLevel2 =  String.IsNullOrEmpty(item["ev_level2_evse_num"].ToString()) ==false ? int.Parse(item["ev_level2_evse_num"].ToString()) : 0;
                 int numLevel3 =  String.IsNullOrEmpty(item["ev_dc_fast_num"].ToString()) ==false ? int.Parse(item["ev_dc_fast_num"].ToString()) : 0;
-
+                var evconnectors = item["ev_connector_types"].ToArray();
                 if (cp.Connections == null)
                 {
                     cp.Connections = new List<ConnectionInfo>();
@@ -174,7 +174,14 @@ namespace OCM.Import.Providers
                     cinfo.Quantity = numLevel1;
                     cinfo.ConnectionType = new ConnectionType { ID = 0 }; //unknown
                     cinfo.Level = chrgLevel1;
+
+                    //assume basic level 1 power
                     cinfo.Voltage = 120;
+                    cinfo.Amps = 16;
+                    cinfo.PowerKW = cinfo.Voltage * cinfo.Amps;
+                    cinfo.CurrentType = new CurrentType { ID = 10 };//AC
+
+                    if (evconnectors.Any(c=>c.Value<string>()=="NEMA520")) cinfo.ConnectionType.ID=9; //nema 5-20
                     if (!IsConnectionInfoBlank(cinfo))
                     {
                         cp.Connections.Add(cinfo);
@@ -186,7 +193,16 @@ namespace OCM.Import.Providers
                     ConnectionInfo cinfo = new ConnectionInfo() { };
 
                     cinfo.Quantity = numLevel2;
-                    cinfo.ConnectionType = new ConnectionType { ID = 1 }; //J1772
+                    cinfo.ConnectionType = new ConnectionType { ID = 0 };
+
+                    //assume basic level 2 power
+                    cinfo.Voltage = 230;
+                    cinfo.Amps = 16;
+                    cinfo.PowerKW = cinfo.Voltage * cinfo.Amps;
+                    cinfo.CurrentType = new CurrentType { ID = 10 };//AC
+
+                    if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionType.ID = 1; //J1772
+
                     cinfo.Level = chrgLevel2;
 
                     if (!IsConnectionInfoBlank(cinfo))
@@ -199,9 +215,22 @@ namespace OCM.Import.Providers
                 {
                     ConnectionInfo cinfo = new ConnectionInfo() { };
 
-                    cinfo.Quantity = numLevel2;
+                    cinfo.Quantity = numLevel3;
                     cinfo.ConnectionType = new ConnectionType { ID = 0 }; //unknown
                     cinfo.Level = chrgLevel3;
+
+                    //assume basic level 3 power
+                    cinfo.Voltage = 400;
+                    cinfo.Amps = 100;
+                    cinfo.PowerKW = cinfo.Voltage * cinfo.Amps;
+                    cinfo.CurrentType = new CurrentType { ID = 10 };//DC
+
+                    if (evconnectors.Any(c => c.Value<string>() == "CHADEMO")) cinfo.ConnectionType.ID = 2; //J1772
+
+                    if (evconnectors.Any(c => c.Value<string>() == "TESLA"))
+                    {
+                        cinfo.ConnectionType.ID = 27; //tesla supercharger
+                    }
 
                     if (!IsConnectionInfoBlank(cinfo))
                     {
