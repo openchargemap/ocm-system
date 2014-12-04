@@ -27,11 +27,9 @@ namespace OCM.API.Common
         private Model.ChargePoint PopulateFullPOI(Model.ChargePoint poi)
         {
             OCMEntities tempDataModel = new OCMEntities();
-            var poiData = new Core.Data.ChargePoint();
-            if (poi.ID > 0) poiData = tempDataModel.ChargePoints.First(c => c.ID == poi.ID);
-
+            
             //convert simple poi to fully populated db version
-            new POIManager().PopulateChargePoint_SimpleToData(poi, poiData, tempDataModel);
+            var poiData = new POIManager().PopulateChargePoint_SimpleToData(poi, tempDataModel);
 
             //convert back to simple POI
             var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData, false, false, true, true);
@@ -210,11 +208,8 @@ namespace OCM.API.Common
                 }
 
                 //user is an editor, go ahead and store the addition/update
-                var cpData = new Core.Data.ChargePoint();
-                if (isUpdate) cpData = dataModel.ChargePoints.First(c => c.ID == updatedPOI.ID);
-
                 //set/update cp properties
-                poiManager.PopulateChargePoint_SimpleToData(updatedPOI, cpData, dataModel);
+                var cpData = poiManager.PopulateChargePoint_SimpleToData(updatedPOI, dataModel);
 
                 //if item has no submission status and user permitted to edit, set to published
                 if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)

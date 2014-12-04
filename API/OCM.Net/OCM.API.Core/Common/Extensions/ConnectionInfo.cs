@@ -22,7 +22,7 @@ namespace OCM.API.Common.Model.Extensions
             };
 
             //connection type (full object or id only)
-            if (isVerboseMode && s.ConnectionType != null)
+            if (isVerboseMode && (s.ConnectionTypeID!=null || s.ConnectionType != null))
             {
                 connectionInfo.ConnectionType = ConnectionType.FromDataModel(s.ConnectionType);
                 connectionInfo.ConnectionTypeID = s.ConnectionType.ID;
@@ -33,7 +33,7 @@ namespace OCM.API.Common.Model.Extensions
             }
 
             //status type (full object or id only)
-            if (isVerboseMode && s.StatusType != null)
+            if (isVerboseMode && (s.StatusTypeID!=null || s.StatusType != null))
             {
                 connectionInfo.StatusType = StatusType.FromDataModel(s.StatusType);
                 connectionInfo.StatusTypeID = s.StatusTypeID;
@@ -44,7 +44,7 @@ namespace OCM.API.Common.Model.Extensions
             }
 
             //charging level type (full object or id only)
-            if (isVerboseMode && s.ChargerType != null)
+            if (isVerboseMode && (s.LevelTypeID!=null || s.ChargerType != null))
             {
                 connectionInfo.Level = ChargerType.FromDataModel(s.ChargerType);
                 connectionInfo.LevelID = s.ChargerType.ID;
@@ -54,7 +54,7 @@ namespace OCM.API.Common.Model.Extensions
                 if (s.LevelTypeID != null) connectionInfo.LevelID = s.LevelTypeID;
             }
 
-            if (isVerboseMode && s.CurrentType != null)
+            if (isVerboseMode && (s.CurrentTypeID!=null || s.CurrentType != null))
             {
                 connectionInfo.CurrentType = CurrentType.FromDataModel(s.CurrentType);
                 connectionInfo.CurrentTypeID = s.CurrentType.ID;

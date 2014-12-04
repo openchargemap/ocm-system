@@ -123,8 +123,7 @@ namespace OCM.API.Common
         {
             var dataModel = new OCMEntities();
 
-            Core.Data.ChargePoint dataPreviewPOI = new Core.Data.ChargePoint();
-            PopulateChargePoint_SimpleToData(poi, dataPreviewPOI, dataModel);
+            var dataPreviewPOI = PopulateChargePoint_SimpleToData(poi, dataModel);
 
             return Model.Extensions.ChargePoint.FromDataModel(dataPreviewPOI);
         }
@@ -797,9 +796,11 @@ namespace OCM.API.Common
             return dataAddressInfo;
         }
 
-        public void PopulateChargePoint_SimpleToData(Model.ChargePoint simpleChargePoint, Core.Data.ChargePoint dataChargePoint, OCM.Core.Data.OCMEntities dataModel)
+        public OCM.Core.Data.ChargePoint PopulateChargePoint_SimpleToData(Model.ChargePoint simpleChargePoint, OCM.Core.Data.OCMEntities dataModel)
         {
-            if (simpleChargePoint.ID > 0) dataChargePoint.ID = simpleChargePoint.ID; // dataModel.ChargePoints.FirstOrDefault(c => c.ID == simpleChargePoint.ID);
+            var dataChargePoint = new OCM.Core.Data.ChargePoint();
+
+            if (simpleChargePoint.ID > 0 && simpleChargePoint.UUID != null) dataChargePoint = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == simpleChargePoint.ID && cp.UUID.ToUpper() == simpleChargePoint.UUID.ToUpper());// dataChargePoint.ID = simpleChargePoint.ID; // dataModel.ChargePoints.FirstOrDefault(c => c.ID == simpleChargePoint.ID);
 
             if (String.IsNullOrEmpty(dataChargePoint.UUID)) dataChargePoint.UUID = Guid.NewGuid().ToString().ToUpper();
 
@@ -1127,6 +1128,8 @@ namespace OCM.API.Common
                 dataChargePoint.SubmissionStatusTypeID = null;
                 dataChargePoint.SubmissionStatusType = null; // dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
             }
+
+            return dataChargePoint;
         }
 
         /// <summary>
@@ -1155,8 +1158,7 @@ namespace OCM.API.Common
             oldPOI.SubmissionStatus = null;
             oldPOI.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Delisted_SupersededByUpdate;
 
-            var supersededPOIData = new OCM.Core.Data.ChargePoint();
-            this.PopulateChargePoint_SimpleToData(oldPOI, supersededPOIData, dataModel);
+            var supersededPOIData = this.PopulateChargePoint_SimpleToData(oldPOI, dataModel);
             dataModel.ChargePoints.Add(supersededPOIData);
             dataModel.SaveChanges();
 

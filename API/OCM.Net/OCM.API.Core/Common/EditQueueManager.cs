@@ -131,8 +131,6 @@ namespace OCM.API.Common
                         }
 
                         //save poi update
-                        var poiData = new Core.Data.ChargePoint();
-
                         //if its an edit, load the original details before applying the change
                         if (poiUpdateRequired)
                         {
@@ -141,11 +139,10 @@ namespace OCM.API.Common
                             {
                                 poiManager.SupersedePOI(DataModel, poiA, poiB);
                             }
-                            poiData = DataModel.ChargePoints.First(c => c.ID == poiB.ID);
                         }
 
-                        //set/update cp properties
-                        poiManager.PopulateChargePoint_SimpleToData(poiB, poiData, DataModel);
+                        //set/update cp properties from simple model to data model
+                        var poiData = poiManager.PopulateChargePoint_SimpleToData(poiB, DataModel);
 
                         //set status type to published if previously unset
                         if (poiData.SubmissionStatusTypeID == null)
