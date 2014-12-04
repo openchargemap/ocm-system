@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using KellermanSoftware.CompareNetObjects;
+using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common;
 using OCM.API.Common.Model;
@@ -123,7 +124,7 @@ namespace OCM.Import
                         (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)
                         || (c.AddressInfo.Title == item.AddressInfo.Title && c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 && c.AddressInfo.Postcode == item.AddressInfo.Postcode)
                         || new System.Device.Location.GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS //meters distance apart
-                ).ToList();
+                );
 
                 if (dupeList.Count() > 0)
                 {
@@ -258,10 +259,13 @@ namespace OCM.Import
             var updatesToIgnore = new List<ChargePoint>();
             foreach (var poi in report.Updated)
             {
-                var orig = masterListCopy.FirstOrDefault(p => p.ID == poi.ID);
+                var origPOI = masterListCopy.FirstOrDefault(p => p.ID == poi.ID);
                 var updatedPOI = poiManager.PreviewPopulatedPOIFromModel(poi);
-                var differences = poiManager.CheckDifferences(orig, updatedPOI);
+                var differences = poiManager.CheckDifferences(origPOI, updatedPOI);
                 differences.RemoveAll(d => d.Context == ".MetadataValues");
+                differences.RemoveAll(d => d.Context == ".DateLastStatusUpdate");
+                differences.RemoveAll(d => d.Context == ".UUID");
+              
                 if (!differences.Any())
                 {
                     updatesToIgnore.Add(poi);
@@ -269,7 +273,19 @@ namespace OCM.Import
                 else
                 {
                     //differences exist
-                    System.Diagnostics.Debug.WriteLine(differences.ToString());
+                    CompareLogic compareLogic = new CompareLogic();
+                    compareLogic.Config.MaxDifferences = 100;
+                    compareLogic.Config.IgnoreObjectTypes = false;
+                    compareLogic.Config.IgnoreUnknownObjectTypes = true;
+                    compareLogic.Config.CompareChildren = true;
+                    ComparisonResult result = compareLogic.Compare(origPOI, updatedPOI);
+
+                    var diffReport = new KellermanSoftware.CompareNetObjects.Reports.UserFriendlyReport();
+                    result.Differences.RemoveAll(d => d.PropertyName == ".MetadataValues");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".DateLastStatusUpdate");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".UUID");
+                    System.Diagnostics.Debug.WriteLine("Difference:"+diffReport.OutputString(result.Differences));
+
                 }
             }
 
@@ -437,11 +453,6 @@ namespace OCM.Import
             return hasDifferences;
         }
 
-        public APICredentials GetAPISessionCredentials(string identifier, string sessionToken)
-        {
-            return new APICredentials { Identifier = identifier, SessionToken = sessionToken };
-        }
-
         public List<IImportProvider> GetImportProviders(List<OCM.API.Common.Model.DataProvider> AllDataProviders)
         {
             List<IImportProvider> providers = new List<IImportProvider>();
@@ -566,7 +577,7 @@ namespace OCM.Import
 
                     //de-duplicate and clean list based on existing data
                     //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
-                    var finalList = await DeDuplicateList(list, true, coreRefData, resultReport);
+                    var finalList = await DeDuplicateList(list.ToList(), true, coreRefData, resultReport);
                     //var finalList = list;
 
                     if (ImportUpdatesOnly)
@@ -636,42 +647,6 @@ namespace OCM.Import
         /// </summary>
         /// <param name="itemList"></param>
         /// <param name="coreRefData"></param>
-        public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
-        {
-            //process list of locations, populating country refreshing cache where required
-            foreach (var item in itemList)
-            {
-                if (item.AddressInfo.Country == null)
-                {
-                    var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
-                    if (geoLookup != null)
-                    {
-                        var country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
-                        if (country != null)
-                        {
-                            item.AddressInfo.Country = country;
-
-                            //remove country name from address line 1 if present
-                            if (item.AddressInfo.AddressLine1 != null)
-                            {
-                                if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
-                                {
-                                    item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (item.AddressInfo.Country == null)
-                {
-                    LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title);
-                }
-            }
-
-            //cache may have updates, save for next time
-            geolocationCacheManager.SaveCache();
-        }
 
         public void UpdateImportedPOIList(ImportReport poiResults, User user)
         {
@@ -724,6 +699,50 @@ namespace OCM.Import
             }
         }
 
+        #region helper methods
+
+        public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
+        {
+            //process list of locations, populating country refreshing cache where required
+            foreach (var item in itemList)
+            {
+                if (item.AddressInfo.Country == null)
+                {
+                    var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
+                    if (geoLookup != null)
+                    {
+                        var country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
+                        if (country != null)
+                        {
+                            item.AddressInfo.Country = country;
+
+                            //remove country name from address line 1 if present
+                            if (item.AddressInfo.AddressLine1 != null)
+                            {
+                                if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
+                                {
+                                    item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (item.AddressInfo.Country == null)
+                {
+                    LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title);
+                }
+            }
+
+            //cache may have updates, save for next time
+            geolocationCacheManager.SaveCache();
+        }
+
+        public APICredentials GetAPISessionCredentials(string identifier, string sessionToken)
+        {
+            return new APICredentials { Identifier = identifier, SessionToken = sessionToken };
+        }
+
         public void GeocodingTest()
         {
             OCMClient client = new OCMClient(IsSandboxedAPIMode);
@@ -764,5 +783,7 @@ namespace OCM.Import
             System.IO.File.WriteAllText("C:\\temp\\GeocodingResult.json", json);
              * */
         }
+
+        #endregion helper methods
     }
 }
