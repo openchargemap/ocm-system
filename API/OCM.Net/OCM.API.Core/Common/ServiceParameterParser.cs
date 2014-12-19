@@ -97,5 +97,49 @@ namespace OCM.API.Common
             return null;
         }
 
+        protected List<LatLon> ParsePolyline(string val)
+        {
+            List<LatLon> points = null;
+            try
+            {
+                if (!String.IsNullOrEmpty(val))
+                {
+
+                    if (val.StartsWith("(") && val.EndsWith(")"))
+                    {
+                        //polyline is comma separated list of points
+                        
+                        var pointStringList = val.Split(')');
+                        points = new List<LatLon>();
+                        foreach (var p in pointStringList)
+                        {
+                            if (!String.IsNullOrEmpty(p))
+                            {
+                                var temp = p.ToString().Trim();
+                                if (temp.StartsWith(",")) temp = temp.Substring(1, temp.Length - 1).Trim();
+                                var fragments = temp.Split(',');
+                                var ll = new LatLon
+                                {
+                                    Latitude = double.Parse(fragments[0].Substring(1, fragments[0].Length - 1)),
+                                    Longitude = double.Parse(fragments[1])
+                                };
+                                points.Add(ll);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //attempt polyline decoding
+                        points = OCM.Core.Util.PolylineEncoder.Decode(val).ToList();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                ; ;//failed to parse supplied polyline
+            }
+
+            return points;
+        }
     }
 }

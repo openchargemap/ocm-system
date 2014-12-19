@@ -40,6 +40,7 @@ namespace OCM.API.Common
         public bool? IsOpenData { get; set; }
         public string Callback { get; set; }
         public double? MinPowerKW { get; set; }
+        public List<LatLon> Polyline { get; set; }
 
         public int[] ConnectionTypeIDs { get; set; }
         public int[] OperatorIDs { get; set; }
@@ -123,6 +124,11 @@ namespace OCM.API.Common
             }
             if (!String.IsNullOrEmpty(context.Request["distance"])) settings.Distance = ParseDouble(context.Request["distance"]);
             if (!String.IsNullOrEmpty(context.Request["distanceunit"])) settings.DistanceUnit = ParseDistanceUnit(context.Request["distanceunit"]);
+
+            if (!String.IsNullOrEmpty(context.Request["polyline"])) settings.Polyline = ParsePolyline(context.Request["polyline"]);
+            //settings.Polyline = ParsePolyline("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
+            //settings.Polyline = ParsePolyline("(38.5, -120.2), (40.7, -120.95), (43.252, -126.453)");
+
             if (!String.IsNullOrEmpty(context.Request["connectiontype"])) settings.ConnectionType = ParseString(context.Request["connectiontype"]);
             
             if (!String.IsNullOrEmpty(context.Request["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(context.Request["submissionstatustypeid"]);
