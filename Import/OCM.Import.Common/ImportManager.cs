@@ -238,7 +238,13 @@ namespace OCM.Import
 
             //determine which POIs in our master list are no longer referenced in the import
             report.Delisted = masterList.Where(cp => cp.DataProviderID == report.ProviderDetails.DataProviderID && cp.SubmissionStatus != null && cp.SubmissionStatus.IsLive == true
-                && !cpListSortedByPos.Any(master => master.ID == cp.ID) && !report.Duplicates.Any(master => master.ID == cp.ID)).ToList();
+                && !cpListSortedByPos.Any(master => master.ID == cp.ID) && !report.Duplicates.Any(master => master.ID == cp.ID)
+                && cp.UserComments==null && cp.MediaItems==null).ToList();
+            //safety check to ensure we're not delisting items just because we have incomplete import data:
+            if (cpList.Count<50 || (report.Delisted.Count > cpList.Count))
+            {
+                report.Delisted = new List<ChargePoint>();
+            }
 
             //determine list of low quality POIs (incomplete address info etc)
             report.LowDataQuality = new List<ChargePoint>();
@@ -456,16 +462,15 @@ namespace OCM.Import
         public List<IImportProvider> GetImportProviders(List<OCM.API.Common.Model.DataProvider> AllDataProviders)
         {
             List<IImportProvider> providers = new List<IImportProvider>();
+            
             providers.Add(new ImportProvider_UKChargePointRegistry());
-            //providers.Add(new ImportProvider_BlinkNetwork() { InputPath = inputDataPathPrefix + "blinknetwork.com\\jsondata2.txt" });
             providers.Add(new ImportProvider_CarStations());
-            //providers.Add(new ImportProvider_RWEMobility() { InputPath = inputDataPathPrefix + "rwe-mobility\\data.json.txt" });
-
             providers.Add(new ImportProvider_Mobie());
             providers.Add(new ImportProvider_AFDC());
             providers.Add(new ImportProvider_ESB_eCars());
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique));
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
+            providers.Add(new ImportProvider_NobilDotNo());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -509,11 +514,14 @@ namespace OCM.Import
 
             ImportReport resultReport = new ImportReport();
             resultReport.ProviderDetails = p;
-
+            
             try
             {
                 bool loadOK = false;
-
+                if (p.ImportInitialisationRequired && p is IImportProviderWithInit)
+                {
+                      ((IImportProviderWithInit)provider).InitImportProvider();
+                }
                 if (fetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
                 {
                     p.Log("Loading input data from URL..");
@@ -664,15 +672,15 @@ namespace OCM.Import
                 submissionManager.PerformPOISubmission(updatedPOI, user, performCacheRefresh: false, disablePOISuperseding: true);
             }
 
-            /*
-            foreach (var deletedPOI in poiResults.Delisted)
+            
+            foreach (var delisted in poiResults.Delisted)
             {
-                System.Diagnostics.Debug.WriteLine("Delisting Removed POI " + itemCount + ": " + deletedPOI.AddressInfo.ToString());
-                deletedPOI.SubmissionStatus = null;
-                deletedPOI.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Delisted_NoLongerActive;
+                System.Diagnostics.Debug.WriteLine("Delisting Removed POI " + itemCount + ": " + delisted.AddressInfo.ToString());
+                delisted.SubmissionStatus = null;
+                delisted.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Delisted_RemovedByDataProvider;
 
-                submissionManager.PerformPOISubmission(deletedPOI, user, false);
-            }*/
+                submissionManager.PerformPOISubmission(delisted, user, false);
+            }
 
             //refresh POI cache
             var cacheTask = Task.Run(async () =>

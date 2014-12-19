@@ -178,7 +178,7 @@ namespace OCM.Import.Providers
                     //assume basic level 1 power
                     cinfo.Voltage = 120;
                     cinfo.Amps = 16;
-                    cinfo.PowerKW = cinfo.Voltage * cinfo.Amps;
+                    cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps)/1000;
                     cinfo.CurrentType = new CurrentType { ID = 10 };//AC
 
                     if (evconnectors.Any(c=>c.Value<string>()=="NEMA520")) cinfo.ConnectionType.ID=9; //nema 5-20
@@ -198,7 +198,7 @@ namespace OCM.Import.Providers
                     //assume basic level 2 power
                     cinfo.Voltage = 230;
                     cinfo.Amps = 16;
-                    cinfo.PowerKW = cinfo.Voltage * cinfo.Amps;
+                    cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps)/1000;
                     cinfo.CurrentType = new CurrentType { ID = 10 };//AC
 
                     if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionType.ID = 1; //J1772
@@ -222,7 +222,7 @@ namespace OCM.Import.Providers
                     //assume basic level 3 power
                     cinfo.Voltage = 400;
                     cinfo.Amps = 100;
-                    cinfo.PowerKW = cinfo.Voltage * cinfo.Amps;
+                    cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps)/1000;
                     cinfo.CurrentType = new CurrentType { ID = 10 };//DC
 
                     if (evconnectors.Any(c => c.Value<string>() == "CHADEMO")) cinfo.ConnectionType.ID = 2; //J1772

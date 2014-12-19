@@ -40,7 +40,8 @@ namespace OCM.API.Common.Model
         Delisted_Duplicate = 1001,
         Delisted_NoLongerActive = 1002,
         Delisted_SupersededByUpdate = 1005,
-        Delisted_NotPublicInformation = 1010
+        Delisted_NotPublicInformation = 1010,
+        Delisted_RemovedByDataProvider = 1020
     }
 
     public enum StandardCommentTypes

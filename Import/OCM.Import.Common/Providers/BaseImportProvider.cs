@@ -203,7 +203,7 @@ namespace OCM.Import.Providers
 
         public DataProvider DefaultDataProvider { get; set; }
 
-        protected WebClient webClient = new WebClient();
+        protected CookieAwareWebClient webClient = new CookieAwareWebClient();
 
         public bool ImportInitialisationRequired { get; set; }
 

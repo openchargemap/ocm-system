@@ -11,4 +11,9 @@ namespace OCM.Import.Providers
         string GetProviderName();
         List<ChargePoint> Process(CoreReferenceData coreRefData);
     }
+
+    public interface IImportProviderWithInit: IImportProvider
+    {
+        void InitImportProvider();
+    }
 }

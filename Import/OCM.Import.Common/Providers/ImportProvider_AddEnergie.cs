@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 
 namespace OCM.Import.Providers
 {
-    public class ImportProvider_AddEnergie : BaseImportProvider, IImportProvider
+    public class ImportProvider_AddEnergie : BaseImportProvider, IImportProviderWithInit
     {
         protected string ServiceBaseURL = null;
         protected string ServiceUserName = null;
@@ -30,8 +30,8 @@ namespace OCM.Import.Providers
 
             if (network == NetworkType.ReseauVER)
             {
-                ServiceBaseURL = "https://admin.reseauver.com";    
-                ServicePassword = "EfDxsrgf_R5462Sz";
+                ServiceBaseURL = "https://admin.reseauver.com";
+                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_AddEnergieReseauVER"]; 
                 ProviderName += " [ReseauVER]";
                 DataProviderID = 24;
             }
@@ -39,7 +39,7 @@ namespace OCM.Import.Providers
             if (network == NetworkType.LeCircuitElectrique)
             {
                 ServiceBaseURL = "https://lecircuitelectrique.co";
-                ServicePassword = "Gtrf67_21g_cEkP3";
+                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_LeCircuitElectrique"]; 
                 ProviderName += " [LeCircuitElectrique]";
                 DataProviderID = 24;
             }
@@ -49,7 +49,7 @@ namespace OCM.Import.Providers
            
             OutputNamePrefix = "AddEnergie_"+network.ToString();
             
-            IsAutoRefreshed = false;
+            IsAutoRefreshed = true;
             IsProductionReady = true;
 
             SourceEncoding = Encoding.GetEncoding("UTF-8");
@@ -155,9 +155,13 @@ namespace OCM.Import.Providers
                     {
                         cType = coreRefData.ConnectionTypes.FirstOrDefault(c => c.ID == 1);
                     }
+                    else if (port["ConnectorType"].ToString().ToUpper() == "CHADEMO")
+                    {
+                        cType = coreRefData.ConnectionTypes.FirstOrDefault(c => c.ID == 2);//CHADEMO
+                    }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Unmatched connector" + item["ConnectorType"].ToString());
+                        System.Diagnostics.Debug.WriteLine("Unmatched connector" + port["ConnectorType"].ToString());
                     }
 
                     cinfo.ConnectionType = cType;
