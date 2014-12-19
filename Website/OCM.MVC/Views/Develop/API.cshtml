@@ -31,7 +31,7 @@
 
                 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
 
-                <p><em>API V2 (documentation last updated June 2014) - Please join the discussion forum to discuss development.</em></p>
+                <p><em>API V2 (documentation last updated December 2014) - Please join the discussion forum to discuss development.</em></p>
                 <h3>Service Base URL: </h3>
                 <p>
                     <code>@Html.Raw(apiBaseUrl)</code>
@@ -114,6 +114,11 @@
                     <tr>
                         <td>levelid</td>
                         <td>exact match on a given charging level (1-3) id (comma separated list)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>minpowerkw</td>
+                        <td>minimum output power in kW (this information is not known for many locations)</td>
                         <td>(blank)</td>
                     </tr>
                     <tr>

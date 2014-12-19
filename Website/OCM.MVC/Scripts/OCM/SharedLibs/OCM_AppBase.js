@@ -1,4 +1,4 @@
-/**
+﻿/**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
@@ -9,6 +9,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 /// <reference path="OCM_CommonUI.ts" />
+
 var OCM;
 (function (OCM) {
     (function (AppMode) {
@@ -17,6 +18,7 @@ var OCM;
         AppMode[AppMode["SANDBOXED"] = 2] = "SANDBOXED";
     })(OCM.AppMode || (OCM.AppMode = {}));
     var AppMode = OCM.AppMode;
+
     /** View Model for core functionality */
     var AppViewModel = (function () {
         function AppViewModel() {
@@ -24,11 +26,13 @@ var OCM;
             this.poiList = null;
             this.favouritesList = null;
             this.searchPosition = null;
+
             this.resultsBatchID = -1;
         }
         return AppViewModel;
     })();
     OCM.AppViewModel = AppViewModel;
+
     /** App configuration settings */
     var AppConfig = (function () {
         function AppConfig() {
@@ -41,6 +45,7 @@ var OCM;
         return AppConfig;
     })();
     OCM.AppConfig = AppConfig;
+
     /** App state settings*/
     var AppState = (function () {
         function AppState() {
@@ -49,6 +54,7 @@ var OCM;
             this.isEmbeddedAppMode = false;
             this.appInitialised = false;
             this.languageCode = "en";
+
             this.isLocationEditMode = false;
             this.enableCommentSubmit = true;
             this.isSearchInProgress = false;
@@ -57,16 +63,20 @@ var OCM;
         return AppState;
     })();
     OCM.AppState = AppState;
+
     /** Base for App Components */
     var AppBase = (function (_super) {
         __extends(AppBase, _super);
         function AppBase() {
             _super.call(this);
+
             this.appState = new AppState();
             this.appConfig = new AppConfig();
+
             this.apiClient = new OCM.API();
             this.geolocationManager = new OCM.Geolocation(this.apiClient);
             this.mappingManager = new OCM.Mapping();
+
             this.viewModel = new AppViewModel();
         }
         AppBase.prototype.getLoggedInUserInfo = function () {
@@ -78,17 +88,18 @@ var OCM;
             };
             return userInfo;
         };
+
         AppBase.prototype.setLoggedInUserInfo = function (userInfo) {
             this.setCookie("Identifier", userInfo.Identifier);
             this.setCookie("Username", userInfo.Username);
             this.setCookie("OCMSessionToken", userInfo.SessionToken);
             this.setCookie("AccessPermissions", userInfo.AccessPermissions);
         };
+
         AppBase.prototype.getCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
                 return this.apiClient.getCachedDataObject("_pref_" + c_name);
-            }
-            else {
+            } else {
                 //http://www.w3schools.com/js/js_cookies.asp
                 var i, x, y, ARRcookies = document.cookie.split(";");
                 for (i = 0; i < ARRcookies.length; i++) {
@@ -105,14 +116,15 @@ var OCM;
                 return null;
             }
         };
+
         AppBase.prototype.setCookie = function (c_name, value, exdays) {
-            if (exdays === void 0) { exdays = 1; }
+            if (typeof exdays === "undefined") { exdays = 1; }
             if (this.appState.isRunningUnderCordova) {
                 this.apiClient.setCachedDataObject("_pref_" + c_name, value);
-            }
-            else {
+            } else {
                 if (exdays == null)
                     exdays = 1;
+
                 //http://www.w3schools.com/js/js_cookies.asp
                 var exdate = new Date();
                 exdate.setDate(exdate.getDate() + exdays);
@@ -120,16 +132,17 @@ var OCM;
                 document.cookie = c_name + "=" + c_value;
             }
         };
+
         AppBase.prototype.clearCookie = function (c_name) {
             if (this.appState.isRunningUnderCordova) {
                 this.apiClient.setCachedDataObject("_pref_" + c_name, null);
-            }
-            else {
+            } else {
                 var expires = new Date();
                 expires.setUTCFullYear(expires.getUTCFullYear() - 1);
                 document.cookie = c_name + '=; expires=' + expires.toUTCString() + '; path=/';
             }
         };
+
         AppBase.prototype.getParameter = function (name) {
             //Get a parameter value from the document url
             name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -141,51 +154,58 @@ var OCM;
             else
                 return results[1];
         };
+
         AppBase.prototype.setDropdown = function (id, selectedValue) {
             if (selectedValue == null)
                 selectedValue = "";
             var $dropdown = $("#" + id);
             $dropdown.val(selectedValue);
         };
+
         AppBase.prototype.populateDropdown = function (id, refDataList, selectedValue, defaultToUnspecified, useTitleAsValue, unspecifiedText) {
-            if (defaultToUnspecified === void 0) { defaultToUnspecified = null; }
-            if (useTitleAsValue === void 0) { useTitleAsValue = null; }
-            if (unspecifiedText === void 0) { unspecifiedText = null; }
+            if (typeof defaultToUnspecified === "undefined") { defaultToUnspecified = null; }
+            if (typeof useTitleAsValue === "undefined") { useTitleAsValue = null; }
+            if (typeof unspecifiedText === "undefined") { unspecifiedText = null; }
             var $dropdown = $("#" + id);
             $('option', $dropdown).remove();
+
             if (defaultToUnspecified == true) {
                 if (unspecifiedText == null)
                     unspecifiedText = "Unknown";
                 $dropdown.append($('<option > </option>').val("").html(unspecifiedText));
                 $dropdown.val("");
             }
+
             for (var i = 0; i < refDataList.length; i++) {
                 if (useTitleAsValue == true) {
                     $dropdown.append($('<option > </option>').val(refDataList[i].Title).html(refDataList[i].Title));
-                }
-                else {
+                } else {
                     $dropdown.append($('<option > </option>').val(refDataList[i].ID).html(refDataList[i].Title));
                 }
             }
+
             if (selectedValue != null)
                 $dropdown.val(selectedValue);
         };
+
         AppBase.prototype.getMultiSelectionAsArray = function ($dropdown, defaultVal) {
             //convert multi select values to string array
             if ($dropdown.val() != null) {
                 var selectedVals = $dropdown.val().toString();
                 return selectedVals.split(",");
-            }
-            else {
+            } else {
                 return defaultVal;
             }
         };
+
         AppBase.prototype.showProgressIndicator = function () {
             $("#progress-indicator").fadeIn('slow');
         };
+
         AppBase.prototype.hideProgressIndicator = function () {
             $("#progress-indicator").fadeOut();
         };
+
         AppBase.prototype.setElementAction = function (elementSelector, actionHandler) {
             $(elementSelector).unbind("click");
             $(elementSelector).unbind("touchstart");
@@ -194,26 +214,33 @@ var OCM;
                 actionHandler();
             });
         };
+
         AppBase.prototype.isUserSignedIn = function () {
             if (this.apiClient.hasAuthorizationError == true) {
                 return false;
             }
+
             var userInfo = this.getLoggedInUserInfo();
+
             if (userInfo.Username !== null && userInfo.Username !== "" && userInfo.SessionToken !== null && userInfo.SessionToken !== "") {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         };
+
         AppBase.prototype.getParameterFromURL = function (name, url) {
             var sval = "";
+
             if (url.indexOf("?") >= 0) {
                 var params = url.substr(url.indexOf("?") + 1);
+
                 params = params.split("&");
                 var temp = "";
+
                 for (var i = 0; i < params.length; i++) {
                     temp = params[i].split("=");
+
                     if ([temp[0]] == name) {
                         sval = temp[1];
                     }
@@ -221,14 +248,14 @@ var OCM;
             }
             return sval;
         };
+
         AppBase.prototype.showMessage = function (msg) {
             if (this.appState.isRunningUnderCordova && navigator.notification) {
                 navigator.notification.alert(msg, function () {
                     ;
                     ;
                 }, 'Open Charge Map', 'OK');
-            }
-            else {
+            } else {
                 bootbox.alert(msg, function () {
                 });
             }
