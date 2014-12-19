@@ -1,82 +1,108 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.EditQueueItem>
+@using OCM.API.Common.Model;
+@using Newtonsoft.Json;
+@{
 
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.User)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateSubmitted)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EntityID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Differences)
-        </th>
-        <th></th>
-    </tr>
+    var isUserAdmin = ViewBag.IsUserAdmin;
+    OCM.API.Common.Model.User currentUserProfile = ViewBag.UserProfile;
+    OCM.API.Common.Model.UserPermissionsContainer userPermissions = null;
 
-    @foreach (var item in Model)
+    if (currentUserProfile != null && !String.IsNullOrEmpty(currentUserProfile.Permissions))
     {
-        <tr>
-            <td>
-                @if (item.User == null)
-                {
-                    @: (Anonymous User)
-                }
-                else
-                {
-
-                    <a target="_blank" href="@Url.Action("View", "Profile", new {id=item.User.ID })">
-                        @Html.DisplayFor(modelItem => item.User.Username)
-                    </a>
-                }
-            </td>
-
-
-
-            <td>
-                @Html.DisplayFor(modelItem => item.DateSubmitted)
-            </td>
-            <td>
-                @if(item.EntityID>0)
-                {
-                @Html.ActionLink("OCM-"+item.EntityID.ToString(),"Details","POI", new {id=item.EntityID}, null)
-                } else {
-                @Html.DisplayFor(modelItem => item.EntityID)
-                }
-            </td>
-            <td>
-                <span style="font-size: smaller;">
-                    @Html.Partial("_DisplayPOIDiff", item.Differences)
-                </span>
-
-            </td>
-            <td>
-                @if (ViewBag.IsUserAdmin == true)
-                {
-                    <div class="btn-group">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            Action
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            @if (!item.IsProcessed)
-                            {
-                                <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
-                            }
-                            <li>@Html.ActionLink("Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
-                        </ul>
-                    </div>
-                }
-                else
-                {
-                    <text>Awaiting Administrator</text>
-                }
-
-            </td>
-        </tr>
+        userPermissions = JsonConvert.DeserializeObject<UserPermissionsContainer>(currentUserProfile.Permissions);
     }
 
-</table>
+}
+
+@if (!Model.Any())
+{
+    <p>There are no matching edits currently awaiting approval.</p>
+}
+else
+{
+
+    <table class="table table-condensed">
+        <tr>
+            <th>
+                Submitter
+            </th>
+            <th>
+            </th>
+            <th>
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            var editPOI = OCM.API.Common.EditQueueManager.DeserializePOIFromJSON(item.EditData);
+
+            <tr>
+                <td rowspan="2">
+                    @if (item.User == null)
+                    {
+                        @: (Anonymous User)
+                }
+                    else
+                    {
+
+                        <a target="_blank" href="@Url.Action("View", "Profile", new {id=item.User.ID })">
+                            @Html.DisplayFor(modelItem => item.User.Username)
+                        </a>
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateSubmitted)
+                </td>
+                <td>
+                    @if (item.EntityID > 0)
+                    {
+                        @Html.ActionLink("OCM-" + item.EntityID.ToString(), "Details", "POI", new { id = item.EntityID }, null)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.EntityID)
+                    }
+                </td>
+
+                <td rowspan="2">
+                    @if (!item.IsProcessed)
+                    {
+                        if (ViewBag.IsUserAdmin == true || (currentUserProfile != null && OCM.API.Common.UserManager.HasUserPermission(currentUserProfile, editPOI.AddressInfo.CountryID, PermissionLevel.Editor, userPermissions)))
+                        {
+
+                            <div class="btn-group">
+                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Action
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+
+                                    <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
+                                    <li>@Html.ActionLink("Reject/Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+
+                            <span class="text-info">Awaiting Country Editor Approval</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-success">Edit Processed @(item.ProcessedByUser != null ? "by " + item.ProcessedByUser.Username : "") @item.DateProcessed</span>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span style="font-size: smaller;">
+                        @Html.Partial("_DisplayPOIDiff", item.Differences)
+                    </span>
+                </td>
+            </tr>
+        }
+    </table>
+}

@@ -166,7 +166,7 @@ namespace OCM.API.Common.Model
 
 #endif
 
-        public string GetAddressSummary(bool UseHTML)
+        public string GetAddressSummary(bool UseHTML, bool fullDetails = false)
         {
             string address = "";
 
@@ -177,6 +177,17 @@ namespace OCM.API.Common.Model
                 if (this.AddressInfo.Town != null) address += "\r\n" + this.AddressInfo.Town;
                 if (this.AddressInfo.StateOrProvince != null) address += "\r\n" + this.AddressInfo.StateOrProvince;
                 if (this.AddressInfo.Postcode != null) address += "\r\n" + this.AddressInfo.Postcode;
+                if (this.AddressInfo.Country!=null) address+="\r\n"+this.AddressInfo.Country.Title;
+                if (fullDetails){
+                    if (this.AddressInfo.Title != null) address = this.AddressInfo.Title+"\r\n"+address;
+                    if (this.AddressInfo.AccessComments != null) address += "\r\n" + this.AddressInfo.AccessComments;
+                    if (this.AddressInfo.ContactEmail != null) address += "\r\n" + this.AddressInfo.ContactEmail;
+                    if (this.AddressInfo.ContactTelephone1 != null) address += "\r\n" + this.AddressInfo.ContactTelephone1;
+                    if (this.AddressInfo.ContactTelephone2 != null) address += "\r\n" + this.AddressInfo.ContactTelephone2;
+                    if (this.AddressInfo.RelatedURL != null) address += "\r\n" + this.AddressInfo.RelatedURL;
+                    if (this.AddressInfo.GeneralComments != null) address += "\r\n" + this.AddressInfo.GeneralComments;
+                    
+                }
             }
 
             return address;

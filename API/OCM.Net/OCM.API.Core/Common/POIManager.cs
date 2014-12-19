@@ -682,7 +682,7 @@ namespace OCM.API.Common
             }
         }
 
-        public List<DiffItem> CheckDifferences(Model.ChargePoint poiA, Model.ChargePoint poiB)
+        public List<DiffItem> CheckDifferences(Model.ChargePoint poiA, Model.ChargePoint poiB, bool useObjectCompare = true)
         {
             var diffList = new List<DiffItem>();
 
@@ -703,9 +703,11 @@ namespace OCM.API.Common
                 return diffList;
             }
 
-            var objectComparison = new CompareLogic(new ComparisonConfig { CompareChildren = true, MaxDifferences = 1000 });
+            if (useObjectCompare)
+            {
+                var objectComparison = new CompareLogic(new ComparisonConfig { CompareChildren = true, MaxDifferences = 1000 });
 
-            var exclusionList = new string[]
+                var exclusionList = new string[]
                 {
                     "UUID",
                     "MediaItems",
@@ -715,8 +717,16 @@ namespace OCM.API.Common
                     ".DataProvider.DateLastImported",
                     ".DataProvider.WebsiteURL",
                     ".DataProvider.DataProviderStatusType",
+                    ".DataProvider.Comments",
+                    ".DataProvider.License",
                     ".StatusType.IsOperational",
                     ".ConnectionType.FormalName",
+                    ".ConnectionType.IsDiscontinued",
+                    ".ConnectionType.IsObsolete",
+                    ".ConnectionType.ID",
+                    ".ConnectionType.ID",
+                    ".CurrentTypeID",
+                    ".CurrentType.Description",
                     ".Level.Comments",
                     ".AddressInfoID",
                     ".AddressInfo.ID",
@@ -738,29 +748,65 @@ namespace OCM.API.Common
                     ".DataProvider.DataProviderStatusType.ID",
                     ".DataProvider.DataProviderStatusType.Title"
                 };
-            objectComparison.Config.MembersToIgnore.AddRange(exclusionList);
+                objectComparison.Config.MembersToIgnore.AddRange(exclusionList);
 
-            var comparisonResult = objectComparison.Compare(poiA, poiB);
+                var comparisonResult = objectComparison.Compare(poiA, poiB);
 
-            if (!comparisonResult.AreEqual)
-            {
-                //clean up differences we want to exclude
-                foreach (var exclusionSuffix in exclusionList)
+                if (!comparisonResult.AreEqual)
                 {
-                    comparisonResult.Differences.RemoveAll(e => e.PropertyName.EndsWith(exclusionSuffix));
+                    //clean up differences we want to exclude
+                    foreach (var exclusionSuffix in exclusionList)
+                    {
+                        comparisonResult.Differences.RemoveAll(e => e.PropertyName.EndsWith(exclusionSuffix));
+                    }
+
+                    diffList.AddRange(comparisonResult.Differences.Select(difference => new DiffItem { Context = difference.PropertyName, ValueA = difference.Object1Value, ValueB = difference.Object2Value }));
+
+                    //remove items which only vary on null vs ""
+                    diffList.RemoveAll(d => (String.IsNullOrWhiteSpace(d.ValueA) || d.ValueA == "(null)") && (String.IsNullOrWhiteSpace(d.ValueB) || d.ValueB == "(null)"));
+
+                    //remove items which are in fact the same
+                    diffList.RemoveAll(d => d.ValueA == d.ValueB);
                 }
+            }
+            else
+            {
+                //perform non-automate diff check
+                CompareSimpleRefDataItem(diffList, "Data Provider", poiA.DataProviderID, poiB.DataProviderID, (SimpleReferenceDataType)poiA.DataProvider, (SimpleReferenceDataType)poiB.DataProvider);
+                CompareSimpleRefDataItem(diffList, "Network/Operator", poiA.OperatorID, poiB.OperatorID, poiA.OperatorInfo, poiB.OperatorInfo);
+                CompareSimpleRefDataItem(diffList, "Operational Status", poiA.StatusTypeID, poiB.StatusTypeID, poiA.StatusType, poiB.StatusType);
+                CompareSimpleRefDataItem(diffList, "Usage Type", poiA.UsageTypeID, poiB.UsageTypeID, poiA.UsageType, poiB.UsageType);
+                CompareSimpleRefDataItem(diffList, "Submission Status", poiA.SubmissionStatusTypeID, poiB.SubmissionStatusTypeID, poiA.SubmissionStatus, poiB.SubmissionStatus);
 
-                diffList.AddRange(comparisonResult.Differences.Select(difference => new DiffItem { Context = difference.PropertyName, ValueA = difference.Object1Value, ValueB = difference.Object2Value }));
+                CompareSimpleProperty(diffList, "Data Providers Reference", poiA.DataProvidersReference, poiB.DataProvidersReference);
+                CompareSimpleProperty(diffList, "Data Quality Level", poiA.DataQualityLevel, poiB.DataQualityLevel);
+                CompareSimpleProperty(diffList, "Number Of Points", poiA.NumberOfPoints, poiB.NumberOfPoints);
+                CompareSimpleProperty(diffList, "Usage Cost", poiA.UsageCost, poiB.UsageCost);
+                CompareSimpleProperty(diffList, "Address", poiA.GetAddressSummary(false, true), poiB.GetAddressSummary(false, true));
+                CompareSimpleProperty(diffList, "General Comments", poiA.GeneralComments, poiB.GeneralComments);
+                CompareSimpleProperty(diffList, "Address : Access Comments", poiA.AddressInfo.AccessComments, poiB.AddressInfo.AccessComments);
 
-                //remove items which only vary on null vs ""
-                diffList.RemoveAll(d => (String.IsNullOrWhiteSpace(d.ValueA) || d.ValueA == "(null)") && (String.IsNullOrWhiteSpace(d.ValueB) || d.ValueB == "(null)"));
-
-                //remove items which are in fact the same
-                diffList.RemoveAll(d => d.ValueA == d.ValueB);
             }
             return diffList;
         }
 
+        private void CompareSimpleRefDataItem(List<DiffItem> diffList, string displayName, int? ID1, int? ID2, SimpleReferenceDataType refData1, SimpleReferenceDataType refData2)
+        {
+            if (ID1 != ID2) diffList.Add(new DiffItem { DisplayName = displayName, Context=displayName, ValueA = (refData1 != null ? refData1.Title : ""), ValueB = (refData2 != null ?refData2.Title : "") });
+        }
+
+        private void CompareSimpleProperty(List<DiffItem> diffList, string displayName, object val1, object val2)
+        {
+            //check if object values are different, if so add to diff list
+            if (
+                (val1!=null && val2==null && !String.IsNullOrEmpty(val1.ToString())) ||
+                (val1==null && val2!=null && !String.IsNullOrEmpty(val2.ToString())) ||
+                (val1 != null && val2 != null && val1.ToString() != val2.ToString())
+                )
+            {
+                diffList.Add(new DiffItem { DisplayName = displayName, Context=displayName, ValueA = (val1 != null ? val1.ToString() : ""), ValueB = (val2 != null ? val2.ToString() : "") });
+            }
+        }
         /// <summary>
         /// Populate AddressInfo data from settings in a simple AddressInfo object
         /// </summary>

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.DiffItem>
 
-<table class="table table-striped table-condensed">
+<table class="table table-bordered table-striped table-condensed">
     <tr>
         <th>
            Field
@@ -16,14 +16,14 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Context)
+            <strong>@Html.DisplayFor(modelItem => item.Context)</strong>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ValueA)
+            <span class="text-success">@Html.DisplayFor(modelItem => item.ValueA)</span>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ValueB)
-        </td>
+            <span class="text-danger">@Html.DisplayFor(modelItem => item.ValueB)</span>
+</td>
     </tr>
 }
 

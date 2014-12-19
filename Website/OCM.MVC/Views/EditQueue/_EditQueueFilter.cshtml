@@ -11,7 +11,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.ShowEditsOnly, new { @class = "control-label" })
 
-                @Html.EditorFor(model => model.ShowEditsOnly)
+                @Html.EditorFor(model => model.ShowEditsOnly, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ShowEditsOnly)
 
             </div>
@@ -19,7 +19,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.ShowProcessed, new { @class = "control-label" })
 
-                @Html.EditorFor(model => model.ShowProcessed)
+                @Html.EditorFor(model => model.ShowProcessed, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ShowProcessed)
 
             </div>

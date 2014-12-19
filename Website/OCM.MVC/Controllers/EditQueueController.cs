@@ -1,55 +1,54 @@
 ﻿using OCM.API.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using OCM.API.Common.Model;
+using System.Web.Mvc;
 
 namespace OCM.MVC.Controllers
 {
-    public class EditQueueController : Controller
+    [AuthSignedInOnly]
+    public class EditQueueController : BaseController
     {
         //
         // GET: /EditQueue/
 
         public ActionResult Index(EditQueueFilter filter)
-        {    
+        {
             using (var editQueueManager = new EditQueueManager())
             {
                 var list = editQueueManager.GetEditQueueItems(filter);
                 ViewBag.EditFilter = filter;
                 ViewBag.IsUserAdmin = (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
-                
+                if (IsUserSignedIn)
+                {
+                    ViewBag.UserProfile = new UserManager().GetUser(int.Parse(Session["UserID"].ToString()));
+                }
                 return View(list);
             }
         }
 
-        [AuthSignedInOnly(Roles="Admin")]
+        [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult Cleanup()
         {
             using (var editQueueManager = new EditQueueManager())
             {
-               editQueueManager.CleanupRedundantEditQueueitems();
+                editQueueManager.CleanupRedundantEditQueueitems();
 
                 return View();
             }
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [AuthSignedInOnly]
         public ActionResult Publish(int id)
         {
-            //approves/publishes the given edit directly
+            //approves/publishes the given edit directly (if user has permission)
             using (var editQueueManager = new EditQueueManager())
             {
-                
                 editQueueManager.ProcessEditQueueItem(id, true, (int)Session["UserID"]);
-                
+
                 return RedirectToAction("Index", "EditQueue");
             }
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [AuthSignedInOnly]
         public ActionResult MarkAsProcessed(int id)
         {
             //marks item as processed without publishing the edit
@@ -60,6 +59,7 @@ namespace OCM.MVC.Controllers
                 return RedirectToAction("Index", "EditQueue");
             }
         }
+
         //
         // GET: /EditQueue/Details/5
 
@@ -67,6 +67,5 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
-
     }
 }

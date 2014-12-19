@@ -304,8 +304,14 @@ namespace OCM.MVC.Controllers
             {
                 //preview poi
                 ViewBag.EnablePreviewMode = true;
+                
+                //reset any values provided as -1 to a standard default (unknown etc)
+                PrepareDefaultsForBlankSelections(poi);
+
                 //update preview of poi with fully populated reference data
                 poi = new POIManager().PreviewPopulatedPOIFromModel(poi);
+
+            
 
                 InitEditReferenceData(poi);
 
@@ -321,81 +327,7 @@ namespace OCM.MVC.Controllers
                     if (IsUserSignedIn) user = new UserManager().GetUser((int)Session["UserID"]);
 
                     //reset any values provided as -1 to a standard default (unknown etc)
-                    //the binding method varies between hidden fields and dropdown values (FIXME)
-                    if (poi.DataProvider != null && poi.DataProvider.ID > 0)
-                    {
-                        poi.DataProviderID = poi.DataProvider.ID;
-                    }
-                    if (poi.DataProviderID == -1 || poi.DataProviderID == null)
-                    {
-                        poi.DataProvider = null;
-                        poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
-                    }
-
-                    if (poi.OperatorInfo != null)
-                    {
-                        poi.OperatorID = poi.OperatorInfo.ID;
-                    }
-                    else
-                    {
-                        poi.OperatorID = (int)StandardOperators.UnknownOperator;
-                    }
-
-                    if (poi.UsageType != null)
-                    {
-                        poi.UsageTypeID = poi.UsageType.ID;
-                    }
-                    else
-                    {
-                        poi.UsageTypeID = (int)StandardUsageTypes.Unknown;
-                    }
-
-                    if (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null))
-                    {
-                        poi.StatusTypeID = poi.StatusType.ID;
-                    }
-
-                    if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
-                    {
-                        poi.StatusType = null;
-                        poi.StatusTypeID = (int)StandardStatusTypes.Unknown;
-                    }
-
-                    if (poi.SubmissionStatusTypeID == -1)
-                    {
-                        poi.SubmissionStatus = null;
-                        poi.SubmissionStatusTypeID = null;
-                    }
-
-                    if (poi.Connections != null)
-                    {
-                        foreach (var connection in poi.Connections)
-                        {
-                            if (connection.ConnectionTypeID == -1)
-                            {
-                                connection.ConnectionType = null;
-                                connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
-                            }
-
-                            if (connection.CurrentTypeID == -1)
-                            {
-                                connection.CurrentType = null;
-                                connection.CurrentTypeID = null;
-                            }
-
-                            if (connection.StatusTypeID == -1)
-                            {
-                                connection.StatusType = null;
-                                connection.StatusTypeID = (int)StandardStatusTypes.Unknown;
-                            }
-
-                            if (connection.LevelID == -1)
-                            {
-                                connection.Level = null;
-                                connection.LevelID = null;
-                            }
-                        }
-                    }
+                    PrepareDefaultsForBlankSelections(poi);
 
                     if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID == -1) ModelState.AddModelError("Country", "Required");
 
@@ -436,6 +368,87 @@ namespace OCM.MVC.Controllers
             ViewBag.ReferenceData = new POIBrowseModel();
 
             return View(poi);
+        }
+
+        private void PrepareDefaultsForBlankSelections(ChargePoint poi)
+        {
+            //Where -1 is supplied as dropdown value etc we need to revert to a default or null value;
+            //FIXME: the binding method varies between hidden fields and dropdown values
+            if (poi.DataProvider != null && poi.DataProvider.ID > 0)
+            {
+                poi.DataProviderID = poi.DataProvider.ID;
+            }
+            if (poi.DataProviderID == -1 || poi.DataProviderID == null)
+            {
+                poi.DataProvider = null;
+                poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
+            }
+
+            if (poi.OperatorInfo != null)
+            {
+                poi.OperatorID = poi.OperatorInfo.ID;
+            }
+            else
+            {
+                poi.OperatorID = (int)StandardOperators.UnknownOperator;
+            }
+
+            if (poi.UsageType != null)
+            {
+                poi.UsageTypeID = poi.UsageType.ID;
+            }
+            else
+            {
+                poi.UsageTypeID = (int)StandardUsageTypes.Unknown;
+            }
+
+            if (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null))
+            {
+                poi.StatusTypeID = poi.StatusType.ID;
+            }
+
+            if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
+            {
+                poi.StatusType = null;
+                poi.StatusTypeID = (int)StandardStatusTypes.Unknown;
+            }
+
+            if (poi.SubmissionStatusTypeID == -1)
+            {
+                poi.SubmissionStatus = null;
+                poi.SubmissionStatusTypeID = null;
+            }
+
+            if (poi.Connections != null)
+            {
+                foreach (var connection in poi.Connections)
+                {
+                    if (connection.ConnectionTypeID == -1)
+                    {
+                        connection.ConnectionType = null;
+                        connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
+                    }
+
+                    if (connection.CurrentTypeID == -1)
+                    {
+                        connection.CurrentType = null;
+                        connection.CurrentTypeID = null;
+                    }
+
+                    if (connection.StatusTypeID == -1)
+                    {
+                        connection.StatusType = null;
+                        connection.StatusTypeID = (int)StandardStatusTypes.Unknown;
+                    }
+
+                    if (connection.LevelID == -1)
+                    {
+                        connection.Level = null;
+                        connection.LevelID = null;
+                    }
+                }
+            }
+
         }
 
         private void InitEditReferenceData(ChargePoint poi)

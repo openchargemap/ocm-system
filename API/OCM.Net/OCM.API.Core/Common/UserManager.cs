@@ -192,14 +192,17 @@ namespace OCM.API.Common
             return false;
         }
 
-        public static bool HasUserPermission(User user, int? CountryID, PermissionLevel requiredLevel)
+        public static bool HasUserPermission(User user, int? CountryID, PermissionLevel requiredLevel, UserPermissionsContainer userPermissions=null)
         {
             if (user != null)
-            {
-                UserPermissionsContainer userPermissions = new UserPermissionsContainer();
+            {   
                 if (!String.IsNullOrEmpty(user.Permissions))
                 {
-                    userPermissions = JsonConvert.DeserializeObject<UserPermissionsContainer>(user.Permissions);
+                    if (userPermissions == null)
+                    {
+                        userPermissions = JsonConvert.DeserializeObject<UserPermissionsContainer>(user.Permissions);
+                    }
+
                     if (userPermissions.Permissions != null)
                     {
                         if (userPermissions.Permissions.Any(p => p.Level == PermissionLevel.Admin && (p.CountryID == null || p.CountryID == CountryID)))
@@ -210,7 +213,7 @@ namespace OCM.API.Common
 
                         if (userPermissions.Permissions.Any(p => p.Level == requiredLevel && (p.CountryID == null || p.CountryID == CountryID)))
                         {
-                            //user has required level of acces (for given country or all countries)
+                            //user has required level of access (for given country or all countries)
                             return true;
                         }
                     }
