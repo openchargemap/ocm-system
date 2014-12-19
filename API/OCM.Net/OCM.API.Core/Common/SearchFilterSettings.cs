@@ -203,6 +203,8 @@ namespace OCM.API.Common
                 if (StatusTypeIDs != null) key += ":stat_id:" + IntArrayToString(StatusTypeIDs);
                 if (DataProviderIDs != null) key += ":prov_id:" + IntArrayToString(DataProviderIDs);
                 if (IsOpenData != null) key += ":opendata:" + IsOpenData.ToString();
+                if (MinPowerKW != null) key += ":minpowerkw:" + MinPowerKW.ToString();
+                if (Polyline != null) key += ":polyline:" + Polyline.GetHashCode().ToString();
                 if (ChangesFromDate != null) key += ":modified:" +  ChangesFromDate.Value.Ticks.ToString();
 
                 return OCM.Core.Util.SecurityHelper.GetMd5Hash(key);

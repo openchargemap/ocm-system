@@ -11,6 +11,7 @@ module OCM {
         public countryCode: string = null;
         public latitude: number = null;
         public longitude: number = null;
+        public locationTitle: string = null;
         public distance: number = null;
         public distanceUnit: string = null;
         public connectionTypeID: number = null;
@@ -19,6 +20,8 @@ module OCM {
         public countryID: number = null;
         public usageTypeID: number = null;
         public statusTypeID: number = null;
+        public minPowerKW: number = null;
+           
         public submissionStatusTypeID: number = null;
 
         public maxResults: number = 100;
@@ -95,6 +98,8 @@ module OCM {
             if (params.operatorID != null) serviceParams += "&operatorid=" + params.operatorID;
             if (params.usageTypeID != null) serviceParams += "&usagetypeid=" + params.usageTypeID;
             if (params.statusTypeID != null) serviceParams += "&statustypeid=" + params.statusTypeID;
+            if (params.locationTitle != null) serviceParams += "&locationtitle=" + params.locationTitle;
+            if (params.minPowerKW != null) serviceParams += "&minpowerkw=" + params.minPowerKW;
             if (params.submissionStatusTypeID != null) serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
 
             if (params.enableCaching == false) serviceParams += "&enablecaching=false";

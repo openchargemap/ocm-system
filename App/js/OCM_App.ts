@@ -683,6 +683,7 @@ module OCM {
                 this.setCookie("optbasemaptype", $('#pref-basemap-type').val());
                 this.setCookie("optsearchbehaviour", $('#pref-search-behaviour').val());
 
+                this.setCookie("filterminpowerkw", $('#filter-minpowerkw').val());
                 this.setCookie("filteroperator", $('#filter-operator').val());
                 this.setCookie("filterconnectiontype", $('#filter-connectiontype').val());
                 this.setCookie("filterconnectionlevel", $('#filter-connectionlevel').val());
@@ -699,6 +700,7 @@ module OCM {
             this.loadPref("optbasemaptype", $("#pref-basemap-type"), false);
             this.loadPref("optsearchbehaviour", $("#pref-search-behaviour"), false);
 
+            this.loadPref("filterminpowerkw", $("#filter-minpowerkw"), true);
             this.loadPref("filteroperator", $("#filter-operator"), true);
             this.loadPref("filterconnectiontype", $("#filter-connectiontype"), true);
             this.loadPref("filterconnectionlevel", $("#filter-connectionlevel"), true);
@@ -944,6 +946,7 @@ module OCM {
                     //apply filter settings from UI
                     if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
                     if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
+                    if ($("#filter-minpowerkw").val() != "") params.minPowerKW = $("#filter-minpowerkw").val();
                     if ($("#filter-operator").val() != "") params.operatorID = $("#filter-operator").val();
                     if ($("#filter-connectionlevel").val() != "") params.levelID = $("#filter-connectionlevel").val();
                     if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();

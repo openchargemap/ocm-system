@@ -67,6 +67,20 @@
                     <h3>Filters</h3>
                     <p class="info">The following filters reduce the amount of results returned, so use these if you have too many results when searching.</p>
                     <div class="form-group">
+                        <label for="filter-minpowerkw">Min. Power kW</label>
+                        <select name="filter-minpowerkw" id="filter-minpowerkw" multiple="multiple" class="form-control">
+                            <option value="" selected="selected">(All)</option>
+                            <option value="7">7+ kW</option>
+                            <option value="14">14+ kW</option>
+                            <option value="20">20+ kW</option>
+                            <option value="30">30+ kW</option>
+                            <option value="40">40+ kW</option>
+                            <option value="50">50+ kW</option>
+                            <option value="75">75+ kW</option>
+                            <option value="100">100+ kW</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="filter-operator">Operator</label>
                         <select name="filter-operator" id="filter-operator" multiple="multiple" class="form-control">
                             <option value="" selected="selected">(All)</option>
