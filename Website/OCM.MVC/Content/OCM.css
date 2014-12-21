@@ -163,6 +163,10 @@ div.result {
 .result > div {
   padding: 0.8em;
 }
+.details-description {
+  padding: 1em;
+  background-color: whitesmoke;
+}
 #details-imageblock {
   width: 100%;
   height: 700px;
@@ -461,3 +465,4 @@ div[data-editormode="advanced"] label {
   border-bottom-left-radius: 8px;
   margin-left: 4em;
 }
+/*# sourceMappingURL=OCM.css.map */
