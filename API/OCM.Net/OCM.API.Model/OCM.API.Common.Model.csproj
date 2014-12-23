@@ -78,6 +78,7 @@
     <Compile Include="Base\MediaItem.cs" />
     <Compile Include="Base\DataType.cs" />
     <Compile Include="Extended\CountryExtendedInfo.cs" />
+    <Compile Include="Extended\DataQualityReport.cs" />
     <Compile Include="Extended\DiffItem.cs" />
     <Compile Include="Base\EntityType.cs" />
     <Compile Include="Base\EditQueueItem.cs" />

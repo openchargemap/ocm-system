@@ -167,6 +167,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DataAnalysisManager.cs" />
     <Compile Include="Common\DataProviderManager.cs" />
     <Compile Include="Common\EditQueueManager.cs" />
     <Compile Include="Common\Extensions\MetadataFieldOption.cs" />

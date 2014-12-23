@@ -458,7 +458,6 @@ namespace OCM.Core.Data
             if (settings.OperatorIDs != null) { filterByOperators = true; }
             else { settings.OperatorIDs = new int[] { -1 }; }
 
-            //TODO: get country id for given country code
             //either filter by named country code or by country id list
             if (settings.CountryCode != null)
             {

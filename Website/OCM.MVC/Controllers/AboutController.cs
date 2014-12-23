@@ -42,7 +42,6 @@ namespace OCM.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO; move submission manager out of API project to core
                 SubmissionManager submissionManager = new SubmissionManager();
                 bool sentOK = submissionManager.SubmitContactSubmission(contactSubmission);
 

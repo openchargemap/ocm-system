@@ -41,6 +41,13 @@ namespace OCM.MVC.Controllers
             }
         }
 
+        public bool IsUserAdmin
+        {
+            get {
+                return (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
+            }
+        }
+
         /// <summary>
         /// Returns new or cached location guess based on client IP address
         /// </summary>

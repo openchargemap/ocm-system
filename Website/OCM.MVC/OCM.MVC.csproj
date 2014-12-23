@@ -447,6 +447,7 @@
     <Content Include="Views\Admin\Import.cshtml" />
     <Content Include="Views\Admin\ConfigCheck.cshtml" />
     <Content Include="Views\Admin\_POIList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DataQualityReport.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
