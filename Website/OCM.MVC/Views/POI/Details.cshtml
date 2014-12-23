@@ -254,6 +254,11 @@
                                     @Html.DisplayFor(m => m.POI.MetadataValues)
                                 </div>
                             }
+
+                            @if (Model.DataQualityReport != null)
+                            {
+                                @Html.DisplayFor(m => m.DataQualityReport);
+                            }
                         </div>
                     </div>
                 </div>
@@ -382,7 +387,7 @@
                     //when map tab is shown, invalidate map to avoid redraw issue
                     setTimeout(function () {
                         google.maps.event.trigger(map, "resize");
-                        
+
                     }, 500);
                 }
 

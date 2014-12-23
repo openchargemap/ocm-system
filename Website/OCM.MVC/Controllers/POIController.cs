@@ -1,6 +1,7 @@
 ﻿using OCM.API.Common;
 using OCM.API.Common.DataSummary;
 using OCM.API.Common.Model;
+using OCM.Core.Common;
 using OCM.MVC.Models;
 using System;
 using System.Collections;
@@ -165,6 +166,13 @@ namespace OCM.MVC.Controllers
                 System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
 
                 ViewBag.ReferenceData = new POIBrowseModel();
+
+                //get data quality report
+
+                if (IsUserAdmin)
+                {
+                    viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
+                }
             }
             else
             {
@@ -304,14 +312,12 @@ namespace OCM.MVC.Controllers
             {
                 //preview poi
                 ViewBag.EnablePreviewMode = true;
-                
+
                 //reset any values provided as -1 to a standard default (unknown etc)
                 PrepareDefaultsForBlankSelections(poi);
 
                 //update preview of poi with fully populated reference data
                 poi = new POIManager().PreviewPopulatedPOIFromModel(poi);
-
-            
 
                 InitEditReferenceData(poi);
 
@@ -448,7 +454,6 @@ namespace OCM.MVC.Controllers
                     }
                 }
             }
-
         }
 
         private void InitEditReferenceData(ChargePoint poi)
@@ -547,7 +552,7 @@ namespace OCM.MVC.Controllers
             }
             else
             {
-                duplicateSummary = new POIManager().GetAllPOIDuplicates((int)countryId, maxDupeRange);
+                duplicateSummary = new DataAnalysisManager().GetAllPOIDuplicates(new POIManager(), (int)countryId, maxDupeRange);
                 HttpRuntime.Cache[cacheKey] = duplicateSummary;
             }
 

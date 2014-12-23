@@ -1,0 +1,24 @@
+﻿@model OCM.API.Common.Model.Extended.DataQualityReport
+
+<div>
+    <h4>Data Quality Report</h4>
+    <hr />
+
+
+    @foreach (var i in Model.POIReports)
+    {
+
+        <h5>Data Quality Score: @i.DataQualityScore out of 100</h5>
+    <ul>
+        @foreach (var qualityItem in i.ReportItems)
+        {
+            <li><span class="label @(qualityItem.IsPositive?"label-success":"label-danger")">
+            @qualityItem.Category -
+            @qualityItem.Comment
+        </span></li>
+        }
+        
+    </ul>
+    }
+</div>
+    

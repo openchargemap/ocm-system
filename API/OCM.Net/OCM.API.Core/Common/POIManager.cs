@@ -182,7 +182,7 @@ namespace OCM.API.Common
                     {
                         dataList = new CacheProviderMongoDB().GetPOIList(settings);
                     }
-                    catch (Exception exp)
+                    catch (Exception)
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
                         //TODO: send error notification
@@ -451,186 +451,6 @@ namespace OCM.API.Common
             return list;
         }
 
-        public POIDuplicates GetAllPOIDuplicates(int countryId, double maxDupeRange = 500)
-        {
-            List<DuplicatePOIItem> allDuplicates = new List<DuplicatePOIItem>();
-
-            OCMEntities dataModel = new OCMEntities();
-
-            double DUPLICATE_DISTANCE_METERS = 25;
-            double POSSIBLE_DUPLICATE_DISTANCE_METERS = maxDupeRange;
-
-            //TODO: better method for large number of POIs
-            //grab all live POIs (30-100,000 items)
-            //var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
-            var allPOIs = GetChargePoints(new APIRequestSettings { CountryIDs = new int[] { countryId } });
-
-            foreach (var poi in allPOIs)
-            {
-                //find pois which duplicate the given poi
-                var dupePOIs = allPOIs.Where(p => p.ID != poi.ID &&
-                    (
-                        p.DataProvidersReference != null && p.DataProvidersReference.Length > 0 && p.DataProvidersReference == poi.DataProvidersReference
-                        || new System.Device.Location.GeoCoordinate(p.AddressInfo.Latitude, p.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude)) < POSSIBLE_DUPLICATE_DISTANCE_METERS
-                    )
-                    );
-
-                if (dupePOIs.Any())
-                {
-                    var poiModel = poi;// OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poi, true, true, true, true);
-
-                    foreach (var dupe in dupePOIs)
-                    {
-                        //poi has duplicates
-                        DuplicatePOIItem dupePoi = new DuplicatePOIItem { DuplicatePOI = dupe, DuplicateOfPOI = poiModel };
-                        dupePoi.Reasons = new List<string>();
-                        if (dupe.AddressInfo.Latitude == poi.AddressInfo.Latitude && dupe.AddressInfo.Longitude == poi.AddressInfo.Longitude)
-                        {
-                            dupePoi.Reasons.Add("POI location is exact match for OCM-" + poi.ID);
-                            dupePoi.Confidence = 95;
-                        }
-                        else
-                        {
-                            double distanceMeters = new System.Device.Location.GeoCoordinate(dupe.AddressInfo.Latitude, dupe.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
-                            if (distanceMeters < DUPLICATE_DISTANCE_METERS)
-                            {
-                                dupePoi.Reasons.Add("POI location is close proximity (" + distanceMeters + "m) to OCM-" + poi.ID);
-                                dupePoi.Confidence = 75;
-                            }
-                            else
-                            {
-                                if (distanceMeters < POSSIBLE_DUPLICATE_DISTANCE_METERS)
-                                {
-                                    dupePoi.Reasons.Add("POI location is in surrounding proximity (" + distanceMeters + "m) to OCM-" + poi.ID);
-                                    dupePoi.Confidence = 50;
-                                }
-                            }
-                        }
-
-                        allDuplicates.Add(dupePoi);
-                    }
-                }
-            }
-
-            //arrange all duplicates into groups
-            POIDuplicates duplicatesSummary = new POIDuplicates();
-            duplicatesSummary.DuplicateSummaryList = new List<DuplicatePOIGroup>();
-            foreach (var dupe in allDuplicates)
-            {
-                bool isNewGroup = false;
-                var dupeGroup = duplicatesSummary.DuplicateSummaryList.FirstOrDefault(d => d.DuplicatePOIList.Any(p => p.DuplicateOfPOI.ID == dupe.DuplicateOfPOI.ID || p.DuplicatePOI.ID == dupe.DuplicatePOI.ID) || d.SuggestedBestPOI.ID == dupe.DuplicatePOI.ID);
-                if (dupeGroup == null)
-                {
-                    isNewGroup = true;
-                    dupeGroup = new DuplicatePOIGroup();
-                    dupeGroup.SuggestedBestPOI = dupe.DuplicatePOI;//TODO: select best
-
-                    dupeGroup.DuplicatePOIList = new List<DuplicatePOIItem>();
-                }
-
-                //only add to dupe group if not already added for another reason
-                if (!dupeGroup.DuplicatePOIList.Contains(dupe) && !dupeGroup.DuplicatePOIList.Any(d => d.DuplicatePOI.ID == dupe.DuplicatePOI.ID))
-                {
-                    dupeGroup.DuplicatePOIList.Add(dupe);
-                }
-
-                if (isNewGroup)
-                {
-                    duplicatesSummary.DuplicateSummaryList.Add(dupeGroup);
-                }
-            }
-
-            //loop through groups and rearrange
-            RearrangeDuplicates(duplicatesSummary);
-
-            //go through all groups and populate final list of All POI per group
-            foreach (var g in duplicatesSummary.DuplicateSummaryList)
-            {
-                var poiList = new List<Model.ChargePoint>();
-                foreach (var d in g.DuplicatePOIList)
-                {
-                    if (!poiList.Contains(d.DuplicatePOI))
-                    {
-                        poiList.Add(d.DuplicatePOI);
-                    }
-
-                    if (!poiList.Contains(d.DuplicateOfPOI))
-                    {
-                        poiList.Add(d.DuplicateOfPOI);
-                    }
-
-                    g.AllPOI = poiList;
-                }
-            }
-
-            //TODO: go through all dupe groups and nominate best poi to be main poi (most comments, most equipment info etc)
-            return duplicatesSummary;
-        }
-
-        private bool OtherDuplicationPOIGroupListHasReference(POIDuplicates duplicates, int poiId, DuplicatePOIGroup currentGroup)
-        {
-            var mentionedGroups = duplicates.DuplicateSummaryList.Where(d => d.DuplicatePOIList.Any(p => p.DuplicateOfPOI.ID == poiId || p.DuplicatePOI.ID == poiId));
-            if (mentionedGroups.Any(m => m != currentGroup))
-            {
-                //POI has a mention in another group
-                return true;
-            }
-            else
-            {
-                //POI not mentioned in any other group
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Recursive grouping of duplicates into groups, removing unused/redundant groups
-        /// </summary>
-        /// <param name="duplicates"></param>
-        /// <returns></returns>
-        private bool RearrangeDuplicates(POIDuplicates duplicates)
-        {
-            var actionRequired = false;
-
-            var removedgroups = new List<DuplicatePOIGroup>();
-            foreach (var dupegroup in duplicates.DuplicateSummaryList)
-            {
-                var removedDupes = new List<DuplicatePOIItem>();
-                foreach (var dupe in dupegroup.DuplicatePOIList)
-                {
-                    //if dupe variation is identified an another group, remove from this group
-                    if (OtherDuplicationPOIGroupListHasReference(duplicates, dupe.DuplicatePOI.ID, dupegroup))
-                    {
-                        removedDupes.Add(dupe);
-                    }
-                }
-
-                if (removedDupes.Any())
-                {
-                    actionRequired = true;
-                    //remove all dupes already present in other groups
-                    dupegroup.DuplicatePOIList.RemoveAll(d => removedDupes.Contains(d));
-                }
-
-                if (!dupegroup.DuplicatePOIList.Any())
-                {
-                    actionRequired = true;
-                    removedgroups.Add(dupegroup);
-                }
-            }
-
-            if (removedgroups.Any())
-            {
-                actionRequired = true;
-                //remove empty groups
-                duplicates.DuplicateSummaryList.RemoveAll(g => removedgroups.Contains(g));
-            }
-
-            //did something this pass, recurse to see if more needed
-            if (actionRequired) RearrangeDuplicates(duplicates);
-
-            return actionRequired;
-        }
-
         public static bool IsValid(Model.ChargePoint cp)
         {
             //determine if the basic CP details are valid as a submission or edit
@@ -785,28 +605,28 @@ namespace OCM.API.Common
                 CompareSimpleProperty(diffList, "Address", poiA.GetAddressSummary(false, true), poiB.GetAddressSummary(false, true));
                 CompareSimpleProperty(diffList, "General Comments", poiA.GeneralComments, poiB.GeneralComments);
                 CompareSimpleProperty(diffList, "Address : Access Comments", poiA.AddressInfo.AccessComments, poiB.AddressInfo.AccessComments);
-
             }
             return diffList;
         }
 
         private void CompareSimpleRefDataItem(List<DiffItem> diffList, string displayName, int? ID1, int? ID2, SimpleReferenceDataType refData1, SimpleReferenceDataType refData2)
         {
-            if (ID1 != ID2) diffList.Add(new DiffItem { DisplayName = displayName, Context=displayName, ValueA = (refData1 != null ? refData1.Title : ""), ValueB = (refData2 != null ?refData2.Title : "") });
+            if (ID1 != ID2) diffList.Add(new DiffItem { DisplayName = displayName, Context = displayName, ValueA = (refData1 != null ? refData1.Title : ""), ValueB = (refData2 != null ? refData2.Title : "") });
         }
 
         private void CompareSimpleProperty(List<DiffItem> diffList, string displayName, object val1, object val2)
         {
             //check if object values are different, if so add to diff list
             if (
-                (val1!=null && val2==null && !String.IsNullOrEmpty(val1.ToString())) ||
-                (val1==null && val2!=null && !String.IsNullOrEmpty(val2.ToString())) ||
+                (val1 != null && val2 == null && !String.IsNullOrEmpty(val1.ToString())) ||
+                (val1 == null && val2 != null && !String.IsNullOrEmpty(val2.ToString())) ||
                 (val1 != null && val2 != null && val1.ToString() != val2.ToString())
                 )
             {
-                diffList.Add(new DiffItem { DisplayName = displayName, Context=displayName, ValueA = (val1 != null ? val1.ToString() : ""), ValueB = (val2 != null ? val2.ToString() : "") });
+                diffList.Add(new DiffItem { DisplayName = displayName, Context = displayName, ValueA = (val1 != null ? val1.ToString() : ""), ValueB = (val2 != null ? val2.ToString() : "") });
             }
         }
+
         /// <summary>
         /// Populate AddressInfo data from settings in a simple AddressInfo object
         /// </summary>
