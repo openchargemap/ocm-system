@@ -275,7 +275,7 @@ namespace OCM.Core.Data
 
             if (updateStrategy != CacheUpdateStrategy.All)
             {
-                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData();
+               
                 if (!database.CollectionExists("reference"))
                 {
                     database.CreateCollection("reference");
@@ -284,10 +284,19 @@ namespace OCM.Core.Data
                 {
                     database.CreateCollection("status");
                 }
-
-                if (coreRefData != null)
+                if (!database.CollectionExists("poi"))
                 {
-                    var reference = database.GetCollection<CoreReferenceData>("reference");
+                    database.CreateCollection("poi");
+                }
+               
+            }
+
+            CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData();
+            if (coreRefData != null)
+            {
+                var reference = database.GetCollection<CoreReferenceData>("reference");
+                if (reference.Exists())
+                {
                     reference.RemoveAll();
                     reference.Insert(coreRefData);
                 }
