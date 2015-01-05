@@ -314,16 +314,6 @@ div.stat {
     background-color: @color-a-pale;
 }
 
-.alert-info {
-    border-color: @color-a-light;
-    background-color: @color-a-pale;
-}
-
-.alert-danger {
-    color: black;
-    font-weight:normal;
-    border:none;
-}
 
 #datasummary {
     font-size: 0.8em;
@@ -559,3 +549,26 @@ div[data-editormode="advanced"] {
     border-bottom-left-radius:8px;
     margin-left:4em;
 }
+
+@media print{
+    .footer{
+            display:none;
+    }
+}
+.alert-info {
+    border-color: @color-a-light;
+    background-color: @color-a-pale;
+}
+
+.details-container .alert-danger, .alert-danger {
+    color: white;
+    background-color:#FA8B8B;
+    font-weight:normal;
+    border:none;
+    
+    a, a:hover, a:visited, a:link{
+        color:white;
+        text-decoration: underline;
+    }
+}
+

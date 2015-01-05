@@ -57,14 +57,14 @@
                             <li><a href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a></li>
                             <li><a href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a></li>
                             <li><a href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a></li>
-                            <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">awaiting review</a></li>
                             <li><a href="@Url.Action("Activity", "POI")" data-localize="ocm.navigation.browse.recentActivity">recent activity</a></li>
                             <li class="nav-divider"></li>
                             <li><a href="http://openchargemap.org/app" data-localize="ocm.navigation.browse.webApp">web app for mobile</a></li>
                             <li class="nav-divider"></li>
                             <li><a href="@Url.Action("Index", "Stats")" data-localize="ocm.navigation.browse.statistics">statistics</a></li>
                             <li class="nav-divider"></li>
-                            <li><a href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edit queue</a></li>
+                            <li><a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">new locations awaiting approval</a></li>
+                            <li><a href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edits awaiting approval</a></li>
                         </ul>
                     </li>
 

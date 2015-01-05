@@ -71,6 +71,10 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
                 cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n",", ");
 
+                //if(!String.IsNullOrEmpty(cp.AddressInfo.Postcode))
+                //{
+                    //cp.AddressInfo.Postcode = this.NormalizePostcode(cp.AddressInfo.Postcode);
+                //}
                 //TODO: if address wasn't provide in address details try to parse from "LocationLongDescription": 
                 /*if (String.IsNullOrEmpty(cp.AddressInfo.AddressLine1) && string.IsNullOrEmpty(cp.AddressInfo.AddressLine2) && string.IsNullOrEmpty(cp.AddressInfo.Town) && string.IsNullOrEmpty(cp.AddressInfo.Postcode))
                 {
@@ -302,6 +306,35 @@ namespace OCM.Import.Providers
             }
 
             return outputList;
+        }
+
+        //http://naveedahmad.co.uk/2010/01/08/normalizing-postcode-in-c/
+        public string NormalizePostcode(string postcode)
+        {
+            //TODO: more sensible detection of postcode format CV32 5?? vs E1 0BH etc
+            string origPostcode = postcode + "";
+            //removes end and start spaces 
+            postcode = postcode.Trim();
+            //removes in middle spaces 
+            postcode = postcode.Replace(" ", "");
+
+            switch (postcode.Length)
+            {
+                //add space after 2 characters if length is 5 
+                case 5: postcode = postcode.Insert(2, " "); break;
+                //add space after 3 characters if length is 6 
+                case 6: postcode = postcode.Insert(3, " "); break;
+                //add space after 4 characters if length is 7 
+                case 7: postcode = postcode.Insert(4, " "); break;
+
+                default: break;
+            }
+
+            if (origPostcode != postcode)
+            {
+                System.Diagnostics.Debug.WriteLine("Postcode normalized: " + origPostcode + "->" + postcode);
+            }
+            return postcode;
         }
     }
 }

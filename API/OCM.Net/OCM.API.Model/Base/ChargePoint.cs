@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace OCM.API.Common.Model
 {
@@ -192,5 +193,41 @@ namespace OCM.API.Common.Model
 
             return address;
         }
+
+        public bool IsRecentlyVerified
+        {
+            get
+            {
+               if (DateLastVerified.HasValue) return true;
+               else return false;
+            }
+        }
+
+        public DateTime? DateLastVerified
+        {
+            get
+            {
+                //confirmed withing last 6 months
+                if (this.DateLastConfirmed != null && this.DateLastConfirmed.Value > DateTime.UtcNow.AddMonths(-6))
+                {
+                    return this.DateLastConfirmed;
+                }
+
+                //positive comments within last 6 months
+                if (this.UserComments != null && this.UserComments.Any(u =>u.CheckinStatusType!=null && u.CheckinStatusType.IsPositive == true && u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
+                {
+                    return this.UserComments.Where(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true).Max(u => u.DateCreated);
+                }
+
+                //created within last month
+                if (this.DateCreated.HasValue && this.DateCreated.Value > DateTime.UtcNow.AddMonths(-1))
+                {
+                    return this.DateCreated;
+                }
+
+                return null;
+            }
+        }
     }
+
 }

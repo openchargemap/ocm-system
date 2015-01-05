@@ -32,6 +32,11 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
+        public ActionResult Guidance()
+        {
+            return View();
+        }
+
         /// <summary>
         /// /contact/ post new contact us mesage
         /// </summary>

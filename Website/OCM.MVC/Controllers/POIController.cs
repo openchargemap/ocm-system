@@ -139,44 +139,49 @@ namespace OCM.MVC.Controllers
             if (status != null) ViewBag.Status = status;
 
             OCM.API.Common.POIManager cpManager = new API.Common.POIManager();
+            POIViewModel viewModel = new POIViewModel();
 
             var poi = cpManager.Get(id, true, allowDiskCache: false, allowMirrorDB: true);
-            ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
-
-            List<LocationImage> imageList = null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
-
-            if (imageList != null)
+            if (poi != null)
             {
-                imageList = imageList.Where(i => i.Width >= 500).ToList();
-                ViewBag.ImageList = imageList.ToList();
-            }
+                ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
 
-            POIViewModel viewModel = new POIViewModel();
-            viewModel.POI = poi;
+                List<LocationImage> imageList = null; // new OCM.MVC.App_Code.GeocodingHelper().GetGeneralLocationImages((double)poi.AddressInfo.Latitude, (double)poi.AddressInfo.Longitude);
 
-            if (!IsRequestByRobot)
-            {
-                viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
-
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestSettings { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
-                viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
-                sw.Stop();
-                System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
-
-                ViewBag.ReferenceData = new POIBrowseModel();
-
-                //get data quality report
-
-                if (IsUserAdmin)
+                if (imageList != null)
                 {
-                    viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
+                    imageList = imageList.Where(i => i.Width >= 500).ToList();
+                    ViewBag.ImageList = imageList.ToList();
                 }
-            }
-            else
-            {
-                viewModel.POIListNearby = new List<ChargePoint>();
+
+                
+                viewModel.POI = poi;
+
+                if (!IsRequestByRobot)
+                {
+                    viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
+
+                    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestSettings { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
+                    viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
+                    sw.Stop();
+                    System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
+
+                    ViewBag.ReferenceData = new POIBrowseModel();
+
+                    //get data quality report
+
+                    if (IsUserAdmin)
+                    {
+                        viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
+                    }
+                }
+                else
+                {
+                    viewModel.POIListNearby = new List<ChargePoint>();
+                }
+
             }
 
             if (layout == "simple")

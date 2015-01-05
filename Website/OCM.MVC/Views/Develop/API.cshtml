@@ -6,20 +6,8 @@
     var apiSandboxBaseUrl = "http://sandbox.api.openchargemap.io/v2/";
 }
 
-<style>
-    section i.fa {
-        color: #8cc63f;
-        text-shadow: 2px 2px 2px rgba(193, 230, 164, 0.81);
-    }
+<link rel="stylesheet" href="~/Content/docs.css" type="text/css" />
 
-    h2 {
-        border-bottom-width: 1px;
-        border-bottom-style: dotted;
-    }
-    section {
-        margin-bottom:2em;
-    }
-</style>
 <div class="row">
     <div class="col-sm-4 hidden-xs"><div id="toc" style="position:fixed;"></div></div>
     <div class="col-sm-8 col-xs-12">
@@ -238,6 +226,7 @@
     </div>
 </div>
 <script type="text/javascript" src="~/scripts/OCM/SharedLibs/OCM_Data.js"></script>
+<script type="text/javascript" src="~/scripts/OCM/TableOfContents.js"></script>
 <script type="text/javascript">
     $(function () {
         prepareTableOfContents();
@@ -245,37 +234,7 @@
         fetchReferenceData();
     });
 
-    function prepareTableOfContents() {
-        // from http://css-tricks.com/automatic-table-of-contents/
-        var ToC = "<nav role='navigation'>" +
-            "<h2>Contents:</h2>" +
-            "<ul class='nav nav-pills nav-stacked'>";
-
-        var newLine, el, title, link;
-
-        $("article h2").each(function () {
-
-            el = $(this);
-            title = el.text();
-            link = "#" + el.attr("id");
-
-            newLine =
-              "<li>" +
-                "<a href='" + link + "'>" +
-                  title +
-                "</a>" +
-              "</li>";
-
-            ToC += newLine;
-
-        });
-
-        ToC +=
-           "</ul>" +
-          "</nav>";
-
-        $("#toc").html(ToC);
-    }
+   
 
     var dataAPI = new OCM.API();
 

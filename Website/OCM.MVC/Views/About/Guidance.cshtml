@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Guidance for Submitters and Editors";
+
+}
+
+<script type="text/javascript" src="~/scripts/OCM/TableOfContents.js"></script>
+
+<div class="row">
+
+    <div class="col-sm-8 col-xs-12">
+        <article>
+            <section>
+                <h1>Guidance for Contributors</h1>
+                <h2 id="intro">Introduction</h2>
+                <p class="alert alert-warning">Note: this guidance is a working draft for comment and is not ready for general use.</p>
+                <p>
+                    The aim of Open Charge Map is to create a reliable and well respected Open Data set for EV charging equipment locations globally. To that ends we rely on our contributors to do their best to provide quality information. This guidance exists to describe both optional and mandatory practises when contributing information to us.
+                </p>
+            </section>
+            <section>
+
+                <h2 id="intro">Guidance For All Contributors</h2>
+                <h3>Contributing Comments, Check-In and Photos</h3>
+                <p>
+                    Adding a Check-In, Comment (which is the same as a Check-In but with your own comment) or Photo can make a huge difference to other people who find a charging location using Open Charge Map data, especially if your comment can help them plan their journey or avoid problems.
+                    Using this feature you can provide useful information to others:
+                    <ul>
+                        <li>If the location is difficult to access.</li>
+                        <li>If the equipment is in good working order.</li>
+                        <li>What the parking spot looks like.</li>
+                        <li>If the spot is regularly occupied (whether by EV's or other cars).</li>
+                        <li>If their is a fault, you can report it - if we know the Operators contact details they will be emailed the fault report.</li>
+                    </ul>
+                    If you find the information for a location to be inaccurate in any way you can <a href="#edits">edit the details</a> yourself using either the OCM website or the OCM App on your mobile/tablet. Your changes will then wait in the <a href="#editqueue">Edit Queue</a> to be approved by an Editor for the relevant country.
+                </p>
+
+                <h3 id="edits">Submitting New Locations</h3>
+                <p>
+                    <ul>
+                        <li>Ensure the location is not a duplicate of an existing listing.</li>
+                        <li>Provide as much detail as possible without being verbose or opinionated - you can leave additional comments and photos etc once you have submitted the location.</li>
+                        <li>
+                            Follow your country/regional standards for Address information e.g.:
+                            <ul>
+                                <li>In the UK postcodes are uppercase and separated into two components.</li>
+                                <li>In Australia the suburb is all uppercase.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+                <h2 id="edits">Submitting Edits</h2>
+                <p>You can edit the details of any location whether you are a new user or a country editor.</p>
+                <h2 id="editors">Guidance For Editors</h2>
+                <p>You should aim to make each listing as complete as possible. If a listing is sourced automatically you should consider whether you can notify the source of the information about required changes so that all other consumers of that information can be notified. Where this is not possible/practical you can edit the listing on Open Charge Map however future imports will no longer be automatically updated for that location.</p>
+                <h3 id="newadditions">New Locations Awaiting Approval</h3>
+                <p>The easiest way to review the locations awaiting approval is via the <a href="@Url.Action("Index", "POI", new { submissionstatustypeid=1})">New Locations Awaiting Approval</a> page. From there an editor can look at the details of the individual location, inspect the quality of the submission and approve it.</p>
+                <h3 id="editqueue">The Edit Queue</h3>
+                <p>The Edit Queue is where changes to existing locations await approval by an editor for the relevant country. The edit queue can show both new locations and edits to existing locations but is best suited to managing edits.</p>
+            </section>
+           
+        </article>
+    </div>
+    <div class="col-sm-4 hidden-xs"><div id="toc" style="position:fixed;"></div></div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        prepareTableOfContents();
+    });
+</script>

@@ -266,15 +266,6 @@ div.stat {
   border: none;
   background-color: #f4ffe5;
 }
-.alert-info {
-  border-color: #c6e29e;
-  background-color: #f4ffe5;
-}
-.alert-danger {
-  color: black;
-  font-weight: normal;
-  border: none;
-}
 #datasummary {
   font-size: 0.8em;
 }
@@ -464,5 +455,32 @@ div[data-editormode="advanced"] label {
   padding: 1em;
   border-bottom-left-radius: 8px;
   margin-left: 4em;
+}
+@media print {
+  .footer {
+    display: none;
+  }
+}
+.alert-info {
+  border-color: #c6e29e;
+  background-color: #f4ffe5;
+}
+.details-container .alert-danger,
+.alert-danger {
+  color: white;
+  background-color: #FA8B8B;
+  font-weight: normal;
+  border: none;
+}
+.details-container .alert-danger a,
+.alert-danger a,
+.details-container .alert-danger a:hover,
+.alert-danger a:hover,
+.details-container .alert-danger a:visited,
+.alert-danger a:visited,
+.details-container .alert-danger a:link,
+.alert-danger a:link {
+  color: white;
+  text-decoration: underline;
 }
 /*# sourceMappingURL=OCM.css.map */

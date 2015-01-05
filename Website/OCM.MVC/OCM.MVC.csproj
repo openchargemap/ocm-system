@@ -233,6 +233,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\docs.css" />
     <Content Include="Content\images\AppIcon_36x36.png" />
     <Content Include="Content\images\branding.png" />
     <Content Include="Content\images\branding_sm.png" />
@@ -336,6 +337,7 @@
     <Content Include="Scripts\OCM\Subscriptions\jquery.dynamicrangevalidator.js" />
     <Content Include="Scripts\OCM\Subscriptions\resize-off.png" />
     <Content Include="Scripts\OCM\Subscriptions\resize.png" />
+    <Content Include="Scripts\OCM\TableOfContents.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />
@@ -448,6 +450,7 @@
     <Content Include="Views\Admin\ConfigCheck.cshtml" />
     <Content Include="Views\Admin\_POIList.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DataQualityReport.cshtml" />
+    <Content Include="Views\About\Guidance.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

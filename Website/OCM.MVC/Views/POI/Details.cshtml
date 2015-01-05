@@ -14,7 +14,13 @@
         height: 480px;
     }
 </style>
-@{
+
+@if (Model.POI == null)
+{
+    <p class="alert alert-danger">The requested POI is not available.</p>
+}
+else { 
+
     var detailsCss = "details-container details-plain";
 
     if (ViewBag.EnableSimpleView != null && !ViewBag.EnableSimpleView == true)
@@ -146,6 +152,17 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
+
+                                    @if (!Model.POI.IsRecentlyVerified)
+                                    {
+                                        <div class="alert alert-danger">
+                                            
+                                            This charging location has not been recently verified and you should not rely on this information for journeys. <br /><br />If you have visited this charging location recently please confirm that the information is accurate by adding a Comment or Check-In. <br /><br />If the details are inaccurate please <a href="@Url.Action("Edit","POI",new {id=@Model.POI.ID})">edit</a> them.
+                                        </div>
+                                    }
+
+
+
                                     @if (!String.IsNullOrEmpty(Model.POI.GeneralComments))
                                     {
 
@@ -393,21 +410,6 @@
 
             });
 
-            /*    $("#tab-map").on('shown.bs.tab', function () {
-                    //when map tab is shown, invalidate map to avoid redraw issue
-
-                    google.maps.event.trigger(map, "resize");
-                    console.log("map resize triggered");
-
-                });
-            */
-            @if (ViewBag.EnableSimpleView!=true) {
-                         <text>
-            //setup background image
-            //getLocationImage(itemPos);
-            </text>
-                    }
-
             //fetch nearby places
             getNearbyPlaces(lat, lng, 2);
         });
@@ -469,6 +471,7 @@
         }
     </script>
 }
+
 @helper formatDescription(string description)
 {
     if (!String.IsNullOrEmpty(description) != null)

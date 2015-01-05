@@ -1,0 +1,12 @@
+﻿ section i.fa {
+        color: #8cc63f;
+        text-shadow: 2px 2px 2px rgba(193, 230, 164, 0.81);
+    }
+
+    h2 {
+        border-bottom-width: 1px;
+        border-bottom-style: dotted;
+    }
+    section {
+        margin-bottom:2em;
+    }
