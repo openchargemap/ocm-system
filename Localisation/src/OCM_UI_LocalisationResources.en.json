@@ -126,7 +126,8 @@
       "discuss": "Discuss",
       "about": {
         "termsPrivacy": "Terms & Privacy",
-        "contact": "Contact"
+        "contact": "Contact",
+        "guidance":  "Guidance for Contributors"
       },
       "profile": {
         "sectionTitle": "My Profile",
