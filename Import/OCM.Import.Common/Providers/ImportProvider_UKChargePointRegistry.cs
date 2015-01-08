@@ -31,7 +31,7 @@ namespace OCM.Import.Providers
 
             var dataList = o["ChargeDevice"].ToArray();
 
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_Published);//imported and published
+            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_UnderReview);//imported and published
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
             var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == (int)StandardStatusTypes.Unknown);

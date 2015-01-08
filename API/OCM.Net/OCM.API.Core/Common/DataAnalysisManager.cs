@@ -23,7 +23,7 @@ namespace OCM.Core.Common
             //TODO: better method for large number of POIs
             //grab all live POIs (30-100,000 items)
             //var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
-            var allPOIs = poiManager.GetChargePoints(new APIRequestSettings { CountryIDs = new int[] { countryId } });
+            var allPOIs = poiManager.GetChargePoints(new APIRequestSettings { CountryIDs = new int[] { countryId }, MaxResults=100000 });
 
             foreach (var poi in allPOIs)
             {

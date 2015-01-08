@@ -1025,6 +1025,7 @@ namespace OCM.API.Common
             oldPOI.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Delisted_SupersededByUpdate;
 
             var supersededPOIData = this.PopulateChargePoint_SimpleToData(oldPOI, dataModel);
+            supersededPOIData.DateLastStatusUpdate = DateTime.UtcNow;
             dataModel.ChargePoints.Add(supersededPOIData);
             dataModel.SaveChanges();
 
