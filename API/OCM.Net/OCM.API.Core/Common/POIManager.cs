@@ -642,9 +642,10 @@ namespace OCM.API.Common
                 dataAddressInfo.Town = simpleAddressInfo.Town;
                 dataAddressInfo.StateOrProvince = simpleAddressInfo.StateOrProvince;
                 dataAddressInfo.Postcode = simpleAddressInfo.Postcode;
-                if (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0)
+                if (simpleAddressInfo.CountryID != null || (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0))
                 {
-                    dataAddressInfo.Country = dataModel.Countries.FirstOrDefault(c => c.ID == simpleAddressInfo.Country.ID);
+                    int countryId = (simpleAddressInfo.CountryID != null ? (int)simpleAddressInfo.CountryID : simpleAddressInfo.Country.ID);
+                    dataAddressInfo.Country = dataModel.Countries.FirstOrDefault(c => c.ID == countryId);
                     dataAddressInfo.CountryID = dataAddressInfo.Country.ID;
                 }
                 dataAddressInfo.Latitude = simpleAddressInfo.Latitude;
@@ -662,31 +663,32 @@ namespace OCM.API.Common
             return dataAddressInfo;
         }
 
-        public OCM.Core.Data.ChargePoint PopulateChargePoint_SimpleToData(Model.ChargePoint simpleChargePoint, OCM.Core.Data.OCMEntities dataModel)
+        public OCM.Core.Data.ChargePoint PopulateChargePoint_SimpleToData(Model.ChargePoint simplePOI, OCM.Core.Data.OCMEntities dataModel)
         {
-            var dataChargePoint = new OCM.Core.Data.ChargePoint();
+            var dataPOI = new OCM.Core.Data.ChargePoint();
 
-            if (simpleChargePoint.ID > 0 && simpleChargePoint.UUID != null) dataChargePoint = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == simpleChargePoint.ID && cp.UUID.ToUpper() == simpleChargePoint.UUID.ToUpper());// dataChargePoint.ID = simpleChargePoint.ID; // dataModel.ChargePoints.FirstOrDefault(c => c.ID == simpleChargePoint.ID);
+            if (simplePOI.ID > 0 && simplePOI.UUID != null) dataPOI = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == simplePOI.ID && cp.UUID.ToUpper() == simplePOI.UUID.ToUpper());// dataChargePoint.ID = simpleChargePoint.ID; // dataModel.ChargePoints.FirstOrDefault(c => c.ID == simpleChargePoint.ID);
 
-            if (String.IsNullOrEmpty(dataChargePoint.UUID)) dataChargePoint.UUID = Guid.NewGuid().ToString().ToUpper();
+            if (String.IsNullOrEmpty(dataPOI.UUID)) dataPOI.UUID = Guid.NewGuid().ToString().ToUpper();
 
             //if required, set the parent charge point id
-            if (simpleChargePoint.ParentChargePointID != null)
+            if (simplePOI.ParentChargePointID != null)
             {
                 //dataChargePoint.ParentChargePoint = dataModel.ChargePoints.FirstOrDefault(c=>c.ID==simpleChargePoint.ParentChargePointID);
-                dataChargePoint.ParentChargePointID = simpleChargePoint.ParentChargePointID;
+                dataPOI.ParentChargePointID = simplePOI.ParentChargePointID;
             }
             else
             {
-                dataChargePoint.ParentChargePoint = null;
-                dataChargePoint.ParentChargePointID = null;
+                dataPOI.ParentChargePoint = null;
+                dataPOI.ParentChargePointID = null;
             }
 
-            if (simpleChargePoint.DataProvider != null && simpleChargePoint.DataProvider.ID >= 0)
+            if (simplePOI.DataProviderID != null || (simplePOI.DataProvider != null && simplePOI.DataProvider.ID >= 0))
             {
+                int providerId = (simplePOI.DataProviderID != null ? (int)simplePOI.DataProviderID : simplePOI.DataProvider.ID);
                 try
                 {
-                    dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == simpleChargePoint.DataProvider.ID);
+                    dataPOI.DataProvider = dataModel.DataProviders.First(d => d.ID == providerId);
                 }
                 catch (Exception)
                 {
@@ -697,16 +699,17 @@ namespace OCM.API.Common
             else
             {
                 //set to ocm contributor by default
-                dataChargePoint.DataProvider = dataModel.DataProviders.First(d => d.ID == (int)StandardDataProviders.OpenChargeMapContrib);
+                dataPOI.DataProvider = dataModel.DataProviders.First(d => d.ID == (int)StandardDataProviders.OpenChargeMapContrib);
             }
 
-            dataChargePoint.DataProvidersReference = simpleChargePoint.DataProvidersReference;
+            dataPOI.DataProvidersReference = simplePOI.DataProvidersReference;
 
-            if (simpleChargePoint.OperatorInfo != null && simpleChargePoint.OperatorInfo.ID >= 0)
+            if (simplePOI.OperatorID != null || (simplePOI.OperatorInfo != null && simplePOI.OperatorInfo.ID >= 0))
             {
+                int operatorId = (simplePOI.OperatorID != null ? (int)simplePOI.OperatorID : simplePOI.OperatorInfo.ID);
                 try
                 {
-                    dataChargePoint.Operator = dataModel.Operators.First(o => o.ID == simpleChargePoint.OperatorInfo.ID);
+                    dataPOI.Operator = dataModel.Operators.First(o => o.ID == operatorId);
                 }
                 catch (Exception)
                 {
@@ -716,17 +719,18 @@ namespace OCM.API.Common
             }
             else
             {
-                dataChargePoint.Operator = null;
-                dataChargePoint.OperatorID = null;
+                dataPOI.Operator = null;
+                dataPOI.OperatorID = null;
             }
 
-            dataChargePoint.OperatorsReference = simpleChargePoint.OperatorsReference;
+            dataPOI.OperatorsReference = simplePOI.OperatorsReference;
 
-            if (simpleChargePoint.UsageType != null && simpleChargePoint.UsageType.ID >= 0)
+            if (simplePOI.UsageTypeID != null || (simplePOI.UsageType != null && simplePOI.UsageType.ID >= 0))
             {
+                int usageTypeId = (simplePOI.UsageTypeID != null ? (int)simplePOI.UsageTypeID : simplePOI.UsageType.ID);
                 try
                 {
-                    dataChargePoint.UsageType = dataModel.UsageTypes.First(u => u.ID == simpleChargePoint.UsageType.ID);
+                    dataPOI.UsageType = dataModel.UsageTypes.First(u => u.ID == usageTypeId);
                 }
                 catch (Exception)
                 {
@@ -736,60 +740,61 @@ namespace OCM.API.Common
             }
             else
             {
-                dataChargePoint.UsageType = null;
-                dataChargePoint.UsageTypeID = null;
+                dataPOI.UsageType = null;
+                dataPOI.UsageTypeID = null;
             }
-            if (dataChargePoint.AddressInfo == null && simpleChargePoint.AddressInfo.ID > 0)
+
+            if (dataPOI.AddressInfo == null && simplePOI.AddressInfo.ID > 0)
             {
-                var addressInfo = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == simpleChargePoint.ID).AddressInfo;
-                if (addressInfo.ID == simpleChargePoint.AddressInfo.ID) dataChargePoint.AddressInfo = addressInfo;
+                var addressInfo = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == simplePOI.ID).AddressInfo;
+                if (addressInfo.ID == simplePOI.AddressInfo.ID) dataPOI.AddressInfo = addressInfo;
             }
-            dataChargePoint.AddressInfo = PopulateAddressInfo_SimpleToData(simpleChargePoint.AddressInfo, dataChargePoint.AddressInfo, dataModel);
+            dataPOI.AddressInfo = PopulateAddressInfo_SimpleToData(simplePOI.AddressInfo, dataPOI.AddressInfo, dataModel);
 
-            dataChargePoint.NumberOfPoints = simpleChargePoint.NumberOfPoints;
-            dataChargePoint.GeneralComments = simpleChargePoint.GeneralComments;
-            dataChargePoint.DatePlanned = simpleChargePoint.DatePlanned;
-            dataChargePoint.UsageCost = simpleChargePoint.UsageCost;
+            dataPOI.NumberOfPoints = simplePOI.NumberOfPoints;
+            dataPOI.GeneralComments = simplePOI.GeneralComments;
+            dataPOI.DatePlanned = simplePOI.DatePlanned;
+            dataPOI.UsageCost = simplePOI.UsageCost;
 
-            if (simpleChargePoint.DateLastStatusUpdate != null)
+            if (simplePOI.DateLastStatusUpdate != null)
             {
-                dataChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
+                dataPOI.DateLastStatusUpdate = DateTime.UtcNow;
             }
             else
             {
-                dataChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
+                dataPOI.DateLastStatusUpdate = DateTime.UtcNow;
             }
 
-            if (simpleChargePoint.DataQualityLevel != null && simpleChargePoint.DataQualityLevel > 0)
+            if (simplePOI.DataQualityLevel != null && simplePOI.DataQualityLevel > 0)
             {
-                if (simpleChargePoint.DataQualityLevel > 5) simpleChargePoint.DataQualityLevel = 5;
-                dataChargePoint.DataQualityLevel = simpleChargePoint.DataQualityLevel;
+                if (simplePOI.DataQualityLevel > 5) simplePOI.DataQualityLevel = 5;
+                dataPOI.DataQualityLevel = simplePOI.DataQualityLevel;
             }
             else
             {
-                dataChargePoint.DataQualityLevel = 1;
+                dataPOI.DataQualityLevel = 1;
             }
 
-            if (simpleChargePoint.DateCreated != null)
+            if (simplePOI.DateCreated != null)
             {
-                dataChargePoint.DateCreated = simpleChargePoint.DateCreated;
+                dataPOI.DateCreated = simplePOI.DateCreated;
             }
             else
             {
-                if (dataChargePoint.DateCreated == null) dataChargePoint.DateCreated = DateTime.UtcNow;
+                if (dataPOI.DateCreated == null) dataPOI.DateCreated = DateTime.UtcNow;
             }
 
             var updateConnectionList = new List<OCM.Core.Data.ConnectionInfo>();
             var deleteList = new List<OCM.Core.Data.ConnectionInfo>();
 
-            if (simpleChargePoint.Connections != null)
+            if (simplePOI.Connections != null)
             {
-                foreach (var c in simpleChargePoint.Connections)
+                foreach (var c in simplePOI.Connections)
                 {
                     var connectionInfo = new Core.Data.ConnectionInfo();
 
                     //edit existing, if required
-                    if (c.ID > 0) connectionInfo = dataModel.ConnectionInfoList.FirstOrDefault(con => con.ID == c.ID && con.ChargePointID == dataChargePoint.ID);
+                    if (c.ID > 0) connectionInfo = dataModel.ConnectionInfoList.FirstOrDefault(con => con.ID == c.ID && con.ChargePointID == dataPOI.ID);
                     if (connectionInfo == null)
                     {
                         //connection is stale info, start new
@@ -804,11 +809,12 @@ namespace OCM.API.Common
                     connectionInfo.Quantity = c.Quantity;
                     connectionInfo.PowerKW = c.PowerKW;
 
-                    if (c.ConnectionType != null && c.ConnectionType.ID >= 0)
+                    if (c.ConnectionTypeID != null || (c.ConnectionType != null && c.ConnectionType.ID >= 0))
                     {
+                        int connectionTypeId = (c.ConnectionTypeID != null ? (int)c.ConnectionTypeID : c.ConnectionType.ID);
                         try
                         {
-                            connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == c.ConnectionType.ID);
+                            connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == connectionTypeId);
                         }
                         catch (Exception)
                         {
@@ -821,11 +827,12 @@ namespace OCM.API.Common
                         connectionInfo.ConnectionTypeID = 0;
                     }
 
-                    if (c.Level != null && c.Level.ID >= 1)
+                    if (c.LevelID!=null || (c.Level != null && c.Level.ID >= 1))
                     {
+                        int levelId = (c.LevelID != null ? (int)c.LevelID : c.Level.ID);
                         try
                         {
-                            connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == c.Level.ID);
+                            connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == levelId);
                         }
                         catch (Exception)
                         {
@@ -838,11 +845,12 @@ namespace OCM.API.Common
                         connectionInfo.LevelTypeID = null;
                     }
 
-                    if (c.CurrentType != null && c.CurrentType.ID >= 10)
+                    if (c.CurrentTypeID !=null || (c.CurrentType != null && c.CurrentType.ID >= 10))
                     {
+                        int currentTypeId = (c.CurrentTypeID != null ? (int)c.CurrentTypeID : c.CurrentType.ID);
                         try
                         {
-                            connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == c.CurrentType.ID);
+                            connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == currentTypeId);
                         }
                         catch (Exception)
                         {
@@ -855,11 +863,12 @@ namespace OCM.API.Common
                         connectionInfo.CurrentTypeID = null;
                     }
 
-                    if (c.StatusType != null && c.StatusType.ID >= 0)
+                    if (c.StatusTypeID!=null || (c.StatusType != null && c.StatusType.ID >= 0))
                     {
+                        int statusTypeId = (c.StatusTypeID != null ? (int)c.StatusTypeID : c.StatusType.ID);
                         try
                         {
-                            connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == c.StatusType.ID);
+                            connectionInfo.StatusType = dataModel.StatusTypes.First(s => s.ID == statusTypeId);
                             connectionInfo.StatusTypeID = connectionInfo.StatusType.ID;
                         }
                         catch (Exception)
@@ -890,15 +899,15 @@ namespace OCM.API.Common
                     )
                     {
                         addConnection = true;
-                        if (connectionInfo.ChargePoint == null) connectionInfo.ChargePoint = dataChargePoint;
+                        if (connectionInfo.ChargePoint == null) connectionInfo.ChargePoint = dataPOI;
                     }
 
                     if (addConnection)
                     {
                         //if adding a new connection (not an update) add to model
-                        if (c.ID <= 0 || dataChargePoint.Connections.Count == 0)
+                        if (c.ID <= 0 || dataPOI.Connections.Count == 0)
                         {
-                            dataChargePoint.Connections.Add(connectionInfo);
+                            dataPOI.Connections.Add(connectionInfo);
                         }
                         //track final list of connections being added/updated  -- will then be used to delete by difference
                         updateConnectionList.Add(connectionInfo);
@@ -908,7 +917,7 @@ namespace OCM.API.Common
                         //remove an existing connection no longer required
                         //if (c.ID > 0)
                         {
-                            if (connectionInfo.ChargePoint == null) connectionInfo.ChargePoint = dataChargePoint;
+                            if (connectionInfo.ChargePoint == null) connectionInfo.ChargePoint = dataPOI;
                             deleteList.Add(connectionInfo);
                             //dataChargePoint.Connections.Remove(connectionInfo);
                         }
@@ -917,9 +926,9 @@ namespace OCM.API.Common
             }
 
             //find existing connections not in updated/added list, add to delete
-            if (dataChargePoint.Connections != null)
+            if (dataPOI.Connections != null)
             {
-                foreach (var con in dataChargePoint.Connections)
+                foreach (var con in dataPOI.Connections)
                 {
                     if (!updateConnectionList.Contains(con))
                     {
@@ -940,17 +949,17 @@ namespace OCM.API.Common
                 }
             }
 
-            if (dataChargePoint.MetadataValues == null)
+            if (dataPOI.MetadataValues == null)
             {
-                dataChargePoint.MetadataValues = new List<OCM.Core.Data.MetadataValue>();
+                dataPOI.MetadataValues = new List<OCM.Core.Data.MetadataValue>();
                 //add metadata values
             }
 
-            if (simpleChargePoint.MetadataValues != null)
+            if (simplePOI.MetadataValues != null)
             {
-                foreach (var m in simpleChargePoint.MetadataValues)
+                foreach (var m in simplePOI.MetadataValues)
                 {
-                    var existingValue = dataChargePoint.MetadataValues.FirstOrDefault(v => v.ID == m.ID);
+                    var existingValue = dataPOI.MetadataValues.FirstOrDefault(v => v.ID == m.ID);
                     if (existingValue != null)
                     {
                         existingValue.ItemValue = m.ItemValue;
@@ -959,43 +968,43 @@ namespace OCM.API.Common
                     {
                         var newValue = new OCM.Core.Data.MetadataValue()
                         {
-                            ChargePointID = dataChargePoint.ID,
+                            ChargePointID = dataPOI.ID,
                             ItemValue = m.ItemValue,
                             MetadataFieldID = m.MetadataFieldID,
                             MetadataField = dataModel.MetadataFields.FirstOrDefault(f => f.ID == m.MetadataFieldID)
                         };
-                        dataChargePoint.MetadataValues.Add(newValue);
+                        dataPOI.MetadataValues.Add(newValue);
                     }
                 }
             }
 
             //TODO:clean up unused metadata values
 
-            if (simpleChargePoint.StatusTypeID != null || simpleChargePoint.StatusType != null)
+            if (simplePOI.StatusTypeID != null || simplePOI.StatusType != null)
             {
-                if (simpleChargePoint.StatusTypeID == null && simpleChargePoint.StatusType != null) simpleChargePoint.StatusTypeID = simpleChargePoint.StatusType.ID;
-                dataChargePoint.StatusTypeID = simpleChargePoint.StatusTypeID;
-                dataChargePoint.StatusType = dataModel.StatusTypes.FirstOrDefault(s => s.ID == simpleChargePoint.StatusTypeID);
+                if (simplePOI.StatusTypeID == null && simplePOI.StatusType != null) simplePOI.StatusTypeID = simplePOI.StatusType.ID;
+                dataPOI.StatusTypeID = simplePOI.StatusTypeID;
+                dataPOI.StatusType = dataModel.StatusTypes.FirstOrDefault(s => s.ID == simplePOI.StatusTypeID);
             }
             else
             {
-                dataChargePoint.StatusType = null;
-                dataChargePoint.StatusTypeID = null;
+                dataPOI.StatusType = null;
+                dataPOI.StatusTypeID = null;
             }
 
-            if (simpleChargePoint.SubmissionStatusTypeID != null || simpleChargePoint.SubmissionStatus != null)
+            if (simplePOI.SubmissionStatusTypeID != null || simplePOI.SubmissionStatus != null)
             {
-                if (simpleChargePoint.SubmissionStatusTypeID == null & simpleChargePoint.SubmissionStatus != null) simpleChargePoint.SubmissionStatusTypeID = simpleChargePoint.SubmissionStatus.ID;
-                dataChargePoint.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == simpleChargePoint.SubmissionStatusTypeID);
-                dataChargePoint.SubmissionStatusTypeID = simpleChargePoint.SubmissionStatusTypeID;
+                if (simplePOI.SubmissionStatusTypeID == null & simplePOI.SubmissionStatus != null) simplePOI.SubmissionStatusTypeID = simplePOI.SubmissionStatus.ID;
+                dataPOI.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == simplePOI.SubmissionStatusTypeID);
+                dataPOI.SubmissionStatusTypeID = simplePOI.SubmissionStatusTypeID;
             }
             else
             {
-                dataChargePoint.SubmissionStatusTypeID = null;
-                dataChargePoint.SubmissionStatusType = null; // dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
+                dataPOI.SubmissionStatusTypeID = null;
+                dataPOI.SubmissionStatusType = null; // dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
             }
 
-            return dataChargePoint;
+            return dataPOI;
         }
 
         /// <summary>
