@@ -630,7 +630,7 @@ namespace OCM.Import.Providers
 
         public bool IsConnectionInfoBlank(ConnectionInfo c)
         {
-            if (c.ConnectionType == null && c.Amps == null & c.Voltage == null && c.Level == null && c.Quantity == null)
+            if (c.ConnectionTypeID==null && c.ConnectionType == null && c.Amps == null & c.Voltage == null && c.Level == null && c.Quantity == null)
             {
                 return true;
             }

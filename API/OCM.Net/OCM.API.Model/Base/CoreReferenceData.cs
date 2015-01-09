@@ -67,7 +67,9 @@ namespace OCM.API.Common.Model
     {
         Unknown = 0,
         J1772 = 1,
-        CHAdeMO = 2
+        CHAdeMO = 2,
+        MennekesType2 = 25,
+        Schuko = 28
     }
 
     public enum StandardCurrentTypes

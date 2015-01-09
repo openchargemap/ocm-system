@@ -7,6 +7,7 @@ using OCM.Import.Misc;
 using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -471,6 +472,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique));
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
             providers.Add(new ImportProvider_NobilDotNo());
+            providers.Add(new ImportProvider_OplaadpalenNL());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
