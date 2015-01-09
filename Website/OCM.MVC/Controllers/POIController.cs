@@ -172,10 +172,10 @@ namespace OCM.MVC.Controllers
 
                     //get data quality report
 
-                    if (IsUserAdmin)
-                    {
+                    //if (IsUserAdmin)
+                    //{
                         viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
-                    }
+                    //}
                 }
                 else
                 {

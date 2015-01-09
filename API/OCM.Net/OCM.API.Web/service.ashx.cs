@@ -358,6 +358,11 @@ namespace OCM.API
                     this.OutputGeocodingResult(outputProvider, context, filter);
                 }
 
+                if (filter.Action == "availability")
+                {
+                    this.OutputAvailabilityResult(outputProvider, context, filter);
+                }
+
                 if (filter.Action == "refreshmirror")
                 {
                     try
@@ -459,6 +464,24 @@ namespace OCM.API
 
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, data, filter);
+        }
+
+        private void OutputAvailabilityResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
+        {
+            //TODO: provider specific availability check with result caching
+            var result = new {id= filter.ChargePointID, status = StandardStatusTypes.Unknown,timestamp=DateTime.UtcNow};
+
+            //send API response
+            if (filter.IsEnvelopedResponse)
+            {
+                var responseEnvelope = new APIResponseEnvelope();
+                responseEnvelope.Data = result;
+                outputProvider.GetOutput(context.Response.OutputStream, responseEnvelope, filter);
+            }
+            else
+            {
+                outputProvider.GetOutput(context.Response.OutputStream, result, filter);
+            }
         }
 
         private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)

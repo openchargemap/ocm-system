@@ -402,9 +402,10 @@ else {
 
                 if (e.target.hash == "#tab-map") {
                     //when map tab is shown, invalidate map to avoid redraw issue
+                    google.maps.event.trigger(map, "resize");
+                    //work around bug related to hidden map tab, call resize again after short delay
                     setTimeout(function () {
                         google.maps.event.trigger(map, "resize");
-
                     }, 500);
                 }
 

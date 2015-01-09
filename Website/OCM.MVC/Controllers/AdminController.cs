@@ -3,6 +3,7 @@ using OCM.API.Common.Model;
 using OCM.Core.Data;
 using OCM.Import.Providers;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -237,6 +238,9 @@ namespace OCM.MVC.Controllers
         [AuthSignedInOnly(Roles = "Admin")]
         public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport =false)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var importManager = new Import.ImportManager(Server.MapPath("~/Temp"));
             
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
@@ -251,6 +255,9 @@ namespace OCM.MVC.Controllers
                 //add/update/delist POIs
                 importManager.UpdateImportedPOIList(result, systemUser);
             }
+
+            stopwatch.Stop();
+            System.Diagnostics.Debug.WriteLine("Import processing time (seconds): "+stopwatch.Elapsed.TotalSeconds);
             return View(result);
         }
 
