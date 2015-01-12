@@ -67,34 +67,45 @@ else
                 </td>
 
                 <td rowspan="2">
-                    @if (!item.IsProcessed)
+                    @if (item.PreviousData == null)
                     {
-                        if (ViewBag.IsUserAdmin == true || (currentUserProfile != null && OCM.API.Common.UserManager.HasUserPermission(currentUserProfile, editPOI.AddressInfo.CountryID, PermissionLevel.Editor, userPermissions)))
-                        {
 
-                            <div class="btn-group">
-                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Action
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-
-                                    <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
-                                    <li>@Html.ActionLink("Reject/Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
-                                </ul>
-                            </div>
-                        }
-                        else
-                        {
-
-                            <span class="text-info">Awaiting Country Editor Approval</span>
-                        }
+                        //item is  new listing awaiting approval, link to approvals page
+                        <a href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })">Locations Awaiting Approval</a>
                     }
                     else
                     {
-                        <span class="text-success">Edit Processed @(item.ProcessedByUser != null ? "by " + item.ProcessedByUser.Username : "") @item.DateProcessed</span>
+                        if (!item.IsProcessed)
+                        {
+                            if (ViewBag.IsUserAdmin == true || (currentUserProfile != null && OCM.API.Common.UserManager.HasUserPermission(currentUserProfile, editPOI.AddressInfo.CountryID, PermissionLevel.Editor, userPermissions)))
+                            {
+
+                                <div class="btn-group">
+                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Action
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+
+                                        <li>@Html.ActionLink("Publish", "Publish", new { id = item.ID })</li>
+                                        <li>@Html.ActionLink("Reject/Mark as Processed", "MarkAsProcessed", new { id = item.ID })</li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+
+                                <span class="text-info">Awaiting Country Editor Approval</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-success">Edit Processed @(item.ProcessedByUser != null ? "by " + item.ProcessedByUser.Username : "") @item.DateProcessed</span>
+                        }
                     }
+                    
                 </td>
+
             </tr>
             <tr>
                 <td colspan="2">
