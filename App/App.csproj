@@ -115,7 +115,6 @@
     <Content Include="js\ThirdParty\swipebox\css\swipebox.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.min.css" />
     <Content Include="js\ThirdParty\swipebox\img\icons.png" />
-    <Content Include="js\ThirdParty\swipebox\img\icons.svg" />
     <Content Include="js\ThirdParty\swipebox\img\loader.gif" />
     <Content Include="js\ThirdParty\swipebox\js\jquery.swipebox.js" />
     <Content Include="js\ThirdParty\swipebox\js\jquery.swipebox.min.js" />
@@ -128,6 +127,7 @@
     <Content Include="fonts\Roboto\roboto-light-webfont.eot" />
     <Content Include="fonts\Roboto\roboto-light-webfont.ttf" />
     <Content Include="fonts\Roboto\roboto-light-webfont.woff" />
+    <Content Include="js\ThirdParty\swipebox\img\icons.svg" />
     <None Include="styles\main.less" />
     <Content Include="styles\main.css">
       <DependentUpon>main.less</DependentUpon>

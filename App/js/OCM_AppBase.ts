@@ -35,6 +35,8 @@ module OCM {
 
         public searchPosition: GeoPosition;
 
+        public isCachedResults: boolean;
+
         constructor() {
             this.selectedPOI = null;
             this.poiList = null;
@@ -42,6 +44,7 @@ module OCM {
             this.searchPosition = null;
 
             this.resultsBatchID = -1;
+            this.isCachedResults = false;
         }
     }
 

@@ -170,6 +170,7 @@ module OCM {
                     app.viewModel.searchPosition = cachedResult_SearchPos;
                 }
                 //use cached POI results, observer will then render the results
+                app.viewModel.isCachedResults = true;
                 app.viewModel.poiList = cachedResults;
                 app.viewModel.searchPOIList = cachedResults;
             } else {
@@ -895,6 +896,7 @@ module OCM {
                 //begin new search
                 this.showProgressIndicator();
                 this.appState.isSearchRequested = true; //used to signal that geolocation updates etc should continue a search after they complete
+                this.viewModel.isCachedResults = false;
 
                 //detect if mapping/geolocation available
                 if (useClientLocation == true) {
@@ -1045,7 +1047,13 @@ module OCM {
                 var distance_unit = "Miles";
                 if (distUnitPref != null) distance_unit = distUnitPref.value;
 
-                var $resultCount = $("<h3 style='margin-top:0'>The following " + locationList.length + " locations match your search</h3>");
+                var introText = "<h3 style='margin-top:0'>The following " + locationList.length + " locations match your search</h3>";
+
+                if (this.viewModel.isCachedResults) {
+                    introText = "<p class='alert alert-warning'>You are viewing old search results. Search again to see the latest information.</p>";
+                }
+
+                var $resultCount = $(introText);
 
                 $listContent.append($resultCount);
 
@@ -1240,7 +1248,9 @@ module OCM {
                     var mediaItem = poi.MediaItems[c];
                     if (mediaItem.IsEnabled == true) {
                         var itemDate = OCM.Utils.fixJSONDate(mediaItem.DateCreated);
-                        mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a class='swipebox' href='" + mediaItem.ItemURL + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+                        var mediaItemThumbnail = mediaItem.ItemThumbnailURL;
+                        var mediumSizeThumbnail = mediaItemThumbnail.replace(".thmb.", ".medi.");
+                        mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a class='swipebox' href='" + mediumSizeThumbnail + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
                         "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" +
                         "</blockquote>";
                     }
