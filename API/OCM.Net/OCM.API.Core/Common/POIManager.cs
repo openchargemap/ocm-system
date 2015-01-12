@@ -642,7 +642,7 @@ namespace OCM.API.Common
                 dataAddressInfo.Town = simpleAddressInfo.Town;
                 dataAddressInfo.StateOrProvince = simpleAddressInfo.StateOrProvince;
                 dataAddressInfo.Postcode = simpleAddressInfo.Postcode;
-                if (simpleAddressInfo.CountryID != null || (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0))
+                if (simpleAddressInfo.CountryID >0 || (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0))
                 {
                     int countryId = (simpleAddressInfo.CountryID != null ? (int)simpleAddressInfo.CountryID : simpleAddressInfo.Country.ID);
                     dataAddressInfo.Country = dataModel.Countries.FirstOrDefault(c => c.ID == countryId);
@@ -683,12 +683,13 @@ namespace OCM.API.Common
                 dataPOI.ParentChargePointID = null;
             }
 
-            if (simplePOI.DataProviderID != null || (simplePOI.DataProvider != null && simplePOI.DataProvider.ID >= 0))
+            if (simplePOI.DataProviderID >0 || (simplePOI.DataProvider != null && simplePOI.DataProvider.ID >= 0))
             {
                 int providerId = (simplePOI.DataProviderID != null ? (int)simplePOI.DataProviderID : simplePOI.DataProvider.ID);
                 try
                 {
                     dataPOI.DataProvider = dataModel.DataProviders.First(d => d.ID == providerId);
+                    dataPOI.DataProviderID = dataPOI.DataProvider.ID;
                 }
                 catch (Exception)
                 {
@@ -700,16 +701,18 @@ namespace OCM.API.Common
             {
                 //set to ocm contributor by default
                 dataPOI.DataProvider = dataModel.DataProviders.First(d => d.ID == (int)StandardDataProviders.OpenChargeMapContrib);
+                dataPOI.DataProviderID = dataPOI.DataProvider.ID;
             }
 
             dataPOI.DataProvidersReference = simplePOI.DataProvidersReference;
 
-            if (simplePOI.OperatorID != null || (simplePOI.OperatorInfo != null && simplePOI.OperatorInfo.ID >= 0))
+            if (simplePOI.OperatorID >=1 || (simplePOI.OperatorInfo != null && simplePOI.OperatorInfo.ID >= 0))
             {
                 int operatorId = (simplePOI.OperatorID != null ? (int)simplePOI.OperatorID : simplePOI.OperatorInfo.ID);
                 try
                 {
                     dataPOI.Operator = dataModel.Operators.First(o => o.ID == operatorId);
+                    dataPOI.OperatorID = dataPOI.Operator.ID;
                 }
                 catch (Exception)
                 {
@@ -725,12 +728,13 @@ namespace OCM.API.Common
 
             dataPOI.OperatorsReference = simplePOI.OperatorsReference;
 
-            if (simplePOI.UsageTypeID != null || (simplePOI.UsageType != null && simplePOI.UsageType.ID >= 0))
+            if (simplePOI.UsageTypeID >=0 || (simplePOI.UsageType != null && simplePOI.UsageType.ID >= 0))
             {
                 int usageTypeId = (simplePOI.UsageTypeID != null ? (int)simplePOI.UsageTypeID : simplePOI.UsageType.ID);
                 try
                 {
                     dataPOI.UsageType = dataModel.UsageTypes.First(u => u.ID == usageTypeId);
+                    dataPOI.UsageTypeID = dataPOI.UsageType.ID;
                 }
                 catch (Exception)
                 {
@@ -809,12 +813,13 @@ namespace OCM.API.Common
                     connectionInfo.Quantity = c.Quantity;
                     connectionInfo.PowerKW = c.PowerKW;
 
-                    if (c.ConnectionTypeID != null || (c.ConnectionType != null && c.ConnectionType.ID >= 0))
+                    if (c.ConnectionTypeID >=0 || (c.ConnectionType != null && c.ConnectionType.ID >= 0))
                     {
                         int connectionTypeId = (c.ConnectionTypeID != null ? (int)c.ConnectionTypeID : c.ConnectionType.ID);
                         try
                         {
                             connectionInfo.ConnectionType = dataModel.ConnectionTypes.First(ct => ct.ID == connectionTypeId);
+                            connectionInfo.ConnectionTypeID = connectionInfo.ConnectionType.ID;
                         }
                         catch (Exception)
                         {
@@ -827,12 +832,13 @@ namespace OCM.API.Common
                         connectionInfo.ConnectionTypeID = 0;
                     }
 
-                    if (c.LevelID!=null || (c.Level != null && c.Level.ID >= 1))
+                    if (c.LevelID>=1 || (c.Level != null && c.Level.ID >= 1))
                     {
                         int levelId = (c.LevelID != null ? (int)c.LevelID : c.Level.ID);
                         try
                         {
                             connectionInfo.ChargerType = dataModel.ChargerTypes.First(chg => chg.ID == levelId);
+                            connectionInfo.LevelTypeID = connectionInfo.ChargerType.ID;
                         }
                         catch (Exception)
                         {
@@ -845,12 +851,13 @@ namespace OCM.API.Common
                         connectionInfo.LevelTypeID = null;
                     }
 
-                    if (c.CurrentTypeID !=null || (c.CurrentType != null && c.CurrentType.ID >= 10))
+                    if (c.CurrentTypeID >=10 || (c.CurrentType != null && c.CurrentType.ID >= 10))
                     {
                         int currentTypeId = (c.CurrentTypeID != null ? (int)c.CurrentTypeID : c.CurrentType.ID);
                         try
                         {
                             connectionInfo.CurrentType = dataModel.CurrentTypes.First(chg => chg.ID == currentTypeId);
+                            connectionInfo.CurrentTypeID = connectionInfo.CurrentType.ID;
                         }
                         catch (Exception)
                         {
@@ -863,7 +870,7 @@ namespace OCM.API.Common
                         connectionInfo.CurrentTypeID = null;
                     }
 
-                    if (c.StatusTypeID!=null || (c.StatusType != null && c.StatusType.ID >= 0))
+                    if (c.StatusTypeID>=0 || (c.StatusType != null && c.StatusType.ID >= 0))
                     {
                         int statusTypeId = (c.StatusTypeID != null ? (int)c.StatusTypeID : c.StatusType.ID);
                         try

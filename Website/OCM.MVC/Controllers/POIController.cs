@@ -385,37 +385,39 @@ namespace OCM.MVC.Controllers
         {
             //Where -1 is supplied as dropdown value etc we need to revert to a default or null value;
             //FIXME: the binding method varies between hidden fields and dropdown values
-            if (poi.DataProvider != null && poi.DataProvider.ID > 0)
+            if (poi.DataProviderID>=1 || (poi.DataProvider != null && poi.DataProvider.ID > 0))
             {
-                poi.DataProviderID = poi.DataProvider.ID;
-            }
-            if (poi.DataProviderID == -1 || poi.DataProviderID == null)
-            {
+                int providerId = (poi.DataProvider!=null?poi.DataProvider.ID:(int)poi.DataProviderID);
+                poi.DataProviderID = providerId;
+            } else  {
                 poi.DataProvider = null;
                 poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
             }
 
-            if (poi.OperatorInfo != null)
+            if (poi.OperatorID >=1 || poi.OperatorInfo != null)
             {
-                poi.OperatorID = poi.OperatorInfo.ID;
+                int operatorId = poi.OperatorInfo!=null?poi.OperatorInfo.ID:(int)poi.OperatorID;
+                poi.OperatorID = operatorId;
             }
             else
             {
                 poi.OperatorID = (int)StandardOperators.UnknownOperator;
             }
 
-            if (poi.UsageType != null)
+            if (poi.UsageTypeID>0 || poi.UsageType != null)
             {
-                poi.UsageTypeID = poi.UsageType.ID;
+                int usageTypeId = poi.UsageType!=null?poi.UsageType.ID:(int)poi.UsageTypeID;
+                poi.UsageTypeID = usageTypeId;
             }
             else
             {
                 poi.UsageTypeID = (int)StandardUsageTypes.Unknown;
             }
 
-            if (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null))
+            if (poi.StatusTypeID>=0 || (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null)))
             {
-                poi.StatusTypeID = poi.StatusType.ID;
+                int statusTypeId = poi.StatusType!=null?poi.StatusType.ID:(int)poi.StatusTypeID;
+                poi.StatusTypeID = statusTypeId;
             }
 
             if (poi.StatusTypeID == -1 || poi.StatusTypeID == null)
