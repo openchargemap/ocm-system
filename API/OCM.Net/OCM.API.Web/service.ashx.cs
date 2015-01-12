@@ -498,7 +498,8 @@ namespace OCM.API
                 var geocoder = new GeocodingHelper();
                 geocoder.IncludeExtendedData = true;
 
-                result = geocoder.GeolocateAddressInfo_OSM(filter.Address);
+                //result = geocoder.GeolocateAddressInfo_OSM(filter.Address);
+                result = geocoder.GeolocateAddressInfo_Google(filter.Address);
 
                 HttpContext.Current.Cache.Add("Geocoding_" + filter.HashKey, result, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
