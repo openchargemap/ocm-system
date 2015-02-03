@@ -23,7 +23,7 @@ namespace OCM.Core.Common
             //TODO: better method for large number of POIs
             //grab all live POIs (30-100,000 items)
             //var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
-            var allPOIs = poiManager.GetChargePoints(new APIRequestSettings { CountryIDs = new int[] { countryId }, MaxResults=100000 });
+            var allPOIs = poiManager.GetChargePoints(new APIRequestParams { CountryIDs = new int[] { countryId }, MaxResults=100000 });
 
             foreach (var poi in allPOIs)
             {
@@ -201,14 +201,23 @@ namespace OCM.Core.Common
             var report = new POIDataQualityReport();
             report.POI = poi;
 
-            if (poi.DateLastConfirmed == null || (poi.DateLastConfirmed.HasValue && !(poi.DateLastConfirmed.Value > DateTime.UtcNow.AddMonths(-12))))
+            DateTime recentUpdateThreshold = DateTime.UtcNow.AddMonths(-6);
+
+            if (
+                (poi.DateLastConfirmed.HasValue && !(poi.DateLastConfirmed.Value > recentUpdateThreshold))
+                ||
+                (poi.UserComments!=null && poi.UserComments.Any(u=>u.CheckinStatusType.IsPositive==true && u.DateCreated>recentUpdateThreshold))
+                ||
+                (poi.MediaItems != null && poi.MediaItems.Any(u => u.DateCreated > recentUpdateThreshold))
+                )
             {
-                //low quality score for date last confirmed
-                report.ReportItems.Add(new DataQualityReportItem { Weighting = 10, Category = "User Feedback", Comment = "No user verification.", IsPositive = false });
+                //has either a recent datelastconfirmed value or a recent positive checkin
+                report.ReportItems.Add(new DataQualityReportItem { Category = "User Feedback", Comment = "Has recent user verification", IsPositive = true });
             }
             else
             {
-                report.ReportItems.Add(new DataQualityReportItem { Category = "User Feedback", Comment = "Has recent user verification", IsPositive = true });
+                //low quality score for date last confirmed
+                report.ReportItems.Add(new DataQualityReportItem { Weighting = 10, Category = "User Feedback", Comment = "No recent user verification.", IsPositive = false });
             }
 
             if (poi.UserComments == null || (poi.UserComments != null && !poi.UserComments.Any()))
