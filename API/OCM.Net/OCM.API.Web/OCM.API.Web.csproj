@@ -86,7 +86,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.7\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Runtime.Serialization" />
@@ -167,8 +167,6 @@
     <Content Include="Widgets\Map\scripts\LAB.min.js" />
     <Content Include="Widgets\Map\scripts\OCM_Map.js" />
     <Content Include="Widgets\Map\TestPage.htm" />
-    <Content Include="Widgets\Submission\Submission.js" />
-    <Content Include="Widgets\Submission\TestPage.htm" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="General\IInputProvider.cs" />
