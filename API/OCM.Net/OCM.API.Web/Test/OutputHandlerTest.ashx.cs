@@ -15,7 +15,7 @@ namespace OCM.API.Test
         public void ProcessRequest(HttpContext context)
         {
             OutputProviders.ImageOutputProvider outputProvider = new OutputProviders.ImageOutputProvider();
-            APIRequestSettings settings = new APIRequestSettings();
+            APIRequestParams settings = new APIRequestParams();
 
             List<OCM.API.Common.Model.ChargePoint> dataList = new List<Common.Model.ChargePoint>();
 

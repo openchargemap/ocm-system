@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace OCM.MVC.Models
 {
-    public class POIBrowseModel : OCM.API.Common.APIRequestSettings
+    public class POIBrowseModel : OCM.API.Common.APIRequestParams
     {
         public POIBrowseModel()
         {

@@ -217,7 +217,7 @@ namespace OCM.API
 
             //decide correct reponse type
             IOutputProvider outputProvider = null;
-            var filter = new APIRequestSettings();
+            var filter = new APIRequestParams();
 
             //set defaults
             string outputType = "xml";
@@ -388,7 +388,7 @@ namespace OCM.API
         /// <param name="outputProvider"></param>
         /// <param name="context"></param>
         /// <param name="filter"></param>
-        private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
+        private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             List<OCM.API.Common.Model.ChargePoint> dataList = null;
 
@@ -406,7 +406,7 @@ namespace OCM.API
         /// </summary>
         /// <param name="context"></param>
         /// <param name="filter"></param>
-        private void OutputCompactPOIList(HttpContext context, APIRequestSettings filter)
+        private void OutputCompactPOIList(HttpContext context, APIRequestParams filter)
         {
             //get list of charge points as compact POISearchResult List for output:
             List<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetChargePoints(filter);
@@ -440,7 +440,7 @@ namespace OCM.API
         /// <param name="outputProvider"></param>
         /// <param name="context"></param>
         /// <param name="filter"></param>
-        private void OutputCoreReferenceData(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
+        private void OutputCoreReferenceData(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             //get core reference data
             var refDataManager = new ReferenceDataManager();
@@ -466,7 +466,7 @@ namespace OCM.API
             outputProvider.GetOutput(context.Response.OutputStream, data, filter);
         }
 
-        private void OutputAvailabilityResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
+        private void OutputAvailabilityResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             //TODO: provider specific availability check with result caching
             var result = new {id= filter.ChargePointID, status = StandardStatusTypes.Unknown,timestamp=DateTime.UtcNow};
@@ -484,7 +484,7 @@ namespace OCM.API
             }
         }
 
-        private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestSettings filter)
+        private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             GeocodingResult result = null;
 

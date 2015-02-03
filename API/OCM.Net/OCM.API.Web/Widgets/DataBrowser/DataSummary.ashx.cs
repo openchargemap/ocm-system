@@ -23,7 +23,7 @@ namespace OCM.API.Widgets.DataBrowser
         {
             if (dataSummaryManager == null) dataSummaryManager = new DataSummaryManager();
 
-            APIRequestSettings filterSettings = new APIRequestSettings();
+            APIRequestParams filterSettings = new APIRequestParams();
             filterSettings.ParseParameters(filterSettings,context);
 
             string action = "totals_per_country";

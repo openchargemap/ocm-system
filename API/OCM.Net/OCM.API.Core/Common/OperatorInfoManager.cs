@@ -1,4 +1,5 @@
 ﻿using OCM.API.Common.Model;
+using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,8 @@ namespace OCM.API.Common
             DataModel.SaveChanges();
 
             update = Model.Extensions.OperatorInfo.FromDataModel(operatorInfo);
+
+            CacheManager.RefreshCachedData();
 
             return update;
 

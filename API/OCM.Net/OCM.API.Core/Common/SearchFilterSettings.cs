@@ -8,7 +8,7 @@ using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
-    public class APIRequestSettings : ServiceParameterParser
+    public class APIRequestParams : ServiceParameterParser
     {
         private const int MAX_API_VERSION =2;
 
@@ -56,7 +56,7 @@ namespace OCM.API.Common
         public bool FastChargeOnly { get; set; }
         #endregion
 
-        public APIRequestSettings()
+        public APIRequestParams()
         {
             DistanceUnit = DistanceUnit.Miles;
             MaxResults = 100;
@@ -85,7 +85,7 @@ namespace OCM.API.Common
             this.ParseParameters(this, context);
         }
 
-        public void ParseParameters(APIRequestSettings settings, HttpContext context)
+        public void ParseParameters(APIRequestParams settings, HttpContext context)
         {
             //get parameter values if any
             if (!String.IsNullOrEmpty(context.Request["v"])) settings.APIVersion = ParseInt(context.Request["v"]);

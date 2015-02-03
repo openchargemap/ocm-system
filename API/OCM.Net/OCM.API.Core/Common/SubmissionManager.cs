@@ -285,7 +285,7 @@ namespace OCM.API.Common
                 {
                     var cacheTask = Task.Run(async () =>
                     {
-                        return await CacheManager.RefreshCachedPOIList();
+                        return await CacheManager.RefreshCachedData();
                     });
                     cacheTask.Wait();
                 }
@@ -416,7 +416,7 @@ namespace OCM.API.Common
 
                 //SendPOICommentSubmissionNotifications(comment, user, dataComment);
 
-                CacheManager.RefreshCachedPOIList();
+                CacheManager.RefreshCachedData();
 
                 return dataComment.ID;
             }

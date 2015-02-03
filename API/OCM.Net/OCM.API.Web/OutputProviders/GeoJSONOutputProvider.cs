@@ -53,7 +53,7 @@ namespace OCM.API.OutputProviders
             ContentType = "application/json";
         }
 
-        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
+        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             if (settings.APIVersion >= 2)
             {
@@ -109,7 +109,7 @@ namespace OCM.API.OutputProviders
             }
         }
 
-        private JsonSerializerSettings GetSerializerSettings(Common.APIRequestSettings settings)
+        private JsonSerializerSettings GetSerializerSettings(Common.APIRequestParams settings)
         {
             JsonSerializerSettings jsonSettings = new JsonSerializerSettings();
 
@@ -128,12 +128,12 @@ namespace OCM.API.OutputProviders
             return jsonSettings;
         }
 
-        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestSettings settings)
+        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestParams settings)
         {
             throw new NotImplementedException();
         }
 
-        public void GetOutput(Stream outputStream, object data, Common.APIRequestSettings settings)
+        public void GetOutput(Stream outputStream, object data, Common.APIRequestParams settings)
         {
             throw new NotImplementedException();
         }

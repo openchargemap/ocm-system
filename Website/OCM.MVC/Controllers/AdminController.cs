@@ -96,7 +96,7 @@ namespace OCM.MVC.Controllers
 
                 operatorInfo = operatorInfoManager.UpdateOperatorInfo(operatorInfo);
 
-                CacheManager.RefreshCachedPOIList();
+                CacheManager.RefreshCachedData();
                 return RedirectToAction("Operators", "Admin");
             }
             return View(operatorInfo);
@@ -156,10 +156,10 @@ namespace OCM.MVC.Controllers
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
-        public ActionResult CheckPOIMirrorStatus()
+        public ActionResult CheckPOIMirrorStatus(bool includeDupeCheck=false)
         {
             var mirrorManager = new CacheProviderMongoDB();
-            var status = mirrorManager.GetMirrorStatus();
+            var status = mirrorManager.GetMirrorStatus(includeDupeCheck);
             if (status == null)
             {
                 status = new MirrorStatus();
@@ -257,7 +257,8 @@ namespace OCM.MVC.Controllers
             }
 
             stopwatch.Stop();
-            System.Diagnostics.Debug.WriteLine("Import processing time (seconds): "+stopwatch.Elapsed.TotalSeconds);
+            result.Log += "\r\nImport processing time (seconds): "+stopwatch.Elapsed.TotalSeconds;
+
             return View(result);
         }
 

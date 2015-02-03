@@ -34,7 +34,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public static List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestSettings filter)
+        public static List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams filter)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public async static Task<MirrorStatus> RefreshCachedPOIList()
+        public async static Task<MirrorStatus> RefreshCachedData()
         {
             try
             {

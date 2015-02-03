@@ -30,7 +30,7 @@ namespace OCM.API.OutputProviders
             else currentLine += val.ToString() + ",";
         }
 
-        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
+        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             output = new StreamWriter(outputStream, System.Text.Encoding.UTF8);
 
@@ -159,12 +159,12 @@ namespace OCM.API.OutputProviders
         }
 
 
-        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestSettings settings)
+        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestParams settings)
         {
             throw new NotImplementedException();
         }
 
-        public void GetOutput(Stream outputStream, Object data, Common.APIRequestSettings settings)
+        public void GetOutput(Stream outputStream, Object data, Common.APIRequestParams settings)
         {
             throw new NotImplementedException();
         }

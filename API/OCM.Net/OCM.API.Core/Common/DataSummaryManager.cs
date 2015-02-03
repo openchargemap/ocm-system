@@ -40,7 +40,7 @@ namespace OCM.API.Common.DataSummary
     /// </summary>
     public class DataSummaryManager : ManagerBase
     {
-        public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestSettings filterSettings)
+        public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestParams filterSettings)
         {
             //TODO: optionally output as normal JSON
             string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
@@ -75,7 +75,7 @@ namespace OCM.API.Common.DataSummary
             return output;
         }
 
-        public POIRecentActivity GetActivitySummary(APIRequestSettings filterSettings)
+        public POIRecentActivity GetActivitySummary(APIRequestParams filterSettings)
         {
             //default to last month
             DateTime dateFrom = DateTime.UtcNow.AddMonths(-1);

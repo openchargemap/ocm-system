@@ -182,7 +182,7 @@ namespace OCM.API.Common
                         //TODO: also award processing editor with reputation points if they are approving someone elses edit and they are not Admin
 
                         //Refresh POI cache
-                        Task cacheRefresh = CacheManager.RefreshCachedPOIList();
+                        Task cacheRefresh = CacheManager.RefreshCachedData();
                     }
                 }
             }

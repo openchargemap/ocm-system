@@ -34,6 +34,7 @@ namespace OCM.MVC.Controllers
             //dropdown selections of -1 represent an intended null selection, fix this by nulling relevant items
             filter.CountryIDs = this.ConvertNullableSelection(filter.CountryIDs);
             filter.LevelIDs = this.ConvertNullableSelection(filter.LevelIDs);
+            filter.ConnectionTypeIDs = this.ConvertNullableSelection(filter.ConnectionTypeIDs);
             filter.OperatorIDs = this.ConvertNullableSelection(filter.OperatorIDs);
             filter.StatusTypeIDs = this.ConvertNullableSelection(filter.StatusTypeIDs);
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
@@ -104,7 +105,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-            filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestSettings)filter);
+            filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestParams)filter);
             return View(filter);
         }
 
@@ -163,7 +164,7 @@ namespace OCM.MVC.Controllers
 
                     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
-                    viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestSettings { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
+                    viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestParams { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
                     viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
                     sw.Stop();
                     System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
@@ -541,7 +542,7 @@ namespace OCM.MVC.Controllers
         public ActionResult Activity()
         {
             var summaryManager = new DataSummaryManager();
-            var summary = summaryManager.GetActivitySummary(new APIRequestSettings());
+            var summary = summaryManager.GetActivitySummary(new APIRequestParams());
             ViewBag.ShowPOILink = true;
             return View(summary);
         }

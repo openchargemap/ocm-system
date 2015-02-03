@@ -105,7 +105,7 @@ namespace OCM.API.OutputProviders
             s.Flush();
         }
 
-        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestSettings settings)
+        public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             if (settings.APIVersion >= 2)
             {
@@ -118,7 +118,7 @@ namespace OCM.API.OutputProviders
             }
         }
 
-        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestSettings settings)
+        public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestParams settings)
         {
             if (settings.APIVersion >= 2)
             {
@@ -131,12 +131,12 @@ namespace OCM.API.OutputProviders
             }
         }
 
-        public void GetOutput(Stream outputStream, Object data, Common.APIRequestSettings settings)
+        public void GetOutput(Stream outputStream, Object data, Common.APIRequestParams settings)
         {
             PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
         }
 
-        private JsonSerializerSettings GetSerializerSettings(Common.APIRequestSettings settings)
+        private JsonSerializerSettings GetSerializerSettings(Common.APIRequestParams settings)
         {
             JsonSerializerSettings jsonSettings = new JsonSerializerSettings();
 
