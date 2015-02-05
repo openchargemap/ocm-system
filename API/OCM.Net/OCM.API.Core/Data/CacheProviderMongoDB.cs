@@ -15,6 +15,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace OCM.Core.Data
 {
@@ -26,6 +27,8 @@ namespace OCM.Core.Data
         public long TotalPOIInDB { get; set; }
         public DateTime LastUpdated { get; set; }
         public int NumPOILastUpdated { get; set; }
+
+        public int NumDistinctPOIs { get; set; }
     }
 
     public class POIMongoDB : OCM.API.Common.Model.ChargePoint
@@ -167,7 +170,7 @@ namespace OCM.Core.Data
                 BsonSerializer.RegisterSerializer(typeof(DateTime),
                  new DateTimeSerializer(DateTimeSerializationOptions.LocalInstance));
             }*/
-            status = GetMirrorStatus();
+            status = GetMirrorStatus(false, false);
         }
 
         public void RemoveAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList,MongoCollection<POIMongoDB> poiCollection )
@@ -215,7 +218,7 @@ namespace OCM.Core.Data
                 if (maxPOI!=null){ maxId=maxPOI.ID;}
                 
                 //from max poi we have in mirror to next 100 results in order of ID
-                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo").OrderBy(o => o.ID).Where(o => o.ID > maxId).Take(100);
+                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User").OrderBy(o => o.ID).Where(o => o.ID > maxId).Take(100);
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
@@ -235,7 +238,16 @@ namespace OCM.Core.Data
 
                 //determine POI updated since last status update we have in cache
                 //db.poi.find().sort({DateLastStatusUpdate:-1})
-                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo").OrderBy(o => o.DateLastStatusUpdate).Where(o => o.DateLastStatusUpdate > dateLastModified);
+
+                //"AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User"
+                var dataList = new Data.OCMEntities().ChargePoints
+                    .Include(a1=>a1.AddressInfo)
+                    .Include(a1 => a1.Connections)
+                    .Include(a1 => a1.MetadataValues)
+                    .Include(a1 => a1.UserComments)
+                    .Include(a1 => a1.MediaItems)
+                    .OrderBy(o => o.DateLastStatusUpdate)
+                    .Where(o => o.DateLastStatusUpdate > dateLastModified).ToList();
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
@@ -247,7 +259,15 @@ namespace OCM.Core.Data
             }
             if (updateStrategy == CacheUpdateStrategy.All)
             {
-                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo").OrderBy(o => o.ID).ToList();
+                var dataList = new Data.OCMEntities().ChargePoints
+                   .Include(a1 => a1.AddressInfo)
+                   .Include(a1 => a1.Connections)
+                   .Include(a1 => a1.MetadataValues)
+                   .Include(a1 => a1.UserComments)
+                   .Include(a1 => a1.MediaItems)
+                   .OrderBy(o => o.ID)
+                   .ToList();
+
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
@@ -294,12 +314,15 @@ namespace OCM.Core.Data
             CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData();
             if (coreRefData != null)
             {
+                database.DropCollection("reference");
+                //problems clearing data from collection...
+                
                 var reference = database.GetCollection<CoreReferenceData>("reference");
-                if (reference.Exists())
-                {
-                    reference.RemoveAll();
-                    reference.Insert(coreRefData);
-                }
+                var query = new QueryDocument();
+                reference.Remove(query, RemoveFlags.None);
+
+                Thread.Sleep(300);
+                reference.Insert(coreRefData);
             }
 
             var poiList = GetPOIListToUpdate(updateStrategy);
@@ -346,13 +369,36 @@ namespace OCM.Core.Data
             
         }
 
-        public MirrorStatus GetMirrorStatus()
+        public MirrorStatus GetMirrorStatus(bool includeDupeCheck, bool includeDBPOICount=true)
         {
             try
             {
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
                 var currentStatus= statusCollection.FindOne();
-                currentStatus.TotalPOIInDB = new OCMEntities().ChargePoints.LongCount();
+
+                if (includeDBPOICount)
+                {
+                    currentStatus.TotalPOIInDB = new OCMEntities().ChargePoints.LongCount();
+                }
+
+                if (includeDupeCheck)
+                {
+                    //perform check to see if number of distinct ids!= number of pois
+                    var poiCollection = database.GetCollection<POIMongoDB>("poi");
+                    var distinctPOI = poiCollection.Distinct("ID");
+                    currentStatus.NumDistinctPOIs = distinctPOI.Count();
+                    string dupePOIs = "";
+                    /*foreach (var poi in poiCollection.FindAll())
+                    {
+                        var itemCount = poiCollection.Count(Query.EQ("ID", poi.ID));
+                        if (itemCount > 1)
+                        {
+                            dupePOIs += " " + poi.ID + " (" + itemCount + "),";
+                        }
+                    }
+                    currentStatus.Description += "Dupe POIs:"+dupePOIs;
+                     */
+                }
                 return currentStatus;
             }
             catch (Exception exp)
@@ -413,7 +459,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestSettings settings)
+        public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
             bool freshCache = false;
             int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
@@ -525,20 +571,26 @@ namespace OCM.Core.Data
                                       && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
                                       && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
                                       && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
-                                      //&& (String.IsNullOrEmpty(settings.LocationTitle) || (!String.IsNullOrEmpty(settings.LocationTitle) && c.AddressInfo!=null && c.AddressInfo.Title!=null && c.AddressInfo.Title.Contains(settings.LocationTitle)))
-                                      && (settings.ConnectionType == null || c.Connections.Any(conn => conn.ConnectionType.Title == settings.ConnectionType))
-                                      && (settings.MinPowerKW == null || c.Connections.Any(conn => conn.PowerKW >= settings.MinPowerKW))
-
                                       && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
-                                      && (filterByConnectionTypes == false || (filterByConnectionTypes == true && c.Connections.Any(conn => settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID))))
-                                      && (filterByLevels == false || (filterByLevels == true && c.Connections.Any(chg => settings.LevelIDs.Contains((int)chg.Level.ID))))
                                       && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
                                       && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                       && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                       && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
                           select c);
-                
-                var results = poiList.ToList().OrderByDescending(p=>p.DateCreated).Take(settings.MaxResults);
+
+
+                //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
+                poiList = from c in poiList
+                                  where
+                                  c.Connections.Any(conn =>
+                                        (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
+                                        && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
+                                        && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
+                                        && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
+                                         )
+                                  select c;
+
+                var results = poiList.OrderByDescending(p => p.DateCreated).ToList().Take(settings.MaxResults);
                 if (requiresDistance && settings.Latitude!=null & settings.Longitude!=null)
                 {
                     //populate distance

@@ -162,7 +162,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> GetChargePoints(APIRequestSettings settings)
+        public List<Model.ChargePoint> GetChargePoints(APIRequestParams settings)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -265,9 +265,7 @@ namespace OCM.API.Common
 
                     //compile initial list of locations
                     var chargePointList = from c in dataModel.ChargePoints.AsNoTracking()
-
                                           where
-                                              //c.ParentChargePointID == null //exclude under review and delisted charge points
                                               (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
                                               && ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
                                                     || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
@@ -279,16 +277,23 @@ namespace OCM.API.Common
                                               && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
                                               && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
                                               && (settings.LocationTitle == null || c.AddressInfo.Title.Contains(settings.LocationTitle))
-                                              && (settings.ConnectionType == null || c.Connections.Any(conn => conn.ConnectionType.Title == settings.ConnectionType))
-                                              && (settings.MinPowerKW == null || c.Connections.Any(conn => conn.PowerKW >= settings.MinPowerKW))
                                               && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
-                                              && (filterByConnectionTypes == false || (filterByConnectionTypes == true && c.Connections.Any(conn => settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID))))
-                                              && (filterByLevels == false || (filterByLevels == true && c.Connections.Any(chg => settings.LevelIDs.Contains((int)chg.ChargerType.ID))))
                                               && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
                                               && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                               && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                               && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
                                           select c;
+
+                    //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
+                    chargePointList = from c in chargePointList
+                                      where 
+                                      c.Connections.Any(conn => 
+                                            (settings.ConnectionType==null || (settings.ConnectionType!=null && conn.ConnectionType.Title == settings.ConnectionType))
+                                            && (settings.MinPowerKW == null || (settings.MinPowerKW!=null && conn.PowerKW >= settings.MinPowerKW))
+                                            && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
+                                            && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.ChargerType.ID)))
+                                             )
+                                      select c;
 
                     System.Data.Entity.Spatial.DbGeography searchPos = null;
 
@@ -642,7 +647,7 @@ namespace OCM.API.Common
                 dataAddressInfo.Town = simpleAddressInfo.Town;
                 dataAddressInfo.StateOrProvince = simpleAddressInfo.StateOrProvince;
                 dataAddressInfo.Postcode = simpleAddressInfo.Postcode;
-                if (simpleAddressInfo.CountryID >0 || (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0))
+                if (simpleAddressInfo.CountryID > 0 || (simpleAddressInfo.Country != null && simpleAddressInfo.Country.ID > 0))
                 {
                     int countryId = (simpleAddressInfo.CountryID != null ? (int)simpleAddressInfo.CountryID : simpleAddressInfo.Country.ID);
                     dataAddressInfo.Country = dataModel.Countries.FirstOrDefault(c => c.ID == countryId);
@@ -683,7 +688,7 @@ namespace OCM.API.Common
                 dataPOI.ParentChargePointID = null;
             }
 
-            if (simplePOI.DataProviderID >0 || (simplePOI.DataProvider != null && simplePOI.DataProvider.ID >= 0))
+            if (simplePOI.DataProviderID > 0 || (simplePOI.DataProvider != null && simplePOI.DataProvider.ID >= 0))
             {
                 int providerId = (simplePOI.DataProviderID != null ? (int)simplePOI.DataProviderID : simplePOI.DataProvider.ID);
                 try
@@ -706,7 +711,7 @@ namespace OCM.API.Common
 
             dataPOI.DataProvidersReference = simplePOI.DataProvidersReference;
 
-            if (simplePOI.OperatorID >=1 || (simplePOI.OperatorInfo != null && simplePOI.OperatorInfo.ID >= 0))
+            if (simplePOI.OperatorID >= 1 || (simplePOI.OperatorInfo != null && simplePOI.OperatorInfo.ID >= 0))
             {
                 int operatorId = (simplePOI.OperatorID != null ? (int)simplePOI.OperatorID : simplePOI.OperatorInfo.ID);
                 try
@@ -728,7 +733,7 @@ namespace OCM.API.Common
 
             dataPOI.OperatorsReference = simplePOI.OperatorsReference;
 
-            if (simplePOI.UsageTypeID >=0 || (simplePOI.UsageType != null && simplePOI.UsageType.ID >= 0))
+            if (simplePOI.UsageTypeID >= 0 || (simplePOI.UsageType != null && simplePOI.UsageType.ID >= 0))
             {
                 int usageTypeId = (simplePOI.UsageTypeID != null ? (int)simplePOI.UsageTypeID : simplePOI.UsageType.ID);
                 try
@@ -813,7 +818,7 @@ namespace OCM.API.Common
                     connectionInfo.Quantity = c.Quantity;
                     connectionInfo.PowerKW = c.PowerKW;
 
-                    if (c.ConnectionTypeID >=0 || (c.ConnectionType != null && c.ConnectionType.ID >= 0))
+                    if (c.ConnectionTypeID >= 0 || (c.ConnectionType != null && c.ConnectionType.ID >= 0))
                     {
                         int connectionTypeId = (c.ConnectionTypeID != null ? (int)c.ConnectionTypeID : c.ConnectionType.ID);
                         try
@@ -832,7 +837,7 @@ namespace OCM.API.Common
                         connectionInfo.ConnectionTypeID = 0;
                     }
 
-                    if (c.LevelID>=1 || (c.Level != null && c.Level.ID >= 1))
+                    if (c.LevelID >= 1 || (c.Level != null && c.Level.ID >= 1))
                     {
                         int levelId = (c.LevelID != null ? (int)c.LevelID : c.Level.ID);
                         try
@@ -851,7 +856,7 @@ namespace OCM.API.Common
                         connectionInfo.LevelTypeID = null;
                     }
 
-                    if (c.CurrentTypeID >=10 || (c.CurrentType != null && c.CurrentType.ID >= 10))
+                    if (c.CurrentTypeID >= 10 || (c.CurrentType != null && c.CurrentType.ID >= 10))
                     {
                         int currentTypeId = (c.CurrentTypeID != null ? (int)c.CurrentTypeID : c.CurrentType.ID);
                         try
@@ -870,7 +875,7 @@ namespace OCM.API.Common
                         connectionInfo.CurrentTypeID = null;
                     }
 
-                    if (c.StatusTypeID>=0 || (c.StatusType != null && c.StatusType.ID >= 0))
+                    if (c.StatusTypeID >= 0 || (c.StatusType != null && c.StatusType.ID >= 0))
                     {
                         int statusTypeId = (c.StatusTypeID != null ? (int)c.StatusTypeID : c.StatusType.ID);
                         try
