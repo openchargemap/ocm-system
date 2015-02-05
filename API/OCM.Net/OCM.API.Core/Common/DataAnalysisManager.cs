@@ -206,7 +206,7 @@ namespace OCM.Core.Common
             if (
                 (poi.DateLastConfirmed.HasValue && !(poi.DateLastConfirmed.Value > recentUpdateThreshold))
                 ||
-                (poi.UserComments!=null && poi.UserComments.Any(u=>u.CheckinStatusType.IsPositive==true && u.DateCreated>recentUpdateThreshold))
+                (poi.UserComments!=null && poi.UserComments.Any(u=>u.CheckinStatusType!=null && u.CheckinStatusType.IsPositive==true && u.DateCreated>recentUpdateThreshold))
                 ||
                 (poi.MediaItems != null && poi.MediaItems.Any(u => u.DateCreated > recentUpdateThreshold))
                 )
