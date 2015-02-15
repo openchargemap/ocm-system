@@ -1,31 +1,38 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.GeoJsonObjectModel;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Data.Entity;
 
 namespace OCM.Core.Data
 {
     public class MirrorStatus
     {
-        public HttpStatusCode StatusCode { get;  set; }
+        public HttpStatusCode StatusCode { get; set; }
+
         public string Description { get; set; }
+
         public long TotalPOIInCache { get; set; }
+
         public long TotalPOIInDB { get; set; }
+
         public DateTime LastUpdated { get; set; }
+
         public int NumPOILastUpdated { get; set; }
 
         public int NumDistinctPOIs { get; set; }
@@ -36,9 +43,9 @@ namespace OCM.Core.Data
         [JsonIgnore]
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> SpatialPosition { get; set; }
 
-        public static POIMongoDB FromChargePoint(OCM.API.Common.Model.ChargePoint cp, POIMongoDB poi=null)
+        public static POIMongoDB FromChargePoint(OCM.API.Common.Model.ChargePoint cp, POIMongoDB poi = null)
         {
-            if (poi==null) poi = new POIMongoDB();
+            if (poi == null) poi = new POIMongoDB();
 
             poi.AddressInfo = cp.AddressInfo;
             poi.Chargers = cp.Chargers;
@@ -54,7 +61,7 @@ namespace OCM.Core.Data
             }
             if (cp.DateLastConfirmed != null)
             {
-               poi.DateLastConfirmed =  (DateTime?)DateTime.SpecifyKind(cp.DateLastConfirmed.Value, DateTimeKind.Utc);
+                poi.DateLastConfirmed = (DateTime?)DateTime.SpecifyKind(cp.DateLastConfirmed.Value, DateTimeKind.Utc);
             }
             if (cp.DateLastStatusUpdate != null)
             {
@@ -64,7 +71,7 @@ namespace OCM.Core.Data
             {
                 poi.DatePlanned = (DateTime?)DateTime.SpecifyKind(cp.DatePlanned.Value, DateTimeKind.Utc);
             }
-            
+
             poi.GeneralComments = cp.GeneralComments;
             poi.ID = cp.ID;
             poi.MediaItems = cp.MediaItems;
@@ -173,7 +180,12 @@ namespace OCM.Core.Data
             status = GetMirrorStatus(false, false);
         }
 
-        public void RemoveAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList,MongoCollection<POIMongoDB> poiCollection )
+        public MongoCollection<POIMongoDB> GetPOICollection()
+        {
+            return database.GetCollection<POIMongoDB>("poi");
+        }
+
+        public void RemoveAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
         {
             using (server.RequestStart(database))
             {
@@ -184,6 +196,7 @@ namespace OCM.Core.Data
                 }
             }
         }
+
         public void InsertAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
         {
             using (server.RequestStart(database))
@@ -201,7 +214,7 @@ namespace OCM.Core.Data
                 poiCollection.InsertBatch(mongoDBPoiList);
             }
         }
-      
+
         public List<OCM.API.Common.Model.ChargePoint> GetPOIListToUpdate(CacheUpdateStrategy updateStrategy)
         {
             if (!database.CollectionExists("poi"))
@@ -213,20 +226,18 @@ namespace OCM.Core.Data
             //incremental update based on POI Id - up to 100 results at a time
             if (updateStrategy == CacheUpdateStrategy.Incremental)
             {
-                var maxPOI= poiCollection.FindAll().SetSortOrder(SortBy.Descending("ID")).SetLimit(1).FirstOrDefault();
+                var maxPOI = poiCollection.FindAll().SetSortOrder(SortBy.Descending("ID")).SetLimit(1).FirstOrDefault();
                 int maxId = 0;
-                if (maxPOI!=null){ maxId=maxPOI.ID;}
-                
+                if (maxPOI != null) { maxId = maxPOI.ID; }
+
                 //from max poi we have in mirror to next 100 results in order of ID
                 var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User").OrderBy(o => o.ID).Where(o => o.ID > maxId).Take(100);
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
-                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp,true,true,true,true));
-
+                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
                 }
                 return poiList;
-                
             }
 
             //update based on POI last modified since last status update
@@ -241,7 +252,7 @@ namespace OCM.Core.Data
 
                 //"AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User"
                 var dataList = new Data.OCMEntities().ChargePoints
-                    .Include(a1=>a1.AddressInfo)
+                    .Include(a1 => a1.AddressInfo)
                     .Include(a1 => a1.Connections)
                     .Include(a1 => a1.MetadataValues)
                     .Include(a1 => a1.UserComments)
@@ -252,10 +263,8 @@ namespace OCM.Core.Data
                 foreach (var cp in dataList)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
-
                 }
                 return poiList;
-
             }
             if (updateStrategy == CacheUpdateStrategy.All)
             {
@@ -272,11 +281,10 @@ namespace OCM.Core.Data
                 foreach (var cp in dataList)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
-
                 }
                 return poiList;
             }
-          
+
             return null;
         }
 
@@ -286,8 +294,6 @@ namespace OCM.Core.Data
         /// <returns></returns>
         public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy)
         {
-            
-            
             if (!database.CollectionExists("poi"))
             {
                 database.CreateCollection("poi");
@@ -295,7 +301,6 @@ namespace OCM.Core.Data
 
             if (updateStrategy != CacheUpdateStrategy.All)
             {
-               
                 if (!database.CollectionExists("reference"))
                 {
                     database.CreateCollection("reference");
@@ -308,7 +313,6 @@ namespace OCM.Core.Data
                 {
                     database.CreateCollection("poi");
                 }
-               
             }
 
             CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData();
@@ -316,7 +320,7 @@ namespace OCM.Core.Data
             {
                 database.DropCollection("reference");
                 //problems clearing data from collection...
-                
+
                 var reference = database.GetCollection<CoreReferenceData>("reference");
                 var query = new QueryDocument();
                 reference.Remove(query, RemoveFlags.None);
@@ -345,7 +349,7 @@ namespace OCM.Core.Data
 
             var statusCollection = database.GetCollection<MirrorStatus>("status");
             statusCollection.RemoveAll();
-            
+
             //new status
             MirrorStatus status = new MirrorStatus();
             //status.ID = Guid.NewGuid().ToString();
@@ -366,15 +370,14 @@ namespace OCM.Core.Data
 
             statusCollection.Insert(status);
             return status;
-            
         }
 
-        public MirrorStatus GetMirrorStatus(bool includeDupeCheck, bool includeDBPOICount=true)
+        public MirrorStatus GetMirrorStatus(bool includeDupeCheck, bool includeDBPOICount = true)
         {
             try
             {
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
-                var currentStatus= statusCollection.FindOne();
+                var currentStatus = statusCollection.FindOne();
 
                 if (includeDBPOICount)
                 {
@@ -403,7 +406,7 @@ namespace OCM.Core.Data
             }
             catch (Exception exp)
             {
-                return new MirrorStatus { StatusCode= HttpStatusCode.NotFound, Description="Cache is offline:"+exp.ToString() };
+                return new MirrorStatus { StatusCode = HttpStatusCode.NotFound, Description = "Cache is offline:" + exp.ToString() };
             }
         }
 
@@ -424,13 +427,12 @@ namespace OCM.Core.Data
         {
             try
             {
-                 int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
-                 if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
-                 {
-                     var refData = database.GetCollection<CoreReferenceData>("reference");
-                     return refData.FindOne();
-                 }
-
+                int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
+                if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
+                {
+                    var refData = database.GetCollection<CoreReferenceData>("reference");
+                    return refData.FindOne();
+                }
             }
             catch (Exception)
             {
@@ -555,53 +557,61 @@ namespace OCM.Core.Data
                 if (requiresDistance)
                 {
                     //filter by distance first
-                    poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject()).Take(settings.MaxResults);
+                    poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject());//.Take(settings.MaxResults);
                 }
 
                 poiList = (from c in poiList
-                          where
+                           where
 
-                                      (c.AddressInfo != null) && //c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
-                                      ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
-                                            || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
-                                            || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
-                                            ) //by default return live cps only, otherwise use specific submission statusid
-                                      && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
-                                      //&& (settings.ChargePointID == null || (settings.ChargePointID!=null && (c.ID!=null && c.ID == settings.ChargePointID)))
-                                      && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
-                                      && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
-                                      && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
-                                      && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
-                                      && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
-                                      && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
-                                      && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
-                                      && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
-                          select c);
+                                       (c.AddressInfo != null) && //c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
+                                       ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
+                                             || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
+                                             || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
+                                             ) //by default return live cps only, otherwise use specific submission statusid
+                                       && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
+                               //&& (settings.ChargePointID == null || (settings.ChargePointID!=null && (c.ID!=null && c.ID == settings.ChargePointID)))
+                                       && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
+                                       && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
+                                       && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
+                                       && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
+                                       && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
+                                       && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
+                                       && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
+                                       && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
+                           select c);
 
-
+                if (settings.ChangesFromDate != null)
+                {
+                    poiList = poiList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
+                }
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                 poiList = from c in poiList
-                                  where
-                                  c.Connections.Any(conn =>
-                                        (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
-                                        && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
-                                        && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
-                                        && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
-                                         )
-                                  select c;
+                          where
+                          c.Connections.Any(conn =>
+                                (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
+                                && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
+                                && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
+                                && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
+                                 )
+                          select c;
 
-                var results = poiList.OrderByDescending(p => p.DateCreated).ToList().Take(settings.MaxResults);
-                if (requiresDistance && settings.Latitude!=null & settings.Longitude!=null)
+                var results = poiList.ToList();
+                if (requiresDistance && settings.Latitude != null & settings.Longitude != null)
                 {
                     //populate distance
                     foreach (var p in results)
                     {
-                        p.AddressInfo.Distance =GeoManager.CalcDistance((double)settings.Latitude, (double)settings.Longitude, p.AddressInfo.Latitude, p.AddressInfo.Longitude, settings.DistanceUnit);
+                        p.AddressInfo.Distance = GeoManager.CalcDistance((double)settings.Latitude, (double)settings.Longitude, p.AddressInfo.Latitude, p.AddressInfo.Longitude, settings.DistanceUnit);
                         p.AddressInfo.DistanceUnit = settings.DistanceUnit;
                     }
-                    results = results.OrderBy(r => r.AddressInfo.Distance);
+                    results = results.OrderBy(r => r.AddressInfo.Distance).Take(settings.MaxResults).ToList();
                 }
-                return results.ToList();
+                else
+                {
+                    results = poiList.OrderByDescending(p => p.DateCreated).Take(settings.MaxResults).ToList();
+                }
+
+                return results;
             }
             else
             {

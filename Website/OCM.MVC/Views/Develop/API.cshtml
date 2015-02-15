@@ -19,7 +19,7 @@
 
                 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
 
-                <p><em>API V2 (documentation last updated December 2014) - Please join the discussion forum to discuss development.</em></p>
+                <p><em>API V2 (documentation last updated February 2015) - Please join the discussion forum to discuss development.</em></p>
                 <h3>Service Base URL: </h3>
                 <p>
                     <code>@Html.Raw(apiBaseUrl)</code>
@@ -125,6 +125,11 @@
                         <td>(blank)</td>
                     </tr>
                     <tr>
+                        <td>modifiedsince</td>
+                        <td>POIs modified since the given date (UTC) e.g. 2016-09-15T09:30</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
                         <td>opendata</td>
                         <td>true or false. Set to true to include only Open Data licensed content, false to return only non-open licensed data. <span class="label label-warning">By default all available data is returned. You should refer to the license of the original data provider in each case.</span></td>
                         <td>(blank)</td>
@@ -138,6 +143,11 @@
                         <td>verbose</td>
                         <td>true or false. Set to true to get a smaller result set with null items removed. </td>
                         <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>camelcase</td>
+                        <td>true or false. Set to true to get a property names in camelCase format. </td>
+                        <td>false</td>
                     </tr>
                     <tr>
                         <td>callback</td>

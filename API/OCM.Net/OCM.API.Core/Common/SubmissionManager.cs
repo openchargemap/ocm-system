@@ -416,6 +416,7 @@ namespace OCM.API.Common
 
                 //SendPOICommentSubmissionNotifications(comment, user, dataComment);
 
+                //TODO: only refresh cache for specific POI
                 CacheManager.RefreshCachedData();
 
                 return dataComment.ID;

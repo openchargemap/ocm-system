@@ -28,6 +28,16 @@ namespace OCM.API.Common
                 return null;
         }
 
+        protected DateTime? ParseDate(string val)
+        {
+            DateTime result = DateTime.Now;
+
+            if (val != "NaN" && DateTime.TryParse(val, out result))
+                return result;
+            else
+                return null;
+        }
+
         /// <summary>
         /// Parse a comman seperated list of int values
         /// </summary>

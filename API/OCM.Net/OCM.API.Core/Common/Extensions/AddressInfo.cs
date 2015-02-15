@@ -20,7 +20,7 @@ namespace OCM.API.Common.Model.Extensions
             a.Postcode = source.Postcode;
 
             //populate country (full object or id only)
-            if (isVerboseMode && (source.CountryID!=null || source.Country!=null))
+            if (isVerboseMode)
             {
                 a.Country = Model.Extensions.Country.FromDataModel(source.Country);
                 a.CountryID = source.Country.ID;

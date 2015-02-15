@@ -28,6 +28,19 @@ namespace OCM.API
             DefaultAction = null;
         }
 
+        public bool IsRequestByRobot
+        {
+            get
+            {
+                var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+                if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google"))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         /// <summary>
         /// Handle input to API
         /// </summary>
@@ -177,11 +190,12 @@ namespace OCM.API
             }
         }
 
-        private void OutputBadRequestMessage(HttpContext context, string message)
+        private void OutputBadRequestMessage(HttpContext context, string message, int statusCode=400)
         {
-            context.Response.StatusCode = 400;
+            context.Response.StatusCode = statusCode;
             context.Response.Write("{\"status\":\"error\",\"description\":\"" + message + "\"}");
-            context.Response.End();
+            context.Response.Flush();
+            //context.Response.End();
         }
 
         private void OutputSubmissionReceivedMessage(HttpContext context, string message, bool processed)
@@ -261,6 +275,12 @@ namespace OCM.API
                     OutputBadRequestMessage(context, "specified output type not supported in this API version");
                     return;
                 }
+            }
+
+            if (IsRequestByRobot)
+            {
+                OutputBadRequestMessage(context, "API requests by robots are temporarily disabled.", statusCode:503);
+                return;
             }
 
             //determine output provider

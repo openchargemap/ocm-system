@@ -8,8 +8,8 @@ namespace OCM.API.Common
 {
     public class GeoManager
     {
-        const Double kEarthRadiusMiles = 3956.0;
-        const Double kEarthRadiusKms = 6376.5;
+        const Double kEarthRadiusMiles = 3959.0;
+        const Double kEarthRadiusKms = 6371;
         const Double KMToMilesConversion = 0.621371192;
 
         // code based on http://www.codeproject.com/KB/cs/distancebetweenlocations.aspx

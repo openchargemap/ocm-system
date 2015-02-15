@@ -22,7 +22,7 @@ namespace OCM.API.Common.Model.Extensions
             };
 
             //connection type (full object or id only)
-            if (isVerboseMode && (s.ConnectionTypeID != null || s.ConnectionType != null))
+            if (isVerboseMode)
             {
                 connectionInfo.ConnectionType = ConnectionType.FromDataModel(s.ConnectionType);
                 connectionInfo.ConnectionTypeID = (s.ConnectionType != null ? s.ConnectionType.ID : s.ConnectionTypeID);

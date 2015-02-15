@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Countries";
     var continents = (Dictionary<string, string>)ViewBag.Continents;
+    var countryStats = (List<OCM.API.Common.DataSummary.CountrySummary>)ViewBag.CountryStats;
 }
 
 <h2>All Countries</h2>
@@ -10,6 +11,7 @@
 <p>
     We have information on charging locations in the following countries, if your country is not listed we need you to <a href="@Url.Action("Add","POI")">add the locations</a> you know about.
 </p>
+@Html.Partial("~/Views/Widget/_GeoChartWidget.cshtml")
 <div>
 
     @foreach (var continent in continents)
@@ -19,14 +21,18 @@
         foreach (var item in Model.Where(c=>c.ContinentCode==continent.Key))
         {
             var countryNameParam = item.Title.Replace(" ", "").ToLower();
+            var countryStat = countryStats.FirstOrDefault(c => c.ISOCode == item.ISOCode);
+
+            if (countryStat != null) { 
             <div class="well well-sm" style="display:inline-block;margin:1em;">
                 <h3>@Html.DisplayFor(modelItem => item.Title)</h3>
                 <ul>
-                    <li><a href="@Url.Action("Index", "POI", new { CountryIDs=item.ID, CountryName=countryNameParam})">Charging Locations</a></li>
-                    <li><a href="@Url.Content("~/country/" +countryNameParam +"/networks")">Charging Networks</a></li>
+                    <li><a href="@Url.Action("Index", "POI", new { CountryIDs=item.ID, CountryName=countryNameParam})">@countryStat.StationCount charging stations in @countryStat.LocationCount locations</a></li>
+                    <li><a href="@Url.Content("~/country/" +countryNameParam +"/networks")">Networks</a></li>
                 </ul>
 
             </div>
+    }
 
         }
     }

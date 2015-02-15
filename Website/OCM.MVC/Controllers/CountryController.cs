@@ -1,4 +1,5 @@
 ﻿using OCM.API.Common;
+using OCM.API.Common.DataSummary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,8 @@ namespace OCM.MVC.Controllers
             }
             
             //list of all countries
-            var allCountries = new ReferenceDataManager().GetCountries(true);
+            var allCountries = new ReferenceDataManager().GetCountries(false);
+            var countryStats = new DataSummaryManager().GetAllCountryStats();
 
             var continents = new Dictionary<string, string>();
             continents.Add("AS", "Asia");
@@ -31,7 +33,7 @@ namespace OCM.MVC.Controllers
             continents.Add("SA", "South America");
 
             ViewBag.Continents = continents;
-
+            ViewBag.CountryStats = countryStats;
             return View(allCountries);
         }
 

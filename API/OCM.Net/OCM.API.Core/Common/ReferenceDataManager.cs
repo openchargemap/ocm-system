@@ -35,9 +35,10 @@ namespace OCM.API.Common
         {
             if (withPOIOnly)
             {
+                var poiCollection = new OCM.Core.Data.CacheProviderMongoDB().GetPOICollection();
                 //determine all countries with live POI
-                var allPOICountries = (from cp in dataModel.ChargePoints
-                                       where cp.SubmissionStatusType.IsLive == true
+                var allPOICountries = (from cp in poiCollection.FindAll()
+                                       where cp.SubmissionStatus.IsLive == true
                                        select cp.AddressInfo.CountryID).Distinct();
 
                 return OCM.API.Common.Model.Extensions.Country.FromDataModel(dataModel.Countries.Where(c => allPOICountries.Contains(c.ID)).OrderBy(c => c.Title));

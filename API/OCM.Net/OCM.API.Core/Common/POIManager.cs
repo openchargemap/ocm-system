@@ -182,10 +182,11 @@ namespace OCM.API.Common
                     {
                         dataList = new CacheProviderMongoDB().GetPOIList(settings);
                     }
-                    catch (Exception)
+                    catch (Exception exp)
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
                         //TODO: send error notification
+                        AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI);
                     }
                 }
 
@@ -283,7 +284,10 @@ namespace OCM.API.Common
                                               && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                               && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
                                           select c;
-
+                    if (settings.ChangesFromDate != null)
+                    {
+                        chargePointList = chargePointList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
+                    }
                     //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                     chargePointList = from c in chargePointList
                                       where 

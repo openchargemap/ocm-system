@@ -36,6 +36,7 @@ namespace OCM.API.Common
                 var user = new UserManager().GetUser(userId);
                 AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\",EntityID:" + commentId + ",ChargePointID:" + cpID + "}", "User deleted comment");
 
+                //TODO: only refrehs cache for specific POI
                 CacheManager.RefreshCachedData();
                 
             }

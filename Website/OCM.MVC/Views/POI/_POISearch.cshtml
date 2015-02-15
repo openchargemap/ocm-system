@@ -68,6 +68,14 @@
             </div>
             <div class="form-group">
 
+                <label class="control-label col-md-2" data-localize="ocm.search.connectionTypes">Connection Type</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("connectiontypeids", Model.ConnectionTypeList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
                 <label class="control-label col-md-2" data-localize="ocm.search.usageTypes">Usage</label>
 
                 <div class="col-md-8">

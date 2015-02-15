@@ -130,8 +130,10 @@ namespace OCM.API.Common
             //settings.Polyline = ParsePolyline("(38.5, -120.2), (40.7, -120.95), (43.252, -126.453)");
 
             if (!String.IsNullOrEmpty(context.Request["connectiontype"])) settings.ConnectionType = ParseString(context.Request["connectiontype"]);
-            
             if (!String.IsNullOrEmpty(context.Request["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(context.Request["submissionstatustypeid"]);
+            if (!String.IsNullOrEmpty(context.Request["modifiedsince"])) settings.ChangesFromDate = ParseDate(context.Request["modifiedsince"]);
+
+
             if (!String.IsNullOrEmpty(context.Request["enablecaching"])) settings.EnableCaching = ParseBool(context.Request["enablecaching"], true);
             if (!String.IsNullOrEmpty(context.Request["allowmirror"])) settings.AllowMirrorDB = ParseBool(context.Request["allowmirror"], false);
             if (!String.IsNullOrEmpty(context.Request["includecomments"])) settings.IncludeComments = ParseBool(context.Request["includecomments"], false);

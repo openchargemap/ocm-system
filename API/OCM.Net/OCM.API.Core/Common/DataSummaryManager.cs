@@ -1,38 +1,52 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using OCM.API.Common.Model;
+using OCM.Core.Util;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using OCM.API.Common.Model;
 
 namespace OCM.API.Common.DataSummary
 {
     public class CountrySummary
     {
         public string CountryName { get; set; }
+
         public string ISOCode { get; set; }
+
         public int ItemCount { get; set; }
+
         public int LocationCount { get; set; }
+
         public int StationCount { get; set; }
+
         public string ItemType { get; set; }
     }
 
     public class GeneralStats
     {
         public int Year { get; set; }
+
         public int Month { get; set; }
+
         public int Quantity { get; set; }
     }
 
-     public class UserEditStats
+    public class UserEditStats
     {
         public int Year { get; set; }
+
         public int Month { get; set; }
+
         public int NumberOfEdits { get; set; }
+
         public int NumberOfAdditions { get; set; }
-        public int NumberOfComments {get;set;}
-        public int NumberOfMediaItems {get;set;}
+
+        public int NumberOfComments { get; set; }
+
+        public int NumberOfMediaItems { get; set; }
     }
 
     /// <summary>
@@ -40,14 +54,12 @@ namespace OCM.API.Common.DataSummary
     /// </summary>
     public class DataSummaryManager : ManagerBase
     {
-        public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestParams filterSettings)
+        public List<CountrySummary> GetAllCountryStats()
         {
-            //TODO: optionally output as normal JSON
-            string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
-            if (HttpContext.Current.Cache["ocm_summary"] == null)
+            var list = new List<CountrySummary>();
+            bool sqlDatabaseQueryMode = false;
+            if (sqlDatabaseQueryMode)
             {
-                var list = new List<CountrySummary>();
-
                 var results = from c in DataModel.ChargePoints
                               where c.SubmissionStatusType.IsLive == true
                               group c by c.AddressInfo.Country into g
@@ -63,7 +75,103 @@ namespace OCM.API.Common.DataSummary
                     string isoCode = c.ISOCode;
                     list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.NumItems, LocationCount = item.NumItems, StationCount = (int)item.NumStations, ItemType = "LocationsPerCountry" });
                 }
+            }
+            else
+            {
+                //mongodb cache version of query
 
+                var match = new BsonDocument
+                {
+                    {
+                        "$match",
+                        new BsonDocument
+                            {
+                                {"SubmissionStatus.IsLive", true}
+                            }
+                    }
+                };
+
+                var group = new BsonDocument
+                {
+                    { "$group",
+                        new BsonDocument
+                            {
+                                { "_id", new BsonDocument {
+                                                 {
+                                                     "Country","$AddressInfo.Country"
+                                                 }
+                                             }
+                                },
+                                {
+                                    "POICount", new BsonDocument
+                                                 {
+                                                     {
+                                                         "$sum", 1
+                                                     }
+                                                 }
+                                },
+                               {
+                                    "StationCount", new BsonDocument
+                                                 {
+                                                     {
+                                                        "$sum",   new BsonDocument{
+                                                        {"$ifNull",
+                                                            new BsonArray{
+                                                            "$NumberOfPoints",
+                                                            1
+                                                            }
+                                                        }
+                                                         }
+                                                     }
+                                                 }
+                                }
+                            }
+                  }
+                };
+
+                var project = new BsonDocument
+                    {
+                        {
+                            "$project",
+                            new BsonDocument
+                            {
+                                {"_id", 0},
+                                {"Country","$_id.Country"},
+                                {"POICount", 1},
+                                {"StationCount",
+                                  1
+                                }
+                            }
+                        }
+                    };
+
+                var pipeline = new[] { match, group, project };
+
+                OCM.Core.Data.CacheProviderMongoDB cacheDB = new OCM.Core.Data.CacheProviderMongoDB();
+                var poiCollection = cacheDB.GetPOICollection();
+                var result = poiCollection.Aggregate(new MongoDB.Driver.AggregateArgs { Pipeline = pipeline });
+
+                var results = result
+                    .Select(x => x.ToDynamic())
+                .ToList();
+
+                foreach (var item in results)
+                {
+                    list.Add(new CountrySummary { CountryName = item.Country.Title, ISOCode = item.Country.ISOCode, ItemCount = item.POICount, LocationCount = item.POICount, StationCount = (int)item.StationCount, ItemType = "LocationsPerCountry" });
+                }
+            }
+
+            return list;
+        }
+        public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestParams filterSettings)
+        {
+            
+            //TODO: optionally output as normal JSON
+            string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
+
+            if (HttpContext.Current.Cache["ocm_summary"] == null)
+            {
+                var list = GetAllCountryStats();
                 HttpContext.Current.Cache["ocm_summary"] = list.OrderByDescending(i => i.ItemCount).ToList();
             }
             var cachedresults = (List<CountrySummary>)HttpContext.Current.Cache["ocm_summary"];
@@ -121,12 +229,11 @@ namespace OCM.API.Common.DataSummary
             return summary;
         }
 
-        public List<User> GetTopNContributors(int maxResults, int? countryId)
+        public List<Model.User> GetTopNContributors(int maxResults, int? countryId)
         {
-
             var contributors = DataModel.Users.Where(u => u.ID != (int)StandardUsers.System).OrderByDescending(u => u.ReputationPoints).Take(maxResults);
 
-            var results = new List<User>();
+            var results = new List<Model.User>();
             foreach (var u in contributors)
             {
                 var r = OCM.API.Common.Model.Extensions.User.PublicProfileFromDataModel(u);
@@ -143,18 +250,17 @@ namespace OCM.API.Common.DataSummary
                         group p by new { month = p.DateCreated.Month, year = p.DateCreated.Year } into d
                         select new GeneralStats { Month = d.Key.month, Year = d.Key.year, Quantity = d.Count() };
 
-            return stats.OrderBy(s=>s.Year).ThenBy(s=>s.Month).ToList();
+            return stats.OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
         }
 
         public List<UserEditStats> GetUserEditSummary(DateTime dateFrom, DateTime dateTo)
         {
-
             var stats = from p in DataModel.EditQueueItems
-                        where p.DateSubmitted >= dateFrom && p.DateSubmitted <= dateTo && p.PreviousData== null
+                        where p.DateSubmitted >= dateFrom && p.DateSubmitted <= dateTo && p.PreviousData == null
                         group p by new { month = p.DateSubmitted.Month, year = p.DateSubmitted.Year } into d
                         select new UserEditStats { Month = d.Key.month, Year = d.Key.year, NumberOfAdditions = d.Count() };
 
-            return stats.OrderBy(s=>s.Year).ThenBy(s=>s.Month).ToList();
+            return stats.OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
         }
 
         public List<GeneralStats> GetUserCommentStats(DateTime dateFrom, DateTime dateTo)
@@ -166,6 +272,5 @@ namespace OCM.API.Common.DataSummary
 
             return stats.OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
         }
-
     }
 }

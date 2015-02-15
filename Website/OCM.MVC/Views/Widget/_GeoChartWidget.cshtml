@@ -1,0 +1,33 @@
+﻿
+<script type="text/javascript" src="~/Scripts/OCM/GeoSummary.js"></script>
+<script type="text/javascript" src="http://www.openchargemap.org/api/widgets/databrowser/datasummary.ashx"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+
+<div class="geochart" id="geochart" style="display:none;">
+    <div class="well well-sm">
+        <div id="datasummary"></div>
+    </div>
+    <div id="visualization"></div>
+</div>
+
+<script type="text/javascript">
+
+    var ocmSummary = new OCM.Widgets.GeoSummary("geochart", "datasummary");
+
+
+    function initChart() {
+        if (ocmSummary != null) {
+            ocmSummary.show();
+        } else {
+            setTimeout(function () {
+                //TODO: hack
+                ocmSummary.show();
+            }, 2000);
+        }
+    }
+
+    google.load('visualization', '1', { packages: ['geochart'] });
+    google.setOnLoadCallback(initChart);
+
+</script>
