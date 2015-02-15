@@ -94,6 +94,7 @@ var localisation_dictionary_el ={
       "useMyLocation": "Αναζήτηση κοντά μου",
       "distance": "Απόσταση",
       "chargingLevels": "Επίπεδο Φόρτισης",
+      "minPowerKW": null,
       "connectionTypes": "Τύποι σύνδεσης",
       "networkOperators": "Δίκτυο/Διαχειριστής",
       "countries": "Χώρα",
@@ -126,7 +127,8 @@ var localisation_dictionary_el ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

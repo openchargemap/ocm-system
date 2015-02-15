@@ -94,6 +94,7 @@ var localisation_dictionary_ja ={
       "useMyLocation": "私の近くの検索",
       "distance": "距離",
       "chargingLevels": "充電レベル",
+      "minPowerKW": null,
       "connectionTypes": "接続の種類",
       "networkOperators": "ネットワーク ・ オペレーター",
       "countries": "国",
@@ -126,7 +127,8 @@ var localisation_dictionary_ja ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

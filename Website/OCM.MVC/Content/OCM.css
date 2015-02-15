@@ -241,17 +241,17 @@ div.stat {
   border: none;
 }
 .stat h2 {
-  margin: 0px;
-  padding: 32px;
-  width: 128px;
-  height: 128px;
-  border: none;
-  border-radius: 64px;
-  background-color: #b9ff28;
+  margin: 0;
+  padding: 24px;
+  width: 96px;
+  height: 96px;
+  border: 2px solid #b9ff28;
+  border-radius: 48px;
+  background-color: #8cc63f;
   color: white;
   vertical-align: sub;
   text-align: center;
-  font-size: 32px;
+  font-size: 24px;
 }
 .stat p {
   vertical-align: central;
@@ -290,7 +290,7 @@ div.stat {
   height: 42px;
 }
 .navbar-inverse {
-  background-color: #5f872a;
+  background-color: #283912;
   background-image: none;
 }
 .navbar-inverse .nav > li > a {
@@ -450,11 +450,15 @@ div[data-editormode="advanced"] label {
   background-color: #f8f8f8;
 }
 .applinks {
-  float: right;
   background: rgba(255, 255, 255, 0.1);
   padding: 1em;
   border-bottom-left-radius: 8px;
   margin-left: 4em;
+  position: relative;
+  z-index: 2;
+}
+.banner-container p > a {
+  text-decoration: underline;
 }
 @media print {
   .footer {
@@ -482,5 +486,17 @@ div[data-editormode="advanced"] label {
 .alert-danger a:link {
   color: white;
   text-decoration: underline;
+}
+.app-container {
+  margin-top: -1em;
+}
+.app-loading {
+  position: absolute;
+  z-index: -10;
+  color: #AAAAAA;
+  font-size: 36px;
+}
+.banner-container {
+  padding: 0;
 }
 /*# sourceMappingURL=OCM.css.map */

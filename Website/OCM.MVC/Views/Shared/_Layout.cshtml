@@ -29,8 +29,37 @@
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/app/images/icons/AppIcon_57x57.png" />
     <link rel="icon" type="image/png" href="/app/images/icons/AppIcon_57x57.png" />
     <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="~/Content/animate.min.css" rel="stylesheet">
+
+    <script>
+    // Prevent variables from being global
+    (function () {
+
+    /*
+    1. Inject CSS which makes iframe invisible
+    */
+
+    var div = document.createElement('div'),
+    ref = document.getElementsByTagName('base')[0] ||
+    document.getElementsByTagName('script')[0];
+
+    div.innerHTML = '&shy;<style>iframe { visibility: hidden; } </style>';
+
+    ref.parentNode.insertBefore(div, ref);
+
+
+    /*
+    2. When window loads, remove that CSS,
+    making iframe visible again
+    */
+
+    window.onload = function() {
+    div.parentNode.removeChild(div);
+    }
+
+    })();
+    </script>
 </head>
 <body>
 
@@ -88,6 +117,7 @@
                             <li><a href="@Url.Action("Index", "About")" data-localize="ocm.general.about">about</a></li>
                             <li><a href="@Url.Action("Terms", "About")" data-localize="ocm.navigation.about.termsPrivacy">terms &amp; privacy</a></li>
                             <li><a href="@Url.Action("Guidance", "About")" data-localize="ocm.navigation.about.guidance">guidance for contributors</a></li>
+                            <li><a href="@Url.Action("Funding", "About")" data-localize="ocm.navigation.about.funding">funding</a></li>
                             <li><a href="@Url.Action("Contact", "About")" data-localize="ocm.navigation.about.contact">contact</a></li>
                         </ul>
                     </li>

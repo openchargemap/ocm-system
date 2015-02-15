@@ -3,105 +3,106 @@
   "_langCode": "it",
   "ocm": {
     "general": {
-      "shortDescription": "Il registro pubblico globale delle infrastrutture di ricarica",
-      "linkWebApp": "Cerca le colonnine utilizzando la nostra Web App",
-      "linkBrowsePOI": "Elenca tutte le colonnine",
+      "shortDescription": "il registro pubblico globale delle infrastrutture di ricarica",
+      "linkWebApp": "cerca le colonnine utilizzando la nostra Web App",
+      "linkBrowsePOI": "elenca tutte le colonnine",
       "browsePOI": "cerca le colonnine di ricarica",
-      "loadingProgress": "Caricamento in corso...",
-      "addLocation": "Aggiungi colonnina",
-      "addItem": "Aggiungi",
-      "favourites": "Preferite",
-      "settings": "Impostazioni",
-      "about": "Chi siamo",
-      "signIn": "Entra",
-      "signOut": "Esci"
+      "loadingProgress": "caricamento in corso...",
+      "addLocation": "aggiungi colonnina",
+      "addItem": "aggiungi",
+      "favourites": "preferite",
+      "settings": "iImpostazioni",
+      "about": "chi siamo",
+      "signIn": "login",
+      "signOut": "logout"
     },
     "details": {
-      "sectionTitle": "Posizione della colonnina",
+      "sectionTitle": "posizione della colonnina",
       "location": {
-        "sectionTitle": "Dettagli della posizione",
-        "title": "Titolo/nome della colonnina",
-        "address": "Indirizzo più vicino",
-        "addressLine1": "Indirizzo - Riga 1",
-        "addressLine2": "Indirizzo - Riga 2",
-        "town": "Città / Comune",
-        "stateOrProvince": "Provincia",
+        "sectionTitle": "dettagli della posizione",
+        "title": "nome della colonnina",
+        "address": "indirizzo più vicino",
+        "addressLine1": "indirizzo - riga 1",
+        "addressLine2": "indirizzo - riga 2",
+        "town": "città / comune",
+        "stateOrProvince": "provincia",
         "postcode": "CAP",
-        "country": "Stato",
+        "country": "nazione",
         "latitude": "latitudine",
         "longitude": "longitudine",
-        "contactTelephone1": "Numero di telefono principale",
-        "contactTelephone2": "Numero di telefono secondario",
-        "contactEmail": "Contatto E-mail",
-        "map": "Mappa",
-        "streetView": "Vista da Street View",
-        "addressRelatedURL": "Sito Web"
+        "contactTelephone1": "numero di telefono principale",
+        "contactTelephone2": "numero di telefono alternativo o fax",
+        "contactEmail": "contatto E-mail",
+        "map": "mappa",
+        "streetView": "vista da Street View",
+        "addressRelatedURL": "sito web"
       },
-      "generalComments": "Info generali",
-      "accessComments": "Come ci arrivo",
+      "generalComments": "info generali",
+      "accessComments": "come ci arrivo",
       "advancedDetails": "Informazioni aggiuntive",
-      "numberOfPoints": "Numero di colonnine/posti auto",
-      "usageType": "Possibilità di untilizzo",
-      "usageCost": "Costo di utilizzo",
-      "operationalStatus": "Operatività",
-      "datePlanned": "Data programmata",
-      "dateLastConfirmed": "Ultima data confermata",
-      "lastUpdated": "Ultimo aggiornamento",
+      "numberOfPoints": "numero di colonnine/posti auto",
+      "usageType": "possibilità di utilizzo",
+      "usageCost": "costo di utilizzo",
+      "operationalStatus": "operatività",
+      "datePlanned": "data programmata",
+      "dateLastConfirmed": "ultima data confermata",
+      "lastUpdated": "ultimo aggiornamento",
       "refNumber": "Rif: OpenChargeMap",
-      "dataQualityLevel": "Livello di affidabilità dei dati",
-      "importedDataNotice": "N.B. Questi dati sono inseriti automaticamente e derivano dal sito del gestore della colonnina per cui eventuali modifiche dovrebbero essere inserite direttamente su tali siti.",
-      "submissionStatus": "Stato di approvazione",
+      "dataQualityLevel": "livello di affidabilità dei dati",
+      "importedDataNotice": "N.B. questi dati sono inseriti automaticamente e derivano dal sito del gestore della colonnina per cui eventuali modifiche dovrebbero essere inserite direttamente su tali siti.",
+      "submissionStatus": "stato di approvazione",
       "placesNearby": {
-        "sectionTitle": "Luoghi di interesse nelle vicinanze"
+        "sectionTitle": "luoghi di interesse nelle vicinanze"
       },
       "mediaItems": {
-        "sectionTitle": "Foto",
-        "addPrompt": "Carica le tue foto per questa colonnina"
+        "sectionTitle": "foto",
+        "addPrompt": "carica le tue foto per questa colonnina"
       },
       "metadataValues": {
-        "sectionTitle": "Tag aggiuntivi"
+        "sectionTitle": "tag aggiuntivi"
       },
       "commentsAndRatings": {
-        "sectionTitle": "Commenti e valutazioni",
-        "zeroComments": "Nessun utente ha ancora inserito un commento",
-        "addPrompt": "Aggiungi un commento o un aggiornamento rapido sullo stato della colonnina"
+        "sectionTitle": "commenti e valutazioni",
+        "zeroComments": "nessun utente ha ancora inserito un commento",
+        "addPrompt": "aggiungi un commento o un aggiornamento rapido sullo stato della colonnina"
       },
       "equipment": {
-        "sectionTitle": "Informazioni di dettaglio sulle prese disponibili",
-        "connectionType": "Tipo di presa",
-        "powerKW": "Potenza massima (KW)",
-        "powerLevel": "Livello di potenza",
-        "quantity": "Numero",
-        "supplyType": "Tipo di alimentazione",
-        "voltage": "Tensione",
-        "current": "Corrente massima",
-        "comment": "Commenti",
-        "reference": "Riferimento"
+        "sectionTitle": "informazioni di dettaglio sulle prese disponibili",
+        "connectionType": "tipo di presa",
+        "powerKW": "potenza massima (kW)",
+        "powerLevel": "livello di potenza",
+        "quantity": "numero",
+        "supplyType": "tipo di alimentazione",
+        "voltage": "tensione (V)",
+        "current": "corrente massima (A)",
+        "comment": "commenti",
+        "reference": "riferimento"
       },
       "dataProvider": {
-        "sectionTitle": "Info fornite da",
-        "website": "Sito Web",
-        "providersReference": "Riferimento del fornitore dei dati"
+        "sectionTitle": "info fornite da",
+        "website": "sito web",
+        "providersReference": "riferimento del fornitore dei dati"
       },
       "operator": {
-        "sectionTitle": "Gestore",
-        "operatorsReference": "Riferimento del gestore"
+        "sectionTitle": "gestore",
+        "operatorsReference": "riferimento del gestore"
       }
     },
     "search": {
-      "sectionTitle": "Ricerca",
-      "locationInput": "Posizione",
-      "useMyLocation": "Cerca nelle vicinanze",
-      "distance": "Distanza",
-      "chargingLevels": "Livello di potenza di ricarica",
-      "connectionTypes": "Tipo di presa disponibile",
-      "networkOperators": "Gestore del servizio",
-      "countries": "Paese",
-      "submissionStatus": "Fase di approvazione",
-      "usageTypes": "Modalità d'uso",
-      "operationalStatusTypes": "Stato",
-      "performSearch": "Cerca",
-      "progress": "Sto cercando..."
+      "sectionTitle": "ricerca",
+      "locationInput": "posizione",
+      "useMyLocation": "cerca nelle vicinanze",
+      "distance": "distanza",
+      "chargingLevels": "livello di potenza di ricarica",
+      "minPowerKW": null,
+      "connectionTypes": "tipo di presa disponibile",
+      "networkOperators": "gestore del servizio",
+      "countries": "paese",
+      "submissionStatus": "fase di approvazione",
+      "usageTypes": "modalità d'uso",
+      "operationalStatusTypes": "stato",
+      "performSearch": "cerca",
+      "progress": "sto cercando..."
     },
     "navigation": {
       "home": "home",
@@ -126,7 +127,8 @@
       "discuss": "forum",
       "about": {
         "termsPrivacy": "termini di utilizzo e norme sulla privacy",
-        "contact": "contatti"
+        "contact": "contatti",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "il mio profilo",
@@ -145,20 +147,20 @@
       "getStations": {
         "sectionTitle": "visualizza le informazioni di una colonnina",
         "who": "costruttori di veicoli, fornitori di navigatori satellitari, sviluppatori di App, proprietari di siti Web:",
-        "what": "È possibile accedere e scaricare le più recenti colonnine di ricarica utilizzando",
-        "websiteOperators": "Se gestisci un sito Web e vuoi includere una mappa delle colonnine di ricarica, è possibile",
+        "what": "è possibile accedere e scaricare le più recenti colonnine di ricarica utilizzando",
+        "websiteOperators": "se gestisci un sito Web e vuoi includere una mappa delle colonnine di ricarica, è possibile",
         "embedMap": "incorporare una mappa nel tuo sito Web"
       },
       "supplyData": {
         "sectionTitle": "operatori e fornitori di dati",
-        "who": "fornitori di EVSE , gestori delle reti, registri nazionali, app & siti di informazioni su reti di ricarica locali:",
+        "who": "fornitori di EVSE, gestori delle reti, registri nazionali, app & siti di informazioni su reti di ricarica locali:",
         "needData": "abbiamo bisogno dei tuoi dati",
-        "what": "Ci potete fornire gli aggiornamenti sulle colonnine di ricarica indipendentemente dal fatto che la vostra organizzazione sia proprietaria, gestisca o semplicemente cataloghi le colonnine di ricarica disponibili. Per favore",
+        "what": "ci potete fornire gli aggiornamenti sulle colonnine di ricarica indipendentemente dal fatto che la vostra organizzazione sia proprietaria, gestisca o semplicemente cataloghi le colonnine di ricarica disponibili. Per favore",
         "contactUs": "contattateci",
         "getStarted": "per iniziare"
       },
       "stats": {
-        "locations": "posizione"
+        "locations": "punti di ricarica"
       },
       "shortProjectSummary": "Open Charge Map è un servizio non-profit, non commerciale, ospitato e supportato da una comunità di imprese, enti di beneficenza, sviluppatori e appassionati di tutto il mondo.",
       "getApp": "scarica l'App",

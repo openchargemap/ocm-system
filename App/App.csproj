@@ -110,6 +110,7 @@
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.css" />
     <Content Include="js\ThirdParty\leaflet\markerclusterer\MarkerCluster.Default.css" />
     <Content Include="js\ThirdParty\marker.svg" />
+    <Content Include="js\ThirdParty\object-observe-lite.min.js" />
     <Content Include="js\ThirdParty\Object.observe.poly.js" />
     <Content Include="js\ThirdParty\pocketgrid.min.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.css" />

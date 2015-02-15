@@ -94,6 +94,7 @@ var localisation_dictionary_et ={
       "useMyLocation": "Otsi Minu Lähedalt",
       "distance": "Kaugus",
       "chargingLevels": "Laadija Võimsus",
+      "minPowerKW": null,
       "connectionTypes": "Pistiku Tüübid",
       "networkOperators": "Kett/Operaator",
       "countries": "Riik",
@@ -126,7 +127,8 @@ var localisation_dictionary_et ={
       "discuss": "Arutle",
       "about": {
         "termsPrivacy": "Tingimused & privaatsus",
-        "contact": "Kontakt"
+        "contact": "Kontakt",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Minu profiil",

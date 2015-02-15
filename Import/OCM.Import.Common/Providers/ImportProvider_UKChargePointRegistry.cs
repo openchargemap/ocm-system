@@ -16,7 +16,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://chargepoints.dft.gov.uk/api/retrieve/registry/format/json";
             IsAutoRefreshed = true;
             IsProductionReady = true;
-            MergeDuplicatePOIEquipment = true;
+            MergeDuplicatePOIEquipment = false;
             DataAttribution = "Contains public sector information licensed under the Open Government Licence v2.0. http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/";
             DataProviderID = 18;//UK Chargepoint Registry
         }

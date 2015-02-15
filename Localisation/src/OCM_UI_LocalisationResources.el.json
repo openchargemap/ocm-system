@@ -94,6 +94,7 @@
       "useMyLocation": "Αναζήτηση κοντά μου",
       "distance": "Απόσταση",
       "chargingLevels": "Επίπεδο Φόρτισης",
+      "minPowerKW": null,
       "connectionTypes": "Τύποι σύνδεσης",
       "networkOperators": "Δίκτυο/Διαχειριστής",
       "countries": "Χώρα",
@@ -126,7 +127,8 @@
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

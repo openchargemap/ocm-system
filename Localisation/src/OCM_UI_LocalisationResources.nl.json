@@ -94,6 +94,7 @@
       "useMyLocation": "Zoek in mijn buurt",
       "distance": "Afstand",
       "chargingLevels": "Laadsnelheid",
+      "minPowerKW": null,
       "connectionTypes": "Connector Types",
       "networkOperators": "Netwerk/Operator",
       "countries": "Land",
@@ -126,7 +127,8 @@
       "discuss": "Bespreken",
       "about": {
         "termsPrivacy": "Voorwaarden & Privacy",
-        "contact": "Contakt"
+        "contact": "Contakt",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Mijn Profiel",

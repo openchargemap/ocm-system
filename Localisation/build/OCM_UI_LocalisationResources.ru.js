@@ -94,6 +94,7 @@ var localisation_dictionary_ru ={
       "useMyLocation": "Поиск рядом со мной",
       "distance": "Расстояние",
       "chargingLevels": "Зарядка уровень",
+      "minPowerKW": null,
       "connectionTypes": "Типы подключения",
       "networkOperators": "Оператор сети",
       "countries": "Страна",
@@ -126,7 +127,8 @@ var localisation_dictionary_ru ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

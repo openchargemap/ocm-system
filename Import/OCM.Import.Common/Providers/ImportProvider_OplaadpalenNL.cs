@@ -23,6 +23,8 @@ namespace OCM.Import.Providers
             IsProductionReady = true;
 
             SourceEncoding = Encoding.GetEncoding("UTF-8");
+            MergeDuplicatePOIEquipment = true;
+            AllowDuplicatePOIWithDifferentOperator = true;
 
             DataProviderID = 26; //Oplaadpalen.nl
         }
@@ -135,7 +137,7 @@ namespace OCM.Import.Providers
 
                 if (operatoInfo == null)
                 {
-                    System.Diagnostics.Debug.WriteLine("Unknown operator: "+owner);
+                    Log("Unknown operator: "+owner);
                 }
                 else
                 {
@@ -189,7 +191,7 @@ namespace OCM.Import.Providers
                     cinfo.LevelID = 2;
                 }
                 else {
-                    System.Diagnostics.Debug.WriteLine("Unknown connectorType:" + connectorType);
+                    Log("Unknown connectorType:" + connectorType);
                 }
 
                 if (cinfo.PowerKW >= 50)
@@ -229,7 +231,7 @@ namespace OCM.Import.Providers
             {
                 temp += ", " + countryCode;
             }
-            System.Diagnostics.Debug.WriteLine(temp);
+            Log("Countries in import:"+temp);
 
             return outputList;
         }

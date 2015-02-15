@@ -94,6 +94,7 @@ var localisation_dictionary_pt ={
       "useMyLocation": "Pesquisar perto de mim",
       "distance": "Distância",
       "chargingLevels": "Nível de carga",
+      "minPowerKW": null,
       "connectionTypes": "Tipos de conexão",
       "networkOperators": "Rede/Operador",
       "countries": "País",
@@ -126,7 +127,8 @@ var localisation_dictionary_pt ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

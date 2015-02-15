@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.0.11_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.0.14_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/OCM.App";
@@ -21,8 +21,8 @@ var scriptFilename = "app.script.min.js";
 var scriptDir = "js/";
 var regexCordovaSection = /<!--JS:Cordova:Begin-->([\s\S]*?)<!--JS:Cordova:End-->/;
 var regexScriptSection = /<!-- JS:LIB:BEGIN -->([\s\S]*?)<!-- JS:LIB:END -->/;
-var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build",
-    ".project", "README.md", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn"];
+var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build", "obj", "res",
+    ".project", "README.md", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*","*.md","*.config","*.user","*.profile.*"];
 
 var mobileVersions = ["Android", "WP7", "iOS"];
 

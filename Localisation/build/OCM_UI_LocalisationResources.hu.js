@@ -94,6 +94,7 @@ var localisation_dictionary_hu ={
       "useMyLocation": "Keresés a közelemben",
       "distance": "Távolság",
       "chargingLevels": "Töltési szint",
+      "minPowerKW": null,
       "connectionTypes": "Kapcsolat típusa",
       "networkOperators": "Hálózati/üzemeltető",
       "countries": "Ország",
@@ -126,7 +127,8 @@ var localisation_dictionary_hu ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

@@ -31,7 +31,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="search-distance">Max Distance</label>
+                            <label for="search-distance" data-localize="ocm.search.distance">Max Distance</label>
                             <select id="search-distance" class="form-control">
                                 <option value="">(Any Distance)</option>
                                 <option value="5">Up to 5</option>
@@ -67,7 +67,7 @@
                     <h3>Filters</h3>
                     <p class="info">The following filters reduce the amount of results returned, so use these if you have too many results when searching.</p>
                     <div class="form-group">
-                        <label for="filter-minpowerkw">Min. Power kW</label>
+                        <label for="filter-minpowerkw" data-localize="ocm.search.minPowerKW">Min. Power kW</label>
                         <select name="filter-minpowerkw" id="filter-minpowerkw" multiple="multiple" class="form-control">
                             <option value="" selected="selected">(All)</option>
                             <option value="7">7+ kW</option>
@@ -81,19 +81,19 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="filter-operator">Operator</label>
+                        <label for="filter-operator" data-localize="ocm.search.networkOperators">Operator</label>
                         <select name="filter-operator" id="filter-operator" multiple="multiple" class="form-control">
                             <option value="" selected="selected">(All)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="filter-connectiontype">Connection Type</label>
+                        <label for="filter-connectiontype" data-localize="ocm.search.connectionTypes">Connection Type</label>
                         <select name="filter-connectiontype" id="filter-connectiontype" multiple="multiple" class="form-control">
                             <option value="" selected="selected">(All)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="filter-connectionlevel">Charging Levels</label>
+                        <label for="filter-connectionlevel" data-localize="ocm.search.chargingLevels">Charging Levels</label>
                         <select name="filter-connectionlevel" id="filter-connectionlevel" multiple="multiple" class="form-control">
                             <option value="" selected="selected">(All)</option>
                             <option value="1">Level 1 (Low Power)</option>
@@ -102,7 +102,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="filter-usagetype">Usage Type</label>
+                        <label for="filter-usagetype" data-localize="ocm.search.usageTypes">Usage Type</label>
                         <select name="filter-usagetype" id="filter-usagetype" multiple="multiple" class="form-control">                            
                             <option value="" selected="selected">(All)</option>
                         </select>
@@ -117,7 +117,7 @@
                 <div class="col-md-12">
                     <h3>Advanced Options</h3>
                     <div class="form-group">
-                        <label for="filter-submissionstatus">Submission Status</label>
+                        <label for="filter-submissionstatus" data-localize="ocm.search.submissionStatus">Submission Status</label>
                         <select id="filter-submissionstatus" class="form-control">
                             <option value="200" selected="selected">Published</option>
                             <option value="1">Awaiting Approval</option>
@@ -125,13 +125,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="filter-statustype">Operational Status</label>
+                        <label for="filter-statustype" data-localize="ocm.search.operationalStatusTypes">Operational Status</label>
                         <select name="filter-statustype" id="filter-statustype" multiple="multiple" class="form-control">
                             <option value="" selected="selected">(All)</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="display:none;">
                         <label for="filter-apimode">API Mode</label>
                         <select name="filter-apimode" id="filter-apimode" class="form-control">
                             <option value="standard" selected="selected">Standard</option>

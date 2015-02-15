@@ -55,7 +55,7 @@ module OCM {
 
             this.mappingManager.setParentAppContext(this);
 
-            this.appConfig.maxResults = 100;
+            this.appConfig.maxResults = 20000;
 
             this.appConfig.baseURL = "http://openchargemap.org/app/";
             this.appConfig.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
@@ -933,7 +933,7 @@ module OCM {
                     }
                 }
 
-                if (this.viewModel.searchPosition != null && !this.appState.isSearchInProgress) {
+                if (this.viewModel.searchPosition != null && this.viewModel.searchPosition.coords != null &&!this.appState.isSearchInProgress) {
                     this.appState.isSearchInProgress = true;
 
                     var params = new OCM.POI_SearchParams();
@@ -1090,7 +1090,7 @@ module OCM {
 
                     var direction = "";
 
-                    if (this.viewModel.searchPosition != null) direction = this.geolocationManager.getCardinalDirectionFromBearing(this.geolocationManager.getBearing(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+                    if (this.viewModel.searchPosition != null && this.viewModel.searchPosition.coords != null) direction = this.geolocationManager.getCardinalDirectionFromBearing(this.geolocationManager.getBearing(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
 
                     itemTemplate = itemTemplate.replace("{distance}", distance.toFixed(1));
                     itemTemplate = itemTemplate.replace("{distanceunit}", distance_unit + (direction != "" ? " <span title='" + direction + "' class='direction-" + direction + "'>&nbsp;&nbsp;</span>" : ""));

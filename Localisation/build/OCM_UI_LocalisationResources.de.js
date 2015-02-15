@@ -94,6 +94,7 @@ var localisation_dictionary_de ={
       "useMyLocation": "Suche in der Nähe meines Standortes",
       "distance": "Distanz",
       "chargingLevels": "Ladeleistungslevel",
+      "minPowerKW": null,
       "connectionTypes": "Steckertyp",
       "networkOperators": "Anbieter/Betreiber der Ladestation",
       "countries": "Land",
@@ -126,7 +127,8 @@ var localisation_dictionary_de ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

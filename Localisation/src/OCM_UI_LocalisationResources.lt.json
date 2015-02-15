@@ -94,6 +94,7 @@
       "useMyLocation": "Ieškoti šalia",
       "distance": "Atstumas",
       "chargingLevels": "Įkrovimo lygis",
+      "minPowerKW": null,
       "connectionTypes": "Jungčių tipai",
       "networkOperators": "Tinklas/operatorius",
       "countries": "Šalis",
@@ -126,7 +127,8 @@
       "discuss": "Aptarti",
       "about": {
         "termsPrivacy": "Sąlygos ir privatumas",
-        "contact": "Susisiekti"
+        "contact": "Susisiekti",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Mano profilis",

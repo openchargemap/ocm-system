@@ -284,17 +284,17 @@ div.stat {
 
 .stat {
     h2 {
-        margin: 0px;
-        padding: 32px;
-        width: 128px;
-        height: 128px;
-        border: none;
-        border-radius: 64px;
-        background-color: @color-c;
+        margin: 0;
+        padding: 24px;
+        width: 96px;
+        height: 96px;
+        border: 2px solid @color-c;
+        border-radius: 48px;
+        background-color: @color-a;
         color: white;
         vertical-align: sub;
         text-align: center;
-        font-size: 32px;
+        font-size: 24px;
     }
 
     p {
@@ -344,7 +344,7 @@ div.stat {
 
 
 .navbar-inverse {
-    background-color: @color-b;
+    background-color: darken(@color-b, 20%);
     background-image: none;
 }
 
@@ -542,14 +542,18 @@ div[data-editormode="advanced"] {
 }
 
 .applinks{
-    float:right;
+    
     background: rgba(255, 255, 255, 0.10);
     padding:1em;
     
     border-bottom-left-radius:8px;
     margin-left:4em;
+    position:relative;
+    z-index:2;
 }
-
+.banner-container  p > a{
+    text-decoration:underline;
+}
 @media print{
     .footer{
             display:none;
@@ -572,3 +576,19 @@ div[data-editormode="advanced"] {
     }
 }
 
+.app-container {
+   margin-top:-1em;
+   
+}
+
+
+.app-loading {
+  position:absolute;
+  z-index:-10;
+  color: #AAAAAA;
+  font-size:36px;
+}
+.banner-container {
+  
+  padding:0;
+}

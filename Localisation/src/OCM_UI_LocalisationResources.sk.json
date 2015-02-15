@@ -94,6 +94,7 @@
       "useMyLocation": "Hľadať v mojej blízkosti",
       "distance": "Vzdialenosť",
       "chargingLevels": "Úroveň nabíjania",
+      "minPowerKW": null,
       "connectionTypes": "Typy konektorov",
       "networkOperators": "Sieť/Operátor",
       "countries": "Krajina",
@@ -126,7 +127,8 @@
       "discuss": "Diskutuj",
       "about": {
         "termsPrivacy": "Podmienky a ochrana súkromia",
-        "contact": "Kontakt"
+        "contact": "Kontakt",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Môj Profil",

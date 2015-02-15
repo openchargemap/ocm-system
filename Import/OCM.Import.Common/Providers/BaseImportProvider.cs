@@ -177,10 +177,18 @@ namespace OCM.Import.Providers
 
         public bool IsProductionReady { get; set; }
 
+        /// <summary>
+        /// If true, import processing will look for duplicate POIs and merge the equipment listed into one master POI
+        /// </summary>
         public bool MergeDuplicatePOIEquipment { get; set; }
 
-        public string DataAttribution { get; set; }
+        /// <summary>
+        /// If true, POI will not be considered a duplicate if the Operator is different
+        /// </summary>
+        public bool AllowDuplicatePOIWithDifferentOperator { get; set; }
 
+        public string DataAttribution { get; set; }
+        
         private Encoding _sourceEncoding = null;
 
         public Encoding SourceEncoding
@@ -207,6 +215,8 @@ namespace OCM.Import.Providers
 
         public bool ImportInitialisationRequired { get; set; }
 
+        public string ProcessingLog { get; set; }
+
         public BaseImportProvider()
         {
             ProviderName = "None";
@@ -218,6 +228,7 @@ namespace OCM.Import.Providers
             webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
             webClient.Encoding = SourceEncoding;
             this.IsStringData = true;
+            this.ProcessingLog = "";
         }
 
         public string GetProviderName()
@@ -227,7 +238,7 @@ namespace OCM.Import.Providers
 
         public void Log(string message)
         {
-            System.Console.WriteLine("[" + ProviderName + "]: " + message);
+            this.ProcessingLog+= "\r\n[" + ProviderName + "]: " + message;
         }
 
         public EVSE GetEVSEFromCP(ChargePoint cp)

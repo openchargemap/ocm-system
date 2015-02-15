@@ -94,6 +94,7 @@ var localisation_dictionary_sk ={
       "useMyLocation": "Hľadať v mojej blízkosti",
       "distance": "Vzdialenosť",
       "chargingLevels": "Úroveň nabíjania",
+      "minPowerKW": null,
       "connectionTypes": "Typy konektorov",
       "networkOperators": "Sieť/Operátor",
       "countries": "Krajina",
@@ -126,7 +127,8 @@ var localisation_dictionary_sk ={
       "discuss": "Diskutuj",
       "about": {
         "termsPrivacy": "Podmienky a ochrana súkromia",
-        "contact": "Kontakt"
+        "contact": "Kontakt",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Môj Profil",

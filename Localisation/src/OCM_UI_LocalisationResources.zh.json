@@ -94,6 +94,7 @@
       "useMyLocation": "靠近我搜索",
       "distance": "距离",
       "chargingLevels": "充电水平",
+      "minPowerKW": null,
       "connectionTypes": "连接类型",
       "networkOperators": "网络/操作员",
       "countries": "国家",
@@ -126,7 +127,8 @@
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

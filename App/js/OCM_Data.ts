@@ -84,6 +84,7 @@ module OCM {
 
         fetchLocationDataListByParam(params: OCM.POI_SearchParams, callbackname, errorcallback) {
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
+    
             var serviceParams = "";
             if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
             if (params.latitude != null) serviceParams += "&latitude=" + params.latitude;
@@ -110,7 +111,7 @@ module OCM {
             var apiCallURL = serviceURL + serviceParams
 
             if (console) {
-                console.log("API Call:" + apiCallURL);
+                console.log("API Call:" + apiCallURL + "&callback=" + callbackname);
             }
 
             var ajaxSettings: JQueryAjaxSettings = {

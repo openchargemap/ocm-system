@@ -24,13 +24,13 @@ module OCM {
         public timestamp: number;
         public attribution: string;
 
-        constructor(lat:number=null,lng:number=null) {
+        constructor(lat: number= null, lng: number= null) {
             this.coords = new GeoLatLng();
             this.coords.latitude = lat;
             this.coords.longitude = lng;
         }
 
-        static fromPosition(pos:Position):GeoPosition {
+        static fromPosition(pos: Position): GeoPosition {
             return new GeoPosition(pos.coords.latitude, pos.coords.longitude);
         }
     }
@@ -335,7 +335,6 @@ module OCM {
                         'bearing': 0
                     });
                 }, 500);
-                
             } else {
                 this.log("map centre not set, not setting camera");
             }
@@ -518,16 +517,6 @@ module OCM {
                                     title: markerTooltip
                                 });
 
-                                /*var marker1 = new MarkerWithLabel({
-                                    position: homeLatLng,
-                                    draggable: true,
-                                    raiseOnDrag: true,
-                                    map: map,
-                                    labelContent: "$425K",
-                                    labelAnchor: new google.maps.Point(22, 0),
-                                    labelClass: "labels", // the CSS class for the label
-                                    labelStyle: { opacity: 0.75 }
-                                });*/
                                 newMarker.poi = poi;
                                 var parentContext = this.parentAppContext;
 
@@ -632,12 +621,6 @@ module OCM {
                                 });
                             });
                         });
-
-                    /*var infowindow = new google.maps.InfoWindow({
-                        content: "Tap marker to search from here, Drag marker to change search position."
-                    });
-                    infowindow.open(map, mapManagerContext.mapCentreMarker);
-*/
                 }
             }
 
@@ -853,8 +836,8 @@ module OCM {
                 }
             }
 
-            this.mapOptions.mapCentre = new GeoPosition(lat,lng);
-        
+            this.mapOptions.mapCentre = new GeoPosition(lat, lng);
+
             if (console) console.log("Map centre pos updated");
         };
 
@@ -868,7 +851,6 @@ module OCM {
 
                 var isAvailable = plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
                     if (isAvailable) {
-
                         if (appcontext.parentAppContext != null && appcontext.parentAppContext.viewModel.searchPosition != null) {
                             var searchPos = appcontext.parentAppContext.viewModel.searchPosition;
                             if (searchPos != null) {
@@ -902,13 +884,13 @@ module OCM {
 
                 this.log("Refreshing map using API: google web");
 
-              //setup map view if not already initialised
+                //setup map view if not already initialised
                 this.initMap(mapCanvasID);
 
                 if (searchPos != null) {
                     //this.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
                 }
-               
+
                 this.showPOIListOnMapViewGoogleWeb(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
 
                 return true;
@@ -975,7 +957,7 @@ module OCM {
 
                 if (this.map != null) {
                     //show/reposition map
-                    
+
                     this.map.refreshLayout();
                     this.map.setVisible(true);
                 } else {

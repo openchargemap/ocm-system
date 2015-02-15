@@ -94,6 +94,7 @@ var localisation_dictionary_lt ={
       "useMyLocation": "Ieškoti šalia",
       "distance": "Atstumas",
       "chargingLevels": "Įkrovimo lygis",
+      "minPowerKW": null,
       "connectionTypes": "Jungčių tipai",
       "networkOperators": "Tinklas/operatorius",
       "countries": "Šalis",
@@ -126,7 +127,8 @@ var localisation_dictionary_lt ={
       "discuss": "Aptarti",
       "about": {
         "termsPrivacy": "Sąlygos ir privatumas",
-        "contact": "Susisiekti"
+        "contact": "Susisiekti",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Mano profilis",

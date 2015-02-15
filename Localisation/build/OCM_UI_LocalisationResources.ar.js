@@ -94,6 +94,7 @@ var localisation_dictionary_ar ={
       "useMyLocation": "البحث بالقرب مني",
       "distance": "المسافة",
       "chargingLevels": "شحن الصعيد",
+      "minPowerKW": null,
       "connectionTypes": "أنواع الاتصال",
       "networkOperators": "مشغل الشبكة/",
       "countries": "البلد",
@@ -126,7 +127,8 @@ var localisation_dictionary_ar ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,

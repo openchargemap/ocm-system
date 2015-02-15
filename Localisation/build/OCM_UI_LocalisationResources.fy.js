@@ -94,6 +94,7 @@ var localisation_dictionary_fy ={
       "useMyLocation": "Sykje yn myn buert",
       "distance": "Ôfstân",
       "chargingLevels": "Oplaadsnelheid",
+      "minPowerKW": null,
       "connectionTypes": "Konneksjetype",
       "networkOperators": "Netwurk/Operator",
       "countries": "Lân",
@@ -126,7 +127,8 @@ var localisation_dictionary_fy ={
       "discuss": "Diskusjearje",
       "about": {
         "termsPrivacy": "Betingsten & privacy",
-        "contact": "Kontakt"
+        "contact": "Kontakt",
+        "guidance": null
       },
       "profile": {
         "sectionTitle": "Myn profyl",

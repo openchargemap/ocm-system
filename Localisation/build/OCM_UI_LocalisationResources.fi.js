@@ -94,6 +94,7 @@ var localisation_dictionary_fi ={
       "useMyLocation": "Etsi lähimmät paikat",
       "distance": "Etäisyys",
       "chargingLevels": "Latauksen tehon taso",
+      "minPowerKW": null,
       "connectionTypes": "Liitäntä tyypit",
       "networkOperators": "Latausoperaattori",
       "countries": "Maa",
@@ -126,7 +127,8 @@ var localisation_dictionary_fi ={
       "discuss": null,
       "about": {
         "termsPrivacy": null,
-        "contact": null
+        "contact": null,
+        "guidance": null
       },
       "profile": {
         "sectionTitle": null,
