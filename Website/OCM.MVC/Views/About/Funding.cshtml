@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Funding and Project Costs";
+}
+
+<script type="text/javascript" src="~/scripts/OCM/TableOfContents.js"></script>
+
+<div class="row">
+
+    <div class="col-sm-8 col-xs-12">
+        <article>
+            <section>
+                <h2 id="funding">Funding</h2>
+
+                <p class="lead">Open Charge Map is currently an unfunded project without a formal organisation. Funding would allow us to coordinate a formal organisation and further our projects goals.</p>
+                <p class="alert alert-info">Individuals, Organisations, Governments and Corporations who are interested in contributing to overall funding or sponsorship of specific project goals are very welcome and we would invite you to <a href="@Url.Action("Contact","About")">Contact Us</a> to discuss details of the funding you'd like to offer.</p>
+                <p>The funding you contribute can either be allocated across all project costs or you may request that funding be applied to specific project goals or activites in line with our overall project objectives.</p>
+            </section>
+            <section>
+                <h2 id="objectives">Project Objectives</h2>
+                <p>Our primary objective is to provide and maintain a quality Open Data set detailing the non-residential charging station infrastructure available to electric vehicle drivers globally.</p>
+                <p>
+                    To achieve this goal we provide:
+                    <ul>
+                        <li>Access to an Open Data set of Charging Locations, Equipment details and user contributed supporting information. Note that the data licensing is mixed and specific to each applicable Data Provider.</li>
+                        <li>Tools and techniques (Web, Apps etc.) for accepting and managing data contributions and information maintenance.</li>
+                        <li>Web/API services to publish the data to all interested parties.</li>
+                        <li>Community support and discussions</li>
+                    </ul>
+                </p>
+                <h2 id="costs">Project Costs</h2>
+                <p>
+                    Currently, our main project cost is server hosting. <a href="http://zerocarbonworld.org/">Zero Carbon World</a> currently provide the bulk of our server hosting (a Windows based VM with 1GB RAM). In addition, <a href="http://webprofusion.com">Webprofusion</a> provide geo-redundant cloud hosting for image uploads etc.
+                </p>
+                <p>
+                    Our service level can be improved if we have funding for improved hosting/cloud services. Offers of spare hosting space or virtual machines are appreciated however we would like to plan to have our resources and billing well coordinated so we don't want to take dependencies on many different vendors via multiple organisations.
+                </p>
+                <p>In the event of formalised funding arrangements being agreed our project costs and funding allocation would subsequently be published here and updated on an annual basis.</p>
+                <h2 id="resourcing">Project Resourcing</h2>
+                <p>
+                    In addition to server hosting the following roles are performed by volunteers on a casual basis:
+                    <ul>
+                        <li>Software Development (Web Site, Apps, Tools, API, Database, Server/System Administration, UI Translation).</li>
+                        <li>High-level Adminstration (Managing Editors, Network Operators etc).</li>
+                        <li>Marketing and Promotion (the quality of our data is directly dependant on user contributed edits and supporting information, requiring an active user base with comprehensive geographic coverage).</li>
+                        <li>Community Support and Discussion (Contact Us, Google+, Twitter, Facebook).</li>
+                        <li>Country Editors (with approval rights per country, editing and approving submissions).</li>
+                        <li>Community Contributors (end-users contributing and editing information).</li>
+                    </ul>
+                </p>
+                <p>Funding or sponsorship would allow our project to allocate specific funding to accelerate or enable work in the many of above areas and other project aspects.</p>
+            </section>
+        </article>
+       
+    </div>
+    <div class="col-sm-4 hidden-xs"><div id="toc" style="position:fixed;"></div></div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            prepareTableOfContents();
+        });
+    </script>
