@@ -89,8 +89,3 @@ module OCM {
         }
     }
 }
-
-
-//var summary = new OCM.Widgets.GeoSummary("geochart", "datasummary");
-//summary.show();
-
