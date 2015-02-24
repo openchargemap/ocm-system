@@ -65,6 +65,7 @@ namespace OCM.API.Common
                 bool isUpdate = false;
                 bool userCanEditWithoutApproval = false;
                 bool isSystemUser = false;
+                int? supersedesID = null;//POI from another data provider which has been superseded by an edit
 
                 //if user signed in, check if they have required permission to perform an edit/approve (if required)
                 if (user != null)
@@ -197,7 +198,7 @@ namespace OCM.API.Common
                     //if poi being updated exists from an imported source we supersede the old POI with the new version, unless we're doing a fresh import from same data provider
                     if (!disablePOISuperseding)
                     {
-                        int? supersedesID = null;
+                        
                         //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
                         if (isUpdate && !isSystemUser && oldPOI.DataProviderID != (int)StandardDataProviders.OpenChargeMapContrib)
                         {
@@ -285,7 +286,11 @@ namespace OCM.API.Common
                 {
                     var cacheTask = Task.Run(async () =>
                     {
-                        return await CacheManager.RefreshCachedData();
+                        if (supersedesID != null)
+                        {
+                            await CacheManager.RefreshCachedPOI((int)supersedesID);
+                        }
+                        return await CacheManager.RefreshCachedPOI(updatedPOI.ID);
                     });
                     cacheTask.Wait();
                 }
@@ -417,7 +422,7 @@ namespace OCM.API.Common
                 //SendPOICommentSubmissionNotifications(comment, user, dataComment);
 
                 //TODO: only refresh cache for specific POI
-                CacheManager.RefreshCachedData();
+                CacheManager.RefreshCachedPOI(dataComment.ChargePoint.ID);
 
                 return dataComment.ID;
             }

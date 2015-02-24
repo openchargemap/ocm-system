@@ -33,7 +33,7 @@ namespace OCM.Core.Data
 
         public DateTime LastUpdated { get; set; }
 
-        public int NumPOILastUpdated { get; set; }
+        public long NumPOILastUpdated { get; set; }
 
         public int NumDistinctPOIs { get; set; }
     }
@@ -102,13 +102,6 @@ namespace OCM.Core.Data
         private MongoClient client = null;
         private MongoServer server = null;
         private MirrorStatus status = null;
-
-        public enum CacheUpdateStrategy
-        {
-            All,
-            Modified,
-            Incremental
-        }
 
         public CacheProviderMongoDB()
         {
@@ -215,7 +208,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public List<OCM.API.Common.Model.ChargePoint> GetPOIListToUpdate(CacheUpdateStrategy updateStrategy)
+        public List<OCM.API.Common.Model.ChargePoint> GetPOIListToUpdate(OCMEntities dataModel, CacheUpdateStrategy updateStrategy)
         {
             if (!database.CollectionExists("poi"))
             {
@@ -231,7 +224,7 @@ namespace OCM.Core.Data
                 if (maxPOI != null) { maxId = maxPOI.ID; }
 
                 //from max poi we have in mirror to next 100 results in order of ID
-                var dataList = new Data.OCMEntities().ChargePoints.Include("AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User").OrderBy(o => o.ID).Where(o => o.ID > maxId).Take(100);
+                var dataList = dataModel.ChargePoints.Include("AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User").OrderBy(o => o.ID).Where(o => o.ID > maxId).Take(100);
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
@@ -288,12 +281,48 @@ namespace OCM.Core.Data
             return null;
         }
 
+        public async Task<MirrorStatus> RefreshCachedPOI(int poiId)
+        {
+            var mirrorStatus = await Task.Run<MirrorStatus>(() => { 
+            
+            var dataModel = new OCMEntities();
+            var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.ID == poiId);
+
+            var poiCollection = database.GetCollection<POIMongoDB>("poi");
+            var query = Query.EQ("ID", poiId);
+            var removeResult = poiCollection.Remove(query);
+            System.Diagnostics.Debug.WriteLine("POIs removed from cache ["+poiId+"]:" + removeResult.DocumentsAffected);
+
+            if (poiModel != null)
+            {    
+                var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel));
+                if (cachePOI.AddressInfo != null)
+                {
+                    cachePOI.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(cachePOI.AddressInfo.Longitude, cachePOI.AddressInfo.Latitude));
+                }
+
+                poiCollection.Insert<POIMongoDB>(cachePOI);
+            }
+            else
+            {
+                //poi not present in master DB, we've removed it from cache
+            }
+
+                long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
+                return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
+            });
+
+            return mirrorStatus;
+        }
+
         /// <summary>
         /// Perform full or partial repopulation of POI Mirror in MongoDB
         /// </summary>
         /// <returns></returns>
         public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy)
         {
+            var dataModel = new Data.OCMEntities();
+
             if (!database.CollectionExists("poi"))
             {
                 database.CreateCollection("poi");
@@ -329,7 +358,7 @@ namespace OCM.Core.Data
                 reference.Insert(coreRefData);
             }
 
-            var poiList = GetPOIListToUpdate(updateStrategy);
+            var poiList = GetPOIListToUpdate(dataModel,updateStrategy);
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
             if (poiList != null && poiList.Any())
             {
@@ -345,8 +374,20 @@ namespace OCM.Core.Data
                 poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
                 poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
                 poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
+
+                if (updateStrategy == CacheUpdateStrategy.All)
+                {
+                    poiCollection.ReIndex();
+                }
             }
 
+            long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
+            return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
+            
+        }
+
+        private MirrorStatus RefreshMirrorStatus(long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB)
+        {
             var statusCollection = database.GetCollection<MirrorStatus>("status");
             statusCollection.RemoveAll();
 
@@ -356,18 +397,12 @@ namespace OCM.Core.Data
             status.Description = "MongoDB Cache of Open Charge Map POI Database";
             status.LastUpdated = DateTime.UtcNow;
 
-            status.TotalPOIInCache = poiCollection.Count();
-            status.TotalPOIInDB = new OCMEntities().ChargePoints.LongCount();
+            status.TotalPOIInCache = cachePOICollectionCount;
+            status.TotalPOIInDB = numPOIInMasterDB;
             status.StatusCode = HttpStatusCode.OK;
-            if (poiList != null)
-            {
-                status.NumPOILastUpdated = poiList.Count;
-            }
-            else
-            {
-                status.NumPOILastUpdated = 0;
-            }
-
+            status.NumPOILastUpdated = numPOIUpdated;
+            status.NumPOILastUpdated = 0;
+  
             statusCollection.Insert(status);
             return status;
         }

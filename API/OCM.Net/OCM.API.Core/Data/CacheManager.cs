@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace OCM.Core.Data
 {
+    public enum CacheUpdateStrategy
+    {
+        All,
+        Modified,
+        Incremental
+    }
+
     public class CacheManager
     {
         public static OCM.API.Common.Model.ChargePoint GetPOI(int id)
@@ -46,11 +53,11 @@ namespace OCM.Core.Data
             }
         }
 
-        public async static Task<MirrorStatus> RefreshCachedData()
+        public async static Task<MirrorStatus> RefreshCachedData(CacheUpdateStrategy updateStrategy = CacheUpdateStrategy.Modified)
         {
             try
             {
-                return await new CacheProviderMongoDB().PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Modified);
+                return await new CacheProviderMongoDB().PopulatePOIMirror(updateStrategy);
             }
             catch (Exception)
             {
@@ -58,6 +65,37 @@ namespace OCM.Core.Data
             }
         }
 
+        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck =false)
+        {
+            try
+            {
+                return await Task.Run<MirrorStatus>(() =>
+                {
+                    return new CacheProviderMongoDB().GetMirrorStatus(includeDupeCheck, true);
+                });
+                
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async static Task<MirrorStatus> RefreshCachedPOI(int poiId)
+        {
+            if (poiId == 0) {
+                return await RefreshCachedData();
+            }
+
+            try
+            {
+                return await new CacheProviderMongoDB().PopulatePOIMirror(CacheUpdateStrategy.Modified);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
         public static List<CountryExtendedInfo> GetExtendedCountryInfo()
         {
             return new CacheProviderMongoDB().GetExtendedCountryInfo();

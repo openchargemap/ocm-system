@@ -387,8 +387,7 @@ namespace OCM.API
                 {
                     try
                     {
-                        
-                        var itemsUpdated = await new OCM.Core.Data.CacheProviderMongoDB().PopulatePOIMirror(Core.Data.CacheProviderMongoDB.CacheUpdateStrategy.Modified);
+                        var itemsUpdated = await OCM.Core.Data.CacheManager.RefreshCachedData();
                         new JSONOutputProvider().GetOutput(context.Response.OutputStream, new { POICount = itemsUpdated, Status = "OK" }, filter);
                     }
                     catch (Exception exp)

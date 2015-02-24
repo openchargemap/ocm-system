@@ -99,7 +99,7 @@ namespace OCM.API.Common
         public void ProcessEditQueueItem(int id, bool publishEdit, int userId)
         {
             //prepare poi details
-
+            int updatePOIId = 0;
             var queueItem = DataModel.EditQueueItems.FirstOrDefault(e => e.ID == id);
 
             if (queueItem != null && queueItem.IsProcessed == false)
@@ -166,6 +166,8 @@ namespace OCM.API.Common
                             //publish edit
                             DataModel.SaveChanges();
 
+                            updatePOIId = poiData.ID;
+
                             //attribute submitter with reputation points
                             if (queueItem.UserID != null)
                             {
@@ -182,7 +184,7 @@ namespace OCM.API.Common
                         //TODO: also award processing editor with reputation points if they are approving someone elses edit and they are not Admin
 
                         //Refresh POI cache
-                        Task cacheRefresh = CacheManager.RefreshCachedData();
+                        Task cacheRefresh = CacheManager.RefreshCachedPOI(updatePOIId);
                     }
                 }
             }

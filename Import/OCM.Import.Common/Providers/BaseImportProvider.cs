@@ -654,7 +654,7 @@ namespace OCM.Import.Providers
             if (poi.AddressInfo == null) return false;
             if (String.IsNullOrEmpty(poi.AddressInfo.Title)) return false;
             if (String.IsNullOrEmpty(poi.AddressInfo.AddressLine1) && String.IsNullOrEmpty(poi.AddressInfo.Postcode)) return false;
-            if (poi.AddressInfo.Latitude == null || poi.AddressInfo.Longitude == null) return false;
+            if (poi.AddressInfo.Latitude == 0 || poi.AddressInfo.Longitude == 0) return false;
 
             if (poi.AddressInfo.Latitude < -90 || poi.AddressInfo.Latitude > 90) return false;
             if (poi.AddressInfo.Longitude < -180 || poi.AddressInfo.Longitude > 180) return false;

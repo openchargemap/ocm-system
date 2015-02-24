@@ -142,7 +142,7 @@ namespace OCM.MVC.Controllers
                 try
                 {
                     HttpContext.Application["_MirrorRefreshInProgress"] = true;
-                    mirrorStatus = await new CacheProviderMongoDB().PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Modified);
+                    mirrorStatus = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Modified);
                 }
                 catch (Exception)
                 {
@@ -156,10 +156,10 @@ namespace OCM.MVC.Controllers
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
-        public ActionResult CheckPOIMirrorStatus(bool includeDupeCheck=false)
+        public async Task<ActionResult> CheckPOIMirrorStatus(bool includeDupeCheck=false)
         {
-            var mirrorManager = new CacheProviderMongoDB();
-            var status = mirrorManager.GetMirrorStatus(includeDupeCheck);
+            
+            var status = await CacheManager.GetCacheStatus(includeDupeCheck);
             if (status == null)
             {
                 status = new MirrorStatus();
@@ -184,27 +184,26 @@ namespace OCM.MVC.Controllers
             if (HttpContext.Application["_MirrorRefreshInProgress"] == null || (bool)HttpContext.Application["_MirrorRefreshInProgress"]==false)
             {
                 HttpContext.Application["_MirrorRefreshInProgress"] = true;
-                var mirrorManager = new CacheProviderMongoDB();
                 
                 try
                 {
                     if (mode == "repeat")
                     {
-                        status = await mirrorManager.PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Incremental);
+                        status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Incremental);
                         while (status.NumPOILastUpdated > 0)
                         {
                             System.Diagnostics.Debug.WriteLine("Mirror Update:" + status.LastUpdated + " updated, " + status.TotalPOIInCache + " total");
-                            status = await mirrorManager.PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Incremental);
+                            status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Incremental);
                         }
                     }
                     else
                         if (mode == "all")
                         {
-                            status = await mirrorManager.PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.All);
+                            status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.All);
                         }
                         else
                         {
-                            status = await mirrorManager.PopulatePOIMirror(CacheProviderMongoDB.CacheUpdateStrategy.Modified);
+                            status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Modified);
                         }
 
                 }
@@ -253,7 +252,11 @@ namespace OCM.MVC.Controllers
             if (performImport)
             {
                 //add/update/delist POIs
-                importManager.UpdateImportedPOIList(result, systemUser);
+                await Task.Run(() =>
+                {
+                    importManager.UpdateImportedPOIList(result, systemUser);
+                });
+                
             }
 
             stopwatch.Stop();
