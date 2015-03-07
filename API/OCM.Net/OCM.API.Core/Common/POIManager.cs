@@ -173,7 +173,7 @@ namespace OCM.API.Common
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
 
-            if (HttpContext.Current.Cache[cacheKey] == null || settings.EnableCaching == false)
+            if ((HttpContext.Current!=null && HttpContext.Current.Cache[cacheKey] == null) || settings.EnableCaching == false)
             {
                 bool enableNoSQLCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]);
                 if (enableNoSQLCaching && settings.AllowMirrorDB && settings.ChargePointID == null) //mongodb api provider can't currently match by ChargePointID
@@ -186,7 +186,7 @@ namespace OCM.API.Common
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
                         //TODO: send error notification
-                        AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI);
+                        if (HttpContext.Current!=null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI);
                     }
                 }
 
@@ -288,6 +288,12 @@ namespace OCM.API.Common
                     {
                         chargePointList = chargePointList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
                     }
+
+                    if (settings.CreatedFromDate != null)
+                    {
+                        chargePointList = chargePointList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
+                    }
+
                     //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                     chargePointList = from c in chargePointList
                                       where 
@@ -398,7 +404,7 @@ namespace OCM.API.Common
                     }
 
                     //cache results (if caching enabled)
-                    if (settings.EnableCaching == true)
+                    if (settings.EnableCaching == true && HttpContext.Current!=null)
                     {
                         HttpContext.Current.Cache.Add(cacheKey, dataList, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 30, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
                     }
@@ -406,7 +412,11 @@ namespace OCM.API.Common
             }
             else
             {
-                dataList = (List<Model.ChargePoint>)HttpContext.Current.Cache[cacheKey];
+                //TODO: pass caching context instead of trying to access HttpContext.Current as not available during async
+                if (HttpContext.Current != null)
+                {
+                    dataList = (List<Model.ChargePoint>)HttpContext.Current.Cache[cacheKey];
+                }
             }
 
             System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.Elapsed.ToString());

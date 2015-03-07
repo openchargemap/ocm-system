@@ -52,11 +52,9 @@ namespace OCM.MVC.Controllers
             return View(userDetails);
         }
 
-
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult PromoteUserToEditor(int userId, int countryId, bool autoCreateSubscriptions, bool removePermission)
         {
-
             new UserManager().PromoteUserToCountryEditor(int.Parse(Session["UserID"].ToString()), userId, countryId, autoCreateSubscriptions, removePermission);
             return RedirectToAction("View", "Profile", new { id = userId });
         }
@@ -66,7 +64,7 @@ namespace OCM.MVC.Controllers
         {
             //convert all user permission to new format where applicable
             new UserManager().ConvertUserPermissions();
-            return RedirectToAction("Index", "Admin", new { result="processed" });
+            return RedirectToAction("Index", "Admin", new { result = "processed" });
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
@@ -130,13 +128,19 @@ namespace OCM.MVC.Controllers
                 //send all pending subscription notifications
                 try
                 {
-                    notificationsSent = new UserSubscriptionManager().SendAllPendingSubscriptionNotifications();
+                    
+                    //TODO: can't run in seperate async thread becuase HttpContext is not available
+                    string templateFolderPath = Server.MapPath("~/templates/notifications");
+
+                    await Task.Run(() =>
+                    {
+                        notificationsSent = new UserSubscriptionManager().SendAllPendingSubscriptionNotifications(templateFolderPath);
+                    });
                 }
                 catch (Exception)
                 {
                     ; ; //failed to send notifications
                 }
-
 
                 //update cache mirror
                 try
@@ -148,26 +152,26 @@ namespace OCM.MVC.Controllers
                 {
                     ; ;//failed to update cache
                 }
-                finally {
+                finally
+                {
                     HttpContext.Application["_MirrorRefreshInProgress"] = false;
                 }
             }
-            return Json(new { NotificationsSent = notificationsSent, MirrorStatus= mirrorStatus }, JsonRequestBehavior.AllowGet);
+            return Json(new { NotificationsSent = notificationsSent, MirrorStatus = mirrorStatus }, JsonRequestBehavior.AllowGet);
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
-        public async Task<ActionResult> CheckPOIMirrorStatus(bool includeDupeCheck=false)
+        public async Task<ActionResult> CheckPOIMirrorStatus(bool includeDupeCheck = false)
         {
-            
             var status = await CacheManager.GetCacheStatus(includeDupeCheck);
             if (status == null)
             {
                 status = new MirrorStatus();
                 status.StatusCode = System.Net.HttpStatusCode.NotFound;
                 status.Description = "Cache is offline";
-
             }
-            else {
+            else
+            {
                 if (HttpContext.Application["_MirrorRefreshInProgress"] != null && (bool)HttpContext.Application["_MirrorRefreshInProgress"] == true)
                 {
                     status.Description += " (Update in progress)";
@@ -181,10 +185,10 @@ namespace OCM.MVC.Controllers
         {
             MirrorStatus status = new MirrorStatus();
 
-            if (HttpContext.Application["_MirrorRefreshInProgress"] == null || (bool)HttpContext.Application["_MirrorRefreshInProgress"]==false)
+            if (HttpContext.Application["_MirrorRefreshInProgress"] == null || (bool)HttpContext.Application["_MirrorRefreshInProgress"] == false)
             {
                 HttpContext.Application["_MirrorRefreshInProgress"] = true;
-                
+
                 try
                 {
                     if (mode == "repeat")
@@ -205,12 +209,11 @@ namespace OCM.MVC.Controllers
                         {
                             status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Modified);
                         }
-
                 }
                 catch (Exception exp)
                 {
                     status.TotalPOIInCache = 0;
-                    status.Description = "Cache update error:"+exp.ToString();
+                    status.Description = "Cache update error:" + exp.ToString();
                     status.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 }
 
@@ -234,14 +237,15 @@ namespace OCM.MVC.Controllers
 
             return View(model);
         }
+
         [AuthSignedInOnly(Roles = "Admin")]
-        public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport =false)
+        public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport = false)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             var importManager = new Import.ImportManager(Server.MapPath("~/Temp"));
-            
+
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
             var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
@@ -256,11 +260,10 @@ namespace OCM.MVC.Controllers
                 {
                     importManager.UpdateImportedPOIList(result, systemUser);
                 });
-                
             }
 
             stopwatch.Stop();
-            result.Log += "\r\nImport processing time (seconds): "+stopwatch.Elapsed.TotalSeconds;
+            result.Log += "\r\nImport processing time (seconds): " + stopwatch.Elapsed.TotalSeconds;
 
             return View(result);
         }
@@ -270,6 +273,5 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
-
     }
 }

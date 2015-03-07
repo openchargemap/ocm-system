@@ -619,6 +619,11 @@ namespace OCM.Core.Data
                 {
                     poiList = poiList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
                 }
+
+                if (settings.CreatedFromDate != null)
+                {
+                    poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
+                }
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                 poiList = from c in poiList
                           where

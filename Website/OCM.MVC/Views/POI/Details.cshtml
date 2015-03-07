@@ -354,7 +354,7 @@ else {
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script>
-        @{
+    @{
     var scriptContent = "var lat = " + Model.POI.AddressInfo.Latitude + "; var lng = " + Model.POI.AddressInfo.Longitude + ";";
       }
 
@@ -411,8 +411,12 @@ else {
 
             });
 
+            @if (ViewBag.EnablePreviewMode != true){
+            <text>
             //fetch nearby places
             getNearbyPlaces(lat, lng, 2);
+            </text>
+            }
         });
 
         function getLocationImage(pos) {
@@ -420,56 +424,56 @@ else {
                 {
                     var locationImage = ViewBag.ImageList[0];
                     <text>
-            $('#details-imageblock').html("<img src='@locationImage.ImageURL' /><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
-            </text>
+        $('#details-imageblock').html("<img src='@locationImage.ImageURL' /><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
+        </text>
                 }
-        }
+    }
 
-        /*
-         * Construct the URL to call for the API request
-         */
-        function constructYelpURL(lat, lng, radius) {
+    /*
+     * Construct the URL to call for the API request
+     */
+    function constructYelpURL(lat, lng, radius) {
 
-            var URL = "http://api.yelp.com/" +
-                "business_review_search?" +
-                "callback=?&limit=10" +
-                "&lat=" + lat +
-                "&long=" + lng +
-                "&radius=" + radius +
-                "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
-            return encodeURI(URL);
+        var URL = "http://api.yelp.com/" +
+            "business_review_search?" +
+            "callback=?&limit=10" +
+            "&lat=" + lat +
+            "&long=" + lng +
+            "&radius=" + radius +
+            "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
+        return encodeURI(URL);
 
-            //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
-        }
+        //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
+    }
 
-        function getNearbyPlaces(lat, lng, radius) {
+    function getNearbyPlaces(lat, lng, radius) {
 
-            var yelpRequestURL = constructYelpURL(lat, lng, radius);
+        var yelpRequestURL = constructYelpURL(lat, lng, radius);
 
-            $.getJSON(yelpRequestURL, function (data) {
+        $.getJSON(yelpRequestURL, function (data) {
 
-                if (data != null) {
-                    var output = "";
-                    var poiList = data.businesses;
+            if (data != null) {
+                var output = "";
+                var poiList = data.businesses;
 
-                    for (var i = 0; i < poiList.length; i++) {
-                        var poi = poiList[i];
-                        output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "' /> <h3>" + poi.name +
-                                        "&nbsp;<img src='" + poi.rating_img_url_small + "' />" +
-                                        (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
-                                        "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
-                                        "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
-                                        "</div>";
-                    }
-
-                    $("#nearby-poi").html(output);
+                for (var i = 0; i < poiList.length; i++) {
+                    var poi = poiList[i];
+                    output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "' /> <h3>" + poi.name +
+                                    "&nbsp;<img src='" + poi.rating_img_url_small + "' />" +
+                                    (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
+                                    "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
+                                    "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
+                                    "</div>";
                 }
-            });
-        }
 
-        function sharePopup(url) {
-            window.open(url, "_blank");
-        }
+                $("#nearby-poi").html(output);
+            }
+        });
+    }
+
+    function sharePopup(url) {
+        window.open(url, "_blank");
+    }
     </script>
 }
 

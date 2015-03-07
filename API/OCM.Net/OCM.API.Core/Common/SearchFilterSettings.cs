@@ -51,6 +51,7 @@ namespace OCM.API.Common
         public int[] StatusTypeIDs { get; set; }
 
         public DateTime? ChangesFromDate { get; set; }
+        public DateTime? CreatedFromDate { get; set; }
 
         #region deprecated api filters
         public bool FastChargeOnly { get; set; }

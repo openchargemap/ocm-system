@@ -41,18 +41,21 @@ namespace OCM.API.Common
 
                 body += ((Exception)exceptionObject).ToString();
 
-                HttpContext con = HttpContext.Current;
-                if (con.Request.Url != null)
+                if (HttpContext.Current != null)
                 {
-                    body += "<br><br>Request Url:" + con.Request.Url.ToString();
+                    HttpContext con = HttpContext.Current;
+                    if (con.Request.Url != null)
+                    {
+                        body += "<br><br>Request Url:" + con.Request.Url.ToString();
 
-                    //special case to avoid reporting /trackback url exceptions
-                    if (con.Request.Url.ToString().EndsWith("/trackback/")) ignoreException = true;
+                        //special case to avoid reporting /trackback url exceptions
+                        if (con.Request.Url.ToString().EndsWith("/trackback/")) ignoreException = true;
 
-                }
-                if (con.Request.UserAgent != null)
-                {
-                    body += "<br>User Agent: " + con.Request.UserAgent;
+                    }
+                    if (con.Request.UserAgent != null)
+                    {
+                        body += "<br>User Agent: " + con.Request.UserAgent;
+                    }
                 }
                 body += "<br><br>" + DateTime.UtcNow.ToString();
             }

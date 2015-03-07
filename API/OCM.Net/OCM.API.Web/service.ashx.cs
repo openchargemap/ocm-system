@@ -32,10 +32,20 @@ namespace OCM.API
         {
             get
             {
-                var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
-                if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google"))
+                try
                 {
-                    return true;
+                    if (HttpContext.Current.Request.UserAgent != null)
+                    {
+                        var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
+                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //exception identifying user agent
                 }
                 return false;
             }

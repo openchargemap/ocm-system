@@ -154,10 +154,12 @@ namespace OCM.API.Common
         public SubscriptionMatchGroup GetSubscriptionMatches(int subscriptionId, int userId, DateTime? dateFrom)
         {
             var dataModel = new OCM.Core.Data.OCMEntities();
+            var poiManager = new POIManager();
+
             var subscription = dataModel.UserSubscriptions.FirstOrDefault(s => s.ID == subscriptionId && s.UserID == userId);
             if (subscription != null)
             {
-                return GetSubscriptionMatches(dataModel, subscription, dateFrom);
+                return GetSubscriptionMatches(dataModel, poiManager, subscription, dateFrom);
             }
             else
             {
@@ -167,7 +169,6 @@ namespace OCM.API.Common
 
         private bool IsPOISubscriptionFilterMatch(ChargePoint poi, UserSubscriptionFilter filter, OCM.Core.Data.UserSubscription subscription)
         {
-            
             if (poi == null) return false;
 
             bool isMatch = true;
@@ -218,7 +219,7 @@ namespace OCM.API.Common
             return isMatch;
         }
 
-        public SubscriptionMatchGroup GetSubscriptionMatches(OCM.Core.Data.OCMEntities dataModel, OCM.Core.Data.UserSubscription subscription, DateTime? dateFrom = null)
+        public SubscriptionMatchGroup GetSubscriptionMatches(OCM.Core.Data.OCMEntities dataModel, POIManager poiManager, OCM.Core.Data.UserSubscription subscription, DateTime? dateFrom = null)
         {
             SubscriptionMatchGroup subscriptionMatchGroup = new SubscriptionMatchGroup();
 
@@ -333,22 +334,36 @@ namespace OCM.API.Common
             //check if any new POIs
             if (subscription.NotifyPOIAdditions)
             {
-                var newPOIs = dataModel.ChargePoints.Where(c => c.DateCreated >= checkFromDate && c.SubmissionStatusType.IsLive == true &&
-                     (searchPos == null ||
-                        (searchPos != null &&
-                            c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < subscription.DistanceKM
-                        ))
-                      ).ToList();
+                /* var newPOIs = dataModel.ChargePoints.Where(c => c.DateCreated >= checkFromDate && c.SubmissionStatusType.IsLive == true &&
+                      (searchPos == null ||
+                         (searchPos != null &&
+                             c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < subscription.DistanceKM
+                         ))
+                       ).ToList();*/
 
-                if (newPOIs.Any())
+                var filterParams = new APIRequestParams { CreatedFromDate = checkFromDate , AllowMirrorDB=true};
+                if (searchPos != null)
+                {
+                    filterParams.DistanceUnit = DistanceUnit.KM;
+                    filterParams.Distance = subscription.DistanceKM;
+                    filterParams.Latitude = searchPos.Latitude;
+                    filterParams.Longitude = searchPos.Longitude;
+                }
+                if (subscription.CountryID != null)
+                {
+                    filterParams.CountryIDs = new int[] { (int)subscription.CountryID };
+                }
+                var poiCollection = poiManager.GetChargePoints(filterParams);
+
+                if (poiCollection.Any())
                 {
                     var subscriptionMatch = new SubscriptionMatch { Category = SubscriptionMatchCategory.NewPOI, Description = "New POIs Added" };
-                    foreach (var p in newPOIs)
+                    foreach (var p in poiCollection)
                     {
-                        var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(p);
-                        if (IsPOISubscriptionFilterMatch(poi, filter, subscription))
+                        //var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(p);
+                        if (IsPOISubscriptionFilterMatch(p, filter, subscription))
                         {
-                            subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { POI = poi });
+                            subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { POI = p });
                         }
                     }
                     if (subscriptionMatch.ItemList.Any()) subscriptionMatchGroup.SubscriptionMatches.Add(subscriptionMatch);
@@ -358,7 +373,7 @@ namespace OCM.API.Common
             //check if any POI Updates match this subscription
             if (subscription.NotifyPOIUpdates)
             {
-                var poiUpdates = dataModel.EditQueueItems.Where(c => c.DateProcessed >= checkFromDate && c.IsProcessed == true && c.PreviousData!=null);
+                var poiUpdates = dataModel.EditQueueItems.Where(c => c.DateProcessed >= checkFromDate && c.IsProcessed == true && c.PreviousData != null);
                 if (poiUpdates.Any())
                 {
                     var subscriptionMatch = new SubscriptionMatch { Category = SubscriptionMatchCategory.UpdatedPOI, Description = "POIs Updated" };
@@ -406,7 +421,7 @@ namespace OCM.API.Common
                     foreach (var c in newComments)
                     {
                         var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint);
-                        if (IsPOISubscriptionFilterMatch(poi, filter,subscription))
+                        if (IsPOISubscriptionFilterMatch(poi, filter, subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = OCM.API.Common.Model.Extensions.UserComment.FromDataModel(c, true), POI = poi });
                         }
@@ -430,7 +445,7 @@ namespace OCM.API.Common
                     foreach (var c in newMedia)
                     {
                         var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint);
-                        if (IsPOISubscriptionFilterMatch(poi, filter,subscription))
+                        if (IsPOISubscriptionFilterMatch(poi, filter, subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = OCM.API.Common.Model.Extensions.MediaItem.FromDataModel(c), POI = poi });
                         }
@@ -450,16 +465,21 @@ namespace OCM.API.Common
         {
             List<SubscriptionMatchGroup> allMatches = new List<SubscriptionMatchGroup>();
 
-            //TODO: performance/optimisation
+            //TODO: performance/optimisation (use cache for POI queries is done)
             //for each subscription, check if any changes match the criteria
             var dataModel = new OCM.Core.Data.OCMEntities();
+            //var cacheManager = new OCM.Core.Data.CacheProviderMongoDB();
+            var poiManager = new POIManager();
             var currentTime = DateTime.UtcNow;
-            var allsubscriptions = dataModel.UserSubscriptions.Where(s => s.IsEnabled == true);
+
+            int minHoursBetweenNotifications = 3;
+            var minDateSinceNotification = currentTime.AddHours(-minHoursBetweenNotifications);
+            var allsubscriptions = dataModel.UserSubscriptions.Where(s => s.IsEnabled == true && s.User.EmailAddress != null && (s.DateLastNotified == null || s.DateLastNotified < minDateSinceNotification));
             foreach (var subscription in allsubscriptions)
             {
                 if (!excludeRecentlyNotified || (subscription.DateLastNotified == null || subscription.DateLastNotified.Value < currentTime.AddMinutes(-subscription.NotificationFrequencyMins)))
                 {
-                    var subscriptionMatchGroup = GetSubscriptionMatches(dataModel, subscription);
+                    var subscriptionMatchGroup = GetSubscriptionMatches(dataModel, poiManager, subscription);
                     if (subscriptionMatchGroup.SubscriptionMatches.Any())
                     {
                         subscriptionMatchGroup.Subscription = OCM.API.Common.Model.Extensions.UserSubscription.FromDataModel(subscription, true);
@@ -555,7 +575,7 @@ namespace OCM.API.Common
                         {
                             var item = (Core.Data.EditQueueItem)i.Item;
                             var poi = (ChargePoint)i.POI;
-                            summaryHTML += "<li>OCM-"+poi.ID+": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
+                            summaryHTML += "<li>OCM-" + poi.ID + ": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + " <a href='" + siteUrl + "/poi/details/" + poi.ID + "'>" + poiLinkText + "</a></li>";
                         }
                         summaryHTML += "</ul>";
 
@@ -615,11 +635,11 @@ namespace OCM.API.Common
         private string FormatPOIHeading(ChargePoint poi)
         {
             string siteUrl = "http://openchargemap.org/site";
-            var html = "<h3><a href='" + siteUrl + "/poi/details/" + poi.ID + "'>OCM-"+poi.ID+": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + "</a></h3>";
+            var html = "<h3><a href='" + siteUrl + "/poi/details/" + poi.ID + "'>OCM-" + poi.ID + ": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + "</a></h3>";
             return html;
         }
 
-        public int SendAllPendingSubscriptionNotifications()
+        public int SendAllPendingSubscriptionNotifications(string templateFolderPath)
         {
             int notificationsSent = 0;
             List<int> subscriptionsNotified = new List<int>();
@@ -628,6 +648,8 @@ namespace OCM.API.Common
             var allSubscriptionMatches = GetAllSubscriptionMatches(true);
             var userManager = new UserManager();
             NotificationManager notificationManager = new NotificationManager();
+
+            notificationManager.TemplateFolderPath = templateFolderPath;
 
             foreach (var subscriptionMatch in allSubscriptionMatches)
             {

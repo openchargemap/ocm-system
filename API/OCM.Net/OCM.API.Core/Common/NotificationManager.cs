@@ -41,6 +41,8 @@ namespace OCM.API.Common
 
         private List<NotificationSetting> Settings { get; set; }
 
+        public string TemplateFolderPath { get; set; }
+
         public NotificationManager()
         {
             SendViaAPI = false;
@@ -98,7 +100,16 @@ namespace OCM.API.Common
 
         public void PrepareNotification(NotificationType notificationType, Hashtable templateParams)
         {
-            string templateFolder = HttpContext.Current.Server.MapPath("~/templates/notifications");
+            string templateFolder = "";
+
+            if (this.TemplateFolderPath != null)
+            {
+                templateFolder = this.TemplateFolderPath;
+            }
+            else
+            {
+                templateFolder = HttpContext.Current.Server.MapPath("~/templates/notifications");
+            }
             string BaseTemplate = System.IO.File.ReadAllText(templateFolder + "\\BaseTemplate.htm");
 
             MessageBody = BaseTemplate;
