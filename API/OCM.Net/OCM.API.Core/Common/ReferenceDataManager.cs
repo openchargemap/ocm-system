@@ -73,11 +73,16 @@ namespace OCM.API.Common
             return dataProviders;
         }
 
-        public CoreReferenceData GetCoreReferenceData()
+        public CoreReferenceData GetCoreReferenceData(bool enableCaching = true)
         {
-            CoreReferenceData data = OCM.Core.Data.CacheManager.GetCoreReferenceData();
+            CoreReferenceData data = null;
 
-            if (data != null) return data;
+            if (enableCaching)
+            {
+                data = OCM.Core.Data.CacheManager.GetCoreReferenceData();
+
+                if (data != null) return data;
+            }
 
             //can't get cached data, get fresh from database
             data = new CoreReferenceData();
