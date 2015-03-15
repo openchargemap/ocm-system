@@ -34,18 +34,21 @@ namespace OCM.API.Common.Model
 
         [DisplayName("Zip/Postcode"), StringLength(100), DataType(System.ComponentModel.DataAnnotations.DataType.PostalCode)]
         public string Postcode { get; set; }
-        
+
         public int? CountryID { get; set; }
+
         [Required]
         public Country Country { get; set; }
 
         [DisplayName("Latitude"), Range(-90, 90), Required]
         public double Latitude { get; set; }
+
         [DisplayName("Longitude"), Range(-180, 180), Required]
         public double Longitude { get; set; }
 
         [DisplayName("Main Contact Phone"), StringLength(200), DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]
         public string ContactTelephone1 { get; set; }
+
         [DisplayName("Additional Contact Phone"), StringLength(200), DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]
         public string ContactTelephone2 { get; set; }
 
@@ -59,23 +62,26 @@ namespace OCM.API.Common.Model
         public string RelatedURL { get; set; }
 
         public double? Distance { get; set; }
+
         public DistanceUnit DistanceUnit { get; set; }
 
         #region deprecated properties
+
         [Obsolete, JsonIgnore]
         public string GeneralComments { get; set; }
-        #endregion
+
+        #endregion deprecated properties
 
         public override string ToString()
         {
             string output = "";
 
-            if (!String.IsNullOrWhiteSpace(this.AddressLine1)) output += this.AddressLine1+",";
+            if (!String.IsNullOrWhiteSpace(this.AddressLine1)) output += this.AddressLine1 + ",";
             if (!String.IsNullOrWhiteSpace(this.AddressLine2)) output += this.AddressLine2 + ",";
             if (!String.IsNullOrWhiteSpace(this.Town)) output += this.Town + ",";
             if (!String.IsNullOrWhiteSpace(this.StateOrProvince)) output += this.StateOrProvince + ",";
             if (!String.IsNullOrWhiteSpace(this.Postcode)) output += this.Postcode + ",";
-            if (this.Country!=null) output += this.Country.Title;
+            if (this.Country != null) output += this.Country.Title;
             return output;
         }
 

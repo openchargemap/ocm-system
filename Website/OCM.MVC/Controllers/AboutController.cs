@@ -41,6 +41,7 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
+
         /// <summary>
         /// /contact/ post new contact us mesage
         /// </summary>
@@ -51,17 +52,20 @@ namespace OCM.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                SubmissionManager submissionManager = new SubmissionManager();
-                bool sentOK = submissionManager.SubmitContactSubmission(contactSubmission);
-
-                if (!sentOK)
+                //check for spam bot by discarding submissions which populate phone field
+                if (String.IsNullOrEmpty(contactSubmission.Phone))
                 {
-                    ViewBag.ErrorMessage = "There was a problem sending your message";
-                }
+                    SubmissionManager submissionManager = new SubmissionManager();
+                    bool sentOK = submissionManager.SubmitContactSubmission(contactSubmission);
 
+                    if (!sentOK)
+                    {
+                        ViewBag.ErrorMessage = "There was a problem sending your message";
+                    }
+                }
                 return RedirectToAction("ContactSubmitted");
             }
-            
+
             return View(contactSubmission);
         }
 

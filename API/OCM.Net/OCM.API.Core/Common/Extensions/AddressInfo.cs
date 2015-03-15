@@ -29,7 +29,7 @@ namespace OCM.API.Common.Model.Extensions
             {
                 a.CountryID = source.CountryID;
             }
-            
+
             a.Latitude = source.Latitude;
             a.Longitude = source.Longitude;
             a.ContactTelephone1 = source.ContactTelephone1;
@@ -40,7 +40,8 @@ namespace OCM.API.Common.Model.Extensions
             a.GeneralComments = source.GeneralComments;
 #pragma warning restore 612 //restore warning
             a.RelatedURL = source.RelatedURL;
-            
+
+            if (a.RelatedURL != null && !a.RelatedURL.StartsWith("http")) a.RelatedURL = "http://" + a.RelatedURL;
             return a;
         }
     }

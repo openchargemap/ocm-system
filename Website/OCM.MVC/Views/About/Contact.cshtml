@@ -4,7 +4,6 @@
     ViewBag.Title = "Contact";
 }
 
-
 <h1>Contact Us</h1>
 <p class="alert alert-info">
     Need to submit details of a new charging location? <a class="btn btn-success btn-sm" href="@Url.Action("Add","POI")">Add New Location</a>
@@ -13,8 +12,7 @@
 </p>
 
 <p>
-    You should use our <a href="../../../forum/">discussion group</a> if you wish to ask general questions, if you would like to contact us privately you can do so using the form below. 
-                
+    You should use our <a href="../../../forum/">discussion group</a> if you wish to ask general questions, if you would like to contact us privately you can do so using the form below.
 </p>
 @using (Html.BeginForm())
 {
@@ -31,19 +29,27 @@
         <div class="form-group">
             <div>
                 @Html.LabelFor(model => model.Email, "Your Email (required for a response)")
-                </div>
-                <div>
-                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
-                </div>
             </div>
+            <div>
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+            </div>
+        </div>
         <div class="form-group">
             <div>
                 @Html.LabelFor(model => model.Comment, "Your Comment")
-                </div>
+            </div>
             <div>
                 @Html.TextAreaFor(model => model.Comment, 5, 60, new { @class = "form-control" })
             </div>
+        </div>
+        <div class="form-group" style="display:none;">
+            <div>
+                @Html.LabelFor(model => model.Phone, "Phone Number")
             </div>
+            <div>
+                @Html.TextAreaFor(model => model.Phone, 5, 60, new { @class = "form-control" })
+            </div>
+        </div>
         <div class="form-options">
             <input type="submit" class="btn btn-info" value="Send Comment" />
         </div>
