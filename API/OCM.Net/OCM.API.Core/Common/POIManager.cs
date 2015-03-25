@@ -222,6 +222,7 @@ namespace OCM.API.Common
                     bool filterByUsage = false;
                     bool filterByStatus = false;
                     bool filterByDataProvider = false;
+                    bool filterByChargePoints = false;
 
                     if (settings.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
                     else { settings.ConnectionTypeIDs = new int[] { -1 }; }
@@ -231,6 +232,9 @@ namespace OCM.API.Common
 
                     if (settings.OperatorIDs != null) { filterByOperators = true; }
                     else { settings.OperatorIDs = new int[] { -1 }; }
+
+                    if (settings.ChargePointIDs != null) { filterByChargePoints = true; }
+                    else { settings.ChargePointIDs = new int[] { -1 }; }
 
                     //either filter by named country code or by country id list
                     if (settings.CountryCode != null)
@@ -280,6 +284,7 @@ namespace OCM.API.Common
                                               && (settings.LocationTitle == null || c.AddressInfo.Title.Contains(settings.LocationTitle))
                                               && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
                                               && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
+                                              && (filterByChargePoints == false || (filterByChargePoints == true && settings.ChargePointIDs.Contains((int)c.ID)))
                                               && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                               && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                               && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
