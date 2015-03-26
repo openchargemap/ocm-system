@@ -96,7 +96,6 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["action"])) settings.Action = ParseString(context.Request["action"]);
             
             if (!String.IsNullOrEmpty(context.Request["apikey"])) settings.APIKey = ParseString(context.Request["apikey"]);
-            if (!String.IsNullOrEmpty(context.Request["chargepointid"])) settings.ChargePointID = ParseInt(context.Request["chargepointid"]);
             if (!String.IsNullOrEmpty(context.Request["chargepointids"])) settings.ChargePointIDs = ParseIntList(context.Request["chargepointids"]);
             if (!String.IsNullOrEmpty(context.Request["operatorname"])) settings.OperatorName = ParseString(context.Request["operatorname"]);
             if (!String.IsNullOrEmpty(context.Request["operatorid"])) settings.OperatorIDs = ParseIntList(context.Request["operatorid"]);
