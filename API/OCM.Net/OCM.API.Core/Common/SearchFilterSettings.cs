@@ -42,6 +42,7 @@ namespace OCM.API.Common
         public double? MinPowerKW { get; set; }
         public List<LatLon> Polyline { get; set; }
 
+        public int[] ChargePointIDs { get; set; }
         public int[] ConnectionTypeIDs { get; set; }
         public int[] OperatorIDs { get; set; }
         public int[] DataProviderIDs { get; set; }
@@ -95,7 +96,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["action"])) settings.Action = ParseString(context.Request["action"]);
             
             if (!String.IsNullOrEmpty(context.Request["apikey"])) settings.APIKey = ParseString(context.Request["apikey"]);
-            if (!String.IsNullOrEmpty(context.Request["chargepointid"])) settings.ChargePointID = ParseInt(context.Request["chargepointid"]);
+            if (!String.IsNullOrEmpty(context.Request["chargepointids"])) settings.ChargePointIDs = ParseIntList(context.Request["chargepointids"]);
             if (!String.IsNullOrEmpty(context.Request["operatorname"])) settings.OperatorName = ParseString(context.Request["operatorname"]);
             if (!String.IsNullOrEmpty(context.Request["operatorid"])) settings.OperatorIDs = ParseIntList(context.Request["operatorid"]);
             if (!String.IsNullOrEmpty(context.Request["connectiontypeid"])) settings.ConnectionTypeIDs = ParseIntList(context.Request["connectiontypeid"]);
@@ -198,6 +199,7 @@ namespace OCM.API.Common
                 key += ":" + MaxResults.ToString();
                 key += ":" + IncludeComments.ToString();
                 key += ":" + this.IsCompactOutput.ToString();
+                if (ChargePointIDs != null) key += ":cp_id:" + IntArrayToString(ChargePointIDs);
                 if (CountryIDs != null) key += ":c_id:" + IntArrayToString(CountryIDs);
                 if (LevelIDs != null) key += ":l_id:" + IntArrayToString(LevelIDs);
                 if (ConnectionTypeIDs != null) key += ":ct_id:" + IntArrayToString(ConnectionTypeIDs);
