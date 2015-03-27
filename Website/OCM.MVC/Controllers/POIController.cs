@@ -75,7 +75,7 @@ namespace OCM.MVC.Controllers
                     //treat numbers as OCM ref
                     if (int.TryParse(filter.SearchLocation.Trim(), out poiID))
                     {
-                        filter.ChargePointID = poiID;
+                        filter.ChargePointIDs = new int[] { poiID };
                     }
                 }
                 else
@@ -155,7 +155,6 @@ namespace OCM.MVC.Controllers
                     ViewBag.ImageList = imageList.ToList();
                 }
 
-                
                 viewModel.POI = poi;
 
                 if (!IsRequestByRobot)
@@ -175,14 +174,13 @@ namespace OCM.MVC.Controllers
 
                     //if (IsUserAdmin)
                     //{
-                        viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
+                    viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
                     //}
                 }
                 else
                 {
                     viewModel.POIListNearby = new List<ChargePoint>();
                 }
-
             }
 
             if (layout == "simple")
@@ -386,18 +384,20 @@ namespace OCM.MVC.Controllers
         {
             //Where -1 is supplied as dropdown value etc we need to revert to a default or null value;
             //FIXME: the binding method varies between hidden fields and dropdown values
-            if (poi.DataProviderID>=1 || (poi.DataProvider != null && poi.DataProvider.ID > 0))
+            if (poi.DataProviderID >= 1 || (poi.DataProvider != null && poi.DataProvider.ID > 0))
             {
-                int providerId = (poi.DataProvider!=null?poi.DataProvider.ID:(int)poi.DataProviderID);
+                int providerId = (poi.DataProvider != null ? poi.DataProvider.ID : (int)poi.DataProviderID);
                 poi.DataProviderID = providerId;
-            } else  {
+            }
+            else
+            {
                 poi.DataProvider = null;
                 poi.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
             }
 
-            if (poi.OperatorID >=1 || poi.OperatorInfo != null)
+            if (poi.OperatorID >= 1 || poi.OperatorInfo != null)
             {
-                int operatorId = poi.OperatorInfo!=null?poi.OperatorInfo.ID:(int)poi.OperatorID;
+                int operatorId = poi.OperatorInfo != null ? poi.OperatorInfo.ID : (int)poi.OperatorID;
                 poi.OperatorID = operatorId;
             }
             else
@@ -405,9 +405,9 @@ namespace OCM.MVC.Controllers
                 poi.OperatorID = (int)StandardOperators.UnknownOperator;
             }
 
-            if (poi.UsageTypeID>0 || poi.UsageType != null)
+            if (poi.UsageTypeID > 0 || poi.UsageType != null)
             {
-                int usageTypeId = poi.UsageType!=null?poi.UsageType.ID:(int)poi.UsageTypeID;
+                int usageTypeId = poi.UsageType != null ? poi.UsageType.ID : (int)poi.UsageTypeID;
                 poi.UsageTypeID = usageTypeId;
             }
             else
@@ -415,9 +415,9 @@ namespace OCM.MVC.Controllers
                 poi.UsageTypeID = (int)StandardUsageTypes.Unknown;
             }
 
-            if (poi.StatusTypeID>=0 || (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null)))
+            if (poi.StatusTypeID >= 0 || (poi.StatusType != null && (poi.StatusTypeID == -1 || poi.StatusTypeID == null)))
             {
-                int statusTypeId = poi.StatusType!=null?poi.StatusType.ID:(int)poi.StatusTypeID;
+                int statusTypeId = poi.StatusType != null ? poi.StatusType.ID : (int)poi.StatusTypeID;
                 poi.StatusTypeID = statusTypeId;
             }
 
