@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OCM.API.Common.Model;
-using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 
 namespace OCM.Import.Providers
@@ -14,13 +14,15 @@ namespace OCM.Import.Providers
         protected string ServiceUserName = null;
         protected string ServicePassword = null;
         protected NetworkType SelectedNetworkType = NetworkType.ReseauVER;
+
         public bool IsInitialised { get; set; }
 
-        public enum NetworkType{
+        public enum NetworkType
+        {
             ReseauVER,
             LeCircuitElectrique
         }
-        
+
         public ImportProvider_AddEnergie(NetworkType network)
         {
             this.SelectedNetworkType = network;
@@ -31,7 +33,7 @@ namespace OCM.Import.Providers
             if (network == NetworkType.ReseauVER)
             {
                 ServiceBaseURL = "https://admin.reseauver.com";
-                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_AddEnergieReseauVER"]; 
+                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_AddEnergieReseauVER"];
                 ProviderName += " [ReseauVER]";
                 DataProviderID = 24;
             }
@@ -39,16 +41,15 @@ namespace OCM.Import.Providers
             if (network == NetworkType.LeCircuitElectrique)
             {
                 ServiceBaseURL = "https://lecircuitelectrique.co";
-                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_LeCircuitElectrique"]; 
+                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_AddEnergieLeCircuitElectrique"];
                 ProviderName += " [LeCircuitElectrique]";
                 DataProviderID = 24;
             }
 
             AutoRefreshURL = ServiceBaseURL + "/Network/StationsList";
 
-           
-            OutputNamePrefix = "AddEnergie_"+network.ToString();
-            
+            OutputNamePrefix = "AddEnergie_" + network.ToString();
+
             IsAutoRefreshed = true;
             IsProductionReady = true;
 
@@ -88,7 +89,7 @@ namespace OCM.Import.Providers
 
             int itemCount = 0;
 
-            string jsonString = "{ \"data\": " + InputData + "}"; 
+            string jsonString = "{ \"data\": " + InputData + "}";
 
             JObject o = JObject.Parse(jsonString);
             var dataList = o.Values()["list"].Values().ToArray();
@@ -112,10 +113,10 @@ namespace OCM.Import.Providers
 
                 //default to canada
                 cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "ca");
-                //todo: detect country     
+                //todo: detect country
 
                 //set network operators
-                if (this.SelectedNetworkType== NetworkType.ReseauVER)
+                if (this.SelectedNetworkType == NetworkType.ReseauVER)
                 {
                     cp.OperatorInfo = new OperatorInfo { ID = 89 };
                 }
@@ -134,7 +135,6 @@ namespace OCM.Import.Providers
                 {
                     cp.UsageType = usageTypePrivate;
                 }
-
 
                 cp.NumberOfPoints = int.Parse(item["NumPorts"].ToString());
                 cp.StatusType = operationalStatus;
@@ -165,7 +165,7 @@ namespace OCM.Import.Providers
                     }
 
                     cinfo.ConnectionType = cType;
-                    
+
                     if (cp.Connections == null)
                     {
                         cp.Connections = new List<ConnectionInfo>();
@@ -175,7 +175,7 @@ namespace OCM.Import.Providers
                         }
                     }
                 }
-               
+
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 4;
 
                 cp.SubmissionStatus = submissionStatus;
