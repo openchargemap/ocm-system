@@ -39,16 +39,17 @@
         <p>
             Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World (<a href="http://www.zerocarbonworld.org">www.zerocarbonworld.org</a>) who sponsor the server hosting of Open Charge Map.
         </p>
-
     </div>
     <div class="col-md-6">
         <h2>Developers and Contributors</h2>
         <p>Our <a href="https://github.com/openchargemap">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://plus.google.com/u/0/communities/112113799071360649945">google+</a> community is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
+        <p>Our list of main code contributors is here: <a href="https://github.com/openchargemap/ocm-system/graphs/contributors">https://github.com/openchargemap/ocm-system/graphs/contributors</a></p>
+        <p>Our list of UI translation contributors is here: <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map/peoples">Contributors on WebTranslateIt</a></p>
+        <p>Our list of top data editors/contributors is here: <a href="@Url.Action("Index","Stats")">Data Contributors/Editors</a></p>
         <h2>Project Stats</h2>
         <p>General statistics for Open Charge Map <a href="@Url.Action("Index","Stats")">data and usage</a> are available.</p>
         <p>The following is an estimation of the software development costs, if someone were to develop an equivalent project commercially: </p>
         <script type="text/javascript" src="http://www.ohloh.net/p/605311/widgets/project_cocomo.js"></script>
-       
     </div>
 </div>
 <h2>Data Sources</h2>
@@ -60,12 +61,10 @@
     var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData().DataProviders;
 }
 
-    @foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))
-    {
-        <blockquote>
-            <p>@provider.Title @(provider.WebsiteURL != null ? " (" + provider.WebsiteURL + ") " : "")</p>
-            <small>@(provider.License != null ? " - License: " + @provider.License : "")</small>
-        </blockquote>
-    }
-
-
+@foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))
+{
+    <blockquote>
+        <p>@provider.Title @(provider.WebsiteURL != null ? " (" + provider.WebsiteURL + ") " : "")</p>
+        <small>@(provider.License != null ? " - License: " + @provider.License : "")</small>
+    </blockquote>
+}
