@@ -173,10 +173,10 @@ namespace OCM.API.Common
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
 
-            if ((HttpContext.Current!=null && HttpContext.Current.Cache[cacheKey] == null) || settings.EnableCaching == false)
+            if ((HttpContext.Current != null && HttpContext.Current.Cache[cacheKey] == null) || settings.EnableCaching == false)
             {
                 bool enableNoSQLCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]);
-                if (enableNoSQLCaching && settings.AllowMirrorDB && settings.ChargePointID == null) //mongodb api provider can't currently match by ChargePointID
+                if (enableNoSQLCaching && settings.AllowMirrorDB)
                 {
                     try
                     {
@@ -186,7 +186,7 @@ namespace OCM.API.Common
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
                         //TODO: send error notification
-                        if (HttpContext.Current!=null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI);
+                        if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI);
                     }
                 }
 
@@ -277,7 +277,6 @@ namespace OCM.API.Common
                                                     || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
                                                     ) //by default return live cps only, otherwise use specific submission statusid
                                               && (c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
-                                              && (settings.ChargePointID == null || c.ID == settings.ChargePointID)
                                               && (settings.OperatorName == null || c.Operator.Title == settings.OperatorName)
                                               && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
                                               && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
@@ -301,10 +300,10 @@ namespace OCM.API.Common
 
                     //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                     chargePointList = from c in chargePointList
-                                      where 
-                                      c.Connections.Any(conn => 
-                                            (settings.ConnectionType==null || (settings.ConnectionType!=null && conn.ConnectionType.Title == settings.ConnectionType))
-                                            && (settings.MinPowerKW == null || (settings.MinPowerKW!=null && conn.PowerKW >= settings.MinPowerKW))
+                                      where
+                                      c.Connections.Any(conn =>
+                                            (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
+                                            && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
                                             && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
                                             && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.ChargerType.ID)))
                                              )
@@ -409,7 +408,7 @@ namespace OCM.API.Common
                     }
 
                     //cache results (if caching enabled)
-                    if (settings.EnableCaching == true && HttpContext.Current!=null)
+                    if (settings.EnableCaching == true && HttpContext.Current != null)
                     {
                         HttpContext.Current.Cache.Add(cacheKey, dataList, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 30, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
                     }

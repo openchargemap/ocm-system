@@ -1,62 +1,95 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Security.Cryptography;
 using System.Text;
-using OCM.API.Common.Model;
+using System.Web;
 
 namespace OCM.API.Common
 {
     public class APIRequestParams : ServiceParameterParser
     {
-        private const int MAX_API_VERSION =2;
+        private const int MAX_API_VERSION = 2;
 
         //result filters
         public int? APIVersion { get; set; }
+
         public string APIKey { get; set; }
+
         public string Action { get; set; }
+
         public string DataProviderName { get; set; }
+
         public string OperatorName { get; set; }
+
         public string LocationTitle { get; set; }
+
         public string Address { get; set; }
 
-        public int? ChargePointID { get; set; }
         public double? Latitude { get; set; }
+
         public double? Longitude { get; set; }
+
         public double? Distance { get; set; }
+
         public DistanceUnit DistanceUnit { get; set; }
+
         public string CountryCode { get; set; }
+
         public string ConnectionType { get; set; }
+
         public int? SubmissionStatusTypeID { get; set; }
+
         public int MaxResults { get; set; }
+
         public bool EnableCaching { get; set; }
+
         public bool IncludeComments { get; set; }
+
         public bool IsVerboseOutput { get; set; }
+
         public bool IsCompactOutput { get; set; }
+
         public bool IsCamelCaseOutput { get; set; }
+
         public bool IsEnvelopedResponse { get; set; }
+
         public bool AllowMirrorDB { get; set; } //if true, api will try to use mongodb to read
+
         public bool? IsOpenData { get; set; }
+
         public string Callback { get; set; }
+
         public double? MinPowerKW { get; set; }
+
         public List<LatLon> Polyline { get; set; }
 
         public int[] ChargePointIDs { get; set; }
+
         public int[] ConnectionTypeIDs { get; set; }
+
         public int[] OperatorIDs { get; set; }
+
         public int[] DataProviderIDs { get; set; }
+
         public int[] CountryIDs { get; set; }
+
         public int[] LevelIDs { get; set; }
+
         public int[] UsageTypeIDs { get; set; }
+
         public int[] StatusTypeIDs { get; set; }
 
         public DateTime? ChangesFromDate { get; set; }
+
         public DateTime? CreatedFromDate { get; set; }
 
         #region deprecated api filters
+
         public bool FastChargeOnly { get; set; }
-        #endregion
+
+        #endregion deprecated api filters
 
         public APIRequestParams()
         {
@@ -70,7 +103,8 @@ namespace OCM.API.Common
 
         public bool IsLegacyAPICall
         {
-            get {
+            get
+            {
                 if (APIVersion == null || APIVersion < MAX_API_VERSION)
                 {
                     return true;
@@ -94,9 +128,9 @@ namespace OCM.API.Common
             if (settings.APIVersion > MAX_API_VERSION) settings.APIVersion = MAX_API_VERSION;
 
             if (!String.IsNullOrEmpty(context.Request["action"])) settings.Action = ParseString(context.Request["action"]);
-            
+
             if (!String.IsNullOrEmpty(context.Request["apikey"])) settings.APIKey = ParseString(context.Request["apikey"]);
-            if (!String.IsNullOrEmpty(context.Request["chargepointids"])) settings.ChargePointIDs = ParseIntList(context.Request["chargepointids"]);
+            if (!String.IsNullOrEmpty(context.Request["chargepointid"])) settings.ChargePointIDs = ParseIntList(context.Request["chargepointid"]);
             if (!String.IsNullOrEmpty(context.Request["operatorname"])) settings.OperatorName = ParseString(context.Request["operatorname"]);
             if (!String.IsNullOrEmpty(context.Request["operatorid"])) settings.OperatorIDs = ParseIntList(context.Request["operatorid"]);
             if (!String.IsNullOrEmpty(context.Request["connectiontypeid"])) settings.ConnectionTypeIDs = ParseIntList(context.Request["connectiontypeid"]);
@@ -106,14 +140,14 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["statustypeid"])) settings.StatusTypeIDs = ParseIntList(context.Request["statustypeid"]);
             if (!String.IsNullOrEmpty(context.Request["dataproviderid"])) settings.DataProviderIDs = ParseIntList(context.Request["dataproviderid"]);
             if (!String.IsNullOrEmpty(context.Request["opendata"])) settings.IsOpenData = ParseBoolNullable(context.Request["opendata"]);
-            
+
             if (!String.IsNullOrEmpty(context.Request["minpowerkw"])) settings.MinPowerKW = ParseDouble(context.Request["minpowerkw"]);
 
             if (!String.IsNullOrEmpty(context.Request["dataprovidername"])) settings.DataProviderName = ParseString(context.Request["dataprovidername"]);
             if (!String.IsNullOrEmpty(context.Request["locationtitle"])) settings.LocationTitle = ParseString(context.Request["locationtitle"]);
             if (!String.IsNullOrEmpty(context.Request["address"])) settings.Address = ParseString(context.Request["address"]);
             if (!String.IsNullOrEmpty(context.Request["countrycode"])) settings.CountryCode = ParseString(context.Request["countrycode"]);
-            
+
             if (!String.IsNullOrEmpty(context.Request["latitude"]))
             {
                 settings.Latitude = ParseDouble(context.Request["latitude"]);
@@ -135,7 +169,6 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(context.Request["submissionstatustypeid"]);
             if (!String.IsNullOrEmpty(context.Request["modifiedsince"])) settings.ChangesFromDate = ParseDate(context.Request["modifiedsince"]);
 
-
             if (!String.IsNullOrEmpty(context.Request["enablecaching"])) settings.EnableCaching = ParseBool(context.Request["enablecaching"], true);
             if (!String.IsNullOrEmpty(context.Request["allowmirror"])) settings.AllowMirrorDB = ParseBool(context.Request["allowmirror"], false);
             if (!String.IsNullOrEmpty(context.Request["includecomments"])) settings.IncludeComments = ParseBool(context.Request["includecomments"], false);
@@ -143,7 +176,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["compact"])) settings.IsCompactOutput = ParseBool(context.Request["compact"], false);
             if (!String.IsNullOrEmpty(context.Request["camelcase"])) settings.IsCamelCaseOutput = ParseBool(context.Request["camelcase"], false);
             if (!String.IsNullOrEmpty(context.Request["callback"])) settings.Callback = ParseString(context.Request["callback"]);
-           
+
             if (!String.IsNullOrEmpty(context.Request["maxresults"]))
             {
                 try
@@ -167,7 +200,6 @@ namespace OCM.API.Common
             {
                 if (!String.IsNullOrEmpty(context.Request["fastchargeonly"])) settings.FastChargeOnly = ParseBool(context.Request["fastchargeonly"], false);
             }
-            
         }
 
         /// <summary>
@@ -177,13 +209,12 @@ namespace OCM.API.Common
         {
             get
             {
-                //return this.GetHashCode().ToString(); 
+                //return this.GetHashCode().ToString();
 
                 string key = "";
 
                 if (APIKey != null) key += ":" + APIKey;
                 if (Action != null) key += ":" + Action;
-                if (ChargePointID != null) key += ":" + ChargePointID.ToString();
                 if (DataProviderName != null) key += ":" + DataProviderName;
                 if (OperatorName != null) key += ":" + OperatorName;
                 if (LocationTitle != null) key += ":" + LocationTitle;
@@ -210,7 +241,7 @@ namespace OCM.API.Common
                 if (IsOpenData != null) key += ":opendata:" + IsOpenData.ToString();
                 if (MinPowerKW != null) key += ":minpowerkw:" + MinPowerKW.ToString();
                 if (Polyline != null) key += ":polyline:" + Polyline.GetHashCode().ToString();
-                if (ChangesFromDate != null) key += ":modified:" +  ChangesFromDate.Value.Ticks.ToString();
+                if (ChangesFromDate != null) key += ":modified:" + ChangesFromDate.Value.Ticks.ToString();
 
                 return OCM.Core.Util.SecurityHelper.GetMd5Hash(key);
             }
@@ -226,8 +257,5 @@ namespace OCM.API.Common
             output += "}";
             return output;
         }
-
-       
     }
-
 }

@@ -283,30 +283,30 @@ namespace OCM.Core.Data
 
         public async Task<MirrorStatus> RefreshCachedPOI(int poiId)
         {
-            var mirrorStatus = await Task.Run<MirrorStatus>(() => { 
-            
-            var dataModel = new OCMEntities();
-            var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.ID == poiId);
-
-            var poiCollection = database.GetCollection<POIMongoDB>("poi");
-            var query = Query.EQ("ID", poiId);
-            var removeResult = poiCollection.Remove(query);
-            System.Diagnostics.Debug.WriteLine("POIs removed from cache ["+poiId+"]:" + removeResult.DocumentsAffected);
-
-            if (poiModel != null)
-            {    
-                var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel));
-                if (cachePOI.AddressInfo != null)
-                {
-                    cachePOI.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(cachePOI.AddressInfo.Longitude, cachePOI.AddressInfo.Latitude));
-                }
-
-                poiCollection.Insert<POIMongoDB>(cachePOI);
-            }
-            else
+            var mirrorStatus = await Task.Run<MirrorStatus>(() =>
             {
-                //poi not present in master DB, we've removed it from cache
-            }
+                var dataModel = new OCMEntities();
+                var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.ID == poiId);
+
+                var poiCollection = database.GetCollection<POIMongoDB>("poi");
+                var query = Query.EQ("ID", poiId);
+                var removeResult = poiCollection.Remove(query);
+                System.Diagnostics.Debug.WriteLine("POIs removed from cache [" + poiId + "]:" + removeResult.DocumentsAffected);
+
+                if (poiModel != null)
+                {
+                    var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel));
+                    if (cachePOI.AddressInfo != null)
+                    {
+                        cachePOI.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(cachePOI.AddressInfo.Longitude, cachePOI.AddressInfo.Latitude));
+                    }
+
+                    poiCollection.Insert<POIMongoDB>(cachePOI);
+                }
+                else
+                {
+                    //poi not present in master DB, we've removed it from cache
+                }
 
                 long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
                 return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
@@ -358,7 +358,7 @@ namespace OCM.Core.Data
                 reference.Insert(coreRefData);
             }
 
-            var poiList = GetPOIListToUpdate(dataModel,updateStrategy);
+            var poiList = GetPOIListToUpdate(dataModel, updateStrategy);
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
             if (poiList != null && poiList.Any())
             {
@@ -383,7 +383,6 @@ namespace OCM.Core.Data
 
             long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
             return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
-            
         }
 
         private MirrorStatus RefreshMirrorStatus(long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB)
@@ -402,7 +401,7 @@ namespace OCM.Core.Data
             status.StatusCode = HttpStatusCode.OK;
             status.NumPOILastUpdated = numPOIUpdated;
             status.NumPOILastUpdated = 0;
-  
+
             statusCollection.Insert(status);
             return status;
         }
@@ -425,8 +424,10 @@ namespace OCM.Core.Data
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
                     var distinctPOI = poiCollection.Distinct("ID");
                     currentStatus.NumDistinctPOIs = distinctPOI.Count();
+
+                    /*
                     string dupePOIs = "";
-                    /*foreach (var poi in poiCollection.FindAll())
+                    foreach (var poi in poiCollection.FindAll())
                     {
                         var itemCount = poiCollection.Count(Query.EQ("ID", poi.ID));
                         if (itemCount > 1)
@@ -540,6 +541,7 @@ namespace OCM.Core.Data
             bool filterByUsage = false;
             bool filterByStatus = false;
             bool filterByDataProvider = false;
+            bool filterByChargePoints = false;
 
             if (settings.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
             else { settings.ConnectionTypeIDs = new int[] { -1 }; }
@@ -549,6 +551,9 @@ namespace OCM.Core.Data
 
             if (settings.OperatorIDs != null) { filterByOperators = true; }
             else { settings.OperatorIDs = new int[] { -1 }; }
+
+            if (settings.ChargePointIDs != null) { filterByChargePoints = true; }
+            else { settings.ChargePointIDs = new int[] { -1 }; }
 
             //either filter by named country code or by country id list
             if (settings.CountryCode != null)
@@ -610,6 +615,7 @@ namespace OCM.Core.Data
                                        && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
                                        && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
                                        && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
+                                       && (filterByChargePoints == false || (filterByChargePoints == true && settings.ChargePointIDs.Contains((int)c.ID)))
                                        && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                        && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                        && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))

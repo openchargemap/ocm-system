@@ -200,7 +200,7 @@ namespace OCM.API
             }
         }
 
-        private void OutputBadRequestMessage(HttpContext context, string message, int statusCode=400)
+        private void OutputBadRequestMessage(HttpContext context, string message, int statusCode = 400)
         {
             context.Response.StatusCode = statusCode;
             context.Response.Write("{\"status\":\"error\",\"description\":\"" + message + "\"}");
@@ -223,8 +223,9 @@ namespace OCM.API
             {
                 context.Response.Write("{\"status\":\"OK\",\"description\":\"" + message + "\"}");
                 context.Response.End();
-            } catch (Exception){
-            
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -289,7 +290,7 @@ namespace OCM.API
 
             if (IsRequestByRobot)
             {
-                OutputBadRequestMessage(context, "API requests by robots are temporarily disabled.", statusCode:503);
+                OutputBadRequestMessage(context, "API requests by robots are temporarily disabled.", statusCode: 503);
                 return;
             }
 
@@ -482,9 +483,8 @@ namespace OCM.API
             }
             else
             {
-                
                 data = refDataManager.GetCoreReferenceData();
-                
+
                 HttpContext.Current.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }
 
@@ -498,18 +498,22 @@ namespace OCM.API
         private void OutputAvailabilityResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             //TODO: provider specific availability check with result caching
-            var result = new {id= filter.ChargePointID, status = StandardStatusTypes.Unknown,timestamp=DateTime.UtcNow};
+            var results = new List<object>();
 
+            foreach (var poiId in filter.ChargePointIDs)
+            {
+                results.Add(new { id = filter.ChargePointIDs, status = StandardStatusTypes.Unknown, timestamp = DateTime.UtcNow });
+            }
             //send API response
             if (filter.IsEnvelopedResponse)
             {
                 var responseEnvelope = new APIResponseEnvelope();
-                responseEnvelope.Data = result;
+                responseEnvelope.Data = results;
                 outputProvider.GetOutput(context.Response.OutputStream, responseEnvelope, filter);
             }
             else
             {
-                outputProvider.GetOutput(context.Response.OutputStream, result, filter);
+                outputProvider.GetOutput(context.Response.OutputStream, results, filter);
             }
         }
 
