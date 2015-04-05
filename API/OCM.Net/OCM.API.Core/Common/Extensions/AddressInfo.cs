@@ -41,7 +41,7 @@ namespace OCM.API.Common.Model.Extensions
 #pragma warning restore 612 //restore warning
             a.RelatedURL = source.RelatedURL;
 
-            if (a.RelatedURL != null && !a.RelatedURL.StartsWith("http")) a.RelatedURL = "http://" + a.RelatedURL;
+            if (!String.IsNullOrEmpty(a.RelatedURL) && !a.RelatedURL.StartsWith("http")) a.RelatedURL = "http://" + a.RelatedURL;
             return a;
         }
     }
