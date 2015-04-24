@@ -1,0 +1,42 @@
+﻿@model OCM.API.Common.Model.LoginModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Sign In Using Your Email Address</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (ViewBag.InvalidLogin == true)
+        {
+            <p class="alert alert-danger">
+                Invalid email address or password.
+            </p>
+        }
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Sign In" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <a href="@Url.Action("Register","LoginProvider")"><i class="fa fa-chevron-right"></i> Register as New User</a>
+        <a href="@Url.Action("PasswordReset","LoginProvider")"><i class="fa fa-chevron-right"></i> Reset Your Password</a>
+    </div>
+}

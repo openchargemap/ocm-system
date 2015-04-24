@@ -33,7 +33,7 @@ namespace OCM.Core.Util
             // and create a string.
             StringBuilder sBuilder = new StringBuilder();
 
-            // Loop through each byte of the hashed data 
+            // Loop through each byte of the hashed data
             // and format each one as a hexadecimal string.
             for (int i = 0; i < data.Length; i++)
             {
@@ -42,6 +42,19 @@ namespace OCM.Core.Util
 
             // Return the hexadecimal string.
             return sBuilder.ToString();
+        }
+
+        public static string GetSHA256Hash(string input)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            SHA256Managed hashFunction = new SHA256Managed();
+            byte[] hash = hashFunction.ComputeHash(bytes);
+            string hashString = string.Empty;
+            foreach (byte x in hash)
+            {
+                hashString += String.Format("{0:x2}", x);
+            }
+            return hashString;
         }
     }
 }

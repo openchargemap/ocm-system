@@ -16,6 +16,7 @@ namespace OCM.API.Common
         LocationCommentReceived = 20,
         ContactUsMessage = 200,
         SubscriptionNotification = 300,
+        PasswordReset = 400,
         FaultReport = 1000
     }
 
@@ -88,6 +89,14 @@ namespace OCM.API.Common
                 Settings.Add(new NotificationSetting
                 {
                     NotificationType = NotificationType.SubscriptionNotification,
+                    TemplateFile = configVals[0],
+                    Subject = configVals[1]
+                });
+
+                configVals = ConfigurationManager.AppSettings["NotificationSetting_PasswordReset"].ToString().Split(';');
+                Settings.Add(new NotificationSetting
+                {
+                    NotificationType = NotificationType.PasswordReset,
                     TemplateFile = configVals[0],
                     Subject = configVals[1]
                 });
@@ -270,7 +279,6 @@ namespace OCM.API.Common
 
                         return true;
                     }
-                   
                 }
             }
             catch (Exception ex)

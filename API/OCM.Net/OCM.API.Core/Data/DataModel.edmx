@@ -309,6 +309,7 @@
           <Property Name="IdentityProvider" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Identifier" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="500" />
           <Property Name="CurrentSessionToken" Type="nvarchar" MaxLength="100" />
           <Property Name="Profile" Type="nvarchar(max)" />
           <Property Name="Location" Type="nvarchar" MaxLength="500" />
@@ -1524,6 +1525,7 @@
           <NavigationProperty Name="UserSubscriptions" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_User" FromRole="User" ToRole="UserSubscription" />
           <Property Name="IsReadOnly" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="UserChargingRequests" Relationship="OCM.Core.Data.OCMEntities.FK_UserChargingRequest_User" FromRole="User" ToRole="UserChargingRequest" />
+          <Property Name="PasswordHash" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -2373,6 +2375,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
                 <ScalarProperty Name="IsReadOnly" ColumnName="IsReadOnly" />
                 <ScalarProperty Name="SyncedSettings" ColumnName="SyncedSettings" />
                 <ScalarProperty Name="APIKey" ColumnName="APIKey" />

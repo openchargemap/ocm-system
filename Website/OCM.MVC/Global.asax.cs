@@ -12,12 +12,13 @@ using System.Web.Routing;
 
 namespace OCM.MVC
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
+    // Note: For instructions on enabling IIS6 or IIS7 classic mode,
     // visit http://go.microsoft.com/?LinkId=9394801
 
     public class MvcApplication : System.Web.HttpApplication
     {
         #region Cookie Helpers
+
         public static void UpdateCookie(System.Web.HttpResponseBase response, string cookieName, string cookieValue)
         {
             if (response.Cookies.AllKeys.Contains(cookieName))
@@ -50,7 +51,8 @@ namespace OCM.MVC
                 response.Cookies[cookieName].Expires = DateTime.UtcNow.AddDays(-1);
             }
         }
-        #endregion
+
+        #endregion Cookie Helpers
 
         protected void Application_Start()
         {
@@ -67,7 +69,7 @@ namespace OCM.MVC
         protected void Application_Error(object sender, EventArgs e)
         {
             // Code that runs when an unhandled error occurs
-            
+
             // Get the exception object.
             Exception exc = Server.GetLastError();
 
@@ -81,12 +83,10 @@ namespace OCM.MVC
 
             Server.ClearError();
             Response.RedirectToRoute(new { controller = "Home", action = "GeneralError" });
-             
         }
 
         protected void Session_OnStart()
         {
-
             //if user has existing OCM session token, sign in automatically
             var sessionToken = GetCookie(new HttpRequestWrapper(Request), "OCMSessionToken");
             var identifier = GetCookie(new HttpRequestWrapper(Request), "Identifier");
@@ -94,12 +94,11 @@ namespace OCM.MVC
             {
                 //got token, if valid sign in users
                 var userManager = new OCM.API.Common.UserManager();
-                var user = userManager.GetUserFromIdentifier(identifier,sessionToken);
+                var user = userManager.GetUserFromIdentifier(identifier, sessionToken);
                 if (user != null)
                 {
                     OCM.MVC.Controllers.LoginProviderController.PerformCoreLogin(user);
                 }
-           
             }
         }
     }

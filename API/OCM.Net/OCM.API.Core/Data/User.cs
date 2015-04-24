@@ -48,6 +48,7 @@ namespace OCM.Core.Data
         public string APIKey { get; set; }
         public string SyncedSettings { get; set; }
         public bool IsReadOnly { get; set; }
+        public string PasswordHash { get; set; }
     
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItems { get; set; }

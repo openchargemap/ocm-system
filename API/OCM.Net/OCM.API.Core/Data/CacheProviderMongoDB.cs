@@ -180,32 +180,26 @@ namespace OCM.Core.Data
 
         public void RemoveAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
         {
-            using (server.RequestStart(database))
+            foreach (var poi in poiList)
             {
-                foreach (var poi in poiList)
-                {
-                    var query = Query.EQ("ID", poi.ID);
-                    poiCollection.Remove(query);
-                }
+                var query = Query.EQ("ID", poi.ID);
+                poiCollection.Remove(query);
             }
         }
 
         public void InsertAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
         {
-            using (server.RequestStart(database))
+            var mongoDBPoiList = new List<POIMongoDB>();
+            foreach (var poi in poiList)
             {
-                var mongoDBPoiList = new List<POIMongoDB>();
-                foreach (var poi in poiList)
+                var newPoi = POIMongoDB.FromChargePoint(poi);
+                if (newPoi.AddressInfo != null)
                 {
-                    var newPoi = POIMongoDB.FromChargePoint(poi);
-                    if (newPoi.AddressInfo != null)
-                    {
-                        newPoi.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(newPoi.AddressInfo.Longitude, newPoi.AddressInfo.Latitude));
-                    }
-                    mongoDBPoiList.Add(newPoi);
+                    newPoi.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(newPoi.AddressInfo.Longitude, newPoi.AddressInfo.Latitude));
                 }
-                poiCollection.InsertBatch(mongoDBPoiList);
+                mongoDBPoiList.Add(newPoi);
             }
+            poiCollection.InsertBatch(mongoDBPoiList);
         }
 
         public List<OCM.API.Common.Model.ChargePoint> GetPOIListToUpdate(OCMEntities dataModel, CacheUpdateStrategy updateStrategy)

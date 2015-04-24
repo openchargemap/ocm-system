@@ -336,6 +336,7 @@
     <Content Include="Scripts\OCM\TableOfContents.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />
+    <Content Include="Templates\Notifications\PasswordReset.htm" />
     <Content Include="Templates\Notifications\ContactUsMessage.htm" />
     <Content Include="Templates\Notifications\FaultReport.htm" />
     <Content Include="Templates\Notifications\LocationCommentReceived.htm" />
@@ -449,6 +450,13 @@
     <Content Include="Views\About\Guidance.cshtml" />
     <Content Include="Views\Widget\_GeoChartWidget.cshtml" />
     <Content Include="Views\About\Funding.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\LoginModel.cshtml" />
+    <Content Include="Views\LoginProvider\PasswordReset.cshtml" />
+    <Content Include="Views\LoginProvider\Register.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PasswordChangeModel.cshtml" />
+    <Content Include="Views\Profile\ChangePassword.cshtml" />
+    <Content Include="Views\LoginProvider\ConfirmPasswordReset.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RegistrationModel.cshtml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

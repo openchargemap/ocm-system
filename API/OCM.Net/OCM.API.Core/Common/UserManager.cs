@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,145 @@ namespace OCM.API.Common
 
     public class UserManager
     {
+        public class PasswordNotSetException : Exception { }
+
         private OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
+
+        public Model.User GetUser(OCM.API.Common.Model.LoginModel loginModel)
+        {
+            if (!String.IsNullOrEmpty(loginModel.EmailAddress))
+            {
+                var user = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == loginModel.EmailAddress.ToLower());
+
+                if (user != null)
+                {
+                    if (String.IsNullOrEmpty(user.PasswordHash)) throw new PasswordNotSetException();
+
+                    if (IsCorrectPassword(user.PasswordHash, loginModel.Password))
+                    {
+                        return Model.Extensions.User.FromDataModel(user);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public bool HasPassword(int userId)
+        {
+            var user = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+            if (user != null)
+            {
+                if (!String.IsNullOrEmpty(user.PasswordHash))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// validated hashed passwords match for given user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="suppliedPassword"></param>
+        public bool IsCorrectPassword(string storedHash, string suppliedPassword)
+        {
+            var salt = storedHash.Substring(0, 8);
+            var testHash = OCM.Core.Util.SecurityHelper.GetSHA256Hash(salt + suppliedPassword);
+            if (salt + testHash == storedHash)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool BeginPasswordReset(string email)
+        {
+            var user = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == email.ToLower());
+            if (user != null)
+            {
+                //update session token and send as verification token
+                AssignNewSessionToken(user.ID);
+                string resetConfirmationURL = "http://openchargemap.org/site/loginprovider/confirmpasswordreset?token=" + System.Web.HttpUtility.UrlEncode(user.CurrentSessionToken) + "&email=" + System.Web.HttpUtility.UrlEncode(email.ToLower());
+                //send notification
+
+                var msgParams = new Hashtable();
+                msgParams.Add("Email", user.EmailAddress.ToLower());
+                msgParams.Add("ResetConfirmationURL", resetConfirmationURL);
+                var notificationManager = new NotificationManager();
+                notificationManager.PrepareNotification(NotificationType.PasswordReset, msgParams);
+                bool sentOK = notificationManager.SendNotification(user.EmailAddress);
+                return sentOK;
+            }
+            else
+            {
+                //user not found, can't begin password reset
+                return false;
+            }
+        }
+
+        public bool SetNewPassword(int userId, API.Common.Model.PasswordChangeModel model)
+        {
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+            if (userDetails != null)
+            {
+                if (model.IsCurrentPasswordRequired && !IsCorrectPassword(userDetails.PasswordHash, model.CurrentPassword))
+                {
+                    //current password is required, incorrect password supplied or none given
+                    return false;
+                }
+
+                //proceed to update password
+                userDetails.PasswordHash = GetNewPasswordHash(model.Password);
+                dataModel.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public string GetNewPasswordHash(string password)
+        {
+            string salt = Guid.NewGuid().ToString().Substring(0, 8);
+            return salt + OCM.Core.Util.SecurityHelper.GetSHA256Hash(salt + password);
+        }
+
+        /// <summary>
+        /// Register a new OCM User (identified by email/password)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public User RegisterNewUser(API.Common.Model.RegistrationModel model)
+        {
+            model.EmailAddress = model.EmailAddress.Trim().ToLower();
+            var existingUser = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == model.EmailAddress.ToLower().Trim());
+            if (existingUser != null)
+            {
+                //if existing user has same email address, cannot perform new registration
+                return null;
+            }
+
+            var userDetails = new Core.Data.User();
+            userDetails.IdentityProvider = "OCM";
+            userDetails.Identifier = model.EmailAddress;
+
+            userDetails.Username = model.Username;
+            userDetails.EmailAddress = model.EmailAddress;
+            userDetails.DateCreated = DateTime.UtcNow;
+            userDetails.DateLastLogin = DateTime.UtcNow;
+            userDetails.IsProfilePublic = true;
+
+            dataModel.Users.Add(userDetails);
+            dataModel.SaveChanges();
+
+            SetNewPassword(userDetails.ID, (PasswordChangeModel)model);
+            AssignNewSessionToken(userDetails.ID);
+
+            return API.Common.Model.Extensions.User.BasicFromDataModel(userDetails);
+        }
 
         public User GetUser(int id)
         {
@@ -28,6 +167,17 @@ namespace OCM.API.Common
             {
                 return null;
             }
+        }
+
+        public User GetUserFromResetToken(string email, string token)
+        {
+            if (!String.IsNullOrEmpty(email) && !String.IsNullOrEmpty(token))
+            {
+                var user = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == email.Trim().ToLower() && u.CurrentSessionToken.ToLower() == token.Trim().ToLower());
+                return Model.Extensions.User.FromDataModel(user);
+            }
+
+            return null;
         }
 
         public User GetUserFromIdentifier(string Identifier, string SessionToken)
@@ -86,12 +236,17 @@ namespace OCM.API.Common
             }
         }
 
-        public void AssignNewSessionToken(int userId)
+        public void AssignNewSessionToken(int userId, bool updateDateLastLogin = false)
         {
             var user = dataModel.Users.FirstOrDefault(u => u.ID == userId);
             if (user != null)
             {
                 user.CurrentSessionToken = Guid.NewGuid().ToString();
+
+                if (updateDateLastLogin)
+                {
+                    user.DateLastLogin = DateTime.UtcNow;
+                }
                 dataModel.SaveChanges();
             }
         }
@@ -112,6 +267,21 @@ namespace OCM.API.Common
                         var userData = dataModel.Users.First(u => u.ID == updatedProfile.ID);
                         if (userData != null)
                         {
+                            if (userData.IdentityProvider == "OCM" && String.IsNullOrWhiteSpace(updatedProfile.EmailAddress))
+                            {
+                                //cannot proceed with update, email required as user name for login
+                                return false;
+                            }
+                            if (userData.EmailAddress != updatedProfile.EmailAddress && !string.IsNullOrWhiteSpace(updatedProfile.EmailAddress))
+                            {
+                                //ensure email address is not in use by another account before changing
+                                if (dataModel.Users.Any(e => e.ID != userData.ID && e.EmailAddress != null && e.EmailAddress.Trim().ToLower() == updatedProfile.EmailAddress.ToLower().Trim()))
+                                {
+                                    //cannot proceed, user is trying to change email address to match another user
+                                    return false;
+                                }
+                            }
+
                             userData.Location = updatedProfile.Location;
                             userData.Profile = updatedProfile.Profile;
                             userData.Username = updatedProfile.Username;
@@ -121,6 +291,7 @@ namespace OCM.API.Common
                             userData.IsPublicChargingProvider = (updatedProfile.IsPublicChargingProvider != null ? (bool)updatedProfile.IsPublicChargingProvider : false);
                             userData.IsEmergencyChargingProvider = (updatedProfile.IsEmergencyChargingProvider != null ? (bool)updatedProfile.IsEmergencyChargingProvider : false);
                             userData.EmailAddress = updatedProfile.EmailAddress;
+
                             userData.Latitude = updatedProfile.Latitude;
                             userData.Longitude = updatedProfile.Longitude;
 
@@ -132,6 +303,8 @@ namespace OCM.API.Common
                                 userData.Permissions = updatedProfile.Permissions;
                                 userData.IdentityProvider = updatedProfile.IdentityProvider;
                             }
+
+                            if (userData.IdentityProvider == "OCM" && !String.IsNullOrWhiteSpace(userData.EmailAddress)) userData.Identifier = userData.EmailAddress;
 
                             dataModel.SaveChanges();
 
@@ -192,10 +365,10 @@ namespace OCM.API.Common
             return false;
         }
 
-        public static bool HasUserPermission(User user, int? CountryID, PermissionLevel requiredLevel, UserPermissionsContainer userPermissions=null)
+        public static bool HasUserPermission(User user, int? CountryID, PermissionLevel requiredLevel, UserPermissionsContainer userPermissions = null)
         {
             if (user != null)
-            {   
+            {
                 if (!String.IsNullOrEmpty(user.Permissions))
                 {
                     if (userPermissions == null)

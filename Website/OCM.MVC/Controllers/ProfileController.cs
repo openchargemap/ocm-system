@@ -107,13 +107,23 @@ namespace OCM.MVC.Controllers
                         var userManager = new UserManager();
                         var user = userManager.GetUser((int)Session["UserID"]);
 
+                        bool updatedOK = false;
                         if (user.ID == updateProfile.ID)
                         {
-                            userManager.UpdateUserProfile(updateProfile, false);
+                            updatedOK = userManager.UpdateUserProfile(updateProfile, false);
                         }
-                        return RedirectToAction("Index");
+
+                        if (updatedOK)
+                        {
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            TempData["UpdateFailed"] = true;
+                        }
                     }
-                    else return View();
+
+                    return View();
                 }
                 catch
                 {
@@ -121,6 +131,44 @@ namespace OCM.MVC.Controllers
                 }
             }
             return View(updateProfile);
+        }
+
+        [AuthSignedInOnly]
+        public ActionResult ChangePassword()
+        {
+            bool requireCurrentPassword = true;
+
+            var userManager = new UserManager();
+            //allow user to set a new password without confirming old one if they haven't set a password yet
+            if (!userManager.HasPassword(int.Parse(Session["UserID"].ToString())))
+            {
+                requireCurrentPassword = false;
+            }
+
+            if (TempData["IsCurrentPasswordRequired"] != null && (bool)TempData["IsCurrentPasswordRequired"] == false)
+            {
+                requireCurrentPassword = false;
+            }
+            return View(new PasswordChangeModel { IsCurrentPasswordRequired = requireCurrentPassword });
+        }
+
+        [AuthSignedInOnly, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(API.Common.Model.PasswordChangeModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var passwordChanged = new UserManager().SetNewPassword(int.Parse(Session["UserID"].ToString()), model);
+
+                model.PasswordResetFailed = !passwordChanged;
+
+                if (passwordChanged)
+                {
+                    model.PasswordResetCompleted = true;
+                    return RedirectToAction("Index", "Profile");
+                }
+            }
+
+            return View(model);
         }
 
         [AuthSignedInOnly]

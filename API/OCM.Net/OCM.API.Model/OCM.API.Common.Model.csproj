@@ -93,10 +93,14 @@
     <Compile Include="Base\OperatorInfo.cs" />
     <Compile Include="Extended\EditQueueFilter.cs" />
     <Compile Include="Extended\GeocodingResult.cs" />
+    <Compile Include="Extended\LoginModel.cs" />
+    <Compile Include="Extended\PasswordChangeModel.cs" />
+    <Compile Include="Extended\PasswordResetRequestModel.cs" />
     <Compile Include="Extended\POIDetailsCache.cs" />
     <Compile Include="Extended\POIDuplicates.cs" />
     <Compile Include="Extended\POIRecentActivity.cs" />
     <Compile Include="Extended\POISearchResult.cs" />
+    <Compile Include="Extended\RegistrationModel.cs" />
     <Compile Include="Extended\SimpleReferenceType.cs" />
     <Compile Include="Base\StatusType.cs" />
     <Compile Include="Base\SubmissionStatusType.cs" />

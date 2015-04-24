@@ -11,8 +11,8 @@ namespace OCM.MVC.Controllers
 {
     public class LoginProviderController : Controller
     {
-
         #region Cookie Helpers
+
         public static void UpdateCookie(HttpResponseBase response, string cookieName, string cookieValue)
         {
             if (response.Cookies.AllKeys.Contains(cookieName))
@@ -47,18 +47,125 @@ namespace OCM.MVC.Controllers
                 response.Cookies[cookieName].Expires = DateTime.UtcNow.AddDays(-1);
             }
         }
-        #endregion
+
+        #endregion Cookie Helpers
 
         #region Login Workflow Handlers
+
         public ActionResult BeginLogin()
         {
             ViewBag.LoginProviders = OAuthWebSecurity.RegisteredClientData;
+            return View(new OCM.API.Common.Model.LoginModel());
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult BeginLogin(OCM.API.Common.Model.LoginModel loginModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userManager = new UserManager();
+
+                try
+                {
+                    var user = userManager.GetUser(loginModel);
+                    if (user != null)
+                    {
+                        return ProcessLoginResult(user.Identifier, user.IdentityProvider, user.Username, user.EmailAddress);
+                    }
+                    else
+                    {
+                        ViewBag.InvalidLogin = true;
+                    }
+                }
+                catch (UserManager.PasswordNotSetException)
+                {
+                    return PasswordReset(loginModel.EmailAddress);
+                }
+            }
+
+            ViewBag.LoginProviders = OAuthWebSecurity.RegisteredClientData;
+            return View(loginModel);
+        }
+
+        public ActionResult PasswordReset(string emailAddress)
+        {
+            return View(new OCM.API.Common.Model.PasswordResetRequestModel { EmailAddress = emailAddress });
+        }
+
+        [HttpPost]
+        public ActionResult PasswordReset(OCM.API.Common.Model.PasswordResetRequestModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //send confirmation email
+                bool resetInitiated = new UserManager().BeginPasswordReset(model.EmailAddress);
+                if (resetInitiated)
+                {
+                    model.ResetInitiated = true;
+                }
+                else
+                {
+                    model.ResetInitiated = false;
+                    model.IsUnknownAccount = true;
+                }
+            }
+            return View(model);
+        }
+
+        public ActionResult ConfirmPasswordReset(string token, string email)
+        {
+            //check token is valid for email, then sign in user and go to password change
+            var userManager = new UserManager();
+
+            var user = userManager.GetUserFromResetToken(email, token);
+
+            if (user != null)
+            {
+                userManager.AssignNewSessionToken(user.ID, true);
+
+                //sign in user
+                PerformCoreLogin(user);
+
+                //proceed to password change
+                TempData["IsCurrentPasswordRequired"] = false;
+
+                return RedirectToAction("ChangePassword", "Profile");
+            }
+
             return View();
+        }
+
+        public ActionResult Register()
+        {
+            return View(new OCM.API.Common.Model.RegistrationModel { IsCurrentPasswordRequired = false });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Register(OCM.API.Common.Model.RegistrationModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //register as new user, check email is valid first
+                var userManager = new UserManager();
+                var user = userManager.RegisterNewUser(model);
+
+                if (user != null)
+                {
+                    return RedirectToAction("BeginLogin", "LoginProvider");
+                }
+                else
+                {
+                    model.RegistrationFailed = true;
+                }
+            }
+
+            return View(model);
         }
 
         public ActionResult LoginFailed()
         {
             TempData["LoginFailed"] = true;
+
             return RedirectToAction("BeginLogin");
         }
 
@@ -81,13 +188,13 @@ namespace OCM.MVC.Controllers
                     var provider = result.Provider;
                     // provider's unique ID for the user
                     var uniqueUserID = result.ProviderUserId;
-                    // since we might use multiple identity providers, then 
-                    // our app uniquely identifies the user by combination of 
+                    // since we might use multiple identity providers, then
+                    // our app uniquely identifies the user by combination of
                     // provider name and provider user id
                     var uniqueID = provider + "/" + uniqueUserID;
 
                     // we then log the user into our application
-                    // we could have done a database lookup for a 
+                    // we could have done a database lookup for a
                     // more user-friendly username for our app
                     //FormsAuthentication.SetAuthCookie(uniqueID, false);
 
@@ -96,7 +203,9 @@ namespace OCM.MVC.Controllers
 
                     string email = null;
                     string name = null;
+
                     if (userDataFromProvider.ContainsKey("email")) email = userDataFromProvider["email"];
+
                     if (userDataFromProvider.ContainsKey("name")) name = userDataFromProvider["name"];
 
                     //for legacy reasons, with twitter we use the text username instead of numeric userid
@@ -118,7 +227,6 @@ namespace OCM.MVC.Controllers
 
         public ActionResult Index(string _mode, bool? _forceLogin, string _redirectURL, string oauth_token, string denied)
         {
-
             //preserve url we're returning to after sign in
             if (!String.IsNullOrEmpty(_redirectURL))
             {
@@ -139,36 +247,6 @@ namespace OCM.MVC.Controllers
             }
 
             return RedirectToAction("BeginLogin");
-            /*
-            //if initiating a login, attempt to authenticate with twitter
-            if (_mode == "silent" && String.IsNullOrEmpty(oauth_token))
-            {
-                //silently initiate pass through to twitter login
-                if (_forceLogin == null) _forceLogin = true;
-                TwitterConsumer.StartSignInWithTwitter((bool)_forceLogin).Send();
-            }
-            else
-            {
-
-                if (TwitterConsumer.IsTwitterConsumerConfigured)
-                {
-
-                    if (!String.IsNullOrEmpty(_redirectURL))
-                    {
-                        Session["_redirectURL"] = _redirectURL;
-                    }
-
-                    string screenName = null;
-                    long userId = 0;
-                    if (TwitterConsumer.TryFinishSignInWithTwitter(out screenName, out userId))
-                    {
-                        return ProcessLoginResult(screenName, screenName, null, "Twitter");
-                    }
-                }
-            }
-
-            return View();
-             * */
         }
 
         private ActionResult ProcessLoginResult(string userIdentifier, string loginProvider, string name, string email)
@@ -180,7 +258,7 @@ namespace OCM.MVC.Controllers
             var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier.ToLower() == userIdentifier.ToLower() && u.IdentityProvider.ToLower() == loginProvider.ToLower());
             if (userDetails == null)
             {
-                //create new user details   
+                //create new user details
                 userDetails = new Core.Data.User();
                 userDetails.IdentityProvider = loginProvider;
                 userDetails.Identifier = userIdentifier;
@@ -216,7 +294,7 @@ namespace OCM.MVC.Controllers
             //store updates to user
             dataModel.SaveChanges();
 
-            LoginProviderController.PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
+            PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
 
             if (!String.IsNullOrEmpty((string)Session["_redirectURL"]))
             {
@@ -251,7 +329,6 @@ namespace OCM.MVC.Controllers
             {
                 session["IsAdministrator"] = true;
             }
-
         }
 
         public ActionResult AppLogin(bool? redirectWithToken)
@@ -276,9 +353,8 @@ namespace OCM.MVC.Controllers
             {
                 return View();
             }
-
         }
 
-        #endregion
+        #endregion Login Workflow Handlers
     }
 }

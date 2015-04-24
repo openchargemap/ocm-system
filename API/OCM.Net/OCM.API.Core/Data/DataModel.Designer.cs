@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Temp\GIT\ocm-system\API\OCM.Net\OCM.API.Core\Data\DataModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Work\GIT\ocm-system\API\OCM.Net\OCM.API.Core\Data\DataModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
