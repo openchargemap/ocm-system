@@ -30,7 +30,7 @@ namespace OCM.Import.Providers
 
             var dataList = o["locations"].ToArray();
 
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == 100);//imported and published
+            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_UnderReview);//imported and under review
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == 0);
             var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == 1);

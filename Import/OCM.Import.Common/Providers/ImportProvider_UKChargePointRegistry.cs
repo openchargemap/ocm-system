@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OCM.API.Common.Model;
-using Newtonsoft.Json.Linq;
 
 namespace OCM.Import.Providers
 {
@@ -31,7 +31,7 @@ namespace OCM.Import.Providers
 
             var dataList = o["ChargeDevice"].ToArray();
 
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_Published);//imported and published
+            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_UnderReview);//imported and under review
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
             var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == (int)StandardStatusTypes.Unknown);
@@ -48,7 +48,7 @@ namespace OCM.Import.Providers
             {
                 var item = dataItem;
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = this.DataProviderID}; //UK National Charge Point Registry
+                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //UK National Charge Point Registry
                 cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -56,10 +56,9 @@ namespace OCM.Import.Providers
                 var locationDetails = item["ChargeDeviceLocation"];
                 var addressDetails = locationDetails["Address"];
 
-            
                 cp.AddressInfo.RelatedURL = "";
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
-                cp.AddressInfo.AddressLine1 = addressDetails["Street"].ToString().Replace("<br>",", ");
+                cp.AddressInfo.AddressLine1 = addressDetails["Street"].ToString().Replace("<br>", ", ");
                 cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? cp.AddressInfo.AddressLine1 : locationDetails["LocationShortDescription"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ");
@@ -69,16 +68,15 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString();
                 cp.AddressInfo.Latitude = double.Parse(locationDetails["Latitude"].ToString());
                 cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
-                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n",", ");
+                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n", ", ");
 
                 //if(!String.IsNullOrEmpty(cp.AddressInfo.Postcode))
                 //{
-                    //cp.AddressInfo.Postcode = this.NormalizePostcode(cp.AddressInfo.Postcode);
+                //cp.AddressInfo.Postcode = this.NormalizePostcode(cp.AddressInfo.Postcode);
                 //}
-                //TODO: if address wasn't provide in address details try to parse from "LocationLongDescription": 
+                //TODO: if address wasn't provide in address details try to parse from "LocationLongDescription":
                 /*if (String.IsNullOrEmpty(cp.AddressInfo.AddressLine1) && string.IsNullOrEmpty(cp.AddressInfo.AddressLine2) && string.IsNullOrEmpty(cp.AddressInfo.Town) && string.IsNullOrEmpty(cp.AddressInfo.Postcode))
                 {
-
                 }*/
 
                 //if title is empty, attempt to add a suitable replacement
@@ -116,7 +114,6 @@ namespace OCM.Import.Providers
                     if (countryID == null)
                     {
                         this.Log("Country Not Matched, will require Geolocation:" + item["country"].ToString());
-
                     }
                     else
                     {
@@ -152,13 +149,13 @@ namespace OCM.Import.Providers
                 //determine most likely usage type
                 cp.UsageType = usageTypeUnknown;
 
-                if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE") {
+                if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE")
+                {
                     //membership required
                     cp.UsageType = usageTypePublicMembershipRequired;
                 }
                 else
                 {
-                    
                     if (item["PaymentRequiredFlag"].ToString().ToUpper() == "TRUE")
                     {
                         //payment required
@@ -245,7 +242,7 @@ namespace OCM.Import.Providers
 
                         if (conn["RatedOutputkW"] != null)
                         {
-                            double tmpKw=0;
+                            double tmpKw = 0;
                             if (double.TryParse(conn["RatedOutputkW"].ToString(), out tmpKw))
                             {
                                 cinfo.PowerKW = tmpKw;
@@ -270,7 +267,7 @@ namespace OCM.Import.Providers
                             }
                         }
 
-                        if (conn["ChargeMethod"]!=null && !String.IsNullOrEmpty(conn["ChargeMethod"].ToString()))
+                        if (conn["ChargeMethod"] != null && !String.IsNullOrEmpty(conn["ChargeMethod"].ToString()))
                         {
                             string method = conn["ChargeMethod"].ToString();
                             //Single Phase AC, Three Phase AC, DC
@@ -295,7 +292,7 @@ namespace OCM.Import.Providers
 
                 //apply data attribution metadata
                 if (cp.MetadataValues == null) cp.MetadataValues = new List<MetadataValue>();
-                cp.MetadataValues.Add(new MetadataValue { MetadataFieldID= (int)StandardMetadataFields.Attribution, ItemValue=DataAttribution });
+                cp.MetadataValues.Add(new MetadataValue { MetadataFieldID = (int)StandardMetadataFields.Attribution, ItemValue = DataAttribution });
 
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
@@ -313,18 +310,18 @@ namespace OCM.Import.Providers
         {
             //TODO: more sensible detection of postcode format CV32 5?? vs E1 0BH etc
             string origPostcode = postcode + "";
-            //removes end and start spaces 
+            //removes end and start spaces
             postcode = postcode.Trim();
-            //removes in middle spaces 
+            //removes in middle spaces
             postcode = postcode.Replace(" ", "");
 
             switch (postcode.Length)
             {
-                //add space after 2 characters if length is 5 
+                //add space after 2 characters if length is 5
                 case 5: postcode = postcode.Insert(2, " "); break;
-                //add space after 3 characters if length is 6 
+                //add space after 3 characters if length is 6
                 case 6: postcode = postcode.Insert(3, " "); break;
-                //add space after 4 characters if length is 7 
+                //add space after 4 characters if length is 7
                 case 7: postcode = postcode.Insert(4, " "); break;
 
                 default: break;
