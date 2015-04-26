@@ -24,17 +24,16 @@ else
 
             <div class="container">
                 <div class="form-group">
-                    
-                        @FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add More Images", uploadText: "Upload File")
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="comment" class="control-label">Comment:</label>
+                    @FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add More Images", uploadText: "Upload File")
+                </div>
 
-                                    <textarea id="comment" class="form-control" name="comment" maxlength="1000" placeholder="Comment or description to accompany the image"></textarea>
-                                </div>
+                <div class="form-group">
+                    <label for="comment" class="control-label">Comment:</label>
 
-                            </div>
+                    <textarea id="comment" class="form-control" name="comment" maxlength="1000" placeholder="Comment or description to accompany the image"></textarea>
+                </div>
+            </div>
             @Html.Partial("_TermsLink")
             <input class="btn btn-primary" type="submit" name="submit" value="Upload!" />
         }
@@ -42,7 +41,7 @@ else
     else
     {
         <h2>Add Your Photos <small>@Model.AddressInfo.Title</small></h2>
-        @Html.Partial("_POISummary",Model)
+        @Html.Partial("_POISummary", Model)
         <p>
             Please Sign In to proceed: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new { id = Model.ID }) }, new { @class = "btn btn-primary" })
         </p>

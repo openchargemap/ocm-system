@@ -126,7 +126,7 @@ namespace OCM.API.Common
                         //return null;
                     }
                     attemptCount++;
-                    Thread.Sleep(1000); //wait a bit then try again
+                    Thread.Sleep(5000); //wait a bit then try again
                 }
 
                 Thread.Sleep(5000);
