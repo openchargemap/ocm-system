@@ -94,7 +94,7 @@
       "useMyLocation": "Otsi Minu Lähedalt",
       "distance": "Kaugus",
       "chargingLevels": "Laadija Võimsus",
-      "minPowerKW": null,
+      "minPowerKW": "Min. Võimsus (kW)",
       "connectionTypes": "Pistiku Tüübid",
       "networkOperators": "Kett/Operaator",
       "countries": "Riik",
@@ -128,7 +128,7 @@
       "about": {
         "termsPrivacy": "Tingimused & privaatsus",
         "contact": "Kontakt",
-        "guidance": null
+        "guidance": "Juhend Kaastöötajale"
       },
       "profile": {
         "sectionTitle": "Minu profiil",

@@ -1,5 +1,5 @@
 var localisation_dictionary_fy ={
-  "_langTitle": "Frisian/Frysk",
+  "_langTitle": "West Frisian/Frysk",
   "_langCode": "fy",
   "ocm": {
     "general": {
@@ -94,7 +94,7 @@ var localisation_dictionary_fy ={
       "useMyLocation": "Sykje yn myn buert",
       "distance": "Ôfstân",
       "chargingLevels": "Oplaadsnelheid",
-      "minPowerKW": null,
+      "minPowerKW": "Min Kinne (KW)",
       "connectionTypes": "Konneksjetype",
       "networkOperators": "Netwurk/Operator",
       "countries": "Lân",
@@ -128,7 +128,7 @@ var localisation_dictionary_fy ={
       "about": {
         "termsPrivacy": "Betingsten & privacy",
         "contact": "Kontakt",
-        "guidance": null
+        "guidance": "Begelieding foar bydragers"
       },
       "profile": {
         "sectionTitle": "Myn profyl",

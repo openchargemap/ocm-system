@@ -35,7 +35,7 @@
         "contactEmail": "Contato e-mail",
         "map": "mapa",
         "streetView": null,
-        "addressRelatedURL": null
+        "addressRelatedURL": "Site da Web"
       },
       "generalComments": "Informações gerais",
       "accessComments": "Informações de acesso",
@@ -56,14 +56,14 @@
       },
       "mediaItems": {
         "sectionTitle": "Fotos",
-        "addPrompt": null
+        "addPrompt": "Envie as suas fotos desta localização"
       },
       "metadataValues": {
         "sectionTitle": "Etiquetas Adicionais"
       },
       "commentsAndRatings": {
-        "sectionTitle": null,
-        "zeroComments": null,
+        "sectionTitle": "Comentários e avaliações",
+        "zeroComments": "Nenhum comentário do utilizador enviado",
         "addPrompt": null
       },
       "equipment": {

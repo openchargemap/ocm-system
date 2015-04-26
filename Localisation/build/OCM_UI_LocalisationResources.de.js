@@ -6,7 +6,7 @@ var localisation_dictionary_de ={
       "shortDescription": "Das weltweite und öffentliche Verzeichnis für Ladestationen für elektrische Fahrzeuge",
       "linkWebApp": "Suche nach Ladestationen mit unserer Web App",
       "linkBrowsePOI": "Alle Standorte anzeigen",
-      "browsePOI": null,
+      "browsePOI": "Nach Ladestandorten suchen",
       "loadingProgress": "Laden …",
       "addLocation": "Standort hinzufügen",
       "addItem": "Hinzufügen",
@@ -28,8 +28,8 @@ var localisation_dictionary_de ={
         "stateOrProvince": "Bundesland/Kanton",
         "postcode": "Postleitzahl",
         "country": "Land",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "Breitengrad",
+        "longitude": "Längengrad",
         "contactTelephone1": "Kontakt Telefonnummer",
         "contactTelephone2": "Weitere Kontakt Telefonnummer",
         "contactEmail": "Kontakt Emailadresse",
@@ -94,7 +94,7 @@ var localisation_dictionary_de ={
       "useMyLocation": "Suche in der Nähe meines Standortes",
       "distance": "Distanz",
       "chargingLevels": "Ladeleistungslevel",
-      "minPowerKW": null,
+      "minPowerKW": "Min. Leistung kW",
       "connectionTypes": "Steckertyp",
       "networkOperators": "Anbieter/Betreiber der Ladestation",
       "countries": "Land",
@@ -105,70 +105,70 @@ var localisation_dictionary_de ={
       "progress": "Bitte warten.."
     },
     "navigation": {
-      "home": null,
+      "home": "Start",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "Suchen",
+        "allLocations": "Alle Standorte",
+        "byCountry": "Nach Land",
+        "avaitingReview": "Erwarte Prüfung",
+        "recentActivity": "Neueste Aktivitäten",
+        "webApp": "Web App für mobile Geräte",
+        "statistics": "Statistik"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "Entwicklung",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Beispiele",
+        "getInvolved": "Mitmachen",
+        "code": "Code (auf Github) ansehen",
+        "translate": "Hilf zu übersetzen"
       },
-      "discuss": null,
+      "discuss": "Diskutiere",
       "about": {
-        "termsPrivacy": null,
-        "contact": null,
-        "guidance": null
+        "termsPrivacy": "Rechtliches",
+        "contact": "Kontakt",
+        "guidance": "Leitfaden für Mitwirkende"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "Mein Profil",
+        "subscriptions": "Meine Abonnements",
+        "comments": "Meine Kommentare",
+        "uploads": "Meine Uploads"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "Sie können",
+        "browseLocations": "Standorte in der Nähe anzeigen",
+        "commentsPhotos": "und füge eigene Kommentare und Fotos hinzu",
+        "dontSeePOI": "Kein Ihnen bekannter Ladeort sichtbar?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "Ladestationsdaten abfragen",
+        "who": "Autohersteller, Anbieter von Navigationsgeräten, Anwendungsentwickler, Website-Besitzer:",
+        "what": "Sie können auf die neuesten Ladestandorte zugreifen und sie herunterladen mit Hilfe unserer",
+        "websiteOperators": "Wenn Sie eine Website anbieten und eine Ladekarte einbinden möchten, können Sie",
+        "embedMap": "die Karte in Ihre eigene Website einbauen"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "Betreiber und Datenanbieter",
+        "who": "Stromversorger, Betreiber von Ladenetzwerken, nationale Behörden, lokale Ladestations-Anwendungen & Websites:",
+        "needData": "Wir benötigen Ihre Eingaben",
+        "what": "Sie können uns mit Informationen über Ladestandorte versorgen ohne Rücksicht darauf, ob Ihre Organisation diese besitzt, betreibt oder einfach nur katalogisiert. Bitte",
+        "contactUs": "Wenden Sie sich an uns",
+        "getStarted": "um anzufangen"
       },
       "stats": {
-        "locations": null
+        "locations": "Standorte"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map ist ein nicht kommerzieller, gemeinnütziger Dienst, der von einer weltweiten Gemeinschaft von Unternehmen, Wohltätigkeitsorganisationen, Entwicklern und Interessierten unterstützt und moderiert wird.",
+      "getApp": "Lade die App",
+      "tip": "Tipp:",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "Wenn Sie auf einfache Art die nächste Ladestation finden möchten, können Sie auch ausprobieren, unsere",
+        "webApp": "Web-App",
+        "searchAppStore": "vor allem auf mobilen Geräten. Sie können auch im App Store für Ihr Gerät nach einer portablen Version suchen."
       }
     }
   }

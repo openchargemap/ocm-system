@@ -94,7 +94,7 @@
       "useMyLocation": "Cherche Près de Moi",
       "distance": "Distance",
       "chargingLevels": "Vitesse de recharge",
-      "minPowerKW": null,
+      "minPowerKW": "Min. Puissance kW",
       "connectionTypes": "Types de connexion",
       "networkOperators": "Réseau/Opérateur",
       "countries": "Pays",
@@ -117,7 +117,7 @@
       },
       "develop": {
         "sectionTitle": "Dévelopez",
-        "api": null,
+        "api": "API",
         "htmlWidgets": null,
         "examples": "Exemples",
         "getInvolved": "Participez",
@@ -127,8 +127,8 @@
       "discuss": "Discuter",
       "about": {
         "termsPrivacy": "Termes & Confidentialité",
-        "contact": null,
-        "guidance": null
+        "contact": "Contacter",
+        "guidance": "Conseils pour les Contributeurs"
       },
       "profile": {
         "sectionTitle": "Mon profil",
@@ -149,7 +149,7 @@
         "who": null,
         "what": null,
         "websiteOperators": null,
-        "embedMap": null
+        "embedMap": "intégrer une carte sur votre propre site Internet"
       },
       "supplyData": {
         "sectionTitle": null,
@@ -163,11 +163,11 @@
         "locations": null
       },
       "shortProjectSummary": null,
-      "getApp": null,
+      "getApp": "Téléchargez l'app",
       "tip": null,
       "searching": {
         "quickWay": null,
-        "webApp": null,
+        "webApp": "App Web",
         "searchAppStore": null
       }
     }

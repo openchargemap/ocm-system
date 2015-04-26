@@ -93,8 +93,8 @@ var localisation_dictionary_en ={
       "locationInput": "Location",
       "useMyLocation": "Search Near Me",
       "distance": "Distance",
-        "chargingLevels": "Charging Level",
-        "minPowerKW": "Min. Power kW",
+      "chargingLevels": "Charging Level",
+      "minPowerKW": "Min. Power kW",
       "connectionTypes": "Connection Types",
       "networkOperators": "Network/Operator",
       "countries": "Country",
@@ -128,7 +128,7 @@ var localisation_dictionary_en ={
       "about": {
         "termsPrivacy": "Terms & Privacy",
         "contact": "Contact",
-        "guidance":  "Guidance for Contributors"
+        "guidance": "Guidance for Contributors"
       },
       "profile": {
         "sectionTitle": "My Profile",

@@ -6,7 +6,7 @@ var localisation_dictionary_fi ={
       "shortDescription": "sähköauton latauspisteiden maailmanlaajuinen julkinen rekisteri",
       "linkWebApp": "Etsi sijainteja käyttäen Web sovellusta",
       "linkBrowsePOI": "Selaa kaikkia sijainteja",
-      "browsePOI": null,
+      "browsePOI": "Selaa lataus sijainteja",
       "loadingProgress": "Ladataan...",
       "addLocation": "Lisää sijainti",
       "addItem": "Lisää",
@@ -28,8 +28,8 @@ var localisation_dictionary_fi ={
         "stateOrProvince": "Maakunta",
         "postcode": "Postinumero",
         "country": "Maa",
-        "latitude": null,
-        "longitude": null,
+        "latitude": "Leveysaste",
+        "longitude": "Pituusaste",
         "contactTelephone1": "Ensisijainen puhelinnumero",
         "contactTelephone2": "Toissijainen puhelinnumero",
         "contactEmail": "Sähköpostiosoite",
@@ -91,10 +91,10 @@ var localisation_dictionary_fi ={
     "search": {
       "sectionTitle": "Etsi",
       "locationInput": "Sijainti",
-      "useMyLocation": "Etsi lähimmät paikat",
+      "useMyLocation": "Etsi lähimmät",
       "distance": "Etäisyys",
       "chargingLevels": "Latauksen tehon taso",
-      "minPowerKW": null,
+      "minPowerKW": "Minimi Teho (KW)",
       "connectionTypes": "Liitäntä tyypit",
       "networkOperators": "Latausoperaattori",
       "countries": "Maa",
@@ -105,36 +105,36 @@ var localisation_dictionary_fi ={
       "progress": "Etsitään…"
     },
     "navigation": {
-      "home": null,
+      "home": "Koti",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null
+        "sectionTitle": "Selaa",
+        "allLocations": "Kaikki Sijainnit",
+        "byCountry": "Maan mukaan",
+        "avaitingReview": "Odottaa hyväksyntää",
+        "recentActivity": "Viimeisin aktiivisuus",
+        "webApp": "Web sovellus mobiililaitteisiin",
+        "statistics": "Tilastot"
       },
       "develop": {
         "sectionTitle": null,
         "api": null,
         "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "examples": "Esimerkit",
+        "getInvolved": "Osallistu",
+        "code": "Koodi (GitHub)",
+        "translate": "Auta kääntämisessä"
       },
-      "discuss": null,
+      "discuss": "Keskustele",
       "about": {
         "termsPrivacy": null,
-        "contact": null,
+        "contact": "Yhteystieto",
         "guidance": null
       },
       "profile": {
-        "sectionTitle": null,
+        "sectionTitle": "Oma profiili",
         "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "comments": "Omat kommentit",
+        "uploads": "Omat lataukset"
       }
     },
     "infoText": {
@@ -152,22 +152,22 @@ var localisation_dictionary_fi ={
         "embedMap": null
       },
       "supplyData": {
-        "sectionTitle": null,
+        "sectionTitle": "Operaattorit ja Tietojen tarjoajat",
         "who": null,
         "needData": null,
         "what": null,
-        "contactUs": null,
+        "contactUs": "Ota yhteyttä",
         "getStarted": null
       },
       "stats": {
-        "locations": null
+        "locations": "Sijainnit"
       },
       "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "getApp": "Hae sovellus",
+      "tip": "Vihje:",
       "searching": {
         "quickWay": null,
-        "webApp": null,
+        "webApp": "Web sovellus",
         "searchAppStore": null
       }
     }

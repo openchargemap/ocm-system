@@ -94,7 +94,7 @@ var localisation_dictionary_nl ={
       "useMyLocation": "Zoek in mijn buurt",
       "distance": "Afstand",
       "chargingLevels": "Laadsnelheid",
-      "minPowerKW": null,
+      "minPowerKW": "Min. Vermogen kW",
       "connectionTypes": "Connector Types",
       "networkOperators": "Netwerk/Operator",
       "countries": "Land",
@@ -128,7 +128,7 @@ var localisation_dictionary_nl ={
       "about": {
         "termsPrivacy": "Voorwaarden & Privacy",
         "contact": "Contakt",
-        "guidance": null
+        "guidance": "Richtlijnen voor Medewerkers"
       },
       "profile": {
         "sectionTitle": "Mijn Profiel",
@@ -142,7 +142,7 @@ var localisation_dictionary_nl ={
         "youCan": "U kunt",
         "browseLocations": "zoeken naar locaties in uw buurt",
         "commentsPhotos": "en uw eigen opmerkingen en foto 's toevoegen",
-        "dontSeePOI": "Kan U een oplaadlocatie niet zien die U weet bestaat?"
+        "dontSeePOI": "Kan U een oplaadlocatie niet zien die U weet die bestaat?"
       },
       "getStations": {
         "sectionTitle": "Krijg Laadstation Gegevens",
