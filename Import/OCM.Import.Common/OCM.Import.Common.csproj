@@ -77,7 +77,6 @@
     <Compile Include="Misc\LogHelper.cs" />
     <Compile Include="NetworkServices\ServiceManager.cs" />
     <Compile Include="Providers\BaseImportProvider.cs" />
-    <Compile Include="Providers\ImportProvider_PlugShare.cs" />
     <Compile Include="Providers\ImportProvider_OplaadpalenNL.cs" />
     <Compile Include="Providers\ImportProvider_ChademoGroup.cs" />
     <Compile Include="Providers\ImportProvider_ESB_eCars.cs" />
