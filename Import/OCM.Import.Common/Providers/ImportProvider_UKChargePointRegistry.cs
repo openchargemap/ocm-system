@@ -64,7 +64,12 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ");
                 if (cp.AddressInfo.Title.Length > 100) cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 64) + "..";
                 cp.AddressInfo.Town = addressDetails["PostTown"].ToString();
-                cp.AddressInfo.StateOrProvince = addressDetails["DependantLocality"].ToString();
+                string dependantLocality = addressDetails["DependantLocality"].ToString();
+                if (!String.IsNullOrEmpty(dependantLocality) && dependantLocality.ToLower() != cp.AddressInfo.Town.ToLower())
+                {
+                    //use depenendantLocality if provided and is not same as town
+                    cp.AddressInfo.AddressLine2 = dependantLocality;
+                }
                 cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString();
                 cp.AddressInfo.Latitude = double.Parse(locationDetails["Latitude"].ToString());
                 cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
