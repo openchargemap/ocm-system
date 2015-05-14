@@ -110,8 +110,8 @@ var localisation_dictionary_de ={
         "sectionTitle": "Suchen",
         "allLocations": "Alle Standorte",
         "byCountry": "Nach Land",
-        "avaitingReview": "Erwarte Prüfung",
-        "recentActivity": "Neueste Aktivitäten",
+        "avaitingReview": "Neue Standorte in Prüfung",
+        "recentActivity": "Neuigkeiten",
         "webApp": "Web App für mobile Geräte",
         "statistics": "Statistik"
       },
@@ -122,7 +122,7 @@ var localisation_dictionary_de ={
         "examples": "Beispiele",
         "getInvolved": "Mitmachen",
         "code": "Code (auf Github) ansehen",
-        "translate": "Hilf zu übersetzen"
+        "translate": "Hilf uns beim Übersetzen"
       },
       "discuss": "Diskutiere",
       "about": {
