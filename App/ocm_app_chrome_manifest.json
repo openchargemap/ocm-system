@@ -1,19 +1,19 @@
 {
-   "name":"OpenChargeMap",
-   "version":"5.0.6",
-   "description":"Find electric vehicle charging locations nearby using Open Charge Map, the world's largest public database of EV charging locations.",
-   "app":{
-      "urls":[
-         "http://openchargemap.org/"
-      ],
-      "launch":{
-         "web_url":"http://openchargemap.org/app/index.html"
-      }
-   },
-   "icons":{
-      "128":"images/icons/AppIcon_128x128.png"
-   },
-   "permissions":[
-      "geolocation"
-   ]
+    "name": "OpenChargeMap",
+    "version": "5.0.15",
+    "description": "Find electric vehicle charging locations nearby using Open Charge Map, the world's largest public database of EV charging locations.",
+    "app": {
+        "urls": [
+            "http://openchargemap.org/"
+        ],
+        "launch": {
+            "web_url": "http://openchargemap.org/app/index.html"
+        }
+    },
+    "icons": {
+        "128": "images/icons/AppIcon_128x128.png"
+    },
+    "permissions": [
+        "geolocation"
+    ]
 }

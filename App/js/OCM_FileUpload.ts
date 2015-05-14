@@ -92,7 +92,7 @@ module OCM {
                 }
                 app.canvas.width = width;
                 app.canvas.height = height;
-                app.ctx = app.canvas.getContext("2d");
+                app.ctx = <CanvasRenderingContext2D>app.canvas.getContext("2d");
                 app.ctx.drawImage(app.img, 0, 0, width, height);
 
                 //rotate
