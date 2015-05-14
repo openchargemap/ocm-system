@@ -79,7 +79,7 @@ namespace OCM.MVC.Controllers
                 }
                 catch (UserManager.PasswordNotSetException)
                 {
-                    return PasswordReset(loginModel.EmailAddress);
+                    return RedirectToAction("PasswordReset", new { emailAddress = loginModel.EmailAddress });
                 }
             }
 
