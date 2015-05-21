@@ -14,7 +14,7 @@ function loadGoogleMapsScript() {
         if (console) console.log("Google Maps Web API not selected.");
         setTimeout(
             function () {
-                ocm_app.mappingManager.mapAPIReady = true;
+                if (!ocm_app.mappingManager.mapAPIReady) ocm_app.mappingManager.mapAPIReady = true;
             }, 1000);
 
         return false;
@@ -38,4 +38,7 @@ function loadGoogleMapsScript() {
     document.body.appendChild(script);*/
 }
 
-window.onload = loadGoogleMapsScript; 
+if (!window.cordova) {
+    //if we are not running under cordova then we use Google Maps Web API
+    window.onload = loadGoogleMapsScript;
+}

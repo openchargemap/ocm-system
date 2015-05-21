@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.0.15_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.1.0_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "../";
 var buildDir = "../../../../builds/OCM.App";

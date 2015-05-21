@@ -59,6 +59,7 @@ module OCM {
         public newsHomeUrl: string;
         public searchTimeoutMS: number; //max time allowed before search considered timed out
         public searchFrequencyMinMS: number; //min ms between search requests
+        public allowAnonymousSubmissions: boolean;
 
         constructor() {
             this.autoRefreshMapResults = false;
@@ -66,6 +67,7 @@ module OCM {
             this.maxResults = 100;
             this.searchTimeoutMS = 20000;
             this.searchFrequencyMinMS = 500;
+            this.allowAnonymousSubmissions = false;
         }
     }
 
@@ -129,6 +131,24 @@ module OCM {
             this.viewModel = new AppViewModel();
         }
 
+        logAnalyticsView(viewName: string) {
+            if (window.analytics) {
+                window.analytics.trackView(viewName);
+            }
+        }
+
+        logAnalyticsEvent(category: string, action: string, label: string = null, value: number = null) {
+            if (window.analytics) {
+                window.analytics.trackEvent(category, action, label, value);
+            }
+        }
+
+        logAnalyticsUserId(userId: string) {
+            if (window.analytics) {
+                window.analytics.setUserId(userId);
+            }
+        }
+
         getLoggedInUserInfo() {
             var userInfo = {
                 "Identifier": this.getCookie("Identifier"),
@@ -136,6 +156,10 @@ module OCM {
                 "SessionToken": this.getCookie("OCMSessionToken"),
                 "Permissions": this.getCookie("AccessPermissions")
             };
+
+            if (userInfo.Identifier != null) {
+                this.logAnalyticsUserId(userInfo.Identifier);
+            }
             return userInfo;
         }
 
@@ -166,7 +190,7 @@ module OCM {
             }
         }
 
-        setCookie(c_name: string, value, exdays: number= 1) {
+        setCookie(c_name: string, value, exdays: number = 1) {
             if (this.appState.isRunningUnderCordova) {
                 this.apiClient.setCachedDataObject("_pref_" + c_name, value);
             } else {
@@ -208,7 +232,7 @@ module OCM {
             $dropdown.val(selectedValue);
         }
 
-        populateDropdown(id: any, refDataList: any, selectedValue: any, defaultToUnspecified: boolean= null, useTitleAsValue: boolean= null, unspecifiedText: string= null) {
+        populateDropdown(id: any, refDataList: any, selectedValue: any, defaultToUnspecified: boolean = null, useTitleAsValue: boolean = null, unspecifiedText: string = null) {
             var $dropdown = $("#" + id);
             $('option', $dropdown).remove();
 

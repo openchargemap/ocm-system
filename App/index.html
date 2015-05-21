@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
     <meta http-equiv="cache-control" content="no-cache" />
 
     <title>Open Charge Map - Web App</title>
@@ -36,14 +36,13 @@
     <link rel="stylesheet" href="fonts/FontAwesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="fonts/Roboto/robotolight.css" />
     <!-- Apply App Styles -->
-    <link rel="stylesheet" href="styles/main.css" />    
+    <link rel="stylesheet" href="styles/main.css" />
 
     <link rel="stylesheet" href="js/ThirdParty/leaflet/leaflet.min.css" />
     <!--
     <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.css" />
     <link rel="stylesheet" href="js/ThirdParty/leaflet/markerclusterer/MarkerCluster.Default.css" />-->
     <link rel="stylesheet" href="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.css">
-     
 
     <!--CSS:WINDOWS:BEGIN-->
     <!--<link rel="stylesheet" href="styles/windows.css" />-->
@@ -65,7 +64,6 @@
     <!--
     <script src="js/ThirdParty/leaflet/markerclusterer/leaflet.markercluster.js"></script>-->
     <script src="js/ThirdParty/leaflet/awesome-markers/leaflet.awesome-markers.js"></script>
-    
 
     <!--JS:IOS:BEGIN-->
     <!--<link rel="stylesheet" href="styles/ios.css" />-->
@@ -95,7 +93,8 @@
         div[data-role=page] {
             display: none; /*all pages start hidden*/
         }
-        .jumbotron{
+
+        .jumbotron {
             background-color: #f1f1f1;
         }
     </style>
@@ -103,7 +102,9 @@
 <body>
 
     <div id="progress-indicator">
-        <i class="fa fa-circle-o-notch fa-spin fa-lg fa-fw"></i>
+
+        <img src="images/icons/loading-bars.svg" width="30" height="30" alt="Loading.." />
+        <!--<i class="fa fa-circle-o-notch fa-spin fa-lg fa-fw"></i>-->
     </div>
 
     <div class="app-menu-container" id="app-menu-container">
@@ -114,7 +115,6 @@
                     <img alt="OCM Logo" src="images/icons/AppIcon_36x36.png" height="36" />
                 </a>
                 <span class="accent">Open Charge Map</span>
-
             </div>
             <ul>
                 <li><a href="#map-page" class="ui-link" data-rel="menu-item"><i class="fa fa-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></a></li>
@@ -128,7 +128,6 @@
             </ul>
 
             <div id="user-profile-info">
-                
             </div>
         </nav>
     </div>
@@ -147,5 +146,4 @@
         ocm_app.apiClient.clientName = "ocm.app.TARGETNAME.APPVERSION";
     </script>
 </body>
-
 </html>

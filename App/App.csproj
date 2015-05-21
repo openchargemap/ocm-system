@@ -42,6 +42,8 @@
     <Content Include="images\icons\compass.png" />
     <Content Include="images\icons\FontAwesomeExport16.png" />
     <Content Include="images\icons\FontAwesomeExport32.png" />
+    <Content Include="images\icons\loading-bars.svg" />
+    <Content Include="images\icons\loading-spin.svg" />
     <Content Include="images\icons\map\level0.png" />
     <Content Include="images\icons\map\level1.png" />
     <Content Include="images\icons\map\level2.png" />
@@ -129,6 +131,9 @@
     <Content Include="fonts\Roboto\roboto-light-webfont.ttf" />
     <Content Include="fonts\Roboto\roboto-light-webfont.woff" />
     <Content Include="js\ThirdParty\swipebox\img\icons.svg" />
+    <Content Include="styles\main.css.map">
+      <DependentUpon>main.css</DependentUpon>
+    </Content>
     <None Include="styles\main.less" />
     <Content Include="styles\main.css">
       <DependentUpon>main.less</DependentUpon>

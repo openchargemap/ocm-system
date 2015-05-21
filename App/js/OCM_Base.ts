@@ -18,7 +18,7 @@ module OCM {
 
         public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {
             if (this.enableLogging && console) {
-                console.log("[" + LogLevel[level] + "] " + msg);
+                console.log("[" + LogLevel[level] + "] {" + (new Date().toLocaleTimeString()) + "} " + msg);
             }
         }
     }

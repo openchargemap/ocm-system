@@ -16,6 +16,7 @@ interface JQueryStatic {
 interface Window {
     L: any;
     cordova: any;
+    analytics: any;
 }
 
 //Set iOS App Splashscreen depending on device size
@@ -42,31 +43,29 @@ function onDeviceReady() {
     ocm_app.log("OCM: Cordova Loaded, onDeviceReady Fired.");
 
     try {
-    if (navigator.connection) {
-        if (navigator.connection.type == Connection.NONE) {
-            ocm_app.log("OCM: No Network status: " + navigator.connection.type.toString());
-            var networkErrorElement = document.getElementById("network-error");
-            if (networkErrorElement) {
-                networkErrorElement.style.display = "block";
+        if (navigator.connection) {
+            if (navigator.connection.type == Connection.NONE) {
+                ocm_app.log("OCM: No Network status: " + navigator.connection.type.toString());
+                var networkErrorElement = document.getElementById("network-error");
+                if (networkErrorElement) {
+                    networkErrorElement.style.display = "block";
+                }
             }
+        } else {
+            ocm_app.log("Cordova connection status not available");
         }
-    } else {
-        ocm_app.log("Cordova connection status not available");
-    }
     } catch (err) {
         ocm_app.log("OCM: error checkin for connection status");
     }
 
     //if (StatusBar) {
-        //StatusBar.overlaysWebView(false);
+    //StatusBar.overlaysWebView(false);
     //}
 
     /*
     //phonegap analytics plugin
-
-    gaPlugin = window.plugins.gaPlugin;
-    gaPlugin.init(successHandler, errorHandler, "UA-76936-12", 10);
     */
+    window.analytics.startTrackerWithId('UA-76936-12');
 
     if (window.L) {
         ocm_app.log("Leaflet ready");

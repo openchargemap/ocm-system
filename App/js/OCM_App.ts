@@ -55,7 +55,7 @@ module OCM {
 
             this.mappingManager.setParentAppContext(this);
 
-            this.appConfig.maxResults = 20000;
+            this.appConfig.maxResults = 100;
 
             this.appConfig.baseURL = "http://openchargemap.org/app/";
             this.appConfig.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
@@ -75,6 +75,8 @@ module OCM {
             this.appState.mapLaunched = false;
 
             this.appState.appMode = AppMode.STANDARD;
+
+            this.enableLogging = true;
 
             if (this.appState.appMode == AppMode.LOCALDEV) {
                 this.appConfig.baseURL = "http://localhost:81/app";
@@ -206,8 +208,7 @@ module OCM {
                 }, 2000);
             }
 
-            //show main page
-            app.navigateToMap();
+            app.mappingManager.initMap("map-view");
         }
 
         beginObservingAppModelChanges() {
@@ -223,23 +224,32 @@ module OCM {
                         app.renderPOIList(app.viewModel.poiList);
 
                         //after initial load subsequent queries auto refresh the map markers
-                        //if (app.appConfig.autoRefreshMapResults) {
-                        app.log("Auto refreshing map view");
-                        app.refreshMapView();
-                        //}
+
+                        if (app.mappingManager.mapReady) {
+                            app.log("Auto refreshing map view");
+                            app.refreshMapView();
+                        }
                     }
                 });
             });
 
             // observe mapping model changes
+            app.log("Observing mappingManager changes");
             Object.observe(this.mappingManager, function (changes) {
                 changes.forEach(function (change) {
-                    //app.log(change.type + ':' + change.name, OCM.LogLevel.VERBOSE);
+                    app.log("changed: app.mappingManager." + change.name);
 
-                    //!app.appState.mapLaunched &&
                     if (change.name == "mapAPIReady" && app.mappingManager.mapAPIReady) {
-                        //can start mapping now
+                        app.log("Map API Ready - Initialising Map.", OCM.LogLevel.VERBOSE);
+                        app.mappingManager.initMap("map-view");
+                    }
+
+                    if (change.name == "mapReady" && app.mappingManager.mapReady) {
+                        app.log("Map Ready - Let's do this thing.", OCM.LogLevel.VERBOSE);
                         app.refreshMapView();
+
+                        //show main page
+                        app.navigateToMap();
                     }
                 });
             });
@@ -298,15 +308,11 @@ module OCM {
             if (this.appConfig.launchMapOnStartup) {
                 //pages are hidden by default, start by show map screen (once map api ready)
 
-                if (app.appState.isRunningUnderCordova && app.mappingManager.isNativeMapsAvailable()) {
-                    app.mappingManager.mapAPIReady = true;
-                }
-
-                if (!app.mappingManager.mapAPIReady) {
-                    app.log("Map API not ready yet. Waiting for map API via model observer.");
+                if (!app.mappingManager.mapReady) {
+                    app.log("Map not ready yet. Waiting for map ready via model observer.");
 
                     setTimeout(function () {
-                        if (!app.mappingManager.mapAPIReady) {
+                        if (!app.mappingManager.mapReady) {
                             //map still not ready
                             //app.showMessage("Map could not load, please try again or check network connection.");
                             app.navigateToHome();
@@ -432,7 +438,7 @@ module OCM {
 
             //if map type selection changes, update map
             $("#pref-basemap-type").on("change", function () {
-                if (app.mappingManager.isMappingInitialised()) {
+                if (app.mappingManager.mapReady) {
                     app.mappingManager.setMapType($("#pref-basemap-type").val());
                 }
                 app.storeSettings();
@@ -525,7 +531,7 @@ module OCM {
 
                 //refresh/show map
                 app.setMapFocus(true);
-                app.refreshMapView();
+                //app.refreshMapView();
             } else {
                 //set list to show on small display
                 //hide map
@@ -865,7 +871,7 @@ module OCM {
             this.showMessage("Sorry, there was an unexpected problem accepting your contribution. Please check your internet connection and try again later.");
         }
 
-        performSearch(useClientLocation: boolean= false, useManualLocation: boolean= false) {
+        performSearch(useClientLocation: boolean = false, useManualLocation: boolean = false) {
             var app = this;
 
             if (this.appState._appSearchTimer == null) {
@@ -888,6 +894,8 @@ module OCM {
                             app.log("performSearch: previous search has timed out.")
                             app.hideProgressIndicator();
                             app.showMessage("Search timed out. Please check your network connection.");
+
+                            app.logAnalyticsEvent("Search", "Timeout");
                         }
                     },
                     this.appConfig.searchTimeoutMS
@@ -918,6 +926,7 @@ module OCM {
                     // search position not set, attempt fetch from location input and return for now
                     var locationText = (<HTMLInputElement>document.getElementById("search-location")).value;
                     if (locationText === null || locationText == "") {
+                        app.logAnalyticsEvent("Search", "Geolocation");
                         //try to geolocate via browser location API
                         this.geolocationManager.determineUserLocation($.proxy(
                             this.determineUserLocationCompleted, this), $.proxy(
@@ -926,6 +935,7 @@ module OCM {
                     } else {
                         // try to gecode text location name, if new lookup not
                         // attempted, continue to rendering
+                        app.logAnalyticsEvent("Search", "Geocode", locationText);
                         var lookupAttempted = this.geolocationManager.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this), $.proxy(this.determineGeocodedLocationFailed, this));
                         if (lookupAttempted == true) {
                             return;
@@ -933,7 +943,7 @@ module OCM {
                     }
                 }
 
-                if (this.viewModel.searchPosition != null && this.viewModel.searchPosition.coords != null &&!this.appState.isSearchInProgress) {
+                if (this.viewModel.searchPosition != null && this.viewModel.searchPosition.coords != null && !this.appState.isSearchInProgress) {
                     this.appState.isSearchInProgress = true;
 
                     var params = new OCM.POI_SearchParams();
@@ -957,6 +967,7 @@ module OCM {
                     this.checkSelectedAPIMode();
 
                     this.log("Performing search..");
+                    app.logAnalyticsEvent("Search", "Perform Search");
                     this.apiClient.fetchLocationDataListByParam(params, "ocm_app.handleSearchCompleted", "ocm_app.handleSearchError");
                 }
             } else {
@@ -997,6 +1008,7 @@ module OCM {
 
         determineGeocodedLocationFailed() {
             this.clearSearchRequest();
+            this.logAnalyticsEvent("Search", "Geocoding Failed");
             this.showMessage("The position of this address could not be determined. You may wish to try starting with a simpler address.");
         }
 
@@ -1012,9 +1024,11 @@ module OCM {
             this.viewModel.searchPOIList = poiList;
 
             if (poiList != null && poiList.length > 0) {
+                this.logAnalyticsEvent("Search", "Completed", "Results", poiList.length);
+
                 this.log("Caching search results..");
                 this.apiClient.setCachedDataObject("SearchResults", poiList);
-                this.apiClient.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
+                this.apiClient.setCachedDataObject("SearchResults_Location",(<HTMLInputElement>document.getElementById("search-location")).value);
                 this.apiClient.setCachedDataObject("SearchResults_SearchPos", this.viewModel.searchPosition);
             } else {
                 this.log("No search results, will not overwrite cached search results.");
@@ -1187,6 +1201,7 @@ module OCM {
             this.viewModel.selectedPOI = poi;
 
             this.log("Showing OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
+            this.logAnalyticsEvent("POI", "View", "Ref", poi.ID);
 
             if (this.isFavouritePOI(poi, null)) {
                 $("#option-favourite-icon").removeClass("fa-heart-o");
@@ -1304,24 +1319,9 @@ module OCM {
         }
 
         refreshMapView() {
-            if (this.appState.isRunningUnderCordova) {
-                var app = this;
-
-                if (app.mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_NATIVE) {
-                    //for cordova, switch over to native google maps, if available
-                    if ((<any>window).plugin && plugin.google && plugin.google.maps) {
-                        plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
-                            if (isAvailable) {
-                                app.log("Native maps available, switching API.");
-                                app.mappingManager.setMapAPI(OCM.MappingAPI.GOOGLE_NATIVE);
-                            } else {
-                                app.log("Google Play Services not available, fallback to web maps API");
-                            }
-                        });
-                    } else {
-                        app.log("Running under cordova but no native maps plugin available.");
-                    }
-                }
+            if (!this.mappingManager.mapAPIReady) {
+                this.log("app.refreshMapView: API Not Ready");
+                return;
             }
 
             //on showing map, adjust map container height to match page
@@ -1337,9 +1337,11 @@ module OCM {
 
         setMapFocus(hasFocus: boolean) {
             if (hasFocus) {
-                this.mappingManager.showMap();
+                //this.mappingManager.showMap();
+                this.mappingManager.focusMap();
             } else {
-                this.mappingManager.hideMap();
+                this.mappingManager.unfocusMap();
+                //this.mappingManager.hideMap();
             }
         }
 
@@ -1354,7 +1356,7 @@ module OCM {
             }
         }
 
-        isFavouritePOI(poi, itineraryName: string= null) {
+        isFavouritePOI(poi, itineraryName: string = null) {
             if (poi != null) {
                 var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
                 if (favouriteLocations != null) {
@@ -1368,7 +1370,7 @@ module OCM {
             return false;
         }
 
-        addFavouritePOI(poi, itineraryName: string= null) {
+        addFavouritePOI(poi, itineraryName: string = null) {
             if (poi != null) {
                 if (!this.isFavouritePOI(poi, itineraryName)) {
                     var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
@@ -1398,7 +1400,7 @@ module OCM {
             }
         }
 
-        removeFavouritePOI(poi, itineraryName: string= null) {
+        removeFavouritePOI(poi, itineraryName: string = null) {
             if (poi != null) {
                 if (this.isFavouritePOI(poi, itineraryName)) {
                     var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
@@ -1422,22 +1424,26 @@ module OCM {
             }
         }
 
-        toggleFavouritePOI(poi, itineraryName: string= null) {
+        toggleFavouritePOI(poi, itineraryName: string = null) {
             if (poi != null) {
                 var $favIcon = $("#option-favourite-icon");
                 if (this.isFavouritePOI(poi, itineraryName)) {
                     this.removeFavouritePOI(poi, itineraryName);
                     $favIcon.removeClass("fa-heart");
                     $favIcon.addClass("fa-heart-o");
+
+                    this.logAnalyticsEvent("Favourite", "Remove", "Ref", poi.ID);
                 } else {
                     this.addFavouritePOI(poi, itineraryName);
                     $favIcon.removeClass("fa-heart-o");
                     $favIcon.addClass("fa-heart");
+
+                    this.logAnalyticsEvent("Favourite", "Add", "Ref", poi.ID);
                 }
             }
         }
 
-        getFavouritePOIList(itineraryName: string= null) {
+        getFavouritePOIList(itineraryName: string = null) {
             var favouriteLocations = this.apiClient.getCachedDataObject("favouritePOIList");
             var poiList = new Array();
             if (favouriteLocations != null) {
@@ -1501,7 +1507,7 @@ module OCM {
             if (!pageTitle) pageTitle = pageId;
 
             this.log("app.showPage:" + pageId, LogLevel.VERBOSE);
-
+            this.logAnalyticsView(pageId);
             //ensure startup page no longer shown
             if (pageId != "startup-page") document.getElementById("startup-page").style.display = 'none';
 
@@ -1533,12 +1539,12 @@ module OCM {
                 setTimeout(function () { (<HTMLElement>document.documentElement).scrollIntoView(); }, 100);
             }
 
-            if (pageId !== "map-page") {
-                //native map needs to be hidden or offscreen
-                this.setMapFocus(false);
-            } else {
-                this.setMapFocus(true);
-            }
+            /* if (pageId !== "map-page") {
+                 //native map needs to be hidden or offscreen
+                 this.setMapFocus(false);
+             } else {
+                 this.setMapFocus(true);
+             }*/
 
             this.appState._lastPageId = pageId;
 
@@ -1612,6 +1618,7 @@ module OCM {
             if (showLatestSearchResults) {
                 app.viewModel.poiList = app.viewModel.searchPOIList;
             }
+            this.setMapFocus(true);
             setTimeout(function () { app.refreshMapView(); }, 250);
         }
 
@@ -1639,27 +1646,36 @@ module OCM {
             this.log("Navigate To: Add Location", LogLevel.VERBOSE);
             var app = this;
 
+            if (!app.isUserSignedIn()) {
+                if (app.appConfig.allowAnonymousSubmissions) {
+                    app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
+                } else {
+                    app.showMessage("You need to Sign In before you can add a location.");
+                    return;
+                };
+            }
+
             app.isLocationEditMode = false;
             app.viewModel.selectedPOI = null;
             app.showLocationEditor();
             this.showPage("editlocation-page", "Add Location");
-
-            if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
-            }
         }
 
         navigateToEditLocation() {
             this.log("Navigate To: Edit Location", LogLevel.VERBOSE);
             var app = this;
 
+            if (!app.isUserSignedIn()) {
+                if (app.appConfig.allowAnonymousSubmissions) {
+                    app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
+                } else {
+                    app.showMessage("You need to Sign In before you can edit locations.");
+                    return;
+                };
+            }
             //show editor
             app.showLocationEditor();
-            app.showPage("editlocation-page", "Edit Location");
-
-            if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
-            }
+            app.showPage("editlocation-page", "Edit Location", true);
         }
 
         navigateToLocationDetails() {
@@ -1715,16 +1731,21 @@ module OCM {
 
             var app = this;
 
+            if (!app.isUserSignedIn()) {
+                if (app.appConfig.allowAnonymousSubmissions) {
+                    app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
+                } else {
+                    app.showMessage("You need to Sign In before adding a comment.");
+                    return;
+                };
+            }
+
             //reset comment form on show
             (<HTMLFormElement>document.getElementById("comment-form")).reset();
             app.appState.enableCommentSubmit = true;
 
             //show checkin/comment page
-            this.showPage("submitcomment-page", "Add Comment");
-
-            if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You should sign in unless you wish to submit an anonymous comment.");
-            }
+            this.showPage("submitcomment-page", "Add Comment", false);
         }
 
         navigateToAddMediaItem() {
@@ -1733,10 +1754,10 @@ module OCM {
             var app = this;
 
             if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You cannot currently submit photos anonymously, please Sign In.");
+                app.showMessage("You need to Sign In before you can add photos.");
             } else {
                 //show upload page
-                this.showPage("submitmediaitem-page", "Add Media");
+                this.showPage("submitmediaitem-page", "Add Media", false);
             }
         }
 
@@ -1754,9 +1775,9 @@ module OCM {
 
             if (this.appState.menuDisplayed) {
                 //hide app menu
+                this.setMapFocus(true);
                 this.appState.menuDisplayed = false;
                 $("#app-menu-container").hide();
-                //$("#menu").hide();
             }
             else {
                 //show app menu

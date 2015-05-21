@@ -24,7 +24,7 @@ module OCM {
         public timestamp: number;
         public attribution: string;
 
-        constructor(lat: number= null, lng: number= null) {
+        constructor(lat: number = null, lng: number = null) {
             this.coords = new GeoLatLng();
             this.coords.latitude = lat;
             this.coords.longitude = lng;
@@ -80,8 +80,9 @@ module OCM {
     export class Mapping extends Base {
         public map: any;
         public mapCentreMarker: any;
-        public mapsInitialised: boolean;
-        public mapAPIReady: boolean;
+        public mapsInitialised: boolean; //initial map setup initiated
+        public mapAPIReady: boolean; //api loaded
+        public mapReady: boolean; //map ready for any api calls (initialisation completed)
         public mapOptions: MapOptions;
         public markerClusterer: any;
         public markerList: Array<any>;
@@ -96,8 +97,10 @@ module OCM {
             super();
 
             this.mapOptions = new MapOptions();
-            this.mapsInitialised = false;
+
             this.mapAPIReady = false;
+            this.mapsInitialised = false;
+            this.mapReady = false;
         }
 
         setParentAppContext(context: any) {
@@ -106,17 +109,55 @@ module OCM {
 
         setMapAPI(api: OCM.MappingAPI) {
             this.mapOptions.mapAPI = api;
+
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+                if (plugin.google.maps) {
+                    this.mapAPIReady = true;
+                }
+            }
         }
 
-        isMappingInitialised() {
-            if (this.mapAPIReady && this.map != null) {
+        isMapReady() {
+            if (this.map != null && this.isMapReady) {
                 return true;
             } else {
                 return false;
             }
         }
 
+        /**
+         * Performs one-time init of map object, detects cordova and chooses map api as ppropriate
+         * @param mapcanvasID  dom element for map canvas
+         */
         initMap(mapcanvasID: string) {
+            if (this.mapsInitialised) {
+                this.log("initMap: map already initialised");
+                return;
+            } else {
+                this.log("initMap: " + this.mapOptions.mapAPI)
+            }
+
+            //detect if running under cordova and if google maps plugin is available
+            if (this.parentAppContext.appState.isRunningUnderCordova) {
+                var mappingManager = this;
+
+                if (mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_NATIVE) {
+                    //for cordova, switch over to native google maps, if available
+                    if ((<any>window).plugin && plugin.google && plugin.google.maps) {
+                        plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
+                            if (isAvailable) {
+                                mappingManager.log("Native maps available, switching API.");
+                                mappingManager.setMapAPI(OCM.MappingAPI.GOOGLE_NATIVE);
+                            } else {
+                                mappingManager.log("Google Play Services not available, fallback to web maps API");
+                            }
+                        });
+                    } else {
+                        mappingManager.log("Running under cordova but no native maps plugin available.");
+                    }
+                }
+            }
+
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.initMapGoogleNativeSDK(mapcanvasID);
             }
@@ -135,29 +176,8 @@ module OCM {
                 var mapManagerContext = this;
                 var mapCanvas = document.getElementById(mapcanvasID);
 
-                this.map = plugin.google.maps.Map.getMap(mapCanvas);
+                this.map = plugin.google.maps.Map.getMap();
                 var map = this.map;
-
-                //set map options
-                this.map.setOptions({
-                    'mapType': plugin.google.maps.MapTypeId.ROADMAP,
-                    'controls': {
-                        'compass': true,
-                        'myLocationButton': true,
-                        'indoorPicker': true,
-                        'zoom': true
-                    },
-                    /* 'gestures': {
-                         'scroll': false,  //Disable scrolling
-                         'tilt': false,    //Disable changing the tilt
-                         'rotate': false   //Disable changing the bearing
-                     },*/
-                    'camera': {
-                        // 'tilt': 30,
-                        'zoom': 15,
-                        'bearing': 50
-                    }
-                });
 
                 if (this.mapOptions.enableClustering) {
                     this.markerClusterer = new MarkerClusterer(this.map, this.markerList);
@@ -200,18 +220,48 @@ module OCM {
                     }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
                 });
 
-                this.map.clear();
-                this.map.refreshLayout();
-                this.map.setVisible(true);
-                this.mapsInitialised = true;
+                this.map.on(plugin.google.maps.event.MAP_READY, function () {
+                    mapManagerContext.log("Native Mapping Ready.", LogLevel.INFO);
+
+                    var mapOptions = {
+                        mapType: plugin.google.maps.MapTypeId.ROADMAP,
+                        controls: {
+                            compass: true,
+                            myLocationButton: true,
+                            zoom: true
+                        },
+                        gestures: {
+                            scroll: true,
+                            tilt: true,
+                            rotate: true,
+                            zoom: true
+                        }
+                        /*,
+                        camera: {
+                            zoom: 15,
+                            bearing: 50
+                        }*/
+                    };
+                    map.setOptions(mapOptions);
+                    map.setDiv(mapCanvas);
+                    //map.clear();
+                    //map.refreshLayout();
+                    map.setVisible(true);
+
+                    mapManagerContext.mapReady = true;
+                });
             }
+
+            //map init has completed, map not actually ready until mapReady==true
+            mapManagerContext.mapAPIReady = true;
+            mapManagerContext.mapsInitialised = true;
 
             return true;
         }
 
         showPOIListOnMapViewGoogleNativeSDK(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
             var app = this;
-            if (!this.mapsInitialised) {
+            if (!this.mapReady) {
                 return;
             }
             //if list has changes to results render new markers etc
@@ -287,7 +337,7 @@ module OCM {
                                     marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
                                         var markerTitle = marker.getTitle();
                                         var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
-                                        app.hideMap();
+                                        //app.hideMap();
 
                                         parentContext.showDetailsViewById(poiId, false);
                                         parentContext.showPage("locationdetails-page", "Location Details");
@@ -341,6 +391,7 @@ module OCM {
         }
 
         initMapGoogleWeb(mapcanvasID) {
+            this.log("Mapping Manager: initGoogleMapWeb");
             if (this.mapsInitialised) {
                 this.log("google web maps: map already initialised");
                 return false;
@@ -435,13 +486,14 @@ module OCM {
                 }
 
                 this.mapsInitialised = true;
+                this.mapReady = true;
                 return true;
             }
         }
 
         showPOIListOnMapViewGoogleWeb(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
-            if (!this.mapsInitialised) {
-                this.log("showPOIList; cannot show google map, not initialised.");
+            if (!this.mapReady) {
+                this.log("showPOIList; cannot show google map, not ready.");
                 return;
             }
 
@@ -589,38 +641,40 @@ module OCM {
                 if (mapManagerContext.mapCentreMarker != null) {
                     mapManagerContext.log("Updating search marker position");
                     mapManagerContext.mapCentreMarker.setPosition(searchPos);
-                    map.refreshLayout();
+                    if (this.mapReady) map.refreshLayout();
                     //mapManagerContext.mapCentreMarker.setMap(map);
                 } else {
-                    mapManagerContext.log("Adding search marker position");
+                    if (this.mapReady) {
+                        mapManagerContext.log("Adding search marker position");
 
-                    map.addMarker({
-                        'position': searchPos,
-                        'draggable': true,
-                        title: "Tap to Searching from here, Drag to change position.",
-                        content: 'Your search position'
-                        // icon: "images/icons/compass.png"
-                    }, function (marker) {
-                            mapManagerContext.mapCentreMarker = marker;
+                        map.addMarker({
+                            'position': searchPos,
+                            'draggable': true,
+                            title: "Tap to Searching from here, Drag to change position.",
+                            content: 'Your search position'
+                            // icon: "images/icons/compass.png"
+                        }, function (marker) {
+                                mapManagerContext.mapCentreMarker = marker;
 
-                            //marker click
-                            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
-                                marker.getPosition(function (pos) {
-                                    mapManagerContext.log("Search marker tapped, requesting search from current position.");
+                                //marker click
+                                marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
+                                    marker.getPosition(function (pos) {
+                                        mapManagerContext.log("Search marker tapped, requesting search from current position.");
 
-                                    mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                    mapManagerContext.mapOptions.requestSearchUpdate = true;
+                                        mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                        mapManagerContext.mapOptions.requestSearchUpdate = true;
+                                    });
+                                });
+
+                                //marker drag
+                                marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
+                                    marker.getPosition(function (pos) {
+                                        mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                        mapManagerContext.mapOptions.requestSearchUpdate = true;
+                                    });
                                 });
                             });
-
-                            //marker drag
-                            marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
-                                marker.getPosition(function (pos) {
-                                    mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                    mapManagerContext.mapOptions.requestSearchUpdate = true;
-                                });
-                            });
-                        });
+                    }
                 }
             }
 
@@ -665,6 +719,7 @@ module OCM {
         initMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser) {
             if (this.map == null) {
                 this.map = this.createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, 13);
+                this.mapReady = true;
             }
         }
 
@@ -813,11 +868,11 @@ module OCM {
 
         updateMapSize() {
             if (this.map != null) {
-                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
                     this.map.refreshLayout();
                 }
 
-                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
+                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB && this.mapReady) {
                     google.maps.event.trigger(this.map, 'resize');
                 }
             }
@@ -827,11 +882,11 @@ module OCM {
             //update record of map centre so search results can optionally be refreshed
             if (moveMap) {
                 //TODO: NATIVE/Web
-                if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
+                if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB && this.mapReady) {
                     this.map.setCenter(new google.maps.LatLng(lat, lng));
                 }
 
-                if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+                if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
                     this.map.setCenter(new plugin.google.maps.LatLng(lat, lng));
                 }
             }
@@ -851,6 +906,9 @@ module OCM {
 
                 var isAvailable = plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
                     if (isAvailable) {
+                        //setup map view if not already initialised
+                        appcontext.initMap(mapCanvasID);
+
                         if (appcontext.parentAppContext != null && appcontext.parentAppContext.viewModel.searchPosition != null) {
                             var searchPos = appcontext.parentAppContext.viewModel.searchPosition;
                             if (searchPos != null) {
@@ -860,9 +918,7 @@ module OCM {
                             appcontext.log("Map centre cannot be updated");
                         }
 
-                        //setup map view if not already initialised
-                        appcontext.initMap(mapCanvasID);
-                        appcontext.showPOIListOnMapViewGoogleNativeSDK(mapCanvasID, poiList, this.parentAppContext, document.getElementById(mapCanvasID), appcontext.mapOptions.resultBatchID);
+                        if (appcontext.mapReady) appcontext.showPOIListOnMapViewGoogleNativeSDK(mapCanvasID, poiList, this.parentAppContext, document.getElementById(mapCanvasID), appcontext.mapOptions.resultBatchID);
                     } else {
                         appcontext.log("Native Maps not available");
                     }
@@ -891,7 +947,7 @@ module OCM {
                     //this.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
                 }
 
-                this.showPOIListOnMapViewGoogleWeb(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
+                if (this.mapReady) this.showPOIListOnMapViewGoogleWeb(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
 
                 return true;
             }
@@ -907,7 +963,7 @@ module OCM {
                 }
                 this.initMapLeaflet(mapCanvasID, centreLat, centreLng, false);
 
-                this.showPOIListOnMapViewLeaflet(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
+                if (this.mapReady) this.showPOIListOnMapViewLeaflet(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
             }
 
             return true;
@@ -919,7 +975,7 @@ module OCM {
             this.mapOptions.mapType = maptype;
             this.log("Changing map type:" + maptype);
 
-            if (this.isMappingInitialised()) {
+            if (this.mapReady) {
                 if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                     try {
                         this.map.setMapTypeId(eval("plugin.google.maps.MapTypeId." + maptype));
@@ -943,10 +999,9 @@ module OCM {
         hideMap() {
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.log("Debug: Hiding Map");
-                if (this.map != null) {
-                    //hide map otherwise it will stay on top
+                if (this.map != null && this.mapReady) {
                     this.map.setVisible(false);
-                    //this.map.refreshLayout();
+                    this.map.setClickable(false);
                 }
             }
         }
@@ -955,18 +1010,30 @@ module OCM {
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 this.log("Debug: Showing Map");
 
-                if (this.map != null) {
+                if (this.map != null && this.mapReady) {
                     //show/reposition map
 
                     this.map.refreshLayout();
                     this.map.setVisible(true);
+                    this.map.setClickable(true);
                 } else {
                     this.log("Map not available - check API?", LogLevel.ERROR);
                 }
             }
         }
 
-        showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean= false, isRunningUnderCordova: boolean= false) {
+        unfocusMap() {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
+                this.map.setClickable(false);
+            }
+        }
+
+        focusMap() {
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
+                this.map.setClickable(true);
+            }
+        }
+        showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean = false, isRunningUnderCordova: boolean = false) {
             var mapCanvas = document.getElementById(mapcanvasID);
             if (mapCanvas != null) {
                 var title = poi.AddressInfo.Title;

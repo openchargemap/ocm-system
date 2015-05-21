@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.webprofusion.openchargemap" version="5.0.15" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.webprofusion.openchargemap" version="5.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Open Charge Map</name>
   <description>
     Find electric vehicle charging locations around the world.
@@ -15,4 +15,11 @@
   <preference name="SplashScreenDelay" value="4000" />
   <preference name="fullscreen" value="false" />
   <preference name="android-windowSoftInputMode" value="stateVisible" />
+  <icon src="res/icon.png" />
+  <platform name="android">
+    <icon src="res/android/drawable-ldpi/icon.png" density="ldpi" />
+    <icon src="res/android/drawable-mdpi/icon.png" density="mdpi" />
+    <icon src="res/android/drawable-hdpi/icon.png" density="hdpi" />
+    <icon src="res/android/drawable-xhdpi/icon.png" density="xhdpi" />
+  </platform>
 </widget>

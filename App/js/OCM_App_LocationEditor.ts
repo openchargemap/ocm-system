@@ -166,15 +166,17 @@ module OCM {
             $("#edit-submissionstatus-container").hide();
             $("#edit-dataprovider-container").hide();
 
-            //populate lists in filter/prefs/about page
-
-            //TODO: refresh of core ref data wipe settings load from prefs
+            //avoid resetting pref selections on list change
             this.appState.suppressSettingsSave = true;
-            this.populateDropdown("filter-connectiontype", refData.ConnectionTypes, this.getMultiSelectionAsArray($("#filter-connectiontype"),""), true, false, "(All)");
-            this.populateDropdown("filter-operator", refData.Operators, this.getMultiSelectionAsArray($("#filter-operator"),""), true, false, "(All)");
-            this.populateDropdown("filter-usagetype", refData.UsageTypes, this.getMultiSelectionAsArray($("#filter-usagetype"),""), true, false, "(All)");
-            this.populateDropdown("filter-statustype", refData.StatusTypes, this.getMultiSelectionAsArray($("#filter-statustype"),""), true, false, "(All)");
+
+            //populate lists in filter/prefs/about page
+            this.populateDropdown("filter-connectiontype", refData.ConnectionTypes, this.getMultiSelectionAsArray($("#filter-connectiontype"), ""), true, false, "(All)");
+            this.populateDropdown("filter-operator", refData.Operators, this.getMultiSelectionAsArray($("#filter-operator"), ""), true, false, "(All)");
+            this.populateDropdown("filter-usagetype", refData.UsageTypes, this.getMultiSelectionAsArray($("#filter-usagetype"), ""), true, false, "(All)");
+            this.populateDropdown("filter-statustype", refData.StatusTypes, this.getMultiSelectionAsArray($("#filter-statustype"), ""), true, false, "(All)");
             this.appState.suppressSettingsSave = false
+
+            //refresh of core ref data wipes settings selections, load from prefs so set them again
             appContext.loadSettings();
 
             this.resetEditorForm();
@@ -487,8 +489,8 @@ module OCM {
                     }
                 })
 
-        // Create editor map view
-        $("#editor-map").show();
+                // Create editor map view
+                $("#editor-map").show();
                 this.editorMap = this.mappingManager.createMapLeaflet("editor-map-canvas", currentLat, currentLng, false, 14);
 
                 var unknownPowerMarker = L.AwesomeMarkers.icon({

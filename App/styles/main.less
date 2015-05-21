@@ -10,8 +10,10 @@
 @ocm-heading-font: "robotolight", "roboto", "Segoe UI Light", Helvetica, Arial, sans-serif;
 
 .ocm-material-shadow() {
-    /*box-shadow: -1px 1px 6px rgba(50, 50, 50, 0.38);*/
-    box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);
+    /*box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);*/
+    /*box shadow slow on android*/
+    border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #BBBBBB;
 }
 
 .palette {
@@ -137,9 +139,9 @@ p {
     display: none;
     font-size: 16px;
     position: fixed;
-    margin-top: 4px;
+    margin-top: 0;
     top: 0.25em;
-    left: 68px;
+    left: 46%;
     height: 30px;
     width: 30px;
     z-index: 1100;
@@ -693,7 +695,7 @@ div#home-page {
 }
 
 .app-menu {
-    z-index: 10001;    
+    z-index: 10001;
     background-color: rgba(12, 17, 5, 0.88);
     width: 240px;
     box-shadow: 5px 5px 5px 3px rgba(102, 102, 102, 0.26);
@@ -864,18 +866,22 @@ select.operational-status-list {
     option[value="50"],
     option[value="100"],
     option[value="200"] {
-    font-weight: bold;
-    color: green;
+        font-weight: bold;
+        color: green;
     }
 }
-
 
 select.filter-status {
     option[value="0"],
     option[value="50"],
     option[value="100"],
     option[value="200"] {
-    font-weight: bold;
-    color: green;
+        font-weight: bold;
+        color: green;
     }
+}
+
+/*spinner fix*/
+.fa-spin {
+    -webkit-filter: blur(0);
 }
