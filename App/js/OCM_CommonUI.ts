@@ -266,12 +266,14 @@ OCM_CommonUI.prototype.formatURL = function (url, title) {
 };
 
 OCM_CommonUI.prototype.formatPOIAddress = function (poi) {
-    var output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
-        this.formatTextField(poi.AddressInfo.AddressLine2) +
-        this.formatTextField(poi.AddressInfo.Town) +
-        this.formatTextField(poi.AddressInfo.StateOrProvince) +
-        this.formatTextField(poi.AddressInfo.Postcode) +
-        this.formatTextField(poi.AddressInfo.Country.Title);
+    var output = "";
+
+    output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
+    this.formatTextField(poi.AddressInfo.AddressLine2) +
+    this.formatTextField(poi.AddressInfo.Town) +
+    this.formatTextField(poi.AddressInfo.StateOrProvince) +
+    this.formatTextField(poi.AddressInfo.Postcode) +
+    this.formatTextField(poi.AddressInfo.Country.Title);
 
     if (this.enablePOIMap == true) {
         output += "<div id='info_map'></div>";
@@ -315,7 +317,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
 
     if (fullDetailsMode == null) fullDetailsMode = false;
 
-    var addressInfo = this.formatPOIAddress(poi);
+    var addressInfo = this.formatPOIAddress(poi, false);
 
     var contactInfo = "";
 

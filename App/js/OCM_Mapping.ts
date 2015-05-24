@@ -1033,14 +1033,14 @@ module OCM {
                 this.map.setClickable(true);
             }
         }
-        showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean = false, isRunningUnderCordova: boolean = false) {
+        showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean = false, isRunningUnderCordova: boolean = false, mapWidth: number = 200, mapHeight: number = 200) {
             var mapCanvas = document.getElementById(mapcanvasID);
             if (mapCanvas != null) {
                 var title = poi.AddressInfo.Title;
                 var lat = poi.AddressInfo.Latitude;
                 var lon = poi.AddressInfo.Longitude;
-                var width = 200;
-                var height = 200;
+                var width = mapWidth;
+                var height = mapHeight;
 
                 var mapImageURL = "http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
                 var mapHTML = "";

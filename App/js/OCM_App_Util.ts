@@ -108,14 +108,40 @@ module OCM {
             return '<a target="_blank" href="' + url + '">' + (title != null ? title : url) + '</a>';
         }
 
-        static formatPOIAddress(poi) {
-            var output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
+        static formatPOIAddress = function (poi, includeLineBreaks: boolean = true) {
+            var output = "";
+            if (includeLineBreaks) {
+                output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
                 this.formatTextField(poi.AddressInfo.AddressLine2) +
                 this.formatTextField(poi.AddressInfo.Town) +
                 this.formatTextField(poi.AddressInfo.StateOrProvince) +
                 this.formatTextField(poi.AddressInfo.Postcode) +
                 this.formatTextField(poi.AddressInfo.Country.Title);
+            } else {
+                output = this.formatStringArray([
+                    poi.AddressInfo.AddressLine1,
+                    poi.AddressInfo.AddressLine2,
+                    poi.AddressInfo.Town,
+                    poi.AddressInfo.StateOrProvince,
+                    poi.AddressInfo.Postcode,
+                    poi.AddressInfo.Country.Title
+                ]);
+            }
+            return output;
+        }
 
+        static formatStringArray = function (list: Array<string>, separator: string = ", ") {
+            if (list == null) return "";
+            var output = "";
+            for (var i = 0; i < list.length; i++) {
+                if (list[i] != null && list[i].trim() != "") {
+                    if (i == list.length - 1) {
+                        output += list[i];
+                    } else {
+                        output += list[i] + separator;
+                    }
+                }
+            }
             return output;
         }
 
@@ -124,7 +150,7 @@ module OCM {
             return val.toString();
         }
 
-        static formatTextField(val, label: string= null, newlineAfterLabel: boolean= false, paragraph: boolean= false, resourceKey: string= null) {
+        static formatTextField(val, label: string = null, newlineAfterLabel: boolean = false, paragraph: boolean = false, resourceKey: string = null) {
             if (val == null || val == "" || val == undefined) return "";
             var output = (label != null ? "<strong class='ocm-label' " + (resourceKey != null ? "data-localize='" + resourceKey + "' " : "") + ">" + label + "</strong>: " : "") + (newlineAfterLabel ? "<br/>" : "") + (val.toString().replace("\n", "<br/>")) + "<br/>";
             if (paragraph == true) output = "<p>" + output + "</p>";
@@ -160,18 +186,20 @@ module OCM {
 
             if (fullDetailsMode == null) fullDetailsMode = false;
 
-            var addressInfo = this.formatPOIAddress(poi);
+            var addressInfo = this.formatPOIAddress(poi, false);
 
             var contactInfo = "";
-
-            if (poi.AddressInfo.Distance != null) {
-                var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
-                contactInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
-            }
-            contactInfo += "<p><i class='fa fa-fw fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone1);
             contactInfo += this.formatPhone(poi.AddressInfo.ContactTelephone2);
             contactInfo += this.formatEmailAddress(poi.AddressInfo.ContactEmail);
+
+            var drivingInfo = "";
+
+            if (poi.AddressInfo.Distance != null) {
+                var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
+                drivingInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
+            }
+            drivingInfo += "<p><i class='fa fa-fw fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
 
             if (poi.AddressInfo.RelatedURL != null && poi.AddressInfo.RelatedURL != "") {
                 var displayUrl = poi.AddressInfo.RelatedURL;
@@ -261,6 +289,7 @@ module OCM {
 
             var output = {
                 "address": addressInfo,
+                "drivingInfo": drivingInfo,
                 "contactInfo": contactInfo,
                 "additionalInfo": comments + additionalInfo + equipmentInfo,
                 "advancedInfo": advancedInfo

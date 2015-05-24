@@ -1,0 +1,22 @@
+{
+  "name": "open-charge-map",
+  "version": "5.1.0",
+  "description": "Mobile and Web App for Open Charge Map",
+  "main": "index.html",
+  "scripts": {},
+  "keywords": [
+    "EV",
+    "Charging"
+  ],
+  "author": "Christopher Cook",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.8.0",
+    "jake": "^8.0.12",
+    "moment": "*",
+    "typedoc": "^0.3.4",
+    "typescript": "^1.5.0-beta",
+    "uglify-js": "*",
+    "wrench": "*"
+  }
+}

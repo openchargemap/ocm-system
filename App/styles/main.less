@@ -121,12 +121,12 @@ p {
     max-width: 90%;
 }
 
-#details-map {
+/*#details-map {
     text-align: center;
     border: 8px solid white;
     margin: 0.5em;
     max-width: 210px;
-}
+}*/
 
 @media only screen and (min-width: 800px) {
     #details-streetview {
@@ -389,7 +389,7 @@ p {
     border-radius: 4px;
     padding: 0.6em;
     margin-bottom: 0.4em;
-    background-color: #FCFCFC;
+    background-color: rgba(255, 255, 255, 0.80);
 }
 
 #locationdetails-page .ui-content {
@@ -836,7 +836,8 @@ i.subtle:hover {
 }
 
 .jumbotron {
-    color: #a1a1a1;
+    background-color: #f7f7f7;
+    color: #CCCCCC;
 }
 
 small.subtle {
@@ -884,4 +885,25 @@ select.filter-status {
 /*spinner fix*/
 .fa-spin {
     -webkit-filter: blur(0);
+}
+
+.details-body {
+    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+.action-button {
+    background-color: #4ea834;
+    padding: 6px;
+    border-radius: 100%;
+    width: 32px;
+    color: white;
+    text-align: center;
+    box-shadow: rgba(186, 180, 180, 0.47) 2px 2px;
+    margin: 8px;
 }

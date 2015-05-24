@@ -118,3 +118,6 @@ UpgradeLog*.XML
 /API/OCM.Net/OCM.API.Web/Web.Sandbox.config
 /Website/OCM.MVC/Web.Sandbox.config
 /OCM.Net.sln.ide
+/App/build/docs
+/App/build/output
+*.DS_Store

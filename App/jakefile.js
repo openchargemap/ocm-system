@@ -12,17 +12,17 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.1.0_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.1.1_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
-var srcDir = "../";
-var buildDir = "../../../../builds/OCM.App";
+var srcDir = "./";
+var buildDir = "build/output";
 var targetList = ["web", "mobile/Cordova"]; //, "mobile/Android", "mobile/WP7"
 var scriptFilename = "app.script.min.js";
 var scriptDir = "js/";
 var regexCordovaSection = /<!--JS:Cordova:Begin-->([\s\S]*?)<!--JS:Cordova:End-->/;
 var regexScriptSection = /<!-- JS:LIB:BEGIN -->([\s\S]*?)<!-- JS:LIB:END -->/;
 var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build", "obj", "res",
-    ".project", "README.md", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*", "*.md", "*.config", "*.user", "*.profile.*"];
+    ".project", "README.md","jakefile.js", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*", "*.md", "*.config", "*.user", "*.profile.*"];
 
 var mobileVersions = ["Android", "WP7", "iOS"];
 
@@ -31,6 +31,7 @@ console.log("Reading:" + srcDir + indexFileName + "::");
 
 var indexFile = fs.readFileSync(srcDir + indexFileName, "utf8");
 var scriptNames = [];
+
 
 desc("Clean old build directory");
 task("clean-dir", function () {
@@ -48,21 +49,22 @@ task("create-dir", ["clean-dir"], function () {
     if (!fs.existsSync(buildDir)) fs.mkdirSync(buildDir);
     if (!fs.existsSync(buildDir + "/mobile")) fs.mkdirSync(buildDir + "/mobile");
     targetList.forEach(
-    function (trg) {
-        fs.mkdirSync(buildDir + "/" + trg);
-        fs.mkdirSync(buildDir + "/" + trg + "/" + scriptDir);
-    });
+        function (trg) {
+            fs.mkdirSync(buildDir + "/" + trg);
+            fs.mkdirSync(buildDir + "/" + trg + "/" + scriptDir);
+        });
 });
 
 desc("Minify scripts");
 task("minify-js", function () {
+    return;
     extractScriptNames();
 
     //minify and export scripts to each target
     targetList.forEach(
-      function (trg) {
-          minifyScripts(buildDir + "/" + trg + "/");
-      });
+        function (trg) {
+            minifyScripts(buildDir + "/" + trg + "/");
+        });
 
     // find the scripts in index.html
     function extractScriptNames() {
@@ -148,29 +150,29 @@ task("copy-index", ["remove-debug"], function () { //"remove-debug","use-min-js"
 
     //copy modified index.html to each target
     targetList.forEach(
-      function (trg) {
-          var finalIndexFile = indexFile;
+        function (trg) {
+            var finalIndexFile = indexFile;
 
-          //apply search/replace modifications
-          //append version to prevent script caching web build
-          if (trg == "web") {
-              console.log("Preventing cached scripts: " + trg);
-              finalIndexFile = indexFile.replace(/(.js")/gmi, ".js?v=" + releaseVersion + "\"");
-              finalIndexFile = finalIndexFile.replace(/(main.css")/gmi, "main.css?v=" + releaseVersion + "\"");
+            //apply search/replace modifications
+            //append version to prevent script caching web build
+            if (trg == "web") {
+                console.log("Preventing cached scripts: " + trg);
+                finalIndexFile = indexFile.replace(/(.js")/gmi, ".js?v=" + releaseVersion + "\"");
+                finalIndexFile = finalIndexFile.replace(/(main.css")/gmi, "main.css?v=" + releaseVersion + "\"");
 
-              //remove cordova references
-              finalIndexFile = finalIndexFile.replace(regexCordovaSection, "<!--cordova/phonegap disabled-->");
-          }
-          //update version info
-          finalIndexFile = finalIndexFile.replace(/(APPVERSION)/gmi, releaseVersion);
+                //remove cordova references
+                finalIndexFile = finalIndexFile.replace(regexCordovaSection, "<!--cordova/phonegap disabled-->");
+            }
+            //update version info
+            finalIndexFile = finalIndexFile.replace(/(APPVERSION)/gmi, releaseVersion);
 
-          finalIndexFile = finalIndexFile.replace(/(TARGETNAME)/gmi, trg.replace("mobile/", ""));
+            finalIndexFile = finalIndexFile.replace(/(TARGETNAME)/gmi, trg.replace("mobile/", ""));
 
-          //copy index.html to target
-          console.log("Copying to Target: " + trg);
+            //copy index.html to target
+            console.log("Copying to Target: " + trg);
 
-          fs.writeFileSync(buildDir + "/" + trg + "/" + indexFileName, finalIndexFile);
-      });
+            fs.writeFileSync(buildDir + "/" + trg + "/" + indexFileName, finalIndexFile);
+        });
 });
 
 desc("Copy all other files");
@@ -208,6 +210,8 @@ task("copy-files", ["minify-js"], function () {
      * base directory to the publish directory.
      */
     function copyFiles(dir, targetDir) {
+        var currentwd =  process.cwd();
+
         var files = fs.readdirSync(srcDir + dir);
         files.forEach(function (file) {
             var currentDir = dir + file;
@@ -238,13 +242,44 @@ task("update-manifest", function () {
     */
 });
 
+desc("Compile typescript]");
+task("ts-compile", function () {
+	console.log("Compiling TypeScript files");
+
+    var cmd = "tsc js/OCM_App.ts --outDir js/Compiled --rootDir js/ --sourceRoot js/Compiled --mapRoot js/Compiled --sourceMap -d";
+    //console.log(cmd + "\n");
+
+    var ex = jake.createExec([cmd]);
+
+    ex.addListener("stdout", function (output) {
+        process.stdout.write(output);
+    });
+
+    ex.addListener("stderr", function (error) {
+        process.stderr.write(error);
+    });
+
+    ex.addListener("cmdEnd", function () {
+        complete();
+    });
+
+    ex.addListener("error", function (name) {
+        //fs.unlinkSync("../js/OCM_App.ts");
+        console.log("Compilation of " + name + " failed.");
+    });
+
+    ex.run();
+
+});
+
+
 desc("Build Target: Web");
-task("build-web", ["create-dir", "concat", "copy-index", "copy-files", "update-manifest"], function () {
+task("build-web", ["create-dir", "ts-compile", "concat", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Web Target built.");
 });
 
 desc("Build Target: Mobile");
-task("build-mobile", ["create-dir", "copy-index", "copy-files", "update-manifest"], function () {
+task("build-mobile", ["create-dir", "ts-compile", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Mobile Targets built.");
 });
 
@@ -267,23 +302,22 @@ task("default", ["build-web", "build-mobile"], function () {
     // build on default
 });
 
-/*
-desc("Generate JSDoc");
-task("generate-docs", function() {
-  console.log("Creating project documentation");
-  var exec = require('child_process').exec;
-  var command = "docs/generate.sh";
-  exec(command, function(error, stdout, stderr) {
-    if (error !== null) {
-      console.log('exec error: ' + error);
-    } else {
-      console.log("STDOUT:\n" + stdout);
-      console.log("Created documentation");
-    }
 
-    if (stderr) {
-      console.log("STDERR: " + stderr);
-    }
-  });
+desc("Generate TypeDoc");
+task("generate-docs", function () {
+    console.log("Creating project documentation");
+    var exec = require('child_process').exec;
+    var command = "typedoc --mode file --out build/docs js/ --exclude **/Compiled/** --excludeExternals";
+    exec(command, function (error, stdout, stderr) {
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        } else {
+            console.log("STDOUT:\n" + stdout);
+            console.log("Created documentation");
+        }
+
+        if (stderr) {
+            console.log("STDERR: " + stderr);
+        }
+    });
 });
-*/

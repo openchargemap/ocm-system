@@ -84,6 +84,7 @@
     <Content Include="js\ThirdParty\jquery-2.1.1.min.js" />
     <Content Include="js\ThirdParty\jQuery.fastClick.js" />
     <Content Include="js\ThirdParty\jquery.history.js" />
+    <Content Include="js\ThirdParty\jquery.stellar.js" />
     <Content Include="js\ThirdParty\jquery.validate.min.js" />
     <Content Include="js\ThirdParty\json3.min.js" />
     <Content Include="js\ThirdParty\leaflet\awesome-markers\images\markers-matte%402x.png" />

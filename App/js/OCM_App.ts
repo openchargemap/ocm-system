@@ -7,7 +7,7 @@ http://openchargemap.org
 */
 
 /*jslint browser: true, devel: true, eqeq: true, white: true */
-/*global define, $, window, document, OCM_CommonUI, OCM_Geolocation, OCM_Data, OCM_LocationSearchParams */
+/*global define, $, window, document */
 
 /*typescript*/
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
@@ -15,9 +15,18 @@ http://openchargemap.org
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 /// <reference path="TypeScriptReferences/history/history.d.ts" />
 
+/*reference includes, required for compilation*/
+/// <reference path="OCM_Base.ts" />
+/// <reference path="OCM_AppBase.ts" />
+/// <reference path="OCM_App_LocationEditor.ts" />
+/// <reference path="OCM_App_Util.ts" />
+/// <reference path="OCM_AppBootstrap.ts" />
+/// <reference path="OCM_FileUpload.ts" />
 /// <reference path="OCM_Data.ts" />
 /// <reference path="OCM_CommonUI.ts" />
 /// <reference path="OCM_Geolocation.ts" />
+/// <reference path="OCM_MapInit.ts" />
+/// <reference path="OCM_Mapping.ts" />
 
 //typescript declarations
 declare var localisation_dictionary: any;
@@ -1223,6 +1232,7 @@ module OCM {
 
             $("#details-locationtitle").html(poi.AddressInfo.Title);
             $("#details-address").html(poiDetails.address);
+            $("#details-driving").html(poiDetails.drivingInfo);
             $("#details-contact").html(poiDetails.contactInfo);
             $("#details-additional").html(poiDetails.additionalInfo);
             $("#details-advanced").html(poiDetails.advancedInfo);
