@@ -16,8 +16,6 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="build\icons.html" />
-    <Content Include="build\jakefile.js" />
     <Content Include="config.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -67,6 +65,7 @@
     <Content Include="images\splashscreen\AppSplashscreen_480x800.png" />
     <Content Include="images\splashscreen\AppSplashscreen_768x1004.png" />
     <Content Include="index.html" />
+    <Content Include="jakefile.js" />
     <Content Include="js\Compiled\readme.txt" />
     <Content Include="js\Localisation\languagePack.min.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
@@ -135,9 +134,10 @@
     <Content Include="styles\main.css.map">
       <DependentUpon>main.css</DependentUpon>
     </Content>
-    <None Include="styles\main.less" />
+    <Content Include="package.json" />
+    <None Include="styles\main.scss" />
     <Content Include="styles\main.css">
-      <DependentUpon>main.less</DependentUpon>
+      <DependentUpon>main.scss</DependentUpon>
     </Content>
     <Content Include="styles\main.min.css">
       <DependentUpon>main.css</DependentUpon>
@@ -156,14 +156,12 @@
     <Content Include="views\map.html" />
     <Content Include="views\README.txt" />
     <Content Include="views\settings.html" />
-    <Content Include="web.config" />
+    <Content Include="testplan.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ocm_app_chrome_manifest.json" />
     <Content Include="ocm_app_mozilla_manifest.webapp" />
     <Content Include="README.md" />
-    <Content Include="build\CordovaNotes.md" />
-    <Content Include="build\readme.md" />
     <Content Include="js\ThirdParty\leaflet\awesome-markers\images\Thumbs.db" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap.css.map" />
@@ -174,12 +172,6 @@
     <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\FontAwesome\fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\FontAwesome\fonts\FontAwesome.otf" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="js\OCM_FileUpload.ts" />
@@ -202,6 +194,7 @@
     <TypeScriptCompile Include="js\TypeScriptReferences\phonegap\phonegap.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="build\" />
     <Folder Include="res\screens\windows-phone\" />
   </ItemGroup>
   <PropertyGroup>
@@ -238,7 +231,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
-    <PostBuildEvent>jake --jakefile $(ProjectDir)\build\jakefile.js
+    <PostBuildEvent>cd $(ProjectDir)
+jake --jakefile $(ProjectDir)\jakefile.js
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
 </PostBuildEvent>

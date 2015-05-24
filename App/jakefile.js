@@ -18,11 +18,11 @@ var srcDir = "./";
 var buildDir = "build/output";
 var targetList = ["web", "mobile/Cordova"]; //, "mobile/Android", "mobile/WP7"
 var scriptFilename = "app.script.min.js";
-var scriptDir = "js/";
+var scriptDir = "./js/";
 var regexCordovaSection = /<!--JS:Cordova:Begin-->([\s\S]*?)<!--JS:Cordova:End-->/;
 var regexScriptSection = /<!-- JS:LIB:BEGIN -->([\s\S]*?)<!-- JS:LIB:END -->/;
 var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build", "obj", "res",
-    ".project", "README.md","jakefile.js", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*", "*.md", "*.config", "*.user", "*.profile.*"];
+    ".project", "README.md", "jakefile.js", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*", "*.md", "*.config", "*.user", "*.profile.*"];
 
 var mobileVersions = ["Android", "WP7", "iOS"];
 
@@ -31,7 +31,6 @@ console.log("Reading:" + srcDir + indexFileName + "::");
 
 var indexFile = fs.readFileSync(srcDir + indexFileName, "utf8");
 var scriptNames = [];
-
 
 desc("Clean old build directory");
 task("clean-dir", function () {
@@ -210,7 +209,7 @@ task("copy-files", ["minify-js"], function () {
      * base directory to the publish directory.
      */
     function copyFiles(dir, targetDir) {
-        var currentwd =  process.cwd();
+        var currentwd = process.cwd();
 
         var files = fs.readdirSync(srcDir + dir);
         files.forEach(function (file) {
@@ -244,7 +243,7 @@ task("update-manifest", function () {
 
 desc("Compile typescript]");
 task("ts-compile", function () {
-	console.log("Compiling TypeScript files");
+    console.log("Compiling TypeScript files");
 
     var cmd = "tsc js/OCM_App.ts --outDir js/Compiled --rootDir js/ --sourceRoot js/Compiled --mapRoot js/Compiled --sourceMap -d";
     //console.log(cmd + "\n");
@@ -269,17 +268,30 @@ task("ts-compile", function () {
     });
 
     ex.run();
-
 });
 
 
+desc("Compile SASS/SCSS");
+task("compile-scss", function () {
+    console.log("Compiling SASS/SCSS");
+    var sass = require('node-sass');
+    sass.render({
+        file: "styles/main.scss",
+        outFile:"styles/main.css",
+        outputStyle: 'expanded'
+    }, function (err, result) {
+        fs.writeFileSync("styles/main.css", result.css.toString())
+           //console.log(result.css.toString());
+        });
+});
+
 desc("Build Target: Web");
-task("build-web", ["create-dir", "ts-compile", "concat", "copy-index", "copy-files", "update-manifest"], function () {
+task("build-web", ["create-dir", "ts-compile", "compile-scss", "concat", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Web Target built.");
 });
 
 desc("Build Target: Mobile");
-task("build-mobile", ["create-dir", "ts-compile", "copy-index", "copy-files", "update-manifest"], function () {
+task("build-mobile", ["create-dir", "ts-compile", "compile-scss", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Mobile Targets built.");
 });
 
@@ -301,7 +313,6 @@ desc("default");
 task("default", ["build-web", "build-mobile"], function () {
     // build on default
 });
-
 
 desc("Generate TypeDoc");
 task("generate-docs", function () {
