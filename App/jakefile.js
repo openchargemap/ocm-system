@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.2.0_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.2.1_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "./";
 var buildDir = "build/output";
