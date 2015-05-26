@@ -199,7 +199,7 @@ module OCM {
                 var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
                 drivingInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
             }
-            drivingInfo += "<p><i class='fa fa-fw fa-road'></i>  " + this.formatSystemWebLink(directionsUrl, "Get Directions") + "<br/>";
+            drivingInfo += "<p>" + this.formatSystemWebLink(directionsUrl, "Get Directions") + "</p>";
 
             if (poi.AddressInfo.RelatedURL != null && poi.AddressInfo.RelatedURL != "") {
                 var displayUrl = poi.AddressInfo.RelatedURL;
@@ -212,28 +212,28 @@ module OCM {
 
             contactInfo += "</p>";
 
-            var comments = this.formatTextField(poi.GeneralComments, "Comments", true, true, "ocm.details.generalComments") +
+            var comments = this.formatTextField(poi.GeneralComments, null, false, true) +
                 this.formatTextField(poi.AddressInfo.AccessComments, "Access", true, true, "ocm.details.accessComments");
 
             var additionalInfo = "";
 
             if (poi.NumberOfPoints != null) {
-                additionalInfo += this.formatTextField(poi.NumberOfPoints, "Number Of Points", false, false, "ocm.details.numberOfPoints");
+                additionalInfo += this.formatTextField(poi.NumberOfPoints, "Bays", false, true, "ocm.details.numberOfPoints");
             }
 
             if (poi.UsageType != null) {
-                additionalInfo += this.formatTextField(poi.UsageType.Title, "Usage", false, false, "ocm.details.usageType");
+                additionalInfo += this.formatTextField(poi.UsageType.Title, "Usage", false, true, "ocm.details.usageType");
             }
 
             if (poi.UsageCost != null) {
-                additionalInfo += this.formatTextField(poi.UsageCost, "Usage Cost", false, false, "ocm.details.usageCost");
+                additionalInfo += this.formatTextField(poi.UsageCost, "Usage Cost", false, true, "ocm.details.usageCost");
             }
 
             if (poi.OperatorInfo != null) {
                 if (poi.OperatorInfo.ID != 1) { //skip unknown operators
-                    additionalInfo += this.formatTextField(poi.OperatorInfo.Title, "Operator", false, false, "ocm.details.operatorTitle");
+                    additionalInfo += this.formatTextField(poi.OperatorInfo.Title, "Operator", false, true, "ocm.details.operatorTitle");
                     if (poi.OperatorInfo.WebsiteURL != null) {
-                        advancedInfo += this.formatTextField(this.formatURL(poi.OperatorInfo.WebsiteURL), "Operator Website", true, false, "ocm.details.operatorWebsite");
+                        advancedInfo += this.formatTextField(this.formatURL(poi.OperatorInfo.WebsiteURL), "Operator Website", true, true, "ocm.details.operatorWebsite");
                     }
                 }
             }
@@ -241,16 +241,16 @@ module OCM {
             var equipmentInfo = "";
 
             if (poi.StatusType != null) {
-                equipmentInfo += this.formatTextField(poi.StatusType.Title, "Status", false, false, "ocm.details.operationalStatus");
+                equipmentInfo += this.formatTextField(poi.StatusType.Title, "Status", false, true, "ocm.details.operationalStatus");
                 if (poi.DateLastStatusUpdate != null) {
-                    equipmentInfo += this.formatTextField(Math.round(((<any>currentDate - <any>this.fixJSONDate(poi.DateLastStatusUpdate)) / dayInMilliseconds)) + " days ago", "Last Updated", false, false, "ocm.details.lastUpdated");
+                    equipmentInfo += this.formatTextField(Math.round(((<any>currentDate - <any>this.fixJSONDate(poi.DateLastStatusUpdate)) / dayInMilliseconds)) + " days ago", "Last Updated", false, true, "ocm.details.lastUpdated");
                 }
             }
 
             //output table of connection info
             if (poi.Connections != null) {
                 if (poi.Connections.length > 0) {
-                    equipmentInfo += "<table class='table table-st'>";
+                    equipmentInfo += "<table class='table table-striped'>";
                     equipmentInfo += "<tr><th data-localize='ocm.details.equipment.connectionType'>Connection</th><th data-localize='ocm.details.equipment.powerLevel'>Power Level</th><th data-localize='ocm.details.operationalStatus'>Status</th></tr>";
 
                     for (var c = 0; c < poi.Connections.length; c++) {
@@ -277,14 +277,14 @@ module OCM {
             }
 
             var advancedInfo = "";
-            advancedInfo += this.formatTextField("<a target='_blank' href='http://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, false, "ocm.details.refNumber");
+            advancedInfo += this.formatTextField("<a target='_blank' href='http://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, true, "ocm.details.refNumber");
             if (poi.DataProvider != null) {
-                advancedInfo += this.formatTextField(poi.DataProvider.Title, "Data Provider", false, false, "ocm.details.dataProviderTitle");
+                advancedInfo += this.formatTextField(poi.DataProvider.Title, "Data Provider", false, true, "ocm.details.dataProviderTitle");
                 if (poi.DataProvider.WebsiteURL != null) {
-                    advancedInfo += this.formatTextField(this.formatURL(poi.DataProvider.WebsiteURL), "Website", false, false, "ocm.details.dataProviderWebsite");
+                    advancedInfo += this.formatTextField(this.formatURL(poi.DataProvider.WebsiteURL), "Website", false, true, "ocm.details.dataProviderWebsite");
                 }
-                advancedInfo += this.formatTextField(poi.AddressInfo.Latitude, "Latitude", false, false, null);
-                advancedInfo += this.formatTextField(poi.AddressInfo.Longitude, "Longitude", false, false, null);
+                advancedInfo += this.formatTextField(poi.AddressInfo.Latitude, "Latitude", false, true, null);
+                advancedInfo += this.formatTextField(poi.AddressInfo.Longitude, "Longitude", false, true, null);
             }
 
             var output = {

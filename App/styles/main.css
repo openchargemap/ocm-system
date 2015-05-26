@@ -51,10 +51,6 @@ h4 {
   font-size: 1.2em;
 }
 
-p {
-  margin: 1em 0 1em 0;
-}
-
 #locationdetails-view {
   position: absolute;
   left: 0px;
@@ -64,8 +60,8 @@ p {
   border-top: 5px solid gainsboro;
   /*box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);*/
   /*box shadow slow on android*/
-  border-right: 1px solid #CCCCCC;
-  border-bottom: 1px solid #BBBBBB;
+  border-right: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
   display: none;
   background-color: #F2F7F3;
   padding: 8px;
@@ -150,8 +146,8 @@ p {
   height: 100%;
   /*box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);*/
   /*box shadow slow on android*/
-  border-right: 1px solid #CCCCCC;
-  border-bottom: 1px solid #BBBBBB;
+  border-right: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
 }
 
 .ocm-label {
@@ -228,8 +224,8 @@ p {
   transition: background-color 1s linear, box-shadow ease-in 0.5s;
   /*box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);*/
   /*box shadow slow on android*/
-  border-right: 1px solid #CCCCCC;
-  border-bottom: 1px solid #BBBBBB;
+  border-right: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
 }
 
 .results-list {
@@ -372,8 +368,8 @@ p {
 .card, .content-subsection {
   /*box-shadow: 1px 1px 4px 1px rgb(228, 225, 225);*/
   /*box shadow slow on android*/
-  border-right: 1px solid #CCCCCC;
-  border-bottom: 1px solid #BBBBBB;
+  border-right: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
   margin: 0.2em;
   border-radius: 4px;
   padding: 0.6em;
@@ -816,7 +812,7 @@ i.subtle:hover {
 }
 
 .jumbotron {
-  background-color: #f7f7f7;
+  background-color: white;
   color: #CCCCCC;
 }
 
@@ -884,9 +880,31 @@ select.filter-status option[value="200"] {
   background-color: #4ea834;
   padding: 6px;
   border-radius: 100%;
-  width: 32px;
   color: white;
   text-align: center;
-  box-shadow: rgba(186, 180, 180, 0.47) 2px 2px;
+  box-shadow: rgba(186, 180, 180, 0.47) 2px 2px 2px;
   margin: 8px;
+  font-size: 16px;
+  display: inline-block;
+  min-width: 32px;
+  height: 32px;
+}
+
+.section-icon {
+  color: #DFDFDF;
+  font-size: 24px;
+  float: left;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  display: inline-block;
+}
+
+.card-heading > .section-icon {
+  float: none;
+  padding-top: 0;
+}
+
+img.user {
+  width: 64px;
+  padding-right: 6px;
 }

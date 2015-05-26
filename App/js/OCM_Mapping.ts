@@ -1039,6 +1039,9 @@ module OCM {
                 var title = poi.AddressInfo.Title;
                 var lat = poi.AddressInfo.Latitude;
                 var lon = poi.AddressInfo.Longitude;
+
+                if (mapWidth > 640) mapWidth = 640;
+                if (mapHeight > 640) mapHeight = 640;
                 var width = mapWidth;
                 var height = mapHeight;
 

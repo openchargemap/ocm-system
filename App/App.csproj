@@ -70,6 +70,10 @@
     <Content Include="js\Localisation\languagePack.min.js" />
     <Content Include="js\OfflineCache\OCM_CoreReferenceData.js" />
     <Content Include="js\ThirdParty\analytics.js" />
+    <Content Include="js\ThirdParty\animate.css" />
+    <Content Include="js\ThirdParty\animate.min.css">
+      <DependentUpon>animate.css</DependentUpon>
+    </Content>
     <Content Include="js\ThirdParty\bootbox.min.js" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.css" />
     <Content Include="js\ThirdParty\bootstrap\css\bootstrap-theme.min.css" />
@@ -114,7 +118,6 @@
     <Content Include="js\ThirdParty\marker.svg" />
     <Content Include="js\ThirdParty\object-observe-lite.min.js" />
     <Content Include="js\ThirdParty\Object.observe.poly.js" />
-    <Content Include="js\ThirdParty\pocketgrid.min.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.css" />
     <Content Include="js\ThirdParty\swipebox\css\swipebox.min.css" />
     <Content Include="js\ThirdParty\swipebox\img\icons.png" />
@@ -232,7 +235,7 @@
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd $(ProjectDir)
-jake --jakefile $(ProjectDir)\jakefile.js
+jake --jakefile $(ProjectDir)\jakefile.js build-web-no-ts
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
 </PostBuildEvent>

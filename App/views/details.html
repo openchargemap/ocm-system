@@ -12,36 +12,53 @@
 
             <div id="details-map" style="margin:0;padding:0;"></div>
 
-            <div class="row details-body">
+            <div class="row details-body" style="margin-top:-50px;">
                 <div class="col-sm-6">
 
-                    <div id="details-general" class="card" style="margin-top:-50px;">
-                        <h3 class="card-heading" style="margin-top:-2em;font-weight:bold;text-shadow: 1px 2px #f7f7f7;">
-                            <div id="details-locationtitle" style="font-size:2em;"></div>
+                    <div id="details-general" class="card">
+                        <h3 class="card-heading" style="margin-top:-2em;font-weight:bold;text-shadow: 2px 2px 5px #f7f7f7;">
+                            <span id="details-locationtitle" style="font-size:2em;"></span>
                         </h3>
                         <div class="row">
                             <div class="col-md-6">
+                                <div class="section-icon">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
                                 <p id="details-address"></p>
 
                                 <p id="details-streetview"></p>
                             </div>
                             <div class="col-md-6">
-                                <div class="action-button pull-left">
+
+                                <div class="section-icon">
                                     <i class="fa fa-car"></i>
                                 </div>
+
                                 <p id="details-driving"></p>
+
                                 <p id="details-contact"></p>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-6">
+
                     <div id="details-additional-container" class="card">
-                        <div class="card-heading"><i class="fa fa-bolt fa-square"></i> <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span></div>
+                        <div class="card-heading">
+                            <div class="section-icon">
+                                <i class="fa fa-bolt"></i>
+                            </div>
+                            <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
+                        </div>
                         <div id="details-additional"></div>
                     </div>
+                </div>
+                <div class="col-sm-6">
+
                     <div id="details-usercomments-container" class="card">
-                        <div class="card-heading"><i class="fa fa-comment"></i> <span data-localize="ocm.details.commentsAndRatings.sectionTitle">comments and ratings</span> <div class="pull-right"><a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i>  <span data-localize="ocm.general.addItem">Add</span></a></div></div>
+                        <div class="card-heading">
+                            <div class="section-icon">
+                                <i class="fa fa-comment"></i>
+                            </div> <span data-localize="ocm.details.commentsAndRatings.sectionTitle">comments and ratings</span> <div class="pull-right"><a id="btn-checkin" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i>  <span data-localize="ocm.general.addItem">Add</span></a></div>
+                        </div>
 
                         <div id="details-usercomments">
                             <span data-localize="ocm.details.commentsAndRatings.zeroComments">No comments submitted.</span>
@@ -49,7 +66,11 @@
                     </div>
 
                     <div id="details-mediaitems-container" class="card">
-                        <div class="card-heading"><i class="fa fa-camera"></i> <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> <div class="pull-right"><a id="btn-uploadphoto" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a></div></div>
+                        <div class="card-heading">
+                            <div class="section-icon">
+                                <i class="fa fa-camera"></i>
+                            </div> <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> <div class="pull-right"><a id="btn-uploadphoto" class="btn btn-primary" href="javascript:void();"><i class="fa fa-plus"></i> <span data-localize="ocm.general.addItem">Add</span></a></div>
+                        </div>
                         <div id="details-mediaitems">
                             No photos submitted.
                         </div>

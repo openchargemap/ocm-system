@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.1.1_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.2.0_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "./";
 var buildDir = "build/output";
@@ -21,7 +21,7 @@ var scriptFilename = "app.script.min.js";
 var scriptDir = "./js/";
 var regexCordovaSection = /<!--JS:Cordova:Begin-->([\s\S]*?)<!--JS:Cordova:End-->/;
 var regexScriptSection = /<!-- JS:LIB:BEGIN -->([\s\S]*?)<!-- JS:LIB:END -->/;
-var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build", "obj", "res",
+var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build", "node_modules", "views", "obj", "res",
     ".project", "README.md", "jakefile.js", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*", "*.md", "*.config", "*.user", "*.profile.*"];
 
 var mobileVersions = ["Android", "WP7", "iOS"];
@@ -176,7 +176,7 @@ task("copy-index", ["remove-debug"], function () { //"remove-debug","use-min-js"
 
 desc("Copy all other files");
 task("copy-files", ["minify-js"], function () {
-    console.log("Copying all other files into /bin");
+    console.log("Copying files to target");
 
     function createExludeRegex() {
         // exclude files that get optimization treatment
@@ -245,8 +245,7 @@ desc("Compile typescript]");
 task("ts-compile", function () {
     console.log("Compiling TypeScript files");
 
-    var cmd = "tsc js/OCM_App.ts --outDir js/Compiled --rootDir js/ --sourceRoot js/Compiled --mapRoot js/Compiled --sourceMap -d";
-    //console.log(cmd + "\n");
+    var cmd = "tsc js/OCM_App.ts --outDir js/Compiled --rootDir js/ --sourceRoot js/Compiled  --sourceMap -d";
 
     var ex = jake.createExec([cmd]);
 
@@ -270,19 +269,23 @@ task("ts-compile", function () {
     ex.run();
 });
 
-
 desc("Compile SASS/SCSS");
 task("compile-scss", function () {
     console.log("Compiling SASS/SCSS");
     var sass = require('node-sass');
     sass.render({
         file: "styles/main.scss",
-        outFile:"styles/main.css",
+        outFile: "styles/main.css",
         outputStyle: 'expanded'
     }, function (err, result) {
         fs.writeFileSync("styles/main.css", result.css.toString())
-           //console.log(result.css.toString());
-        });
+        //console.log(result.css.toString());
+    });
+});
+
+desc("Build Target: Web without TS Compile");
+task("build-web-no-ts", ["create-dir", "compile-scss", "concat", "copy-index", "copy-files", "update-manifest"], function () {
+    console.log("Web Target built.");
 });
 
 desc("Build Target: Web");

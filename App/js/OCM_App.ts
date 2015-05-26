@@ -85,7 +85,7 @@ module OCM {
 
             this.appState.appMode = AppMode.STANDARD;
 
-            this.enableLogging = true;
+            this.enableLogging = false;
 
             if (this.appState.appMode == AppMode.LOCALDEV) {
                 this.appConfig.baseURL = "http://localhost:81/app";
@@ -1237,7 +1237,8 @@ module OCM {
             $("#details-additional").html(poiDetails.additionalInfo);
             $("#details-advanced").html(poiDetails.advancedInfo);
 
-            this.mappingManager.showPOIOnStaticMap("details-map", poi, true, this.appState.isRunningUnderCordova);
+            var viewWidth = $(window).width();
+            this.mappingManager.showPOIOnStaticMap("details-map", poi, true, this.appState.isRunningUnderCordova, viewWidth, 200);
 
             var streetviewUrl = "http://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
             var streetViewLink = "https://maps.google.com/maps?q=&layer=c&cbll=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&cbp=11,0,0,0,0";
@@ -1249,14 +1250,24 @@ module OCM {
                 for (var c = 0; c < poi.UserComments.length; c++) {
                     var comment = poi.UserComments[c];
                     var commentDate = OCM.Utils.fixJSONDate(comment.DateCreated);
-                    commentOutput +=
-                    "<blockquote>" +
-                    "<p>" + (comment.Rating != null ? "<strong>Rating: " + comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
-                    "<small><cite>" + (comment.CommentType != null ? "[" + comment.CommentType.Title + "] " : "") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() +
-                    "<em>" +
+                    var fragment =
+                        "<div class='card comment'>" +
+                        "<div class='row'>" +
+                        "<div class='col-sm-2'>" + (comment.User != null ? "<img class='user' src='http://www.gravatar.com/avatar/" + comment.User.EmailHash + "?d=mm' />" : "<img class='user' src='http://www.gravatar.com/avatar/00?f=y&d=mm'/>") + "<br/>" +
+                        ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") +
+                        "</div>" +
+                        "<div class='col-sm-8'>" +
+                        "<h3>" + (comment.CommentType != null ? comment.CommentType.Title + " - " : "") +
+                        (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
+                        "</h3>" +
+                        "<p>" + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
+                        "<small>" + commentDate.toLocaleDateString() +
+                        "<em>" +
 
-                    (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
-                    "</em> </cite></small></blockquote>";
+                        "</em></small></div>" +
+                        "<div class='col-sm-2'>" + (comment.Rating != null ? "" + comment.Rating + " out of 5" : " Not Rated") + "</div>" +
+                        "</div></div>";
+                    commentOutput += fragment;
                 }
                 commentOutput += "</div>";
 
@@ -1275,9 +1286,12 @@ module OCM {
                         var itemDate = OCM.Utils.fixJSONDate(mediaItem.DateCreated);
                         var mediaItemThumbnail = mediaItem.ItemThumbnailURL;
                         var mediumSizeThumbnail = mediaItemThumbnail.replace(".thmb.", ".medi.");
-                        mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a class='swipebox' href='" + mediumSizeThumbnail + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
-                        "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" +
-                        "</blockquote>";
+                        mediaItemOutput += "<div class='card comment'><div class='row'>" +
+                        "<div class='col-xs-6'><a class='swipebox' href='" + mediumSizeThumbnail + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img class='img-responsive img-thumbnail' src='" + mediaItem.ItemThumbnailURL + "'/></a></div>" +
+                        "<div class='col-xs-6'><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+                        "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " " + itemDate.toLocaleDateString() + "</cite></small>" +
+                        "</div>" +
+                        "</div></div>";
                     }
                 }
 
