@@ -229,6 +229,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\docs.css" />
+    <Content Include="Content\images\app.png" />
     <Content Include="Content\images\AppIcon_36x36.png" />
     <Content Include="Content\images\branding.png" />
     <Content Include="Content\images\branding_sm.png" />
@@ -490,6 +491,10 @@
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Web\OCM.API.Web.csproj">
       <Project>{d59550ef-227c-48cb-b97a-200bb2aee27c}</Project>
       <Name>OCM.API.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Import\OCM.Import.Analysis\OCM.Import.Analysis.csproj">
+      <Project>{fbd1bb19-0912-4a8c-be95-197ccdc27cf3}</Project>
+      <Name>OCM.Import.Analysis</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Import\OCM.Import.Common\OCM.Import.Common.csproj">
       <Project>{c65726e4-1154-4a3d-b3ab-b1dd50590e34}</Project>

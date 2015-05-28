@@ -56,7 +56,7 @@ var localisation_dictionary_hu ={
       },
       "mediaItems": {
         "sectionTitle": "Fotók",
-        "addPrompt": "Tölts fel saját fényképet ehhez a helyhez!"
+        "addPrompt": "Tölts fel saját fényképet ehhez a helyhez"
       },
       "metadataValues": {
         "sectionTitle": "További címkék"
