@@ -104,12 +104,32 @@ h4 {
   max-width: 90%;
 }
 
-/*#details-map {
-    text-align: center;
-    border: 8px solid white;
-    margin: 0.5em;
-    max-width: 210px;
-}*/
+#details-map {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: #e9e5dc;
+  /* Old browsers */
+  background: -moz-linear-gradient(left, #e9e5dc 0%, #cadfaa 40%, #cadfaa 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #e9e5dc), color-stop(40%, #cadfaa), color-stop(100%, #cadfaa));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(left, #e9e5dc 0%, #cadfaa 40%, #cadfaa 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left, #e9e5dc 0%, #cadfaa 40%, #cadfaa 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(left, #e9e5dc 0%, #cadfaa 40%, #cadfaa 100%);
+  /* IE10+ */
+  background: linear-gradient(to right, #e9e5dc 0%, #cadfaa 40%, #cadfaa 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9e5dc', endColorstr='#cadfaa',GradientType=1 );
+  /* IE6-9 */
+}
+
+#details-map img {
+  border: 1px solid gainsboro;
+}
+
 @media only screen and (min-width: 800px) {
   #details-streetview {
     float: right;
@@ -891,7 +911,7 @@ select.filter-status option[value="200"] {
 }
 
 .section-icon {
-  color: #DFDFDF;
+  color: #767676;
   font-size: 24px;
   float: left;
   padding-right: 8px;

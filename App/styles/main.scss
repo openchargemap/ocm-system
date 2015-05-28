@@ -121,12 +121,24 @@ p {
     max-width: 90%;
 }
 
-/*#details-map {
-    text-align: center;
-    border: 8px solid white;
-    margin: 0.5em;
-    max-width: 210px;
-}*/
+#details-map {
+    margin:0;
+    padding:0;
+    width:100%;
+    background: rgb(233,229,220); /* Old browsers */
+background: -moz-linear-gradient(left,  rgba(233,229,220,1) 0%, rgba(202,223,170,1) 40%, rgba(202,223,170,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(233,229,220,1)), color-stop(40%,rgba(202,223,170,1)), color-stop(100%,rgba(202,223,170,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left,  rgba(233,229,220,1) 0%,rgba(202,223,170,1) 40%,rgba(202,223,170,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left,  rgba(233,229,220,1) 0%,rgba(202,223,170,1) 40%,rgba(202,223,170,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left,  rgba(233,229,220,1) 0%,rgba(202,223,170,1) 40%,rgba(202,223,170,1) 100%); /* IE10+ */
+background: linear-gradient(to right,  rgba(233,229,220,1) 0%,rgba(202,223,170,1) 40%,rgba(202,223,170,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9e5dc', endColorstr='#cadfaa',GradientType=1 ); /* IE6-9 */
+
+}
+
+#details-map img {
+border:1px solid gainsboro;
+}
 
 @media only screen and (min-width: 800px) {
     #details-streetview {
@@ -912,7 +924,7 @@ select.filter-status {
 }
 
 .section-icon {
-    color: #DFDFDF;
+    color: #767676;
     font-size: 24px;
     float: left;
     padding-right: 8px;

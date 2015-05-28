@@ -12,19 +12,17 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.2.1_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.2.3_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "./";
 var buildDir = "build/output";
-var targetList = ["web", "mobile/Cordova"]; //, "mobile/Android", "mobile/WP7"
+var targetList = ["web", "mobile/Cordova"];
 var scriptFilename = "app.script.min.js";
 var scriptDir = "./js/";
 var regexCordovaSection = /<!--JS:Cordova:Begin-->([\s\S]*?)<!--JS:Cordova:End-->/;
 var regexScriptSection = /<!-- JS:LIB:BEGIN -->([\s\S]*?)<!-- JS:LIB:END -->/;
 var excludeFiles = [".gitignore", ".git", ".idea", "bin", "test", ".settings", "build", "node_modules", "views", "obj", "res",
     ".project", "README.md", "jakefile.js", "*psd", "*.psd", "*libs", "CordovaNotes.txt", "*.bat", ".svn", "*.csproj*", "*.md", "*.config", "*.user", "*.profile.*"];
-
-var mobileVersions = ["Android", "WP7", "iOS"];
 
 /* Build Tasks */
 console.log("Reading:" + srcDir + indexFileName + "::");
@@ -56,7 +54,7 @@ task("create-dir", ["clean-dir"], function () {
 
 desc("Minify scripts");
 task("minify-js", function () {
-    return;
+    
     extractScriptNames();
 
     //minify and export scripts to each target
@@ -144,7 +142,7 @@ task("remove-debug", function () {
 });
 
 desc("Copy index.html");
-task("copy-index", ["remove-debug"], function () { //"remove-debug","use-min-js"
+task("copy-index", ["remove-debug","use-min-js"], function () { //"remove-debug","use-min-js"
     console.log("Copying index.html to build targets");
 
     //copy modified index.html to each target
@@ -289,7 +287,7 @@ task("build-web-no-ts", ["create-dir", "compile-scss", "concat", "copy-index", "
 });
 
 desc("Build Target: Web");
-task("build-web", ["create-dir", "ts-compile", "compile-scss", "concat", "copy-index", "copy-files", "update-manifest"], function () {
+task("build-web", ["create-dir", "ts-compile", "compile-scss", "concat", "", "copy-index", "copy-files", "update-manifest"], function () {
     console.log("Web Target built.");
 });
 
