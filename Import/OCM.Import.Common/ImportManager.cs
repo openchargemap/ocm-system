@@ -1,4 +1,5 @@
-﻿using KellermanSoftware.CompareNetObjects;
+﻿using i4o.i4o;
+using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common;
@@ -13,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace OCM.Import
 {
-
     /*Import Reporting:
      * before performing import, prepare report of items to be added/updated, ignored or delisted.
      * for each item, detail the reason for the categorisation and related items from the import
      * */
+
     public enum ImportItemStatus
     {
         Added,
@@ -39,6 +40,7 @@ namespace OCM.Import
         /// If true, item is from the data source, otherwise item is target in OCM to be added/updated.
         /// </summary>
         public bool IsSourceItem { get; set; }
+
         public ChargePoint POI { get; set; }
 
         public List<ImportItem> RelatedItems { get; set; }
@@ -97,6 +99,7 @@ namespace OCM.Import
         private GeolocationCacheManager geolocationCacheManager = null;
 
         public string ImportLog { get; set; }
+
         public ImportManager(string tempFolderPath)
         {
             GeonamesAPIUserName = "openchargemap";
@@ -133,7 +136,7 @@ namespace OCM.Import
             Way to remove item (or log items) which no longer exist in data source?
          * */
 
-        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator=false)
+        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -147,15 +150,27 @@ namespace OCM.Import
             //List<ChargePoint> masterList = await new OCMClient(IsSandboxedAPIMode).GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
             var poiManager = new POIManager();
 
-            List<ChargePoint> masterList = poiManager.GetChargePoints(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
-            List<ChargePoint> masterListCopy = JsonConvert.DeserializeObject<List<ChargePoint>>(JsonConvert.SerializeObject(masterList)); //copy master list so we have before/after
+            List<ChargePoint> masterListCollection = poiManager.GetChargePoints(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
+
+            var spec = new i4o.IndexSpecification<ChargePoint>()
+                    .Add(i => i.DataProviderID)
+                    .Add(i => i.DataProvidersReference);
+
+            var masterList = new i4o.IndexSet<ChargePoint>(masterListCollection, spec);
+
+            List<ChargePoint> masterListCopy = new List<ChargePoint>();
+            foreach (var tmp in masterList)
+            {
+                //fully copy of master list item so we have before/after
+                masterListCopy.Add(JsonConvert.DeserializeObject<ChargePoint>(JsonConvert.SerializeObject(tmp)));
+            }
             /*List<ChargePoint> masterListCopy = new List<ChargePoint>();
             foreach (var mcp in masterList)
             {
                 masterListCopy.Add(mcp.ShallowCopy());
             }*/
             //if we failed to get a master list, quit with no result
-            if (masterList.Count == 0) return new List<ChargePoint>();
+            if (masterListCollection.Count == 0) return new List<ChargePoint>();
 
             List<ChargePoint> duplicateList = new List<ChargePoint>();
             List<ChargePoint> updateList = new List<ChargePoint>();
@@ -166,13 +181,16 @@ namespace OCM.Import
 
             var cpListSortedByPos = cpList.OrderBy(c => c.AddressInfo.Latitude).ThenBy(c => c.AddressInfo.Longitude);
 
+            int poiProcessed = 0;
+            int totalPOI = cpListSortedByPos.Count();
+
             foreach (var item in cpListSortedByPos)
             {
                 var itemGeoPos = new System.Device.Location.GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
-                
+
                 //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
                 var dupeList = masterList.Where(c =>
-                        (c.DataProvider != null && c.DataProvider.ID == item.DataProvider.ID && c.DataProvidersReference == item.DataProvidersReference)
+                        (c.DataProvider != null && c.DataProviderID == item.DataProviderID && c.DataProvidersReference == item.DataProvidersReference)
                         || (c.AddressInfo.Title == item.AddressInfo.Title && c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 && c.AddressInfo.Postcode == item.AddressInfo.Postcode)
                         || new System.Device.Location.GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS //meters distance apart
                 );
@@ -232,6 +250,13 @@ namespace OCM.Import
                     }
                 }
                 previousCP = item;
+
+                poiProcessed++;
+
+                if (poiProcessed % 300 == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Deduplication: " + poiProcessed + " processed of " + totalPOI);
+                }
             }
 
             //remove duplicates from list to apply
@@ -240,7 +265,7 @@ namespace OCM.Import
                 cpList.Remove(dupe);
             }
 
-            Log("Duplicate removed from import:" + duplicateList.Count);
+            Log("Duplicates removed from import:" + duplicateList.Count);
 
             //add updated items (replace duplicates with property changes)
 
@@ -384,7 +409,7 @@ namespace OCM.Import
                     foreach (var otherPoi in importedPOIList.Where(p => p != poi))
                     {
                         //if address matches or if address is empty and lat/long matches then merge the poi
-                        if ((!String.IsNullOrEmpty(poi.AddressInfo.ToString()) && poi.AddressInfo.ToString() == otherPoi.AddressInfo.ToString()) || (String.IsNullOrEmpty(poi.AddressInfo.ToString()) && poi.AddressInfo.Latitude==otherPoi.AddressInfo.Latitude && poi.AddressInfo.Longitude==otherPoi.AddressInfo.Longitude))
+                        if ((!String.IsNullOrEmpty(poi.AddressInfo.ToString()) && poi.AddressInfo.ToString() == otherPoi.AddressInfo.ToString()) || (String.IsNullOrEmpty(poi.AddressInfo.ToString()) && poi.AddressInfo.Latitude == otherPoi.AddressInfo.Latitude && poi.AddressInfo.Longitude == otherPoi.AddressInfo.Longitude))
                         {
                             if (poi.OperatorID != otherPoi.OperatorID)
                             {
@@ -396,7 +421,11 @@ namespace OCM.Import
                                 tmpMergedPOIs.Add(otherPoi); //track which POIs will now be discarded
 
                                 //add equipment info from merged poi to our main poi
-                                poi.Connections.AddRange(otherPoi.Connections);
+                                if (otherPoi.Connections != null)
+                                {
+                                    if (poi.Connections == null) poi.Connections = new List<ConnectionInfo>();
+                                    poi.Connections.AddRange(otherPoi.Connections);
+                                }
                             }
                         }
                     }
@@ -411,7 +440,7 @@ namespace OCM.Import
             }
 
             stopWatch.Stop();
-            Log("MergeDuplicatePOIEquipmentList took "+stopWatch.Elapsed.TotalSeconds +" seconds");
+            Log("MergeDuplicatePOIEquipmentList took " + stopWatch.Elapsed.TotalSeconds + " seconds");
             return mergedPOIList;
         }
 
@@ -419,6 +448,7 @@ namespace OCM.Import
         {
             this.ImportLog += message + "\r\n";
         }
+
         /// <summary>
         /// Given a list of POIs, returns list of those which are low data quality based on their content (address etc)
         /// </summary>
@@ -583,6 +613,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
             providers.Add(new ImportProvider_NobilDotNo());
             providers.Add(new ImportProvider_OplaadpalenNL());
+            
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -614,7 +645,7 @@ namespace OCM.Import
             {
                 await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, false);
             }
-            
+
             return true;
         }
 
@@ -640,7 +671,7 @@ namespace OCM.Import
                 }
                 else
                 {
-                    if (p.IsStringData)
+                    if (p.IsStringData && !p.UseCustomReader)
                     {
                         Log("Loading input data from file..");
                         loadOK = p.LoadInputFromFile(p.InputPath);
@@ -678,33 +709,45 @@ namespace OCM.Import
 
                 if (list.Count > 0)
                 {
-
                     if (p.MergeDuplicatePOIEquipment)
                     {
                         Log("Merging Equipment from Duplicate POIs");
                         list = MergeDuplicatePOIEquipment(list);
                     }
 
-                    Log("Cleaning invalid POIs");
-                    var invalidPOIs = new List<ChargePoint>();
-                    foreach (var poi in list)
+                    if (!p.IncludeInvalidPOIs)
                     {
-                        if (!BaseImportProvider.IsPOIValidForImport(poi))
+                        Log("Cleaning invalid POIs");
+                        var invalidPOIs = new List<ChargePoint>();
+                        foreach (var poi in list)
                         {
-                            invalidPOIs.Add(poi);
+                            if (!BaseImportProvider.IsPOIValidForImport(poi))
+                            {
+                                invalidPOIs.Add(poi);
+                            }
+                        }
+                        foreach (var poi in invalidPOIs)
+                        {
+                            list.Remove(poi);
                         }
                     }
-                    foreach (var poi in invalidPOIs)
+
+                    List<ChargePoint> finalList = new List<ChargePoint>();
+
+                    if (!p.SkipDeduplication)
                     {
-                        list.Remove(poi);
+                        Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
+
+                        //de-duplicate and clean list based on existing data
+                        //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
+                        finalList = await DeDuplicateList(list.ToList(), true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator);
+                        //var finalList = list;
                     }
-
-                    Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
-
-                    //de-duplicate and clean list based on existing data
-                    //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
-                    var finalList = await DeDuplicateList(list.ToList(), true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator);
-                    //var finalList = list;
+                    else
+                    {
+                        //skip deduplication
+                        finalList = list.ToList();
+                    }
 
                     if (ImportUpdatesOnly)
                     {
@@ -832,26 +875,38 @@ namespace OCM.Import
 
         public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
+            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(TempFolder+"\\Shapefiles");
+
             //process list of locations, populating country refreshing cache where required
             foreach (var item in itemList)
             {
                 if (item.AddressInfo.Country == null)
                 {
-                    var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
-                    if (geoLookup != null)
-                    {
-                        var country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
-                        if (country != null)
-                        {
-                            item.AddressInfo.Country = country;
+                    Country country = null;
 
-                            //remove country name from address line 1 if present
-                            if (item.AddressInfo.AddressLine1 != null)
+                    var test = spatialAnalysis.ClassifyPoint((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude);
+                    if (test != null)
+                    {
+                        country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == test.CountryCode || c.Title == test.CountryName);
+                    }
+                    if (country == null)
+                    {
+                        var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
+                        if (geoLookup != null)
+                        {
+                            country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
+                        }
+                    }
+                    if (country != null)
+                    {
+                        item.AddressInfo.Country = country;
+
+                        //remove country name from address line 1 if present
+                        if (item.AddressInfo.AddressLine1 != null)
+                        {
+                            if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
                             {
-                                if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
-                                {
-                                    item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
-                                }
+                                item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
                             }
                         }
                     }

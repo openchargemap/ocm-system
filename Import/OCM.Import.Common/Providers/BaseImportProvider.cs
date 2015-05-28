@@ -165,6 +165,8 @@ namespace OCM.Import.Providers
 
         public bool IsStringData { get; set; }
 
+        public bool UseCustomReader { get; set; }
+
         public string AutoRefreshURL { get; set; }
 
         public string InputData { get; set; }
@@ -177,6 +179,8 @@ namespace OCM.Import.Providers
 
         public bool IsProductionReady { get; set; }
 
+        public bool IncludeInvalidPOIs { get; set; }
+
         /// <summary>
         /// If true, import processing will look for duplicate POIs and merge the equipment listed into one master POI
         /// </summary>
@@ -187,8 +191,10 @@ namespace OCM.Import.Providers
         /// </summary>
         public bool AllowDuplicatePOIWithDifferentOperator { get; set; }
 
+        public bool SkipDeduplication { get; set; }
+
         public string DataAttribution { get; set; }
-        
+
         private Encoding _sourceEncoding = null;
 
         public Encoding SourceEncoding
@@ -238,7 +244,7 @@ namespace OCM.Import.Providers
 
         public void Log(string message)
         {
-            this.ProcessingLog+= "\r\n[" + ProviderName + "]: " + message;
+            this.ProcessingLog += "\r\n[" + ProviderName + "]: " + message;
         }
 
         public EVSE GetEVSEFromCP(ChargePoint cp)
@@ -641,14 +647,14 @@ namespace OCM.Import.Providers
 
         public bool IsConnectionInfoBlank(ConnectionInfo c)
         {
-            if (c.ConnectionTypeID==null && c.ConnectionType == null && c.Amps == null & c.Voltage == null && c.Level == null && c.Quantity == null)
+            if (c.ConnectionTypeID == null && c.ConnectionType == null && c.Amps == null & c.Voltage == null && c.Level == null && c.Quantity == null)
             {
                 return true;
             }
             return false;
         }
 
-        public static bool IsPOIValidForImport(ChargePoint poi, bool includeCountryValidation=false)
+        public static bool IsPOIValidForImport(ChargePoint poi, bool includeCountryValidation = false)
         {
             if (poi == null) return false;
             if (poi.AddressInfo == null) return false;

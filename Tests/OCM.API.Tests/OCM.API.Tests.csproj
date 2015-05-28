@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestAnalysis.cs" />
     <Compile Include="TestPOIQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,6 +78,10 @@
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj">
       <Project>{f330eca1-d079-4ee0-aeb4-30a3fd67fe03}</Project>
       <Name>OCM.API.Common.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Import\OCM.Import.Analysis\OCM.Import.Analysis.csproj">
+      <Project>{fbd1bb19-0912-4a8c-be95-197ccdc27cf3}</Project>
+      <Name>OCM.Import.Analysis</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

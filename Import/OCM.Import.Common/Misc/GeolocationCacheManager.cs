@@ -1,22 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using System.Net;
-using System.IO;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
 
 namespace OCM.Import.Misc
 {
     public class GelocationCacheItem
     {
         public double Latitude { get; set; }
+
         public double Longitude { get; set; }
+
         public int CountryID { get; set; }
+
         public string CountryCode { get; set; }
+
         public string CountryName { get; set; }
+
         public string LanguageCodes { get; set; }
     }
 
@@ -38,9 +43,9 @@ namespace OCM.Import.Misc
 
         public bool LoadCache()
         {
-            if (System.IO.File.Exists(tempFolder+"\\"+GeolocationCacheDataFile))
+            if (System.IO.File.Exists(tempFolder + "\\" + GeolocationCacheDataFile))
             {
-                string cacheJSON = System.IO.File.ReadAllText(tempFolder+"\\GeolocationCache.json");
+                string cacheJSON = System.IO.File.ReadAllText(tempFolder + "\\GeolocationCache.json");
                 GeolocationCache = (List<GelocationCacheItem>)JsonConvert.DeserializeObject(cacheJSON, GeolocationCache.GetType());
                 return true;
             }
@@ -55,6 +60,9 @@ namespace OCM.Import.Misc
                 var output = GeolocationCache.OrderBy(c => c.CountryName).ThenBy(c => c.Latitude).ThenBy(c => c.Longitude);
                 string json = JsonConvert.SerializeObject(output);
                 System.IO.File.WriteAllText(tempFolder + "\\" + GeolocationCacheDataFile, json);
+
+                //refresh in memory cache
+                LoadCache();
                 return true;
             }
             catch (Exception exp)
@@ -70,7 +78,6 @@ namespace OCM.Import.Misc
         {
             //http://api.geonames.org/countryCodeJSON?formatted=true&lat=41.55111&lng=10.2&username<userid>&style=full
             //http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=47.3&lng=9&username=<userid>&style=full
-
 
             try
             {
@@ -124,19 +131,17 @@ namespace OCM.Import.Misc
 
                             LogHelper.Log("Geocache item created:" + cacheItem.CountryName);
                             GeolocationCache.Add(cacheItem);
+                            SaveCache();
                         }
                     }
                     return cacheItem;
                 }
-
-
             }
             catch (Exception)
             {
                 //failed
                 return null;
             }
-
         }
     }
 }
