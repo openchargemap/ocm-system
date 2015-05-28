@@ -6,7 +6,7 @@
 
 
 <div class="banner-container">
-   
+
     <div class="ocm-backdrop">
 
 
@@ -18,7 +18,7 @@
             <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
         </div>
 
-        <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated flip">
+        <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated fadeIn">
             <a href="@Url.Action("Index", "POI")">
                 <div class="stat">
                     <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
@@ -30,7 +30,7 @@
         <div class="animated fadeIn container-fluid">
 
             <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
-            
+
             <div id="datasummary"></div>
             <p>We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")">Find out more</a>.</p>
             <p class="pull-right">
@@ -41,52 +41,50 @@
     </div>
 </div>
 
-<div class="hidden-xs">
+<!--<div class="hidden-xs">
     <div class="app-container animated fadeIn">
         <p class="app-loading animated zoomIn"><i class="fa fa-circle-o-notch fa-spin"></i> Loading App..</p>
         <iframe id="mapapp" class="animated fadeInUpBig" style="width: 100%; height: 620px; margin-top:0.5em;border:none; box-shadow:0 0 8px #333;" src="http://openchargemap.org/app?mode=embedded@(Session["languageCode"]!=null?"&languagecode="+Session["languageCode"]:"")"></iframe>
     </div>
 </div>
-<div class="visible-xs">
-    <h1>Find Charging Locations</h1>
-    You can quickly browse all locations using our web app: <a href="/app" target="_blank" class="btn btn-primary">Open App</a>
-</div>
-
-<script>
-    var buffer = 20; //scroll bar buffer
-    var appFrame = document.getElementById('mapapp');
-
-    function pageY(elem) {
-        return elem.offsetParent ? (elem.offsetTop + pageY(elem.offsetParent)) : elem.offsetTop;
-    }
-
-    function resizeIframe() {
-        var height = document.documentElement.clientHeight;
-        height -= pageY(appFrame) + buffer;
-        height = (height < 0) ? 0 : height;
-        appFrame.style.height = height + 'px';
-    }
-
-    // .onload doesn't work with IE8 and older.
-    if (appFrame.attachEvent) {
-        appFrame.attachEvent("onload", resizeIframe);
-    } else {
-        appFrame.onload = resizeIframe;
-    }
-
-    window.onresize = resizeIframe;
-</script>
+    -->
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6 card">
+        <h2 data-localize="ocm.general.linkWebApp">Find Charging Locations</h2>
+        <i class="fa fa-search pull-left home-icons"></i>
+       
+            <a href="/app" target="_blank">
+                <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
+            </a>
+        
+
+    </div>
+    <div class="col-md-6 card">
+        <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
+        <i class="fa fa-tachometer pull-left home-icons"></i>
+        <p>
+            <em data-localize="ocm.infoText.supplyData.who">EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
+        </p>
+        <p>
+            <strong data-localize="ocm.infoText.supplyData.needData">We need your data.</strong> <span data-localize="ocm.infoText.supplyData.what">You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please</span> <a href="@Url.Action("Contact", "About")" data-localize="ocm.infoText.supplyData.contactUs">contact us</a> <span data-localize="ocm.infoText.supplyData.getStarted">to get started</span>.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 card">
         <h2 data-localize="ocm.navigation.develop.getInvolved">Get Involved</h2>
+        <i class="fa fa-users pull-left home-icons"></i>
         <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
         <p>
             <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-warning" href="@Url.Action("Add", "POI")"> <span data-localize="ocm.general.addLocation">Add A Location</span> <span class="glyphicon glyphicon-pencil"></span></a>
         </p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6 card">
         <h2 data-localize="ocm.infoText.getStations.sectionTitle">Get Charging Station Data</h2>
+
+        <i class="fa fa-cloud-download pull-left home-icons"></i>
         <p>
             <em data-localize="ocm.infoText.getStations.who">Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> <span data-localize="ocm.infoText.getStations.what">
                 You can access and download
@@ -94,15 +92,6 @@
             </span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.navigation.develop.api">API</a>.
         </p>
         <p> <span data-localize="ocm.infoText.getStations.websiteOperators">If you operate a website and would like to include a charging location map, you can</span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.infoText.getStations.embedMap">embed a map on your own website</a>.</p>
-    </div>
-    <div class="col-md-4">
-        <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
-        <p>
-            <em data-localize="ocm.infoText.supplyData.who">EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
-        </p>
-        <p>
-            <strong data-localize="ocm.infoText.supplyData.needData">We need your data.</strong> <span data-localize="ocm.infoText.supplyData.what">You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please</span> <a href="@Url.Action("Contact", "About")" data-localize="ocm.infoText.supplyData.contactUs">contact us</a> <span data-localize="ocm.infoText.supplyData.getStarted">to get started</span>.
-        </p>
     </div>
 </div>
 
@@ -128,7 +117,7 @@
         //summaryContent += "<strong>"+totalStations + "</strong> <span data-localize="ocm.infoText.stats.stations">charging stations across</span> <strong>" + totalLocations + "</strong> <span data-localize="ocm.infoText.stats.acrossLocations">locations</span>.";
         summaryContent += "<strong>" + totalStations + "</strong> charging stations across <strong>" + totalLocations + "</strong> locations.";
         document.getElementById("datasummary").innerHTML = summaryContent;
-        
+
     }
 
     function loadCountryMap(countryName, isoCode) {
@@ -137,3 +126,35 @@
 
     refreshDataSummary();
 </script>
+
+
+<script>
+    var buffer = 20; //scroll bar buffer
+    var appFrame = document.getElementById('mapapp');
+
+    function pageY(elem) {
+        return elem.offsetParent ? (elem.offsetTop + pageY(elem.offsetParent)) : elem.offsetTop;
+    }
+
+    function resizeIframe() {
+        var height = document.documentElement.clientHeight;
+        height -= pageY(appFrame) + buffer;
+        height = (height < 0) ? 0 : height;
+
+        if (appFrame) {
+            appFrame.style.height = height + 'px';
+        }
+    }
+
+    if (appFrame) {
+        // .onload doesn't work with IE8 and older.
+        if (appFrame.attachEvent) {
+            appFrame.attachEvent("onload", resizeIframe);
+        } else {
+            appFrame.onload = resizeIframe;
+        }
+
+        window.onresize = resizeIframe;
+    }
+</script>
+

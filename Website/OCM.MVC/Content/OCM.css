@@ -499,4 +499,9 @@ div[data-editormode="advanced"] label {
 .banner-container {
   padding: 0;
 }
+i.home-icons {
+  font-size: 64px;
+  font-size: 8vw;
+  color: #515151;
+}
 /*# sourceMappingURL=OCM.css.map */
