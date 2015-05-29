@@ -55,7 +55,7 @@ namespace OCM.Import.Providers
                 {
                     var item = dataItem;
                     
-                    cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //AFDC
+                    cp.DataProviderID = this.DataProviderID; //AFDC
                     cp.DataProvidersReference = item["id"].ToString();
                     cp.DateLastStatusUpdate = DateTime.UtcNow;
                     cp.AddressInfo = new AddressInfo();
@@ -92,7 +92,7 @@ namespace OCM.Import.Providers
                     }
                     else
                     {
-                        cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(cy => cy.ID == countryID);
+                        cp.AddressInfo.CountryID = countryID;
                     }
 
 
@@ -106,7 +106,7 @@ namespace OCM.Import.Providers
                         var deviceOperatorInfo = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Contains(deviceController) == true);
                         if (deviceOperatorInfo != null)
                         {
-                            cp.OperatorInfo = deviceOperatorInfo;
+                            cp.OperatorID = deviceOperatorInfo.ID;
                         }
                         else
                         {
@@ -115,42 +115,42 @@ namespace OCM.Import.Providers
                     }
 
                     //determine most likely usage type
-                    cp.UsageType = usageTypePrivate;
+                    cp.UsageTypeID = usageTypePrivate.ID;
                     if (item["groups_with_access_code"] != null)
                     {
                         string accessDesc = item["groups_with_access_code"].ToString().ToLower();
                         if (accessDesc.StartsWith("public - see hours"))
                         {
-                            cp.UsageType = usageTypePublic;
+                            cp.UsageTypeID = usageTypePublic.ID;
                         }
                         else if (accessDesc.Trim() == "public")
                         {
-                            cp.UsageType = usageTypePublic;
+                            cp.UsageTypeID = usageTypePublic.ID;
                         }
                         else if (accessDesc.StartsWith("private access only"))
                         {
-                            cp.UsageType = usageTypePrivate;
+                            cp.UsageTypeID = usageTypePrivate.ID;
                         }
                         else if (accessDesc.StartsWith("public - card key at all times"))
                         {
-                            cp.UsageType = usageTypePublicMembershipRequired;
+                            cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
                         }
                         else if (accessDesc.StartsWith("public - call ahead"))
                         {
-                            cp.UsageType = usageTypePublicNoticeRequired;
+                            cp.UsageTypeID = usageTypePublicNoticeRequired.ID;
                         }
                         else if (accessDesc.StartsWith("public - credit card at all times"))
                         {
-                            cp.UsageType = usageTypePublicPayAtLocation;
+                            cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
                         }
                         else if (accessDesc.StartsWith("private"))
                         {
-                            cp.UsageType = usageTypePrivate;
+                            cp.UsageTypeID = usageTypePrivate.ID;
                         }
                         else if (accessDesc.StartsWith("planned"))
                         {
-                            cp.UsageType = usageTypePrivate;
-                            cp.StatusType = nonoperationalStatus;
+                            cp.UsageTypeID = usageTypePrivate.ID;
+                            cp.StatusTypeID = nonoperationalStatus.ID;
                             skipItem = true;
                         }
                         else
@@ -179,16 +179,23 @@ namespace OCM.Import.Providers
                         ConnectionInfo cinfo = new ConnectionInfo() { };
 
                         cinfo.Quantity = numLevel1;
-                        cinfo.ConnectionType = new ConnectionType { ID = 0 }; //unknown
-                        cinfo.Level = chrgLevel1;
+                        cinfo.ConnectionTypeID = 0; //unknown
+                        cinfo.LevelID = chrgLevel1.ID;
 
                         //assume basic level 1 power
                         cinfo.Voltage = 120;
                         cinfo.Amps = 16;
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
-                        cinfo.CurrentType = new CurrentType { ID = 10 };//AC
+                        cinfo.CurrentTypeID =  10;//AC
 
-                        if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionType.ID = 9; //nema 5-20
+                        if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = 9; //nema 5-20
+
+                        if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
+                        {
+                            //unknown connection type
+                            Log("Unknown Lvl 1 Connection Type or top many types:" + evconnectors.ToString());
+                        }
+
                         if (!IsConnectionInfoBlank(cinfo))
                         {
                             cp.Connections.Add(cinfo);
@@ -206,11 +213,17 @@ namespace OCM.Import.Providers
                         cinfo.Voltage = 230;
                         cinfo.Amps = 16;
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
-                        cinfo.CurrentType = new CurrentType { ID = 10 };//AC
+                        cinfo.CurrentTypeID = 10; //AC
 
-                        if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionType.ID = 1; //J1772
+                        if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionTypeID = 1; //J1772
 
-                        cinfo.Level = chrgLevel2;
+                        if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
+                        {
+                            //unknown connection type
+                            Log("Unknown Lvl 2 Connection Type or too many types:" + evconnectors.ToString());
+                        }
+
+                        cinfo.LevelID = chrgLevel2.ID;
 
                         if (!IsConnectionInfoBlank(cinfo))
                         {
@@ -223,22 +236,32 @@ namespace OCM.Import.Providers
                         ConnectionInfo cinfo = new ConnectionInfo() { };
 
                         cinfo.Quantity = numLevel3;
-                        cinfo.ConnectionType = new ConnectionType { ID = 0 }; //unknown
-                        cinfo.Level = chrgLevel3;
+                        cinfo.ConnectionTypeID = 0; //unknown
+                        cinfo.LevelID = chrgLevel3.ID;
 
                         //assume basic level 3 power
                         cinfo.Voltage = 400;
                         cinfo.Amps = 100;
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
-                        cinfo.CurrentType = new CurrentType { ID = 10 };//DC
+                        cinfo.CurrentTypeID = 10; //DC
 
-                        if (evconnectors.Any(c => c.Value<string>() == "CHADEMO")) cinfo.ConnectionType.ID = 2; //J1772
+                        if (evconnectors.Any(c => c.Value<string>() == "CHADEMO")) cinfo.ConnectionTypeID = 2; //CHADEMO
 
                         if (evconnectors.Any(c => c.Value<string>() == "TESLA"))
                         {
-                            cinfo.ConnectionType.ID = 27; //tesla supercharger
+                            cinfo.ConnectionTypeID = 27; //tesla supercharger
                         }
 
+                        if (evconnectors.Any(c => c.Value<string>() == "J1772COMBO"))
+                        {
+                            cinfo.ConnectionTypeID = 32; //CCS Combo J1772 Version
+                        }
+
+                        if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
+                        {
+                            //unknown connection type
+                            Log("Unknown Lvl 3 Connection Type or too many types:" + evconnectors.ToString());
+                        }
                         if (!IsConnectionInfoBlank(cinfo))
                         {
                             cp.Connections.Add(cinfo);
@@ -259,7 +282,7 @@ namespace OCM.Import.Providers
                 itemCount++;
             }
 
-            return outputList;
+            return outputList.ToList();
         }
     }
 }

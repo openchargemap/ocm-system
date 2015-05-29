@@ -154,7 +154,8 @@ namespace OCM.Import
 
             var spec = new i4o.IndexSpecification<ChargePoint>()
                     .Add(i => i.DataProviderID)
-                    .Add(i => i.DataProvidersReference);
+                    .Add(i => i.DataProvidersReference)
+                    ;
 
             var masterList = new i4o.IndexSet<ChargePoint>(masterListCollection, spec);
 
@@ -184,6 +185,9 @@ namespace OCM.Import
             int poiProcessed = 0;
             int totalPOI = cpListSortedByPos.Count();
 
+            Stopwatch dupeIdentWatch = new Stopwatch();
+            dupeIdentWatch.Start();
+
             foreach (var item in cpListSortedByPos)
             {
                 var itemGeoPos = new System.Device.Location.GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
@@ -200,7 +204,7 @@ namespace OCM.Import
                     if (updateDuplicate)
                     {
                         //if updating duplicates, get exact matching duplicate based on provider reference and update/merge with this item to update status/merge properties
-                        var updatedItem = dupeList.FirstOrDefault(d => d.DataProvider.ID == item.DataProvider.ID && d.DataProvidersReference == item.DataProvidersReference);
+                        var updatedItem = dupeList.FirstOrDefault(d => d.DataProviderID == (item.DataProvider!=null? item.DataProvider.ID : item.DataProviderID) && d.DataProvidersReference == item.DataProvidersReference);
                         if (updatedItem != null)
                         {
                             //only merge/update from live published items
@@ -231,8 +235,10 @@ namespace OCM.Import
                 }
 
                 //mark item as duplicate if location/title exactly matches previous entry or lat/long is within DuplicateDistance meters
+                
                 if (previousCP != null)
                 {
+                    //this branch is the most expensive part of dedupe:
                     if (IsDuplicateLocation(item, previousCP, true))
                     {
                         if (!duplicateList.Contains(item))
@@ -249,6 +255,8 @@ namespace OCM.Import
                         }
                     }
                 }
+                
+                
                 previousCP = item;
 
                 poiProcessed++;
@@ -258,6 +266,10 @@ namespace OCM.Import
                     System.Diagnostics.Debug.WriteLine("Deduplication: " + poiProcessed + " processed of " + totalPOI);
                 }
             }
+
+            dupeIdentWatch.Stop();
+            Log("De-dupe pass took " + dupeIdentWatch.Elapsed.TotalSeconds + " seconds. " + (dupeIdentWatch.Elapsed.TotalMilliseconds / cpList.Count) + "ms per item.");
+
 
             //remove duplicates from list to apply
             foreach (var dupe in duplicateList)
@@ -280,7 +292,11 @@ namespace OCM.Import
             Log("Updated items to import:" + updateList.Count);
 
             //populate missing location info from geolocation cache if possible
+            Stopwatch geoWatch = new Stopwatch();
+            geoWatch.Start();
             PopulateLocationFromGeolocationCache(cpList, coreRefData);
+            geoWatch.Stop();
+            Log("Populate Country from Lat/Long took " + geoWatch.Elapsed.TotalSeconds+ " seconds. " + (geoWatch.Elapsed.TotalMilliseconds/cpList.Count)+ "ms per item.");
 
             //final pass to catch duplicates present in data source, mark additional items as Delisted Duplicate so we have a record for them
             var submissionStatusDelistedDupe = coreRefData.SubmissionStatusTypes.First(s => s.ID == 1001); //delisted duplicate
@@ -484,17 +500,18 @@ namespace OCM.Import
                 || new System.Device.Location.GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS //meters distance apart
                 )
             {
+                int dataProviderId = (previous.DataProvider != null ? previous.DataProvider.ID : (int)previous.DataProviderID);
                 if (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate due to exact equal latlon to [Data Provider " + previous.DataProvider.ID + "]" + previous.AddressInfo.ToString());
+                    Log(current.AddressInfo.ToString() + " is Duplicate due to exact equal latlon to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
                 else if (new System.Device.Location.GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate due to close proximity to [Data Provider " + previous.DataProvider.ID + "]" + previous.AddressInfo.ToString());
+                    Log(current.AddressInfo.ToString() + " is Duplicate due to close proximity to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
                 else if (previous.AddressInfo.Title == current.AddressInfo.Title && previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1 && previous.AddressInfo.Postcode == current.AddressInfo.Postcode)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate due to same Title and matching AddressLine1 and Postcode  [Data Provider " + previous.DataProvider.ID + "]" + previous.AddressInfo.ToString());
+                    Log(current.AddressInfo.ToString() + " is Duplicate due to same Title and matching AddressLine1 and Postcode  [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
                 return true;
             }
@@ -875,12 +892,12 @@ namespace OCM.Import
 
         public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
-            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(TempFolder+"\\Shapefiles");
+            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(TempFolder + "\\Shapefiles\\World\\ne_10m_admin_0_map_units.shp");
 
             //process list of locations, populating country refreshing cache where required
             foreach (var item in itemList)
             {
-                if (item.AddressInfo.Country == null)
+                if (item.AddressInfo.Country == null && item.AddressInfo.CountryID==null)
                 {
                     Country country = null;
 
@@ -915,6 +932,10 @@ namespace OCM.Import
                 if (item.AddressInfo.Country == null)
                 {
                     LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title);
+                }
+                else
+                {
+                    item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
                 }
             }
 

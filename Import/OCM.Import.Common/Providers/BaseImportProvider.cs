@@ -667,7 +667,7 @@ namespace OCM.Import.Providers
 
             if (poi.Connections == null || !poi.Connections.Any()) return false;
             if (poi.AddressInfo.Title.Contains("????")) return false; //imports with invalid character encoding
-            if (includeCountryValidation && poi.AddressInfo.Country == null) return false;
+            if (includeCountryValidation && (poi.AddressInfo.CountryID==null && poi.AddressInfo.Country == null)) return false;
             return true;
         }
     }
