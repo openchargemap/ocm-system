@@ -15,6 +15,7 @@ namespace OCM.MVC.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            ViewBag.IsHome = true;
             ViewBag.WideContainer = true; //tell layout to user wide view
             return View();
         }

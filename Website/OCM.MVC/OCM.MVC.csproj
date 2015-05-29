@@ -224,6 +224,10 @@
   <ItemGroup>
     <Content Include="Content\animate.css" />
     <Content Include="Content\animate.min.css" />
+    <Content Include="Content\bootstrap-cosmo.css" />
+    <Content Include="Content\bootstrap-cosmo.min.css">
+      <DependentUpon>bootstrap-cosmo.css</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -351,6 +355,8 @@
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Templates\Notifications\SubscriptionNotification.htm" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.README.html" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.VERSION.txt" />
     <Content Include="Temp\Uploads\readme.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -458,6 +464,11 @@
     <Content Include="Views\Profile\ChangePassword.cshtml" />
     <Content Include="Views\LoginProvider\ConfirmPasswordReset.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RegistrationModel.cshtml" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.cpg" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.dbf" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.prj" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.shp" />
+    <Content Include="Temp\Shapefiles\World\ne_10m_admin_0_map_units.shx" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

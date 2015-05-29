@@ -12,7 +12,7 @@
 {
     if (String.IsNullOrEmpty(((OCM.API.Common.Model.User)ViewBag.UserProfile).EmailAddress))
     {
-        <div class="alert alert-danger">Your profile does not have an email address set. Subscriptions require your email address in order to notify you about matching changes. <a href="@Url.Action("Edit","Profile")">Edit Your Profile</a></div>
+        <div class="alert alert-danger">Your profile does not have an email address set. Subscriptions require your email address in order to notify you about matching changes. <a href="@Url.Action("Edit","Profile")" class="alert-link">Edit Your Profile</a></div>
     }
 }
 @Html.Partial("_UserSubscriptions", Model)

@@ -5,41 +5,7 @@
 }
 
 
-<div class="banner-container">
 
-    <div class="ocm-backdrop">
-
-
-        <div class="applinks pull-right animated fadeInDown">
-            <span data-localize="ocm.infoText.getApp">Get the app</span>:
-            <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
-            <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
-            <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
-            <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
-        </div>
-
-        <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated fadeIn">
-            <a href="@Url.Action("Index", "POI")">
-                <div class="stat">
-                    <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
-                </div>
-            </a>
-        </div>
-
-
-        <div class="animated fadeIn container-fluid">
-
-            <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
-
-            <div id="datasummary"></div>
-            <p>We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")">Find out more</a>.</p>
-            <p class="pull-right">
-                <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span> <span class="glyphicon glyphicon-list-alt"></span> </a>
-                <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"> <span data-localize="ocm.general.addLocation">Add A Location</span> <span class="glyphicon glyphicon-plus-sign"></span></a>
-            </p>
-        </div>
-    </div>
-</div>
 
 <!--<div class="hidden-xs">
     <div class="app-container animated fadeIn">
@@ -78,7 +44,7 @@
         <i class="fa fa-users pull-left home-icons"></i>
         <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
         <p>
-            <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-warning" href="@Url.Action("Add", "POI")"> <span data-localize="ocm.general.addLocation">Add A Location</span> <span class="glyphicon glyphicon-pencil"></span></a>
+            <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-sm btn-warning" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span> </a>
         </p>
     </div>
     <div class="col-md-6 card">

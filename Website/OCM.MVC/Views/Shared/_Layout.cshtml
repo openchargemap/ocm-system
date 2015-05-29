@@ -15,7 +15,7 @@
     <meta name="description" content="@ViewBag.Description" />
     <meta name="author" content="openchargemap.org" />
 
-    <link href="~/content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/content/bootstrap-cosmo.min.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/css")
 
@@ -172,6 +172,46 @@
         </div>
     </div>
 
+    @if (ViewBag.IsHome==true)
+    { 
+    <div class="banner-container">
+
+        <div class="banner-backdrop">
+
+            <div class="banner-foreground">
+                <div class="applinks pull-right animated fadeInDown">
+                    <span data-localize="ocm.infoText.getApp">Get the app</span>:
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
+                    <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
+                    <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
+                    <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
+                </div>
+
+                <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated fadeIn">
+                    <a href="@Url.Action("Index", "POI")">
+                        <div class="stat">
+                            <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="animated fadeIn container-fluid">
+
+                <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
+
+                <div id="datasummary"></div>
+                <p>We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")">Find out more</a>.</p>
+                <p class="pull-right">
+                    <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    }
+    
     <div class="container @if(ViewBag.WideContainer==true){<text>container-wide</text>}">
         <div class="content">
             @RenderBody()

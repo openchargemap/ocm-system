@@ -19,7 +19,7 @@
     color: @color-b-semitrans; /*color-b-semitrans*/
     color: @color-c; /*color-c-pale*/
 }
-
+/*
 @font-face {
     font-family: 'Oswald';
     font-style: normal;
@@ -75,16 +75,6 @@ div.content {
     .info > h3 {
         line-height: 1em;
     }
-
-footer, div.footer {
-    margin: 16px;
-    padding: 16px;
-    border-top: 1px dotted @color-a;
-    color: #464646;
-    text-align: center;
-    font-size: 8pt;
-    background-color: #f8fbf7;
-}
 
 .license {
     padding: 6px;
@@ -232,9 +222,7 @@ div.details-container {
     position: relative;
     top: -700px;
     padding: 1em;
-    /*overflow: auto;
-    min-height: 500px;
-         */
+  
     background-color: @color-black-semitrans;
     color: white;
 
@@ -329,68 +317,6 @@ div.stat {
     border: none;
 }
 
-.navbar-brand, .navbar-inverse .navbar-brand {
-    background-image: url('images/AppIcon_36x36.png');
-    background-repeat: no-repeat;
-    background-position: 6px 6px;
-    padding-left: 46px;
-    color: white;
-    font-family: @font-headings;
-    font-weight: 300;
-    padding-top: 14px;
-    height: 42px;
-}
-
-
-
-.navbar-inverse {
-    background-color: darken(@color-b, 20%);
-    background-image: none;
-}
-
-    .navbar-inverse .nav > li > a {
-        color: #fff;
-        text-transform: lowercase;
-    }
-
-.navbar .nav li.dropdown.open > .dropdown-toggle {
-    background-color: (@color-b + #111);
-}
-
-@media (max-width: 767px){
-.navbar-inverse .navbar-nav .open .dropdown-menu>li>a
-{
-    color:white;
-}
-}
-.ocm-backdrop {
-    margin: 0em -1em 1em -1em;
-    border-radius: 0;
-    background-color: @color-b-light;
-    background-image: url('images/world2.jpg');
-    color: white;
-    overflow: auto;
-     a,  a:visited {
-        color: white;
-      
-    }
-     h2 > small {
-         font-size:0.5em;
-         color:white;
-     }
-     h3 > small {
-         
-         color:rgba(255, 255, 255, 0.92);
-     }
-}
-
-   
-.attribution {
-    margin-top: -10px;
-    font-style: italic;
-    font-size: 0.5em;
-}
-
 .breadcrumb {
     margin-top: 2em;
     background-color: @color-a-pale;
@@ -404,7 +330,7 @@ div.stat {
     background-color: #B3D1FF;
     -webkit-box-shadow: 0px 0px 8px #c0c0c0;
     box-shadow: 0px 0px 8px #c0c0c0;
-    /*box-shadow:inset 0 0 10px #000000*/
+    
 }
 
     .map-box img {
@@ -515,16 +441,6 @@ div[data-editormode="advanced"] {
     }
 }
 
-.social {
-    display: inline;
-    margin-right: 4em;
-    font-size: 1.618em;
-
-    a:link, a:hover, a:visited {
-        color: @color-b-light;
-    }
-}
-
 
 @media (max-width: 480px) { 
     .nav-tabs > li {
@@ -541,16 +457,6 @@ div[data-editormode="advanced"] {
     background-color:#f8f8f8;
 }
 
-.applinks{
-    
-    background: rgba(255, 255, 255, 0.10);
-    padding:1em;
-    
-    border-bottom-left-radius:8px;
-    margin-left:4em;
-    position:relative;
-    z-index:2;
-}
 .banner-container  p > a{
     text-decoration:underline;
 }
@@ -592,13 +498,132 @@ div[data-editormode="advanced"] {
   
   padding:0;
 }
+    */
 
-i.home-icons{
-    font-size:64px;
-    font-size:8vw;
-    color:#515151;
+.navbar-brand, .navbar-inverse .navbar-brand {
+    background-image: url('images/AppIcon_36x36.png');
+    background-repeat: no-repeat;
+    background-position: 6px 6px;
+    padding-left: 46px;
+    color: white;
+    font-family: @font-headings;
+    font-weight: 300;
+    padding-top: 14px;
+    height: 42px;
+}
+
+
+
+.navbar-inverse {
+    background-color: darken(@color-a, 20%);
+    background-image: none;
+    border:none;
+}
+
+.navbar-inverse .navbar-text {
+    color:@color-b;
+}
+
+.navbar-inverse .nav > li > a {
+    color: #fff;
+    text-transform: lowercase;
+}
+
+.navbar-inverse .nav > li > a:hover,
+.dropdown-menu>li>a:hover,
+                       .navbar-nav>li>a:hover {
+    background-color:@color-a;
+}
+
+
+.navbar .nav li.dropdown.open > .dropdown-toggle, .navbar .nav li.dropdown.open > .dropdown-toggle:hover {
+    background-color: (@color-a + #111);
+}
+
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+        color: white;
+    }
+}
+
+.banner-container{
+    margin-top:-21px;
+}
+.banner-backdrop {
+    border-radius: 0;
+    background-color: @color-b-light;
+    background-image: url('images/world2.jpg');
+    color: white;
+    overflow: auto;
+
+    a, a:visited {
+        color: white;
+    }
+
+    h2 > small {
+        font-size: 0.5em;
+        color: white;
+    }
+
+    h3 > small {
+        color: rgba(255, 255, 255, 0.92);
+    }
+}
+
+h1 small {
+    padding-left:0.2em;
+}
+.banner-foreground{
+    background-color:@color-b-light;
+}
+.attribution {
+    margin-top: -10px;
+    font-style: italic;
+    font-size: 0.5em;
+}
+.form-actions{
+    background-color: @color-a-pale;
+    padding:1em;
+}
+.social {
+    display: inline;
+    margin-right: 4em;
+    font-size: 1.618em;
+
+    a:link, a:hover, a:visited {
+        color: @color-b-light;
+    }
+}
+
+
+.applinks {
+    background: rgba(255, 255, 255, 0.10);
+    padding: 1em;
+    border-bottom-left-radius: 8px;
+    margin-left: 4em;
+    position: relative;
+    z-index: 2;
+}
+
+
+
+footer, div.footer {
+    margin: 16px;
+    padding: 16px;
+    border-top: 1px dotted @color-a;
+    color: #464646;
+    text-align: center;
+    font-size: 8pt;
+    background-color: #f8fbf7;
+}
+
+
+i.home-icons {
+    font-size: 64px;
+    font-size: 6vw;
+    color: #646464;
+    
 }
 
 .card {
-    
 }
