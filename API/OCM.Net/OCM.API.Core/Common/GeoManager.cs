@@ -14,6 +14,31 @@ namespace OCM.API.Common
 
         // code based on http://www.codeproject.com/KB/cs/distancebetweenlocations.aspx
 
+        /// <summary>
+        /// very approximate distance check for data filtering, with 2 decimal places being approx 1km 
+        /// </summary>
+        /// <param name="lat1"></param>
+        /// <param name="long1"></param>
+        /// <param name="lat2"></param>
+        /// <param name="long2"></param>
+        /// <param name="decimals"></param>
+        public static bool IsClose(double lat1,
+                  double long1, double lat2, double long2, int decimals = 2)
+        {
+
+            if (lat1 == lat2 || long1 == long2) return true;
+
+            //http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
+            
+            double latDiff = Math.Round(Math.Abs(lat1-lat2),decimals);
+            double lngDiff = Math.Round(Math.Abs(long1-long2),decimals);
+
+            if (latDiff==0 && lngDiff== 0) {
+                return true;
+            }
+
+            return false;
+        }
         public static double CalcDistance(double Lat1,
                   double Long1, double Lat2, double Long2, DistanceUnit Unit)
         {
