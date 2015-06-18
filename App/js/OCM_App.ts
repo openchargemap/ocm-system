@@ -157,11 +157,12 @@ module OCM {
             $('#option-language').change(function () {
                 app.switchLanguage($("#option-language").val());
             });
-            $('#filter-operator').change(function () { app.storeSettings(); });
-            $('#filter-connectiontype').change(function () { app.storeSettings(); });
-            $('#filter-connectionlevel').change(function () { app.storeSettings(); });
-            $('#filter-usagetype').change(function () { app.storeSettings(); });
-            $('#filter-statustype').change(function () { app.storeSettings(); });
+
+            $('#filter-operator, #filter-connectiontype, #filter-connectionlevel,#filter-usagetype,#filter-statustype, #filter-minpowerkw')
+                .change(function () {
+                app.validateMultiSelect($(this));
+                app.storeSettings();
+            });
 
             var app = this;
 
@@ -687,6 +688,23 @@ module OCM {
             }
         }
 
+        validateMultiSelect($multiSelect: JQuery) {
+            //for a given multi select element, ensure that (All) option isn't set at same time as another option
+
+            var options = this.getMultiSelectionAsArray($multiSelect, "");
+
+            if (options.length > 1) {
+                //multiple options selected, check (All) option not selected along with other options
+                var allOptionIndex = options.indexOf("");
+                if (allOptionIndex >= 0) {
+                    //all option selected along with other options, remove it then reset the selected options of the multiselect list
+                    options = options.splice(allOptionIndex, 1);
+                    $multiSelect.val(options);
+                    this.log("(All) option removed from multi select - other options selected at same time", LogLevel.VERBOSE);
+                }
+            }
+        }
+
         storeSettings() {
             if (this.appState.suppressSettingsSave == false) {
                 //save option settings to cookies
@@ -1036,7 +1054,13 @@ module OCM {
                 this.logAnalyticsEvent("Search", "Completed", "Results", poiList.length);
 
                 this.log("Caching search results..");
-                this.apiClient.setCachedDataObject("SearchResults", poiList);
+                if (poiList.length <= 101) {
+                    this.apiClient.setCachedDataObject("SearchResults", poiList);
+                } else {
+                    //only cache first 100 results, otherwise cache storage quota may be exceeded
+                    var cacheList = poiList.splice(0, 100);
+                    this.apiClient.setCachedDataObject("SearchResults", cacheList);
+                }
                 this.apiClient.setCachedDataObject("SearchResults_Location",(<HTMLInputElement>document.getElementById("search-location")).value);
                 this.apiClient.setCachedDataObject("SearchResults_SearchPos", this.viewModel.searchPosition);
             } else {
@@ -1253,10 +1277,10 @@ module OCM {
                     var fragment =
                         "<div class='card comment'>" +
                         "<div class='row'>" +
-                        "<div class='col-sm-2'>" + (comment.User != null ? "<img class='user' src='http://www.gravatar.com/avatar/" + comment.User.EmailHash + "?d=mm' />" : "<img class='user' src='http://www.gravatar.com/avatar/00?f=y&d=mm'/>") + "<br/>" +
+                        "<div class='col-sm-3'>" + (comment.User != null ? "<img class='user' src='http://www.gravatar.com/avatar/" + comment.User.EmailHash + "?d=mm' />" : "<img class='user' src='http://www.gravatar.com/avatar/00?f=y&d=mm'/>") + "<br/>" +
                         ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") +
                         "</div>" +
-                        "<div class='col-sm-8'>" +
+                        "<div class='col-sm-7'>" +
                         "<h3>" + (comment.CommentType != null ? comment.CommentType.Title + " - " : "") +
                         (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
                         "</h3>" +

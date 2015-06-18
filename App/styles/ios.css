@@ -1,15 +1,38 @@
-﻿body, 1, h2, h3, h4 {
-     font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial;
+﻿
+body {
+    color:#000;
+}
+
+body, h1, h2, h3, h4 {
+    font-family: 'Helvetica Neue','Helvetica', Arial;
 }
 
 .btn-default {
-    border:none;
-    background-color:transparent;
-    color:#2c77ba;
+    border: none;
+    background-color: transparent;
+    color: #2c77ba;
 }
 
-.btn-default:hover {
-    border:none;
-    background-color:transparent;
-    color:#2c77ba;
+    .btn-default:hover {
+        border: none;
+        background-color: transparent;
+        color: #2c77ba;
+    }
+
+/*ios7 upwards status bar padding*/
+body.iOS div[data-role="page"] {
+    margin-top: 18px;
+}
+
+    body.iOS div[data-role="page"] div[data-role="header"] {
+        height: 58px;
+        padding-top: 20px;
+    }
+
+body.iOS .app-menu {
+    padding-top: 26px;
+}
+
+#progress-indicator {
+    margin-top:20px;
 }

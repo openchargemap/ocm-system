@@ -56,6 +56,7 @@ module OCM {
                 //attempt to fetch fresh data later (wait 1 second)
                 setTimeout(function () { _app.apiClient.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo()); }, 1000);
             }
+            
         }
 
         resetEditorForm() {

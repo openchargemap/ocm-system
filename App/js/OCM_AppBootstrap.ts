@@ -16,6 +16,7 @@ interface JQueryStatic {
 interface Window {
     L: any;
     cordova: any;
+    device: any;
     analytics: any;
 }
 
@@ -41,6 +42,19 @@ function onDeviceReady() {
     'use strict';
     ocm_app.appState.isRunningUnderCordova = true;
     ocm_app.log("OCM: Cordova Loaded, onDeviceReady Fired.");
+
+    if (device) {
+
+        //if running under iOS 7or higher , add iOS specific css adjustments
+        var iOS7 =
+            device.platform
+            && device.platform.toLowerCase() == "ios"
+            && parseFloat(device.version) >= 7.0;
+
+        if (iOS7) {
+            $("body").addClass("iOS");
+        }
+    }
 
     try {
         if (navigator.connection) {
@@ -85,6 +99,9 @@ $(function () {
             ocm_app.appState.isRunningUnderCordova = true;
             ocm_app.log("Phonegap enabled. Operating as mobile app.");
             document.addEventListener("deviceready", onDeviceReady, false);
+
+          
+
         } else {
             ocm_app.log("Phonegap not enabled. Operating as desktop browser.");
             startApp();
