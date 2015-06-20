@@ -1,34 +1,40 @@
- <!-- Page:Map:Start -->
 <div data-role="page" id="map-page" class="ui-page">
     <div data-role="header" data-position="fixed">
         <div>
             <a href="javascript:void();" data-rel="menu">&nbsp;</a>
-            <div style="float: right" id="search-title-main"><i class="fa fa-search"></i>&nbsp;<span data-localize="ocm.search.sectionTitle">Search</span></div>
-
-            <div style="display:none; float: right" id="search-title-favourites"><i class="fa fa-heart"></i>&nbsp;<span data-localize="ocm.general.favourites">Favourites</span></div>
-            <div style="display:none; float: right" id="option-expand"><i class="fa fa-expand fa-fw subtle" title="Expand Window"></i>&nbsp;</div>
+            <div style="float: right" id="search-title-main">
+                <i class="fa fa-search"></i>&nbsp;
+                <span data-localize="ocm.search.sectionTitle">Search</span>
+            </div>
+            <div style="display:none; float: right" id="search-title-favourites">
+                <i class="fa fa-heart"></i>&nbsp;
+                <span data-localize="ocm.general.favourites">Favourites</span>
+            </div>
+            <div style="display:none; float: right" id="option-expand">
+                <i class="fa fa-expand fa-fw subtle" title="Expand Window"></i>&nbsp;</div>
         </div>
     </div>
-
-    <div data-role="content" style="padding: 0;">
-
+    <div data-role="content" style="padding: 0; overflow:hidden;">
         <div class="well well-sm" id="search-pane">
             <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
-
                 <div class="row">
                     <div class="col-xs-10" style="padding-left:0;padding-right:0">
                         <div class="form-group">
                             <label for="search-location" class="sr-only">Location</label>
-
                             <div class="input-group">
                                 <span class="input-group-btn">
-                                    <button id="search-nearby" class="btn btn-default" type="button"><i class="fa fa-location-arrow"></i></button>
+                                    <button id="search-nearby" class="btn btn-default" type="button">
+                                        <i class="fa fa-location-arrow"></i>
+                                    </button>
                                 </span>
                                 <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" />
                                 <span class="input-group-btn">
-                                    <button id="search-button" class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
-
-                                    <button id="search-settings" class="btn btn-default" type="button"><i class="fa fa-filter"></i></button>
+                                    <button id="search-button" class="btn btn-primary" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <button id="search-settings" class="btn btn-default" type="button">
+                                        <i class="fa fa-filter"></i>
+                                    </button>
                                 </span>
                             </div>
                         </div>
@@ -37,7 +43,8 @@
                         <div class="form-group">
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-info" id="map-toggle-list">
-                                    <input type="radio" name="options"> <i id="map-toggle-icon" class="fa fa-list fa-fw"></i>
+                                    <input type="radio" name="options">
+                                    <i id="map-toggle-icon" class="fa fa-list fa-fw"></i>
                                 </label>
                             </div>
                         </div>
@@ -45,15 +52,15 @@
                 </div>
             </form>
         </div>
-
         <div class="row">
             <div class="col-sm-12 col-md-8 col-lg-9" style="padding:0;" id="mapview-container">
                 <div id="map-view"></div>
             </div>
             <div class="col-md-4 col-lg-3 hidden-xs hidden-sm" id="listview-container">
-                <div id="results-list">
-                    <div class="result" style="display: none;" id="results-item-template">
-                        <a href="#locationdetails-page" style="overflow: auto;">
+                <div id="list-scroll-container" class="scroll-container">
+                    <ul id="results-list">
+                        <li class="result details-link" style="display: none;" id="results-item-template">
+                            <a href="#locationdetails-page" class="details-link" style="overflow: auto;">
                             <div style="overflow: auto">
                                 <h3>{locationtitle}</h3>
                                 <div style="overflow: auto;">
@@ -71,10 +78,12 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <!-- Page:Map:End -->

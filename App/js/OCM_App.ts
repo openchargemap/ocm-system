@@ -52,6 +52,7 @@ interface Object {
 
 var Historyjs: Historyjs = <any>History;
 
+var IScroll: any;
 ////////////////////////////////////////////////////////////////
 
 module OCM {
@@ -1080,13 +1081,13 @@ module OCM {
             var appContext = this;
 
             //var $listContent = $('#results-list');
-            var $listContent = $('<div id="results-list" class="results-list"></div>');
+            var $listContent = $('<ul id="results-list" class="results-list"></ul>');
             if (this.resultItemTemplate == null) this.resultItemTemplate = $("#results-item-template").html();
 
             $listContent.children().remove();
 
             if (this.viewModel.poiList == null || this.viewModel.poiList.length == 0) {
-                var $content = $("<div class=\"section-heading\"><p><span class=\"ui-li-count\">0 Results match your search</span></p></div>");
+                var $content = $("<li class=\"section-heading\"><p><span class=\"ui-li-count\">0 Results match your search</span></p></li>");
                 $listContent.append($content);
             }
             else {
@@ -1114,7 +1115,7 @@ module OCM {
                     var contactHTML = "";
                     contactHTML += OCM.Utils.formatPhone(poi.AddressInfo.ContactTelephone1, "Tel.");
 
-                    var itemTemplate = "<div class='result'>" + this.resultItemTemplate + "</div>";
+                    var itemTemplate = "<li class='result'>" + this.resultItemTemplate + "</li>";
                     var locTitle = poi.AddressInfo.Title;
 
                     locTitle += "<div class='pull-right'>";
@@ -1198,6 +1199,9 @@ module OCM {
             //show hidden results ui
             $('#results-list').replaceWith($listContent);
             $("#results-list").css("display", "block");
+            
+           
+         
         }
 
         showDetailsViewById(id, forceRefresh) {

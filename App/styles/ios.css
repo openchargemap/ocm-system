@@ -1,38 +1,52 @@
 ﻿
-body {
+body.safari {
     color:#000;
-}
-
-body, h1, h2, h3, h4 {
+    
     font-family: 'Helvetica Neue','Helvetica', Arial;
 }
 
-.btn-default {
+body.safari h1, h2, h3, h4, .card-heading, .section-heading, .result h3, .app-menu, div [data-role="header"]  {
+    font-family: 'Helvetica Neue','Helvetica', Arial;
+}
+
+body.safari .detail-heading{
+    font-weight: 300;
+}
+
+body.safari .btn-default {
     border: none;
     background-color: transparent;
     color: #2c77ba;
 }
 
-    .btn-default:hover {
+body.safari  .btn-default:hover {
         border: none;
         background-color: transparent;
         color: #2c77ba;
     }
 
+body.iOS{
+    overflow: hidden;
+}
+
 /*ios7 upwards status bar padding*/
 body.iOS div[data-role="page"] {
     margin-top: 18px;
+    
 }
 
     body.iOS div[data-role="page"] div[data-role="header"] {
         height: 58px;
         padding-top: 20px;
     }
+body.iOS div[data-role="contents"] {
+    overflow-y:scroll;
+}
 
 body.iOS .app-menu {
     padding-top: 26px;
 }
 
-#progress-indicator {
+body.iOS #progress-indicator {
     margin-top:20px;
 }

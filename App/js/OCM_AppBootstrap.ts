@@ -95,6 +95,13 @@ $(function () {
     if (_appBootStrapped == false) {
         ocm_app.log("There can be only one.");
 
+        //apply safari specific styling adjustments
+        var isSafari = navigator.vendor.indexOf("Apple")==0 && /\sSafari\//.test(navigator.userAgent); // true or false
+        if (isSafari) {
+            ocm_app.log("Adjusting for Safari browser.");
+             $("body").addClass("safari");
+        }
+        
         if (window.cordova) {
             ocm_app.appState.isRunningUnderCordova = true;
             ocm_app.log("Phonegap enabled. Operating as mobile app.");

@@ -243,7 +243,7 @@ border:1px solid gainsboro;
     color: #666666;
 }
 
-.result:hover {
+.result:hover, .result:active {
     -webkit-transition: background-color 1s linear, box-shadow ease-in 0.5s;
     -moz-transition: background-color 1s linear, box-shadow ease-in 0.5s;
     -ms-transition: background-color 1s linear, box-shadow ease-in 0.5s;
@@ -254,6 +254,8 @@ border:1px solid gainsboro;
 
 .results-list {
     overflow: auto;
+    padding:0;
+    margin:0;
 }
 
 .result > a:active, .result > a:visited, .result > a:link {
@@ -402,6 +404,11 @@ border:1px solid gainsboro;
     padding: 0.6em;
     margin-bottom: 0.4em;
     background-color: rgba(255, 255, 255, 0.80);
+}
+
+.card h3 {
+    padding-top:0;
+    margin-top:0;
 }
 
 #locationdetails-page .ui-content {
@@ -830,8 +837,7 @@ a[data-rel="menu"] {
 }
 
 #listview-container {
-    padding: 1em;
-    overflow-y: scroll;
+    
 }
 
 .prompt {
@@ -943,4 +949,20 @@ select.filter-status {
 img.user {
     width: 64px;
     padding-right: 6px;
+}
+
+.scroll-container{
+    
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch; 
+    background-color:white;
+
+}
+
+.details-link:active {
+   transform: rotate(45deg);
+   -webkit-transform: rotate(45deg);
+   -ms-transform: rotate(45deg);
 }

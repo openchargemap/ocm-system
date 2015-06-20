@@ -9,7 +9,7 @@ The production build of the app is built using the Jake build system under NodeJ
 
 # Build
 
-To build, run *jake* from app root folder.
+To build, create the folder ./build/output/ then run *jake* from app root folder.
 
 The following tools are required to perform a multi-platform build (web & cordova):
 
