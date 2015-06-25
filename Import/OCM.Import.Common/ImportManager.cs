@@ -594,6 +594,9 @@ namespace OCM.Import
                         foreach (var conn in sourceItem.Connections)
                         {
                             //imported equipment info is replaced in order they appear in the import
+                            //TODO: if the connection type/power rating has changed we need to create new equipment
+                            // rather than update existing as this is probably a physically different equipment installation
+
                             ConnectionInfo existingConnection = null;
 
                             existingConnection = destItem.Connections.FirstOrDefault(d => d.Reference == conn.Reference && !String.IsNullOrEmpty(conn.Reference));
@@ -608,8 +611,9 @@ namespace OCM.Import
 
                             if (existingConnection != null)
                             {
-                                //update existing
-                                if (conn.ConnectionType != null) existingConnection.ConnectionType = conn.ConnectionType;
+                                //update existing- updates can be either object base reference data or use ID values
+                                existingConnection.ConnectionType = conn.ConnectionType;
+                                existingConnection.ConnectionTypeID = conn.ConnectionTypeID;
                                 existingConnection.Quantity = conn.Quantity;
                                 existingConnection.LevelID = conn.LevelID;
                                 existingConnection.Level = conn.Level;
@@ -620,7 +624,7 @@ namespace OCM.Import
                                 existingConnection.Amps = conn.Amps;
                                 existingConnection.PowerKW = conn.PowerKW;
                                 existingConnection.Comments = conn.Comments;
-                                if (conn.CurrentType != null) existingConnection.CurrentType = conn.CurrentType;
+                                existingConnection.CurrentType = conn.CurrentType;
                                 existingConnection.CurrentTypeID = conn.CurrentTypeID;
                             }
                             else
