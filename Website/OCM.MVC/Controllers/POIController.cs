@@ -245,11 +245,22 @@ namespace OCM.MVC.Controllers
 
         //
         // GET: /POI/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, bool createCopy = false)
         {
             if (id > 0)
             {
-                var poi = new POIManager().Get((int)id);
+                ChargePoint poi = null;
+
+                if (createCopy)
+                {
+                    //get version of POI with location details removed, copying equipment etc
+                    poi = new POIManager().GetCopy((int)id, true);
+                }
+                else
+                {
+                    poi = new POIManager().Get((int)id);
+                }
+
                 if (poi != null)
                 {
                     InitEditReferenceData(poi);
@@ -258,17 +269,20 @@ namespace OCM.MVC.Controllers
                     ViewBag.ReferenceData = refData;
                     ViewBag.HideAdvancedInfo = true;
 
-                    try
+                    if (!createCopy)
                     {
-                        var user = new UserManager().GetUser((int)Session["UserID"]);
-                        if (POIManager.CanUserEditPOI(poi, user))
+                        try
                         {
-                            ViewBag.HideAdvancedInfo = false;
+                            var user = new UserManager().GetUser((int)Session["UserID"]);
+                            if (POIManager.CanUserEditPOI(poi, user))
+                            {
+                                ViewBag.HideAdvancedInfo = false;
+                            }
                         }
-                    }
-                    catch (Exception)
-                    {
-                        ; ; //user not signed in
+                        catch (Exception)
+                        {
+                            ; ; //user not signed in
+                        }
                     }
 
                     //enable advanced edit options for full editors/admin

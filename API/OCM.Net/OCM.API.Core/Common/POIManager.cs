@@ -72,6 +72,42 @@ namespace OCM.API.Common
             return this.Get(id, false);
         }
 
+        public Model.ChargePoint GetCopy(int id, bool resetAddress = true)
+        {
+            var poi = this.Get(id, false);
+            poi.ID = 0;
+            poi.MediaItems = null;
+            poi.UserComments = null;
+            poi.AddressInfo.ID = 0;
+            if (resetAddress)
+            {
+                poi.AddressInfo.Title = "";
+                poi.AddressInfo.AddressLine1 = "";
+                poi.AddressInfo.AddressLine2 = "";
+                poi.AddressInfo.AccessComments = "";
+                poi.AddressInfo.GeneralComments = "";
+            }
+            poi.DataProvider = null;
+            poi.DataProviderID = null;
+            poi.DataProvidersReference = null;
+            poi.DataQualityLevel = null;
+            poi.OperatorsReference = null;
+            poi.DateCreated = DateTime.UtcNow;
+            poi.DateLastConfirmed = null;
+            poi.DateLastStatusUpdate = null;
+            
+            poi.DatePlanned = null;
+            poi.UUID = null;
+
+            foreach (var conn in poi.Connections)
+            {
+                conn.ID = 0;
+                conn.Reference = null;
+            }
+
+            return poi;
+        }
+
         public Model.ChargePoint Get(int id, bool includeExtendedInfo, bool allowDiskCache = false, bool allowMirrorDB = false)
         {
             if (allowMirrorDB)
