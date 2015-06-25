@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OCM.API.Common.Model;
-using Newtonsoft.Json.Linq;
 
 namespace OCM.Import.Providers
 {
@@ -42,10 +42,10 @@ namespace OCM.Import.Providers
             var operatorUnknown = coreRefData.Operators.First(opUnknown => opUnknown.ID == 1);
             var chrgLevel1 = coreRefData.ChargerTypes.First(c => c.ID == 1);
             var chrgLevel2 = coreRefData.ChargerTypes.First(c => c.ID == 2);
-            var chrgLevel3 = coreRefData.ChargerTypes.First(c => c.ID == 2);
+            var chrgLevel3 = coreRefData.ChargerTypes.First(c => c.ID == 3);
 
             int itemCount = 0;
-          
+
             foreach (var dataItem in dataList)
             {
                 bool skipItem = false;
@@ -54,7 +54,7 @@ namespace OCM.Import.Providers
                 try
                 {
                     var item = dataItem;
-                    
+
                     cp.DataProviderID = this.DataProviderID; //AFDC
                     cp.DataProvidersReference = item["id"].ToString();
                     cp.DateLastStatusUpdate = DateTime.UtcNow;
@@ -78,7 +78,6 @@ namespace OCM.Import.Providers
                     }
                     if (item["station_phone"] != null) cp.AddressInfo.ContactTelephone1 = item["station_phone"].ToString();
 
-
                     int? countryID = null;
                     if (cp.AddressInfo.StateOrProvince != null && cp.AddressInfo.StateOrProvince.Length == 2)
                     {
@@ -94,7 +93,6 @@ namespace OCM.Import.Providers
                     {
                         cp.AddressInfo.CountryID = countryID;
                     }
-
 
                     //operator from ev_network
                     string deviceController = item["ev_network"].ToString();
@@ -176,17 +174,18 @@ namespace OCM.Import.Providers
 
                     if (numLevel1 > 0)
                     {
-                        ConnectionInfo cinfo = new ConnectionInfo() { };
+                        ConnectionInfo cinfo = new ConnectionInfo()
+                        {
+                            Quantity = numLevel1,
+                            ConnectionTypeID = 0, //unknown
+                            LevelID = chrgLevel1.ID,
+                            //assume basic level 1 power
+                            Voltage = 120,
+                            Amps = 16,
+                            CurrentTypeID = 10 //AC
+                        };
 
-                        cinfo.Quantity = numLevel1;
-                        cinfo.ConnectionTypeID = 0; //unknown
-                        cinfo.LevelID = chrgLevel1.ID;
-
-                        //assume basic level 1 power
-                        cinfo.Voltage = 120;
-                        cinfo.Amps = 16;
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
-                        cinfo.CurrentTypeID =  10;//AC
 
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = 9; //nema 5-20
 
@@ -204,16 +203,18 @@ namespace OCM.Import.Providers
 
                     if (numLevel2 > 0)
                     {
-                        ConnectionInfo cinfo = new ConnectionInfo() { };
+                        ConnectionInfo cinfo = new ConnectionInfo()
+                        {
+                            Quantity = numLevel2,
+                            ConnectionTypeID = 0, //unknown
+                            LevelID = chrgLevel2.ID,
+                            //assume basic level 2 power
+                            Voltage = 230,
+                            Amps = 16,
+                            CurrentTypeID = 10 //AC
+                        };
 
-                        cinfo.Quantity = numLevel2;
-                        cinfo.ConnectionType = new ConnectionType { ID = 0 };
-
-                        //assume basic level 2 power
-                        cinfo.Voltage = 230;
-                        cinfo.Amps = 16;
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
-                        cinfo.CurrentTypeID = 10; //AC
 
                         if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionTypeID = 1; //J1772
 
@@ -223,8 +224,6 @@ namespace OCM.Import.Providers
                             Log("Unknown Lvl 2 Connection Type or too many types:" + evconnectors.ToString());
                         }
 
-                        cinfo.LevelID = chrgLevel2.ID;
-
                         if (!IsConnectionInfoBlank(cinfo))
                         {
                             cp.Connections.Add(cinfo);
@@ -233,38 +232,54 @@ namespace OCM.Import.Providers
 
                     if (numLevel3 > 0)
                     {
-                        ConnectionInfo cinfo = new ConnectionInfo() { };
-
-                        cinfo.Quantity = numLevel3;
-                        cinfo.ConnectionTypeID = 0; //unknown
-                        cinfo.LevelID = chrgLevel3.ID;
-
-                        //assume basic level 3 power
-                        cinfo.Voltage = 400;
-                        cinfo.Amps = 100;
-                        cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
-                        cinfo.CurrentTypeID = 10; //DC
-
-                        if (evconnectors.Any(c => c.Value<string>() == "CHADEMO")) cinfo.ConnectionTypeID = 2; //CHADEMO
-
-                        if (evconnectors.Any(c => c.Value<string>() == "TESLA"))
+                        //for each level 3 type connector identified, add an equipment entry. We don't have full information as data may say 3 * Lvl3, including CHADEMO & J1772COMBO, but we don't know which is which.
+                        var allConnectors = evconnectors.Where(c => c.Value<string>() == "CHADEMO" || c.Value<string>() == "TESLA" || c.Value<string>() == "J1772COMBO");
+                        bool lvl3Added = false;
+                        foreach (var lvl3Connector in allConnectors)
                         {
-                            cinfo.ConnectionTypeID = 27; //tesla supercharger
+                            int stdQuantity = numLevel3;
+                            if (allConnectors.Count() > 1) stdQuantity = 1;
+
+                            ConnectionInfo cinfo = new ConnectionInfo()
+                            {
+                                Quantity = stdQuantity,
+                                ConnectionTypeID = 0, //unknown
+                                LevelID = chrgLevel3.ID,
+
+                                //assume basic level 3 power
+                                Voltage = 400,
+                                Amps = 100,
+                                CurrentTypeID = 10 //DC
+                            };
+
+                            cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
+
+                            if (lvl3Connector.Value<string>() == "CHADEMO")
+                            {
+                                cinfo.ConnectionTypeID = 2; //CHADEMO
+                            }
+
+                            if (lvl3Connector.Value<string>() == "TESLA")
+                            {
+                                cinfo.ConnectionTypeID = 27; //tesla supercharger
+                            }
+
+                            if (lvl3Connector.Value<string>() == "J1772COMBO")
+                            {
+                                cinfo.ConnectionTypeID = 32; //SAE Combo (DC Fast J1772 Version)
+                            }
+
+                            if (!IsConnectionInfoBlank(cinfo))
+                            {
+                                cp.Connections.Add(cinfo);
+                            }
+                            lvl3Added = true;
                         }
 
-                        if (evconnectors.Any(c => c.Value<string>() == "J1772COMBO"))
-                        {
-                            cinfo.ConnectionTypeID = 32; //CCS Combo J1772 Version
-                        }
-
-                        if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
+                        if (!lvl3Added)
                         {
                             //unknown connection type
-                            Log("Unknown Lvl 3 Connection Type or too many types:" + evconnectors.ToString());
-                        }
-                        if (!IsConnectionInfoBlank(cinfo))
-                        {
-                            cp.Connections.Add(cinfo);
+                            Log("Unknown Lvl 3 Connection Type :" + evconnectors.ToString());
                         }
                     }
 

@@ -566,9 +566,6 @@ namespace OCM.API.Common
                     ".ConnectionType.FormalName",
                     ".ConnectionType.IsDiscontinued",
                     ".ConnectionType.IsObsolete",
-                    ".ConnectionType.ID",
-                    ".ConnectionType.ID",
-                    ".CurrentTypeID",
                     ".CurrentType.Description",
                     ".Level.Comments",
                     ".AddressInfoID",
@@ -576,7 +573,6 @@ namespace OCM.API.Common
                     ".AddressInfo.Distance",
                     ".AddressInfo.DistanceUnit",
                     ".AddressInfo.DistanceUnit.DistanceUnit",
-                    ".SubmissionStatus.ID",
                     ".SubmissionStatus.IsLive",
                     ".OperatorInfo.WebsiteURL",
                     ".OperatorInfo.PhonePrimaryContact",
@@ -586,8 +582,6 @@ namespace OCM.API.Common
                     ".UsageType.IsPayAtLocation",
                     ".UsageType.IsMembershipRequired",
                     ".UsageType.IsAccessKeyRequired",
-                    ".UsageType.ID",
-                    ".DataProvider.ID",
                     ".DataProvider.DataProviderStatusType.ID",
                     ".DataProvider.DataProviderStatusType.Title"
                 };

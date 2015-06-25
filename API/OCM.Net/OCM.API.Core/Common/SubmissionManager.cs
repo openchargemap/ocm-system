@@ -27,7 +27,7 @@ namespace OCM.API.Common
         private Model.ChargePoint PopulateFullPOI(Model.ChargePoint poi)
         {
             OCMEntities tempDataModel = new OCMEntities();
-            
+
             //convert simple poi to fully populated db version
             var poiData = new POIManager().PopulateChargePoint_SimpleToData(poi, tempDataModel);
 
@@ -51,12 +51,13 @@ namespace OCM.API.Common
                 return JsonConvert.SerializeObject(graph);
             }
         }
+
         /// <summary>
         /// Consumers should prepare a new/updated ChargePoint with as much info populated as possible
         /// </summary>
         /// <param name="submission">ChargePoint info for submission, if ID and UUID set will be treated as an update</param>
         /// <returns>false on error or not enough data supplied</returns>
-        public int PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding= false)
+        public int PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding = false)
         {
             try
             {
@@ -104,7 +105,7 @@ namespace OCM.API.Common
                 }
 
                 //validate if minimal required data is present
-                if (updatedPOI.AddressInfo.Title == null || updatedPOI.AddressInfo.Country == null)
+                if (updatedPOI.AddressInfo.Title == null || (updatedPOI.AddressInfo.Country == null && updatedPOI.AddressInfo.CountryID == null))
                 {
                     return -1;
                 }
@@ -128,7 +129,7 @@ namespace OCM.API.Common
                     //charging point location entity type id
 
                     //serialize cp as json
-                   
+
                     //null extra data we don't want to serialize/compare
                     updatedPOI.UserComments = null;
                     updatedPOI.MediaItems = null;
@@ -198,14 +199,13 @@ namespace OCM.API.Common
                     //if poi being updated exists from an imported source we supersede the old POI with the new version, unless we're doing a fresh import from same data provider
                     if (!disablePOISuperseding)
                     {
-                        
                         //if update by non-system user will change an imported/externally provided data, supersede old POI with new one (retain ID against new POI)
                         if (isUpdate && !isSystemUser && oldPOI.DataProviderID != (int)StandardDataProviders.OpenChargeMapContrib)
                         {
                             //move old poi to new id, set status of new item to superseded
                             supersedesID = poiManager.SupersedePOI(dataModel, oldPOI, updatedPOI);
                         }
-                    } 
+                    }
                 }
 
                 //user is an editor, go ahead and store the addition/update

@@ -227,7 +227,6 @@ namespace OCM.Import
 
                     //item has one or more likely duplicates, add it to list of items to remove
                     duplicateList.Add(item);
-
                 }
 
                 //mark item as duplicate if location/title exactly matches previous entry or lat/long is within DuplicateDistance meters
@@ -252,7 +251,6 @@ namespace OCM.Import
                     }
                 }
 
-
                 previousCP = item;
 
                 poiProcessed++;
@@ -265,7 +263,6 @@ namespace OCM.Import
 
             dupeIdentWatch.Stop();
             Log("De-dupe pass took " + dupeIdentWatch.Elapsed.TotalSeconds + " seconds. " + (dupeIdentWatch.Elapsed.TotalMilliseconds / cpList.Count) + "ms per item.");
-
 
             //remove duplicates from list to apply
             foreach (var dupe in duplicateList)
@@ -369,6 +366,12 @@ namespace OCM.Import
                 differences.RemoveAll(d => d.Context == ".DateLastStatusUpdate");
                 differences.RemoveAll(d => d.Context == ".UUID");
 
+                differences.RemoveAll(d => d.Context == ".DataProvider.DateLastImported");
+                differences.RemoveAll(d => d.Context == ".IsRecentlyVerified");
+                differences.RemoveAll(d => d.Context == ".DateLastVerified");
+                differences.RemoveAll(d => d.Context == ".UserComments");
+                differences.RemoveAll(d => d.Context == ".MediaItems");
+
                 if (!differences.Any())
                 {
                     updatesToIgnore.Add(poi);
@@ -387,7 +390,17 @@ namespace OCM.Import
                     result.Differences.RemoveAll(d => d.PropertyName == ".MetadataValues");
                     result.Differences.RemoveAll(d => d.PropertyName == ".DateLastStatusUpdate");
                     result.Differences.RemoveAll(d => d.PropertyName == ".UUID");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".DataProvider.DateLastImported");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".IsRecentlyVerified");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".DateLastVerified");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".UserComments");
+                    result.Differences.RemoveAll(d => d.PropertyName == ".MediaItems");
                     System.Diagnostics.Debug.WriteLine("Difference:" + diffReport.OutputString(result.Differences));
+
+                    if (!result.Differences.Any())
+                    {
+                        updatesToIgnore.Add(poi);
+                    }
                 }
             }
 
@@ -476,7 +489,7 @@ namespace OCM.Import
                 ||
                 String.IsNullOrEmpty(p.AddressInfo.AddressLine1) && String.IsNullOrEmpty(p.AddressInfo.Postcode)
                 ||
-                (p.AddressInfo.CountryID == null && p.AddressInfo.Country==null))
+                (p.AddressInfo.CountryID == null && p.AddressInfo.Country == null))
                 ).ToList();
         }
 
@@ -496,7 +509,7 @@ namespace OCM.Import
                 || (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
                 || (current.DataProvidersReference != null && current.DataProvidersReference.Length > 0 && previous.DataProvidersReference == current.DataProvidersReference)
                 || (previous.AddressInfo.ToString() == current.AddressInfo.ToString())
-                
+
                 )
             {
                 int dataProviderId = (previous.DataProvider != null ? previous.DataProvider.ID : (int)previous.DataProviderID);
@@ -538,6 +551,8 @@ namespace OCM.Import
                 destItem.AddressInfo.Postcode = sourceItem.AddressInfo.Postcode;
                 destItem.AddressInfo.RelatedURL = sourceItem.AddressInfo.RelatedURL;
                 if (sourceItem.AddressInfo.Country != null) destItem.AddressInfo.Country = sourceItem.AddressInfo.Country;
+                destItem.AddressInfo.CountryID = sourceItem.AddressInfo.CountryID;
+
                 destItem.AddressInfo.AccessComments = sourceItem.AddressInfo.AccessComments;
                 destItem.AddressInfo.ContactEmail = sourceItem.AddressInfo.ContactEmail;
                 destItem.AddressInfo.ContactTelephone1 = sourceItem.AddressInfo.ContactTelephone1;
@@ -550,10 +565,13 @@ namespace OCM.Import
 
                 //update general
                 destItem.DataProvider = sourceItem.DataProvider;
+                destItem.DataProviderID = sourceItem.DataProviderID;
                 destItem.DataProvidersReference = sourceItem.DataProvidersReference;
+                destItem.OperatorID = sourceItem.OperatorID;
                 destItem.OperatorInfo = sourceItem.OperatorInfo;
                 destItem.OperatorsReference = sourceItem.OperatorsReference;
                 destItem.UsageType = sourceItem.UsageType;
+                destItem.UsageTypeID = sourceItem.UsageTypeID;
                 destItem.UsageCost = sourceItem.UsageCost;
                 destItem.NumberOfPoints = sourceItem.NumberOfPoints;
                 destItem.GeneralComments = sourceItem.GeneralComments;
@@ -593,14 +611,17 @@ namespace OCM.Import
                                 //update existing
                                 if (conn.ConnectionType != null) existingConnection.ConnectionType = conn.ConnectionType;
                                 existingConnection.Quantity = conn.Quantity;
+                                existingConnection.LevelID = conn.LevelID;
                                 existingConnection.Level = conn.Level;
                                 existingConnection.Reference = conn.Reference;
+                                existingConnection.StatusTypeID = conn.StatusTypeID;
                                 existingConnection.StatusType = conn.StatusType;
                                 existingConnection.Voltage = conn.Voltage;
                                 existingConnection.Amps = conn.Amps;
                                 existingConnection.PowerKW = conn.PowerKW;
                                 existingConnection.Comments = conn.Comments;
                                 if (conn.CurrentType != null) existingConnection.CurrentType = conn.CurrentType;
+                                existingConnection.CurrentTypeID = conn.CurrentTypeID;
                             }
                             else
                             {
@@ -629,7 +650,6 @@ namespace OCM.Import
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
             providers.Add(new ImportProvider_NobilDotNo());
             providers.Add(new ImportProvider_OplaadpalenNL());
-
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -926,15 +946,15 @@ namespace OCM.Import
                             }
                         }
                     }
-                }
 
-                if (item.AddressInfo.Country == null)
-                {
-                    LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title);
-                }
-                else
-                {
-                    item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
+                    if (item.AddressInfo.Country == null)
+                    {
+                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title);
+                    }
+                    else
+                    {
+                        item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
+                    }
                 }
             }
 
