@@ -194,28 +194,28 @@ namespace OCM.Import.Providers
                         ChargerType level = null;
                         cinfo.Reference = conn["ConnectorId"].ToString();
 
-                        if (connectorType.ToUpper().Contains("BS 1363"))
+                        if (connectorType.ToUpper().Contains("BS 1363") || connectorType.ToUpper().Contains("3-PIN TYPE G (BS1363)"))
                         {
                             cType = new ConnectionType();
                             cType.ID = 3; //UK 13 amp plug
                             level = new ChargerType { ID = 2 };//default to level 2
                         }
 
-                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 1 (SAE J1772)")
+                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 1 (SAE J1772)" || connectorType.ToUpper() == "TYPE 1 SAEJ1772 (IEC 62196)")
                         {
                             cType = new ConnectionType();
                             cType.ID = 2; //J1772
                             level = new ChargerType { ID = 2 };//default to level 2
                         }
 
-                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 2")
+                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 2" || connectorType.ToUpper().Contains("TYPE 2 MENNEKES (IEC62196)"))
                         {
                             cType = new ConnectionType();
                             cType.ID = 25; //Mennkes Type 2
                             level = new ChargerType { ID = 2 };//default to level 2
                         }
 
-                        if (connectorType.ToUpper() == "JEVS G 105 (CHADEMO)")
+                        if (connectorType.ToUpper() == "JEVS G 105 (CHADEMO)" || connectorType.ToUpper() == "JEVS G105 (CHADEMO) DC")
                         {
                             cType = new ConnectionType();
                             cType.ID = 2; //CHadeMO
@@ -227,6 +227,14 @@ namespace OCM.Import.Providers
                             cType.ID = 26; //IEC 62196-2 type 3
 
                             level = new ChargerType { ID = 2 };//default to level 2
+                        }
+
+                        if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
+                        {
+                            cType = new ConnectionType();
+                            cType.ID = 33; //CCS with Type 2
+
+                            level = new ChargerType { ID = 3 };//default to level 3
                         }
 
                         if (cType.ID == 0)
@@ -283,6 +291,13 @@ namespace OCM.Import.Providers
                         cinfo.ConnectionType = cType;
                         cinfo.Level = level;
 
+                        if ((cinfo.ConnectionType == null && cinfo.ConnectionTypeID == null) || cinfo.ConnectionType != null && cinfo.ConnectionType.ID == 0)
+                        {
+                            if (!String.IsNullOrEmpty(connectorType))
+                            {
+                                Log("Unknown connector type:" + connectorType);
+                            }
+                        }
                         if (cp.Connections == null)
                         {
                             cp.Connections = new List<ConnectionInfo>();
