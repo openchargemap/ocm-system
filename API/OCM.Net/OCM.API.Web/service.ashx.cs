@@ -1,4 +1,4 @@
-﻿using OCM.API.Common;
+using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using OCM.API.InputProviders;
@@ -37,7 +37,7 @@ namespace OCM.API
                     if (HttpContext.Current.Request.UserAgent != null)
                     {
                         var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
-                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google"))
+                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google") || userAgent.Contains("apache-httpclient"))
                         {
                             return true;
                         }

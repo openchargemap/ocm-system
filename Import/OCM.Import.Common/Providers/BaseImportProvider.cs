@@ -207,6 +207,9 @@ namespace OCM.Import.Providers
             }
         }
 
+        /// <summary>
+        /// If specified, default http method will be POST instead of GET
+        /// </summary>
         public string HTTPPostVariables { get; set; }
 
         public string APIKeyPrimary { get; set; }
@@ -303,7 +306,15 @@ namespace OCM.Import.Providers
         {
             try
             {
-                InputData = webClient.DownloadString(url);
+                if (String.IsNullOrEmpty(HTTPPostVariables))
+                {
+                    //get
+                    InputData = webClient.DownloadString(url);
+                } else
+                {
+                    //post
+                    InputData = webClient.UploadString(url, HTTPPostVariables);
+                }
 
                 return true;
             }

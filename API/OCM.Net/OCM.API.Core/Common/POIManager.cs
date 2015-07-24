@@ -222,7 +222,7 @@ namespace OCM.API.Common
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
                         //TODO: send error notification
-                        if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI);
+                        if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI, "POI Cache query exception:"+exp.ToString());
                     }
                 }
 
@@ -744,10 +744,10 @@ namespace OCM.API.Common
                     dataPOI.DataProvider = dataModel.DataProviders.First(d => d.ID == providerId);
                     dataPOI.DataProviderID = dataPOI.DataProvider.ID;
                 }
-                catch (Exception)
+                catch (Exception exp)
                 {
                     //unknown operator
-                    throw new OCMAPIException("Unknown Data Provider Specified");
+                    throw new OCMAPIException("Unknown Data Provider Specified:"+providerId+" "+exp.ToString());
                 }
             }
             else
@@ -770,7 +770,7 @@ namespace OCM.API.Common
                 catch (Exception)
                 {
                     //unknown operator
-                    throw new OCMAPIException("Unknown Network Operator Specified");
+                    throw new OCMAPIException("Unknown Network Operator Specified:"+operatorId);
                 }
             }
             else
@@ -792,7 +792,7 @@ namespace OCM.API.Common
                 catch (Exception)
                 {
                     //unknown usage type
-                    throw new OCMAPIException("Unknown Usage Type Specified");
+                    throw new OCMAPIException("Unknown Usage Type Specified:"+usageTypeId);
                 }
             }
             else

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<OCM.Core.Data.BenchmarkResult>
+
+@{
+    ViewBag.Title = "Benchmarks";
+}
+
+<h2>Benchmarks</h2>
+
+<p>
+    Queries: @Model.Count()
+    TotalMS: @Model.Sum(m => m.TimeMS)
+    AvgMS: @Model.Average(m=>m.TimeMS)
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeMS)
+        </th>
+        <th></th>
+    </tr>
+
+    
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeMS)
+        </td>
+    </tr>
+}
+
+</table>

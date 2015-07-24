@@ -1,11 +1,9 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.GeoJsonObjectModel;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
@@ -13,9 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,6 +34,12 @@ namespace OCM.Core.Data
         public long NumPOILastUpdated { get; set; }
 
         public int NumDistinctPOIs { get; set; }
+    }
+
+    public class BenchmarkResult
+    {
+        public string Description { get; set; }
+        public long TimeMS { get; set; }
     }
 
     public class POIMongoDB : OCM.API.Common.Model.ChargePoint
@@ -603,7 +607,7 @@ namespace OCM.Core.Data
                                              || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
                                              ) //by default return live cps only, otherwise use specific submission statusid
                                        && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
-                               //&& (settings.ChargePointID == null || (settings.ChargePointID!=null && (c.ID!=null && c.ID == settings.ChargePointID)))
+                                       //&& (settings.ChargePointID == null || (settings.ChargePointID!=null && (c.ID!=null && c.ID == settings.ChargePointID)))
                                        && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
                                        && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
                                        && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
@@ -635,9 +639,16 @@ namespace OCM.Core.Data
                                  )
                           select c;
 
-                var results = poiList.ToList();
-                if (requiresDistance && settings.Latitude != null & settings.Longitude != null)
+                List<API.Common.Model.ChargePoint> results = null;
+                if (!requiresDistance || (settings.Latitude == null || settings.Longitude == null))
                 {
+                    //distance is not required or can't be provided
+                    results = poiList.OrderByDescending(p => p.DateCreated).Take(settings.MaxResults).ToList();
+                }
+                else
+                {
+                    //distance is required, calculate and populate in results
+                    results = poiList.ToList();
                     //populate distance
                     foreach (var p in results)
                     {
@@ -646,10 +657,6 @@ namespace OCM.Core.Data
                     }
                     results = results.OrderBy(r => r.AddressInfo.Distance).Take(settings.MaxResults).ToList();
                 }
-                else
-                {
-                    results = poiList.OrderByDescending(p => p.DateCreated).Take(settings.MaxResults).ToList();
-                }
 
                 return results;
             }
@@ -657,6 +664,50 @@ namespace OCM.Core.Data
             {
                 return null;
             }
+        }
+
+        public List<BenchmarkResult> PerformPOIQueryBenchmark(int numQueries, string mode="country")
+        {
+            List<BenchmarkResult> results = new List<BenchmarkResult>();
+
+            for (int i = 0; i < numQueries; i++)
+            {
+                BenchmarkResult result = new BenchmarkResult();
+
+                try
+                {
+                    result.Description = "Cached POI Query " + i;
+
+                    APIRequestParams filter = new APIRequestParams();
+                    filter.MaxResults = 100;
+
+                    if (mode == "country")
+                    {
+                        filter.CountryCode = "NL";
+                    } else
+                    {
+                        filter.Latitude = 57.10604;
+                        filter.Longitude = -2.62214;
+                        filter.Distance = 50;
+
+                        filter.DistanceUnit = DistanceUnit.Miles;
+                    }
+
+                    var stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    var poiList = this.GetPOIList(filter);
+                    stopwatch.Stop();
+                    result.Description += " results:" + poiList.Count;
+                    result.TimeMS = stopwatch.ElapsedMilliseconds;
+                }
+                catch (Exception exp)
+                {
+                    result.Description += " Failed:" + exp.ToString();
+                }
+
+                results.Add(result);
+            }
+            return results;
         }
     }
 }

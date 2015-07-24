@@ -22,11 +22,16 @@ namespace OCM.API.Common
 
     public class AuditLogManager
     {
-        public static void ReportWebException(HttpServerUtility Server, AuditEventType eventType)
+        public static void ReportWebException(HttpServerUtility Server, AuditEventType eventType, string msg=null)
         {
 
             bool ignoreException = false;
             string body = "An error has occurred while a user was browsing OCM:<br><br>";
+
+            if (msg!=null)
+            {
+                body = msg;
+            }
 
             object exceptionObject = null;
             if (Server.GetLastError() != null)

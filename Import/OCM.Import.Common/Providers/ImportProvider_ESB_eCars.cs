@@ -32,6 +32,8 @@ namespace OCM.Import.Providers
         {
             //parse address info
             string[] loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace(" - ","~").Replace(",","~").Split('~');
+
+            if (loctitle.Length==1 && loctitle[0].Contains("-")) loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace("-", "~").Replace(",", "~").Split('~');
             cp.AddressInfo.Town = loctitle[0].Trim();
 
             if (loctitle[1].Contains(","))

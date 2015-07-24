@@ -273,5 +273,13 @@ namespace OCM.MVC.Controllers
         {
             return View();
         }
+
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult Benchmarks()
+        {
+            CacheProviderMongoDB cache = new CacheProviderMongoDB();
+            var results = cache.PerformPOIQueryBenchmark(10, "distance");
+            return View(results);
+        }
     }
 }
