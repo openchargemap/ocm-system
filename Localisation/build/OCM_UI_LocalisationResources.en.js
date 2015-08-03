@@ -14,7 +14,8 @@ var localisation_dictionary_en ={
       "settings": "Settings",
       "about": "About",
       "signIn": "Sign In",
-      "signOut": "Sign Out"
+      "signOut": "Sign Out",
+      "findOutMore": "Find out more"
     },
     "details": {
       "sectionTitle": "Charging Location",
@@ -113,7 +114,9 @@ var localisation_dictionary_en ={
         "avaitingReview": "Awaiting Review",
         "recentActivity": "Recent Activity",
         "webApp": "Web App for Mobile",
-        "statistics": "Statistics"
+        "statistics": "Statistics",
+        "awaitingReviewImported": "imported locations awaiting approval",
+        "editqueue": "edits awaiting approval"
       },
       "develop": {
         "sectionTitle": "Develop",
@@ -128,7 +131,8 @@ var localisation_dictionary_en ={
       "about": {
         "termsPrivacy": "Terms & Privacy",
         "contact": "Contact",
-        "guidance": "Guidance for Contributors"
+        "guidance": "Guidance for Contributors",
+        "funding": "Funding"
       },
       "profile": {
         "sectionTitle": "My Profile",
@@ -169,6 +173,54 @@ var localisation_dictionary_en ={
         "quickWay": "If you just need a quick way to find your nearest charging location you can also try our",
         "webApp": "Web App",
         "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
+      },
+      "sponsors": "We are seeking funding and sponsors, think you can help?",
+      "aboutUs": {
+        "ourService": "Our Service",
+        "disclaimer": "By using our services or submitting information to Open Charge Map you agree to our",
+        "termsPolicyLicensing": "standard terms, privacy policy and licensing",
+        "aimTitle": "Our Aim",
+        "aimContent": "Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.",
+        "goalContent": "Our goal is to avoid the proliferation of independent conflicting charging location maps/websites/applications and to provide (as much as possible) a reliable single point of reference for charging equipment location information. Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for data sharing and de-duplication efforts.",
+        "whyOCMTitle": "Why Use Open Charge Map?",
+        "whyOCMContent": "By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set.",
+        "fundingContent": "Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please",
+        "fundingMoreInfo": "More information on funding and project costs",
+        "fundingInfoLink": "is available",
+        "steeringGroupTitle": "Steering Group",
+        "steeringGroupContent": "Our steering group consists of a wide range of people and organisations, both formally and informally:",
+        "coordinators": {
+          "sectionTitle": "Coordinators",
+          "content": "The following people provide leadership and coordination for the project:",
+          "christopherGeneral": "Christopher is the lead technical architect, database designer and lead developer for the Open Charge Map system. He is a director of the UK software development company Webprofusion Ltd",
+          "christopherOwner": "and owner of",
+          "jCGeneral": "J-C is the community coordinator for the Open Charge Map project and an OCM Administrator, promoting the uptake of OCM by the public and industry. Links",
+          "jCWebsite": "Website",
+          "kevinGeneral": "Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World",
+          "kevinHosting": "who sponsor the server hosting of Open Charge Map"
+        },
+        "developersContributors": {
+          "sectionTitle": "Developers and Contributors",
+          "our": "Our",
+          "gitHubLink": "GitHub project",
+          "gitHubDescription": "provides a conduit for external technical contributors to discuss and influence our system and plans. Our",
+          "googlePlusDescription": "community is our primary means of exchanging ideas and gathering feedback from interested parties",
+          "contributorsLists": "You can take a look at the lists of our main contributors of",
+          "codeLink": "code",
+          "translationsLink": "translations",
+          "and": "and",
+          "dataLink": "data"
+        },
+        "projectStats": {
+          "sectionTitle": "Project Stats",
+          "general": "General statistics for Open Charge Map",
+          "link": "data and usage",
+          "generalContinued": "are available",
+          "devCosts": "The following is an estimation of the software development costs, if someone were to develop an equivalent project commercially:"
+        },
+        "dataSourcesTitle": "Data Sources",
+        "dataSourcesContent": "The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly (\"crowd sourced\") by our users and those of apps using our services.",
+        "dataSourcesThanks": "Credit and our thanks goes to following major data sources currently included in our database:"
       }
     }
   }
