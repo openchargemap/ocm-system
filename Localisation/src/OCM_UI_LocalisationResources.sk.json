@@ -14,7 +14,8 @@
       "settings": "Nastavenia",
       "about": "O nás",
       "signIn": "Prihlásiť sa",
-      "signOut": "Odhlásiť sa"
+      "signOut": "Odhlásiť sa",
+      "findOutMore": "Zisti viac"
     },
     "details": {
       "sectionTitle": "Poloha nabíjacej stanice",
@@ -113,7 +114,9 @@
         "avaitingReview": "Nepotvrdené umiestnenia",
         "recentActivity": "Nedávnu činnosť",
         "webApp": "Mobilnú aplikáciu",
-        "statistics": "Štatistiky"
+        "statistics": "Štatistiky",
+        "awaitingReviewImported": "Importované umiestnenia čakajúce na schválenie",
+        "editqueue": "Úpravy čakajúce na schválenie"
       },
       "develop": {
         "sectionTitle": "Vývoj",
@@ -128,7 +131,8 @@
       "about": {
         "termsPrivacy": "Podmienky a ochrana súkromia",
         "contact": "Kontakt",
-        "guidance": "Rady pre prispievateľov"
+        "guidance": "Rady pre prispievateľov",
+        "funding": "Financovanie"
       },
       "profile": {
         "sectionTitle": "Môj Profil",
@@ -169,6 +173,54 @@
         "quickWay": "Ak iba potrebujete rýchly spôsob, ako nájsť najbližšiu nabíjaciu stanicu, môžete tiež vyskúšať našu",
         "webApp": "webovú aplikáciu",
         "searchAppStore": "hlavne na mobilných zariadeniach. V obchode s aplikáciami na Vašom zariadení nájdete aj verziu, ktorú môžete mať stále so sebou."
+      },
+      "sponsors": "Hľadáme sponzorov. Vieš s tým pomôcť?",
+      "aboutUs": {
+        "ourService": "Naša služba",
+        "disclaimer": "Používaním našich služieb alebo pridaním informácii do databázy Open Charge Map súhlasíte s našimi",
+        "termsPolicyLicensing": "všeobecnými podmienkami, politikou ochrany súkromia a licencovaním",
+        "aimTitle": "Naše ciele",
+        "aimContent": "Chceme spolupracovať s komunitou na vytváraní a poskytovaní vysoko kvalitnej, otvorenej, verejnej a bezplatnej databáze nabíjacích zariadení po celom svete.",
+        "goalContent": "Naším cieľom je tiež zabrániť potrebe šírenia nezávislých konfliktných máp/stránok/aplikácii poskytovaním jedného spoľahlivého (v maximálnej možnej miere) zdroja informácií o nabíjacích staniciach. Namiesto súťaženia s inými poskytovateľmi dát sa snažíme s nimi spolupracovať a ponúkať im služby výmenou za zdieľanie ich dát a snahu o neduplikovanie informácií.",
+        "whyOCMTitle": "Prečo používať Open Charge Map?",
+        "whyOCMContent": "Používaním Open Charge Map (OCM) a príslušných aplikácii môžete pomôcť vylepšiť informácie v databáze recenziami, zmenami a pridávaním informácií, komentárov a fotiek a odporúčaním služby ostatným užívateľom. Výhodou OCM oproti ostatným poskytovateľom podobných dát je, že cieľom OCM je otvorené zdieľanie informácií, kým komerční poskytovatelia si musia ponechávať informácie pre seba (alebo len vrámci svojej aplikácie), aby si mohli udržovať komerčne speňažiteľné množstvo dát.",
+        "fundingContent": "Open Charge Map je vyvinutá a udržovaná dobrovoľníkmi. Ak môžete ponúknuť financovanie na podporu projektu alebo podporiť konkrétnu pracovnú činnosť prosím",
+        "fundingMoreInfo": "Viac informácií ohľadom financovania a projektových nákladov",
+        "fundingInfoLink": "je k dispozícií",
+        "steeringGroupTitle": "Riadiaci výbor",
+        "steeringGroupContent": "Náš riadiaci výbor pozostáva zo širokého spektra ľudí a organizácii, ako formálne, tak i neformálne:",
+        "coordinators": {
+          "sectionTitle": "Koordinátori",
+          "content": "Nasledujúci ľudia zaisťujú vedenie a koordináciu projektu:",
+          "christopherGeneral": "Christopher je vedúci technický architekt, dizajnér databázy a vedúci vývojár systému Open Charge Map. Je riaditeľ Anglickej softvérovej firmy Webprofusion Ltd",
+          "christopherOwner": "a majiteľ",
+          "jCGeneral": "J-C je komunitný koordinátor a administrátor projektu, podporujúci prijatie Open Charge Map verejnosťou a odvetvím. Odkazy",
+          "jCWebsite": "webová stránka",
+          "kevinGeneral": "Kevin začal pôvodnú verziu projektu Open Charge Map. Je tiež zakladateľom a predsedom anglickej charity podporujúcej zníženie uhlíkovej stopy pod názvom Zero Carbon World",
+          "kevinHosting": "ktorá sponzoruje server hosting pre Open Charge Map"
+        },
+        "developersContributors": {
+          "sectionTitle": "Vývojári a prispievatelia",
+          "our": "Náš projekt na",
+          "gitHubLink": "GitHube",
+          "gitHubDescription": "poskytuje zázemie, ktoré umožnuje externým technickým prispievateľom diskutovať a ovlpyvniť náš systém a plány do budúcnosti. Naša komunita na",
+          "googlePlusDescription": "je hlavný spôsob výmeny nápadov a získavania spätnej väzby od zainteresovaných strán",
+          "contributorsLists": "Môžete si prezrieť zoznamy našich najvačších prispievateľov",
+          "codeLink": "kódu",
+          "translationsLink": "prekladov",
+          "and": "a",
+          "dataLink": "dát"
+        },
+        "projectStats": {
+          "sectionTitle": "Projektové štatistiky",
+          "general": "Máme k dispozícií všeobecné štatistiky ohľadom",
+          "link": "dát a používanosti",
+          "generalContinued": "Open Charge Map",
+          "devCosts": "Nasleduje odhad ceny vývoja softvéru v prípade, že by sa niekto snažil vyvinúť ekvivalentný projekt komerčne:"
+        },
+        "dataSourcesTitle": "Zdroje dát",
+        "dataSourcesContent": "Dáta, ktoré sú k dispozícií prostredníctvom systému Open Charge Map a príslušných služieb sa získavajú z mnohých zdrojov a sú často získavané priamo prostredníctvom \"crowdsourcingu\", teda pridané našimi užívateľmi a aplikáciami používajúcimi naše služby.",
+        "dataSourcesThanks": "Uznanie a vďaka patrí nasledujúcim hlavným zdrojom dát, ktoré sú v súčasnosti zahrnuté v našej databáze:"
       }
     }
   }
