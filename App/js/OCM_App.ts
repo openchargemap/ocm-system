@@ -1842,5 +1842,11 @@ module OCM {
                 //Historyjs.pushState({ view: "menu", title: "Menu" }, "Menu", "?view=menu");
             }
         }
+        
+        jumpToPageTop(){
+            //jump to top of page
+            this.log("Status tapped, scrolling to page top.");
+            window.scrollTo(0,0);
+        }
     }
 }
