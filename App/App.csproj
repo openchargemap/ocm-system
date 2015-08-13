@@ -138,6 +138,7 @@
       <DependentUpon>main.css</DependentUpon>
     </Content>
     <Content Include="package.json" />
+    <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="styles\main.scss" />
     <Content Include="styles\main.css">
       <DependentUpon>main.scss</DependentUpon>

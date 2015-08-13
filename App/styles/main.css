@@ -13,7 +13,6 @@ html, body {
 }
 
 body {
-  font-family: segoe;
   margin: 0;
   padding: 0;
   font-family: Roboto, "Segoe UI Light", Helvetica, Arial, sans-serif;
@@ -937,10 +936,4 @@ img.user {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   background-color: white;
-}
-
-.details-link:active {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
 }

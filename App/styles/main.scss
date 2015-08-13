@@ -30,7 +30,6 @@ html, body {
 }
 
 body {
-    font-family: segoe;
     margin: 0;
     padding: 0;
     font-family: $ocm-body-font;
@@ -959,10 +958,4 @@ img.user {
     -webkit-overflow-scrolling: touch; 
     background-color:white;
 
-}
-
-.details-link:active {
-   transform: rotate(45deg);
-   -webkit-transform: rotate(45deg);
-   -ms-transform: rotate(45deg);
 }
