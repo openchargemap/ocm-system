@@ -4,7 +4,7 @@ var localisation_dictionary_el ={
   "ocm": {
     "general": {
       "shortDescription": "Παγκόσμιο δημόσιο μητρώο σημείων φόρτισης ηλεκτρικών οχημάτων",
-      "linkWebApp": "Αναζήτηση τοποθεσιών με χρήση των δικτυακών εφαρμογών μας",
+      "linkWebApp": "Αναζήτηση τοποθεσιών",
       "linkBrowsePOI": "Αναζήτηση σε όλες τις τοποθεσίες",
       "browsePOI": null,
       "loadingProgress": "Φόρτωση...",

@@ -34,6 +34,7 @@ namespace OCM.MVC
                 languages.Add(new KeyValuePair<string, string>("pt", "Portuguese/português"));
                 languages.Add(new KeyValuePair<string, string>("sk", "Slovak/slovenčina"));
                 languages.Add(new KeyValuePair<string, string>("it", "Italian/Italiano"));
+                languages.Add(new KeyValuePair<string, string>("es", "Spanish/Inglés"));
                 languages.Add(new KeyValuePair<string, string>("et", "Estonian/Eesti"));
                 languages.Add(new KeyValuePair<string, string>("fy", "Frisian/Frysk"));
                 languages.Add(new KeyValuePair<string, string>("fi", "Finnish/Suomi"));

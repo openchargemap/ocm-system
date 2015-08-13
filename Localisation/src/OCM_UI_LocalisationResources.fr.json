@@ -8,7 +8,7 @@
       "linkBrowsePOI": "Feuilletez Tout les Emplacements",
       "browsePOI": "Explorer Emplacements de Chargement",
       "loadingProgress": "Chargement...",
-      "addLocation": "Ajouter un lieu",
+      "addLocation": "Ajouter un emplacement",
       "addItem": "Ajouter",
       "favourites": "Favoris",
       "settings": "Paramètres",
@@ -30,7 +30,7 @@
         "country": "Pays",
         "latitude": "Latitude :",
         "longitude": "Longitude :",
-        "contactTelephone1": "Numéro de téléphone Principale",
+        "contactTelephone1": "Numéro de téléphone Principal",
         "contactTelephone2": "Numéro de téléphone Secondaire",
         "contactEmail": "Email de contact",
         "map": "Carte",
@@ -89,9 +89,9 @@
       }
     },
     "search": {
-      "sectionTitle": "Cherche",
-      "locationInput": "Endroit",
-      "useMyLocation": "Cherche Près de Moi",
+      "sectionTitle": "Chercher",
+      "locationInput": "Emplacement",
+      "useMyLocation": "Chercher à proximité",
       "distance": "Distance",
       "chargingLevels": "Vitesse de recharge",
       "minPowerKW": "Min. Puissance kW",
@@ -101,7 +101,7 @@
       "submissionStatus": "Statut de soumission",
       "usageTypes": "Usage",
       "operationalStatusTypes": "Disponibilité",
-      "performSearch": "Cherche",
+      "performSearch": "Chercher",
       "progress": "Recherche..."
     },
     "navigation": {
@@ -118,7 +118,7 @@
       "develop": {
         "sectionTitle": "Dévelopez",
         "api": "API",
-        "htmlWidgets": null,
+        "htmlWidgets": "Widgets HTML",
         "examples": "Exemples",
         "getInvolved": "Participez",
         "code": "Voir le Code (sur GitHub)",
@@ -139,24 +139,24 @@
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "youCan": "Vous pouvez",
+        "browseLocations": "Chercher des emplacements à proximité",
+        "commentsPhotos": "et ajouter vos propres commentaires, et photos.",
+        "dontSeePOI": "Impossible de trouver un emplacement que vous connaissez ?"
       },
       "getStations": {
-        "sectionTitle": null,
+        "sectionTitle": "Obtenir les données des stations de charge",
         "who": null,
-        "what": null,
+        "what": "Vous pouvez accéder et télécharger nos derniers points de charge en utilisant notre",
         "websiteOperators": null,
-        "embedMap": "intégrer une carte sur votre propre site Internet"
+        "embedMap": "Intégrer une carte sur votre propre site Internet"
       },
       "supplyData": {
         "sectionTitle": null,
         "who": null,
         "needData": null,
         "what": null,
-        "contactUs": null,
+        "contactUs": "Contactez-nous",
         "getStarted": null
       },
       "stats": {
