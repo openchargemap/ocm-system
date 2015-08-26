@@ -30,34 +30,6 @@
     <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="~/Content/animate.min.css" rel="stylesheet">
-
-    <script>
-        // Prevent variables from being global
-        (function () {
-
-            /*
-            1. Inject CSS which makes iframe invisible
-            */
-
-            var div = document.createElement('div'),
-            ref = document.getElementsByTagName('base')[0] ||
-            document.getElementsByTagName('script')[0];
-
-            div.innerHTML = '&shy;<style>iframe { visibility: hidden; } </style>';
-
-            ref.parentNode.insertBefore(div, ref);
-
-            /*
-            2. When window loads, remove that CSS,
-            making iframe visible again
-            */
-
-            window.onload = function () {
-                div.parentNode.removeChild(div);
-            }
-
-        })();
-    </script>
 </head>
 <body>
 
@@ -201,7 +173,7 @@
                 <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
 
                 <div id="datasummary"></div>
-                <p>We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")">Find out more</a>.</p>
+                <p data-localize="ocm.infoText.funding">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" data-localize-linkid="link">Find out more</a>.</p>
                 <p class="pull-right">
                     <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
                     <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>

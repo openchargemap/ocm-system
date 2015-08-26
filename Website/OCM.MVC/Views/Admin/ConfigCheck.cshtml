@@ -21,3 +21,41 @@
     
 </dl>
 
+<script>
+    //translation test
+
+    //when localisation is ready we can render the test paragraph
+
+    document.addEventListener("ocm-localisation-ready", function(event){
+        
+    }, false);
+
+</script>
+
+<div id="translation-test" class="well" >
+    
+
+    <i class="fa fa-cloud-download pull-left home-icons"></i>
+    <div data-localize="ocm.infoText.translationTest.p1">
+        <p >
+            <em>Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em>
+            You can access and download
+            our latest charging locations using our
+            <a href="/site/develop" data-localize-id="link-api" class="btn btn-primary">API</a>.
+            </p>
+        <p>
+            If you operate a website and would like to include a charging location map, you can <a href="/site/develop" data-localize-id="link-embed">embed a map on your own website</a>.
+        </p>
+    </div>
+
+    <select data-localize="ocm.reference.operationalStatus" data-val="true" data-val-number="The field ID must be a number." data-val-required="The ID field is required." id="StatusType_ID" name="StatusType.ID" class="form-control valid" aria-required="true" aria-invalid="false" aria-describedby="StatusType_ID-error">
+        <option value="-1">(None Selected)</option>
+        <option value="0">Unknown</option>
+        <option value="30">Temporarily Unavailable</option>
+        <option selected="selected" value="50">Operational</option>
+        <option value="75">Partly Operational (Mixed)</option>
+        <option value="100">Not Operational</option>
+        <option value="150">Planned For Future Date</option>
+        <option value="200">Removed (Decomissioned)</option>
+    </select>
+</div>

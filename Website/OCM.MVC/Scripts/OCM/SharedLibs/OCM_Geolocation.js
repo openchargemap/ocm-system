@@ -1,6 +1,6 @@
 /// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.ts" />
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -16,14 +16,11 @@ var OCM;
         __extends(Geolocation, _super);
         function Geolocation(api) {
             _super.call(this);
-
             //result for latest client geolocation attempt
             this.clientGeolocationPos = null;
-
             //input/results for latest text geocoding attempt
             this.geocodingTextInput = null;
             this.geocodingResultPos = null;
-
             this.api = api;
         }
         Geolocation.prototype.startWatchingUserLocation = function () {
@@ -33,7 +30,6 @@ var OCM;
                 maximumAge: 30000,
                 timeout: 27000
             };
-
             //begin watching position (with high accuracy)
             this.positionWatcherID = navigator.geolocation.watchPosition(function (position) {
                 //got position update
@@ -43,19 +39,16 @@ var OCM;
                 }
             }, function () {
                 //got error
-                app.log("Could not watch GPS position.", 3 /* ERROR */);
+                app.log("Could not watch GPS position.", OCM.LogLevel.ERROR);
             }, geoOptions);
         };
-
         Geolocation.prototype.stopWatchingUserLocation = function () {
             if (this.positionWatcherID != null) {
                 navigator.geolocation.clearWatch(this.positionWatcherID);
             }
         };
-
         Geolocation.prototype.determineUserLocation = function (successCallback, failureCallback) {
             var appContext = this;
-
             //determine user location automatically if enabled & supported
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -67,16 +60,15 @@ var OCM;
                     // could not geolocate
                     appContext.determineUserLocationFailed(failureCallback);
                 });
-            } else {
+            }
+            else {
                 appContext.determineUserLocationFailed(failureCallback);
             }
         };
-
         Geolocation.prototype.determineUserLocationFailed = function (failureCallback) {
             //failed
             failureCallback();
         };
-
         Geolocation.prototype.determineGeocodedLocation = function (locationText, successCallback, failureCallback) {
             //caller is searching for same (previously geocoded) text again, return last result
             if (locationText === this.geocodingTextInput) {
@@ -85,13 +77,10 @@ var OCM;
                     return false;
                 }
             }
-
             this.geocodingTextInput = locationText;
             this.geocodingResultPos = null;
-
             var geocoder = this.api;
             var appContext = this;
-
             geocoder.fetchGeocodeResult(locationText, function (results) {
                 var locationPos = {
                     "lat": results.latitude,
@@ -101,21 +90,19 @@ var OCM;
                 };
                 appContext.determineGeocodedLocationCompleted(locationPos, successCallback, failureCallback);
             }, null, null);
-
             /*
             geocoder.geocode({ 'address': locationText }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-            var locationPos = results[0].geometry.location;
-            
-            appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
-            } else {
-            alert("Sorry, we could not identify this location: " + status);
-            }
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var locationPos = results[0].geometry.location;
+
+                    appContext.determineGeocodedLocationCompleted(locationPos, successCallback);
+                } else {
+                    alert("Sorry, we could not identify this location: " + status);
+                }
             });
             */
             return true;
         };
-
         Geolocation.prototype.determineGeocodedLocationCompleted = function (pos, successCallback, failureCallback) {
             if (pos.resultsAvailable === true) {
                 //convert geocoding service lat/lng result into browser coords, including position source data attribution
@@ -126,18 +113,18 @@ var OCM;
                     },
                     attribution: pos.attribution
                 };
-
                 this.geocodingResultPos = geoPosition;
                 successCallback(geoPosition);
-            } else {
+            }
+            else {
                 if (failureCallback) {
                     failureCallback();
-                } else {
+                }
+                else {
                     alert("The position of this address could not be determined. You may wish to try starting with a simpler address.");
                 }
             }
         };
-
         Geolocation.prototype.getBearing = function (lat1, lon1, lat2, lon2) {
             //from http://stackoverflow.com/questions/1971585/mapping-math-and-javascript
             //convert degrees to radians
@@ -146,16 +133,13 @@ var OCM;
             var dLon = (lon2 - lon1) * Math.PI / 180;
             var y = Math.sin(dLon) * Math.cos(lat2);
             var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-
             var bearing = Math.atan2(y, x) * 180 / Math.PI;
             if (bearing < 0) {
                 bearing = bearing + 360;
             }
-
             bearing = Math.floor(bearing);
             return bearing;
         };
-
         Geolocation.prototype.getCardinalDirectionFromBearing = function (bearing) {
             //partly inspired by http://bryan.reynoldslive.com/post/Latitude2c-Longitude2c-Bearing2c-Cardinal-Direction2c-Distance2c-and-C.aspx
             if (bearing >= 0 && bearing <= 22.5) {
@@ -185,22 +169,18 @@ var OCM;
             if (bearing >= 337.5 && bearing <= 360.1) {
                 return "N";
             }
-
             return "?";
         };
-
         Geolocation.prototype.getDrivingDistanceBetweenPoints = function (startLat, startLng, endLat, endLng, distanceUnit, completedCallback) {
-            try  {
+            try {
                 if (typeof (google) !== "undefined" && google.maps) {
                     //FIXME: use native where available
                     var unitSystem = google.maps.UnitSystem.IMPERIAL;
                     if (distanceUnit === "KM") {
                         unitSystem = google.maps.UnitSystem.METRIC;
                     }
-
                     var startPos = new google.maps.LatLng(startLat, startLng);
                     var endPos = new google.maps.LatLng(endLat, endLng);
-
                     var service = new google.maps.DistanceMatrixService();
                     service.getDistanceMatrix({
                         origins: [startPos],
@@ -209,7 +189,8 @@ var OCM;
                         unitSystem: unitSystem
                     }, completedCallback);
                 }
-            } catch (exception) {
+            }
+            catch (exception) {
                 //failed to get distance
                 return null;
             }

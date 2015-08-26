@@ -1,4 +1,4 @@
-﻿/**
+/**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
@@ -16,9 +16,9 @@ var OCM;
             this.enableLogging = true;
         }
         Base.prototype.log = function (msg, level) {
-            if (typeof level === "undefined") { level = 0 /* VERBOSE */; }
+            if (level === void 0) { level = LogLevel.VERBOSE; }
             if (this.enableLogging && console) {
-                console.log("[" + LogLevel[level] + "] " + msg);
+                console.log("[" + LogLevel[level] + "] {" + (new Date().toLocaleTimeString()) + "} " + msg);
             }
         };
         return Base;

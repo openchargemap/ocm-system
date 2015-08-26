@@ -4,27 +4,14 @@
     ViewBag.EnableAppMarkeplaceLinks = true;
 }
 
-
-
-
-<!--<div class="hidden-xs">
-    <div class="app-container animated fadeIn">
-        <p class="app-loading animated zoomIn"><i class="fa fa-circle-o-notch fa-spin"></i> Loading App..</p>
-        <iframe id="mapapp" class="animated fadeInUpBig" style="width: 100%; height: 620px; margin-top:0.5em;border:none; box-shadow:0 0 8px #333;" src="http://openchargemap.org/app?mode=embedded@(Session["languageCode"]!=null?"&languagecode="+Session["languageCode"]:"")"></iframe>
-    </div>
-</div>
-    -->
-
 <div class="row">
     <div class="col-md-6 card">
         <h2 data-localize="ocm.general.linkWebApp">Find Charging Locations</h2>
         <i class="fa fa-search pull-left home-icons"></i>
-       
-            <a href="/app" target="_blank">
-                <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
-            </a>
-        
 
+        <a href="/app" target="_blank">
+            <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
+        </a>
     </div>
     <div class="col-md-6 card">
         <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
@@ -63,6 +50,7 @@
 
 <script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript">
+    var ocmCommonUI=null;
 
     function refreshDataSummary() {
         // <!--data summary-->
@@ -80,8 +68,10 @@
 
         if (summaryElement != null) summaryElement.innerHTML = totalLocations;
 
-        //summaryContent += "<strong>"+totalStations + "</strong> <span data-localize="ocm.infoText.stats.stations">charging stations across</span> <strong>" + totalLocations + "</strong> <span data-localize="ocm.infoText.stats.acrossLocations">locations</span>.";
-        summaryContent += "<strong>" + totalStations + "</strong> charging stations across <strong>" + totalLocations + "</strong> locations.";
+        var translationUtil = _i18nUtils; //global OCM i18n util
+        var summaryText = translationUtil.getTranslation("ocm.infoText.stats.locationSummary", "{totalStations} charging stations across {totalLocations} locations.", { totalStations: totalStations, totalLocations: totalLocations });
+
+        summaryContent += "<strong>"+summaryText+"</strong>";
         document.getElementById("datasummary").innerHTML = summaryContent;
 
     }
@@ -90,37 +80,8 @@
         document.getElementById("countrymap").src = "http://openchargemap.org/api/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage,status&clustering=true";
     }
 
-    refreshDataSummary();
+    //when localisation is ready we can render the summary count
+    document.addEventListener("ocm-i18n-ready", function(event){
+        refreshDataSummary(event.detail);
+    }, false);
 </script>
-
-
-<script>
-    var buffer = 20; //scroll bar buffer
-    var appFrame = document.getElementById('mapapp');
-
-    function pageY(elem) {
-        return elem.offsetParent ? (elem.offsetTop + pageY(elem.offsetParent)) : elem.offsetTop;
-    }
-
-    function resizeIframe() {
-        var height = document.documentElement.clientHeight;
-        height -= pageY(appFrame) + buffer;
-        height = (height < 0) ? 0 : height;
-
-        if (appFrame) {
-            appFrame.style.height = height + 'px';
-        }
-    }
-
-    if (appFrame) {
-        // .onload doesn't work with IE8 and older.
-        if (appFrame.attachEvent) {
-            appFrame.attachEvent("onload", resizeIframe);
-        } else {
-            appFrame.onload = resizeIframe;
-        }
-
-        window.onresize = resizeIframe;
-    }
-</script>
-

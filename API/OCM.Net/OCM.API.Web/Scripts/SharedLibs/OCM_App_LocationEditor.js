@@ -1,7 +1,7 @@
 /// <reference path="TypeScriptReferences/jquery/jquery.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 /// <reference path="OCM_App.ts" />
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -42,13 +42,9 @@ var OCM;
                 //cached ref data exists, use that
                 this.log("Using cached reference data..");
                 var _app = this;
-                setTimeout(function () {
-                    _app.populateEditor(null);
-                }, 50);
+                setTimeout(function () { _app.populateEditor(null); }, 50);
                 //attempt to fetch fresh data later (wait 1 second)
-                setTimeout(function () {
-                    _app.apiClient.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo());
-                }, 1000);
+                setTimeout(function () { _app.apiClient.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo()); }, 1000);
             }
         };
         LocationEditor.prototype.resetEditorForm = function () {
@@ -93,6 +89,7 @@ var OCM;
             this.populateDropdown("edit_usagetype", refData.UsageTypes, null);
             this.populateDropdown("edit_statustype", refData.StatusTypes, null);
             this.populateDropdown("edit_operator", refData.Operators, 1);
+            //populate connection editor(s)
             for (var n = 1; n <= this.numConnectionEditors; n++) {
                 //create editor section
                 var $connection = ($("#edit_connection" + n));
@@ -117,7 +114,12 @@ var OCM;
             var appContext = this;
             appContext.setElementAction("#edit-location-lookup", function (event, ui) {
                 //format current address as string
-                var lookupString = ($("#edit_addressinfo_addressline1").val().length > 0 ? $("#edit_addressinfo_addressline1").val() + "," : "") + ($("#edit_addressinfo_addressline2").val().length > 0 ? $("#edit_addressinfo_addressline2").val() + "," : "") + ($("#edit_addressinfo_town").val().length > 0 ? $("#edit_addressinfo_town").val() + "," : "") + ($("#edit_addressinfo_stateorprovince").val().length > 0 ? $("#edit_addressinfo_stateorprovince").val() + "," : "") + ($("#edit_addressinfo_postcode").val().length > 0 ? $("#edit_addressinfo_postcode").val() + "," : "") + appContext.apiClient.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
+                var lookupString = ($("#edit_addressinfo_addressline1").val().length > 0 ? $("#edit_addressinfo_addressline1").val() + "," : "") +
+                    ($("#edit_addressinfo_addressline2").val().length > 0 ? $("#edit_addressinfo_addressline2").val() + "," : "") +
+                    ($("#edit_addressinfo_town").val().length > 0 ? $("#edit_addressinfo_town").val() + "," : "") +
+                    ($("#edit_addressinfo_stateorprovince").val().length > 0 ? $("#edit_addressinfo_stateorprovince").val() + "," : "") +
+                    ($("#edit_addressinfo_postcode").val().length > 0 ? $("#edit_addressinfo_postcode").val() + "," : "") +
+                    appContext.apiClient.getRefDataByID(refData.Countries, $("#edit_addressinfo_countryid").val()).Title;
                 //attempt to geocode address
                 appContext.geolocationManager.determineGeocodedLocation(lookupString, $.proxy(appContext.populateEditorLatLon, appContext), $.proxy(appContext.determineGeocodedLocationFailed, appContext));
             });
@@ -134,14 +136,15 @@ var OCM;
             this.populateDropdown("edit_dataprovider", refData.DataProviders, 1);
             $("#edit-submissionstatus-container").hide();
             $("#edit-dataprovider-container").hide();
-            //populate lists in filter/prefs/about page
-            //TODO: refresh of core ref data wipe settings load from prefs
+            //avoid resetting pref selections on list change
             this.appState.suppressSettingsSave = true;
+            //populate lists in filter/prefs/about page
             this.populateDropdown("filter-connectiontype", refData.ConnectionTypes, this.getMultiSelectionAsArray($("#filter-connectiontype"), ""), true, false, "(All)");
             this.populateDropdown("filter-operator", refData.Operators, this.getMultiSelectionAsArray($("#filter-operator"), ""), true, false, "(All)");
             this.populateDropdown("filter-usagetype", refData.UsageTypes, this.getMultiSelectionAsArray($("#filter-usagetype"), ""), true, false, "(All)");
             this.populateDropdown("filter-statustype", refData.StatusTypes, this.getMultiSelectionAsArray($("#filter-statustype"), ""), true, false, "(All)");
             this.appState.suppressSettingsSave = false;
+            //refresh of core ref data wipes settings selections, load from prefs so set them again
             appContext.loadSettings();
             this.resetEditorForm();
             if (refData.UserProfile && refData.UserProfile != null && refData.UserProfile.IsCurrentSessionTokenValid == false) {
@@ -427,9 +430,7 @@ var OCM;
                 });
                 //refresh map rendering
                 var map = this.editorMap;
-                setTimeout(function () {
-                    map.invalidateSize(false);
-                }, 300);
+                setTimeout(function () { map.invalidateSize(false); }, 300);
             }
             else {
                 var point = app.editMarker.getLatLng();

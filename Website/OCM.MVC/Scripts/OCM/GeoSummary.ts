@@ -8,7 +8,6 @@ declare function ocm_getdatasummary();
 module OCM {
     export module Widgets {
         export class GeoSummary {
-
             private geochartContainerId: string;
             private datasummaryContainerId: string;
 
@@ -73,13 +72,15 @@ module OCM {
 
                 summaryContent += "<br/><strong>" + totalStations + "</strong> charging stations across <strong>" + totalLocations + "</strong> locations.";
                 document.getElementById(this.datasummaryContainerId).innerHTML = summaryContent;
-
             }
 
             loadCountryMap(countryName, isoCode) {
                 if (top != null && (<any>top).loadCountryMap) {
                     (<any>top).loadCountryMap(countryName, isoCode);
+                } else {
+                    location.hash = "#" + isoCode;
                 }
+               
                 //document.getElementById("countrymap").src = "http://api.openchargemap.io/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=nearlocation,distance,country,operator,connectiontype,level,usage";
             }
 

@@ -160,7 +160,8 @@ var localisation_dictionary_et ={
         "getStarted": "Alusta siit"
       },
       "stats": {
-        "locations": "Asukohad"
+        "locations": "Asukohad",
+        "locationSummary": null
       },
       "shortProjectSummary": "Open Charge Map on mitteäriline ning mittetulunduslik ettevõtmine, mis on toetatud ettevõtete, heategevuse, arendajate ja huvitatud osapoolte poolt üle maailma.",
       "getApp": "Lae rakendus/App",
@@ -169,6 +170,55 @@ var localisation_dictionary_et ={
         "quickWay": "Kui sa tahad kiiresti leida lähima laadijat, siis proovi meie",
         "webApp": "Veebirakedust",
         "searchAppStore": "eriti mobiilsideseadmetes. Saate otsida oma seadme App Store'ist oma seadmele sobivat versiooni."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_10": "Hetkel Vaba",
+        "value_20": "Hetkel Kasutuses",
+        "value_30": "Ajutiselt Mittetöötav",
+        "value_50": "Töökorras",
+        "value_75": "Osaliselt Töökorras",
+        "value_100": "Mittetöötav",
+        "value_150": "Tulevikus Avatav",
+        "value_200": "Likvideeritud"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Valimata)",
+        "value_1": "(Teenusepakkuja Teadmata)",
+        "value_44": "(Eravaldus/Järsku Jagab)",
+        "value_45": "(Klienditeenindaja kohapeal)"
+      },
+      "usageType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_1": "Avalik",
+        "value_2": "Eravaldus - Ligipääsematu",
+        "value_3": "Eravaldus - Teavitus Vajalik",
+        "value_4": "Avalik - Kliendi Staatus Vajalik",
+        "value_5": "Avalik - Maksa Kohapeal",
+        "value_6": "Eravaldus - Külalistele ja Töötajatele",
+        "value_7": "Avalik - Teavitus Vajalik"
+      },
+      "connectionType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)"
+      },
+      "levelType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_1": "Level 1: Aeglane (Alla 2kW)",
+        "value_2": "Level 2: Keskmine (Üle 2kW)",
+        "value_3": "Level3: Kiirlaadija (Üle 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_10": "AC(1-Faas)",
+        "value_20": "AC(3-Faasi)",
+        "value_30": "DC"
       }
     }
   }

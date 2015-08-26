@@ -4,6 +4,7 @@
 /// <reference path="TypeScriptReferences/leaflet/leaflet.awesomemarkers.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="OCM_Mapping.ts" />
+/// <reference path="OCM_i18n.ts" />
 var google;
 (function (google) {
     var maps;
@@ -19,10 +20,11 @@ function OCM_CommonUI() {
         }
     }
     this.isRunningUnderCordova = false;
+    this.uiLocalizationManager = new OCM.i18n();
 }
 OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, isTestMode) {
     if (typeof localisation_dictionary != 'undefined' || isTestMode == true) {
-        return eval("localisation_dictionary." + resourceKey);
+        return this.uiLocalizationManager.getTranslation(resourceKey, defaultValue, null, null);
     }
     else {
         //localisation not in use
@@ -34,46 +36,11 @@ OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, is
         }
     }
 };
+OCM_CommonUI.prototype.getTranslation = function (resourceKey, defaultValue, params, targetElement) {
+    return this.uiLocalizationManager.getTranslation(resourceKey, defaultValue, params, targetElement);
+};
 OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
-    try {
-        if (isTestMode == true || localisation_dictionary != null) {
-            var elementList = $("[data-localize]");
-            for (var i = 0; i < elementList.length; i++) {
-                var $element = $(elementList[i]);
-                var resourceKey = $element.attr("data-localize");
-                if (isTestMode == true || eval("localisation_dictionary." + resourceKey) != undefined) {
-                    var localisedText;
-                    if (isTestMode == true) {
-                        //in test mode the resource key is displayed as the localised text
-                        localisedText = "[" + resourceKey + "]";
-                    }
-                    else {
-                        localisedText = eval("localisation_dictionary." + resourceKey);
-                    }
-                    if ($element.is("input")) {
-                        if ($element.attr("type") == "button") {
-                            //set input button value
-                            $element.val(localisedText);
-                        }
-                    }
-                    else {
-                        if ($element.attr("data-localize-opt") == "title") {
-                            //set title of element only
-                            $(elementList[i]).attr("title", localisedText);
-                        }
-                        else {
-                            //standard localisation method is to replace inner text of element
-                            $(elementList[i]).text(localisedText);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    catch (exp) {
-    }
-    finally {
-    }
+    return this.uiLocalizationManager.applyLocalisation(isTestMode);
 };
 OCM_CommonUI.prototype.fixJSONDate = function (val) {
     if (val == null)
@@ -178,6 +145,7 @@ OCM_CommonUI.prototype.showPOIListOnMap = function (mapcanvasID, poiList, appcon
         }
         this.ocm_markers = new Array();
         if (poiList != null) {
+            //render poi markers
             for (var i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
                     if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
@@ -233,7 +201,13 @@ OCM_CommonUI.prototype.formatURL = function (url, title) {
     return '<a target="_blank" href="' + url + '">' + (title != null ? title : url) + '</a>';
 };
 OCM_CommonUI.prototype.formatPOIAddress = function (poi) {
-    var output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) + this.formatTextField(poi.AddressInfo.AddressLine2) + this.formatTextField(poi.AddressInfo.Town) + this.formatTextField(poi.AddressInfo.StateOrProvince) + this.formatTextField(poi.AddressInfo.Postcode) + this.formatTextField(poi.AddressInfo.Country.Title);
+    var output = "";
+    output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
+        this.formatTextField(poi.AddressInfo.AddressLine2) +
+        this.formatTextField(poi.AddressInfo.Town) +
+        this.formatTextField(poi.AddressInfo.StateOrProvince) +
+        this.formatTextField(poi.AddressInfo.Postcode) +
+        this.formatTextField(poi.AddressInfo.Country.Title);
     if (this.enablePOIMap == true) {
         output += "<div id='info_map'></div>";
     }
@@ -277,7 +251,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     var currentDate = new Date();
     if (fullDetailsMode == null)
         fullDetailsMode = false;
-    var addressInfo = this.formatPOIAddress(poi);
+    var addressInfo = this.formatPOIAddress(poi, false);
     var contactInfo = "";
     if (poi.AddressInfo.Distance != null) {
         var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
@@ -296,7 +270,8 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
             displayUrl = displayUrl.substr(0, 40) + "..";
         contactInfo += "<i class='icon-external-link'></i>  " + this.formatURL(poi.AddressInfo.RelatedURL, "<span data-localize='ocm.details.addressRelatedURL'>" + displayUrl + "</span>");
     }
-    var comments = this.formatTextField(poi.GeneralComments, "Comments", true, true, "ocm.details.generalComments") + this.formatTextField(poi.AddressInfo.AccessComments, "Access", true, true, "ocm.details.accessComments");
+    var comments = this.formatTextField(poi.GeneralComments, "Comments", true, true, "ocm.details.generalComments") +
+        this.formatTextField(poi.AddressInfo.AccessComments, "Access", true, true, "ocm.details.accessComments");
     var additionalInfo = "";
     if (poi.NumberOfPoints != null) {
         additionalInfo += this.formatTextField(poi.NumberOfPoints, "Number Of Points", false, false, "ocm.details.numberOfPoints");
@@ -337,7 +312,17 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
                     con.Quantity = null;
                 if (con.PowerKW == "")
                     con.PowerKW = null;
-                equipmentInfo += "<tr>" + "<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" + "<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") + (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") + (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") + (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") + (con.CurrentType != null ? con.CurrentType.Title : "") + "</td>" + "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" + "<td>" + (con.Quantity != null ? this.formatString(con.Quantity) : "1") + "</td>" + "</tr>";
+                equipmentInfo += "<tr>" +
+                    "<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" +
+                    "<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") +
+                    (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
+                    (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
+                    (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
+                    (con.CurrentType != null ? con.CurrentType.Title : "") +
+                    "</td>" +
+                    "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
+                    "<td>" + (con.Quantity != null ? this.formatString(con.Quantity) : "1") + "</td>" +
+                    "</tr>";
             }
             equipmentInfo += "</table>";
         }
@@ -358,4 +343,5 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
     };
     return output;
 };
+/// End Standard Data Formatting methods /// 
 //# sourceMappingURL=OCM_CommonUI.js.map

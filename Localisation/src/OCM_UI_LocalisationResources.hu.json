@@ -160,7 +160,8 @@
         "getStarted": "első lépések"
       },
       "stats": {
-        "locations": "Helyek"
+        "locations": "Helyek",
+        "locationSummary": null
       },
       "shortProjectSummary": "Az Open Charge Map egy cégek, alapítványok, fejlesztők és egyéb érdekelt felek által biztosított és támogatott nem kereskedelmi, non-profit szolgáltatás.",
       "getApp": "Töltsd le az alkalmazást!",
@@ -169,6 +170,55 @@
         "quickWay": "Ha csak gyorsan meg szeretnéd keresni a legközelebbi töltőpontot, akkor próbáld ki a",
         "webApp": "Webes alkalmazást",
         "searchAppStore": ", különösen, ha mobilon keresel. Keress rá a mobilod alkalmazásboltjában az applikációra, hogy mindig kéznél legyen az adatbázis."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null,
+        "value_50": null,
+        "value_75": null,
+        "value_100": null,
+        "value_150": null,
+        "value_200": null
+      },
+      "operatorInfo": {
+        "value_minus1": null,
+        "value_1": null,
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null,
+        "value_4": null,
+        "value_5": null,
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
       }
     }
   }

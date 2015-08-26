@@ -160,7 +160,8 @@
         "getStarted": "per iniziare"
       },
       "stats": {
-        "locations": "punti di ricarica"
+        "locations": "punti di ricarica",
+        "locationSummary": null
       },
       "shortProjectSummary": "Open Charge Map è un servizio non-profit, non commerciale, ospitato e supportato da una comunità di imprese, enti di beneficenza, sviluppatori e appassionati di tutto il mondo.",
       "getApp": "scarica l'App",
@@ -169,6 +170,55 @@
         "quickWay": "se avete semplicemente bisogno di un modo rapido per trovare la colonnina di ricarica più vicina potete provare la nostra",
         "webApp": "Web App",
         "searchAppStore": "specialmente sui cellulari. È anche possibile cercare nell'App Store la versione più adatta al tuo smartphone."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null,
+        "value_50": null,
+        "value_75": null,
+        "value_100": null,
+        "value_150": null,
+        "value_200": null
+      },
+      "operatorInfo": {
+        "value_minus1": null,
+        "value_1": null,
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null,
+        "value_4": null,
+        "value_5": null,
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
       }
     }
   }

@@ -1,4 +1,4 @@
-﻿/**
+/**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
@@ -10,6 +10,7 @@ var OCM;
             this.countryCode = null;
             this.latitude = null;
             this.longitude = null;
+            this.locationTitle = null;
             this.distance = null;
             this.distanceUnit = null;
             this.connectionTypeID = null;
@@ -18,18 +19,17 @@ var OCM;
             this.countryID = null;
             this.usageTypeID = null;
             this.statusTypeID = null;
+            this.minPowerKW = null;
             this.submissionStatusTypeID = null;
             this.maxResults = 100;
             this.additionalParams = null;
             this.includeComments = false;
-            this.enableCaching = true;
+            this.enableCaching = true; //FIXME: need way for user to override cached data
         }
         return POI_SearchParams;
     })();
     OCM.POI_SearchParams = POI_SearchParams;
-
     ;
-
     var API = (function () {
         function API() {
             this.serviceBaseURL = "http://api.openchargemap.io/v2";
@@ -45,16 +45,12 @@ var OCM;
                 countrycode = "";
             if (additionalparams === null)
                 additionalparams = "";
-
             if (!errorcallback)
                 errorcallback = this.handleGeneralAjaxError;
-
             var apiCallURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams;
-
             if (console) {
                 console.log("API Call:" + apiCallURL);
             }
-
             $.ajax({
                 type: "GET",
                 url: apiCallURL + "&callback=" + callbackname,
@@ -65,7 +61,6 @@ var OCM;
                 error: errorcallback
             });
         };
-
         API.prototype.fetchLocationDataListByParam = function (params, callbackname, errorcallback) {
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
             var serviceParams = "";
@@ -95,23 +90,22 @@ var OCM;
                 serviceParams += "&usagetypeid=" + params.usageTypeID;
             if (params.statusTypeID != null)
                 serviceParams += "&statustypeid=" + params.statusTypeID;
+            if (params.locationTitle != null)
+                serviceParams += "&locationtitle=" + params.locationTitle;
+            if (params.minPowerKW != null)
+                serviceParams += "&minpowerkw=" + params.minPowerKW;
             if (params.submissionStatusTypeID != null)
                 serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
-
             if (params.enableCaching == false)
                 serviceParams += "&enablecaching=false";
             if (params.additionalParams != null)
                 serviceParams += "&" + params.additionalParams;
-
             if (!errorcallback)
                 errorcallback = this.handleGeneralAjaxError;
-
             var apiCallURL = serviceURL + serviceParams;
-
             if (console) {
-                console.log("API Call:" + apiCallURL);
+                console.log("API Call:" + apiCallURL + "&callback=" + callbackname);
             }
-
             var ajaxSettings = {
                 type: "GET",
                 url: apiCallURL + "&callback=" + callbackname,
@@ -121,17 +115,14 @@ var OCM;
                 crossDomain: true,
                 error: errorcallback
             };
-
             $.ajax(ajaxSettings);
         };
-
         API.prototype.fetchLocationById = function (id, callbackname, errorcallback, disableCaching) {
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
             if (disableCaching)
                 serviceURL += "&enablecaching=false";
             if (!errorcallback)
                 errorcallback = this.handleGeneralAjaxError;
-
             var ajaxSettings = {
                 type: "GET",
                 url: serviceURL + "&callback=" + callbackname,
@@ -141,37 +132,35 @@ var OCM;
                 crossDomain: true,
                 error: errorcallback
             };
-
             $.ajax(ajaxSettings);
         };
-
         API.prototype.handleGeneralAjaxError = function (result, ajaxOptions, thrownError) {
             this.hasAuthorizationError = false;
-
             if (result.status == 200) {
-                //all ok
-            } else if (result.status == 401) {
+            }
+            else if (result.status == 401) {
                 //unauthorised, user session has probably expired
                 this.hasAuthorizationError = true;
                 if (this.authorizationErrorCallback) {
                     this.authorizationErrorCallback();
-                } else {
+                }
+                else {
                     if (console)
                         console.log("Your session has expired. Please sign in again.");
                 }
-            } else {
+            }
+            else {
                 if (this.generalErrorCallback) {
                     this.generalErrorCallback();
-                } else {
+                }
+                else {
                     if (console)
                         console.log("There was a problem transferring data. Please check your internet connection.");
                 }
             }
         };
-
         API.prototype.fetchCoreReferenceData = function (callbackname, authSessionInfo) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
             var ajaxSettings = {
                 type: "GET",
                 url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&callback=" + callbackname + "&" + authInfoParams,
@@ -181,13 +170,10 @@ var OCM;
                 crossDomain: true,
                 error: this.handleGeneralAjaxError
             };
-
             $.ajax(ajaxSettings);
         };
-
         API.prototype.fetchGeocodeResult = function (address, successCallback, authSessionInfo, errorCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
             var ajaxSettings = {
                 type: "GET",
                 url: this.serviceBaseURL + "/geocode/?client=" + this.clientName + "&address=" + address + "&output=json&verbose=false&camelcase=true&" + authInfoParams,
@@ -197,63 +183,46 @@ var OCM;
                 success: successCallback,
                 error: (errorCallback != null ? errorCallback : this.handleGeneralAjaxError)
             };
-
             $.ajax(ajaxSettings);
         };
-
         API.prototype.getAuthParamsFromSessionInfo = function (authSessionInfo) {
             var authInfoParams = "";
-
             if (authSessionInfo != null) {
                 if (authSessionInfo.Identifier != null)
                     authInfoParams += "&Identifier=" + authSessionInfo.Identifier;
                 if (authSessionInfo.SessionToken != null)
                     authInfoParams += "&SessionToken=" + authSessionInfo.SessionToken;
-
                 return authInfoParams;
             }
             return "";
         };
-
         API.prototype.submitLocation = function (data, authSessionInfo, completedCallback, failureCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
             var jsonString = JSON.stringify(data);
-
             var ajaxSettings = {
                 type: "POST",
                 url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=cp_submission&format=json" + authInfoParams,
                 data: jsonString,
-                complete: function (jqXHR, textStatus) {
-                    completedCallback(jqXHR, textStatus);
-                },
+                complete: function (jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
                 crossDomain: true,
                 error: this.handleGeneralAjaxError
             };
-
             $.ajax(ajaxSettings);
         };
-
         API.prototype.submitUserComment = function (data, authSessionInfo, completedCallback, failureCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
             var jsonString = JSON.stringify(data);
-
             $.ajax({
                 type: "POST",
                 url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=comment_submission&format=json" + authInfoParams,
                 data: jsonString,
-                success: function (result, textStatus, jqXHR) {
-                    completedCallback(jqXHR, textStatus);
-                },
+                success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
                 crossDomain: true,
                 error: failureCallback
             });
         };
-
         API.prototype.submitMediaItem = function (data, authSessionInfo, completedCallback, failureCallback, progressCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
             $.ajax({
                 url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams,
                 type: 'POST',
@@ -264,9 +233,7 @@ var OCM;
                     }
                     return myXhr;
                 },
-                success: function (result, textStatus, jqXHR) {
-                    completedCallback(jqXHR, textStatus);
-                },
+                success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
                 error: (failureCallback == null ? this.handleGeneralAjaxError : failureCallback),
                 data: data,
                 cache: false,
@@ -275,11 +242,9 @@ var OCM;
                 crossDomain: true
             });
         };
-
         API.prototype.getRefDataByID = function (refDataList, id) {
             if (id != "")
                 id = parseInt(id);
-
             if (refDataList != null) {
                 for (var i = 0; i < refDataList.length; i++) {
                     if (refDataList[i].ID == id) {
@@ -289,7 +254,6 @@ var OCM;
             }
             return null;
         };
-
         API.prototype.sortCoreReferenceData = function () {
             //sort reference data lists
             this.sortReferenceData(this.referenceData.ConnectionTypes);
@@ -300,15 +264,12 @@ var OCM;
             this.sortReferenceData(this.referenceData.StatusTypes);
             this.sortReferenceData(this.referenceData.CheckinStatusTypes);
         };
-
         API.prototype.sortReferenceData = function (sourceList) {
             sourceList.sort(this.sortListByTitle);
         };
-
         API.prototype.getMetadataValueByMetadataFieldID = function (metadataValues, id) {
             if (id != "")
                 id = parseInt(id);
-
             if (metadataValues != null) {
                 for (var i = 0; i < metadataValues.length; i++) {
                     if (metadataValues[i].ID == id) {
@@ -318,7 +279,6 @@ var OCM;
             }
             return null;
         };
-
         API.prototype.sortListByTitle = function (a, b) {
             if (a.Title < b.Title)
                 return -1;
@@ -326,26 +286,23 @@ var OCM;
                 return 1;
             if (a.Title == b.Title)
                 return 0;
-
             return 0;
         };
-
         API.prototype.isLocalStorageAvailable = function () {
             return typeof window.localStorage != 'undefined';
         };
-
         API.prototype.setCachedDataObject = function (itemName, itemValue) {
             if (this.isLocalStorageAvailable()) {
                 if (typeof itemValue === 'undefined')
                     itemValue = null;
                 if (itemValue === null) {
                     localStorage.removeItem(itemName);
-                } else {
+                }
+                else {
                     localStorage.setItem(itemName, JSON.stringify(itemValue));
                 }
             }
         };
-
         API.prototype.getCachedDataObject = function (itemName) {
             if (this.isLocalStorageAvailable()) {
                 var val = localStorage.getItem(itemName);

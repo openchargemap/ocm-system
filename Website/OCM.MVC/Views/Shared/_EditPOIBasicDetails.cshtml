@@ -7,12 +7,12 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group" data-editormode="core">
-                    <div  data-localize="ocm.details.operationalStatus">
+                    <div data-localize="ocm.details.operationalStatus">
                         @Html.LabelFor(model => model.StatusType)
                     </div>
-                    <div >
+                    <div>
                         <span id="tip-statustype" data-toggle="tooltip" title="Operational Status, usually Operational or Not Operational. Available & In Use are reserved for live status updates.">
-                            @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList)
+                            @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList, new { data_localize = "ocm.reference.statusType" })
                         </span>
                         @Html.ValidationMessageFor(model => model.StatusType)
                     </div>
@@ -20,22 +20,22 @@
             </div>
             <div class="col-sm-4">
                 <div class="form-group" data-editormode="core">
-                    <div  data-localize="ocm.details.operator.sectionTitle">
+                    <div data-localize="ocm.details.operator.sectionTitle">
                         @Html.LabelFor(model => model.OperatorInfo)
                     </div>
-                    <div >
-                        @Html.DropDownListFor(model => model.OperatorInfo.ID, (SelectList)ViewBag.ReferenceData.OperatorList)
+                    <div>
+                        @Html.DropDownListFor(model => model.OperatorInfo.ID, (SelectList)ViewBag.ReferenceData.OperatorList, new { data_localize = "ocm.reference.operatorInfo" })
                         @Html.ValidationMessageFor(model => model.OperatorInfo)
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group" data-editormode="core">
-                    <div  data-localize="ocm.details.usageType">
+                    <div data-localize="ocm.details.usageType">
                         @Html.LabelFor(model => model.UsageType)
                     </div>
-                    <div >
-                        @Html.DropDownListFor(model => model.UsageType.ID, (SelectList)ViewBag.ReferenceData.UsageTypeList)
+                    <div>
+                        @Html.DropDownListFor(model => model.UsageType.ID, (SelectList)ViewBag.ReferenceData.UsageTypeList, new { data_localize = "ocm.reference.usageType" })
                         @Html.ValidationMessageFor(model => model.UsageType)
                     </div>
                 </div>
@@ -45,10 +45,10 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group" data-editormode="core">
-                    <div  data-localize="ocm.details.numberOfPoints">
+                    <div data-localize="ocm.details.numberOfPoints">
                         @Html.LabelFor(model => model.NumberOfPoints)
                     </div>
-                    <div >
+                    <div>
                         @Html.EditorFor(model => model.NumberOfPoints)
                         @Html.ValidationMessageFor(model => model.NumberOfPoints)
                     </div>
@@ -56,23 +56,22 @@
             </div>
             <div class="col-sm-4">
                 <div class="form-group" data-editormode="core">
-                    <div  data-localize="ocm.details.usageCost">
+                    <div data-localize="ocm.details.usageCost">
                         @Html.LabelFor(model => model.UsageCost)
                     </div>
-                    <div >
+                    <div>
                         @Html.EditorFor(model => model.UsageCost)
                         @Html.ValidationMessageFor(model => model.UsageCost)
                     </div>
                 </div>
-
             </div>
         </div>
 
         <div class="form-group" data-editormode="core">
-            <div  data-localize="ocm.details.generalComments">
+            <div data-localize="ocm.details.generalComments">
                 @Html.LabelFor(model => model.GeneralComments)
             </div>
-            <div >
+            <div>
                 @Html.TextAreaFor(model => model.GeneralComments)
                 @Html.ValidationMessageFor(model => model.GeneralComments)
                 <p class="help-block">Please only provide factual comments to clarify details about this location. If you would like to offer details of your charging experience or any other related comments please use the separate Add Comment feature.</p>

@@ -160,7 +160,8 @@ var localisation_dictionary_en ={
         "getStarted": "to get started"
       },
       "stats": {
-        "locations": "Locations"
+        "locations": "Locations",
+        "locationSummary": "{totalStations} charging stations across {totalLocations} locations."
       },
       "shortProjectSummary": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
       "getApp": "Get the app",
@@ -169,6 +170,55 @@ var localisation_dictionary_en ={
         "quickWay": "If you just need a quick way to find your nearest charging location you can also try our",
         "webApp": "Web App",
         "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "Unknown",
+        "value_10": "Currently Available (Automated Status)",
+        "value_20": "Currently In Use (Automated Status)",
+        "value_30": "Temporarily Unavailable",
+        "value_50": "Operational",
+        "value_75": "Partly Operational (Mixed)",
+        "value_100": "Not Operational",
+        "value_150": "Planned For Future Date",
+        "value_200": "Removed (Decomissioned)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(None Selected)",
+        "value_1": "(Unknown Operator)",
+        "value_44": "(Private Residence/Individual)",
+        "value_45": "(Business Owner at Location)"
+      },
+      "usageType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)",
+        "value_1": "Public",
+        "value_2": "Private - Restricted Access",
+        "value_3": "Privately Owned - Notice Required",
+        "value_4": "Public - Membership Required",
+        "value_5": "Public - Pay At Location",
+        "value_6": "Private - For Staff and Visitors",
+        "value_7": "Public - Notice Required"
+      },
+      "connectionType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)"
+      },
+      "levelType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)",
+        "value_1": "Level 1 : Low (Under 2kW)",
+        "value_2": "Level 2 : Medium (Over 2kW)",
+        "value_3": "Level 3:  High (Over 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)",
+        "value_10": "AC (Single-Phase)",
+        "value_20": "AC (Three-Phase)",
+        "value_30": "DC"
       }
     }
   }

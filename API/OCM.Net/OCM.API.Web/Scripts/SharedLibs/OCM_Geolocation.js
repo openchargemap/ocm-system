@@ -1,6 +1,6 @@
 /// <reference path="TypeScriptReferences/googlemaps/google.maps.d.ts" />
 /// <reference path="OCM_Data.ts" />
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -39,7 +39,7 @@ var OCM;
                 }
             }, function () {
                 //got error
-                app.log("Could not watch GPS position.", 3 /* ERROR */);
+                app.log("Could not watch GPS position.", OCM.LogLevel.ERROR);
             }, geoOptions);
         };
         Geolocation.prototype.stopWatchingUserLocation = function () {

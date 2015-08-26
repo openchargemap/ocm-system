@@ -160,7 +160,8 @@
         "getStarted": "om te begjinnen"
       },
       "stats": {
-        "locations": "Lokaasjes"
+        "locations": "Lokaasjes",
+        "locationSummary": null
       },
       "shortProjectSummary": "Open Charge Map is in net-kommersjele-, sûnder winsteachmerk-service organisearre en stipe troch in mienskip fan bedriuwen, woldiedigensorganisaasjes, ûntwikkelders en ynteresearre partijen oer de hiele wrâld.",
       "getApp": "Krij de tapassing",
@@ -169,6 +170,55 @@
         "quickWay": "At jo in snelle manier noadich hawwe om oplaadlokaasjes yn 'e buert te finen, kinne jo ek gebrûk makke fan ús",
         "webApp": "Webtapassing",
         "searchAppStore": "foaral op mobyle apparaten. Jo kinne ek sykje yn 'e Tapassings Winkel fan jo apparaat foar in ferzje dy't jo brûken kinne."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Gjin selektearre)",
+        "value_0": "Ûnbekend",
+        "value_10": "Op it stuit beskikber (automatisearre steat)",
+        "value_20": "Op dit stuit yn gebrûk (automatisearre steat)",
+        "value_30": "Op dit stuit net beskikber",
+        "value_50": "Operasjoneel",
+        "value_75": "Part operasjoneel",
+        "value_100": "Net operasjoneel",
+        "value_150": null,
+        "value_200": "Fuorthelle (út opdracht)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Neat selektearre)",
+        "value_1": "(Netwurk/Operator ûnbekend)",
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": "(Neat selektearre)",
+        "value_0": "(Ûnbekend)",
+        "value_1": "Iepenbier",
+        "value_2": "Privee - beheinde tagong",
+        "value_3": null,
+        "value_4": "Iepenbier - lidmaatskip nedich",
+        "value_5": "Iepenbier - betelje op lokaasje",
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
       }
     }
   }

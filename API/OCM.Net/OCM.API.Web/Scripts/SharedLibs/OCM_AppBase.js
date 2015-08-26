@@ -2,7 +2,7 @@
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -25,6 +25,7 @@ var OCM;
             this.favouritesList = null;
             this.searchPosition = null;
             this.resultsBatchID = -1;
+            this.isCachedResults = false;
         }
         return AppViewModel;
     })();
@@ -37,6 +38,7 @@ var OCM;
             this.maxResults = 100;
             this.searchTimeoutMS = 20000;
             this.searchFrequencyMinMS = 500;
+            this.allowAnonymousSubmissions = false;
         }
         return AppConfig;
     })();
@@ -44,7 +46,7 @@ var OCM;
     /** App state settings*/
     var AppState = (function () {
         function AppState() {
-            this.appMode = 0 /* STANDARD */;
+            this.appMode = AppMode.STANDARD;
             this.isRunningUnderCordova = false;
             this.isEmbeddedAppMode = false;
             this.appInitialised = false;
@@ -69,6 +71,23 @@ var OCM;
             this.mappingManager = new OCM.Mapping();
             this.viewModel = new AppViewModel();
         }
+        AppBase.prototype.logAnalyticsView = function (viewName) {
+            if (window.analytics) {
+                window.analytics.trackView(viewName);
+            }
+        };
+        AppBase.prototype.logAnalyticsEvent = function (category, action, label, value) {
+            if (label === void 0) { label = null; }
+            if (value === void 0) { value = null; }
+            if (window.analytics) {
+                window.analytics.trackEvent(category, action, label, value);
+            }
+        };
+        AppBase.prototype.logAnalyticsUserId = function (userId) {
+            if (window.analytics) {
+                window.analytics.setUserId(userId);
+            }
+        };
         AppBase.prototype.getLoggedInUserInfo = function () {
             var userInfo = {
                 "Identifier": this.getCookie("Identifier"),
@@ -76,6 +95,9 @@ var OCM;
                 "SessionToken": this.getCookie("OCMSessionToken"),
                 "Permissions": this.getCookie("AccessPermissions")
             };
+            if (userInfo.Identifier != null) {
+                this.logAnalyticsUserId(userInfo.Identifier);
+            }
             return userInfo;
         };
         AppBase.prototype.setLoggedInUserInfo = function (userInfo) {
@@ -212,6 +234,7 @@ var OCM;
                 var params = url.substr(url.indexOf("?") + 1);
                 params = params.split("&");
                 var temp = "";
+                // split param and value into individual pieces
                 for (var i = 0; i < params.length; i++) {
                     temp = params[i].split("=");
                     if ([temp[0]] == name) {
@@ -223,10 +246,8 @@ var OCM;
         };
         AppBase.prototype.showMessage = function (msg) {
             if (this.appState.isRunningUnderCordova && navigator.notification) {
-                navigator.notification.alert(msg, function () {
-                    ;
-                    ;
-                }, 'Open Charge Map', 'OK');
+                navigator.notification.alert(msg, function () { ; ; }, 'Open Charge Map', 'OK' // buttonName
+                );
             }
             else {
                 bootbox.alert(msg, function () {

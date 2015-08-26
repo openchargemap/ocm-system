@@ -160,7 +160,8 @@
         "getStarted": null
       },
       "stats": {
-        "locations": null
+        "locations": null,
+        "locationSummary": "{totalStations} stations de recharge sur {totalLocations} endroits."
       },
       "shortProjectSummary": null,
       "getApp": "Téléchargez l'app",
@@ -169,6 +170,55 @@
         "quickWay": null,
         "webApp": "App Web",
         "searchAppStore": null
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Aucun Sélectionné)",
+        "value_0": "Inconnu",
+        "value_10": null,
+        "value_20": null,
+        "value_30": null,
+        "value_50": null,
+        "value_75": null,
+        "value_100": null,
+        "value_150": null,
+        "value_200": null
+      },
+      "operatorInfo": {
+        "value_minus1": null,
+        "value_1": null,
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null,
+        "value_4": null,
+        "value_5": null,
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": "Niveau 1: Faible (moins de 2 kW)",
+        "value_2": "Niveau 2: Moyen (plus de 2 kW)",
+        "value_3": "Niveau 3: Haut (plus de 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Aucun Sélectionné)",
+        "value_0": "(Inconnu)",
+        "value_10": "AC (Monophase)",
+        "value_20": "AC (triphase)",
+        "value_30": "DC"
       }
     }
   }

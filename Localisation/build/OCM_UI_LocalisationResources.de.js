@@ -160,7 +160,8 @@ var localisation_dictionary_de ={
         "getStarted": "um anzufangen"
       },
       "stats": {
-        "locations": "Standorte"
+        "locations": "Standorte",
+        "locationSummary": "{totalLocations} Ladestationen an {totalLocations} Standorten."
       },
       "shortProjectSummary": "Open Charge Map ist ein nicht kommerzieller, gemeinnütziger Dienst, der von einer weltweiten Gemeinschaft von Unternehmen, Wohltätigkeitsorganisationen, Entwicklern und Interessierten unterstützt und moderiert wird.",
       "getApp": "Lade die App",
@@ -169,6 +170,55 @@ var localisation_dictionary_de ={
         "quickWay": "Wenn Sie auf einfache Art die nächste Ladestation finden möchten, können Sie auch ausprobieren, unsere",
         "webApp": "Web-App",
         "searchAppStore": "vor allem auf mobilen Geräten. Sie können auch im App Store für Ihr Gerät nach einer portablen Version suchen."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Nichts ausgewählt)",
+        "value_0": "Unbekannt",
+        "value_10": "Derzeit verfügbar (automatische Statusmeldung)",
+        "value_20": "Derzeit belegt (automatische Statusmeldung)",
+        "value_30": "Vorübergehend nicht verfügbar",
+        "value_50": "Betriebsbereit",
+        "value_75": "Manchmal betriebsbereit",
+        "value_100": "Nicht betriebsbereit",
+        "value_150": "In Planung",
+        "value_200": "Abgebaut"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Nichts ausgewählt)",
+        "value_1": "(Unbekannter Betreiber)",
+        "value_44": "(Privatperson/Privatwohnsitz)",
+        "value_45": "(Geschäftsinhaber am Standort)"
+      },
+      "usageType": {
+        "value_minus1": "(Nichts ausgewählt)",
+        "value_0": "(Unbekannt)",
+        "value_1": "Öffentlich",
+        "value_2": "Privat - Zugang beschränkt",
+        "value_3": "Privat - Anmeldung erforderlich",
+        "value_4": "Öffentlich - Mitgliedschaft erforderlich",
+        "value_5": "Öffentlich - Bezahlen am Standort",
+        "value_6": "Privat - für Mitarbeiter/Besucher",
+        "value_7": "Öffentlich - Kenntnisnahme erforderlich"
+      },
+      "connectionType": {
+        "value_minus1": "(Nichts ausgewählt)",
+        "value_0": "(Unbekannt)"
+      },
+      "levelType": {
+        "value_minus1": "(Nichts ausgewählt)",
+        "value_0": "(Nichts ausgewählt)",
+        "value_1": "Stufe 1: Niedrig (weniger als 2kW)",
+        "value_2": "Stufe 2: Normal (über 2kW)",
+        "value_3": "Stufe 3: Hoch (über 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Nichts ausgewählt)",
+        "value_0": "(Unbekannt)",
+        "value_10": "Wechselstrom 1P",
+        "value_20": "Drehstrom",
+        "value_30": "Gleichstrom"
       }
     }
   }

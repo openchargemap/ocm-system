@@ -10,6 +10,7 @@ var OCM;
             this.countryCode = null;
             this.latitude = null;
             this.longitude = null;
+            this.locationTitle = null;
             this.distance = null;
             this.distanceUnit = null;
             this.connectionTypeID = null;
@@ -18,6 +19,7 @@ var OCM;
             this.countryID = null;
             this.usageTypeID = null;
             this.statusTypeID = null;
+            this.minPowerKW = null;
             this.submissionStatusTypeID = null;
             this.maxResults = 100;
             this.additionalParams = null;
@@ -88,6 +90,10 @@ var OCM;
                 serviceParams += "&usagetypeid=" + params.usageTypeID;
             if (params.statusTypeID != null)
                 serviceParams += "&statustypeid=" + params.statusTypeID;
+            if (params.locationTitle != null)
+                serviceParams += "&locationtitle=" + params.locationTitle;
+            if (params.minPowerKW != null)
+                serviceParams += "&minpowerkw=" + params.minPowerKW;
             if (params.submissionStatusTypeID != null)
                 serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
             if (params.enableCaching == false)
@@ -98,7 +104,7 @@ var OCM;
                 errorcallback = this.handleGeneralAjaxError;
             var apiCallURL = serviceURL + serviceParams;
             if (console) {
-                console.log("API Call:" + apiCallURL);
+                console.log("API Call:" + apiCallURL + "&callback=" + callbackname);
             }
             var ajaxSettings = {
                 type: "GET",
@@ -197,9 +203,7 @@ var OCM;
                 type: "POST",
                 url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=cp_submission&format=json" + authInfoParams,
                 data: jsonString,
-                complete: function (jqXHR, textStatus) {
-                    completedCallback(jqXHR, textStatus);
-                },
+                complete: function (jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
                 crossDomain: true,
                 error: this.handleGeneralAjaxError
             };
@@ -212,9 +216,7 @@ var OCM;
                 type: "POST",
                 url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=comment_submission&format=json" + authInfoParams,
                 data: jsonString,
-                success: function (result, textStatus, jqXHR) {
-                    completedCallback(jqXHR, textStatus);
-                },
+                success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
                 crossDomain: true,
                 error: failureCallback
             });
@@ -231,9 +233,7 @@ var OCM;
                     }
                     return myXhr;
                 },
-                success: function (result, textStatus, jqXHR) {
-                    completedCallback(jqXHR, textStatus);
-                },
+                success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
                 error: (failureCallback == null ? this.handleGeneralAjaxError : failureCallback),
                 data: data,
                 cache: false,

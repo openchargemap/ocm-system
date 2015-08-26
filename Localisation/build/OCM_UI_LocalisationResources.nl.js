@@ -160,7 +160,8 @@ var localisation_dictionary_nl ={
         "getStarted": "om te starten"
       },
       "stats": {
-        "locations": "Locaties"
+        "locations": "Locaties",
+        "locationSummary": "{totalStations} oplaadpunten op {totalLocations} locaties"
       },
       "shortProjectSummary": "Open Charge Map is een niet-commerciële, non-profit service gehost en ondersteund door een Gemeenschap van bedrijven, liefdadigheidsinstellingen, ontwikkelaars en belanghebbende partijen over de hele wereld.",
       "getApp": "Verkrijg de app",
@@ -169,6 +170,55 @@ var localisation_dictionary_nl ={
         "quickWay": "Als je alleen maar een snelle manier nodig hebt om uw dichtstbijzijnde oplaadlocatie te vinden probeert U onze",
         "webApp": "Web App",
         "searchAppStore": "vooral op mobiele apparaten. U kunt ook zoeken op uw apparaat s' App Store voor een versie die u kunt rond dragen."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Niets Geselecteerd)",
+        "value_0": "Onbekend",
+        "value_10": "Nu Beschikbaar (Geautomatiseerde Status)",
+        "value_20": "Nu In Gebruik (Geautomatiseerde Status)",
+        "value_30": "Tijdelijk Niet Beschikbaar",
+        "value_50": "Operationeell",
+        "value_75": "Gedeeltelijk Operationeel (Gemengd)",
+        "value_100": "Niet Operationeel",
+        "value_150": "Gepland voor de Toekomst",
+        "value_200": "Verwijderd (Ontmanteld)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Niets Geselecteerd)",
+        "value_1": "(Onbekende Operator)",
+        "value_44": "(Privé Verblijf/Persoon)",
+        "value_45": "(Bedrijf / Eigenaar op Locatie)"
+      },
+      "usageType": {
+        "value_minus1": "(Niets Geselecteerd)",
+        "value_0": "(Onbekend)",
+        "value_1": "Publiek",
+        "value_2": "Privé - Beperkte Toegang",
+        "value_3": "Privé Bezit - Aankondiging Vereist",
+        "value_4": "Publiek - Lidmaatschap Vereist",
+        "value_5": "Publiek - Betalen Op Locatie",
+        "value_6": "Privé - Voor Personeel en Bezoekers",
+        "value_7": "Publiek - Aankondiging Vereist"
+      },
+      "connectionType": {
+        "value_minus1": "(Niets Geselecteerd)",
+        "value_0": "(Onbekend)"
+      },
+      "levelType": {
+        "value_minus1": "(Niets Geselecteerd)",
+        "value_0": "(Onbekend)",
+        "value_1": "Niveau 1: Laag (Onder 2kW)",
+        "value_2": "Niveau 2: Gemiddeld (meer dan 2kW)",
+        "value_3": "Niveau 3: Hoog (Over 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Niets Geselecteerd)",
+        "value_0": "(Onbekend)",
+        "value_10": "AC (Enkelfasig)",
+        "value_20": "AC (Drie-Fase)",
+        "value_30": "DC"
       }
     }
   }

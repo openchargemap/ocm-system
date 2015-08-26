@@ -35,35 +35,36 @@
                 <span class="glyphicon glyphicon-link"></span> @Html.DisplayFor(modelItem => item.ConnectionType.Title)
             </h4>
             <div>
-                <span class="glyphicon glyphicon-flash"></span> @(item.Level==null?"Charging Level Unknown":Html.DisplayFor(modelItem => item.Level.Title).ToString())
+                <span class="glyphicon glyphicon-flash"></span> @(item.Level == null ? "Charging Level Unknown" : Html.DisplayFor(modelItem => item.Level.Title).ToString())
             </div>
             <div>
-                @if (item.Quantity!=null) {
+                <span class="glyphicon glyphicon-transfer"></span> @(item.StatusType == null ? "Status Unknown" : Html.DisplayFor(modelItem => item.StatusType.Title).ToString())
+            </div>
+            <div>
+                @if (item.Quantity != null)
+                {
                     <span class="glyphicon glyphicon-star"></span> @Html.DisplayFor(modelItem => item.Quantity) <text> Present</text>
                 }
+            </div>
         </div>
 
+        <div class="col-sm-6 equipment-extended">
+            <div class="equipment-ref">
+                <span class="glyphicon glyphicon-flash"></span>
+                OCM-CN-@item.ID
+            </div>
+            <div>
+                @(item.PowerKW == null ? "" : Html.DisplayFor(modelItem => item.PowerKW).ToString() + " kW") @Html.DisplayFor(modelItem => item.CurrentType.Title)
+            </div>
+            <div>
+                @(item.Voltage == null ? "" : Html.DisplayFor(modelItem => item.Voltage).ToString() + " V")
+            </div>
+            <div>
+                @(item.Amps == null ? "" : Html.DisplayFor(modelItem => item.Amps).ToString() + " A")
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <p>@Html.DisplayFor(modelItem => item.Comments)</p>
+        </div>
     </div>
-
-                <div class="col-sm-6 equipment-extended">
-                    <div class="equipment-ref">
-                        <span class="glyphicon glyphicon-flash"></span>
-                        OCM-CN-@item.ID
-                    </div>
-                    <div>
-                        @(item.PowerKW == null ? "" : Html.DisplayFor(modelItem => item.PowerKW).ToString() + " kW") @Html.DisplayFor(modelItem => item.CurrentType.Title)
-                    </div>
-                    <div>
-                        @(item.Voltage == null ? "" : Html.DisplayFor(modelItem => item.Voltage).ToString()+ " V")
-                    </div>
-                    <div>
-                        @(item.Amps == null ? "" : Html.DisplayFor(modelItem => item.Amps).ToString()+" A")
-                    </div>
-
-                </div>
-                    <div class="col-sm-3">
-                        <p>@Html.DisplayFor(modelItem => item.Comments)</p>
-                    </div>
-
-                </div>
 }

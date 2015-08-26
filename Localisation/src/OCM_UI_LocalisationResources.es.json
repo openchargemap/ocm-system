@@ -1,5 +1,5 @@
 {
-  "_langTitle": "Spanish/Inglés",
+  "_langTitle": "Spanish/Español",
   "_langCode": "es",
   "ocm": {
     "general": {
@@ -139,10 +139,10 @@
     },
     "infoText": {
       "getInvolved": {
-        "youCan": "Tu puedes",
+        "youCan": "Puedes",
         "browseLocations": "buscar ubicaciones donde estés",
         "commentsPhotos": "y añadir tus propios comentarios y fotos",
-        "dontSeePOI": "No ves un punto de recarga que sabes que existe?"
+        "dontSeePOI": "No encuentras un punto de recarga que sabes que existe?"
       },
       "getStations": {
         "sectionTitle": "Obtener datos del punto de recarga",
@@ -153,14 +153,15 @@
       },
       "supplyData": {
         "sectionTitle": "Operadores y proveedores de datos",
-        "who": "Suministradores de EVSE, Operadores de red, registros nacionales, aplicaciones y sitios de información sobre puntos de recarga locales:",
+        "who": "Suministradores de equipos de recarga, operadores de red, registros nacionales, aplicaciones y sitios de información sobre puntos de recarga locales:",
         "needData": "Necesitamos vuestra información.",
         "what": "Pueden suministrarnos información actualizada sobre los puntos de recarga independientemente de si su organización posee, opera o simplemente dispone de un catálogo de los puntos de recarga disponibles. Por favor",
-        "contactUs": "Contáctenos",
-        "getStarted": "Para empezar"
+        "contactUs": "contáctenos",
+        "getStarted": "para empezar"
       },
       "stats": {
-        "locations": "Ubicaciones"
+        "locations": "Ubicaciones",
+        "locationSummary": "{totalStations} estaciones de carga en {totalLocations} ubicaciones."
       },
       "shortProjectSummary": "Open Charge Map es un servicio no comercial y sin ánimo de lucro, alojado y soportado por una comunidad de empresas, organizaciones sin ánimo de lucro, desarrolladores y otras instituciones interesadas alrededor del mundo.",
       "getApp": "Obtener la app",
@@ -169,6 +170,55 @@
         "quickWay": "Si simplemente necesitas una manera rápida de encontrar tu punto de recarga más próximo, también puedes probar nuestra",
         "webApp": "Aplicación web",
         "searchAppStore": "para dispositivos móviles. También puedes buscar nuestra app para descargar."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Ninguna selección)",
+        "value_0": "Desconocido",
+        "value_10": "Disponible Actualmente (Estado Automatizado)",
+        "value_20": "Actualmente En Uso (Estado Automático)",
+        "value_30": "No disponible temporalmente",
+        "value_50": "Funcionando",
+        "value_75": "Funcionando Parcialmente (Combinado)",
+        "value_100": "No Funciona",
+        "value_150": "Funcionará Próximamente",
+        "value_200": "Eliminado (Desmantelado)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Ninguna Selección)",
+        "value_1": "(Operador Desconocido)",
+        "value_44": "(Residencia Privada/Individual)",
+        "value_45": "(Propietario del Negocio en la Ubicación)"
+      },
+      "usageType": {
+        "value_minus1": "(Ninguna Selección)",
+        "value_0": "(Desconocido)",
+        "value_1": "Público",
+        "value_2": "Privado - Acceso Restringido",
+        "value_3": "Propietario Privado - Aviso Requerido",
+        "value_4": "Público - Se Requiere Tarjeta de Activación",
+        "value_5": "Público - Pagar en la ubicación",
+        "value_6": "Privado - Para Trabajadores y Visitantes",
+        "value_7": "Público - Aviso Requerido"
+      },
+      "connectionType": {
+        "value_minus1": "(Ninguno Seleccionado)",
+        "value_0": "(Desconocido)"
+      },
+      "levelType": {
+        "value_minus1": "(Ninguno Seleccionado)",
+        "value_0": "(Desconocido)",
+        "value_1": "Nivel 1: Bajo (Inferior a 2kW)",
+        "value_2": "Nivel 2: Medio (Superior a 2kW)",
+        "value_3": "Nivel 3: Alto (Superior a 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Ninguna Selección)",
+        "value_0": "(Desconocido)",
+        "value_10": "C.A. (Monofásico)",
+        "value_20": "C.A. (Trifásico)",
+        "value_30": "C.C."
       }
     }
   }

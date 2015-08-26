@@ -96,9 +96,9 @@
       "chargingLevels": "Úroveň nabíjania",
       "minPowerKW": "Minimálny výkon v kW",
       "connectionTypes": "Typy konektorov",
-      "networkOperators": "Sieť/Operátor",
+      "networkOperators": "Sieť/Prevádzkovateľ",
       "countries": "Krajina",
-      "submissionStatus": "Stav položky",
+      "submissionStatus": "Stav záznamu",
       "usageTypes": "Využitie",
       "operationalStatusTypes": "Stav",
       "performSearch": "Hľadať",
@@ -160,7 +160,8 @@
         "getStarted": "pre pokračovanie"
       },
       "stats": {
-        "locations": "Umiestnení"
+        "locations": "Umiestnení",
+        "locationSummary": "{totalStations} nabíjacích staníc na {totalLocations} miestach."
       },
       "shortProjectSummary": "Open Charge Map je nekomerčná a nezisková služba udržovaná a podporovaná komunitou firiem, charít, vývojárov a záujmových skupín z celého sveta.",
       "getApp": "Stiahni si aplikáciu",
@@ -169,6 +170,55 @@
         "quickWay": "Ak iba potrebujete rýchly spôsob, ako nájsť najbližšiu nabíjaciu stanicu, môžete tiež vyskúšať našu",
         "webApp": "webovú aplikáciu",
         "searchAppStore": "hlavne na mobilných zariadeniach. V obchode s aplikáciami na Vašom zariadení nájdete aj verziu, ktorú môžete mať stále so sebou."
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Nezvolený)",
+        "value_0": "Neznámy",
+        "value_10": "Práve voľná (automaticky aktualizované)",
+        "value_20": "Práve obsadená (automaticky aktualizované)",
+        "value_30": "Dočasne nedostupná/nefunkčná",
+        "value_50": "Funkčná",
+        "value_75": "Čiastočne funkčná",
+        "value_100": "Nefunkčná",
+        "value_150": "Plánované spustenie v budúcnosti",
+        "value_200": "Odstránená (vyradená z prevádzky)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Nezvolená)",
+        "value_1": "(Neznámy prevádzkovateľ)",
+        "value_44": "(Súkromná osoba)",
+        "value_45": "(Firma na danom mieste)"
+      },
+      "usageType": {
+        "value_minus1": "(Nezvolené)",
+        "value_0": "(Neznáme)",
+        "value_1": "Verejné",
+        "value_2": "Súkromné - obmedzený prístup",
+        "value_3": "Súkromné - vyžadované oznámenie",
+        "value_4": "Verejné - vyžadované členstvo",
+        "value_5": "Verejné - platba na mieste",
+        "value_6": "Súkromné - pre zamestnancov a návštevníkov",
+        "value_7": "Verejné - vyžadované oznámenie"
+      },
+      "connectionType": {
+        "value_minus1": "(Nezvolené)",
+        "value_0": "(Neznáme)"
+      },
+      "levelType": {
+        "value_minus1": "(Nezvolená)",
+        "value_0": "(Neznáma)",
+        "value_1": "Úroveň 1: Nízka (pod 2kW)",
+        "value_2": "Úroveň 2: Stredná (nad 2kW)",
+        "value_3": "Úroveň 3: Vysoká (nad 40 kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Nezvolený)",
+        "value_0": "(Neznámy)",
+        "value_10": "Striedavé (jednofázové)",
+        "value_20": "Striedavé (trojfázové)",
+        "value_30": "Jednosmerné"
       }
     }
   }

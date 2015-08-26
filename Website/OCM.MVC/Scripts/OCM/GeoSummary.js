@@ -57,6 +57,9 @@ var OCM;
                 if (top != null && top.loadCountryMap) {
                     top.loadCountryMap(countryName, isoCode);
                 }
+                else {
+                    location.hash = "#" + isoCode;
+                }
                 //document.getElementById("countrymap").src = "http://api.openchargemap.io/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=nearlocation,distance,country,operator,connectiontype,level,usage";
             };
             GeoSummary.prototype.show = function () {

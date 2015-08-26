@@ -4,6 +4,7 @@
 /// <reference path="TypeScriptReferences/leaflet/leaflet.awesomemarkers.d.ts" />
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="OCM_Mapping.ts" />
+/// <reference path="OCM_i18n.ts" />
 
 /**
 * @author Christopher Cook
@@ -11,7 +12,6 @@
 */
 
 //typescript declarations
-declare var localisation_dictionary;
 declare var MarkerClusterer: any;
 declare var MarkerWithLabel: any;
 declare var plugin: any;
@@ -32,11 +32,12 @@ function OCM_CommonUI() {
         }
     }
     this.isRunningUnderCordova = false;
+    this.uiLocalizationManager = new OCM.i18n();
 }
 
 OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, isTestMode) {
     if (typeof localisation_dictionary != 'undefined' || isTestMode == true) {
-        return eval("localisation_dictionary." + resourceKey);
+        return this.uiLocalizationManager.getTranslation(resourceKey, defaultValue, null, null);
     } else {
         //localisation not in use
         if (isTestMode == true) {
@@ -47,47 +48,12 @@ OCM_CommonUI.prototype.getLocalisation = function (resourceKey, defaultValue, is
     }
 };
 
+OCM_CommonUI.prototype.getTranslation = function (resourceKey, defaultValue, params, targetElement: HTMLElement) {
+    return this.uiLocalizationManager.getTranslation(resourceKey, defaultValue, params, targetElement);
+};
+
 OCM_CommonUI.prototype.applyLocalisation = function (isTestMode) {
-    try {
-        if (isTestMode == true || localisation_dictionary != null) {
-            var elementList = $("[data-localize]");
-
-            for (var i = 0; i < elementList.length; i++) {
-                var $element = $(elementList[i]);
-                var resourceKey = $element.attr("data-localize");
-
-                if (isTestMode == true || eval("localisation_dictionary." + resourceKey) != undefined) {
-                    var localisedText;
-
-                    if (isTestMode == true) {
-                        //in test mode the resource key is displayed as the localised text
-                        localisedText = "[" + resourceKey + "]";
-                    } else {
-                        localisedText = eval("localisation_dictionary." + resourceKey);
-                    }
-
-                    if ($element.is("input")) {
-                        if ($element.attr("type") == "button") {
-                            //set input button value
-                            $element.val(localisedText);
-                        }
-                    } else {
-                        if ($element.attr("data-localize-opt") == "title") {
-                            //set title of element only
-                            $(elementList[i]).attr("title", localisedText);
-                        } else {
-                            //standard localisation method is to replace inner text of element
-                            $(elementList[i]).text(localisedText);
-                        }
-                    }
-                }
-            }
-        }
-    } catch (exp) {
-        //localisation attempt failed
-        //if (console) console.log(exp.toString());
-    } finally {
-    }
+    return this.uiLocalizationManager.applyLocalisation(isTestMode);
 };
 
 OCM_CommonUI.prototype.fixJSONDate = function (val) {

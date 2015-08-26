@@ -5,7 +5,7 @@
 
 http://openchargemap.org
 */
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -15,10 +15,19 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 /// <reference path="TypeScriptReferences/history/history.d.ts" />
+/// <reference path="OCM_Base.ts" />
+/// <reference path="OCM_AppBase.ts" />
+/// <reference path="OCM_App_LocationEditor.ts" />
+/// <reference path="OCM_App_Util.ts" />
+/// <reference path="OCM_AppBootstrap.ts" />
+/// <reference path="OCM_FileUpload.ts" />
 /// <reference path="OCM_Data.ts" />
 /// <reference path="OCM_CommonUI.ts" />
 /// <reference path="OCM_Geolocation.ts" />
+/// <reference path="OCM_MapInit.ts" />
+/// <reference path="OCM_Mapping.ts" />
 var Historyjs = History;
+var IScroll;
 ////////////////////////////////////////////////////////////////
 var OCM;
 (function (OCM) {
@@ -40,8 +49,9 @@ var OCM;
             this.appState.isEmbeddedAppMode = false; //used when app is embedded in another site
             this.appConfig.launchMapOnStartup = true;
             this.appState.mapLaunched = false;
-            this.appState.appMode = 0 /* STANDARD */;
-            if (this.appState.appMode == 1 /* LOCALDEV */) {
+            this.appState.appMode = OCM.AppMode.STANDARD;
+            this.enableLogging = false;
+            if (this.appState.appMode == OCM.AppMode.LOCALDEV) {
                 this.appConfig.baseURL = "http://localhost:81/app";
                 this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
                 //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
@@ -50,7 +60,7 @@ var OCM;
                 this.apiClient.serviceBaseURL_Standard = "http://localhost:81/api/v2";
                 this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             }
-            if (this.appState.appMode == 2 /* SANDBOXED */) {
+            if (this.appState.appMode == OCM.AppMode.SANDBOXED) {
                 this.appConfig.baseURL = "http://localhost:81/app";
                 this.apiClient.serviceBaseURL = "http://sandbox.api.openchargemap.io/v2";
                 this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
@@ -92,28 +102,14 @@ var OCM;
             //load options settings from storage/cookies
             this.loadSettings();
             //when options change, store settings
-            $('#search-distance').change(function () {
-                app.storeSettings();
-            });
-            $('#search-distance-unit').change(function () {
-                app.storeSettings();
-            });
+            $('#search-distance').change(function () { app.storeSettings(); });
+            $('#search-distance-unit').change(function () { app.storeSettings(); });
             $('#option-language').change(function () {
                 app.switchLanguage($("#option-language").val());
             });
-            $('#filter-operator').change(function () {
-                app.storeSettings();
-            });
-            $('#filter-connectiontype').change(function () {
-                app.storeSettings();
-            });
-            $('#filter-connectionlevel').change(function () {
-                app.storeSettings();
-            });
-            $('#filter-usagetype').change(function () {
-                app.storeSettings();
-            });
-            $('#filter-statustype').change(function () {
+            $('#filter-operator, #filter-connectiontype, #filter-connectionlevel,#filter-usagetype,#filter-statustype, #filter-minpowerkw')
+                .change(function () {
+                app.validateMultiSelect($(this));
                 app.storeSettings();
             });
             var app = this;
@@ -131,6 +127,7 @@ var OCM;
                     app.viewModel.searchPosition = cachedResult_SearchPos;
                 }
                 //use cached POI results, observer will then render the results
+                app.viewModel.isCachedResults = true;
                 app.viewModel.poiList = cachedResults;
                 app.viewModel.searchPOIList = cachedResults;
             }
@@ -161,8 +158,7 @@ var OCM;
                         navigator.splashscreen.hide();
                 }, 2000);
             }
-            //show main page
-            app.navigateToMap();
+            app.mappingManager.initMap("map-view");
         };
         App.prototype.beginObservingAppModelChanges = function () {
             var app = this;
@@ -174,20 +170,27 @@ var OCM;
                     if (change.name == "poiList") {
                         app.renderPOIList(app.viewModel.poiList);
                         //after initial load subsequent queries auto refresh the map markers
-                        //if (app.appConfig.autoRefreshMapResults) {
-                        app.log("Auto refreshing map view");
-                        app.refreshMapView();
+                        if (app.mappingManager.mapReady) {
+                            app.log("Auto refreshing map view");
+                            app.refreshMapView();
+                        }
                     }
                 });
             });
             // observe mapping model changes
+            app.log("Observing mappingManager changes");
             Object.observe(this.mappingManager, function (changes) {
                 changes.forEach(function (change) {
-                    //app.log(change.type + ':' + change.name, OCM.LogLevel.VERBOSE);
-                    //!app.appState.mapLaunched &&
+                    app.log("changed: app.mappingManager." + change.name);
                     if (change.name == "mapAPIReady" && app.mappingManager.mapAPIReady) {
-                        //can start mapping now
+                        app.log("Map API Ready - Initialising Map.", OCM.LogLevel.VERBOSE);
+                        app.mappingManager.initMap("map-view");
+                    }
+                    if (change.name == "mapReady" && app.mappingManager.mapReady) {
+                        app.log("Map Ready - Let's do this thing.", OCM.LogLevel.VERBOSE);
                         app.refreshMapView();
+                        //show main page
+                        app.navigateToMap();
                     }
                 });
             });
@@ -230,13 +233,10 @@ var OCM;
             var app = this;
             if (this.appConfig.launchMapOnStartup) {
                 //pages are hidden by default, start by show map screen (once map api ready)
-                if (app.appState.isRunningUnderCordova && app.mappingManager.isNativeMapsAvailable()) {
-                    app.mappingManager.mapAPIReady = true;
-                }
-                if (!app.mappingManager.mapAPIReady) {
-                    app.log("Map API not ready yet. Waiting for map API via model observer.");
+                if (!app.mappingManager.mapReady) {
+                    app.log("Map not ready yet. Waiting for map ready via model observer.");
                     setTimeout(function () {
-                        if (!app.mappingManager.mapAPIReady) {
+                        if (!app.mappingManager.mapReady) {
                             //map still not ready
                             //app.showMessage("Map could not load, please try again or check network connection.");
                             app.navigateToHome();
@@ -341,7 +341,7 @@ var OCM;
             });
             //if map type selection changes, update map
             $("#pref-basemap-type").on("change", function () {
-                if (app.mappingManager.isMappingInitialised()) {
+                if (app.mappingManager.mapReady) {
                     app.mappingManager.setMapType($("#pref-basemap-type").val());
                 }
                 app.storeSettings();
@@ -418,7 +418,6 @@ var OCM;
                 $("#map-toggle-icon").addClass("fa-list");
                 //refresh/show map
                 app.setMapFocus(true);
-                app.refreshMapView();
             }
             else {
                 //set list to show on small display
@@ -460,9 +459,10 @@ var OCM;
             if (this.appState.isRunningUnderCordova) {
                 //do phonegapped login using InAppBrowser
                 var ref = window.open(this.appConfig.loginProviderRedirectBaseURL + 'AppLogin?redirectWithToken=true', '_blank', 'location=yes');
+                //attempt attach event listeners
                 try {
                     ref.addEventListener('loaderror', function (event) {
-                        app.log('loaderror: ' + event.message, 3 /* ERROR */);
+                        app.log('loaderror: ' + event.message, OCM.LogLevel.ERROR);
                     });
                     ref.addEventListener('loadstart', function (event) {
                         app.log('loadstart: ' + event.url);
@@ -537,13 +537,25 @@ var OCM;
                     app.navigateToMap();
                 }
                 else {
-                    setTimeout(function () {
-                        window.location.href = app.appConfig.baseURL;
-                    }, 100);
+                    setTimeout(function () { window.location.href = app.appConfig.baseURL; }, 100);
                 }
             }
             else {
                 app.postLoginInit(); //refresh signed in/out ui
+            }
+        };
+        App.prototype.validateMultiSelect = function ($multiSelect) {
+            //for a given multi select element, ensure that (All) option isn't set at same time as another option
+            var options = this.getMultiSelectionAsArray($multiSelect, "");
+            if (options.length > 1) {
+                //multiple options selected, check (All) option not selected along with other options
+                var allOptionIndex = options.indexOf("");
+                if (allOptionIndex >= 0) {
+                    //all option selected along with other options, remove it then reset the selected options of the multiselect list
+                    options = options.splice(allOptionIndex, 1);
+                    $multiSelect.val(options);
+                    this.log("(All) option removed from multi select - other options selected at same time", OCM.LogLevel.VERBOSE);
+                }
             }
         };
         App.prototype.storeSettings = function () {
@@ -555,6 +567,7 @@ var OCM;
                 this.setCookie("filterapimode", $('#filter-apimode').val());
                 this.setCookie("optbasemaptype", $('#pref-basemap-type').val());
                 this.setCookie("optsearchbehaviour", $('#pref-search-behaviour').val());
+                this.setCookie("filterminpowerkw", $('#filter-minpowerkw').val());
                 this.setCookie("filteroperator", $('#filter-operator').val());
                 this.setCookie("filterconnectiontype", $('#filter-connectiontype').val());
                 this.setCookie("filterconnectionlevel", $('#filter-connectionlevel').val());
@@ -569,6 +582,7 @@ var OCM;
             this.loadPref("filterapimode", $("#filter-apimode"), false);
             this.loadPref("optbasemaptype", $("#pref-basemap-type"), false);
             this.loadPref("optsearchbehaviour", $("#pref-search-behaviour"), false);
+            this.loadPref("filterminpowerkw", $("#filter-minpowerkw"), true);
             this.loadPref("filteroperator", $("#filter-operator"), true);
             this.loadPref("filterconnectiontype", $("#filter-connectiontype"), true);
             this.loadPref("filterconnectionlevel", $("#filter-connectionlevel"), true);
@@ -666,7 +680,7 @@ var OCM;
             }
         };
         App.prototype.submissionCompleted = function (jqXHR, textStatus) {
-            this.log("submission::" + textStatus, 0 /* VERBOSE */);
+            this.log("submission::" + textStatus, OCM.LogLevel.VERBOSE);
             this.hideProgressIndicator();
             this.appState.isSubmissionInProgress = false;
             if (textStatus != "error") {
@@ -723,11 +737,13 @@ var OCM;
                         app.log("performSearch: previous search has timed out.");
                         app.hideProgressIndicator();
                         app.showMessage("Search timed out. Please check your network connection.");
+                        app.logAnalyticsEvent("Search", "Timeout");
                     }
                 }, this.appConfig.searchTimeoutMS);
                 //begin new search
                 this.showProgressIndicator();
                 this.appState.isSearchRequested = true; //used to signal that geolocation updates etc should continue a search after they complete
+                this.viewModel.isCachedResults = false;
                 //detect if mapping/geolocation available
                 if (useClientLocation == true) {
                     //initiate client geolocation (if not already determined)
@@ -745,6 +761,7 @@ var OCM;
                     // search position not set, attempt fetch from location input and return for now
                     var locationText = document.getElementById("search-location").value;
                     if (locationText === null || locationText == "") {
+                        app.logAnalyticsEvent("Search", "Geolocation");
                         //try to geolocate via browser location API
                         this.geolocationManager.determineUserLocation($.proxy(this.determineUserLocationCompleted, this), $.proxy(this.determineUserLocationFailed, this));
                         return;
@@ -752,13 +769,14 @@ var OCM;
                     else {
                         // try to gecode text location name, if new lookup not
                         // attempted, continue to rendering
+                        app.logAnalyticsEvent("Search", "Geocode", locationText);
                         var lookupAttempted = this.geolocationManager.determineGeocodedLocation(locationText, $.proxy(this.determineGeocodedLocationCompleted, this), $.proxy(this.determineGeocodedLocationFailed, this));
                         if (lookupAttempted == true) {
                             return;
                         }
                     }
                 }
-                if (this.viewModel.searchPosition != null && !this.appState.isSearchInProgress) {
+                if (this.viewModel.searchPosition != null && this.viewModel.searchPosition.coords != null && !this.appState.isSearchInProgress) {
                     this.appState.isSearchInProgress = true;
                     var params = new OCM.POI_SearchParams();
                     params.latitude = this.viewModel.searchPosition.coords.latitude;
@@ -773,6 +791,8 @@ var OCM;
                         params.submissionStatusTypeID = $("#filter-submissionstatus").val();
                     if ($("#filter-connectiontype").val() != "")
                         params.connectionTypeID = $("#filter-connectiontype").val();
+                    if ($("#filter-minpowerkw").val() != "")
+                        params.minPowerKW = $("#filter-minpowerkw").val();
                     if ($("#filter-operator").val() != "")
                         params.operatorID = $("#filter-operator").val();
                     if ($("#filter-connectionlevel").val() != "")
@@ -783,6 +803,7 @@ var OCM;
                         params.statusTypeID = $("#filter-statustype").val();
                     this.checkSelectedAPIMode();
                     this.log("Performing search..");
+                    app.logAnalyticsEvent("Search", "Perform Search");
                     this.apiClient.fetchLocationDataListByParam(params, "ocm_app.handleSearchCompleted", "ocm_app.handleSearchError");
                 }
             }
@@ -815,6 +836,7 @@ var OCM;
         };
         App.prototype.determineGeocodedLocationFailed = function () {
             this.clearSearchRequest();
+            this.logAnalyticsEvent("Search", "Geocoding Failed");
             this.showMessage("The position of this address could not be determined. You may wish to try starting with a simpler address.");
         };
         App.prototype.handleSearchCompleted = function (poiList) {
@@ -826,8 +848,16 @@ var OCM;
             this.viewModel.poiList = poiList;
             this.viewModel.searchPOIList = poiList;
             if (poiList != null && poiList.length > 0) {
+                this.logAnalyticsEvent("Search", "Completed", "Results", poiList.length);
                 this.log("Caching search results..");
-                this.apiClient.setCachedDataObject("SearchResults", poiList);
+                if (poiList.length <= 101) {
+                    this.apiClient.setCachedDataObject("SearchResults", poiList);
+                }
+                else {
+                    //only cache first 100 results, otherwise cache storage quota may be exceeded
+                    var cacheList = poiList.splice(0, 100);
+                    this.apiClient.setCachedDataObject("SearchResults", cacheList);
+                }
                 this.apiClient.setCachedDataObject("SearchResults_Location", document.getElementById("search-location").value);
                 this.apiClient.setCachedDataObject("SearchResults_SearchPos", this.viewModel.searchPosition);
             }
@@ -843,12 +873,12 @@ var OCM;
             this.appState.isSearchInProgress = false;
             var appContext = this;
             //var $listContent = $('#results-list');
-            var $listContent = $('<div id="results-list" class="results-list"></div>');
+            var $listContent = $('<ul id="results-list" class="results-list"></ul>');
             if (this.resultItemTemplate == null)
                 this.resultItemTemplate = $("#results-item-template").html();
             $listContent.children().remove();
             if (this.viewModel.poiList == null || this.viewModel.poiList.length == 0) {
-                var $content = $("<div class=\"section-heading\"><p><span class=\"ui-li-count\">0 Results match your search</span></p></div>");
+                var $content = $("<li class=\"section-heading\"><p><span class=\"ui-li-count\">0 Results match your search</span></p></li>");
                 $listContent.append($content);
             }
             else {
@@ -856,7 +886,11 @@ var OCM;
                 var distance_unit = "Miles";
                 if (distUnitPref != null)
                     distance_unit = distUnitPref.value;
-                var $resultCount = $("<h3 style='margin-top:0'>The following " + locationList.length + " locations match your search</h3>");
+                var introText = "<h3 style='margin-top:0'>The following " + locationList.length + " locations match your search</h3>";
+                if (this.viewModel.isCachedResults) {
+                    introText = "<p class='alert alert-warning'>You are viewing old search results. Search again to see the latest information.</p>";
+                }
+                var $resultCount = $(introText);
                 $listContent.append($resultCount);
                 var isAlternate = false;
                 for (var i = 0; i < this.viewModel.poiList.length; i++) {
@@ -867,7 +901,7 @@ var OCM;
                     var addressHTML = OCM.Utils.formatPOIAddress(poi);
                     var contactHTML = "";
                     contactHTML += OCM.Utils.formatPhone(poi.AddressInfo.ContactTelephone1, "Tel.");
-                    var itemTemplate = "<div class='result'>" + this.resultItemTemplate + "</div>";
+                    var itemTemplate = "<li class='result'>" + this.resultItemTemplate + "</li>";
                     var locTitle = poi.AddressInfo.Title;
                     locTitle += "<div class='pull-right'>";
                     if (poi.UserComments && poi.UserComments != null) {
@@ -883,7 +917,7 @@ var OCM;
                     itemTemplate = itemTemplate.replace("{location}", addressHTML);
                     itemTemplate = itemTemplate.replace("{comments}", "");
                     var direction = "";
-                    if (this.viewModel.searchPosition != null)
+                    if (this.viewModel.searchPosition != null && this.viewModel.searchPosition.coords != null)
                         direction = this.geolocationManager.getCardinalDirectionFromBearing(this.geolocationManager.getBearing(this.viewModel.searchPosition.coords.latitude, this.viewModel.searchPosition.coords.longitude, poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
                     itemTemplate = itemTemplate.replace("{distance}", distance.toFixed(1));
                     itemTemplate = itemTemplate.replace("{distanceunit}", distance_unit + (direction != "" ? " <span title='" + direction + "' class='direction-" + direction + "'>&nbsp;&nbsp;</span>" : ""));
@@ -921,6 +955,7 @@ var OCM;
                     $item.on('click', { poi: poi }, function (e) {
                         e.preventDefault();
                         e.stopPropagation();
+                        //todo: rename as prepareDetailsView
                         try {
                             appContext.showDetailsView(this, e.data.poi);
                         }
@@ -967,6 +1002,7 @@ var OCM;
         App.prototype.showDetailsView = function (element, poi) {
             this.viewModel.selectedPOI = poi;
             this.log("Showing OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
+            this.logAnalyticsEvent("POI", "View", "Ref", poi.ID);
             if (this.isFavouritePOI(poi, null)) {
                 $("#option-favourite-icon").removeClass("fa-heart-o");
                 $("#option-favourite-icon").addClass("fa-heart");
@@ -984,10 +1020,12 @@ var OCM;
             var poiDetails = OCM.Utils.formatPOIDetails(poi, false);
             $("#details-locationtitle").html(poi.AddressInfo.Title);
             $("#details-address").html(poiDetails.address);
+            $("#details-driving").html(poiDetails.drivingInfo);
             $("#details-contact").html(poiDetails.contactInfo);
             $("#details-additional").html(poiDetails.additionalInfo);
             $("#details-advanced").html(poiDetails.advancedInfo);
-            this.mappingManager.showPOIOnStaticMap("details-map", poi, true, this.appState.isRunningUnderCordova);
+            var viewWidth = $(window).width();
+            this.mappingManager.showPOIOnStaticMap("details-map", poi, true, this.appState.isRunningUnderCordova, viewWidth, 200);
             var streetviewUrl = "http://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
             var streetViewLink = "https://maps.google.com/maps?q=&layer=c&cbll=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&cbp=11,0,0,0,0";
             $("#details-streetview").html("<a href='#' onclick=\"window.open('" + streetViewLink + "', '_system');\"><img src=\"" + streetviewUrl + "\" width=\"192\" height=\"96\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" /></a>");
@@ -996,7 +1034,22 @@ var OCM;
                 for (var c = 0; c < poi.UserComments.length; c++) {
                     var comment = poi.UserComments[c];
                     var commentDate = OCM.Utils.fixJSONDate(comment.DateCreated);
-                    commentOutput += "<blockquote>" + "<p>" + (comment.Rating != null ? "<strong>Rating: " + comment.Rating + " out of 5</strong> : " : "") + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " + "<small><cite>" + (comment.CommentType != null ? "[" + comment.CommentType.Title + "] " : "") + ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") + " : " + commentDate.toLocaleDateString() + "<em>" + (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") + "</em> </cite></small></blockquote>";
+                    var fragment = "<div class='card comment'>" +
+                        "<div class='row'>" +
+                        "<div class='col-sm-3'>" + (comment.User != null ? "<img class='user' src='http://www.gravatar.com/avatar/" + comment.User.EmailHash + "?d=mm' />" : "<img class='user' src='http://www.gravatar.com/avatar/00?f=y&d=mm'/>") + "<br/>" +
+                        ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") +
+                        "</div>" +
+                        "<div class='col-sm-7'>" +
+                        "<h3>" + (comment.CommentType != null ? comment.CommentType.Title + " - " : "") +
+                        (comment.CheckinStatusType != null ? " " + comment.CheckinStatusType.Title : "") +
+                        "</h3>" +
+                        "<p>" + (comment.Comment != null ? comment.Comment : "(No Comment)") + "</p> " +
+                        "<small>" + commentDate.toLocaleDateString() +
+                        "<em>" +
+                        "</em></small></div>" +
+                        "<div class='col-sm-2'>" + (comment.Rating != null ? "" + comment.Rating + " out of 5" : " Not Rated") + "</div>" +
+                        "</div></div>";
+                    commentOutput += fragment;
                 }
                 commentOutput += "</div>";
                 $("#details-usercomments").html(commentOutput);
@@ -1011,7 +1064,14 @@ var OCM;
                     var mediaItem = poi.MediaItems[c];
                     if (mediaItem.IsEnabled == true) {
                         var itemDate = OCM.Utils.fixJSONDate(mediaItem.DateCreated);
-                        mediaItemOutput += "<blockquote><div style='float:left;padding-right:0.3em;'><a class='swipebox' href='" + mediaItem.ItemURL + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img src='" + mediaItem.ItemThumbnailURL + "'/></a></div><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " + "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " : " + itemDate.toLocaleDateString() + "</cite></small>" + "</blockquote>";
+                        var mediaItemThumbnail = mediaItem.ItemThumbnailURL;
+                        var mediumSizeThumbnail = mediaItemThumbnail.replace(".thmb.", ".medi.");
+                        mediaItemOutput += "<div class='card comment'><div class='row'>" +
+                            "<div class='col-xs-6'><a class='swipebox' href='" + mediumSizeThumbnail + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img class='img-responsive img-thumbnail' src='" + mediaItem.ItemThumbnailURL + "'/></a></div>" +
+                            "<div class='col-xs-6'><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+                            "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " " + itemDate.toLocaleDateString() + "</cite></small>" +
+                            "</div>" +
+                            "</div></div>";
                     }
                 }
                 mediaItemOutput += "</div>";
@@ -1043,7 +1103,7 @@ var OCM;
             //HACK: adjust map/list content to main viewport
             var preferredContentHeight = $(window).height() - 90;
             if ($("#map-view").height() != preferredContentHeight) {
-                this.log("adjusting content height:" + preferredContentHeight, 0 /* VERBOSE */);
+                this.log("adjusting content height:" + preferredContentHeight, OCM.LogLevel.VERBOSE);
                 document.getElementById("map-view").style.height = preferredContentHeight + "px";
                 document.getElementById("listview-container").style.height = preferredContentHeight + "px";
                 document.getElementById("listview-container").style.maxHeight = preferredContentHeight + "px";
@@ -1053,25 +1113,9 @@ var OCM;
             return preferredContentHeight;
         };
         App.prototype.refreshMapView = function () {
-            if (this.appState.isRunningUnderCordova) {
-                var app = this;
-                if (app.mappingManager.mapOptions.mapAPI != 1 /* GOOGLE_NATIVE */) {
-                    //for cordova, switch over to native google maps, if available
-                    if (window.plugin && plugin.google && plugin.google.maps) {
-                        plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
-                            if (isAvailable) {
-                                app.log("Native maps available, switching API.");
-                                app.mappingManager.setMapAPI(1 /* GOOGLE_NATIVE */);
-                            }
-                            else {
-                                app.log("Google Play Services not available, fallback to web maps API");
-                            }
-                        });
-                    }
-                    else {
-                        app.log("Running under cordova but no native maps plugin available.");
-                    }
-                }
+            if (!this.mappingManager.mapAPIReady) {
+                this.log("app.refreshMapView: API Not Ready");
+                return;
             }
             //on showing map, adjust map container height to match page
             var mapHeight = this.adjustMainContentHeight();
@@ -1082,10 +1126,11 @@ var OCM;
         };
         App.prototype.setMapFocus = function (hasFocus) {
             if (hasFocus) {
-                this.mappingManager.showMap();
+                //this.mappingManager.showMap();
+                this.mappingManager.focusMap();
             }
             else {
-                this.mappingManager.hideMap();
+                this.mappingManager.unfocusMap();
             }
         };
         App.prototype.updatePOIDistanceDetails = function (response, status) {
@@ -1171,11 +1216,13 @@ var OCM;
                     this.removeFavouritePOI(poi, itineraryName);
                     $favIcon.removeClass("fa-heart");
                     $favIcon.addClass("fa-heart-o");
+                    this.logAnalyticsEvent("Favourite", "Remove", "Ref", poi.ID);
                 }
                 else {
                     this.addFavouritePOI(poi, itineraryName);
                     $favIcon.removeClass("fa-heart-o");
                     $favIcon.addClass("fa-heart");
+                    this.logAnalyticsEvent("Favourite", "Add", "Ref", poi.ID);
                 }
             }
         };
@@ -1232,7 +1279,8 @@ var OCM;
             if (skipState === void 0) { skipState = false; }
             if (!pageTitle)
                 pageTitle = pageId;
-            this.log("app.showPage:" + pageId, 0 /* VERBOSE */);
+            this.log("app.showPage:" + pageId, OCM.LogLevel.VERBOSE);
+            this.logAnalyticsView(pageId);
             //ensure startup page no longer shown
             if (pageId != "startup-page")
                 document.getElementById("startup-page").style.display = 'none';
@@ -1260,17 +1308,14 @@ var OCM;
             document.getElementById(pageId).style.display = "block";
             if (!this.appState.isEmbeddedAppMode) {
                 //hack: reset scroll position for new page once page has had a chance to render
-                setTimeout(function () {
-                    document.documentElement.scrollIntoView();
-                }, 100);
+                setTimeout(function () { document.documentElement.scrollIntoView(); }, 100);
             }
-            if (pageId !== "map-page") {
-                //native map needs to be hidden or offscreen
-                this.setMapFocus(false);
-            }
-            else {
-                this.setMapFocus(true);
-            }
+            /* if (pageId !== "map-page") {
+                 //native map needs to be hidden or offscreen
+                 this.setMapFocus(false);
+             } else {
+                 this.setMapFocus(true);
+             }*/
             this.appState._lastPageId = pageId;
             if (skipState) {
             }
@@ -1317,12 +1362,12 @@ var OCM;
             });
         };
         App.prototype.navigateToHome = function () {
-            this.log("Navigate To: Start Page (Map)", 0 /* VERBOSE */);
+            this.log("Navigate To: Start Page (Map)", OCM.LogLevel.VERBOSE);
             this.navigateToMap();
         };
         App.prototype.navigateToMap = function (showLatestSearchResults) {
             if (showLatestSearchResults === void 0) { showLatestSearchResults = true; }
-            this.log("Navigate To: Map Page", 0 /* VERBOSE */);
+            this.log("Navigate To: Map Page", OCM.LogLevel.VERBOSE);
             this.showPage("map-page", "Map");
             var app = this;
             //change title of map page to be Search
@@ -1331,12 +1376,11 @@ var OCM;
             if (showLatestSearchResults) {
                 app.viewModel.poiList = app.viewModel.searchPOIList;
             }
-            setTimeout(function () {
-                app.refreshMapView();
-            }, 250);
+            this.setMapFocus(true);
+            setTimeout(function () { app.refreshMapView(); }, 250);
         };
         App.prototype.navigateToFavourites = function () {
-            this.log("Navigate To: Favourites", 0 /* VERBOSE */);
+            this.log("Navigate To: Favourites", OCM.LogLevel.VERBOSE);
             var app = this;
             //get list of favourites as POI list and render in standard search page
             var favouritesList = app.getFavouritePOIList();
@@ -1354,45 +1398,59 @@ var OCM;
             }
         };
         App.prototype.navigateToAddLocation = function () {
-            this.log("Navigate To: Add Location", 0 /* VERBOSE */);
+            this.log("Navigate To: Add Location", OCM.LogLevel.VERBOSE);
             var app = this;
+            if (!app.isUserSignedIn()) {
+                if (app.appConfig.allowAnonymousSubmissions) {
+                    app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
+                }
+                else {
+                    app.showMessage("You need to Sign In before you can add a location.");
+                    return;
+                }
+                ;
+            }
             app.isLocationEditMode = false;
             app.viewModel.selectedPOI = null;
             app.showLocationEditor();
             this.showPage("editlocation-page", "Add Location");
-            if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
-            }
         };
         App.prototype.navigateToEditLocation = function () {
-            this.log("Navigate To: Edit Location", 0 /* VERBOSE */);
+            this.log("Navigate To: Edit Location", OCM.LogLevel.VERBOSE);
             var app = this;
+            if (!app.isUserSignedIn()) {
+                if (app.appConfig.allowAnonymousSubmissions) {
+                    app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
+                }
+                else {
+                    app.showMessage("You need to Sign In before you can edit locations.");
+                    return;
+                }
+                ;
+            }
             //show editor
             app.showLocationEditor();
-            app.showPage("editlocation-page", "Edit Location");
-            if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
-            }
+            app.showPage("editlocation-page", "Edit Location", true);
         };
         App.prototype.navigateToLocationDetails = function () {
-            this.log("Navigate To: Location Details", 0 /* VERBOSE */);
+            this.log("Navigate To: Location Details", OCM.LogLevel.VERBOSE);
             //show location details for currently selected POI
             this.showPage("locationdetails-page", "Charging Location");
         };
         App.prototype.navigateToProfile = function () {
-            this.log("Navigate To: Profile", 0 /* VERBOSE */);
+            this.log("Navigate To: Profile", OCM.LogLevel.VERBOSE);
             this.showPage("profile-page", "Sign In");
         };
         App.prototype.navigateToSettings = function () {
-            this.log("Navigate To: Settings", 0 /* VERBOSE */);
+            this.log("Navigate To: Settings", OCM.LogLevel.VERBOSE);
             this.showPage("settings-page", "Settings");
         };
         App.prototype.navigateToStartup = function () {
-            this.log("Navigate To: Startup", 0 /* VERBOSE */);
+            this.log("Navigate To: Startup", OCM.LogLevel.VERBOSE);
             this.showPage("startup-page", "Open Charge Map", true);
         };
         App.prototype.navigateToAbout = function () {
-            this.log("Navigate To: About", 0 /* VERBOSE */);
+            this.log("Navigate To: About", OCM.LogLevel.VERBOSE);
             try {
                 var dataProviders = this.apiClient.referenceData.DataProviders;
                 var summary = "<ul>";
@@ -1411,31 +1469,38 @@ var OCM;
             this.showPage("about-page", "About");
         };
         App.prototype.navigateToNews = function () {
-            this.log("Navigate To: News", 0 /* VERBOSE */);
+            this.log("Navigate To: News", OCM.LogLevel.VERBOSE);
             this.showPage("news-page", "News");
             document.getElementById("news-frame").src = this.appConfig.newsHomeUrl;
         };
         App.prototype.navigateToAddComment = function () {
-            this.log("Navigate To: Add Comment", 0 /* VERBOSE */);
+            this.log("Navigate To: Add Comment", OCM.LogLevel.VERBOSE);
             var app = this;
+            if (!app.isUserSignedIn()) {
+                if (app.appConfig.allowAnonymousSubmissions) {
+                    app.showMessage("You are not signed in. You should sign in unless you wish to submit your edit anonymously.");
+                }
+                else {
+                    app.showMessage("You need to Sign In before adding a comment.");
+                    return;
+                }
+                ;
+            }
             //reset comment form on show
             document.getElementById("comment-form").reset();
             app.appState.enableCommentSubmit = true;
             //show checkin/comment page
-            this.showPage("submitcomment-page", "Add Comment");
-            if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You should sign in unless you wish to submit an anonymous comment.");
-            }
+            this.showPage("submitcomment-page", "Add Comment", false);
         };
         App.prototype.navigateToAddMediaItem = function () {
-            this.log("Navigate To: Add Media Item", 0 /* VERBOSE */);
+            this.log("Navigate To: Add Media Item", OCM.LogLevel.VERBOSE);
             var app = this;
             if (!app.isUserSignedIn()) {
-                app.showMessage("You are not signed in. You cannot currently submit photos anonymously, please Sign In.");
+                app.showMessage("You need to Sign In before you can add photos.");
             }
             else {
                 //show upload page
-                this.showPage("submitmediaitem-page", "Add Media");
+                this.showPage("submitmediaitem-page", "Add Media", false);
             }
         };
         App.prototype.showConnectionError = function () {
@@ -1450,6 +1515,7 @@ var OCM;
                 this.appState.menuDisplayed = !showMenu;
             if (this.appState.menuDisplayed) {
                 //hide app menu
+                this.setMapFocus(true);
                 this.appState.menuDisplayed = false;
                 $("#app-menu-container").hide();
             }
@@ -1459,6 +1525,11 @@ var OCM;
                 this.setMapFocus(false);
                 $("#app-menu-container").show();
             }
+        };
+        App.prototype.jumpToPageTop = function () {
+            //jump to top of page
+            this.log("Status tapped, scrolling to page top.");
+            window.scrollTo(0, 0);
         };
         return App;
     })(OCM.LocationEditor);

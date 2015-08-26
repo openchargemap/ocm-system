@@ -178,6 +178,7 @@
     <Content Include="fonts\FontAwesome\fonts\FontAwesome.otf" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="js\OCM_i18n.ts" />
     <TypeScriptCompile Include="js\OCM_FileUpload.ts" />
     <TypeScriptCompile Include="js\OCM_App.ts" />
     <TypeScriptCompile Include="js\OCM_AppBase.ts" />
@@ -208,6 +209,9 @@
   <PropertyGroup>
     <RootNamespace>TypeScriptHTMLApp1</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <ProjectExtensions>
@@ -236,9 +240,11 @@
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd $(ProjectDir)
-jake --jakefile $(ProjectDir)\jakefile.js build-web-no-ts
+REM -- build problem: xcopy should run after jake but won't. so build twice to update web/api to latest js.
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
+jake --jakefile $(ProjectDir)\jakefile.js build-web-no-ts
+
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
