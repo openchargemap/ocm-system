@@ -1,4 +1,5 @@
 ﻿using Mandrill;
+using Mandrill.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace OCM.API.Common
@@ -242,7 +244,7 @@ namespace OCM.API.Common
                         {
                             emailToList.Add(new EmailAddress(emailAddress));
                         }
-                        message.to = emailToList;
+                        message.To = emailToList;
 
                         if (!String.IsNullOrEmpty(bccEmail) && !isDebugOnly)
                         {
@@ -254,17 +256,26 @@ namespace OCM.API.Common
                             }
                         }
 
-                        message.from_email = ConfigurationManager.AppSettings["DefaultSenderEmailAddress"];
-                        message.from_name = "Open Charge Map - Automated Notification";
-                        message.subject = this.Subject;
+                        message.FromEmail = ConfigurationManager.AppSettings["DefaultSenderEmailAddress"];
+                        message.FromName = "Open Charge Map - Automated Notification";
+                        message.Subject = this.Subject;
 
-                        message.auto_text = true;
-                        message.html = this.MessageBody;
-                        var result = api.SendMessage(message);
+                        message.AutoText = true;
+                        message.Html = this.MessageBody;
+
+                        var messageRequest = new Mandrill.Requests.Messages.SendMessageRequest(message);
+
+                        var messageTask = Task.Run(async () =>
+                        {
+                            return await api.SendMessage(messageRequest);
+                        });
+
+                        messageTask.Wait();
+                        var result = messageTask.Result;
                         if (result != null && result.Any())
                         {
                             //optional notification result logging
-                            logEvent(JSON.Serialize(new { eventDate = DateTime.UtcNow, result = result }));
+                            LogEvent(Newtonsoft.Json.JsonConvert.SerializeObject(new { eventDate = DateTime.UtcNow, result = result }));
 
                             var r = result.First();
                             if (r.Status == EmailResultStatus.Invalid || r.Status == EmailResultStatus.Rejected)
@@ -274,7 +285,7 @@ namespace OCM.API.Common
                         }
                         else
                         {
-                            logEvent(JSON.Serialize(new { eventDate = DateTime.UtcNow, result = result }));
+                            LogEvent(Newtonsoft.Json.JsonConvert.SerializeObject(new { eventDate = DateTime.UtcNow, result = result }));
                         }
 
                         return true;
@@ -283,20 +294,20 @@ namespace OCM.API.Common
             }
             catch (Exception ex)
             {
-                logEvent(JSON.Serialize(new { eventDate = DateTime.UtcNow, result = ex }));
+                LogEvent(Newtonsoft.Json.JsonConvert.SerializeObject(new { eventDate = DateTime.UtcNow, result = ex }));
             }
 
             return false;
         }
 
-        private void logEvent(string content)
+        private void LogEvent(string content)
         {
             try
             {
                 if (bool.Parse(ConfigurationManager.AppSettings["EnableNotificationLogging"]) == true)
                 {
                     string logPath = ConfigurationManager.AppSettings["CachePath"] + "\\notifications.log";
-                    System.IO.File.AppendAllText(logPath, content);
+                    System.IO.File.AppendAllText(logPath, content + "\r\n");
                 }
             }
             catch (Exception) { }
