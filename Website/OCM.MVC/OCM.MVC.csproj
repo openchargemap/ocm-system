@@ -334,6 +334,7 @@
     <Content Include="Scripts\OCM\SharedLibs\OCM_CommonUI.js" />
     <Content Include="Scripts\OCM\SharedLibs\OCM_Data.js" />
     <Content Include="Scripts\OCM\SharedLibs\OCM_Geolocation.js" />
+    <Content Include="Scripts\OCM\SharedLibs\OCM_i18n.js" />
     <Content Include="Scripts\OCM\SharedLibs\readme.txt" />
     <Content Include="Scripts\OCM\Subscriptions\distancewidget.js" />
     <Content Include="Scripts\OCM\Subscriptions\jquery.dynamicrangevalidator.js" />

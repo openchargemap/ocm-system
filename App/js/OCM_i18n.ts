@@ -50,7 +50,7 @@ module OCM {
             }
 
             //no translation available
-            return resourceKey;
+            return null;
         }
 
         applyLocalisation(isTestMode) {
@@ -82,9 +82,10 @@ module OCM {
                                     } else {
                                         localisedText = this.getTranslation(optResourceKey, null, null, elementList[i]);
                                     }
-                                    optionsList[opt].text = localisedText;
+                                    if (localisedText != null) {
+                                        optionsList[opt].text = localisedText;
+                                    }
                                 }
-
                             } else {
                                 if (isTestMode == true) {
                                     //in test mode the resource key is displayed as the localised text
@@ -93,18 +94,20 @@ module OCM {
                                     localisedText = this.getTranslation(resourceKey, null, null, elementList[i]);
                                 }
 
-                                if ($element.is("input")) {
-                                    if ($element.attr("type") == "button") {
-                                        //set input button value
-                                        $element.val(localisedText);
-                                    }
-                                } else {
-                                    if ($element.attr("data-localize-opt") == "title") {
-                                        //set title of element only
-                                        $(elementList[i]).attr("title", localisedText);
+                                if (localisedText != null) {
+                                    if ($element.is("input")) {
+                                        if ($element.attr("type") == "button") {
+                                            //set input button value
+                                            $element.val(localisedText);
+                                        }
                                     } else {
-                                        //standard localisation method is to replace inner text of element
-                                        $(elementList[i]).html(localisedText);
+                                        if ($element.attr("data-localize-opt") == "title") {
+                                            //set title of element only
+                                            $(elementList[i]).attr("title", localisedText);
+                                        } else {
+                                            //standard localisation method is to replace inner text of element
+                                            $(elementList[i]).html(localisedText);
+                                        }
                                     }
                                 }
                             }

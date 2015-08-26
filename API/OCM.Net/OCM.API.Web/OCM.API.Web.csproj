@@ -118,7 +118,10 @@
     <Content Include="Scripts\SharedLibs\OCM_Base.js" />
     <Content Include="Scripts\SharedLibs\OCM_CommonUI.js" />
     <Content Include="Scripts\SharedLibs\OCM_Data.js" />
+    <Content Include="Scripts\SharedLibs\OCM_FileUpload.js" />
     <Content Include="Scripts\SharedLibs\OCM_Geolocation.js" />
+    <Content Include="Scripts\SharedLibs\OCM_i18n.js" />
+    <Content Include="Scripts\SharedLibs\OCM_MapInit.js" />
     <Content Include="Scripts\SharedLibs\OCM_Mapping.js" />
     <Content Include="Styles\StyleSheet.css" />
     <Content Include="Templates\Notifications\BaseTemplate.htm" />

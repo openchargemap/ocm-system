@@ -161,7 +161,7 @@
       },
       "stats": {
         "locations": "Standorte",
-        "locationSummary": "{totalLocations} Ladestationen an {totalLocations} Standorten."
+        "locationSummary": "{totalStations} Ladestationen an {totalLocations} Standorten."
       },
       "shortProjectSummary": "Open Charge Map ist ein nicht kommerzieller, gemeinnütziger Dienst, der von einer weltweiten Gemeinschaft von Unternehmen, Wohltätigkeitsorganisationen, Entwicklern und Interessierten unterstützt und moderiert wird.",
       "getApp": "Lade die App",
