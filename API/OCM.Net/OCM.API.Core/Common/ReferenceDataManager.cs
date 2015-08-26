@@ -54,7 +54,7 @@ namespace OCM.API.Common
             if (countryId != null)
             {
                 return OCM.API.Common.Model.Extensions.OperatorInfo.FromDataModel(
-                    dataModel.Operators.Where(c => c.ChargePoints.Any(cp => cp.AddressInfo.CountryID == countryId)).OrderBy(c => c.Title)
+                    dataModel.Operators.Where(c => c.ChargePoints.Any(cp => cp.AddressInfo.CountryID == countryId && cp.SubmissionStatusType.IsLive == true)).OrderBy(c => c.Title)
                     );
             }
             else

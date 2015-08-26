@@ -17,26 +17,23 @@
     @foreach (var continent in continents)
     {
         <h1>@continent.Value</h1>
-        
-        foreach (var item in Model.Where(c=>c.ContinentCode==continent.Key))
+
+        foreach (var item in Model.Where(c => c.ContinentCode == continent.Key))
         {
             var countryNameParam = item.Title.Replace(" ", "").ToLower();
             var countryStat = countryStats.FirstOrDefault(c => c.ISOCode == item.ISOCode);
 
-            if (countryStat != null) { 
-            <div class="well well-sm" style="display:inline-block;margin:1em;">
-                <h3>@Html.DisplayFor(modelItem => item.Title)</h3>
-                <ul>
-                    <li><a href="@Url.Action("Index", "POI", new { CountryIDs=item.ID, CountryName=countryNameParam})">@countryStat.StationCount charging stations in @countryStat.LocationCount locations</a></li>
-                    <li><a href="@Url.Content("~/country/" +countryNameParam +"/networks")">Networks</a></li>
-                </ul>
-
-            </div>
-    }
+            if (countryStat != null)
+            {
+                <div class="well well-sm" style="display:inline-block;margin:1em;">
+                    <h3><a id="@item.ISOCode"></a>@Html.DisplayFor(modelItem => item.Title)</h3>
+                    <ul>
+                        <li><a href="@Url.Action("Index", "POI", new { CountryIDs=item.ID, CountryName=countryNameParam})">@countryStat.StationCount charging stations in @countryStat.LocationCount locations</a></li>
+                        <li><a href="@Url.Content("~/country/" +countryNameParam +"/networks")">Networks</a></li>
+                    </ul>
+                </div>
+            }
 
         }
     }
-
-
-    
 </div>
