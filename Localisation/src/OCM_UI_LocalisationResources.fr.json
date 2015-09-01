@@ -160,7 +160,7 @@
         "getStarted": null
       },
       "stats": {
-        "locations": null,
+        "locations": "Lieux",
         "locationSummary": "{totalStations} stations de recharge sur {totalLocations} endroits."
       },
       "shortProjectSummary": null,
@@ -176,39 +176,39 @@
       "statusType": {
         "value_minus1": "(Aucun Sélectionné)",
         "value_0": "Inconnu",
-        "value_10": null,
-        "value_20": null,
-        "value_30": null,
-        "value_50": null,
-        "value_75": null,
-        "value_100": null,
-        "value_150": null,
-        "value_200": null
+        "value_10": "Actuellement Disponible (État automatisé)",
+        "value_20": "En cours d'utilisation (État automatisé)",
+        "value_30": "Temporairement Indisponible",
+        "value_50": "Opérationnel",
+        "value_75": "Partiellement Opérationnel (Mixte)",
+        "value_100": "Non Opérationnel",
+        "value_150": "Prévu pour une date future",
+        "value_200": "Supprimé (Désactivé)"
       },
       "operatorInfo": {
-        "value_minus1": null,
-        "value_1": null,
-        "value_44": null,
-        "value_45": null
+        "value_minus1": "(Aucun Sélectionné)",
+        "value_1": "(Réseau/Opérateur Inconnu)",
+        "value_44": "(Residence/Personne Privé)",
+        "value_45": "(Propriétaire de l'entreprise à l'emplacement)"
       },
       "usageType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null,
-        "value_4": null,
-        "value_5": null,
-        "value_6": null,
-        "value_7": null
+        "value_minus1": "(Aucun Sélectionné)",
+        "value_0": "(Inconnu)",
+        "value_1": "Public",
+        "value_2": "Privé - Accès Limité",
+        "value_3": "Propriété privé - annonce requis",
+        "value_4": "Public - Abonnement Requis",
+        "value_5": "Public - Payement sur le lieu",
+        "value_6": "Privé - Pour le Personnel et les Visiteurs",
+        "value_7": "Public - Annonce Requis"
       },
       "connectionType": {
-        "value_minus1": null,
-        "value_0": null
+        "value_minus1": "(Aucun Sélectionné)",
+        "value_0": "(Inconnu)"
       },
       "levelType": {
-        "value_minus1": null,
-        "value_0": null,
+        "value_minus1": "(Aucun Sélectionné)",
+        "value_0": "(Inconnu)",
         "value_1": "Niveau 1: Faible (moins de 2 kW)",
         "value_2": "Niveau 2: Moyen (plus de 2 kW)",
         "value_3": "Niveau 3: Haut (plus de 40kW)"

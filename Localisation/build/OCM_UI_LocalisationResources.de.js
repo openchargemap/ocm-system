@@ -41,7 +41,7 @@ var localisation_dictionary_de ={
       "accessComments": "Detaillierte Informationen zum Zugang und zum Betrieb der Ladestation",
       "advancedDetails": "zusätzliche Informationen",
       "numberOfPoints": "Anzahl der Ladesäulen / Lademöglichkeiten",
-      "usageType": "Zugang/Benutzung (privat, öffentlich, nur bestimmte Nutzgruppen etc.)",
+      "usageType": "Zugang/Benutzung (privat, öffentlich, etc.)",
       "usageCost": "Stromkosten",
       "operationalStatus": "Verfügbarkeit",
       "datePlanned": "Planungsstand",

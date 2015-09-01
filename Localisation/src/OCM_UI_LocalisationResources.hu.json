@@ -161,7 +161,7 @@
       },
       "stats": {
         "locations": "Helyek",
-        "locationSummary": null
+        "locationSummary": "{totalStations} töltési pont {totalLocations} helyszínen"
       },
       "shortProjectSummary": "Az Open Charge Map egy cégek, alapítványok, fejlesztők és egyéb érdekelt felek által biztosított és támogatott nem kereskedelmi, non-profit szolgáltatás.",
       "getApp": "Töltsd le az alkalmazást!",
@@ -174,51 +174,51 @@
     },
     "reference": {
       "statusType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null,
-        "value_50": null,
-        "value_75": null,
-        "value_100": null,
-        "value_150": null,
-        "value_200": null
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "Ismeretlen",
+        "value_10": "Jelenleg elérhető (automatikus státusz)",
+        "value_20": "Jelenleg használatban (automatikus státusz)",
+        "value_30": "Átmenetileg nem elérhető",
+        "value_50": "Működik",
+        "value_75": "Részben működik",
+        "value_100": "Nem működik",
+        "value_150": "Tervezett",
+        "value_200": "Nincs már ott (leszerelve)"
       },
       "operatorInfo": {
-        "value_minus1": null,
-        "value_1": null,
-        "value_44": null,
-        "value_45": null
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_1": "(Ismeretlen üzemeltető)",
+        "value_44": "(Privát lakás)",
+        "value_45": "(Vállalkozás a helyszínen)"
       },
       "usageType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null,
-        "value_4": null,
-        "value_5": null,
-        "value_6": null,
-        "value_7": null
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismeretlen)",
+        "value_1": "Nyilvános",
+        "value_2": "Privát - korlátozott hozzáférés",
+        "value_3": "Privát - bejelentkezés szükséges",
+        "value_4": "Nyilvános - tagság szükséges",
+        "value_5": "Nyilvános - fizetés a helyszínen",
+        "value_6": "Privát - dolgozók és látogatók részére",
+        "value_7": "Nyilvános - bejelentkezés szükséges"
       },
       "connectionType": {
-        "value_minus1": null,
-        "value_0": null
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismeretlen)"
       },
       "levelType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismeretlen)",
+        "value_1": "Level 1: alacsony (2 kW alatt)",
+        "value_2": "Level 2: közepes (2 kW felett)",
+        "value_3": "Level 3: magas (40 kW felett)"
       },
       "supplyType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismetelten)",
+        "value_10": "AC (egy fázis)",
+        "value_20": "AC (három fázis)",
+        "value_30": "DC"
       }
     }
   }
