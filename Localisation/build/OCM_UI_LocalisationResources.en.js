@@ -170,12 +170,6 @@ var localisation_dictionary_en ={
         "quickWay": "If you just need a quick way to find your nearest charging location you can also try our",
         "webApp": "Web App",
         "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
-      },
-      "about": {
-        "funding": {
-          "title": "Funding",
-          "p1": "Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please {link-contact:get in touch}. More information on funding and project costs {link-funding:is available}."
-        }
       }
     },
     "reference": {
