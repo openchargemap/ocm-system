@@ -170,6 +170,12 @@
         "quickWay": "Ha csak gyorsan meg szeretnéd keresni a legközelebbi töltőpontot, akkor próbáld ki a",
         "webApp": "Webes alkalmazást",
         "searchAppStore": ", különösen, ha mobilon keresel. Keress rá a mobilod alkalmazásboltjában az applikációra, hogy mindig kéznél legyen az adatbázis."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {
