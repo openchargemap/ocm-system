@@ -170,6 +170,12 @@
         "quickWay": "At jo in snelle manier noadich hawwe om oplaadlokaasjes yn 'e buert te finen, kinne jo ek gebrûk makke fan ús",
         "webApp": "Webtapassing",
         "searchAppStore": "foaral op mobyle apparaten. Jo kinne ek sykje yn 'e Tapassings Winkel fan jo apparaat foar in ferzje dy't jo brûken kinne."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {
