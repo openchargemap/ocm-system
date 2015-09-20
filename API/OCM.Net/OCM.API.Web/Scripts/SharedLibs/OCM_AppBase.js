@@ -5,8 +5,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /// <reference path="OCM_CommonUI.ts" />
 var OCM;
@@ -246,7 +245,10 @@ var OCM;
         };
         AppBase.prototype.showMessage = function (msg) {
             if (this.appState.isRunningUnderCordova && navigator.notification) {
-                navigator.notification.alert(msg, function () { ; ; }, 'Open Charge Map', 'OK' // buttonName
+                navigator.notification.alert(msg, // message
+                function () { ; ; }, // callback
+                'Open Charge Map', // title
+                'OK' // buttonName
                 );
             }
             else {

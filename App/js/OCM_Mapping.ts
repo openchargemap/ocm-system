@@ -191,7 +191,7 @@ module OCM {
                         mapManagerContext.updateSearchPosMarker(new plugin.google.maps.LatLng(location.latLng.lat, location.latLng.lng));
                         mapManagerContext.mapOptions.requestSearchUpdate = true;
                     }
-                        );
+                    );
                 });
 
                 this.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, function () {
@@ -333,16 +333,16 @@ module OCM {
                                     }
                                 }
                             }, function (marker) {
-                                    //show full details when info window tapped
-                                    marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
-                                        var markerTitle = marker.getTitle();
-                                        var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
-                                        //app.hideMap();
+                                //show full details when info window tapped
+                                marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
+                                    var markerTitle = marker.getTitle();
+                                    var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
+                                    //app.hideMap();
 
-                                        parentContext.showDetailsViewById(poiId, false);
-                                        parentContext.showPage("locationdetails-page", "Location Details");
-                                    });
+                                    parentContext.showDetailsViewById(poiId, false);
+                                    parentContext.showPage("locationdetails-page", "Location Details");
                                 });
+                            });
 
                             bounds.extend(markerPos);
                         }
@@ -542,13 +542,13 @@ module OCM {
                                             new google.maps.Size(41.0, 31.0),
                                             new google.maps.Point(0, 0),
                                             new google.maps.Point(12.0, 15.0)
-                                            );
+                                        );
 
                                         markerImg = new google.maps.MarkerImage(iconURL,
                                             new google.maps.Size(25.0, 31.0),
                                             new google.maps.Point(0, 0),
                                             new google.maps.Point(12.0, 15.0)
-                                            );
+                                        );
                                     }
                                 }
 
@@ -600,8 +600,7 @@ module OCM {
                         this.mapCentreMarker = new google.maps.Marker({
                             position: searchMarkerPos,
                             map: map,
-                            title: "Searching From Here",
-                            content: 'Your search position'
+                            title: "Searching From Here"
                         });
                     }
 
@@ -654,26 +653,26 @@ module OCM {
                             content: 'Your search position'
                             // icon: "images/icons/compass.png"
                         }, function (marker) {
-                                mapManagerContext.mapCentreMarker = marker;
+                            mapManagerContext.mapCentreMarker = marker;
 
-                                //marker click
-                                marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
-                                    marker.getPosition(function (pos) {
-                                        mapManagerContext.log("Search marker tapped, requesting search from current position.");
+                            //marker click
+                            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
+                                marker.getPosition(function (pos) {
+                                    mapManagerContext.log("Search marker tapped, requesting search from current position.");
 
-                                        mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                        mapManagerContext.mapOptions.requestSearchUpdate = true;
-                                    });
-                                });
-
-                                //marker drag
-                                marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
-                                    marker.getPosition(function (pos) {
-                                        mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                        mapManagerContext.mapOptions.requestSearchUpdate = true;
-                                    });
+                                    mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                    mapManagerContext.mapOptions.requestSearchUpdate = true;
                                 });
                             });
+
+                            //marker drag
+                            marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
+                                marker.getPosition(function (pos) {
+                                    mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                    mapManagerContext.mapOptions.requestSearchUpdate = true;
+                                });
+                            });
+                        });
                     }
                 }
             }
@@ -690,7 +689,6 @@ module OCM {
                         map: map,
                         draggable: true,
                         title: "Tap to Searching from here, Drag to change position.",
-                        content: 'Your search position',
                         icon: "images/icons/compass.png"
                     });
 

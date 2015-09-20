@@ -3,8 +3,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /**
 * @author Christopher Cook
@@ -521,8 +520,7 @@ var OCM;
                         this.mapCentreMarker = new google.maps.Marker({
                             position: searchMarkerPos,
                             map: map,
-                            title: "Searching From Here",
-                            content: 'Your search position'
+                            title: "Searching From Here"
                         });
                     }
                     bounds.extend(this.mapCentreMarker.getPosition());
@@ -601,7 +599,6 @@ var OCM;
                         map: map,
                         draggable: true,
                         title: "Tap to Searching from here, Drag to change position.",
-                        content: 'Your search position',
                         icon: "images/icons/compass.png"
                     });
                     var infowindow = new google.maps.InfoWindow({

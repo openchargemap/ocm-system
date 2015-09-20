@@ -216,7 +216,7 @@
       "supplyType": {
         "value_minus1": "(Nichts ausgewählt)",
         "value_0": "(Unbekannt)",
-        "value_10": "Wechselstrom 1P",
+        "value_10": "Wechselstrom",
         "value_20": "Drehstrom",
         "value_30": "Gleichstrom"
       }
