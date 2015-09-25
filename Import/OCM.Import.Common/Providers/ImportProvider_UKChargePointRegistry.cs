@@ -32,6 +32,7 @@ namespace OCM.Import.Providers
             var dataList = o["ChargeDevice"].ToArray();
 
             var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_UnderReview);//imported and under review
+            var submissionStatusDelistedPrivate = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation);//delisted not public
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
             var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == (int)StandardStatusTypes.Unknown);
@@ -46,8 +47,29 @@ namespace OCM.Import.Providers
 
             foreach (var dataItem in dataList)
             {
+                bool skipPOI = false;
                 var item = dataItem;
                 ChargePoint cp = new ChargePoint();
+
+                var deviceName = item["ChargeDeviceName"].ToString();
+
+                //private addresses are skipped from import
+                if (!String.IsNullOrEmpty(deviceName) && deviceName.ToLower().Contains("parkatmyhouse"))
+                {
+                    //skipPOI = true;
+                    skipPOI = true;
+                }
+
+                var locationType = item["LocationType"].ToString();
+                if (!String.IsNullOrEmpty(locationType))
+                {
+                    if (locationType.ToLower().Contains("home"))
+                    {
+                        skipPOI = true;
+                    }
+                }
+
+                //parse reset of POI data
                 cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //UK National Charge Point Registry
                 cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
@@ -204,7 +226,7 @@ namespace OCM.Import.Providers
                         if (connectorType.ToUpper() == "IEC 62196-2 TYPE 1 (SAE J1772)" || connectorType.ToUpper() == "TYPE 1 SAEJ1772 (IEC 62196)")
                         {
                             cType = new ConnectionType();
-                            cType.ID = 2; //J1772
+                            cType.ID = 1; //J1772
                             level = new ChargerType { ID = 2 };//default to level 2
                         }
 
@@ -316,10 +338,13 @@ namespace OCM.Import.Providers
 
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
-                cp.SubmissionStatus = submissionStatus;
+                if (cp.SubmissionStatus == null) cp.SubmissionStatus = submissionStatus;
 
-                outputList.Add(cp);
-                itemCount++;
+                if (!skipPOI)
+                {
+                    outputList.Add(cp);
+                    itemCount++;
+                }
             }
 
             return outputList;

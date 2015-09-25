@@ -203,7 +203,9 @@ namespace OCM.Import
                         if (updatedItem != null)
                         {
                             //only merge/update from live published items
-                            if (updatedItem.SubmissionStatus.IsLive == (bool?)true)
+                            if (updatedItem.SubmissionStatus.IsLive == (bool?)true
+                                || updatedItem.SubmissionStatus.ID == (int)StandardSubmissionStatusTypes.Delisted_RemovedByDataProvider
+                                 || updatedItem.SubmissionStatus.ID == (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
                             {
                                 //item is an exact match from same data provider
                                 //overwrite existing with imported data (use import as master)
@@ -329,11 +331,11 @@ namespace OCM.Import
             report.Duplicates = duplicateList; //TODO: add additional pass of duplicates from above
 
             //determine which POIs in our master list are no longer referenced in the import
-            report.Delisted = masterList.Where(cp => cp.DataProviderID == report.ProviderDetails.DataProviderID && cp.SubmissionStatus != null && cp.SubmissionStatus.IsLive == true
+            report.Delisted = masterList.Where(cp => cp.DataProviderID == report.ProviderDetails.DataProviderID && cp.SubmissionStatus != null && (cp.SubmissionStatus.IsLive == true || cp.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
                 && !cpListSortedByPos.Any(master => master.ID == cp.ID) && !report.Duplicates.Any(master => master.ID == cp.ID)
                 && cp.UserComments == null && cp.MediaItems == null).ToList();
             //safety check to ensure we're not delisting items just because we have incomplete import data:
-            if (cpList.Count < 50 || (report.Delisted.Count > cpList.Count))
+            if (cpList.Count < 50)// || (report.Delisted.Count > cpList.Count))
             {
                 report.Delisted = new List<ChargePoint>();
             }
