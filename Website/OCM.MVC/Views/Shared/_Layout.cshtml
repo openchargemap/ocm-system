@@ -30,6 +30,25 @@
     <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="~/Content/animate.min.css" rel="stylesheet">
+
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+    <link rel="stylesheet" type="text/css" href="http://assets.cookieconsent.silktide.com/current/style.min.css" />
+    <script type="text/javascript" src="http://assets.cookieconsent.silktide.com/current/plugin.min.js"></script>
+    <script type="text/javascript">
+        // <![CDATA[
+        cc.initialise({
+            cookies: {
+
+                analytics: {},
+                necessary: {}
+            },
+            settings: {
+                consenttype: "implicit"
+            }
+        });
+        // ]]>
+    </script>
+    <!-- End Cookie Consent plugin -->
 </head>
 <body>
 
@@ -144,46 +163,45 @@
         </div>
     </div>
 
-    @if (ViewBag.IsHome==true)
-    { 
-    <div class="banner-container">
+    @if (ViewBag.IsHome == true)
+    {
+        <div class="banner-container">
 
-        <div class="banner-backdrop">
+            <div class="banner-backdrop">
 
-            <div class="banner-foreground">
-                <div class="applinks pull-right animated fadeInDown">
-                    <span data-localize="ocm.infoText.getApp">Get the app</span>:
-                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
-                    <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
-                    <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
-                    <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
+                <div class="banner-foreground">
+                    <div class="applinks pull-right animated fadeInDown">
+                        <span data-localize="ocm.infoText.getApp">Get the app</span>:
+                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
+                        <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
+                        <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
+                        <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
+                    </div>
+
+                    <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated fadeIn">
+                        <a href="@Url.Action("Index", "POI")">
+                            <div class="stat">
+                                <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
+                            </div>
+                        </a>
+                    </div>
                 </div>
+                <div class="animated fadeIn container-fluid">
 
-                <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated fadeIn">
-                    <a href="@Url.Action("Index", "POI")">
-                        <div class="stat">
-                            <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
-                        </div>
-                    </a>
+                    <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
+
+                    <div id="datasummary"></div>
+                    <p data-localize="ocm.infoText.funding">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" data-localize-linkid="link">Find out more</a>.</p>
+                    <p class="pull-right">
+                        <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
+                    </p>
                 </div>
-
-            </div>
-            <div class="animated fadeIn container-fluid">
-
-                <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
-
-                <div id="datasummary"></div>
-                <p data-localize="ocm.infoText.funding">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" data-localize-linkid="link">Find out more</a>.</p>
-                <p class="pull-right">
-                    <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
-                    <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
-                </p>
             </div>
         </div>
-    </div>
 
     }
-    
+
     <div class="container @if(ViewBag.WideContainer==true){<text>container-wide</text>}">
         <div class="content">
             @RenderBody()
