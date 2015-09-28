@@ -1,20 +1,20 @@
 ﻿@{
     ViewBag.Title = "About Open Charge Map";
 }
-<h2>Our Service</h2>
-<p>Open Charge Map is a non-commercial, non-profit, electric vehicle data service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</p>
+<h2 data-localize="ocm.infoText.about.ourService">Our Service</h2>
+<p data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit, electric vehicle data service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</p>
 @Html.Partial("_TermsLink")
 
-<h2>Our Aim</h2>
-<p>Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.</p>
-<p>
+<h2 data-localize="ocm.infoText.about.aimTitle">Our Aim</h2>
+<p data-localize="ocm.infoText.about.aimContent">Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.</p>
+<p data-localize="ocm.infoText.about.goalContent">
     Our goal is to avoid the proliferation of independent conflicting charging location maps/websites/applications
     and to provide (as much as possible) a reliable single point of reference for charging equipment location information.
     Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for
     data sharing and de-duplication efforts.
 </p>
-<h2>Why Use Open Charge Map?</h2>
-<p>By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set.</p>
+<h2 data-localize="ocm.infoText.about.whyOCMTitle">Why Use Open Charge Map?</h2>
+<p data-localize="ocm.infoText.about.whyOCMContent">By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set.</p>
 
 <div>
     <h2 data-localize="ocm.infoText.about.funding.title">Funding</h2>
@@ -23,42 +23,59 @@
 
 <div class="row">
     <div class="col-md-6">
-        <h2>Steering Group</h2>
+        <h2 data-localize="ocm.infoText.about.steeringGroupTitle">Steering Group</h2>
 
-        <p>
+        <p data-localize="ocm.infoText.about.steeringGroupContent">
             Our steering group consists of a wide range of people and organisations, both formally and informally:
         </p>
-        <h3>Coordinators</h3>
-        <p>
+        <h3 data-localize="ocm.infoText.about.coordinators.sectionTitle">Coordinators</h3>
+        <p data-localize="ocm.infoText.about.coordinators.content">
             The following people provide leadership and coordination for the project:
         </p>
 
         <h4>Christopher Cook</h4>
-        <p>Christopher is the lead technical architect, database designer and lead developer for the Open Charge Map system. He is a director of the UK software development company Webprofusion Ltd (<a href="http://www.webprofusion.com">www.webprofusion.com</a>) and owner of <a href="http://www.electriccarbuyer.com">electriccarbuyer.com</a></p>
+        <p data-localize="ocm.infoText.about.coordinators.christopher">Christopher is the lead technical architect, database designer and lead developer for the Open Charge Map system. He is a director of the UK software development company <a href="http://www.webprofusion.com" data-localize-id="link_webprofusion">Webprofusion Ltd</a> and owner of <a href="http://www.electriccarbuyer.com" data-localize-id="link_electriccarbuyer">electriccarbuyer.com</a>.</p>
+<!--         <p>
+          <p data-localize="ocm.infoText.sponsors">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" data-localize-id="link">Find out more</a>.</p>
+            <span data-localize="ocm.infoText.about.coordinators.christopherGeneral">Christopher is the lead technical architect, database designer and lead developer for the Open Charge Map system. He is a director of the UK software development company Webprofusion Ltd </span>
+            (<a href="http://www.webprofusion.com">www.webprofusion.com</a>)
+            <span data-localize="ocm.infoText.aboutUs.coordinators.christopherOwner">and owner of</span>
+            <a href="http://www.electriccarbuyer.com">electriccarbuyer.com</a>.
+        </p> -->
         <h4>Jean-Christoph Saint-Pô</h4>
-        <p>J-C is the community coordinator for the Open Charge Map project and an OCM Administrator, promoting the uptake of OCM by the public and industry. Links: <a href="https://twitter.com/jcstp">Twitter</a>, <a href="https://plus.google.com/u/0/115943172884477844202/">Google+</a>, <a href="http://home.scarlet.be/jcsaintpo/">Website</a></p>
+        <p data-localize="ocm.infoText.about.coordinators.jC">J-C is the community coordinator for the Open Charge Map project and an OCM Administrator, promoting the uptake of OCM by the public and industry. Links: <a href="https://twitter.com/jcstp" data-localize-id="link_twitter">Twitter</a>, <a href="https://plus.google.com/u/0/115943172884477844202/" data-localize-id="link_google_plus">Google+</a>, <a href="http://home.scarlet.be/jcsaintpo/" data-localize-id="link_website">Website</a>.</p>
         <h4>Kevin Sharpe</h4>
-        <p>
-            Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World (<a href="http://www.zerocarbonworld.org">www.zerocarbonworld.org</a>) who sponsor the server hosting of Open Charge Map.
+        <p data-localize="ocm.infoText.about.coordinators.kevin">
+            Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity Zero Carbon World (<a href="http://www.zerocarbonworld.org" data-localize-id="link">www.zerocarbonworld.org</a>) who sponsor the server hosting of Open Charge Map.
         </p>
     </div>
     <div class="col-md-6">
-        <h2>Developers and Contributors</h2>
-        <p>Our <a href="https://github.com/openchargemap">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://plus.google.com/u/0/communities/112113799071360649945">google+</a> community is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
-        <p>Our list of main code contributors is here: <a href="https://github.com/openchargemap/ocm-system/graphs/contributors">https://github.com/openchargemap/ocm-system/graphs/contributors</a></p>
-        <p>Our list of UI translation contributors is here: <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map/peoples">Contributors on WebTranslateIt</a></p>
-        <p>Our list of top data editors/contributors is here: <a href="@Url.Action("Index","Stats")">Data Contributors/Editors</a></p>
-        <h2>Project Stats</h2>
-        <p>General statistics for Open Charge Map <a href="@Url.Action("Index","Stats")">data and usage</a> are available.</p>
-        <p>The following is an estimation of the software development costs, if someone were to develop an equivalent project commercially: </p>
+        <h2 data-localize="ocm.infoText.about.developersContributors.sectionTitle">Developers and Contributors</h2>
+        <p data-localize="ocm.infoText.about.developersContributors.p1">Our <a href="https://github.com/openchargemap" data-localize-id="link_github">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://plus.google.com/u/0/communities/112113799071360649945" data-localize-id="link_google_plus">google+</a> community is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
+        <p data-localize="ocm.infoText.about.developersContributors.p2">
+            You can take a look at the lists of our main contributors of
+            <a href="https://github.com/openchargemap/ocm-system/graphs/contributors" data-localize-id="link_code">code</a>,
+            <a href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map/people" data-localize-id="link_translations">translations</a>
+            and
+            <a href="@Url.Action("Index","Stats")" data-localize-id="link_data">data</a>.
+        </p>
+        <h2 data-localize="ocm.infoText.about.projectStats.sectionTitle">Project Stats</h2>
+        <!-- <p>General statistics for Open Charge Map <a href="@Url.Action("Index","Stats")">data and usage</a> are available.</p> -->
+        <p data-localize="ocm.infoText.about.projectStats.general">General statistics for Open Charge Map <a href="@Url.Action("Index","Stats")" data-localize-id="link">data and usage</a> are available.</p>
+<!--         <p>
+            <span data-localize="ocm.infoText.aboutUs.projectStats.general">General statistics for Open Charge Map</span>
+            <a href="@Url.Action("Index","Stats")" data-localize="ocm.infoText.aboutUs.projectStats.link">data and usage</a>
+            <span data-localize="ocm.infoText.aboutUs.projectStats.generalContinued">are available</span>.
+        </p> -->
+        <p data-localize="ocm.infoText.about.projectStats.devCosts">The following is an estimation of the software development costs, if someone were to develop an equivalent project commercially: </p>
         <script type="text/javascript" src="http://www.ohloh.net/p/605311/widgets/project_cocomo.js"></script>
     </div>
 </div>
-<h2>Data Sources</h2>
-<p>
+<h2 data-localize="ocm.infoText.about.dataSourcesTitle">Data Sources</h2>
+<p data-localize="ocm.infoText.about.dataSourcesContent">
     The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly ("crowd sourced") by our users and those of apps using our services.
 </p>
-<p>Credit and our thanks goes to following major data sources currently included in our database:</p>
+<p data-localize="ocm.infoText.about.dataSourcesThanks">Credit and our thanks goes to following major data sources currently included in our database:</p>
 @{
     var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData().DataProviders;
 }
