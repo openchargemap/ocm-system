@@ -113,7 +113,9 @@
         "avaitingReview": "Awaiting Review",
         "recentActivity": "Recent Activity",
         "webApp": "Web App for Mobile",
-        "statistics": "Statistics"
+        "statistics": "Statistics",
+        "awaitingReviewImported": "Imported locations awaiting approval",
+        "editqueue": "Edits awaiting approval"
       },
       "develop": {
         "sectionTitle": "Develop",
@@ -171,11 +173,41 @@
         "webApp": "Web App",
         "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
       },
+      "sponsors": "We are seeking funding and sponsors, think you can help? {link:Find out more}.",
+      "disclaimer": "By using our services or submitting information to Open Charge Map you agree to our {link:standard terms, privacy policy and licensing}.",
       "about": {
+        "ourService": "Our Service",
+        "aimTitle": "Our Aim",
+        "aimContent": "Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.",
+        "goalContent": "Our goal is to avoid the proliferation of independent conflicting charging location maps/websites/applications and to provide (as much as possible) a reliable single point of reference for charging equipment location information. Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for data sharing and de-duplication efforts.",
+        "whyOCMTitle": "Why Use Open Charge Map?",
+        "whyOCMContent": "By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set.",
         "funding": {
           "title": "Funding",
           "p1": "Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please {link-contact:get in touch}. More information on funding and project costs {link-funding:is available}."
-        }
+        },
+        "steeringGroupTitle": "Steering Group",
+        "steeringGroupContent": "Our steering group consists of a wide range of people and organisations, both formally and informally:",
+        "coordinators": {
+          "sectionTitle": "Coordinators",
+          "content": "The following people provide leadership and coordination for the project:",
+          "christopher": "Christopher is the lead technical architect, database designer and lead developer for the Open Charge Map system. He is a director of the UK software development company {link_webprofusion:Webprofusion Ltd} and owner of {link_electriccarbuyer:electriccarbuyer.com}.",
+          "jC": "J-C is the community coordinator for the Open Charge Map project and an OCM Administrator, promoting the uptake of OCM by the public and industry. Links: {link_twitter:Twitter}, {link_google_plus:Google+} and {link_website:Website}.",
+          "kevin": "Kevin started the original Open Charge Map initiative. He is also the founder and chairman of the UK carbon reduction charity {link:Zero Carbon World} who sponsor the server hosting of Open Charge Map."
+        },
+        "developersContributors": {
+          "sectionTitle": "Developers and Contributors",
+          "p1": "Our {link_github:GitHub project} provides a conduit for external technical contributors to discuss and influence our system and plans. Our {link_google_plus:Google+} community is our primary means of exchanging ideas and gathering feedback from interested parties.",
+          "p2": "You can take a look at the lists of our main contributors of {link_code:code}, {link_translations:translations} and {link_data:data}."
+        },
+        "projectStats": {
+          "sectionTitle": "Project Stats",
+          "general": "General statistics for Open Charge Map {link:data and usage} are available.",
+          "devCosts": "The following is an estimation of the software development costs, if someone were to develop an equivalent project commercially:"
+        },
+        "dataSourcesTitle": "Data Sources",
+        "dataSourcesContent": "The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly (\"crowd sourced\") by our users and those of apps using our services.",
+        "dataSourcesThanks": "Credit and our thanks goes to following major data sources currently included in our database:"
       }
     },
     "reference": {
