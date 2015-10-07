@@ -113,7 +113,9 @@
         "avaitingReview": "En espera de revisión",
         "recentActivity": "Última actividad",
         "webApp": "App para móvil",
-        "statistics": "Estadísticas"
+        "statistics": "Estadísticas",
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
         "sectionTitle": "Desarrollo",
@@ -171,10 +173,36 @@
         "webApp": "Aplicación web",
         "searchAppStore": "para dispositivos móviles. También puedes buscar nuestra app para descargar."
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
-        "funding": {
+        "ourService": null,
+        "aim": {
           "title": null,
-          "p1": null
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
+        "funding": {
+          "title": "Financiación",
+          "p1": "Open Charge Map está desarrollado y gestionado por voluntarios. Si puedes ofrecer financiación para apoyar el proyecto o para financiar un trabajo específico por favor {link-contact:get in touch}. Más información sobre financiación y costes del proyecto {link-funding:is available}."
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

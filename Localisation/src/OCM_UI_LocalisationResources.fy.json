@@ -113,7 +113,9 @@
         "avaitingReview": "Wachtsje op skôging",
         "recentActivity": "Resinte aktiviteit",
         "webApp": "Webtapassing foar mobyl",
-        "statistics": "Statistiken"
+        "statistics": "Statistiken",
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
         "sectionTitle": "Ûntwikkeljen",
@@ -171,10 +173,36 @@
         "webApp": "Webtapassing",
         "searchAppStore": "foaral op mobyle apparaten. Jo kinne ek sykje yn 'e Tapassings Winkel fan jo apparaat foar in ferzje dy't jo brûken kinne."
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
+        "ourService": null,
+        "aim": {
+          "title": null,
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
         "funding": {
           "title": null,
           "p1": null
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

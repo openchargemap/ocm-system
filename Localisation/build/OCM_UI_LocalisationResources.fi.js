@@ -170,6 +170,12 @@ var localisation_dictionary_fi ={
         "quickWay": null,
         "webApp": "Web sovellus",
         "searchAppStore": null
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

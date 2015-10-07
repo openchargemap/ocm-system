@@ -113,7 +113,9 @@
         "avaitingReview": "Jóváhagyásra vár",
         "recentActivity": "Legutóbbi tevékenységek",
         "webApp": "Webes alkalmazás mobilra",
-        "statistics": "Statisztikák"
+        "statistics": "Statisztikák",
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
         "sectionTitle": "Fejlesztés",
@@ -171,10 +173,36 @@
         "webApp": "Webes alkalmazást",
         "searchAppStore": ", különösen, ha mobilon keresel. Keress rá a mobilod alkalmazásboltjában az applikációra, hogy mindig kéznél legyen az adatbázis."
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
-        "funding": {
+        "ourService": null,
+        "aim": {
           "title": null,
-          "p1": null
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
+        "funding": {
+          "title": "Finanszírozás",
+          "p1": "Az Open Charge Map projektet önkéntesek üzemeltetik. Ha van lehetőséged támogatni a projektet vagy egy konkrét munkát, akkor kérlek {link-contact:keress meg bennünket}. További információk a finanszírozásról és a projekt költségeiről {link-funding:itt}."
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

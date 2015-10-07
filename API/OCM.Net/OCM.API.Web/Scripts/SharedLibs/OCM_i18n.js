@@ -27,10 +27,13 @@ var OCM;
                             var matchingNodes = targetElement.querySelectorAll('[data-localize-id]');
                             for (var m = 0; m < matchingNodes.length; m++) {
                                 var origElement = matchingNodes[m];
-                                var startPos = (translationTemplate.indexOf(":")) + 1;
-                                var newText = translationTemplate.substr(startPos, translationTemplate.indexOf("}") - startPos);
-                                origElement.innerHTML = newText;
-                                translatedText = translatedText.replace(found[i], origElement.outerHTML);
+                                var elementId = origElement.getAttribute('data-localize-id');
+                                if (translationTemplate.indexOf(elementId) >= 0) {
+                                    var startPos = (translationTemplate.indexOf(":")) + 1;
+                                    var newText = translationTemplate.substr(startPos, translationTemplate.indexOf("}") - startPos);
+                                    origElement.innerHTML = newText;
+                                    translatedText = translatedText.replace(found[i], origElement.outerHTML);
+                                }
                             }
                         }
                     }

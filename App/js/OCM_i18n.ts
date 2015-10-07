@@ -27,11 +27,15 @@ module OCM {
                             //alert(found[i]);
                             var matchingNodes: NodeList = targetElement.querySelectorAll('[data-localize-id]');
                             for (var m = 0; m < matchingNodes.length; m++) {
-                                var origElement = matchingNodes[m];
-                                var startPos = (translationTemplate.indexOf(":")) + 1;
-                                var newText = translationTemplate.substr(startPos, translationTemplate.indexOf("}") - startPos);
-                                (<HTMLElement>origElement).innerHTML = newText;
-                                translatedText = translatedText.replace(found[i], (<HTMLElement>origElement).outerHTML);
+                                var origElement = <Element>matchingNodes[m];
+
+                                var elementId = origElement.getAttribute('data-localize-id');
+                                if (translationTemplate.indexOf(elementId) >= 0) {
+                                    var startPos = (translationTemplate.indexOf(":")) + 1;
+                                    var newText = translationTemplate.substr(startPos, translationTemplate.indexOf("}") - startPos);
+                                    (<HTMLElement>origElement).innerHTML = newText;
+                                    translatedText = translatedText.replace(found[i], (<HTMLElement>origElement).outerHTML);
+                                }
                             }
                         }
                     }

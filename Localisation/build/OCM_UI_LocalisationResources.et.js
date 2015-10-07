@@ -170,6 +170,12 @@ var localisation_dictionary_et ={
         "quickWay": "Kui sa tahad kiiresti leida lähima laadijat, siis proovi meie",
         "webApp": "Veebirakedust",
         "searchAppStore": "eriti mobiilsideseadmetes. Saate otsida oma seadme App Store'ist oma seadmele sobivat versiooni."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

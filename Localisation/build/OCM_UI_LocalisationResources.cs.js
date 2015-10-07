@@ -170,6 +170,12 @@ var localisation_dictionary_cs ={
         "quickWay": "Jestliže potřebujete jen rychle najít nejbližší nabíjecí stanici, můžete vyzkoušet naši",
         "webApp": "webovou aplikaci",
         "searchAppStore": "hlavně na mobilních zařízeních. V obchodě s aplikacemi pro vaše zařízení naleznete i verzi, kterou můžete mít stále sebou."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

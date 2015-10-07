@@ -170,6 +170,12 @@ var localisation_dictionary_ar ={
         "quickWay": null,
         "webApp": null,
         "searchAppStore": null
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

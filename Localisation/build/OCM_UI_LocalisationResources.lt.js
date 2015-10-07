@@ -170,6 +170,12 @@ var localisation_dictionary_lt ={
         "quickWay": "Jei jums tereikia greitai rasti savo artimiausią įkrovimo vietą, galite pabandyti mūsų",
         "webApp": "Web aplikacija",
         "searchAppStore": "ypač mobiliuose įrenginiuose. Taip pat galite ieškoti įrenginio aplikacijų naršyklėj."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

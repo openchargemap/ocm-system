@@ -113,7 +113,9 @@ var localisation_dictionary_sk ={
         "avaitingReview": "Nepotvrdené umiestnenia",
         "recentActivity": "Nedávnu činnosť",
         "webApp": "Mobilnú aplikáciu",
-        "statistics": "Štatistiky"
+        "statistics": "Štatistiky",
+        "awaitingReviewImported": "Importované umiestnenia čakajúce na schválenie",
+        "editqueue": "Úpravy čakajúce na schválenie"
       },
       "develop": {
         "sectionTitle": "Vývoj",
@@ -170,6 +172,41 @@ var localisation_dictionary_sk ={
         "quickWay": "Ak iba potrebujete rýchly spôsob, ako nájsť najbližšiu nabíjaciu stanicu, môžete tiež vyskúšať našu",
         "webApp": "webovú aplikáciu",
         "searchAppStore": "hlavne na mobilných zariadeniach. V obchode s aplikáciami na Vašom zariadení nájdete aj verziu, ktorú môžete mať stále so sebou."
+      },
+      "sponsors": "Hľadáme sponzorov. Vieš s tým pomôcť? {link:Zisti viac}.",
+      "termsNotice": "Používaním našich služieb alebo pridaním informácii do databázy Open Charge Map súhlasíte s našimi {link:všeobecnými podmienkami, politikou ochrany súkromia a licencovaním}.",
+      "about": {
+        "ourService": "Naša služba",
+        "aim": {
+          "title": "Naše ciele",
+          "p1": "Chceme spolupracovať s komunitou na vytváraní a poskytovaní vysoko kvalitnej, otvorenej, verejnej a bezplatnej databáze nabíjacích zariadení po celom svete.",
+          "p2": "Naším cieľom je tiež zabrániť potrebe šírenia nezávislých konfliktných máp/stránok/aplikácii poskytovaním jedného spoľahlivého (v maximálnej možnej miere) zdroja informácií o nabíjacích staniciach. Namiesto súťaženia s inými poskytovateľmi dát sa snažíme s nimi spolupracovať a ponúkať im služby výmenou za zdieľanie ich dát a snahu o neduplikovanie informácií."
+        },
+
+        "whyOCM": {
+          "title": "Prečo používať Open Charge Map?",
+          "content": "Používaním Open Charge Map (OCM) a príslušných aplikácii môžete pomôcť vylepšiť informácie v databáze recenziami, zmenami a pridávaním informácií, komentárov a fotiek a odporúčaním služby ostatným užívateľom. Výhodou OCM oproti ostatným poskytovateľom podobných dát je, že cieľom OCM je otvorené zdieľanie informácií, kým komerční poskytovatelia si musia ponechávať informácie pre seba (alebo len vrámci svojej aplikácie), aby si mohli udržovať komerčne speňažiteľné množstvo dát."
+        },
+
+        "funding": {
+          "title": "Financovanie",
+          "p1": "Open Charge Map je vyvinutá a udržovaná dobrovoľníkmi. Ak môžete ponúknuť financovanie na podporu projektu alebo podporiť konkrétnu pracovnú činnosť prosím {link-contact:kontaktujte nás}. Viac informácií ohľadom financovania a projektových nákladov {link-funding:je k dispozícií}."
+        },
+
+        "developersContributors": {
+          "sectionTitle": "Vývojári a prispievatelia",
+          "p1": "Náš projekt na {link_github:GitHube} poskytuje zázemie, ktoré umožnuje externým technickým prispievateľom diskutovať a ovlpyvniť náš systém a plány do budúcnosti. Naša komunita na {link_google_plus:Google+} je hlavný spôsob výmeny nápadov a získavania spätnej väzby od zainteresovaných strán.",
+          "p2": "Môžete si prezrieť zoznamy našich najvačších prispievateľov {link_code:kódu}, {link_translations:prekladov} a {link_data:dát}."
+        },
+        "projectStats": {
+          "sectionTitle": "Projektové štatistiky",
+          "general": "Máme k dispozícií všeobecné štatistiky ohľadom {link:dát a používanosti} Open Charge Map."
+        },
+        "dataSources": {
+          "title": "Zdroje dát",
+          "p1": "Dáta, ktoré sú k dispozícií prostredníctvom systému Open Charge Map a príslušných služieb sa získavajú z mnohých zdrojov a sú často získavané priamo prostredníctvom \"crowdsourcingu\", teda pridané našimi užívateľmi a aplikáciami používajúcimi naše služby.",
+          "p2": "Uznanie a vďaka patrí nasledujúcim hlavným zdrojom dát, ktoré sú v súčasnosti zahrnuté v našej databáze:"
+        }
       }
     },
     "reference": {

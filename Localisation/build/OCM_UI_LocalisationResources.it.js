@@ -170,6 +170,12 @@ var localisation_dictionary_it ={
         "quickWay": "se avete semplicemente bisogno di un modo rapido per trovare la colonnina di ricarica più vicina potete provare la nostra",
         "webApp": "Web App",
         "searchAppStore": "specialmente sui cellulari. È anche possibile cercare nell'App Store la versione più adatta al tuo smartphone."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

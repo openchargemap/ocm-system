@@ -5,36 +5,36 @@
     "general": {
       "shortDescription": null,
       "linkWebApp": null,
-      "linkBrowsePOI": null,
-      "browsePOI": null,
-      "loadingProgress": null,
-      "addLocation": null,
-      "addItem": null,
-      "favourites": null,
-      "settings": null,
-      "about": null,
-      "signIn": null,
-      "signOut": null
+      "linkBrowsePOI": "Explorar todos os locais",
+      "browsePOI": "Explorar Localizações de carregamento",
+      "loadingProgress": "Carregando...",
+      "addLocation": "Adicionar local",
+      "addItem": "Adicionar",
+      "favourites": "Favoritos",
+      "settings": "Opções",
+      "about": "Sobre",
+      "signIn": "Iniciar sessão",
+      "signOut": "Terminar Sessão"
     },
     "details": {
       "sectionTitle": "Localização de carregamento",
       "location": {
         "sectionTitle": "Detalhes do local",
-        "title": null,
+        "title": "Título de localização",
         "address": "Endereço mais próximo",
-        "addressLine1": null,
-        "addressLine2": null,
-        "town": null,
-        "stateOrProvince": null,
+        "addressLine1": "Linha de morada 1",
+        "addressLine2": "Linha de morada 2",
+        "town": "Vila/Cidade",
+        "stateOrProvince": "Estado/Província",
         "postcode": "Código postal",
         "country": "País",
-        "latitude": null,
-        "longitude": null,
-        "contactTelephone1": null,
-        "contactTelephone2": null,
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "contactTelephone1": "Telefone de contato principal",
+        "contactTelephone2": "Telefone de contato secundário",
         "contactEmail": "Contato e-mail",
         "map": "mapa",
-        "streetView": null,
+        "streetView": "Vista de rua",
         "addressRelatedURL": "Site da Web"
       },
       "generalComments": "Informações gerais",
@@ -42,15 +42,15 @@
       "advancedDetails": "Informações adicionais",
       "numberOfPoints": "Número de estações/lugares",
       "usageType": "Uso",
-      "usageCost": null,
+      "usageCost": "Custo de uso",
       "operationalStatus": "Estado Operacional",
-      "datePlanned": null,
+      "datePlanned": "Data planeada",
       "dateLastConfirmed": null,
       "lastUpdated": "Ultima atualização",
-      "refNumber": null,
+      "refNumber": "Ref OpenChargeMap",
       "dataQualityLevel": null,
       "importedDataNotice": null,
-      "submissionStatus": null,
+      "submissionStatus": "Estado de submissão",
       "placesNearby": {
         "sectionTitle": "Locais perto"
       },
@@ -69,23 +69,23 @@
       "equipment": {
         "sectionTitle": "Detalhes do equipamento",
         "connectionType": "Tipo de ligação",
-        "powerKW": null,
-        "powerLevel": null,
+        "powerKW": "Potência máxima (KW)",
+        "powerLevel": "Nível",
         "quantity": "Quantidade",
-        "supplyType": null,
+        "supplyType": "Tipo de alimentação",
         "voltage": "Voltagem",
-        "current": null,
-        "comment": null,
-        "reference": null
+        "current": "Corrente máxima",
+        "comment": "Comentários",
+        "reference": "Referência"
       },
       "dataProvider": {
-        "sectionTitle": null,
+        "sectionTitle": "Provedor de dados",
         "website": "Site",
-        "providersReference": null
+        "providersReference": "Ref de provedores"
       },
       "operator": {
-        "sectionTitle": null,
-        "operatorsReference": null
+        "sectionTitle": "Rede/Operador",
+        "operatorsReference": "Ref de operadores"
       }
     },
     "search": {
@@ -105,41 +105,43 @@
       "progress": "Procurando.."
     },
     "navigation": {
-      "home": null,
+      "home": "Início",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
+        "sectionTitle": "Explorar",
+        "allLocations": "Todos os Locais",
+        "byCountry": "Por País",
+        "avaitingReview": "Aguardando revisão",
+        "recentActivity": "Atividade Recente",
         "webApp": null,
-        "statistics": null
+        "statistics": "Estatísticas",
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
+        "sectionTitle": "Desenvolver",
+        "api": "API",
+        "htmlWidgets": "Widgets HTML",
+        "examples": "Exemplos",
+        "getInvolved": "Envolver-se",
         "code": null,
-        "translate": null
+        "translate": "Ajude na tradução"
       },
-      "discuss": null,
+      "discuss": "Discutir",
       "about": {
-        "termsPrivacy": null,
-        "contact": null,
+        "termsPrivacy": "Termos & privacidade",
+        "contact": "Contato",
         "guidance": null
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
+        "sectionTitle": "Meu perfil",
+        "subscriptions": "As Minhas Subscrições",
+        "comments": "Meus Comentários",
+        "uploads": "Meus uploads"
       }
     },
     "infoText": {
       "getInvolved": {
-        "youCan": null,
+        "youCan": "Você pode",
         "browseLocations": null,
         "commentsPhotos": null,
         "dontSeePOI": null
@@ -171,10 +173,36 @@
         "webApp": null,
         "searchAppStore": null
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
+        "ourService": null,
+        "aim": {
+          "title": null,
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
         "funding": {
           "title": null,
           "p1": null
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

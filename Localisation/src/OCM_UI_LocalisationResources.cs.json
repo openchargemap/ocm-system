@@ -49,7 +49,7 @@
       "lastUpdated": "Poslední aktualizace",
       "refNumber": "Referenční číslo OpenChargeMap",
       "dataQualityLevel": "Úroveň kvality dat",
-      "importedDataNotice": "Poznámka: Tyto údaje se získávají automaticky, změny by měly být předložené přímo poskytovately údajů.",
+      "importedDataNotice": "Poznámka: Tyto údaje se získávají automaticky, změny by měly být předložené přímo poskytovatelem údajů.",
       "submissionStatus": "Stav položky",
       "placesNearby": {
         "sectionTitle": "Místa v blízkosti"
@@ -113,7 +113,9 @@
         "avaitingReview": "Nepotvrzená umístění",
         "recentActivity": "Poslední změny",
         "webApp": "Webovou mapu",
-        "statistics": "Statistiky"
+        "statistics": "Statistiky",
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
         "sectionTitle": "Vývoj",
@@ -171,10 +173,36 @@
         "webApp": "webovou aplikaci",
         "searchAppStore": "hlavně na mobilních zařízeních. V obchodě s aplikacemi pro vaše zařízení naleznete i verzi, kterou můžete mít stále sebou."
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
-        "funding": {
+        "ourService": null,
+        "aim": {
           "title": null,
-          "p1": null
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
+        "funding": {
+          "title": "Financování",
+          "p1": "Open Charge Map je vyvíjena a provozována dobrovolníky. Pokud můžete nabídnout finanční prostředky na podporu projektu nebo k financování konkrétní práce, prosím, {link-contact:kontaktujte nás}. Další informace o financování a nákladech projektu {link-funding:jsou dostupné}."
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

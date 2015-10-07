@@ -113,7 +113,9 @@
         "avaitingReview": "In corso di verifica",
         "recentActivity": "ultimi aggiornamenti",
         "webApp": "Web App per cellulare",
-        "statistics": "statistiche"
+        "statistics": "statistiche",
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
         "sectionTitle": "collabora al progetto",
@@ -171,10 +173,36 @@
         "webApp": "Web App",
         "searchAppStore": "specialmente sui cellulari. È anche possibile cercare nell'App Store la versione più adatta al tuo smartphone."
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
+        "ourService": null,
+        "aim": {
+          "title": null,
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
         "funding": {
           "title": null,
           "p1": null
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

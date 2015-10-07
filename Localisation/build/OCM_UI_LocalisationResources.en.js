@@ -113,7 +113,9 @@ var localisation_dictionary_en ={
         "avaitingReview": "Awaiting Review",
         "recentActivity": "Recent Activity",
         "webApp": "Web App for Mobile",
-        "statistics": "Statistics"
+        "statistics": "Statistics",
+        "awaitingReviewImported": "Imported locations awaiting approval",
+        "editqueue": "Edits awaiting approval"
       },
       "develop": {
         "sectionTitle": "Develop",
@@ -170,6 +172,40 @@ var localisation_dictionary_en ={
         "quickWay": "If you just need a quick way to find your nearest charging location you can also try our",
         "webApp": "Web App",
         "searchAppStore": "especially on mobile devices. You can also search your device App Store for a version you can carry around."
+      },
+      "sponsors": "We are seeking funding and sponsors, think you can help? {link:Find out more}.",
+      "termsNotice": "By using our services or submitting information to Open Charge Map you agree to our {link:standard terms, privacy policy and licensing}.",
+      "about": {
+        "ourService": "Our Service",
+        "aim": {
+          "title": "Our Aim",
+          "p1": "Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.",
+          "p2": "Our goal is to avoid the proliferation of independent conflicting charging location maps/websites/applications and to provide (as much as possible) a reliable single point of reference for charging equipment location information. Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for data sharing and de-duplication efforts."
+        },
+
+        "whyOCM": {
+          "title": "Why Use Open Charge Map?",
+          "content": "By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set."
+        },
+
+        "funding": {
+          "title": "Funding",
+          "p1": "Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please {link-contact:get in touch}. More information on funding and project costs {link-funding:is available}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Developers and Contributors",
+          "p1": "Our {link_github:GitHub project} provides a conduit for external technical contributors to discuss and influence our system and plans. Our {link_google_plus:Google+} community is our primary means of exchanging ideas and gathering feedback from interested parties.",
+          "p2": "You can take a look at the lists of our main contributors of {link_code:code}, {link_translations:translations} and {link_data:data}."
+        },
+        "projectStats": {
+          "sectionTitle": "Project Stats",
+          "general": "General statistics for Open Charge Map {link:data and usage} are available."
+        },
+        "dataSources": {
+          "title": "Data Sources",
+          "p1": "The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly (\"crowd sourced\") by our users and those of apps using our services.",
+          "p2": "Credit and our thanks goes to following major data sources currently included in our database:"
+        }
       }
     },
     "reference": {

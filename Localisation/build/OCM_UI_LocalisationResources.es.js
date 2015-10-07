@@ -170,6 +170,12 @@ var localisation_dictionary_es ={
         "quickWay": "Si simplemente necesitas una manera rápida de encontrar tu punto de recarga más próximo, también puedes probar nuestra",
         "webApp": "Aplicación web",
         "searchAppStore": "para dispositivos móviles. También puedes buscar nuestra app para descargar."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {

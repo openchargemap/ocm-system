@@ -170,6 +170,12 @@ var localisation_dictionary_de ={
         "quickWay": "Wenn Sie auf einfache Art die nächste Ladestation finden möchten, können Sie auch ausprobieren, unsere",
         "webApp": "Web-App",
         "searchAppStore": "vor allem auf mobilen Geräten. Sie können auch im App Store für Ihr Gerät nach einer portablen Version suchen."
+      },
+      "about": {
+        "funding": {
+          "title": null,
+          "p1": null
+        }
       }
     },
     "reference": {
