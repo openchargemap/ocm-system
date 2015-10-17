@@ -52,7 +52,7 @@ else
         }
         else
         {
-            <div class="form-actions">To edit, add comments or upload photos: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary", target = "_blank" }) </div>
+            <div class="form-actions"> <span data-localize="ocm.details.editPrompt">To edit, add comments or upload photos</span>: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary", target = "_blank" }) </div>
         }
     }
 
@@ -157,9 +157,8 @@ else
 
                                     @if (!Model.POI.IsRecentlyVerified)
                                     {
-                                        <div class="alert alert-danger">
-
-                                            This charging location has not been recently verified and you should not rely on this information for journeys. <br /><br />If you have visited this charging location recently please confirm that the information is accurate by adding a Comment or Check-In. <br /><br />If the details are inaccurate please <a href="@Url.Action("Edit","POI",new {id=@Model.POI.ID})" class="alert-link">edit</a> them.
+                                        <div class="alert alert-danger" data-localize="ocm.warningsErrors.oldData">
+                                            This charging location has not been recently verified and you should not rely on this information for journeys. <br /><br />If you have visited this charging location recently please confirm that the information is accurate by adding a Comment or Check-In. <br /><br />If the details are inaccurate please <a href="@Url.Action("Edit","POI",new {id=@Model.POI.ID})" class="alert-link" data-localize-id="link-edit">edit</a> them.
                                         </div>
                                     }
 
@@ -321,11 +320,11 @@ else
                     <div id="tab-nearby" class="tab-pane">
                         <div class="row">
                             <div class="col-md-6">
-                                <h2>Other Points Of Interest</h2>
+                                <h2 data-localize="ocm.details.placesNearby.pois">Points Of Interest</h2>
                                 <div id="nearby-poi"></div>
                             </div>
                             <div class="col-md-6">
-                                <h2>Other Charging Locations</h2>
+                                <h2 data-localize="ocm.details.placesNearby.chargingLocations">Other Charging Locations</h2>
                                 @Html.Partial("_POIList", Model.POIListNearby)
                             </div>
                         </div>
