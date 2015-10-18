@@ -6,7 +6,6 @@ using OCM.API.OutputProviders;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using System.Web;
@@ -371,7 +370,6 @@ namespace OCM.API
                 }
                 if (filter.Action == "getchargepoints" || filter.Action == "getpoilist")
                 {
-                    System.Diagnostics.Debug.WriteLine("At getpoilist output: " + stopwatch.ElapsedMilliseconds + "ms");
                     OutputPOIList(outputProvider, context, filter);
                 }
 
@@ -410,7 +408,7 @@ namespace OCM.API
                 }
 
                 stopwatch.Stop();
-                System.Diagnostics.Debug.WriteLine("Total output time: " + stopwatch.ElapsedMilliseconds + "ms");
+                System.Diagnostics.Debug.WriteLine("Total output time: " + stopwatch.Elapsed.ToString());
             }
         }
 
@@ -422,24 +420,15 @@ namespace OCM.API
         /// <param name="filter"></param>
         private void OutputPOIList(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
-#if DEBUG
-            var stopwatch = Stopwatch.StartNew();
-#endif
             List<OCM.API.Common.Model.ChargePoint> dataList = null;
 
             //get list of charge points for output:
             dataList = new POIManager().GetChargePoints(filter);
 
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine("OutputPOIList: Time for Query/Conversion: " + stopwatch.ElapsedMilliseconds + "ms");
-            stopwatch.Restart();
-#endif
+            int numResults = dataList.Count;
+
             //send response
             outputProvider.GetOutput(context.Response.OutputStream, dataList, filter);
-
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine("OutputPOIList: Time for Output to stream: " + stopwatch.ElapsedMilliseconds + "ms");
-#endif
         }
 
         /// <summary>

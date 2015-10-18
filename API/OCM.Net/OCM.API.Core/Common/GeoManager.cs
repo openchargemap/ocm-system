@@ -1,23 +1,21 @@
-﻿using OCM.API.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
     public class GeoManager
     {
-        private const Double kEarthRadiusMiles = 3959.0;
-        private const Double kEarthRadiusKms = 6371;
-        private const Double KMToMilesConversion = 0.621371192;
-        private const Double DegLongitudeConversionToKM = 111.320;
-        private const Double DegLatitudeConversionToKM = 110.574;
+        const Double kEarthRadiusMiles = 3959.0;
+        const Double kEarthRadiusKms = 6371;
+        const Double KMToMilesConversion = 0.621371192;
 
         // code based on http://www.codeproject.com/KB/cs/distancebetweenlocations.aspx
 
         /// <summary>
-        /// very approximate distance check for data filtering, with 2 decimal places being approx 1km
+        /// very approximate distance check for data filtering, with 2 decimal places being approx 1km 
         /// </summary>
         /// <param name="lat1"></param>
         /// <param name="long1"></param>
@@ -27,88 +25,40 @@ namespace OCM.API.Common
         public static bool IsClose(double lat1,
                   double long1, double lat2, double long2, int decimals = 2)
         {
+
             if (lat1 == lat2 || long1 == long2) return true;
 
             //http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
+            
+            double latDiff = Math.Round(Math.Abs(lat1-lat2),decimals);
+            double lngDiff = Math.Round(Math.Abs(long1-long2),decimals);
 
-            double latDiff = Math.Round(Math.Abs(lat1 - lat2), decimals);
-            double lngDiff = Math.Round(Math.Abs(long1 - long2), decimals);
-
-            if (latDiff == 0 && lngDiff == 0)
-            {
+            if (latDiff==0 && lngDiff== 0) {
                 return true;
             }
 
             return false;
         }
-
-        /// <summary>
-        /// Aproximately add KM to given longitude value (with wrapping)
-        /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lon"></param>
-        /// <param name="km"></param>
-        /// <returns></returns>
-        public static double AddKMToLongitude(double lat, double lon, double km)
-        {
-            //var kmFactor = KMToLongitudeConversion/100
-            var deg = km / (DegLongitudeConversionToKM * Math.Cos(lat));
-
-            var result = lon + deg;
-            if (result > 180)
-            {
-                result = result - (180 * 2);
-            }
-            else if (result < -180)
-            {
-                result = result + (180 * 2);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Aproximately add KM to given latitude value (with wrapping)
-        /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lon"></param>
-        /// <param name="km"></param>
-        /// <returns></returns>
-        public static double AddKMToLatitude(double lat, double lon, double km)
-        {
-            var deg = (km / DegLatitudeConversionToKM);
-
-            var result = lat + deg;
-            if (result > 90)
-            {
-                result = result - (90 * 2);
-            }
-            else if (result < -90)
-            {
-                result = result + (90 * 2);
-            }
-            return result;
-        }
-
         public static double CalcDistance(double Lat1,
                   double Long1, double Lat2, double Long2, DistanceUnit Unit)
         {
             /*
                 The Haversine formula according to Dr. Math.
                 http://mathforum.org/library/drmath/view/51879.html
-
+                
                 dlon = lon2 - lon1
                 dlat = lat2 - lat1
                 a = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2
-                c = 2 * atan2(sqrt(a), sqrt(1-a))
+                c = 2 * atan2(sqrt(a), sqrt(1-a)) 
                 d = R * c
-
+                
                 Where
                     * dlon is the change in longitude
                     * dlat is the change in latitude
                     * c is the great circle distance in Radians.
                     * R is the radius of a spherical Earth.
-                    * The locations of the two points in
-                        spherical coordinates (longitude and
+                    * The locations of the two points in 
+                        spherical coordinates (longitude and 
                         latitude) are lon1,lat1 and lon2, lat2.
             */
             double dDistance = Double.MinValue;

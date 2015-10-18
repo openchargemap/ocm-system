@@ -18,25 +18,6 @@ namespace OCM.API.Common
         public double? Latitude { get; set; }
 
         public double? Longitude { get; set; }
-
-        public static LatLon Parse(string val)
-        {
-            var temp = val.ToString().Trim();
-            if (temp.StartsWith(",")) temp = temp.Substring(1, temp.Length - 1).Trim();
-            var fragments = temp.Split(',');
-            var ll = new LatLon
-            {
-                Latitude = double.Parse(fragments[0].Substring(1, fragments[0].Length - 1)),
-                Longitude = double.Parse(fragments[1])
-            };
-
-            if (ll.Latitude < -90) ll.Latitude = -90;
-            if (ll.Latitude > 90) ll.Latitude = 90;
-
-            if (ll.Longitude < -180) ll.Longitude = -180;
-            if (ll.Longitude > 180) ll.Longitude = 180;
-            return ll;
-        }
     }
 
     [Serializable]
