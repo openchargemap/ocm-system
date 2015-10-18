@@ -85,16 +85,18 @@ module OCM {
             this.appState.mapLaunched = false;
 
             this.appState.appMode = AppMode.STANDARD;
+            //this.appState.appMode = AppMode.LOCALDEV;
+            this.appConfig.enableLiveMapQuerying = true;
 
             this.enableLogging = false;
 
             if (this.appState.appMode == AppMode.LOCALDEV) {
                 this.appConfig.baseURL = "http://localhost:81/app";
                 this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-                //this.ocm_data.serviceBaseURL = "http://localhost:8080/v2";
-                //this.ocm_data.serviceBaseURL_Standard = "http://localhost:8080/v2";
-                this.apiClient.serviceBaseURL = "http://localhost:81/api/v2";
-                this.apiClient.serviceBaseURL_Standard = "http://localhost:81/api/v2";
+                this.apiClient.serviceBaseURL = "http://localhost:8080/v2";
+                this.apiClient.serviceBaseURL_Standard = "http://localhost:8080/v2";
+                //this.apiClient.serviceBaseURL = "http://localhost:81/api/v2";
+                //this.apiClient.serviceBaseURL_Standard = "http://localhost:81/api/v2";
                 this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             }
 
@@ -161,9 +163,9 @@ module OCM {
 
             $('#filter-operator, #filter-connectiontype, #filter-connectionlevel,#filter-usagetype,#filter-statustype, #filter-minpowerkw')
                 .change(function () {
-                app.validateMultiSelect($(this));
-                app.storeSettings();
-            });
+                    app.validateMultiSelect($(this));
+                    app.storeSettings();
+                });
 
             var app = this;
 
@@ -271,11 +273,18 @@ module OCM {
                     app.log("changed: app.mappingManager.mapOptions." + change.name);
 
                     if (change.name == "mapCentre") {
+                        if (app.appConfig.enableLiveMapQuerying) {
+                            app.log("Live map querying enabled, performing a search from map centre..");
+
+                            app.mappingManager.mapOptions.requestSearchUpdate = true;
+                        }
+
                         if (app.mappingManager.mapOptions.requestSearchUpdate) {
                             app.mappingManager.mapOptions.requestSearchUpdate = false;
                             var pos = app.mappingManager.mapOptions.mapCentre;
                             app.log("Starting new search from map position: " + pos.coords.latitude + "," + pos.coords.longitude);
                             app.viewModel.searchPosition = pos;
+
                             app.performSearch(false, false);
                         }
                         /*if (app.mappingManager.mapOptions.enableTrackingMapCentre) {
@@ -791,7 +800,7 @@ module OCM {
                             }
                         },
                         $.proxy(this.submissionFailed, this)
-                        );
+                    );
                 } else {
                     this.log("Comment submit not enabled");
                 }
@@ -845,7 +854,7 @@ module OCM {
                         app.showMessage("Sorry, your submission could not be processed. Please check your network connection or try again later.");
                     },
                     $.proxy(this.mediaSubmissionProgress, this)
-                    );
+                );
             }
         }
 
@@ -927,7 +936,7 @@ module OCM {
                         }
                     },
                     this.appConfig.searchTimeoutMS
-                    );
+                );
 
                 //begin new search
                 this.showProgressIndicator();
@@ -982,6 +991,24 @@ module OCM {
                     params.maxResults = this.appConfig.maxResults;
                     params.includeComments = true;
                     params.enableCaching = true;
+
+                    //TEMP: map viewport bounds search, API specific, move to mapping manager?
+
+                    //TODO: map viewport search on bounding rectangle instead of map centre
+                    if (this.mappingManager.map != null) {
+                        if (this.appConfig.enableLiveMapQuerying) {
+                            var bounds = this.mappingManager.map.getBounds();
+                            if (bounds != null) {
+                                params.boundingbox = "(" + bounds.getNorthEast().lat() + "," + bounds.getNorthEast().lng() + "),"
+                                + "(" + bounds.getSouthWest().lat() + "," + bounds.getSouthWest().lng() + ")";
+                                //params.maxResults = 10000;
+                            }
+
+                            //close zooms are 1:1 level of detail, zoomed out samples less data
+                            var zoomLevel = 22 - this.mappingManager.map.getZoom();
+                            params.levelOfDetail = (zoomLevel <= 12 ? 0 : Math.floor(zoomLevel));
+                        }
+                    }
 
                     //apply filter settings from UI
                     if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
@@ -1046,6 +1073,9 @@ module OCM {
             //indicate search has completed
             this.clearSearchRequest();
 
+            //hydrate compact POI list (expand navigation reference data)
+            poiList = this.apiClient.hydrateCompactPOIList(poiList);
+
             //inform viewmodel of changes
             this.viewModel.resultsBatchID++; //indicates that results have changed and need reprocessed (maps etc)
             this.viewModel.poiList = poiList;
@@ -1062,7 +1092,7 @@ module OCM {
                     var cacheList = poiList.splice(0, 100);
                     this.apiClient.setCachedDataObject("SearchResults", cacheList);
                 }
-                this.apiClient.setCachedDataObject("SearchResults_Location",(<HTMLInputElement>document.getElementById("search-location")).value);
+                this.apiClient.setCachedDataObject("SearchResults_Location", (<HTMLInputElement>document.getElementById("search-location")).value);
                 this.apiClient.setCachedDataObject("SearchResults_SearchPos", this.viewModel.searchPosition);
             } else {
                 this.log("No search results, will not overwrite cached search results.");
@@ -1199,9 +1229,6 @@ module OCM {
             //show hidden results ui
             $('#results-list').replaceWith($listContent);
             $("#results-list").css("display", "block");
-            
-           
-         
         }
 
         showDetailsViewById(id, forceRefresh) {
@@ -1842,11 +1869,11 @@ module OCM {
                 //Historyjs.pushState({ view: "menu", title: "Menu" }, "Menu", "?view=menu");
             }
         }
-        
-        jumpToPageTop(){
+
+        jumpToPageTop() {
             //jump to top of page
             this.log("Status tapped, scrolling to page top.");
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         }
     }
 }

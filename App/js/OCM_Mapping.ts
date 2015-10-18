@@ -51,6 +51,7 @@ module OCM {
         public requestSearchUpdate: boolean;
         public enableSearchRadiusIndicator: boolean;
         public mapType: string;
+        public minZoomLevel: number;
 
         /** @constructor */
         constructor() {
@@ -66,6 +67,7 @@ module OCM {
             this.searchDistanceKM = 1000 * 100;
             this.mapMoveQueryRefreshMS = 300;
             this.enableSearchRadiusIndicator = false;
+            this.minZoomLevel = 0;
         }
     }
 
@@ -244,8 +246,7 @@ module OCM {
                     };
                     map.setOptions(mapOptions);
                     map.setDiv(mapCanvas);
-                    //map.clear();
-                    //map.refreshLayout();
+
                     map.setVisible(true);
 
                     mapManagerContext.mapReady = true;
@@ -265,8 +266,6 @@ module OCM {
                 return;
             }
             //if list has changes to results render new markers etc
-            //  if (this.mapOptions.resultBatchID != resultBatchID) {
-            //this.mapOptions.resultBatchID = resultBatchID;
 
             var map = this.map;
             map.setVisible(true);
@@ -375,10 +374,11 @@ module OCM {
                     });
                 }
 
-                this.log("Animating camera to map centre:" + this.mapOptions.mapCentre);
+                this.log("Moving camera to map centre:" + this.mapOptions.mapCentre);
 
+                //move camera insteaad of animating
                 setTimeout(function () {
-                    map.animateCamera({
+                    map.moveCamera({
                         'target': gmMapCentre,
                         'tilt': 60,
                         'zoom': 12,
@@ -420,7 +420,7 @@ module OCM {
                     //create map
                     var mapOptions = {
                         zoom: 10,
-                        minZoom: 6,
+                        minZoom: this.mapOptions.minZoomLevel,
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
                         mapTypeControl: true,
                         mapTypeControlOptions: {
@@ -614,24 +614,26 @@ module OCM {
                 var uiContext = this;
                 //zoom to bounds of markers
                 if (poiList != null && poiList.length > 0) {
-                    this.log("Fitting to marker bounds:" + bounds);
-                    map.setCenter(bounds.getCenter());
-                    this.log("zoom before fit bounds:" + map.getZoom());
-                    map.fitBounds(bounds);
+                    if (!this.parentAppContext.appConfig.enableLiveMapQuerying) {
+                        this.log("Fitting to marker bounds:" + bounds);
+                        map.setCenter(bounds.getCenter());
+                        this.log("zoom before fit bounds:" + map.getZoom());
 
-                    //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
-                    var zoom = map.getZoom();
-                    map.setZoom(zoom < 6 ? 6 : zoom);
+                        map.fitBounds(bounds);
+
+                        //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+                        var zoom = map.getZoom();
+                        map.setZoom(zoom < 6 ? 6 : zoom);
+                    }
                 }
             }
-            /*else {
-                    if (this.enableLogging && console) console.log("Not rendering markers, batchId is same as last time.");
-                }*/
-
             google.maps.event.trigger(this.map, 'resize');
         }
 
         updateSearchPosMarker(searchPos) {
+            //skip search marker if using live map viewport bounds querying
+            if (this.parentAppContext.appConfig.enableLiveMapQuerying) return;
+
             var mapManagerContext = this;
             var map = this.map;
 

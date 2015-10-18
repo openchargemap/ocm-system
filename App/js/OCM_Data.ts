@@ -21,13 +21,17 @@ module OCM {
         public usageTypeID: number = null;
         public statusTypeID: number = null;
         public minPowerKW: number = null;
-           
+
         public submissionStatusTypeID: number = null;
 
-        public maxResults: number = 100;
+        public maxResults: number = 1000;
         public additionalParams: string = null;
         public includeComments: boolean = false;
+        public compact: boolean = true;
         public enableCaching: boolean = true; //FIXME: need way for user to override cached data
+        public levelOfDetail: number = 1; //if supplied, will return a random sample of matching results, higher number return less results
+        public polyline: string = null; //(lat,lng),(lat,lng),(lat,lng),(lat,lng) or encoded polyline
+        public boundingbox: string = null;//(lat,lng),(lat,lng),(lat,lng),(lat,lng)
     }
 
     export interface ConnectionInfo {
@@ -84,7 +88,7 @@ module OCM {
 
         fetchLocationDataListByParam(params: OCM.POI_SearchParams, callbackname, errorcallback) {
             var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
-    
+
             var serviceParams = "";
             if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
             if (params.latitude != null) serviceParams += "&latitude=" + params.latitude;
@@ -104,11 +108,16 @@ module OCM {
             if (params.submissionStatusTypeID != null) serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
 
             if (params.enableCaching == false) serviceParams += "&enablecaching=false";
+            if (params.compact != null) serviceParams += "&compact=" + params.compact;
+            if (params.levelOfDetail > 1) serviceParams += "&levelofdetail=" + params.levelOfDetail;
+            if (params.polyline != null) serviceParams += "&polyline=" + params.polyline;
+            if (params.boundingbox != null) serviceParams += "&boundingbox=" + params.boundingbox;
             if (params.additionalParams != null) serviceParams += "&" + params.additionalParams;
 
             if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
-            var apiCallURL = serviceURL + serviceParams
+            var apiCallURL = serviceURL + serviceParams;
+            //+ "&polyline=u`lyH|iW{}D|dHweCboEasA|x@_gAupBs}A{yE}n@ydG}bBi~FybCsnBmeCse@otLm{BshGscAw`E|nDawLykJq``@flAqbRczR";
 
             if (console) {
                 console.log("API Call:" + apiCallURL + "&callback=" + callbackname);
@@ -314,6 +323,71 @@ module OCM {
             if (a.Title == b.Title) return 0;
 
             return 0;
+        }
+
+        hydrateCompactPOI(poi: any): Array<any> {
+            if (poi.DataProviderID != null && poi.DataProvider == null) {
+                poi.DataProvider = this.getRefDataByID(this.referenceData.DataProviders, poi.DataProviderID);
+            }
+            if (poi.OperatorID != null && poi.OperatorInfo == null) {
+                poi.OperatorInfo = this.getRefDataByID(this.referenceData.Operators, poi.OperatorID);
+            }
+            if (poi.UsageTypeID != null && poi.UsageType == null) {
+                poi.UsageType = this.getRefDataByID(this.referenceData.UsageTypes, poi.UsageTypeID);
+            }
+            if (poi.AddressInfo.CountryID != null && poi.AddressInfo.Country == null) {
+                poi.AddressInfo.Country = this.getRefDataByID(this.referenceData.Countries, poi.AddressInfo.CountryID);
+            }
+            if (poi.StatusTypeID != null && poi.StatusType == null) {
+                poi.StatusType = this.getRefDataByID(this.referenceData.StatusTypes, poi.StatusTypeID);
+            }
+            if (poi.SubmissionStatusTypeID != null && poi.SubmissionStatusType == null) {
+                poi.SubmissionStatusType = this.getRefDataByID(this.referenceData.SubmissionStatusTypes, poi.SubmissionStatusTypeID);
+            }
+
+            //TOD: UserComments, MediaItems,
+            if (poi.Connections != null) {
+                for (var c = 0; c < poi.Connections.length; c++) {
+                    var conn = poi.Connections[c];
+                    if (conn.ConnectionTypeID != null && conn.ConnectionType == null) {
+                        conn.ConnectionType = this.getRefDataByID(this.referenceData.ConnectionTypes, conn.ConnectionTypeID);
+                    }
+                    if (conn.LevelID != null && conn.Level == null) {
+                        conn.Level = this.getRefDataByID(this.referenceData.ChargerTypes, conn.LevelID);
+                    }
+                    if (conn.CurrentTypeID != null && conn.CurrentTypeID == null) {
+                        conn.CurrentType = this.getRefDataByID(this.referenceData.CurrentTypes, conn.CurrentTypeID);
+                    }
+                    if (conn.StatusTypeID != null && conn.StatusTypeID == null) {
+                        conn.StatusTypeID = this.getRefDataByID(this.referenceData.StatusTypes, conn.StatusTypeID);
+                    }
+
+                    poi.Connections[c] = conn;
+                }
+            }
+
+            if (poi.UserComments != null) {
+                for (var c = 0; c < poi.UserComments.length; c++) {
+                    var comment = poi.UserComments[c];
+                    if (comment.CommentType != null && comment.CommentTypeID == null) {
+                        comment.CommentType = this.getRefDataByID(this.referenceData.CommentTypes, conn.CommentTypeID);
+                    }
+                    if (comment.CheckinStatusType != null && comment.CheckinStatusTypeID == null) {
+                        comment.CheckinStatusTypeID = this.getRefDataByID(this.referenceData.CheckinStatusTypes, conn.CheckinStatusTypeID);
+                    }
+                    poi.UserComments[c] = comment;
+                }
+            }
+
+            return poi;
+        }
+
+        // for a given list of POIs expand navigation properties (such as AddresssInfo.Country, Connection[0].ConnectionType etc)
+        hydrateCompactPOIList(poiList: Array<any>) {
+            for (var i = 0; i < poiList.length; i++) {
+                poiList[i] = this.hydrateCompactPOI(poiList[i]);
+            }
+            return poiList;
         }
 
         isLocalStorageAvailable() {

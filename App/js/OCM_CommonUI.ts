@@ -239,7 +239,7 @@ OCM_CommonUI.prototype.formatPOIAddress = function (poi) {
     this.formatTextField(poi.AddressInfo.Town) +
     this.formatTextField(poi.AddressInfo.StateOrProvince) +
     this.formatTextField(poi.AddressInfo.Postcode) +
-    this.formatTextField(poi.AddressInfo.Country.Title);
+    (poi.AddressInfo.Country != null ? this.formatTextField(poi.AddressInfo.Country.Title) : "");
 
     if (this.enablePOIMap == true) {
         output += "<div id='info_map'></div>";

@@ -61,6 +61,11 @@ module OCM {
         public searchFrequencyMinMS: number; //min ms between search requests
         public allowAnonymousSubmissions: boolean;
 
+        ///
+        // if enabled map movement will perform constant querying, user search for a specific location will centre on that location
+        ///
+        public enableLiveMapQuerying: boolean;
+
         constructor() {
             this.autoRefreshMapResults = false;
             this.launchMapOnStartup = false;
@@ -68,6 +73,7 @@ module OCM {
             this.searchTimeoutMS = 20000;
             this.searchFrequencyMinMS = 500;
             this.allowAnonymousSubmissions = false;
+            this.enableLiveMapQuerying = false;
         }
     }
 
@@ -323,7 +329,7 @@ module OCM {
                     function () { ;; },         // callback
                     'Open Charge Map',            // title
                     'OK'                  // buttonName
-                    );
+                );
             } else {
                 bootbox.alert(msg, function () {
                 });

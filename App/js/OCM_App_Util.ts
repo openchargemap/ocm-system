@@ -116,7 +116,8 @@ module OCM {
                 this.formatTextField(poi.AddressInfo.Town) +
                 this.formatTextField(poi.AddressInfo.StateOrProvince) +
                 this.formatTextField(poi.AddressInfo.Postcode) +
-                this.formatTextField(poi.AddressInfo.Country.Title);
+                (poi.AddressInfo.Country != null ? this.formatTextField(poi.AddressInfo.Country.Title) : "");
+                
             } else {
                 output = this.formatStringArray([
                     poi.AddressInfo.AddressLine1,
@@ -124,7 +125,7 @@ module OCM {
                     poi.AddressInfo.Town,
                     poi.AddressInfo.StateOrProvince,
                     poi.AddressInfo.Postcode,
-                    poi.AddressInfo.Country.Title
+                    (poi.AddressInfo.Country!=null?poi.AddressInfo.Country.Title:"")
                 ]);
             }
             return output;

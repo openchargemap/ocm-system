@@ -12,7 +12,7 @@ var util = require("util");
 
 /* Globals */
 var buildDate = new Date();
-var releaseVersion = "5.2.6_" + moment().format('YYYYMMDD');
+var releaseVersion = "5.3.0_" + moment().format('YYYYMMDD');
 var indexFileName = "index.html";
 var srcDir = "./";
 var buildDir = "build/output";
@@ -54,7 +54,6 @@ task("create-dir", ["clean-dir"], function () {
 
 desc("Minify scripts");
 task("minify-js", function () {
-    
     extractScriptNames();
 
     //minify and export scripts to each target
@@ -142,7 +141,7 @@ task("remove-debug", function () {
 });
 
 desc("Copy index.html");
-task("copy-index", ["remove-debug","use-min-js"], function () { //"remove-debug","use-min-js"
+task("copy-index", [], function () { //"remove-debug","use-min-js"
     console.log("Copying index.html to build targets");
 
     //copy modified index.html to each target
