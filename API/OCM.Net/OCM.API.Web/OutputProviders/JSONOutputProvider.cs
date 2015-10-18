@@ -147,6 +147,10 @@ namespace OCM.API.OutputProviders
 
             jsonSettings.Formatting = Formatting.Indented;
 
+            if (settings.IsCompactOutput)
+            {
+                jsonSettings.Formatting = Formatting.None;
+            }
             if (settings.IsCamelCaseOutput)
             {
                 jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
