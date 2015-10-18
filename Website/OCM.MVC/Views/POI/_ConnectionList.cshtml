@@ -32,13 +32,37 @@
     <div class="row equipment-row">
         <div class="col-sm-4 equipment-core">
             <h4>
-                <span class="glyphicon glyphicon-link"></span> @Html.DisplayFor(modelItem => item.ConnectionType.Title)
+                <span class="glyphicon glyphicon-link"></span>
+                <span data-localize="ocm.reference.connectionType.value_@item.ConnectionTypeID">
+                    @Html.DisplayFor(modelItem => item.ConnectionType.Title)
+                </span>
             </h4>
             <div>
-                <span class="glyphicon glyphicon-flash"></span> @(item.Level == null ? "Charging Level Unknown" : Html.DisplayFor(modelItem => item.Level.Title).ToString())
+                <span class="glyphicon glyphicon-flash"></span>
+                @if (item.Level == null)
+                {
+                    <span data-localize="ocm.reference.levelType.value_0"> Charging Level Unknown</span>
+                }
+                else
+                {
+                    <span data-localize="ocm.reference.levelType.value_@item.LevelID">
+                        @Html.DisplayFor(modelItem => item.Level.Title).ToString())
+                    </span>
+                }
             </div>
             <div>
-                <span class="glyphicon glyphicon-transfer"></span> @(item.StatusType == null ? "Status Unknown" : Html.DisplayFor(modelItem => item.StatusType.Title).ToString())
+                <span class="glyphicon glyphicon-transfer"></span>
+
+                @if (item.StatusType == null)
+                {
+                    <span data-localize="ocm.reference.statusType.value_0"> Status Unknown</span>
+                }
+                else
+                {
+                    <span data-localize="ocm.reference.statusType.value_@item.StatusTypeID">
+                        @Html.DisplayFor(modelItem => item.StatusType.Title).ToString())
+                    </span>
+                }
             </div>
             <div>
                 @if (item.Quantity != null)
@@ -54,7 +78,13 @@
                 OCM-CN-@item.ID
             </div>
             <div>
-                @(item.PowerKW == null ? "" : Html.DisplayFor(modelItem => item.PowerKW).ToString() + " kW") @Html.DisplayFor(modelItem => item.CurrentType.Title)
+                @(item.PowerKW == null ? "" : Html.DisplayFor(modelItem => item.PowerKW).ToString() + " kW")
+                @if (item.CurrentType != null)
+                {
+                    <span data-localize="ocm.reference.supplyType.value_@item.CurrentTypeID">
+                        @Html.DisplayFor(modelItem => item.CurrentType.Title)
+                    </span>
+                }
             </div>
             <div>
                 @(item.Voltage == null ? "" : Html.DisplayFor(modelItem => item.Voltage).ToString() + " V")

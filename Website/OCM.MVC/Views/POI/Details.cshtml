@@ -185,7 +185,9 @@ else
                                     {
                                         <div>
                                             <strong class="ocm-label" data-localize="ocm.details.usageType">Usage</strong>:
+                                            <span data-localize="ocm.reference.usageType.value_@Model.POI.UsageTypeID">
                                             @Html.DisplayFor(m => m.POI.UsageType.Title)
+                                            </span>
                                         </div>
                                     }
                                     @if (Model.POI.UsageCost != null)
@@ -199,7 +201,9 @@ else
                                     {
                                         <div>
                                             <strong class="ocm-label" data-localize="ocm.details.operationalStatus">Operational Status</strong>:
+                                            <span data-localize="ocm.reference.statusType.value_@Model.POI.StatusTypeID">
                                             @Html.DisplayFor(m => m.POI.StatusType.Title)
+                                            </span>
                                         </div>
                                     }
 
@@ -308,7 +312,7 @@ else
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary" })
+                                        <a href="@Url.Action("SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) })" class="btn btn-primary" target="_blank" data-localize="ocm.general.signIn">Sign In</a>
                                     }
                                 }
                             </div>
