@@ -343,11 +343,7 @@ namespace OCM.API.Common
 
                     ///////////
                     //filter by points along polyline or bounding box (TODO: polygon)
-                    if (
-                        (settings.Polyline != null && settings.Polyline.Any())
-                        || (settings.BoundingBox != null && settings.BoundingBox.Any())
-                        || (settings.Polygon != null && settings.Polygon.Any())
-                   )
+                    if ((settings.Polyline != null && settings.Polyline.Any()) || (settings.BoundingBox != null && settings.BoundingBox.Any()))
                     {
                         //override lat.long specified in search, use polyline or bounding box instead
                         settings.Latitude = null;
@@ -356,20 +352,13 @@ namespace OCM.API.Common
                         //filter by locationwithin polylinne expanded to a polygon
                         //TODO; conversion to Km if required
                         IEnumerable<LatLon> searchPolygon = null;
-
                         if (settings.Polyline != null && settings.Polyline.Any())
                         {
                             searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
                         }
-
                         if (settings.BoundingBox != null && settings.BoundingBox.Any())
                         {
                             searchPolygon = settings.BoundingBox;
-                        }
-
-                        if (settings.Polygon != null && settings.Polygon.Any())
-                        {
-                            searchPolygon = settings.Polygon;
                         }
 
                         //invalidate any further use of distance as filter because polyline/bounding box takes precedence

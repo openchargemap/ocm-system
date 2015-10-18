@@ -595,11 +595,7 @@ namespace OCM.Core.Data
                 IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
 
                 //filter by points along polyline or bounding box (TODO: polygon)
-                if (
-                    (settings.Polyline != null && settings.Polyline.Any())
-                    || (settings.BoundingBox != null && settings.BoundingBox.Any())
-                    || (settings.Polygon != null && settings.Polygon.Any())
-                    )
+                if ((settings.Polyline != null && settings.Polyline.Any()) || (settings.BoundingBox != null && settings.BoundingBox.Any()))
                 {
                     //override lat.long specified in search, use polyline or bounding box instead
                     settings.Latitude = null;
@@ -609,22 +605,14 @@ namespace OCM.Core.Data
                     //filter by locationwithin polylinne expanded to a polygon
                     //TODO; conversion to Km if required
                     IEnumerable<LatLon> searchPolygon = null;
-
                     if (settings.Polyline != null && settings.Polyline.Any())
                     {
                         searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
                     }
-
                     if (settings.BoundingBox != null && settings.BoundingBox.Any())
                     {
                         searchPolygon = settings.BoundingBox;
                     }
-
-                    if (settings.Polygon != null && settings.Polygon.Any())
-                    {
-                        searchPolygon = settings.Polygon;
-                    }
-
                     pointList = new double[searchPolygon.Count(), 2];
                     int pointIndex = 0;
                     foreach (var p in searchPolygon)

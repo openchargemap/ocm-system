@@ -129,25 +129,6 @@ namespace OCM.API.Common
             return ParsePointsList(val);
         }
 
-        protected List<LatLon> ParsePolygon(string val, bool closePolygon)
-        {
-            var pointsList = ParsePointsList(val);
-            if (closePolygon)
-            {
-                //close polygon by ending on the starting point
-                if (pointsList != null && pointsList.Any())
-                {
-                    var firstPoint = pointsList[0];
-                    var lastPoint = pointsList.Last();
-                    if (firstPoint.Latitude != lastPoint.Latitude || firstPoint.Longitude != lastPoint.Longitude)
-                    {
-                        pointsList.Add(firstPoint);
-                    }
-                }
-            }
-            return pointsList;
-        }
-
         protected List<LatLon> ParsePointsList(string val)
         {
             List<LatLon> points = null;

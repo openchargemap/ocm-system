@@ -63,20 +63,12 @@ namespace OCM.API.Common
 
         public double? MinPowerKW { get; set; }
 
-        /// <summary>
-        /// list of (lat,lng) points to search along (route etc)
-        /// </summary>
         public List<LatLon> Polyline { get; set; }
 
         /// <summary>
         /// pair of top left and bottom right coords for bounding box. If specified then latitude/longitude params are ignored, distance is instead from box centre
         /// </summary>
         public List<LatLon> BoundingBox { get; set; }
-
-        /// <summary>
-        /// list of (lat,lng) points comprising the area to search within, for instance a region shape
-        /// </summary>
-        public List<LatLon> Polygon { get; set; }
 
         public int[] ChargePointIDs { get; set; }
 
@@ -186,9 +178,11 @@ namespace OCM.API.Common
             //settings.Polyline = ParsePolyline("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
             //settings.Polyline = ParsePolyline("(38.5, -120.2), (40.7, -120.95), (43.252, -126.453)");
 
-            if (!String.IsNullOrEmpty(context.Request["boundingbox"])) settings.BoundingBox = ParseBoundingBox(context.Request["boundingbox"]);     //e.g. (-31.947017,115.803974),(-31.956672,115.819968)
-            if (!String.IsNullOrEmpty(context.Request["polygon"])) settings.Polygon = ParsePolygon(context.Request["polygon"], true);
-
+            if (!String.IsNullOrEmpty(context.Request["boundingbox"]))
+            {
+                //e.g. (-31.947017,115.803974),(-31.956672,115.819968)
+                settings.BoundingBox = ParseBoundingBox(context.Request["boundingbox"]);
+            }
             if (!String.IsNullOrEmpty(context.Request["connectiontype"])) settings.ConnectionType = ParseString(context.Request["connectiontype"]);
             if (!String.IsNullOrEmpty(context.Request["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(context.Request["submissionstatustypeid"]);
             if (!String.IsNullOrEmpty(context.Request["modifiedsince"])) settings.ChangesFromDate = ParseDate(context.Request["modifiedsince"]);
@@ -266,9 +260,6 @@ namespace OCM.API.Common
                 if (IsOpenData != null) key += ":opendata:" + IsOpenData.ToString();
                 if (MinPowerKW != null) key += ":minpowerkw:" + MinPowerKW.ToString();
                 if (Polyline != null) key += ":polyline:" + Polyline.GetHashCode().ToString();
-                if (Polygon != null) key += ":polygon:" + Polygon.GetHashCode().ToString();
-                if (BoundingBox != null) key += ":boundingbox:" + BoundingBox.GetHashCode().ToString();
-                if (LevelOfDetail > 1) key += ":lod:" + LevelOfDetail.ToString();
                 if (ChangesFromDate != null) key += ":modified:" + ChangesFromDate.Value.Ticks.ToString();
 
                 return OCM.Core.Util.SecurityHelper.GetMd5Hash(key);
