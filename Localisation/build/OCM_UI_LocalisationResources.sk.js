@@ -52,7 +52,9 @@ var localisation_dictionary_sk ={
       "importedDataNotice": "Poznámka: Tieto údaje sa získavajú automaticky, zmeny by mali byť predložené priamo poskytovateľovi údajov.",
       "submissionStatus": "Stav položky",
       "placesNearby": {
-        "sectionTitle": "Miesta v blízskosti"
+        "sectionTitle": "Miesta v blízskosti",
+        "pois": "Zaujímavosti",
+        "chargingLocations": "Iné nabíjacie stanice"
       },
       "mediaItems": {
         "sectionTitle": "Fotografie",
@@ -81,12 +83,14 @@ var localisation_dictionary_sk ={
       "dataProvider": {
         "sectionTitle": "Poskytovateľ dát",
         "website": "Webová stránka",
-        "providersReference": "Referenčné číslo poskytovateľa"
+        "providersReference": "Referenčné číslo poskytovateľa",
+        "license": "Licencia dát"
       },
       "operator": {
         "sectionTitle": "Sieť-Operátor",
         "operatorsReference": "Referenčné číslo operátora"
-      }
+      },
+      "editPrompt": "Pre úpravu, komentovanie a pridávanie fotografií"
     },
     "search": {
       "sectionTitle": "Hľadať",
@@ -182,17 +186,14 @@ var localisation_dictionary_sk ={
           "p1": "Chceme spolupracovať s komunitou na vytváraní a poskytovaní vysoko kvalitnej, otvorenej, verejnej a bezplatnej databáze nabíjacích zariadení po celom svete.",
           "p2": "Naším cieľom je tiež zabrániť potrebe šírenia nezávislých konfliktných máp/stránok/aplikácii poskytovaním jedného spoľahlivého (v maximálnej možnej miere) zdroja informácií o nabíjacích staniciach. Namiesto súťaženia s inými poskytovateľmi dát sa snažíme s nimi spolupracovať a ponúkať im služby výmenou za zdieľanie ich dát a snahu o neduplikovanie informácií."
         },
-
         "whyOCM": {
           "title": "Prečo používať Open Charge Map?",
           "content": "Používaním Open Charge Map (OCM) a príslušných aplikácii môžete pomôcť vylepšiť informácie v databáze recenziami, zmenami a pridávaním informácií, komentárov a fotiek a odporúčaním služby ostatným užívateľom. Výhodou OCM oproti ostatným poskytovateľom podobných dát je, že cieľom OCM je otvorené zdieľanie informácií, kým komerční poskytovatelia si musia ponechávať informácie pre seba (alebo len vrámci svojej aplikácie), aby si mohli udržovať komerčne speňažiteľné množstvo dát."
         },
-
         "funding": {
           "title": "Financovanie",
           "p1": "Open Charge Map je vyvinutá a udržovaná dobrovoľníkmi. Ak môžete ponúknuť financovanie na podporu projektu alebo podporiť konkrétnu pracovnú činnosť prosím {link-contact:kontaktujte nás}. Viac informácií ohľadom financovania a projektových nákladov {link-funding:je k dispozícií}."
         },
-
         "developersContributors": {
           "sectionTitle": "Vývojári a prispievatelia",
           "p1": "Náš projekt na {link_github:GitHube} poskytuje zázemie, ktoré umožnuje externým technickým prispievateľom diskutovať a ovlpyvniť náš systém a plány do budúcnosti. Naša komunita na {link_google_plus:Google+} je hlavný spôsob výmeny nápadov a získavania spätnej väzby od zainteresovaných strán.",
@@ -208,6 +209,9 @@ var localisation_dictionary_sk ={
           "p2": "Uznanie a vďaka patrí nasledujúcim hlavným zdrojom dát, ktoré sú v súčasnosti zahrnuté v našej databáze:"
         }
       }
+    },
+    "warningsErrors":{
+      "oldData": "Táto nabíjacia stanica nebola v poslednej dobe verifikovaná and nemali by ste sa na informácie o nej spoliehať pri plánovaní cesty. <br /><br />Ak ste nedávno navštívili toto nabíjacie miesto, tak prosíme potvrďte aktuálnosť informácií pridaním komentára. <br /><br />Ak sú informácie nesprávne tak prosíme {link-edit: upravte}."
     },
     "reference": {
       "statusType": {
