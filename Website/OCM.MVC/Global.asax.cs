@@ -85,7 +85,7 @@ namespace OCM.MVC
             Response.RedirectToRoute(new { controller = "Home", action = "GeneralError" });
         }
 
-        protected void Session_OnStart()
+        protected void Session_Start()
         {
             //if user has existing OCM session token, sign in automatically
             var sessionToken = GetCookie(new HttpRequestWrapper(Request), "OCMSessionToken");
