@@ -55,5 +55,6 @@ namespace OCM.Core.Data
         public virtual DbSet<RegisteredApplication> RegisteredApplications { get; set; }
         public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }
         public virtual DbSet<UserChargingRequest> UserChargingRequests { get; set; }
+        public virtual DbSet<Statistic> Statistics { get; set; }
     }
 }

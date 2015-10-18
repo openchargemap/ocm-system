@@ -265,6 +265,18 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Statistic">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StatTypeCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Month" Type="int" />
+          <Property Name="Year" Type="int" />
+          <Property Name="CountryID" Type="int" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="NumItems" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="StatusType">
           <Key>
             <PropertyRef Name="ID" />
@@ -728,6 +740,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Statistics_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Statistic" Type="Self.Statistic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Statistic">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statistics_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Statistic" Type="Self.Statistic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Statistic">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SystemConfig_DataType">
           <End Role="DataType" Type="Self.DataType" Multiplicity="0..1" />
           <End Role="SystemConfig" Type="Self.SystemConfig" Multiplicity="*" />
@@ -846,6 +882,7 @@
           <EntitySet Name="MetadataValue" EntityType="Self.MetadataValue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Operator" EntityType="Self.Operator" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegisteredApplication" EntityType="Self.RegisteredApplication" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Statistic" EntityType="Self.Statistic" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StatusType" EntityType="Self.StatusType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubmissionStatusType" EntityType="Self.SubmissionStatusType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SystemConfig" EntityType="Self.SystemConfig" Schema="dbo" store:Type="Tables" />
@@ -966,6 +1003,14 @@
           <AssociationSet Name="FK_RegisteredApplication_User" Association="Self.FK_RegisteredApplication_User">
             <End Role="User" EntitySet="User" />
             <End Role="RegisteredApplication" EntitySet="RegisteredApplication" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistics_Country" Association="Self.FK_Statistics_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Statistic" EntitySet="Statistic" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistics_User" Association="Self.FK_Statistics_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Statistic" EntitySet="Statistic" />
           </AssociationSet>
           <AssociationSet Name="FK_SystemConfig_DataType" Association="Self.FK_SystemConfig_DataType">
             <End Role="DataType" EntitySet="DataType" />
@@ -1184,6 +1229,15 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserChargingRequest" EntitySet="UserChargingRequests" />
           </AssociationSet>
+          <EntitySet Name="Statistics" EntityType="OCM.Core.Data.OCMEntities.Statistic" />
+          <AssociationSet Name="FK_Statistics_Country" Association="OCM.Core.Data.OCMEntities.FK_Statistics_Country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Statistic" EntitySet="Statistics" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistics_User" Association="OCM.Core.Data.OCMEntities.FK_Statistics_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Statistic" EntitySet="Statistics" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="AddressInfo">
           <Key>
@@ -1320,6 +1374,7 @@
           <NavigationProperty Name="AddressInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="Country" ToRole="AddressInfo" />
           <Property Name="ContinentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="UserSubscriptions" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_Country" FromRole="Country" ToRole="UserSubscription" />
+          <NavigationProperty Name="Statistics" Relationship="OCM.Core.Data.OCMEntities.FK_Statistics_Country" FromRole="Country" ToRole="Statistic" />
         </EntityType>
         <EntityType Name="CurrentType">
           <Key>
@@ -1526,6 +1581,7 @@
           <Property Name="IsReadOnly" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="UserChargingRequests" Relationship="OCM.Core.Data.OCMEntities.FK_UserChargingRequest_User" FromRole="User" ToRole="UserChargingRequest" />
           <Property Name="PasswordHash" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Statistics" Relationship="OCM.Core.Data.OCMEntities.FK_Statistics_User" FromRole="User" ToRole="Statistic" />
         </EntityType>
         <EntityType Name="UserComment">
           <Key>
@@ -2090,6 +2146,44 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Statistic">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="StatTypeCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Month" Type="Int32" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="CountryID" Type="Int32" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="NumItems" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Country" Relationship="OCM.Core.Data.OCMEntities.FK_Statistics_Country" FromRole="Statistic" ToRole="Country" />
+          <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_Statistics_User" FromRole="Statistic" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Statistics_Country">
+          <End Type="OCM.Core.Data.OCMEntities.Country" Role="Country" Multiplicity="0..1" />
+          <End Type="OCM.Core.Data.OCMEntities.Statistic" Role="Statistic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Statistic">
+              <PropertyRef Name="CountryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statistics_User">
+          <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="0..1" />
+          <End Type="OCM.Core.Data.OCMEntities.Statistic" Role="Statistic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Statistic">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2509,6 +2603,19 @@
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Statistics">
+            <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.Statistic">
+              <MappingFragment StoreEntitySet="Statistic">
+                <ScalarProperty Name="NumItems" ColumnName="NumItems" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="StatTypeCode" ColumnName="StatTypeCode" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

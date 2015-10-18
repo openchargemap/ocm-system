@@ -9,7 +9,6 @@
 <a href="@Url.Action("Index", "POI")">
     <div class="stat">
         <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
-
     </div>
 </a>
 <div id="datasummary"></div>
@@ -37,21 +36,18 @@
     }
 
     function loadCountryMap(countryName, isoCode) {
-            document.getElementById("countrymap").src = "http://openchargemap.org/api/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage,status&clustering=true";
+        document.getElementById("countrymap").src = "http://openchargemap.org/api/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage,status&clustering=true";
     }
 
     refreshDataSummary();
-
 </script>
 <div class="row">
-    <div class="col-md-6">
-        <h2><i class="fa fa-star"></i> Top 15 Contributors</h2>
-        <p>Users who have contributed the most new locations, edits, comments and photos:</p>
+    <div class="col-md-4">
+        <h3><i class="fa fa-star"></i> Most Changes Last 90 Days</h3>
+        <p>Users who have contributed the most new locations or edits:</p>
         @Html.Partial("_TopContributors", Model.TopContributors)
-
-
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
 
         <script src="~/Scripts/Chart.min.js"></script>
 
@@ -67,8 +63,13 @@
 
         @Html.Partial("_UserComments", Model.UserComments)
     </div>
+    <div class="col-md-4">
+        <h3><i class="fa fa-commenting"></i> Most Comments Last 90 Days</h3>
+        <p>Users who have contributed the most location comments or check-ins:</p>
+        @Html.Partial("_TopContributors", Model.TopCommentators)
+
+        <h3><i class="fa fa-commenting"></i> Most Photos Last 90 Days</h3>
+        <p>Users who have contributed the most location photos:</p>
+        @Html.Partial("_TopContributors", Model.TopMediaItems)
+    </div>
 </div>
-
-
-
-

@@ -24,6 +24,7 @@ namespace OCM.Core.Data
             this.RegisteredApplications = new HashSet<RegisteredApplication>();
             this.UserSubscriptions = new HashSet<UserSubscription>();
             this.UserChargingRequests = new HashSet<UserChargingRequest>();
+            this.Statistics = new HashSet<Statistic>();
         }
     
         public int ID { get; set; }
@@ -58,5 +59,6 @@ namespace OCM.Core.Data
         public virtual ICollection<RegisteredApplication> RegisteredApplications { get; set; }
         public virtual ICollection<UserSubscription> UserSubscriptions { get; set; }
         public virtual ICollection<UserChargingRequest> UserChargingRequests { get; set; }
+        public virtual ICollection<Statistic> Statistics { get; set; }
     }
 }

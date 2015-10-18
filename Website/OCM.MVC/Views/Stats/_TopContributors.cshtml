@@ -1,11 +1,12 @@
-﻿@model IEnumerable<OCM.API.Common.Model.User>
+﻿@model IEnumerable<OCM.API.Common.DataSummary.GeneralStats>
 
 @{
     var positionCount = 1;
 
 }
-@foreach (var item in Model)
+@foreach (var stat in Model)
 {
+    var item = stat.User;
     <div class="panel panel-info">
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -21,30 +22,29 @@
             </h3>
         </div>
         <div class="panel-body">
-            @Html.Raw("<img class='pull-right img-thumbnail' style='margin-right:1em;' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />")
+            <div class="row">
+                <div class="col-xs-2">
 
-            <dl class="dl-horizontal">
-                @if (item.Location != null)
-                {
-                    <dt>@Html.DisplayNameFor(model => model.Location)</dt>
-                    <dd>@Html.DisplayFor(modelItem => item.Location)</dd>
-                }
+                    @Html.Raw("<img class='img-thumbnail' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />")
+                </div>
+                <div class="col-xs-10">
+                    @stat.Quantity Changes
 
-                @if (item.WebsiteURL != null)
-                {
-                    <dt>@Html.DisplayNameFor(model => model.WebsiteURL)</dt>
-                    <dd>@Html.DisplayFor(modelItem => item.WebsiteURL)</dd>
-                }
-                @if (item.ReputationPoints != null)
-                {
-                    <dt>@Html.DisplayNameFor(model => model.ReputationPoints)</dt>
-                    <dd>@Html.DisplayFor(modelItem => item.ReputationPoints)</dd>
-                }
-                <dt>@Html.DisplayNameFor(model => model.DateCreated)</dt>
-                <dd>@item.DateCreated.Value.ToShortDateString()</dd>
-            </dl>
+                    @if (item.Location != null)
+                    {
+                        <br />
+                        <strong>@Html.DisplayFor(modelItem => item.Location)</strong>
+                    }
+
+                    @if (item.WebsiteURL != null)
+                    {
+                        <br />
+                        @Html.DisplayFor(modelItem => item.WebsiteURL)
+                    }
+                </div>
+            </div>
         </div>
     </div>
 
-                positionCount++;
+    positionCount++;
 }

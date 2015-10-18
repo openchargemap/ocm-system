@@ -73,6 +73,9 @@
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_UserSubscription_User" />
         <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.UserChargingRequest" Width="1.5" PointX="6" PointY="42.75" />
         <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_UserChargingRequest_User" />
+        <EntityTypeShape EntityType="OCM.Core.Data.OCMEntities.Statistic" Width="1.5" PointX="12" PointY="7" />
+        <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_Statistics_Country" />
+        <AssociationConnector Association="OCM.Core.Data.OCMEntities.FK_Statistics_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

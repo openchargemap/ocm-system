@@ -18,6 +18,7 @@ namespace OCM.Core.Data
         {
             this.AddressInfoes = new HashSet<AddressInfo>();
             this.UserSubscriptions = new HashSet<UserSubscription>();
+            this.Statistics = new HashSet<Statistic>();
         }
     
         public int ID { get; set; }
@@ -27,5 +28,6 @@ namespace OCM.Core.Data
     
         public virtual ICollection<AddressInfo> AddressInfoes { get; set; }
         public virtual ICollection<UserSubscription> UserSubscriptions { get; set; }
+        public virtual ICollection<Statistic> Statistics { get; set; }
     }
 }

@@ -27,6 +27,10 @@ namespace OCM.API.Common.DataSummary
 
     public class GeneralStats
     {
+        public User User { get; set; }
+
+        public Country Country { get; set; }
+
         public int Year { get; set; }
 
         public int Month { get; set; }
@@ -163,9 +167,9 @@ namespace OCM.API.Common.DataSummary
 
             return list;
         }
+
         public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestParams filterSettings)
         {
-            
             //TODO: optionally output as normal JSON
             string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
 
@@ -229,16 +233,18 @@ namespace OCM.API.Common.DataSummary
             return summary;
         }
 
-        public List<Model.User> GetTopNContributors(int maxResults, int? countryId)
+        public List<GeneralStats> GetTopNStats(string statTypeCode, int maxResults, int? countryId)
         {
-            var contributors = DataModel.Users.Where(u => u.ID != (int)StandardUsers.System).OrderByDescending(u => u.ReputationPoints).Take(maxResults);
-
-            var results = new List<Model.User>();
-            foreach (var u in contributors)
+            var stats = DataModel.Statistics.Where(stat => stat.StatTypeCode == statTypeCode).OrderByDescending(s => s.NumItems).Distinct().Take(maxResults);
+            var results = new List<GeneralStats>();
+            foreach (var s in stats)
             {
-                var r = OCM.API.Common.Model.Extensions.User.PublicProfileFromDataModel(u);
-                if (u.EmailAddress != null) r.EmailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(u.EmailAddress);
-                results.Add(r);
+                if (s.UserID != null)
+                {
+                    var r = OCM.API.Common.Model.Extensions.User.PublicProfileFromDataModel(s.User);
+                    if (r.EmailAddress != null) r.EmailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(r.EmailAddress);
+                    results.Add(new GeneralStats { User = r, Quantity = s.NumItems });
+                }
             }
             return results;
         }
