@@ -497,6 +497,8 @@ namespace OCM.Core.Data
 
         public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             bool freshCache = false;
             int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
             if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
@@ -592,9 +594,41 @@ namespace OCM.Core.Data
                 var collection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
                 IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
 
-                if (requiresDistance)
+                //filter by points along polyline or bounding box (TODO: polygon)
+                if ((settings.Polyline != null && settings.Polyline.Any()) || (settings.BoundingBox != null && settings.BoundingBox.Any()))
                 {
-                    //filter by distance first
+                    //override lat.long specified in search, use polyline or bounding box instead
+                    settings.Latitude = null;
+                    settings.Longitude = null;
+
+                    double[,] pointList;
+                    //filter by locationwithin polylinne expanded to a polygon
+                    //TODO; conversion to Km if required
+                    IEnumerable<LatLon> searchPolygon = null;
+                    if (settings.Polyline != null && settings.Polyline.Any())
+                    {
+                        searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
+                    }
+                    if (settings.BoundingBox != null && settings.BoundingBox.Any())
+                    {
+                        searchPolygon = settings.BoundingBox;
+                    }
+                    pointList = new double[searchPolygon.Count(), 2];
+                    int pointIndex = 0;
+                    foreach (var p in searchPolygon)
+                    {
+                        pointList[pointIndex, 0] = (double)p.Longitude;
+                        pointList[pointIndex, 1] = (double)p.Latitude;
+                        pointIndex++;
+#if DEBUG
+                        System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
+#endif
+                    }
+                    poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition", pointList).Inject());
+                }
+                else
+                {
+                    //filter by distance from lat/lon first
                     poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject());//.Take(settings.MaxResults);
                 }
 
@@ -628,6 +662,12 @@ namespace OCM.Core.Data
                 {
                     poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
                 }
+
+                if (settings.LevelOfDetail != null && settings.LevelOfDetail > 1)
+                {
+                    poiList = poiList.Where(q => Query.Mod("ID", (int)settings.LevelOfDetail, 0).Inject());
+                }
+
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                 poiList = from c in poiList
                           where
@@ -658,6 +698,50 @@ namespace OCM.Core.Data
                     results = results.OrderBy(r => r.AddressInfo.Distance).Take(settings.MaxResults).ToList();
                 }
 
+                if (settings.IsCompactOutput)
+                {
+                    //dehydrate POI object by removing navigation properties which are based on reference data. Client can then rehydrate using reference data, saving on data transfer KB
+                    foreach (var p in results)
+                    {
+                        //need to null reference data objects so they are not included in output. caution required here to ensure compact output via SQL is same as Cache DB output
+                        p.DataProvider = null;
+                        p.OperatorInfo = null;
+                        p.UsageType = null;
+                        p.StatusType = null;
+                        p.SubmissionStatus = null;
+                        p.AddressInfo.Country = null;
+                        if (p.Connections != null)
+                        {
+                            foreach (var c in p.Connections)
+                            {
+                                c.ConnectionType = null;
+                                c.CurrentType = null;
+                                c.Level = null;
+                                c.StatusType = null;
+                            }
+                        }
+                        if (p.UserComments != null)
+                        {
+                            foreach (var c in p.UserComments)
+                            {
+                                c.CheckinStatusType = null;
+                                c.CommentType = null;
+                            }
+                        }
+
+                        /* if (p.MediaItems != null)
+                         {
+                             foreach (var c in p.MediaItems)
+                             {
+                                 c.User = null;
+                             }
+                         }*/
+                    }
+                }
+
+                stopwatch.Stop();
+                System.Diagnostics.Debug.WriteLine("Cache Provider POI Query Time:" + stopwatch.ElapsedMilliseconds + "ms");
+
                 return results;
             }
             else
@@ -666,7 +750,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public List<BenchmarkResult> PerformPOIQueryBenchmark(int numQueries, string mode="country")
+        public List<BenchmarkResult> PerformPOIQueryBenchmark(int numQueries, string mode = "country")
         {
             List<BenchmarkResult> results = new List<BenchmarkResult>();
 
@@ -684,7 +768,8 @@ namespace OCM.Core.Data
                     if (mode == "country")
                     {
                         filter.CountryCode = "NL";
-                    } else
+                    }
+                    else
                     {
                         filter.Latitude = 57.10604;
                         filter.Longitude = -2.62214;

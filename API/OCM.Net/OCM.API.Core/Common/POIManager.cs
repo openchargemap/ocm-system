@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Spatial;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -95,7 +96,7 @@ namespace OCM.API.Common
             poi.DateCreated = DateTime.UtcNow;
             poi.DateLastConfirmed = null;
             poi.DateLastStatusUpdate = null;
-            
+
             poi.DatePlanned = null;
             poi.UUID = null;
 
@@ -200,7 +201,7 @@ namespace OCM.API.Common
         /// <returns></returns>
         public List<Model.ChargePoint> GetChargePoints(APIRequestParams settings)
         {
-            var stopwatch = new Stopwatch();
+            var stopwatch = Stopwatch.StartNew();
             stopwatch.Start();
 
             bool cachingConfigEnabled = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableInMemoryCaching"]);
@@ -222,7 +223,7 @@ namespace OCM.API.Common
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
                         //TODO: send error notification
-                        if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI, "POI Cache query exception:"+exp.ToString());
+                        if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI, "POI Cache query exception:" + exp.ToString());
                     }
                 }
 
@@ -307,7 +308,7 @@ namespace OCM.API.Common
                     //compile initial list of locations
                     var chargePointList = from c in dataModel.ChargePoints.AsNoTracking()
                                           where
-                                              (c.AddressInfo != null && c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
+                                              (c.AddressInfo != null)
                                               && ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
                                                     || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
                                                     || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
@@ -334,6 +335,61 @@ namespace OCM.API.Common
                         chargePointList = chargePointList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
                     }
 
+                    if (settings.LevelOfDetail > 1)
+                    {
+                        //return progressively less matching results (across whole data set) as Level Of Detail gets higher
+                        chargePointList = chargePointList.Where(c => c.ID % settings.LevelOfDetail == 0);
+                    }
+
+                    ///////////
+                    //filter by points along polyline or bounding box (TODO: polygon)
+                    if ((settings.Polyline != null && settings.Polyline.Any()) || (settings.BoundingBox != null && settings.BoundingBox.Any()))
+                    {
+                        //override lat.long specified in search, use polyline or bounding box instead
+                        settings.Latitude = null;
+                        settings.Longitude = null;
+
+                        //filter by locationwithin polylinne expanded to a polygon
+                        //TODO; conversion to Km if required
+                        IEnumerable<LatLon> searchPolygon = null;
+                        if (settings.Polyline != null && settings.Polyline.Any())
+                        {
+                            searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
+                        }
+                        if (settings.BoundingBox != null && settings.BoundingBox.Any())
+                        {
+                            searchPolygon = settings.BoundingBox;
+                        }
+
+                        //invalidate any further use of distance as filter because polyline/bounding box takes precedence
+                        settings.Distance = null;
+                        requiresDistance = false;
+
+                        int numPoints = searchPolygon.Count();
+                        string polygonText = "";
+                        foreach (var p in searchPolygon)
+                        {
+                            polygonText += p.Longitude + " " + p.Latitude;
+#if DEBUG
+                            System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
+#endif
+
+                            polygonText += ", ";
+                        }
+                        //close polygon
+                        var closingPoint = searchPolygon.First();
+                        polygonText += closingPoint.Longitude + " " + closingPoint.Latitude;
+
+                        string polygonWKT = "POLYGON((" + polygonText + "))";
+
+#if DEBUG
+                        System.Diagnostics.Debug.WriteLine(polygonWKT);
+#endif
+                        chargePointList = chargePointList.Where(q => q.AddressInfo.SpatialPosition.Intersects(DbGeography.PolygonFromText(polygonWKT, 4326)));
+                    }
+
+                    /////////////////
+
                     //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                     chargePointList = from c in chargePointList
                                       where
@@ -350,27 +406,26 @@ namespace OCM.API.Common
                     if (requiresDistance && settings.Latitude != null && settings.Longitude != null) searchPos = System.Data.Entity.Spatial.DbGeography.PointFromText("POINT(" + settings.Longitude + " " + settings.Latitude + ")", 4326);
 
                     //compute/filter by distance (if required)
+
                     var filteredList = from c in chargePointList
                                        where
                                        (requiresDistance == false)
                                        ||
                                        (
-                                           (requiresDistance == true
-                                               && (c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null)
-                                               && (settings.Latitude != null && settings.Longitude != null)
-                                               && (settings.Distance == null ||
-                                                        (settings.Distance != null &&
-                                           // GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) <= settings.Distance
-                                                           c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < settings.Distance
-                                                        )
-                                               )
-                                           )
+                                            requiresDistance == true
+                                            && (settings.Latitude != null && settings.Longitude != null)
+                                            && (settings.Distance == null ||
+                                                    (settings.Distance != null &&
+                                                        // GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude) <= settings.Distance
+                                                        c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < settings.Distance
+                                                    )
+                                            )
                                        )
                                        select new
                                        {
                                            c,
                                            //    DistanceKM = GetDistanceFromLatLonKM(settings.Latitude, settings.Longitude, c.AddressInfo.Latitude, c.AddressInfo.Longitude)
-                                           DistanceKM = c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000
+                                           DistanceKM = (requiresDistance ? c.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 : null)
                                        };
 
                     if (requiresDistance)
@@ -383,18 +438,11 @@ namespace OCM.API.Common
                         filteredList = filteredList.OrderByDescending(p => p.c.DateCreated);
                     }
 
-                    //query is of type IQueryable
-#if DEBUG
-                    string sql = filteredList.ToString();
-
-                    //writes to output window
-                    System.Diagnostics.Debug.WriteLine(sql);
-#endif
                     var additionalFilteredList = filteredList.Take(maxResults).ToList();
 
                     stopwatch.Stop();
 
-                    System.Diagnostics.Debug.WriteLine("Total query time: " + stopwatch.Elapsed.ToString());
+                    System.Diagnostics.Debug.WriteLine("Total query time (ms): " + stopwatch.ElapsedMilliseconds.ToString());
 
                     stopwatch.Restart();
 
@@ -459,7 +507,7 @@ namespace OCM.API.Common
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.Elapsed.ToString());
+            System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
 
             return dataList.Take(settings.MaxResults).ToList();
         }
@@ -747,7 +795,7 @@ namespace OCM.API.Common
                 catch (Exception exp)
                 {
                     //unknown operator
-                    throw new OCMAPIException("Unknown Data Provider Specified:"+providerId+" "+exp.ToString());
+                    throw new OCMAPIException("Unknown Data Provider Specified:" + providerId + " " + exp.ToString());
                 }
             }
             else
@@ -770,7 +818,7 @@ namespace OCM.API.Common
                 catch (Exception)
                 {
                     //unknown operator
-                    throw new OCMAPIException("Unknown Network Operator Specified:"+operatorId);
+                    throw new OCMAPIException("Unknown Network Operator Specified:" + operatorId);
                 }
             }
             else
@@ -792,7 +840,7 @@ namespace OCM.API.Common
                 catch (Exception)
                 {
                     //unknown usage type
-                    throw new OCMAPIException("Unknown Usage Type Specified:"+usageTypeId);
+                    throw new OCMAPIException("Unknown Usage Type Specified:" + usageTypeId);
                 }
             }
             else

@@ -107,33 +107,46 @@ namespace OCM.API.Common
             return null;
         }
 
+        /// <summary>
+        /// Parse bounding box in format (top left lat,top left lon), (bottom right lat, bottom right lon)
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        protected List<LatLon> ParseBoundingBox(string val)
+        {
+            var pointsList = ParsePointsList(val);// NorthEast and SouthWest lat/Lon pairs
+            List<LatLon> rect = new List<LatLon>();
+            rect.Add(pointsList[0]); //top left
+            rect.Add(new LatLon { Latitude = pointsList[0].Latitude, Longitude = pointsList[1].Longitude }); //top right
+            rect.Add(pointsList[1]); //bottom right
+            rect.Add(new LatLon { Latitude = pointsList[1].Latitude, Longitude = pointsList[0].Longitude }); //bottom left
+
+            return rect;
+        }
+
         protected List<LatLon> ParsePolyline(string val)
+        {
+            return ParsePointsList(val);
+        }
+
+        protected List<LatLon> ParsePointsList(string val)
         {
             List<LatLon> points = null;
             try
             {
                 if (!String.IsNullOrEmpty(val))
                 {
-
                     if (val.StartsWith("(") && val.EndsWith(")"))
                     {
                         //polyline is comma separated list of points
-                        
+
                         var pointStringList = val.Split(')');
                         points = new List<LatLon>();
                         foreach (var p in pointStringList)
                         {
                             if (!String.IsNullOrEmpty(p))
                             {
-                                var temp = p.ToString().Trim();
-                                if (temp.StartsWith(",")) temp = temp.Substring(1, temp.Length - 1).Trim();
-                                var fragments = temp.Split(',');
-                                var ll = new LatLon
-                                {
-                                    Latitude = double.Parse(fragments[0].Substring(1, fragments[0].Length - 1)),
-                                    Longitude = double.Parse(fragments[1])
-                                };
-                                points.Add(ll);
+                                points.Add(LatLon.Parse(p));
                             }
                         }
                     }
