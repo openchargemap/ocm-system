@@ -38,6 +38,8 @@ x64/
 *.vspscc
 *.vssscc
 .builds
+API\OCM.Net\OCM.API.Web\Scripts\SharedLibs\*.js
+Website\OCM.MVC\Scripts\OCM\SharedLibs\*.js
 
 # Visual C++ cache files
 ipch/

@@ -1,0 +1,1 @@
+﻿- Note: do not edit these files, these scripts are build as part of the mobile app and copied as a build event to this folder
