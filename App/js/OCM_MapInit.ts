@@ -4,23 +4,13 @@
 */
 
 function initGoogleMapsCompleted() {
-    if (ocm_app.mappingManager.mapOptions.mapAPI == OCM.MappingAPI.GOOGLE_WEB) {
-        ocm_app.mappingManager.mapAPIReady = true;
-    }
-    if (console) console.log("Google Maps Web API Loaded.");
+    ocm_app.mappingManager.externalAPILoaded(OCM.MappingAPI.GOOGLE_WEB);
 };
 
 function loadGoogleMaps() {
     //load google maps script async, if google API is selected
     if (ocm_app.mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_WEB) {
         if (console) console.log("Google Maps Web API not selected. Loading API anyway.");
-        /*setTimeout(
-            function () {
-                if (!ocm_app.mappingManager.mapAPIReady) ocm_app.mappingManager.mapAPIReady = true;
-            }, 1000);
-
-        return false;
-          */
     }
 
     if (console) console.log("Starting load of Google Maps Web API");

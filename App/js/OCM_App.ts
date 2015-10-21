@@ -222,7 +222,7 @@ module OCM {
                 }, 2000);
             }
 
-            app.mappingManager.initMap("map-view");
+            //app.mappingManager.initMap("map-view");
         }
 
         beginObservingAppModelChanges() {
@@ -995,20 +995,17 @@ module OCM {
                     params.includeComments = true;
                     params.enableCaching = true;
 
-                    //TEMP: map viewport bounds search, API specific, move to mapping manager?
+                    //map viewport search on bounding rectangle instead of map centre
 
-                    //TODO: map viewport search on bounding rectangle instead of map centre
-                    if (this.mappingManager.map != null) {
-                        if (this.appConfig.enableLiveMapQuerying) {
-                            var bounds = this.mappingManager.map.getBounds();
+                    if (this.appConfig.enableLiveMapQuerying) {
+                        if (this.mappingManager.isMapReady()) {
+                            var bounds = this.mappingManager.getMapBounds();
                             if (bounds != null) {
-                                params.boundingbox = "(" + bounds.getNorthEast().lat() + "," + bounds.getNorthEast().lng() + "),"
-                                + "(" + bounds.getSouthWest().lat() + "," + bounds.getSouthWest().lng() + ")";
-                                //params.maxResults = 10000;
+                                params.boundingbox = "(" + bounds[0].latitude + "," + bounds[0].longitude + "),(" + bounds[1].latitude + "," + bounds[1].longitude + ")";
                             }
 
                             //close zooms are 1:1 level of detail, zoomed out samples less data
-                            var zoomLevel = this.mappingManager.map.getZoom();
+                            var zoomLevel = this.mappingManager.getMapZoom();
 
                             if (zoomLevel > 10) {
                                 params.levelOfDetail = 1;
