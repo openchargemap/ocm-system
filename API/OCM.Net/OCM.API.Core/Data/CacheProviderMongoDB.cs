@@ -640,8 +640,11 @@ namespace OCM.Core.Data
                 }
                 else
                 {
-                    //filter by distance from lat/lon first
-                    poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject());//.Take(settings.MaxResults);
+                    if (requiresDistance)
+                    {
+                        //filter by distance from lat/lon first
+                        poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject());//.Take(settings.MaxResults);
+                    }
                 }
 
                 poiList = (from c in poiList
