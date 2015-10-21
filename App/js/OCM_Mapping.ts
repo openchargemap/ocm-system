@@ -76,6 +76,15 @@ module OCM {
         GOOGLE_NATIVE,
         LEAFLET
     }
+
+    export interface IMapProvider {
+        mapAPIType: OCM.MappingAPI;
+        mapReady: boolean;
+        providerError: string;
+
+        initMap(mapCanvasID: string, mapConfig: MapOptions);
+    }
+
     /** Mapping - provides a way to render to various mapping APIs
      * @module OCM.Mapping
      */
@@ -93,6 +102,7 @@ module OCM {
         public errorMessage: string;
         public parentAppContext: OCM.App;
         private _mapMoveTimer: any;
+        private mapProvider: IMapProvider;
 
         /** @constructor */
         constructor() {
@@ -116,6 +126,10 @@ module OCM {
                 if (plugin.google.maps) {
                     this.mapAPIReady = true;
                 }
+            }
+
+            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
+                this.mapProvider = new OCM.MapProviders.GoogleMapsWeb();
             }
         }
 
@@ -456,7 +470,7 @@ module OCM {
                     if (this.mapOptions.enableTrackingMapCentre == false) {
                         this.mapOptions.enableTrackingMapCentre = true;
                         var map = this.map;
-                        google.maps.event.addListener(this.map, 'dragend', function () {
+                        var mapManipulated = function () {
                             if (mapManagerContext._mapMoveTimer != null) {
                                 clearTimeout(mapManagerContext._mapMoveTimer);
                                 mapManagerContext._mapMoveTimer = null;
@@ -467,7 +481,7 @@ module OCM {
                                 try {
                                     //create new latlng from map centre so that values get normalised to 180/-180
                                     var centrePos = new google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
-                                    mapManagerContext.log("Map centre changed, updating search position:" + centrePos);
+                                    mapManagerContext.log("Map centre/zoom changed, updating search position:" + centrePos);
                                     mapManagerContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
                                     mapManagerContext.updateSearchPosMarker(centrePos);
                                 } catch (exc) {
@@ -481,7 +495,10 @@ module OCM {
                                     mapManagerContext.mapOptions.enableTrackingMapCentre = true;
                                 }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS - 200);
                             }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
-                        });
+                        }
+
+                        google.maps.event.addListener(this.map, 'dragend', mapManipulated);
+                        google.maps.event.addListener(this.map, 'zoom_changed', mapManipulated);
                     }
                 }
 
@@ -537,17 +554,13 @@ module OCM {
                                     if (this.mapOptions.iconSet == "SmallPins") {
                                         iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
                                     } else {
-                                        iconURL = "images/icons/map/set2_level" + poiLevel + ".png";
-                                        shadow = new google.maps.MarkerImage("images/icons/map/marker-shadow.png",
-                                            new google.maps.Size(41.0, 31.0),
-                                            new google.maps.Point(0, 0),
-                                            new google.maps.Point(12.0, 15.0)
-                                        );
+                                        iconURL = "images/icons/map/set3_level" + poiLevel + ".png";
 
                                         markerImg = new google.maps.MarkerImage(iconURL,
-                                            new google.maps.Size(25.0, 31.0),
+                                            new google.maps.Size(88.0, 88.0),
                                             new google.maps.Point(0, 0),
-                                            new google.maps.Point(12.0, 15.0)
+                                            new google.maps.Point(0, 0),
+                                            new google.maps.Size(44, 44)
                                         );
                                     }
                                 }
@@ -565,7 +578,7 @@ module OCM {
                                     position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
                                     map: this.mapOptions.enableClustering ? null : map,
                                     icon: markerImg != null ? markerImg : iconURL,
-                                    shadow: shadow,
+                                    //shadow: shadow,
                                     title: markerTooltip
                                 });
 
@@ -621,9 +634,14 @@ module OCM {
 
                         map.fitBounds(bounds);
 
-                        //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+                        //fix incorrect zoom level when fitBounds guesses a zoom level of 0 etc.
                         var zoom = map.getZoom();
                         map.setZoom(zoom < 6 ? 6 : zoom);
+                    } else {
+                        //need to set map centre at least once or map won't display
+                        if (map.getCenter() == undefined) {
+                            map.setCenter(bounds.getCenter());
+                        }
                     }
                 }
             }

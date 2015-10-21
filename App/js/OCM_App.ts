@@ -65,7 +65,7 @@ module OCM {
 
             this.mappingManager.setParentAppContext(this);
 
-            this.appConfig.maxResults = 100;
+            this.appConfig.maxResults = 1000;
 
             this.appConfig.baseURL = "http://openchargemap.org/app/";
             this.appConfig.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
@@ -87,8 +87,9 @@ module OCM {
             this.appState.appMode = AppMode.STANDARD;
             //this.appState.appMode = AppMode.LOCALDEV;
             this.appConfig.enableLiveMapQuerying = true;
+            this.appConfig.enablePOIListView = false;
 
-            this.enableLogging = false;
+            this.enableLogging = true;
 
             if (this.appState.appMode == AppMode.LOCALDEV) {
                 this.appConfig.baseURL = "http://localhost:81/app";
@@ -234,7 +235,9 @@ module OCM {
 
                     //if viewModel.poiList changes, update the rendered list and refresh map markers
                     if (change.name == "poiList") {
-                        app.renderPOIList(app.viewModel.poiList);
+                        if (app.appConfig.enablePOIListView) {
+                            app.renderPOIList(app.viewModel.poiList);
+                        }
 
                         //after initial load subsequent queries auto refresh the map markers
 
@@ -1005,8 +1008,21 @@ module OCM {
                             }
 
                             //close zooms are 1:1 level of detail, zoomed out samples less data
-                            var zoomLevel = 22 - this.mappingManager.map.getZoom();
-                            params.levelOfDetail = (zoomLevel <= 12 ? 0 : Math.floor(zoomLevel));
+                            var zoomLevel = this.mappingManager.map.getZoom();
+
+                            if (zoomLevel > 10) {
+                                params.levelOfDetail = 1;
+                            } else if (zoomLevel > 6) {
+                                params.levelOfDetail = 3;
+                            } else if (zoomLevel > 4) {
+                                params.levelOfDetail = 5;
+                            } else if (zoomLevel > 3) {
+                                params.levelOfDetail = 10;
+                            }
+                            else {
+                                params.levelOfDetail = 20;
+                            }
+                            this.log("zoomLevel:" + zoomLevel + "  :Level of detail:" + params.levelOfDetail);
                         }
                     }
 

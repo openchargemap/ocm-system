@@ -60,6 +60,7 @@ module OCM {
         public searchTimeoutMS: number; //max time allowed before search considered timed out
         public searchFrequencyMinMS: number; //min ms between search requests
         public allowAnonymousSubmissions: boolean;
+        public enablePOIListView: boolean;
 
         ///
         // if enabled map movement will perform constant querying, user search for a specific location will centre on that location
@@ -74,6 +75,7 @@ module OCM {
             this.searchFrequencyMinMS = 500;
             this.allowAnonymousSubmissions = false;
             this.enableLiveMapQuerying = false;
+            this.enablePOIListView = true;
         }
     }
 

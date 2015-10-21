@@ -191,6 +191,7 @@
     <TypeScriptCompile Include="js\OCM_Geolocation.ts" />
     <TypeScriptCompile Include="js\OCM_MapInit.ts" />
     <TypeScriptCompile Include="js\OCM_Mapping.ts" />
+    <TypeScriptCompile Include="js\OCM_MapProvider_GoogleWeb.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\history\history.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\jquery\jquery.d.ts" />
@@ -240,7 +241,9 @@
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd $(ProjectDir)
+
 REM -- build problem: xcopy should run after jake but won't. so build twice to update web/api to latest js.
+
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
 xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
 jake --jakefile $(ProjectDir)\jakefile.js build-web-no-ts
