@@ -14,6 +14,7 @@ http://openchargemap.org
 /// <reference path="TypeScriptReferences/phonegap/phonegap.d.ts" />
 /// <reference path="TypeScriptReferences/leaflet/leaflet.d.ts" />
 /// <reference path="TypeScriptReferences/history/history.d.ts" />
+/// <reference path="TypeScriptReferences/collections/collections.d.ts" />
 
 /*reference includes, required for compilation*/
 /// <reference path="OCM_Base.ts" />
@@ -235,15 +236,19 @@ module OCM {
 
                     //if viewModel.poiList changes, update the rendered list and refresh map markers
                     if (change.name == "poiList") {
+                        app.log("Handling POI List Change event.");
                         if (app.appConfig.enablePOIListView) {
                             app.renderPOIList(app.viewModel.poiList);
+                        } else {
                         }
 
                         //after initial load subsequent queries auto refresh the map markers
 
-                        if (app.mappingManager.mapReady) {
+                        if (app.mappingManager.isMapReady()) {
                             app.log("Auto refreshing map view");
                             app.refreshMapView();
+                        } else {
+                            app.log("Map not ready, skipping refresh.");
                         }
                     }
                 });
@@ -262,6 +267,11 @@ module OCM {
 
                     if (change.name == "mapReady" && app.mappingManager.mapReady) {
                         app.log("Map Ready - Let's do this thing.", OCM.LogLevel.VERBOSE);
+
+                        if (app.appConfig.enablePOIListView == false) {
+                            app.toggleMapView(true);
+                        }
+
                         app.refreshMapView();
 
                         //show main page
@@ -536,9 +546,9 @@ module OCM {
             }
         }
 
-        toggleMapView() {
+        toggleMapView(forceHideList: boolean = false) {
             var app = this;
-            if ($("#mapview-container").hasClass("hidden-xs")) {
+            if ($("#mapview-container").hasClass("hidden-xs") || forceHideList == true) {
                 //set map to show on small display
 
                 //hide list

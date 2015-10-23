@@ -37,8 +37,12 @@
                 </p>
 
                 <h3>Example API Calls: </h3>
-                <p>Return charging location information for the US in JSON format, limited to the first 100 results: <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=json&countrycode=US&maxresults=100">@Html.Raw(apiBaseUrl + "poi/")?output=json&amp;countrycode=US&amp;maxresults=100</a></code></p>
-                <p>Return KML format results suitable for viewing in google earth/maps etc (UK, max 500 locations): <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=kml&countrycode=GB&maxresults=500">@Html.Raw(apiBaseUrl + "poi/")?output=kml&amp;countrycode=GB&amp;maxresults=500</a></code></p>
+                <p>Return charging location information for the US in JSON format, limited to the first 10 results: <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=json&countrycode=US&maxresults=10">@Html.Raw(apiBaseUrl + "poi/")?output=json&amp;countrycode=US&amp;maxresults=10</a></code></p>
+                <p>
+                    The default output contains a lot of information. Here is the same call as above, but with the most compact output (formatting removed, reference data as IDs instead of full objects, null fields skipped):
+                    <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=json&countrycode=US&maxresults=10&compact=true&verbose=false">@Html.Raw(apiBaseUrl + "poi/")?output=json&amp;countrycode=US&amp;maxresults=10<em>0&amp;compact=true&amp;verbose=false</em></a></code>
+                </p>
+                <p>Return KML format results suitable for viewing in google earth/maps etc (UK, max 500 locations): <code><a href="@Html.Raw(apiBaseUrl+"poi/")?output=kml&countrycode=GB&maxresults=50">@Html.Raw(apiBaseUrl + "poi/")?output=kml&amp;countrycode=GB&amp;maxresults=500</a></code></p>
 
                 <p><div class="alert alert-warning">Data returned by the API has mixed licensing and applicable copyright attribution (included in results as "Data Provider"). If you require <em>Open</em> licensed data you currently must filter by <code>opendata=true</code> to return only original OCM data.</div></p>
 
@@ -144,6 +148,11 @@
                         <td>verbose</td>
                         <td>true or false. Set to false to get a smaller result set with null items removed. </td>
                         <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>compact</td>
+                        <td>true or false. Set to true to remove reference data objects from output (just returns IDs for common reference data such as DataProvider etc). </td>
+                        <td>false</td>
                     </tr>
                     <tr>
                         <td>camelcase</td>

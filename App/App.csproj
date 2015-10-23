@@ -82,6 +82,7 @@
     <Content Include="js\ThirdParty\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="js\ThirdParty\bootstrap\js\bootstrap.js" />
     <Content Include="js\ThirdParty\bootstrap\js\bootstrap.min.js" />
+    <Content Include="js\ThirdParty\collections\collections.js" />
     <Content Include="js\ThirdParty\google.maps\markerclusterer_compiled.js" />
     <Content Include="js\ThirdParty\google.maps\markerwithlabel_packed.js" />
     <Content Include="js\ThirdParty\jquery-2.1.1.min.js" />
@@ -192,6 +193,7 @@
     <TypeScriptCompile Include="js\OCM_MapInit.ts" />
     <TypeScriptCompile Include="js\OCM_Mapping.ts" />
     <TypeScriptCompile Include="js\OCM_MapProvider_GoogleWeb.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\collections\collections.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\history\history.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\jquery\jquery.d.ts" />

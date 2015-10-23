@@ -72,7 +72,7 @@ module OCM {
             this.searchDistanceKM = 1000 * 100;
             this.mapMoveQueryRefreshMS = 300;
             this.enableSearchRadiusIndicator = false;
-            this.minZoomLevel = 0;
+            this.minZoomLevel = 2;
         }
     }
 

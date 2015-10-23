@@ -15,7 +15,7 @@ module OCM {
             mapCanvasID: string;
 
             private map: any;
-            private markerList: Array<google.maps.Marker>;
+            private markerList: collections.Dictionary<number, google.maps.Marker>;
             private mapManipulationCallback: any;
 
             /** @constructor */
@@ -23,8 +23,15 @@ module OCM {
                 super();
                 this.mapAPIType = MappingAPI.GOOGLE_WEB;
                 this.mapReady = false;
+                this.markerList = new collections.Dictionary<number, google.maps.Marker>();
             }
 
+            /**
+            * Performs one-time init of map object for this map provider
+            * @param mapcanvasID  dom element for map canvas
+            * @param mapConfig  general map config/options
+            * @param mapManipulationCallback  custom handler for map zoom/drag events
+            */
             initMap(mapCanvasID, mapConfig: MapOptions, mapManipulationCallback: any) {
                 this.mapCanvasID = mapCanvasID;
                 this.mapManipulationCallback = mapManipulationCallback;
@@ -93,29 +100,46 @@ module OCM {
                 }
             }
 
+            /**
+            * Renders the given array of POIs as map markers
+            * @param poiList  array of POI objects
+            * @param parentContext  parent app context
+            */
             showPOIListOnMap(poiList: Array<any>, parentContext: OCM.App) {
-                {
-                    var map = this.map;
-                    var bounds = new google.maps.LatLngBounds();
+                var clearMarkersOnRefresh = false;
+                var map = this.map;
+                var bounds = new google.maps.LatLngBounds();
+                var markersAdded = 0;
 
-                    //clear existing markers
+                //clear existing markers (if enabled)
+                if (clearMarkersOnRefresh == true) {
                     if (this.markerList != null) {
-                        for (var i = 0; i < this.markerList.length; i++) {
+                        for (var i = 0; i < this.markerList.size(); i++) {
                             if (this.markerList[i]) {
                                 this.markerList[i].setMap(null);
                             }
                         }
                     }
+                    this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+                }
 
-                    this.markerList = new Array();
-                    if (poiList != null) {
-                        //render poi markers
-                        var poiCount = poiList.length;
-                        for (var i = 0; i < poiList.length; i++) {
-                            if (poiList[i].AddressInfo != null) {
-                                if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                                    var poi = poiList[i];
+                if (poiList != null) {
+                    //render poi markers
+                    var poiCount = poiList.length;
+                    for (var i = 0; i < poiList.length; i++) {
+                        if (poiList[i].AddressInfo != null) {
+                            if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
+                                var poi = poiList[i];
 
+                                var addMarker = true;
+                                if (!clearMarkersOnRefresh && this.markerList != null) {
+                                    //find if this poi already exists in the marker list
+                                    if (this.markerList.containsKey(poi.ID)) {
+                                        addMarker = false;
+                                    }
+                                }
+
+                                if (addMarker) {
                                     var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
 
                                     var iconURL = null;
@@ -130,11 +154,12 @@ module OCM {
                                         new google.maps.Point(0, 0),
                                         new google.maps.Point(12.0, 15.0)
                                     );*/
+
                                     markerImg = new google.maps.MarkerImage(
                                         iconURL,
                                         new google.maps.Size(88.0, 88.0),
                                         null,
-                                        null,
+                                        new google.maps.Point(22, 44),
                                         new google.maps.Size(44, 44)
                                     );
 
@@ -160,34 +185,38 @@ module OCM {
                                     });
 
                                     bounds.extend(newMarker.getPosition());
-                                    this.markerList.push(newMarker);
+
+                                    this.markerList.setValue(poi.ID, newMarker);
+                                    markersAdded++;
                                 }
                             }
                         }
                     }
 
-                    var uiContext = this;
-                    //zoom to bounds of markers
-                    if (poiList != null && poiList.length > 0) {
-                        if (!parentContext.appConfig.enableLiveMapQuerying) {
-                            this.log("Fitting to marker bounds:" + bounds);
+                    this.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+                }
+
+                var uiContext = this;
+                //zoom to bounds of markers
+                if (poiList != null && poiList.length > 0) {
+                    if (!parentContext.appConfig.enableLiveMapQuerying) {
+                        this.log("Fitting to marker bounds:" + bounds);
+                        map.setCenter(bounds.getCenter());
+                        this.log("zoom before fit bounds:" + map.getZoom());
+
+                        map.fitBounds(bounds);
+
+                        //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+                        var zoom = map.getZoom();
+                        map.setZoom(zoom < 6 ? 6 : zoom);
+                    } else {
+                        if (map.getCenter() == undefined) {
                             map.setCenter(bounds.getCenter());
-                            this.log("zoom before fit bounds:" + map.getZoom());
-
-                            map.fitBounds(bounds);
-
-                            //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
-                            var zoom = map.getZoom();
-                            map.setZoom(zoom < 6 ? 6 : zoom);
-                        } else {
-                            if (map.getCenter() == undefined) {
-                                map.setCenter(bounds.getCenter());
-                            }
                         }
                     }
                 }
-                this.refreshMapLayout();
-                //google.maps.event.trigger(this.map, 'resize');
+
+                //this.refreshMapLayout();
             }
 
             refreshMapLayout() {
@@ -210,9 +239,11 @@ module OCM {
             setMapZoom(zoomLevel: number) {
                 this.map.setZoom(zoomLevel);
             }
+
             getMapZoom(): number {
                 return this.map.getZoom();
             }
+
             setMapType(mapType: string) {
                 try {
                     this.map.setMapTypeId(eval("google.maps.MapTypeId." + mapType));
@@ -220,6 +251,7 @@ module OCM {
                     this.log("Failed to set map type:" + mapType + " : " + exception.toString());
                 }
             }
+
             getMapBounds(): Array<GeoLatLng> {
                 var bounds = new Array<GeoLatLng>();
 
@@ -229,6 +261,7 @@ module OCM {
 
                 return bounds;
             }
+
             renderMap(poiList: Array<any>, mapHeight: number, parentContext: App): boolean {
                 document.getElementById(this.mapCanvasID).style.height = mapHeight + "px";
 
