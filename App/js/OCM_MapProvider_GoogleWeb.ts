@@ -147,20 +147,19 @@ module OCM {
                                     var shadow = null;
                                     var markerImg = null;
 
-                                    iconURL = "images/icons/map/set3_level" + poiLevel + ".png";
+                                    iconURL = "images/icons/map/set4_level" + poiLevel;
+                                    if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
+                                        iconURL += "_private";
+                                    }
 
-                                    /*markerImg = new google.maps.MarkerImage(iconURL,
-                                        new google.maps.Size(25.0, 31.0),
-                                        new google.maps.Point(0, 0),
-                                        new google.maps.Point(12.0, 15.0)
-                                    );*/
+                                    iconURL += ".png";
 
                                     markerImg = new google.maps.MarkerImage(
                                         iconURL,
-                                        new google.maps.Size(88.0, 88.0),
+                                        new google.maps.Size(68, 100.0),
                                         null,
-                                        new google.maps.Point(22, 44),
-                                        new google.maps.Size(44, 44)
+                                        new google.maps.Point(15, 45),
+                                        new google.maps.Size(34, 50)
                                     );
 
                                     var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
@@ -216,7 +215,7 @@ module OCM {
                     }
                 }
 
-                //this.refreshMapLayout();
+                this.refreshMapLayout();
             }
 
             refreshMapLayout() {
