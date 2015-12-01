@@ -107,7 +107,8 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Latitude = double.Parse(item["lat"].ToString());
                 cp.AddressInfo.Longitude = double.Parse(item["lng"].ToString());
 
-                var countryCode = item["country"].ToString().ToLower();
+                //disable matching on country. Country information is not always reliable, will do Geocode instead
+                /*var countryCode = item["country"].ToString().ToLower();
 
                 if (!distinctCountries.Exists(c=>c==countryCode)) distinctCountries.Add(countryCode);
 
@@ -120,6 +121,7 @@ namespace OCM.Import.Providers
                 if (countryCode == "ir") countryCode = "ie"; //ireland, not iran
 
                 cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == countryCode);
+                */
                 if (!String.IsNullOrEmpty(item["url"].ToString())) cp.AddressInfo.RelatedURL = item["url"].ToString();
                 if (!String.IsNullOrEmpty(item["email"].ToString())) cp.AddressInfo.ContactEmail = item["email"].ToString();
                 if (!String.IsNullOrEmpty(item["phone"].ToString())) cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
