@@ -51,7 +51,14 @@ namespace OCM.Core.Util
     {
         public string UploadImage(string sourceFile, string destName, List<KeyValuePair<string, string>> metadataTags)
         {
-            return BlobStorageHelper.UploadImageBlob(sourceFile, destName, metadataTags);
+            string result = BlobStorageHelper.UploadImageBlob(sourceFile, destName, metadataTags);
+
+            //auto apply https instead of http in image url
+            if (result != null && result.StartsWith("http://"))
+            {
+                result = result.Replace("http://", "https://");
+            }
+            return result;
         }
     }
 }
