@@ -684,15 +684,18 @@ namespace OCM.Core.Data
                 }
 
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
-                poiList = from c in poiList
-                          where
-                          c.Connections.Any(conn =>
-                                (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
-                                && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
-                                && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
-                                && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
-                                 )
-                          select c;
+                if (settings.ConnectionType != null || settings.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
+                {
+                    poiList = from c in poiList
+                              where
+                              c.Connections.Any(conn =>
+                                    (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
+                                    && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
+                                    && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
+                                    && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
+                                     )
+                              select c;
+                }
 
                 List<API.Common.Model.ChargePoint> results = null;
                 if (!requiresDistance || (settings.Latitude == null || settings.Longitude == null))

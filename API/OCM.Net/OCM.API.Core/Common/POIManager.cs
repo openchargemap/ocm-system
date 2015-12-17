@@ -402,16 +402,18 @@ namespace OCM.API.Common
                     /////////////////
 
                     //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
-                    chargePointList = from c in chargePointList
-                                      where
-                                      c.Connections.Any(conn =>
-                                            (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
-                                            && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
-                                            && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
-                                            && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.ChargerType.ID)))
-                                             )
-                                      select c;
-
+                    if (settings.ConnectionType != null || settings.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
+                    {
+                        chargePointList = from c in chargePointList
+                                          where
+                                          c.Connections.Any(conn =>
+                                                (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
+                                                && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
+                                                && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
+                                                && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.ChargerType.ID)))
+                                                 )
+                                          select c;
+                    }
                     System.Data.Entity.Spatial.DbGeography searchPos = null;
 
                     if (requiresDistance && settings.Latitude != null && settings.Longitude != null) searchPos = System.Data.Entity.Spatial.DbGeography.PointFromText("POINT(" + settings.Longitude + " " + settings.Latitude + ")", 4326);
