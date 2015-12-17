@@ -60,6 +60,7 @@ module OCM {
     export class App extends OCM.LocationEditor {
         private resultItemTemplate: any;
         private fileUploadManager: OCM.FileUpload;
+        private _autocomplete: any;
 
         constructor() {
             super();
@@ -89,6 +90,7 @@ module OCM {
             //this.appState.appMode = AppMode.LOCALDEV;
             this.appConfig.enableLiveMapQuerying = true;
             this.appConfig.enablePOIListView = false;
+            // this.mappingManager.setMapAPI(MappingAPI.GOOGLE_NATIVE);
 
             this.enableLogging = true;
 
@@ -261,16 +263,15 @@ module OCM {
                     app.log("changed: app.mappingManager." + change.name);
 
                     if (change.name == "mapAPIReady" && app.mappingManager.mapAPIReady) {
-                        app.log("Map API Ready - Initialising Map.", OCM.LogLevel.VERBOSE);
+                        app.log("Mapping Step 1:Map API Ready - Initialising Map.", OCM.LogLevel.VERBOSE);
+
+                        //if (!app.mappingManager.isMapReady()) {
                         app.mappingManager.initMap("map-view");
+                        // }
                     }
 
-                    if (change.name == "mapReady" && app.mappingManager.mapReady) {
-                        app.log("Map Ready - Let's do this thing.", OCM.LogLevel.VERBOSE);
-
-                        if (app.appConfig.enablePOIListView == false) {
-                            app.toggleMapView(true);
-                        }
+                    if (change.name == "mapReady" && app.mappingManager.isMapReady()) {
+                        app.log("Mapping Step 2:Map Initialised. Performing First Render:", OCM.LogLevel.VERBOSE);
 
                         app.refreshMapView();
 
@@ -1080,8 +1081,9 @@ module OCM {
             this.viewModel.searchPosition = pos;
 
             this.clearSearchRequest();
+            this.mappingManager.updateMapCentrePos(pos.coords.latitude, pos.coords.longitude, true);
 
-            this.performSearch();
+            //this.performSearch();
         }
 
         determineGeocodedLocationFailed() {
@@ -1285,6 +1287,8 @@ module OCM {
         }
 
         showDetailsView(element, poi) {
+            var mapSideViewMode = true;
+            var templatePrefix = "";
             this.viewModel.selectedPOI = poi;
 
             this.log("Showing OCM-" + poi.ID + ": " + poi.AddressInfo.Title);
@@ -1301,9 +1305,16 @@ module OCM {
             //TODO: bug/ref data load when editor opens clears settings
 
             var $element = $(element);
-            var $detailsView = $("#locationdetails-view");
-            $detailsView.css("width", "90%");
-            $detailsView.css("display", "block");
+            var $poiTemplate;
+            var $detailsView = null;
+
+            if (mapSideViewMode == true) {
+                $detailsView = $("#list-scroll-container");
+            } else {
+                $detailsView = $("#locationdetails-view");
+                $detailsView.css("width", "90%");
+                $detailsView.css("display", "block");
+            }
 
             //populate details view
             var poiDetails = OCM.Utils.formatPOIDetails(poi, false);
@@ -1385,11 +1396,17 @@ module OCM {
                 $("#details-mediaitems-gallery").html("");
             }
 
-            /*
-            var leftPos = $element.position().left;
-            var topPos = $element.position().top;
-            $detailsView.css("left", leftPos);
-            $detailsView.css("top", topPos);*/
+            if (mapSideViewMode) {
+                $poiTemplate = $("#details-content").detach();
+
+                $poiTemplate.appendTo($detailsView);
+                $("#results-list").hide();
+                $(".details-body").css("margin-top", "0");
+                $("#details-locationtitle").css("font-size", "1em");
+
+                $("#details-map").hide();
+            } else {
+            }
 
             //once displayed, try fetching a more accurate distance estimate
             if (this.viewModel.searchPosition != null) {
@@ -1429,7 +1446,7 @@ module OCM {
             //on showing map, adjust map container height to match page
             var mapHeight = this.adjustMainContentHeight();
 
-            this.mappingManager.refreshMapView("map-view", mapHeight, this.viewModel.poiList, this.viewModel.searchPosition);
+            this.mappingManager.refreshMapView(mapHeight, this.viewModel.poiList, this.viewModel.searchPosition);
 
             //set map type based on pref
             this.mappingManager.setMapType($("#pref-basemap-type").val());
@@ -1897,6 +1914,26 @@ module OCM {
             //jump to top of page
             this.log("Status tapped, scrolling to page top.");
             window.scrollTo(0, 0);
+        }
+
+        initPlacesAutocomplete() {
+            // Create the search box and link it to the UI element.
+            var input = <HTMLInputElement>document.getElementById('search-location');
+
+            this._autocomplete = new google.maps.places.Autocomplete(input);
+            //this._autocomplete.setComponentRestrictions({ 'country': 'au' });
+            // When the user selects an address from the dropdown, populate the address
+            // fields in the form.
+            this._autocomplete.addListener('place_changed', $.proxy(this.searchFromSelectedPlace, this));
+        }
+
+        searchFromSelectedPlace() {
+            // Get the place details from the autocomplete object.
+            var place = this._autocomplete.getPlace();
+
+            if (place != null) {
+                this.determineGeocodedLocationCompleted(new GeoPosition(place.geometry.location.lat(), place.geometry.location.lng()));
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ module OCM {
      * @module OCM.Mapping
      */
     export module MapProviders {
-        export class GoogleMapsWeb extends OCM.Base implements IMapProvider {
+        export class GoogleMapsNative extends OCM.Base implements IMapProvider {
             mapAPIType: OCM.MappingAPI;
             mapReady: boolean;
             providerError: string;
@@ -21,9 +21,10 @@ module OCM {
             /** @constructor */
             constructor() {
                 super();
-                this.mapAPIType = MappingAPI.GOOGLE_WEB;
+                this.mapAPIType = MappingAPI.GOOGLE_NATIVE;
                 this.mapReady = false;
                 this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+                this.mapCanvasID = "map-view";
             }
 
             /**
@@ -32,71 +33,56 @@ module OCM {
             * @param mapConfig  general map config/options
             * @param mapManipulationCallback  custom handler for map zoom/drag events
             */
-            initMap(mapCanvasID, mapConfig: MapOptions, mapManipulationCallback: any) {
+            initMap(mapCanvasID, mapConfig: MapOptions, mapManipulationCallback: any, parentMapManager: Mapping) {
+                this.log("GoogleMapsNative: initMap");
                 this.mapCanvasID = mapCanvasID;
                 this.mapManipulationCallback = mapManipulationCallback;
 
-                var apiLoaded = true;
-                if (typeof google === 'undefined') {
-                    apiLoaded = false;
-                } else if (typeof google.maps === 'undefined') {
-                    apiLoaded = false;
-                }
+                var apiAvailable = true;
+                if ((<any>window).plugin && plugin.google && plugin.google.maps) {
+                    apiAvailable = true;
 
-                if (apiLoaded) {
+                    this.log("Native maps plugin is available.");
+
                     if (this.map == null) {
                         var mapCanvas = document.getElementById(mapCanvasID);
+                        this.map = plugin.google.maps.Map.getMap();
 
-                        if (mapCanvas != null) {
-                            (<any>google.maps).visualRefresh = true;
+                        var mapManagerContext = this;
 
-                            mapCanvas.style.width = '99.5%';
-                            mapCanvas.style.height = $(document).height().toString();
+                        //setup map manipulation events
+                        this.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, function () {
+                            mapManipulationCallback("drag");
+                        });
 
-                            //create map
+                        this.map.on(plugin.google.maps.event.MAP_READY, function () {
+                            mapManagerContext.log("Native Mapping Ready.", LogLevel.INFO);
+
                             var mapOptions = {
-                                zoom: 10,
-                                minZoom: mapConfig.minZoomLevel,
-                                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                                mapTypeControl: true,
-                                mapTypeControlOptions: {
-                                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                                    position: google.maps.ControlPosition.BOTTOM_RIGHT
+                                mapType: plugin.google.maps.MapTypeId.ROADMAP,
+                                controls: {
+                                    compass: true,
+                                    myLocationButton: true,
+                                    zoom: true
                                 },
-                                panControl: true,
-                                panControlOptions: {
-                                    position: google.maps.ControlPosition.TOP_LEFT
-                                },
-                                zoomControl: true,
-                                zoomControlOptions: {
-                                    style: google.maps.ZoomControlStyle.LARGE,
-                                    position: google.maps.ControlPosition.TOP_LEFT
-                                },
-                                scaleControl: true,
-                                scaleControlOptions: {
-                                    position: google.maps.ControlPosition.BOTTOM_LEFT
-                                },
-                                streetViewControl: true,
-                                streetViewControlOptions: {
-                                    position: google.maps.ControlPosition.TOP_LEFT
+                                gestures: {
+                                    scroll: true,
+                                    tilt: true,
+                                    rotate: true,
+                                    zoom: true
                                 }
                             };
 
-                            this.map = new google.maps.Map(mapCanvas, mapOptions);
-
-                            this.mapReady = true;
-
-                            //TODO: events for map manipulation to perform search
-                            google.maps.event.addListener(this.map, 'dragend', function () { mapManipulationCallback("drag"); });
-                            google.maps.event.addListener(this.map, 'zoom_changed', function () { mapManipulationCallback("zoom"); });
-                        }
+                            mapManagerContext.map.setOptions(mapOptions);
+                            mapManagerContext.map.setDiv(mapCanvas);
+                            mapManagerContext.map.setVisible(true);
+                            mapManagerContext.mapReady = true;
+                            parentMapManager.mapReady = true;
+                        });
                     }
-                }
-                else {
-                    this.log("Call to initMap before API is ready:" + OCM.MappingAPI[this.mapAPIType], LogLevel.ERROR);
-
+                } else {
+                    this.log("No native maps plugin available.");
                     this.mapReady = false;
-                    return false;
                 }
             }
 
@@ -108,7 +94,11 @@ module OCM {
             showPOIListOnMap(poiList: Array<any>, parentContext: OCM.App) {
                 var clearMarkersOnRefresh = false;
                 var map = this.map;
-                var bounds = new google.maps.LatLngBounds();
+
+                map.setVisible(true);
+                map.clear();
+
+                var bounds = new plugin.google.maps.LatLngBounds();
                 var markersAdded = 0;
 
                 //clear existing markers (if enabled)
@@ -120,7 +110,7 @@ module OCM {
                             }
                         }
                     }
-                    this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+                    this.markerList = new collections.Dictionary<number, any>();
                 }
 
                 if (poiList != null) {
@@ -154,6 +144,12 @@ module OCM {
 
                                     iconURL += ".png";
 
+                                    var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                                    if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+                                    if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
+                                    if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+
+                                    /*
                                     markerImg = new google.maps.MarkerImage(
                                         iconURL,
                                         new google.maps.Size(68, 100.0),
@@ -161,11 +157,6 @@ module OCM {
                                         new google.maps.Point(15, 45),
                                         new google.maps.Size(34, 50)
                                     );
-
-                                    var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-                                    if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                                    if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
-                                    if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
 
                                     var newMarker = <any>new google.maps.Marker({
                                         position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
@@ -180,10 +171,36 @@ module OCM {
                                     google.maps.event.addListener(newMarker, 'click', function () {
                                         //TODO: move to parent callback, probably based on poi.ID
                                         parentContext.showDetailsView(anchorElement, this.poi);
-                                        parentContext.showPage("locationdetails-page", "Location Details");
+                                        //parentContext.showPage("locationdetails-page", "Location Details");
+                                    });
+                                    */
+
+                                    var markerPos = new plugin.google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);
+
+                                    var newMarker = map.addMarker({
+                                        'position': markerPos,
+                                        'title': markerTooltip,
+                                        'snippet': "View details",
+                                        'icon': {
+                                            'url': 'www/' + iconURL,
+                                            'size': {
+                                                'width': 30,
+                                                'height': 50
+                                            }
+                                        }
+                                    }, function (marker) {
+                                        //show full details when info window tapped
+                                        marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
+                                            var markerTitle = marker.getTitle();
+                                            var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
+                                            //app.hideMap();
+
+                                            parentContext.showDetailsViewById(poiId, false);
+                                            parentContext.showPage("locationdetails-page", "Location Details");
+                                        });
                                     });
 
-                                    bounds.extend(newMarker.getPosition());
+                                    bounds.extend(markerPos);
 
                                     this.markerList.setValue(poi.ID, newMarker);
                                     markersAdded++;
@@ -215,20 +232,32 @@ module OCM {
                     }
                 }
 
+                // this.log("Moving camera to map centre:" + this.mapOptions.mapCentre);
+
+                //move camera insteaad of animating
+                /*setTimeout(function () {
+                    map.moveCamera({
+                        'target': gmMapCentre,
+                        'tilt': 60,
+                        'zoom': 12,
+                        'bearing': 0
+                    });
+                }, 500);*/
+
                 this.refreshMapLayout();
             }
 
             refreshMapLayout() {
                 if (this.map != null) {
-                    google.maps.event.trigger(this.map, 'resize');
+                    this.map.refreshLayout();
                 }
             }
 
             setMapCenter(pos: GeoPosition) {
                 if (this.mapReady) {
-                    this.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+                    this.map.setCenter(new plugin.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
                 }
-            };
+            }
 
             getMapCenter(): GeoPosition {
                 var pos = this.map.getCenter();
@@ -262,20 +291,35 @@ module OCM {
             }
 
             renderMap(poiList: Array<any>, mapHeight: number, parentContext: App): boolean {
+                if (!this.mapReady) {
+                    this.log("renderMap: skipping render, map not ready yet");
+                }
+
+                if (this.map == null) this.log("Native map not initialised");
+                if (this.mapCanvasID == null) this.log("mapcanvasid not set!!");
                 document.getElementById(this.mapCanvasID).style.height = mapHeight + "px";
 
-                if (typeof (google) == "undefined") {
-                    //no google maps currently available
-                    this.providerError = "Google maps cannot be loaded. Please check your data connection.";
-                    return false;
-                }
+                var mapManagerContext = this;
+                var isAvailable = plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
+                    if (isAvailable) {
+                        //setup map view if not already initialised
+                        //mapManagerContext.initMap(this.mapCanvasID, parentContext.mappingManager.mapOptions, this.mapManipulationCallback, parentContext.mappingManager);
 
-                //finish init of map view if not already initialised (could previously be called before api ready)
-                this.initMap(this.mapCanvasID, parentContext.mappingManager.mapOptions, this.mapManipulationCallback);
+                        /*if (parentContext != null && parentContext.viewModel.searchPosition != null) {
+                            var searchPos = parentContext.viewModel.searchPosition;
+                            if (searchPos != null) {
+                                mapManagerContext.(searchPos.coords.latitude, searchPos.coords.longitude, false);
+                            }
+                        } else {
+                            mapManagerContext.log("Map centre cannot be updated");
+                        }*/
 
-                if (this.mapReady) {
-                    this.showPOIListOnMap(poiList, parentContext);
-                }
+                        mapManagerContext.showPOIListOnMap(poiList, parentContext);
+                    } else {
+                        mapManagerContext.log("Native Maps not available");
+                    }
+                    return isAvailable;
+                });
 
                 return true;
             }

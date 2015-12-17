@@ -44,7 +44,6 @@ function onDeviceReady() {
     ocm_app.log("OCM: Cordova Loaded, onDeviceReady Fired.");
 
     if (device) {
-
         //if running under iOS 7or higher , add iOS specific css adjustments
         var iOS7 =
             device.platform
@@ -79,7 +78,7 @@ function onDeviceReady() {
     /*
     //phonegap analytics plugin
     */
-    window.analytics.startTrackerWithId('UA-76936-12');
+    if (window.analytics) window.analytics.startTrackerWithId('UA-76936-12');
 
     if (window.L) {
         ocm_app.log("Leaflet ready");
@@ -96,19 +95,16 @@ $(function () {
         ocm_app.log("There can be only one.");
 
         //apply safari specific styling adjustments
-        var isSafari = navigator.vendor.indexOf("Apple")==0 && /\sSafari\//.test(navigator.userAgent); // true or false
+        var isSafari = navigator.vendor.indexOf("Apple") == 0 && /\sSafari\//.test(navigator.userAgent); // true or false
         if (isSafari) {
             ocm_app.log("Adjusting for Safari browser.");
-             $("body").addClass("safari");
+            $("body").addClass("safari");
         }
-        
+
         if (window.cordova) {
             ocm_app.appState.isRunningUnderCordova = true;
             ocm_app.log("Phonegap enabled. Operating as mobile app.");
             document.addEventListener("deviceready", onDeviceReady, false);
-
-          
-
         } else {
             ocm_app.log("Phonegap not enabled. Operating as desktop browser.");
             startApp();

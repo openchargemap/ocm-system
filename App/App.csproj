@@ -192,7 +192,8 @@
     <TypeScriptCompile Include="js\OCM_Geolocation.ts" />
     <TypeScriptCompile Include="js\OCM_MapInit.ts" />
     <TypeScriptCompile Include="js\OCM_Mapping.ts" />
-    <TypeScriptCompile Include="js\OCM_MapProvider_GoogleWeb.ts" />
+    <TypeScriptCompile Include="js\OCM_MapProvider_GoogleMapsNative.ts" />
+    <TypeScriptCompile Include="js\OCM_MapProvider_GoogleMapsWeb.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\collections\collections.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\history\history.d.ts" />

@@ -87,7 +87,7 @@ module OCM {
         mapReady: boolean;
         providerError: string;
 
-        initMap(mapCanvasID: string, mapConfig: MapOptions, mapManipulationCallback: any);
+        initMap(mapCanvasID: string, mapConfig: MapOptions, mapManipulationCallback: any, mapManagerContext: Mapping);
         refreshMapLayout();
         renderMap(poiList: Array<any>, mapHeight: number, parentContext: App);
         getMapZoom(): number;
@@ -116,6 +116,7 @@ module OCM {
         public parentAppContext: OCM.App;
         private _mapMoveTimer: any;
         private mapProvider: IMapProvider;
+        private debouncedMapPositionUpdate: any;
 
         /** @constructor */
         constructor() {
@@ -128,6 +129,18 @@ module OCM {
             this.mapReady = false;
 
             this.setMapAPI(this.mapOptions.mapAPI);
+
+            var mapManagerContext = this;
+            this.debouncedMapPositionUpdate = OCM.Utils.debounce(function () {
+                mapManagerContext.log("signaling map position change:");
+                if (mapManagerContext.mapProvider.mapReady) {
+                    //create new latlng from map centre so that values get normalised to 180/-180
+
+                    var centerPos: GeoPosition = mapManagerContext.mapProvider.getMapCenter();
+                    mapManagerContext.log("Map centre/zoom changed, updating search position:" + centerPos);
+                    mapManagerContext.updateMapCentrePos(centerPos.coords.latitude, centerPos.coords.longitude, false);
+                }
+            }, 300, false);
         }
 
         setParentAppContext(context: any) {
@@ -138,9 +151,7 @@ module OCM {
             this.mapOptions.mapAPI = api;
 
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                if (plugin.google.maps) {
-                    this.mapAPIReady = true;
-                }
+                this.mapProvider = new OCM.MapProviders.GoogleMapsNative();
             }
 
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
@@ -152,54 +163,13 @@ module OCM {
             if (this.mapProvider != null) {
                 return this.mapProvider.mapReady;
             } else {
-                //TODO: remove when all map providers implemented
-                if (this.map != null && this.isMapReady) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return false;
             }
         }
 
         externalAPILoaded(mapAPI: OCM.MappingAPI) {
             this.mapAPIReady = true;
-            this.log("Mapping API Loaded: " + mapAPI);
-        }
-
-        /**
-        * Used by map provider as callback when a zoom or pan/drag has been performed
-        * @param manipulationType  string name for event "zoom", "drag" etc
-        */
-        mapManipulationPerformed(manipulationType: string) {
-            this.log("map manipulated:" + manipulationType);
-            var mapManagerContext = this;
-            if (manipulationType == "drag" || manipulationType == "zoom") {
-                if (mapManagerContext._mapMoveTimer != null) {
-                    clearTimeout(mapManagerContext._mapMoveTimer);
-                    mapManagerContext._mapMoveTimer = null;
-                }
-
-                //after the center of the map centre has stopped changing, update search centre pos
-                mapManagerContext._mapMoveTimer = window.setTimeout(function () {
-                    try {
-                        //create new latlng from map centre so that values get normalised to 180/-180
-
-                        var centerPos: GeoPosition = mapManagerContext.mapProvider.getMapCenter();
-                        mapManagerContext.log("Map centre/zoom changed, updating search position:" + centerPos);
-                        mapManagerContext.updateMapCentrePos(centerPos.coords.latitude, centerPos.coords.longitude, false);
-                        //mapManagerContext.updateSearchPosMarker(centerPos);
-                    } catch (exc) {
-                        //failed to update map centre pos
-                    }
-
-                    clearTimeout(mapManagerContext._mapMoveTimer);
-                    mapManagerContext._mapMoveTimer = null;
-
-                    setTimeout(function () {
-                        mapManagerContext.mapOptions.enableTrackingMapCentre = true;
-                    }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS - 200);
-                }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
-            }
+            this.log("Mapping API Loaded: " + OCM.MappingAPI[mapAPI]);
         }
 
         /**
@@ -208,9 +178,13 @@ module OCM {
          */
         initMap(mapcanvasID: string) {
             if (this.mapProvider != null) {
+                if (this.mapsInitialised) {
+                    this.log("initMap: Map provider already initialised");
+                }
+
                 this.log("Mapping Manager: Init " + OCM.MappingAPI[this.mapProvider.mapAPIType]);
-                this.mapProvider.initMap(mapcanvasID, this.mapOptions, $.proxy(this.mapManipulationPerformed, this));
-                this.mapsInitialised = true;
+
+                this.mapProvider.initMap(mapcanvasID, this.mapOptions, $.proxy(this.mapManipulationPerformed, this), this);
             } else {
                 if (this.mapsInitialised) {
                     this.log("initMap: map already initialised");
@@ -218,251 +192,6 @@ module OCM {
                 } else {
                     this.log("initMap: " + this.mapOptions.mapAPI)
                 }
-                //detect if running under cordova and if google maps plugin is available
-                if (this.parentAppContext.appState.isRunningUnderCordova) {
-                    var mappingManager = this;
-
-                    if (mappingManager.mapOptions.mapAPI != OCM.MappingAPI.GOOGLE_NATIVE) {
-                        //for cordova, switch over to native google maps, if available
-                        if ((<any>window).plugin && plugin.google && plugin.google.maps) {
-                            plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
-                                if (isAvailable) {
-                                    mappingManager.log("Native maps available, switching API.");
-                                    mappingManager.setMapAPI(OCM.MappingAPI.GOOGLE_NATIVE);
-                                } else {
-                                    mappingManager.log("Google Play Services not available, fallback to web maps API");
-                                }
-                            });
-                        } else {
-                            mappingManager.log("Running under cordova but no native maps plugin available.");
-                        }
-                    }
-                }
-
-                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                    this.initMapGoogleNativeSDK(mapcanvasID);
-                }
-            }
-        }
-
-        initMapGoogleNativeSDK(mapcanvasID: string) {
-            if (this.mapsInitialised) return false;
-
-            this.log("Using Google Maps Native", LogLevel.INFO);
-
-            if (plugin.google && plugin.google.maps) {
-                var mapManagerContext = this;
-                var mapCanvas = document.getElementById(mapcanvasID);
-
-                this.map = plugin.google.maps.Map.getMap();
-                var map = this.map;
-
-                if (this.mapOptions.enableClustering) {
-                    this.markerClusterer = new MarkerClusterer(this.map, this.markerList);
-                }
-
-                this.map.addEventListener(plugin.google.maps.event.MY_LOCATION_BUTTON_CLICK, function () {
-                    map.getMyLocation(function (location) {
-                        var msg = JSON.stringify(location);
-                        mapManagerContext.log("My Location Clicked, updating search position: " + msg);
-                        mapManagerContext.updateMapCentrePos(location.latLng.lat, location.latLng.lng, false);
-                        mapManagerContext.updateSearchPosMarker(new plugin.google.maps.LatLng(location.latLng.lat, location.latLng.lng));
-                        mapManagerContext.mapOptions.requestSearchUpdate = true;
-                    }
-                    );
-                });
-
-                this.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, function () {
-                    if (mapManagerContext._mapMoveTimer != null) {
-                        clearTimeout(mapManagerContext._mapMoveTimer);
-                        mapManagerContext._mapMoveTimer = null;
-                    }
-
-                    var map = this.map;
-
-                    // after the center of the map centre has stopped changing, update search centre pos
-                    mapManagerContext._mapMoveTimer = window.setTimeout(function () {
-                        try {
-                            //create new latlng from map centre so that values get normalised to 180/-180
-                            var centrePos = new plugin.google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng());
-                            mapManagerContext.log("Map centre changed, updating search position:" + centrePos);
-
-                            mapManagerContext.updateMapCentrePos(centrePos.lat(), centrePos.lng(), false);
-                            mapManagerContext.updateSearchPosMarker(centrePos);
-                        } catch (exc) {
-                            //failed to update map centre pos
-                        }
-
-                        clearTimeout(mapManagerContext._mapMoveTimer);
-                        mapManagerContext._mapMoveTimer = null;
-                    }, mapManagerContext.mapOptions.mapMoveQueryRefreshMS);
-                });
-
-                this.map.on(plugin.google.maps.event.MAP_READY, function () {
-                    mapManagerContext.log("Native Mapping Ready.", LogLevel.INFO);
-
-                    var mapOptions = {
-                        mapType: plugin.google.maps.MapTypeId.ROADMAP,
-                        controls: {
-                            compass: true,
-                            myLocationButton: true,
-                            zoom: true
-                        },
-                        gestures: {
-                            scroll: true,
-                            tilt: true,
-                            rotate: true,
-                            zoom: true
-                        }
-                        /*,
-                        camera: {
-                            zoom: 15,
-                            bearing: 50
-                        }*/
-                    };
-                    map.setOptions(mapOptions);
-                    map.setDiv(mapCanvas);
-
-                    map.setVisible(true);
-
-                    mapManagerContext.mapReady = true;
-                });
-            }
-
-            //map init has completed, map not actually ready until mapReady==true
-            mapManagerContext.mapAPIReady = true;
-            mapManagerContext.mapsInitialised = true;
-
-            return true;
-        }
-
-        showPOIListOnMapViewGoogleNativeSDK(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
-            var app = this;
-            if (!this.mapReady) {
-                return;
-            }
-            //if list has changes to results render new markers etc
-
-            var map = this.map;
-            map.setVisible(true);
-            map.clear();
-
-            var bounds = new plugin.google.maps.LatLngBounds();
-
-            if (this.mapOptions.enableClustering && this.markerClusterer) {
-                this.markerClusterer.clearMarkers();
-            }
-
-            //clear existing markers
-            if (this.markerList != null) {
-                for (var m = 0; m < this.markerList.length; m++) {
-                    if (this.markerList[m]) {
-                        this.markerList[m].setMap(null);
-                    }
-                }
-            }
-
-            this.markerList = new Array();
-
-            if (poiList != null) {
-                //render poi markers
-                var poiCount = poiList.length;
-                for (var i = 0; i < poiList.length; i++) {
-                    if (poiList[i].AddressInfo != null) {
-                        if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                            var poi = poiList[i];
-
-                            var poiLevel = OCM.Utils.getMaxLevelOfPOI(poi);
-
-                            var iconURL = null;
-                            var animation = null;
-                            var shadow = null;
-                            var markerImg = null;
-
-                            if (this.mapOptions.useMarkerIcons) {
-                                if (this.mapOptions.iconSet == "SmallPins") {
-                                    iconURL = "images/icons/map/sm_pin_level" + poiLevel + ".png";
-                                } else {
-                                    iconURL = "images/icons/map/set2_level" + poiLevel + "_60x100.png";
-                                }
-                            }
-
-                            var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-                            if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                            if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
-                            if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
-
-                            var parentContext = this.parentAppContext;
-
-                            var markerPos = new plugin.google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);
-
-                            map.addMarker({
-                                'position': markerPos,
-                                'title': markerTooltip,
-                                'snippet': "View details",
-                                'icon': {
-                                    'url': 'www/' + iconURL,
-                                    'size': {
-                                        'width': 30,
-                                        'height': 50
-                                    }
-                                }
-                            }, function (marker) {
-                                //show full details when info window tapped
-                                marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
-                                    var markerTitle = marker.getTitle();
-                                    var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
-                                    //app.hideMap();
-
-                                    parentContext.showDetailsViewById(poiId, false);
-                                    parentContext.showPage("locationdetails-page", "Location Details");
-                                });
-                            });
-
-                            bounds.extend(markerPos);
-                        }
-                    }
-                }
-            }
-
-            if (this.mapOptions.enableClustering && this.markerClusterer) {
-                this.markerClusterer.addMarkers(this.markerList);
-            }
-
-            //include centre search location in bounds of map zoom
-            if (this.searchMarker != null) bounds.extend(this.searchMarker.position);
-
-            var uiContext = this;
-
-            this.log("Native Maps: refreshing map layout");
-            this.map.refreshLayout();
-
-            if (this.mapOptions.mapCentre != null) {
-                var gmMapCentre = new plugin.google.maps.LatLng(this.mapOptions.mapCentre.coords.latitude, this.mapOptions.mapCentre.coords.longitude);
-
-                if (this.mapOptions.searchDistanceKM != null && this.mapOptions.enableSearchRadiusIndicator) {
-                    map.addCircle({
-                        'center': gmMapCentre,
-                        'radius': this.mapOptions.searchDistanceKM,
-                        'strokeColor': '#AA00FF',
-                        'strokeWidth': 5,
-                        'fillColor': '#009DFF33'
-                    });
-                }
-
-                this.log("Moving camera to map centre:" + this.mapOptions.mapCentre);
-
-                //move camera insteaad of animating
-                setTimeout(function () {
-                    map.moveCamera({
-                        'target': gmMapCentre,
-                        'tilt': 60,
-                        'zoom': 12,
-                        'bearing': 0
-                    });
-                }, 500);
-            } else {
-                this.log("map centre not set, not setting camera");
             }
         }
 
@@ -554,6 +283,19 @@ module OCM {
                         });
                     }
                 }
+            }
+        }
+
+        /**
+        * Used by map provider as callback when a zoom or pan/drag has been performed
+        * @param manipulationType  string name for event "zoom", "drag" etc
+        */
+        mapManipulationPerformed(manipulationType: string) {
+            this.log("map manipulated:" + manipulationType);
+            var mapManagerContext = this;
+            if (manipulationType == "drag" || manipulationType == "zoom") {
+                //after the center of the map centre has stopped changing, update search centre pos
+                this.debouncedMapPositionUpdate();
             }
         }
 
@@ -677,7 +419,7 @@ module OCM {
             }
         }
 
-        createMapLeaflet = function (mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
+        createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
             // create a map in the "map" div, set the view to a given place and zoom
             var map = new L.Map(mapcanvasID);
             if (currentLat != null && currentLng != null) {
@@ -712,67 +454,34 @@ module OCM {
                 if (this.mapProvider.mapReady) {
                     this.mapProvider.refreshMapLayout();
                 }
-            } else {
-                if (this.map != null) {
-                    if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
-                        this.map.refreshLayout();
-                    }
-                }
             }
         }
 
-        updateMapCentrePos = function (lat: number, lng: number, moveMap: boolean) {
+        updateMapCentrePos(lat: number, lng: number, moveMap: boolean) {
             //update record of map centre so search results can optionally be refreshed
             if (moveMap) {
                 if (this.mapProvider != null) {
-                    this.mapProvider.setMapCenter(lat, lng);
-                } else {
-                    if (this.map && this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
-                        this.map.setCenter(new plugin.google.maps.LatLng(lat, lng));
-                    }
+                    this.mapProvider.setMapCenter(new GeoPosition(lat, lng));
                 }
             }
 
             this.mapOptions.mapCentre = new GeoPosition(lat, lng);
         };
 
-        refreshMapView(mapCanvasID: string, mapHeight: number, poiList: Array<any>, searchPos: any): boolean {
+        refreshMapView(mapHeight: number, poiList: Array<any>, searchPos: any): boolean {
             if (this.mapProvider != null) {
                 this.log("Mapping Manager: renderMap " + OCM.MappingAPI[this.mapProvider.mapAPIType]);
-                this.mapProvider.renderMap(poiList, mapHeight, this.parentAppContext);
-            } else {
-                document.getElementById(mapCanvasID).style.height = mapHeight + "px";
-                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                    this.log("Refreshing map using API: googlenativesdk");
 
-                    var appcontext = this;
-
-                    var isAvailable = plugin.google.maps.Map.isAvailable(function (isAvailable, message) {
-                        if (isAvailable) {
-                            //setup map view if not already initialised
-                            appcontext.initMap(mapCanvasID);
-
-                            if (appcontext.parentAppContext != null && appcontext.parentAppContext.viewModel.searchPosition != null) {
-                                var searchPos = appcontext.parentAppContext.viewModel.searchPosition;
-                                if (searchPos != null) {
-                                    appcontext.updateMapCentrePos(searchPos.coords.latitude, searchPos.coords.longitude, false);
-                                }
-                            } else {
-                                appcontext.log("Map centre cannot be updated");
-                            }
-
-                            if (appcontext.mapReady) appcontext.showPOIListOnMapViewGoogleNativeSDK(mapCanvasID, poiList, this.parentAppContext, document.getElementById(mapCanvasID), appcontext.mapOptions.resultBatchID);
-                        } else {
-                            appcontext.log("Native Maps not available");
-                        }
-                        return isAvailable;
-                    });
-
-                    if (!isAvailable) {
-                        this.errorMessage = "Google Maps not installed";
-                        return false;
-                    }
+                if (this.isMapReady()) {
+                    this.mapProvider.renderMap(poiList, mapHeight, this.parentAppContext);
+                } else {
+                    this.log("refreshMapView: map provider not initialised..");
                 }
+            } else {
+                this.log("Unsupported Map API: refreshMapView", LogLevel.ERROR);
+                /*
+
+                document.getElementById(mapCanvasID).style.height = mapHeight + "px";
 
                 if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
                     //setup map view, tracking user pos, if not already initialised
@@ -787,6 +496,7 @@ module OCM {
 
                     if (this.mapReady) this.showPOIListOnMapViewLeaflet(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
                 }
+                */
             }
             return true;
         }

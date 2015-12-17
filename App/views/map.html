@@ -11,48 +11,51 @@
                 <span data-localize="ocm.general.favourites">Favourites</span>
             </div>
             <div style="display:none; float: right" id="option-expand">
-                <i class="fa fa-expand fa-fw subtle" title="Expand Window"></i>&nbsp;</div>
+                <i class="fa fa-expand fa-fw subtle" title="Expand Window"></i>&nbsp;
+            </div>
         </div>
     </div>
     <div data-role="content" style="padding: 0; overflow:hidden;">
-        <div class="well well-sm" id="search-pane">
-            <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
-                <div class="row">
-                    <div class="col-xs-10" style="padding-left:0;padding-right:0">
-                        <div class="form-group">
-                            <label for="search-location" class="sr-only">Location</label>
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <button id="search-nearby" class="btn btn-default" type="button">
-                                        <i class="fa fa-location-arrow"></i>
-                                    </button>
-                                </span>
-                                <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" />
-                                <span class="input-group-btn">
-                                    <button id="search-button" class="btn btn-primary" type="button">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                    <button id="search-settings" class="btn btn-default" type="button">
-                                        <i class="fa fa-filter"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-2 hidden-md hidden-lg" style="padding-left:6px;">
-                        <div class="form-group">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-info" id="map-toggle-list">
-                                    <input type="radio" name="options">
-                                    <i id="map-toggle-icon" class="fa fa-list fa-fw"></i>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+
         <div class="row">
+            <div id="search-pane" style="position:absolute;margin-left:40px;margin-top:10px;max-width:450px;">
+                <form id="search-form" role="search" action="javascript:ocm_app.performSearch(false, true);">
+                    <div class="row">
+                        <div class="col-xs-10" style="padding-left:0;padding-right:0">
+                            <div class="form-group">
+                                <label for="search-location" class="sr-only">Location</label>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button id="search-nearby" class="btn btn-default" type="button">
+                                            <i class="fa fa-location-arrow"></i>
+                                        </button>
+                                    </span>
+                                    <input type="text" id="search-location" class="form-control" autocorrect="on" placeholder="Enter a location&hellip;" />
+                                    <span class="input-group-btn">
+                                        <button id="search-button" class="btn btn-default" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button id="search-settings" class="btn btn-default" type="button">
+                                            <i class="fa fa-filter"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 hidden-md hidden-lg" style="padding-left:6px;">
+                            <div class="form-group">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-info" id="map-toggle-list">
+                                        <input type="radio" name="options">
+                                        <i id="map-toggle-icon" class="fa fa-list fa-fw"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <div class="col-sm-12 col-md-8 col-lg-9" style="padding:0;" id="mapview-container">
                 <div id="map-view"></div>
             </div>
@@ -61,23 +64,23 @@
                     <ul id="results-list">
                         <li class="result details-link" style="display: none;" id="results-item-template">
                             <a href="#locationdetails-page" class="details-link" style="overflow: auto;">
-                            <div style="overflow: auto">
-                                <h3>{locationtitle}</h3>
-                                <div style="overflow: auto;">
-                                    <div class="result-item-a">
-                                        {location}
-                                        {comments}
-                                    </div>
-                                    <div class="result-item-b">
+                                <div style="overflow: auto">
+                                    <h3>{locationtitle}</h3>
+                                    <div style="overflow: auto;">
+                                        <div class="result-item-a">
+                                            {location}
+                                            {comments}
+                                        </div>
+                                        <div class="result-item-b">
 
-                                        <em>{distance} {distanceunit}</em>
-                                        <p>
-                                            {status}
-                                        </p>
+                                            <em>{distance} {distanceunit}</em>
+                                            <p>
+                                                {status}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
                         </li>
                     </ul>
                 </div>
