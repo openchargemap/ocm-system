@@ -38,7 +38,7 @@ namespace OCM.API
                     if (HttpContext.Current.Request.UserAgent != null)
                     {
                         var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
-                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google") || userAgent.Contains("apache-httpclient"))
+                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google") || userAgent.Contains("apache-httpclient") || userAgent.Equals("apache"))
                         {
                             return true;
                         }
