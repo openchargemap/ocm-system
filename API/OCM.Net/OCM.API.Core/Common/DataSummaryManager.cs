@@ -58,6 +58,13 @@ namespace OCM.API.Common.DataSummary
     /// </summary>
     public class DataSummaryManager : ManagerBase
     {
+        public void RefreshStats()
+        {
+            this.dataModel.Database.ExecuteSqlCommand("procUpdateOCMStats", null);
+            this.dataModel.AuditLogs.Add(new Core.Data.AuditLog { EventDate = DateTime.UtcNow, EventDescription = "Statistics", UserID = (int)StandardUsers.System, Comment = "OCM Statistics Updated" });
+            this.dataModel.SaveChanges();
+        }
+
         public List<CountrySummary> GetAllCountryStats()
         {
             var list = new List<CountrySummary>();
@@ -246,7 +253,7 @@ namespace OCM.API.Common.DataSummary
                     results.Add(new GeneralStats { User = r, Quantity = s.NumItems });
                 }
             }
-            return results;
+            return results.OrderByDescending(r => r.Quantity).ToList();
         }
 
         public List<GeneralStats> GetUserRegistrationStats(DateTime dateFrom, DateTime dateTo)

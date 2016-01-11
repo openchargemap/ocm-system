@@ -1371,7 +1371,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="ISOCode" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="AddressInfoes" Relationship="OCM.Core.Data.OCMEntities.FK_AddressInfo_Country" FromRole="Country" ToRole="AddressInfo" />
           <Property Name="ContinentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="UserSubscriptions" Relationship="OCM.Core.Data.OCMEntities.FK_UserSubscription_Country" FromRole="Country" ToRole="UserSubscription" />
           <NavigationProperty Name="Statistics" Relationship="OCM.Core.Data.OCMEntities.FK_Statistics_Country" FromRole="Country" ToRole="Statistic" />

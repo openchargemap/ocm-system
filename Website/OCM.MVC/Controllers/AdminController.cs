@@ -128,7 +128,6 @@ namespace OCM.MVC.Controllers
                 //send all pending subscription notifications
                 try
                 {
-                    
                     //TODO: can't run in seperate async thread becuase HttpContext is not available
                     string templateFolderPath = Server.MapPath("~/templates/notifications");
 
@@ -155,6 +154,14 @@ namespace OCM.MVC.Controllers
                 finally
                 {
                     HttpContext.Application["_MirrorRefreshInProgress"] = false;
+                }
+
+                //update stats
+                if (this.HttpContext.Cache["_StatsRefreshed"] == null)
+                {
+                    var dataSummaryManager = new API.Common.DataSummary.DataSummaryManager();
+                    dataSummaryManager.RefreshStats();
+                    this.HttpContext.Cache.Insert("_StatsRefreshed", true, null, DateTime.Now.AddHours(6), System.Web.Caching.Cache.NoSlidingExpiration);
                 }
             }
             return Json(new { NotificationsSent = notificationsSent, MirrorStatus = mirrorStatus }, JsonRequestBehavior.AllowGet);
@@ -202,13 +209,13 @@ namespace OCM.MVC.Controllers
                     }
                     else
                         if (mode == "all")
-                        {
-                            status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.All);
-                        }
-                        else
-                        {
-                            status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Modified);
-                        }
+                    {
+                        status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.All);
+                    }
+                    else
+                    {
+                        status = await CacheManager.RefreshCachedData(CacheUpdateStrategy.Modified);
+                    }
                 }
                 catch (Exception exp)
                 {

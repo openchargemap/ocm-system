@@ -4,47 +4,54 @@
     var positionCount = 1;
 
 }
-@foreach (var stat in Model)
-{
-    var item = stat.User;
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                @positionCount :
-                @if (item.IsProfilePublic != false)
-                {
+<table class="table table-striped">
+   
+
+
+
+    @foreach (var stat in Model)
+    {
+        var item = stat.User;
+
+        <tr>
+            <td style="font-size:2em;color:#c0c0c0;">@positionCount</td><td>
+                                       @Html.Raw("<img class='img-thumbnail' title='Gravatar Profile Image' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />")
+            </td>
+            <td>
+                 @if (item.IsProfilePublic != false)
+                    {
                     <a href="@Url.Action("View", "Profile", new { id=item.ID})">@Html.DisplayFor(modelItem => item.Username)</a>
-                }
-                else
-                {
-                    @Html.DisplayFor(modelItem => item.Username)
-                }
-            </h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-2">
-
-                    @Html.Raw("<img class='img-thumbnail' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />")
-                </div>
-                <div class="col-xs-10">
-                    @stat.Quantity Changes
-
-                    @if (item.Location != null)
+                    }
+                    else
                     {
-                        <br />
-                        <strong>@Html.DisplayFor(modelItem => item.Location)</strong>
+                        @Html.DisplayFor(modelItem => item.Username)
                     }
 
-                    @if (item.WebsiteURL != null)
-                    {
-                        <br />
-                        @Html.DisplayFor(modelItem => item.WebsiteURL)
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
 
-    positionCount++;
-}
+                                    
+
+                                       @if (item.Location != null)
+                                       {
+                                           <br />
+                                           <strong>@Html.DisplayFor(modelItem => item.Location)</strong>
+                                       }
+
+                                       @if (item.WebsiteURL != null)
+                                       {
+                                           <br />
+                                           @Html.DisplayFor(modelItem => item.WebsiteURL)
+                                       }
+                </td>
+            <td>
+
+                @stat.Quantity 
+            </td>
+        </tr>
+
+                   
+                   
+         
+
+        positionCount++;
+    }
+</table>

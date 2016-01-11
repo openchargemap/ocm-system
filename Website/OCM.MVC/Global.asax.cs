@@ -71,18 +71,19 @@ namespace OCM.MVC
             // Code that runs when an unhandled error occurs
 
             // Get the exception object.
-            Exception exc = Server.GetLastError();
+            /* Exception exc = Server.GetLastError();
 
-            // Handle HTTP errors
-            if (exc.GetType() == typeof(HttpException) || exc.GetType() == typeof(System.Runtime.Serialization.SerializationException))
-            {
-                if (exc.Message.Contains("NoCatch") || exc.Message.Contains("maxUrlLength") || exc.Message.Contains("InMemoryTokenManager") || exc.Message.Contains("non-serializable") || exc.Message.Contains("The controller for path")) return;
-            }
+             // Handle HTTP errors
+             if (exc.GetType() == typeof(HttpException) || exc.GetType() == typeof(System.Runtime.Serialization.SerializationException))
+             {
+                 if (exc.Message.Contains("NoCatch") || exc.Message.Contains("maxUrlLength") || exc.Message.Contains("InMemoryTokenManager") || exc.Message.Contains("non-serializable") || exc.Message.Contains("The controller for path")) return;
+             }
 
-            AuditLogManager.ReportWebException(Server, AuditEventType.SystemErrorWeb);
+             AuditLogManager.ReportWebException(Server, AuditEventType.SystemErrorWeb);
 
-            Server.ClearError();
-            Response.RedirectToRoute(new { controller = "Home", action = "GeneralError" });
+             Server.ClearError();
+             Response.RedirectToRoute(new { controller = "Home", action = "GeneralError" });
+             */
         }
 
         protected void Session_Start()

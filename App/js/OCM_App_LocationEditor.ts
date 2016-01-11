@@ -56,7 +56,6 @@ module OCM {
                 //attempt to fetch fresh data later (wait 1 second)
                 setTimeout(function () { _app.apiClient.fetchCoreReferenceData("ocm_app.populateEditor", _app.getLoggedInUserInfo()); }, 1000);
             }
-            
         }
 
         resetEditorForm() {
@@ -135,7 +134,7 @@ module OCM {
             }
 
             //setup geocoding lookup of address in editor
-            var appContext = (<OCM.App>this);
+            var appContext = (<any>this);
             appContext.setElementAction("#edit-location-lookup", function (event, ui) {
                 //format current address as string
                 var lookupString =
@@ -225,7 +224,7 @@ module OCM {
         }
 
         performLocationSubmit() {
-            var app = (<OCM.App>this);
+            var app = (<any>this);
             if (!app.appState.isSubmissionInProgress) {
                 var refData = this.apiClient.referenceData;
                 var item = this.apiClient.referenceData.ChargePoint;
@@ -365,7 +364,7 @@ module OCM {
                     }
                     ,
                     $.proxy(app.submissionFailed, app)
-                    );
+                );
             }
         }
 
