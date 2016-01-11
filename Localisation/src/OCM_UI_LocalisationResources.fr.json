@@ -114,8 +114,8 @@
         "recentActivity": "Activité Récente",
         "webApp": "App Web pour Mobile",
         "statistics": "Statistiques",
-        "awaitingReviewImported": null,
-        "editqueue": null
+        "awaitingReviewImported": "Emplacements Importés en attente d'approbation",
+        "editqueue": "Modifications en attente d'approbation"
       },
       "develop": {
         "sectionTitle": "Dévelopez",

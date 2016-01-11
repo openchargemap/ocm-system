@@ -38,8 +38,6 @@ x64/
 *.vspscc
 *.vssscc
 .builds
-API\OCM.Net\OCM.API.Web\Scripts\SharedLibs\*.js
-Website\OCM.MVC\Scripts\OCM\SharedLibs\*.js
 
 # Visual C++ cache files
 ipch/
@@ -124,3 +122,6 @@ UpgradeLog*.XML
 /App/build/docs
 /App/build/output
 *.DS_Store
+/API/OCM.Net/OCM.API.Web/Scripts/SharedLibs
+/Website/OCM.MVC/Scripts/OCM/SharedLibs
+/Localisation/build

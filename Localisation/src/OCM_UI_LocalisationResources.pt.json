@@ -3,8 +3,8 @@
   "_langCode": "pt",
   "ocm": {
     "general": {
-      "shortDescription": null,
-      "linkWebApp": null,
+      "shortDescription": "O Ultimo registo global inserido sobre a localização dos pontos de carga.",
+      "linkWebApp": "A procurar localizações usando a nossa Web App",
       "linkBrowsePOI": "Explorar todos os locais",
       "browsePOI": "Explorar Localizações de carregamento",
       "loadingProgress": "Carregando...",
@@ -45,11 +45,11 @@
       "usageCost": "Custo de uso",
       "operationalStatus": "Estado Operacional",
       "datePlanned": "Data planeada",
-      "dateLastConfirmed": null,
+      "dateLastConfirmed": "Ultima data confirmada",
       "lastUpdated": "Ultima atualização",
       "refNumber": "Ref OpenChargeMap",
-      "dataQualityLevel": null,
-      "importedDataNotice": null,
+      "dataQualityLevel": "Qualidade da informação prestada",
+      "importedDataNotice": "Estes dados são gerados automaticamente, as modificações devem ser submetidas para a administração para aprovação.",
       "submissionStatus": "Estado de submissão",
       "placesNearby": {
         "sectionTitle": "Locais perto"
@@ -64,7 +64,7 @@
       "commentsAndRatings": {
         "sectionTitle": "Comentários e avaliações",
         "zeroComments": "Nenhum comentário do utilizador enviado",
-        "addPrompt": null
+        "addPrompt": "Adicione um comentário ou coloque o estado do mesmo"
       },
       "equipment": {
         "sectionTitle": "Detalhes do equipamento",
@@ -94,7 +94,7 @@
       "useMyLocation": "Pesquisar perto de mim",
       "distance": "Distância",
       "chargingLevels": "Nível de carga",
-      "minPowerKW": null,
+      "minPowerKW": "Minima Potência em Kw",
       "connectionTypes": "Tipos de conexão",
       "networkOperators": "Rede/Operador",
       "countries": "País",
@@ -112,10 +112,10 @@
         "byCountry": "Por País",
         "avaitingReview": "Aguardando revisão",
         "recentActivity": "Atividade Recente",
-        "webApp": null,
+        "webApp": "Web App para telemóvel",
         "statistics": "Estatísticas",
-        "awaitingReviewImported": null,
-        "editqueue": null
+        "awaitingReviewImported": "Localizações importadas a aguardarem aprovação",
+        "editqueue": "Edição a aguardar aprovação"
       },
       "develop": {
         "sectionTitle": "Desenvolver",
@@ -123,14 +123,14 @@
         "htmlWidgets": "Widgets HTML",
         "examples": "Exemplos",
         "getInvolved": "Envolver-se",
-        "code": null,
+        "code": "Verifique o código (on GitHub)",
         "translate": "Ajude na tradução"
       },
       "discuss": "Discutir",
       "about": {
         "termsPrivacy": "Termos & privacidade",
         "contact": "Contato",
-        "guidance": null
+        "guidance": "Guia dos Contribuintes"
       },
       "profile": {
         "sectionTitle": "Meu perfil",
@@ -142,56 +142,56 @@
     "infoText": {
       "getInvolved": {
         "youCan": "Você pode",
-        "browseLocations": null,
-        "commentsPhotos": null,
-        "dontSeePOI": null
+        "browseLocations": "A explorar localizações perto de si",
+        "commentsPhotos": "Adicione os seus comentários e fotos",
+        "dontSeePOI": "Não consegue encontrar um ponto de carga mas que sabe que existe?"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
-        "what": null,
-        "websiteOperators": null,
-        "embedMap": null
+        "sectionTitle": "Informações sobre o ponto de Carga",
+        "who": "Informações dos vários Fabricantes, Programadores da App, site oficial",
+        "what": "Consegue acesso e baixar todos os últimos pontos de carga usando a nossa",
+        "websiteOperators": "Se tem um site e pretende incluir a localização do nosso site, pode",
+        "embedMap": "Inserir o mapa no seu site"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
-        "contactUs": null,
-        "getStarted": null
+        "sectionTitle": "Programadores e provedores de informação",
+        "who": "EVSE fornecedores, Operadores de rede, Registos Nacionais, Carregamentos locais informações apps & sites:",
+        "needData": "Nós precisamos da sua informação",
+        "what": "Pode nos fornecer com a sua ultima visita num ponto de carga, localização e estado, independentemente sobre a sua profissão ou empresa, fácil de funcionar, disponibiliza toda a informação e localização dos pontos de carga.",
+        "contactUs": "Contacte nos",
+        "getStarted": "Para começar"
       },
       "stats": {
-        "locations": null,
+        "locations": "Localizações",
         "locationSummary": null
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "Open Charge Map é uma organização não comercial alojada e suportada por uma comunidade de empresas, programadores, utilizadores e todos os interessados em todo o mundo.",
+      "getApp": "Baixar a App",
+      "tip": "Dica",
       "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
+        "quickWay": "Se deseja uma maneira rápida de chegar ao ponto de carga  mais proximo de si, pode tentar o nosso",
+        "webApp": "App via internet",
+        "searchAppStore": "especialmente nos equipamentos móveis. Pode também procurar no seu equipamento a APP Store por uma versão em que pode carregar."
       },
-      "sponsors": null,
+      "sponsors": "Estamos a procurar patrocinadores e parceiros, acha que consegue ajudar?",
       "termsNotice": null,
       "about": {
-        "ourService": null,
+        "ourService": "O Nosso Serviço",
         "aim": {
-          "title": null,
+          "title": "O Nosso Objectivo",
           "p1": null,
           "p2": null
         },
         "whyOCM": {
-          "title": null,
+          "title": "Porquê usar o Open Charge Map?",
           "content": null
         },
         "funding": {
-          "title": null,
+          "title": "A Fundar",
           "p1": null
         },
         "developersContributors": {
-          "sectionTitle": null,
+          "sectionTitle": "Programadores e colaboradores",
           "p1": null,
           "p2": null
         },
@@ -200,7 +200,7 @@
           "general": null
         },
         "dataSources": {
-          "title": null,
+          "title": "Informações dos dados",
           "p1": null,
           "p2": null
         }
@@ -208,51 +208,51 @@
     },
     "reference": {
       "statusType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null,
-        "value_50": null,
-        "value_75": null,
-        "value_100": null,
-        "value_150": null,
-        "value_200": null
+        "value_minus1": "Nenhum seleccionado",
+        "value_0": "Desconhecido",
+        "value_10": "Disponível de momento; estado automatico",
+        "value_20": "Em uso, estado automatico",
+        "value_30": "Temporariamente indisponível",
+        "value_50": "A Funcionar",
+        "value_75": "Parcialmente a funcionar",
+        "value_100": "Avariado",
+        "value_150": "Planeado Futuramente",
+        "value_200": "Removido"
       },
       "operatorInfo": {
-        "value_minus1": null,
-        "value_1": null,
-        "value_44": null,
-        "value_45": null
+        "value_minus1": "Nenhum selecionado",
+        "value_1": "Operador desconhecido",
+        "value_44": "Habitação pessoal",
+        "value_45": "Empresa proprietária na Localização"
       },
       "usageType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null,
-        "value_4": null,
-        "value_5": null,
-        "value_6": null,
-        "value_7": null
+        "value_minus1": "Nenhum selecionado",
+        "value_0": "Desconhecido",
+        "value_1": "Publico",
+        "value_2": "Privado - Acesso restrito",
+        "value_3": "Privado a proprietário, acesso exclusivo",
+        "value_4": "Publico - Membro registados unicamente",
+        "value_5": "Publico - Pago no Local",
+        "value_6": "Privado - Para empregados e visitantes",
+        "value_7": "Publico - Necessário informar"
       },
       "connectionType": {
-        "value_minus1": null,
-        "value_0": null
+        "value_minus1": "nenhum selecionado",
+        "value_0": "Desconhecido"
       },
       "levelType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null
+        "value_minus1": "nenhum selecionado",
+        "value_0": "(desconhecido)",
+        "value_1": "Nivel 1; Lento; abaixo de 2Kw",
+        "value_2": "Nível 2 Medio; acima 2Kw",
+        "value_3": "Nivel 3 Alto Acima dos 40Kw"
       },
       "supplyType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null
+        "value_minus1": "nenhum selecionado",
+        "value_0": "(desconhecido)",
+        "value_10": "AC (Fase-Unica)",
+        "value_20": "AC (Três-Fases)",
+        "value_30": "DC"
       }
     }
   }

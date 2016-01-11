@@ -114,8 +114,8 @@
         "recentActivity": "Viimased tegevused",
         "webApp": "APP mobiilile",
         "statistics": "Statistika",
-        "awaitingReviewImported": null,
-        "editqueue": null
+        "awaitingReviewImported": "Automaatsisestused, mis ootavad ülevaatamist",
+        "editqueue": "Muudatused ootavad ülevaatamist"
       },
       "develop": {
         "sectionTitle": "Arenda",
@@ -163,7 +163,7 @@
       },
       "stats": {
         "locations": "Asukohad",
-        "locationSummary": null
+        "locationSummary": "{totalStations} laadijat {totalLocations} erinevas asukohas."
       },
       "shortProjectSummary": "Open Charge Map on mitteäriline ning mittetulunduslik ettevõtmine, mis on toetatud ettevõtete, heategevuse, arendajate ja huvitatud osapoolte poolt üle maailma.",
       "getApp": "Lae rakendus/App",
@@ -173,36 +173,36 @@
         "webApp": "Veebirakedust",
         "searchAppStore": "eriti mobiilsideseadmetes. Saate otsida oma seadme App Store'ist oma seadmele sobivat versiooni."
       },
-      "sponsors": null,
-      "termsNotice": null,
+      "sponsors": "Me ei ütleks ära annetustest ja sponsoritest, arvad, et saad aidata? {link:Find out more}",
+      "termsNotice": "Kasutades meie infot või sisestades oma infot Open Charge Map saidile nõustud meie {link:standard terms, privacy policy and licensing}",
       "about": {
-        "ourService": null,
+        "ourService": "Meie Pakutav",
         "aim": {
-          "title": null,
-          "p1": null,
-          "p2": null
+          "title": "Meie Eesmärk",
+          "p1": "Meie eesmärk on töötada kogukonnana, et arendada ja pakkuda uuendatud, avalikku, tasuta, avatud andmebaasiga laadijate võrgustiku andmeid üle maailma.",
+          "p2": "Meie eesmärk on pakkuda inot erinevate laadimsivõrgustike kohta ühest kohast, et vältida olukorda, kus on palju erinevaid laadijate asukoha informatsiooni pakkumise lehekülgi, kes igaüks näitab oma kindla operaatori laadijaid. Selle asemel, et teisega võistelda on meie eesmärgiks koostöö nendega ja info vahetus."
         },
         "whyOCM": {
-          "title": null,
-          "content": null
+          "title": "Miks kasutada Open Charge Map'i?",
+          "content": "Kasutades Open Chage Map'i ja seotud äppe on sul võimalik aidata tõsta informatsiooni ajakohasust sisestades kasutaja kommentaare, uusi asukohti, täiendada olemasolevaid asukohti, kommentaare, pilte ja jagades informatsiooni meie lehe kohta. Open Charge Map'i eeliseks on avatud andmebaas, mis ei tööta kommerts alustel ja see loob head eeldused, et selles kajastuvad kõik laadimiskohad sõltumata koha omanikust."
         },
         "funding": {
-          "title": null,
-          "p1": null
+          "title": "Finantseerimine",
+          "p1": "Open Charge Map on arendatud ja hoitakse käigus vabatahtlike poolt. Kui sul on võimalik pakkuda abi, et toetada meie projekti või toetada konkreetset tööjärrku, siis palun {link-contact:get in touch}. Rohkem infot toetamise ja projekti maksumuse kohta {link-funding:is available}."
         },
         "developersContributors": {
-          "sectionTitle": null,
-          "p1": null,
-          "p2": null
+          "sectionTitle": "Arendajad ja Kaastöötajad",
+          "p1": "Meie {link_github:GitHub project} pakub kaasautoritele võimaluse kaasarääkida ja mõjutada meie lehekülje arenguid ja plaane.\nMeie {link_google_plus:Google+} kogukond on peamine kanal jagamaks ideid ja kogumaks tagasisidet huvitatud osapoolte vahel.",
+          "p2": "Pakume võimalust tutvuda meie suurimate kaasautoritega läbi {link_code:code}, {link_translations:translations} ja {link_data:data}"
         },
         "projectStats": {
-          "sectionTitle": null,
-          "general": null
+          "sectionTitle": "Proejkti Statistika",
+          "general": "Üldine statistika Open Charge Map {link:data and usage} lehekülje kohta"
         },
         "dataSources": {
-          "title": null,
-          "p1": null,
-          "p2": null
+          "title": "Teabe Allikad",
+          "p1": "Info, mis on tehtud avalikuks open Charge Map'i keskonnas ja sellega seotud teenustega on kogutud mitmetest erinevatest allikates ja on sageli saadud otse meie kasutajate käest.",
+          "p2": "Meie suurimad tänud lähevad järgmistele suurtele panustajatele:"
         }
       }
     },

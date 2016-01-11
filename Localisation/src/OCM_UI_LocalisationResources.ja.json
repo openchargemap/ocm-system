@@ -94,7 +94,7 @@
       "useMyLocation": "近隣を検索",
       "distance": "距離",
       "chargingLevels": "充電レベル",
-      "minPowerKW": null,
+      "minPowerKW": "最小電力 (KW)",
       "connectionTypes": "接続口タイプ",
       "networkOperators": "設置会社",
       "countries": "国",
@@ -105,7 +105,7 @@
       "progress": "検索中…"
     },
     "navigation": {
-      "home": "自宅",
+      "home": "ホーム",
       "browse": {
         "sectionTitle": "閲覧",
         "allLocations": "全ての場所",
@@ -130,7 +130,7 @@
       "about": {
         "termsPrivacy": "利用規約",
         "contact": "問合せ",
-        "guidance": null
+        "guidance": "貢献者のためのガイダンス"
       },
       "profile": {
         "sectionTitle": "マイプロフィール",
@@ -147,8 +147,8 @@
         "dontSeePOI": "充電場所が見つけられませんか？"
       },
       "getStations": {
-        "sectionTitle": null,
-        "who": null,
+        "sectionTitle": "充電器の情報を見る",
+        "who": "車両製造メーカー、カーナビゲーション会社、アプリケーション開発者、ウェブサイトの所有者:",
         "what": null,
         "websiteOperators": null,
         "embedMap": null
@@ -162,15 +162,15 @@
         "getStarted": null
       },
       "stats": {
-        "locations": null,
-        "locationSummary": null
+        "locations": "場所",
+        "locationSummary": "{totalStations}の場所で{totalLocations}の充電器があります"
       },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
+      "shortProjectSummary": "オープンチャージマップは非営利サービスで、コミュニティやボランティア開発者、各国の企業によってサポートされている慈善団体です。",
+      "getApp": "アプリをダウンロードする",
+      "tip": "ヒント:",
       "searching": {
         "quickWay": null,
-        "webApp": null,
+        "webApp": "アプリ",
         "searchAppStore": null
       },
       "sponsors": null,
@@ -187,7 +187,7 @@
           "content": null
         },
         "funding": {
-          "title": null,
+          "title": "資金運用",
           "p1": null
         },
         "developersContributors": {
@@ -208,48 +208,48 @@
     },
     "reference": {
       "statusType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null,
-        "value_50": null,
-        "value_75": null,
-        "value_100": null,
-        "value_150": null,
-        "value_200": null
+        "value_minus1": "(未選択)",
+        "value_0": "不明",
+        "value_10": "空き台数",
+        "value_20": "空き状況",
+        "value_30": "一時的に利用不可能",
+        "value_50": "利用可能",
+        "value_75": "一部利用可能",
+        "value_100": "利用不可能",
+        "value_150": "計画中",
+        "value_200": "撤去"
       },
       "operatorInfo": {
-        "value_minus1": null,
-        "value_1": null,
-        "value_44": null,
-        "value_45": null
+        "value_minus1": "(未選択)",
+        "value_1": "設置会社不明",
+        "value_44": "(プライベート レジデンス/個人)",
+        "value_45": "担当者在中"
       },
       "usageType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null,
-        "value_4": null,
-        "value_5": null,
-        "value_6": null,
-        "value_7": null
+        "value_minus1": "(未選択)",
+        "value_0": "（不明）",
+        "value_1": "公開",
+        "value_2": "非公開",
+        "value_3": "個人所有-連絡必須",
+        "value_4": "公開-メンバー限定",
+        "value_5": "公開-有料",
+        "value_6": "非公開-スタッフ、ビジターのみ",
+        "value_7": "公開-連絡必須"
       },
       "connectionType": {
-        "value_minus1": null,
-        "value_0": null
+        "value_minus1": "(未選択)",
+        "value_0": "（不明）"
       },
       "levelType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null
+        "value_minus1": "(未選択)",
+        "value_0": "（不明）",
+        "value_1": "レベル 1: 低（2kW以下）",
+        "value_2": "レベル 2: 中（2kW以上）",
+        "value_3": "レベル 3: 高（40kW以上）"
       },
       "supplyType": {
-        "value_minus1": null,
-        "value_0": null,
+        "value_minus1": "(未選択)",
+        "value_0": "（不明）",
         "value_10": null,
         "value_20": null,
         "value_30": null
