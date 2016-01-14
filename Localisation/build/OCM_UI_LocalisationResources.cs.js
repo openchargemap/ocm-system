@@ -49,7 +49,7 @@ var localisation_dictionary_cs ={
       "lastUpdated": "Poslední aktualizace",
       "refNumber": "Referenční číslo OpenChargeMap",
       "dataQualityLevel": "Úroveň kvality dat",
-      "importedDataNotice": "Poznámka: Tyto údaje se získávají automaticky, změny by měly být předložené přímo poskytovately údajů.",
+      "importedDataNotice": "Poznámka: Tyto údaje se získávají automaticky, změny by měly být dodány přímo poskytovatelem údajů.",
       "submissionStatus": "Stav položky",
       "placesNearby": {
         "sectionTitle": "Místa v blízkosti"
@@ -113,7 +113,9 @@ var localisation_dictionary_cs ={
         "avaitingReview": "Nepotvrzená umístění",
         "recentActivity": "Poslední změny",
         "webApp": "Webovou mapu",
-        "statistics": "Statistiky"
+        "statistics": "Statistiky",
+        "awaitingReviewImported": "Importovaná umístění čekající na schválení",
+        "editqueue": "Úpravy čekající na schválení"
       },
       "develop": {
         "sectionTitle": "Vývoj",
@@ -142,7 +144,7 @@ var localisation_dictionary_cs ={
         "youCan": "Můžeš",
         "browseLocations": "prohlížet stanice ve svém okolí",
         "commentsPhotos": "a přidávat vlastní komentáře a fotografie",
-        "dontSeePOI": "Nevidíš nabíjecí stanici, o které víš, ze existuje?"
+        "dontSeePOI": "Nenašel jsi nabíjecí stanici, o které víš, ze existuje?"
       },
       "getStations": {
         "sectionTitle": "Stáhnout data o nabíjecích stanicích",
@@ -171,10 +173,36 @@ var localisation_dictionary_cs ={
         "webApp": "webovou aplikaci",
         "searchAppStore": "hlavně na mobilních zařízeních. V obchodě s aplikacemi pro vaše zařízení naleznete i verzi, kterou můžete mít stále sebou."
       },
+      "sponsors": "Hledáme sponzory. Umíš s tím pomoci? {link:Zjisti si více}.",
+      "termsNotice": "Používáním našich služeb anebo přidáním informací do databáze Open Charge Map souhlasíte s našimi {link:všeobecnými podmínkami, politikou ochrany soukromí a licencováním}.",
       "about": {
+        "ourService": "Naše služba",
+        "aim": {
+          "title": "Naše cíle",
+          "p1": "Chceme spolupracovat s komunitou na vytváření a poskytování vysoce kvalitní, otevořené, veřejné a bezplatné databáze nabíjecích zařízení na celém světě.",
+          "p2": "Naším cílem je též zabránit potřebě šíření nezávislých konfliktních map/stránek/aplikací poskytováním jednoho spolehlivého (v maximální možné míře) zdroje informací o nabíjecích stanicích. Místo soutěžení s jinými poskytovately dat se snažíme s nimi spolupracovat a nabízet jim služby výměnou za zdílení jejich dat a snahu o neduplikování informací."
+        },
+        "whyOCM": {
+          "title": "Proč používat Open Charge Map?",
+          "content": "Používáním Open Charge Map (OCM) a příslušných aplikací můžete pomoci vylepšit informace v databázi recenzemi, změnami a přidávaním informací, komentářů a fotek a doporučením služby ostatním užívatelům. Výhodou OCM oproti ostatním poskytovatelům podobných dat je, že cílem OCM je otevřené sdílení informací, zatímco komerční poskytovatelé si musí ponechávat informace pro seba (anebo jen vrámci své aplikace), aby si mohli udržovat komerčně zpeněžitelné množství dat."
+        },
         "funding": {
-          "title": null,
-          "p1": null
+          "title": "Financování",
+          "p1": "Open Charge Map je vyvíjena a provozována dobrovolníky. Pokud můžete nabídnout finanční prostředky na podporu projektu nebo k financování konkrétní práce, prosím, {link-contact:kontaktujte nás}. Další informace o financování a nákladech projektu {link-funding:jsou dostupné}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Vývojáři a přispěvatelé",
+          "p1": "Náš projekt na {link_github:GitHubu} poskytuje zázemí, které umožňuje externím technickým přispěvatelům diskutovat a ovlivnit náš systém a plány do budoucnosti. Naše komunita na {link_google_plus:Google+} je hlavní způsob výměny nápadů a získávání zpětné vazby od zainteresovaných stran.",
+          "p2": "Můžete si prohlédnout seznamy našich největších přispěvatelů {link_code:kódu}, {link_translations:překladů} a {link_data:dat}."
+        },
+        "projectStats": {
+          "sectionTitle": "Projektové statistiky",
+          "general": "Máme k dispozici všeobecné statistiky ohledně {link:dat a používanosti} Open Charge Map."
+        },
+        "dataSources": {
+          "title": "Zdroje dat",
+          "p1": "Data, které jsou k dispozici prostřednictvím systému Open Charge Map a příslušných služeb se získávají z mnoha zdrojů a jsou často získávany přímo prostředníctvím \"crowdsourcingu\", teda přidané našimi užívateli a aplikacemi používajícími naše služby.",
+          "p2": "Uznání a vděk patří následujícím hlavním zdrojům dat, které jsou v současnosti zahrnuty v naší databázi:"
         }
       }
     },
@@ -198,7 +226,7 @@ var localisation_dictionary_cs ={
         "value_45": "(firma na daném místě)"
       },
       "usageType": {
-        "value_minus1": "Plánované spustenie v budúcnosti",
+        "value_minus1": "(nevybráno)",
         "value_0": "(neznámé)",
         "value_1": "Veřejná",
         "value_2": "Soukromá - omezený přístup",

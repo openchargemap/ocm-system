@@ -113,7 +113,9 @@ var localisation_dictionary_de ={
         "avaitingReview": "Neue Standorte in Prüfung",
         "recentActivity": "Neuigkeiten",
         "webApp": "Web App für mobile Geräte",
-        "statistics": "Statistik"
+        "statistics": "Statistik",
+        "awaitingReviewImported": "Importierte Standorte in Prüfung",
+        "editqueue": "Änderungen in Prüfung"
       },
       "develop": {
         "sectionTitle": "Entwicklung",
@@ -171,10 +173,36 @@ var localisation_dictionary_de ={
         "webApp": "Web-App",
         "searchAppStore": "vor allem auf mobilen Geräten. Sie können auch im App Store für Ihr Gerät nach einer portablen Version suchen."
       },
+      "sponsors": "Wir suchen Sponsoren und Finanzierung, vielleicht können Sie helfen? {link:Weitere Informationen}",
+      "termsNotice": "Mit der Nutzung unserer Dienste oder durch Informationsübermittlung stimmen sie unseren {link:Allgemeinen Bedingungen, der Datenschutzrichtlinie und den Lizensierungsbestimmungen} zu.",
       "about": {
+        "ourService": "Unser Dienst",
+        "aim": {
+          "title": "Unser Ziel",
+          "p1": "Unser Ziel ist es, mit Hilfe der Gemeinschaft ein öffentliches, kostenloses und offenes Verzeichnis für Ladestationen auf der ganzen Welt zu entwickeln und anzubieten - und das in hoher Qualität.",
+          "p2": "Unser Ziel ist es, die Ausbreitung unabhängiger und miteinander in Konkurrenz stehender Karten / Websites / Anwendungen zu verhindern. Wir möchten die einzig verläßliche Referenz für Ladestationen sein.\nAnstatt zu konkurrieren setzen wir auf Kooperation, Datenaustausch und die Vermeidung von Duplikaten."
+        },
+        "whyOCM": {
+          "title": "Wozu Open Charge Map?",
+          "content": "In der Verwendung von Open Charge Map helfen Sie, die Datenqualität zu steigern, durch Überprüfen der Angaben, Editieren, Hinzufügen von Fotos und Kommentaren und durch Bekanntmachen und Fördern des Projekts.\nDer Vorteil von Open Charge Map im Vergleich zu kommerziellen Providern ist, das wir unsere Daten frei verfügbar machen, während diese Anbieter in der Regel darin äußerst restriktiv sind, da Daten ihr Kapital darstellen."
+        },
         "funding": {
-          "title": null,
-          "p1": null
+          "title": "finanzielle Unterstützung",
+          "p1": "Open Charge Map wird von Freiwilligen verwaltet und weiter entwickelt. {link-contact: Melden Sie sich} , wenn Sie uns oder bestimmte Arbeiten finanziell unterstützen möchten.Weitere Informationen zu Unterstützungsmöglichkeiten sowie eine Kostenaufstellung sind {link-funding: hier} verfügbar."
+        },
+        "developersContributors": {
+          "sectionTitle": "Entwickler und Mitwirkende",
+          "p1": "Unser {link_github:GitHub Projekt} ist das Mittel für am Code mitwirkende, um Planungen und Verfahren zu diskutieren.  Unsere {link_google_plus:Google+} Community dient in erster Linie zum Austausch von Ideen und für das Feedback aller Interessenten.",
+          "p2": "Sie können die Listen unserer aktivsten Mitwirkenden bezüglich  {Link_code:Quellcode}, {Link_translations:Übersetzungen} und {Link_data:Daten} einsehen."
+        },
+        "projectStats": {
+          "sectionTitle": "Statistiken des Projekts",
+          "general": "Statistiken für Open Charge Map sind verfügbar unter {link:Daten und Verwendung} ."
+        },
+        "dataSources": {
+          "title": "Herkunft der Daten",
+          "p1": "Die in Open Charge Map zur Verfügung gestellten Daten stammen aus vielen unterschiedlichen Quellen. Oft werden sie direkt von unseren Nutzern - sowohl der Website als auch der App - eingegeben (\"crowd sourced\").",
+          "p2": "Unser Dank gilt den folgenden hauptsächlichen Informationslieferanten für unsere Datenbank:"
         }
       }
     },

@@ -163,7 +163,7 @@
       },
       "stats": {
         "locations": "Punti di ricarica",
-        "locationSummary": "{totalStations} prese di ricarica in {totalStations} colonnine"
+        "locationSummary": "{totalStations} prese di ricarica in {totalLocations} colonnine"
       },
       "shortProjectSummary": "Open Charge Map è un servizio non-profit, non commerciale, ospitato e supportato da una comunità di imprese, enti di beneficenza, sviluppatori e appassionati di tutto il mondo.",
       "getApp": "Scarica l'App",
@@ -220,7 +220,7 @@
         "value_200": "Rimossa"
       },
       "operatorInfo": {
-        "value_minus1": "Non Selezionato",
+        "value_minus1": "Non Selezionato o Non Presente nella lista",
         "value_1": "Operatore non Conosciuto",
         "value_44": "Abitazione Privata",
         "value_45": "Attività Imprenditoriale"
@@ -229,7 +229,7 @@
         "value_minus1": "Non Selezionato",
         "value_0": "Non Conosciuto",
         "value_1": "Pubblico",
-        "value_2": "Privato - Accesso Limitato",
+        "value_2": "Privato - Accesso limitato",
         "value_3": "Privato - È richiesto un preavviso",
         "value_4": "Pubblico - È necessaria una registrazione o tessera",
         "value_5": "Pubblico - Pagamento sul posto",

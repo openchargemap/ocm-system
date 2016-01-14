@@ -52,9 +52,7 @@ var localisation_dictionary_en ={
       "importedDataNotice": "Note: This data is sourced automatically, changes should be submitted to the data provider directly.",
       "submissionStatus": "Submission Status",
       "placesNearby": {
-        "sectionTitle": "Places Nearby",
-        "pois": "Points Of Interest",
-        "chargingLocations": "Other Charging Locations"
+        "sectionTitle": "Places Nearby"
       },
       "mediaItems": {
         "sectionTitle": "Photos",
@@ -83,14 +81,12 @@ var localisation_dictionary_en ={
       "dataProvider": {
         "sectionTitle": "Data Provider",
         "website": "Website",
-        "providersReference": "Providers Ref",
-        "license": "Data License"
+        "providersReference": "Providers Ref"
       },
       "operator": {
         "sectionTitle": "Network/Operator",
         "operatorsReference": "Operators Ref"
-      },
-      "editPrompt": "To edit, add comments or upload photos"
+      }
     },
     "search": {
       "sectionTitle": "Search",
@@ -210,9 +206,6 @@ var localisation_dictionary_en ={
         }
       }
     },
-    "warningsErrors":{
-      "oldData": "This charging location has not been recently verified and you should not rely on this information for journeys. <br /><br />If you have visited this charging location recently please confirm that the information is accurate by adding a Comment or Check-In. <br /><br />If the details are inaccurate please {link-edit: edit} them."
-    },
     "reference": {
       "statusType": {
         "value_minus1": "(None Selected)",
@@ -240,7 +233,7 @@ var localisation_dictionary_en ={
         "value_3": "Privately Owned - Notice Required",
         "value_4": "Public - Membership Required",
         "value_5": "Public - Pay At Location",
-        "value_6": "Private - For Staff and Visitors",
+        "value_6": "Private - For Staff, Visitors or Customers",
         "value_7": "Public - Notice Required"
       },
       "connectionType": {

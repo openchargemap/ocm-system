@@ -178,16 +178,16 @@ namespace OCM.API.Common.Model
                 if (this.AddressInfo.Town != null) address += "\r\n" + this.AddressInfo.Town;
                 if (this.AddressInfo.StateOrProvince != null) address += "\r\n" + this.AddressInfo.StateOrProvince;
                 if (this.AddressInfo.Postcode != null) address += "\r\n" + this.AddressInfo.Postcode;
-                if (this.AddressInfo.Country!=null) address+="\r\n"+this.AddressInfo.Country.Title;
-                if (fullDetails){
-                    if (this.AddressInfo.Title != null) address = this.AddressInfo.Title+"\r\n"+address;
+                if (this.AddressInfo.Country != null) address += "\r\n" + this.AddressInfo.Country.Title;
+                if (fullDetails)
+                {
+                    if (this.AddressInfo.Title != null) address = this.AddressInfo.Title + "\r\n" + address;
                     if (this.AddressInfo.AccessComments != null) address += "\r\n" + this.AddressInfo.AccessComments;
                     if (this.AddressInfo.ContactEmail != null) address += "\r\n" + this.AddressInfo.ContactEmail;
                     if (this.AddressInfo.ContactTelephone1 != null) address += "\r\n" + this.AddressInfo.ContactTelephone1;
                     if (this.AddressInfo.ContactTelephone2 != null) address += "\r\n" + this.AddressInfo.ContactTelephone2;
                     if (this.AddressInfo.RelatedURL != null) address += "\r\n" + this.AddressInfo.RelatedURL;
                     if (this.AddressInfo.GeneralComments != null) address += "\r\n" + this.AddressInfo.GeneralComments;
-                    
                 }
             }
 
@@ -198,8 +198,8 @@ namespace OCM.API.Common.Model
         {
             get
             {
-               if (DateLastVerified.HasValue) return true;
-               else return false;
+                if (DateLastVerified.HasValue) return true;
+                else return false;
             }
         }
 
@@ -207,14 +207,14 @@ namespace OCM.API.Common.Model
         {
             get
             {
-                //confirmed withing last 6 months
+                //confirmed within last 6 months
                 if (this.DateLastConfirmed != null && this.DateLastConfirmed.Value > DateTime.UtcNow.AddMonths(-6))
                 {
                     return this.DateLastConfirmed;
                 }
 
                 //positive comments within last 6 months
-                if (this.UserComments != null && this.UserComments.Any(u =>u.CheckinStatusType!=null && u.CheckinStatusType.IsPositive == true && u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
+                if (this.UserComments != null && this.UserComments.Any(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true && u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
                 {
                     return this.UserComments.Where(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true).Max(u => u.DateCreated);
                 }
@@ -229,5 +229,4 @@ namespace OCM.API.Common.Model
             }
         }
     }
-
 }

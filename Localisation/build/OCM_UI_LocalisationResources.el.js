@@ -113,7 +113,9 @@ var localisation_dictionary_el ={
         "avaitingReview": null,
         "recentActivity": null,
         "webApp": null,
-        "statistics": null
+        "statistics": null,
+        "awaitingReviewImported": null,
+        "editqueue": null
       },
       "develop": {
         "sectionTitle": null,
@@ -171,10 +173,36 @@ var localisation_dictionary_el ={
         "webApp": null,
         "searchAppStore": null
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
+        "ourService": null,
+        "aim": {
+          "title": null,
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
         "funding": {
           "title": null,
           "p1": null
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

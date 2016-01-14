@@ -113,7 +113,9 @@ var localisation_dictionary_es ={
         "avaitingReview": "En espera de revisión",
         "recentActivity": "Última actividad",
         "webApp": "App para móvil",
-        "statistics": "Estadísticas"
+        "statistics": "Estadísticas",
+        "awaitingReviewImported": "Localizaciones importadas pendientes de revisión",
+        "editqueue": "Modificaciones pendientes de aprobación"
       },
       "develop": {
         "sectionTitle": "Desarrollo",
@@ -171,10 +173,36 @@ var localisation_dictionary_es ={
         "webApp": "Aplicación web",
         "searchAppStore": "para dispositivos móviles. También puedes buscar nuestra app para descargar."
       },
+      "sponsors": "Estamos buscando financiación y sponsors, nos puedes ayudar?",
+      "termsNotice": "Al utilizar nuestros servicios o al añadir información en Open Charge Map estás de acuerdo con nuestros {link:standard terms, privacy policy and licensing}.",
       "about": {
+        "ourService": "Nuestro Servicio",
+        "aim": {
+          "title": "Nuestro Objetivo",
+          "p1": "Nuestro deseo es trabajar con la comunidad para desarrollar y proporcionar globalmente una base de datos de alta calidad, pública, libre y abierta de ubicaciones de equipos de recarga",
+          "p2": "Nuestro objectivo es evitar la proliferación de mapas/webs/aplicaciones independientes de ubicaciones de recarga que pueden ser conflictivas entre sí, y proporcionar (tanto como sea posible) un único sitio de referencia fiable para la información de ubicaciones de equipos de recarga. en lugar de competir con otros proveedores, queremos colaborar con ellos y proporcionarles servicios en intercambio por la compartición de datos."
+        },
+        "whyOCM": {
+          "title": "Por qué utilizar Open Charge Map?",
+          "content": "Utilizando Open Charge Map y sus aplicaciones estás ayudando a mejorar la información en el registro añadiendo reseñas, correcciones, mejoras, comentarios, fotos y promoviendo el servicio a otros usuarios. El beneficio de OCM sobre otros proveedores es que la finalidad de OCM es compartir abiertamente la información, mientras que los proveedores comerciales guardan su información para ellos mismos (para su propia aplicación) con el fin de poseer una base de datos con finalidades comerciales."
+        },
         "funding": {
-          "title": null,
-          "p1": null
+          "title": "Financiación",
+          "p1": "Open Charge Map está desarrollado y gestionado por voluntarios. Si puedes ofrecer financiación para apoyar el proyecto o para financiar un trabajo específico por favor {link-contact:get in touch}. Más información sobre financiación y costes del proyecto {link-funding:is available}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Desarrolladores y Colaboradores",
+          "p1": "Nuestro {link_github:GitHub project} proporciona un canal para colaboradores técnicos externos para debatir y mejorar nuestro sistema y nuestros planes. Nuestra {link_google_plus:Google+} comunidad es nuestro pilar para intercambiar ideas y recoger opiniones.",
+          "p2": "Puedes dar un vistazo a las listas de nuestros colaboradores principales de {link_code:code}, {link_translations:translations} y {link_data:data}."
+        },
+        "projectStats": {
+          "sectionTitle": "Estadísticas del Proyecto",
+          "general": "Estadísticas generales para Open Charge Map están disponibles {link:data and usage} aquí."
+        },
+        "dataSources": {
+          "title": "Fuentes de datos",
+          "p1": "Los datos disponibles en el sistema y servicios relacionados de Open Charge Map provienen de distintas ubicaciones y a menudo son proporcionadas directamente por nuestros usuarios y los que utilizan nuestros servicios.",
+          "p2": "Nuestro sincero agradecimiento a los mayores proveedores de datos que actualmente tenemos en nuestra base de datos:"
         }
       }
     },

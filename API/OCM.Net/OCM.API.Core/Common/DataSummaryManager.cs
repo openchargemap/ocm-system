@@ -60,9 +60,16 @@ namespace OCM.API.Common.DataSummary
     {
         public void RefreshStats()
         {
-            this.dataModel.Database.ExecuteSqlCommand("procUpdateOCMStats", null);
-            this.dataModel.AuditLogs.Add(new Core.Data.AuditLog { EventDate = DateTime.UtcNow, EventDescription = "Statistics", UserID = (int)StandardUsers.System, Comment = "OCM Statistics Updated" });
-            this.dataModel.SaveChanges();
+            try
+            {
+                var paramList = new object[] { };
+                this.dataModel.Database.ExecuteSqlCommand("procUpdateOCMStats", paramList);
+                AuditLogManager.Log(null, AuditEventType.StatisticsUpdated, "Statistics Updated", "");
+            }
+            catch (Exception)
+            {
+                ; ;
+            }
         }
 
         public List<CountrySummary> GetAllCountryStats()

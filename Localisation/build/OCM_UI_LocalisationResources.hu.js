@@ -3,9 +3,9 @@ var localisation_dictionary_hu ={
   "_langCode": "hu",
   "ocm": {
     "general": {
-      "shortDescription": "villanyautó töltőpontok nyilvános globális regisztere",
+      "shortDescription": "EV töltőpontok publikus globális nyilvántartása",
       "linkWebApp": "Keress töltőpontot a webes alkalmazásunk segítségével!",
-      "linkBrowsePOI": "Minden helyszín listázása",
+      "linkBrowsePOI": "Összes helyszín böngészése",
       "browsePOI": "Töltőpontok listázása",
       "loadingProgress": "Betöltés...",
       "addLocation": "Hely hozzáadása",
@@ -17,13 +17,13 @@ var localisation_dictionary_hu ={
       "signOut": "Kilépés"
     },
     "details": {
-      "sectionTitle": "Töltési hely",
+      "sectionTitle": "Töltő hely",
       "location": {
         "sectionTitle": "Helyszín leírása",
         "title": "Helyszín megnevezése",
         "address": "Legközelebbi cím",
-        "addressLine1": "Cim első sor",
-        "addressLine2": "Cim második sor",
+        "addressLine1": "Cím első sora",
+        "addressLine2": "Cím második sora",
         "town": "Város",
         "stateOrProvince": "Állam/megye",
         "postcode": "Irányítószám",
@@ -38,18 +38,18 @@ var localisation_dictionary_hu ={
         "addressRelatedURL": "Honlap"
       },
       "generalComments": "Általános információk",
-      "accessComments": "Megközelítési információk",
+      "accessComments": "Megközelítési információ",
       "advancedDetails": "További információk",
       "numberOfPoints": "Állomások/parkolók száma",
       "usageType": "Elérhetőség",
       "usageCost": "Használati díj",
       "operationalStatus": "Működési állapot",
       "datePlanned": "Tervezett időpont",
-      "dateLastConfirmed": "Utolsó megerősítés időpontja",
+      "dateLastConfirmed": "Utolsó megerősítés ideje",
       "lastUpdated": "Legutolsó frissítés",
       "refNumber": "OpenChargeMap Ref",
       "dataQualityLevel": "Adatminőség szintje",
-      "importedDataNotice": "Megjegyzés: Az adatok más forrásból, automatikusan lettek átemelve. A módosításokat az adatszolgáltatóhoz közvetlenül kell benyújtani.",
+      "importedDataNotice": "Megjegyzés: Az adatok más forrásból, automatikusan lettek átemelve. A változásokat az adatszolgáltatóhoz közvetlenül kell benyújtani.",
       "submissionStatus": "Adatpont státusza",
       "placesNearby": {
         "sectionTitle": "Közeli helyek"
@@ -63,7 +63,7 @@ var localisation_dictionary_hu ={
       },
       "commentsAndRatings": {
         "sectionTitle": "Észrevételek és minősítések",
-        "zeroComments": "Nincs felhasználói észrevétel",
+        "zeroComments": "Nincs beküldött felhasználói észrevétel",
         "addPrompt": "Rögzítsd az észrevételeidet vagy az állapotot!"
       },
       "equipment": {
@@ -74,7 +74,7 @@ var localisation_dictionary_hu ={
         "quantity": "Mennyiség",
         "supplyType": "Áramforrás típusa",
         "voltage": "Feszültség",
-        "current": "Max áramerősség",
+        "current": "Max áram",
         "comment": "Észrevételek",
         "reference": "Referencia"
       },
@@ -98,22 +98,24 @@ var localisation_dictionary_hu ={
       "connectionTypes": "Csatlakozó típusa",
       "networkOperators": "Hálózat/üzemeltető",
       "countries": "Ország",
-      "submissionStatus": "Adatpont státusza",
-      "usageTypes": "Elérhetőség",
+      "submissionStatus": "Beküldés állapota",
+      "usageTypes": "Használat",
       "operationalStatusTypes": "Állapot",
       "performSearch": "Keresés",
       "progress": "Keresés..."
     },
     "navigation": {
-      "home": "Főoldal",
+      "home": "Kezdőlap",
       "browse": {
-        "sectionTitle": "Listázás",
+        "sectionTitle": "Böngészés",
         "allLocations": "Minden helyszín",
         "byCountry": "Országonként",
         "avaitingReview": "Jóváhagyásra vár",
         "recentActivity": "Legutóbbi tevékenységek",
         "webApp": "Webes alkalmazás mobilra",
-        "statistics": "Statisztikák"
+        "statistics": "Statisztikák",
+        "awaitingReviewImported": "Jóváhagyásra váró importált helyszínek",
+        "editqueue": "Jóváhagyásra váró módosítások"
       },
       "develop": {
         "sectionTitle": "Fejlesztés",
@@ -142,7 +144,7 @@ var localisation_dictionary_hu ={
         "youCan": "Lehetőséged van",
         "browseLocations": "megkeresni a közeledben lévő töltőpontokat",
         "commentsPhotos": "és rögzíteni az észrevételeidet, fotóidat.",
-        "dontSeePOI": "Nem látsz egy általad jól ismert töltési pontot?"
+        "dontSeePOI": "Nem találsz egy általad jól ismert töltési pontot?"
       },
       "getStations": {
         "sectionTitle": "Töltőpont adatok elérése",
@@ -154,9 +156,9 @@ var localisation_dictionary_hu ={
       "supplyData": {
         "sectionTitle": "Üzemeltetők és adatszolgáltatók",
         "who": "EVSE forgalmazók, hálózat üzemeltetők, nemzeti adatszolgáltatók, helyi töltőpont alkalmazások és weboldalak:",
-        "needData": "Szükségünk van az információitokra!",
-        "what": "Átadhatjátok a legfrissebb töltőpont adataitokat függetlenül attól, hogy a szervezetetek tulajdonában van, vagy csak üzemeltet vagy katalogizálja a töltőpont adatokat.",
-        "contactUs": "Írjatok nekünk!",
+        "needData": "Szükségünk van az adataidra.",
+        "what": "Elláthatsz minket a legfrissebb töltőpont információiddal függetlenül attól, hogy a szervezeted tulajdonolja, üzemelteti, vagy csak nyilvántartja a töltőpont adatait. Kérlek",
+        "contactUs": "Lépj velünk kapcsolatba!",
         "getStarted": "első lépések"
       },
       "stats": {
@@ -171,10 +173,36 @@ var localisation_dictionary_hu ={
         "webApp": "Webes alkalmazást",
         "searchAppStore": ", különösen, ha mobilon keresel. Keress rá a mobilod alkalmazásboltjában az applikációra, hogy mindig kéznél legyen az adatbázis."
       },
+      "sponsors": "Támogatókat és szponzorokat keresünk! Tudsz segíteni? {link:Tudj meg többet erről}",
+      "termsNotice": "A szolgáltatások használatával és az Open Charge Map használatával elfogadja a {link:feltételeket, adatvédelmi alapelveket és a licencelési elveket}.",
       "about": {
+        "ourService": "Szolgáltatásunk",
+        "aim": {
+          "title": "Célunk",
+          "p1": "A célunk, hogy a közösséggel együttműködve egy egész világot lefedő, magas minőségű, nyilvános, ingyenes és nyitott töltőpont adatbázist fejlesszünk.",
+          "p2": "A célunk, hogy elkerüljük az egymásnak sokszor ellentmondó apróbb töltőpont térképek/weboldalak/alkalmazások szaporodását, és ehelyett amennyire csak lehet megbízható referenciapontként szolgáljunk a töltőeszközök pozíciójának meghatározásához. A többi adatszolgáltatóval való verseny helyett együttműködést és szolgáltatást nyújtunk nekik, cserébe az általuk nyújtott adatokért és a duplikációk megszüntetéséért."
+        },
+        "whyOCM": {
+          "title": "Miért érdemes az Open Charge Map-et használni?",
+          "content": "Az Open Charge Map és a kapcsolódó appok használatával segíti a regiszterben található adatok pontosságát, miközben értékelést ír, adatot szerkeszt, kommentel, fotót tölt fel vagy csak népszerűsíti a szolgáltatást más felhasználók körében. Az OCM előnye a többi szolgáltatóval szemben, hogy az OCM az információk szabad terjesztését tűzte ki céljául, miközben a kereskedelmi szolgáltatásoknak vigyázniuk kell az adataikra (pl. csak a saját alkalmazásaikkal használhatók), hogy kereskedelmileg értékes adatbázisuk legyen."
+        },
         "funding": {
-          "title": null,
-          "p1": null
+          "title": "Finanszírozás",
+          "p1": "Az Open Charge Map projektet önkéntesek üzemeltetik. Ha van lehetőséged támogatni a projektet vagy egy konkrét munkát, akkor kérlek {link-contact:keress meg bennünket}. További információk a finanszírozásról és a projekt költségeiről {link-funding:itt}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Fejlesztők és közreműködők",
+          "p1": "A {link_github:GitHub projekt} lehetőséget biztosít, hogy külső fejlesztők megvitassák és fejlesszék a rendszerünket és a terveinket. A {link_google_plus:Google+} közösségünk az elsődleges felület, ahol az ötleteinket és visszajelzéseinket megoszthatjuk egymással.",
+          "p2": "Nézd meg a legaktívabb {link_code:programozók}, {link_translations:fordítók} és {link_data:adatfeltöltők} listáit."
+        },
+        "projectStats": {
+          "sectionTitle": "Projekt statisztikák",
+          "general": "Itt elérhetők az Open Charge Map általános statisztikái az {link:adatokról és a használatról}."
+        },
+        "dataSources": {
+          "title": "Adatforrások",
+          "p1": "Az Open Charge Map rendszerben és a kapcsolódó szolgáltatások által biztosított adatok többféle forrásból származnak. Gyakran a szolgáltatást használó alkalmazásokon keresztül, vagy egyszerűen csak közösségi forrásból származnak.",
+          "p2": "Köszönetünket fejezzük ki az alábbi fontos adatforrásoknak, amelyek adatait az adatbázisunk tartalmazza:"
         }
       }
     },
@@ -194,18 +222,18 @@ var localisation_dictionary_hu ={
       "operatorInfo": {
         "value_minus1": "(Nincs kiválasztva)",
         "value_1": "(Ismeretlen üzemeltető)",
-        "value_44": "(Privát lakás)",
+        "value_44": "(Magánterület)",
         "value_45": "(Vállalkozás a helyszínen)"
       },
       "usageType": {
         "value_minus1": "(Nincs kiválasztva)",
         "value_0": "(Ismeretlen)",
         "value_1": "Nyilvános",
-        "value_2": "Privát - korlátozott hozzáférés",
-        "value_3": "Privát - bejelentkezés szükséges",
+        "value_2": "Magán - korlátozott hozzáférés",
+        "value_3": "Magán - bejelentkezés szükséges",
         "value_4": "Nyilvános - tagság szükséges",
         "value_5": "Nyilvános - fizetés a helyszínen",
-        "value_6": "Privát - dolgozók és látogatók részére",
+        "value_6": "Magán - dolgozók és látogatók részére",
         "value_7": "Nyilvános - bejelentkezés szükséges"
       },
       "connectionType": {

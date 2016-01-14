@@ -1,10 +1,10 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
-using OCM.API.Common.Model;
-using System.Collections;
-using System.Configuration;
 
 namespace OCM.API.Common
 {
@@ -17,18 +17,18 @@ namespace OCM.API.Common
         UpdatedItem = 200,
         DeletedItem = 300,
         SystemErrorWeb = 1000,
-        SystemErrorAPI = 1010
+        SystemErrorAPI = 1010,
+        StatisticsUpdated = 2000
     }
 
     public class AuditLogManager
     {
-        public static void ReportWebException(HttpServerUtility Server, AuditEventType eventType, string msg=null)
+        public static void ReportWebException(HttpServerUtility Server, AuditEventType eventType, string msg = null)
         {
-
             bool ignoreException = false;
             string body = "An error has occurred while a user was browsing OCM:<br><br>";
 
-            if (msg!=null)
+            if (msg != null)
             {
                 body = msg;
             }
@@ -55,7 +55,6 @@ namespace OCM.API.Common
 
                         //special case to avoid reporting /trackback url exceptions
                         if (con.Request.Url.ToString().EndsWith("/trackback/")) ignoreException = true;
-
                     }
                     if (con.Request.UserAgent != null)
                     {
@@ -82,11 +81,9 @@ namespace OCM.API.Common
 
                     notification.PrepareNotification(NotificationType.ContactUsMessage, msgParams);
                     notification.SendNotification(NotificationType.ContactUsMessage);
-
                 }
 
                 AuditLogManager.Log(null, eventType, body, null);
-
             }
         }
 
@@ -113,7 +110,7 @@ namespace OCM.API.Common
                 dataModel.AuditLogs.Add(auditEntry);
                 dataModel.SaveChanges();
 
-                System.Diagnostics.Debug.WriteLine("Log:"+auditEntry.EventDescription);
+                System.Diagnostics.Debug.WriteLine("Log:" + auditEntry.EventDescription);
             }
             catch (Exception)
             {

@@ -52,9 +52,7 @@ var localisation_dictionary_sk ={
       "importedDataNotice": "Poznámka: Tieto údaje sa získavajú automaticky, zmeny by mali byť predložené priamo poskytovateľovi údajov.",
       "submissionStatus": "Stav položky",
       "placesNearby": {
-        "sectionTitle": "Miesta v blízskosti",
-        "pois": "Zaujímavosti",
-        "chargingLocations": "Iné nabíjacie stanice"
+        "sectionTitle": "Miesta v blízskosti"
       },
       "mediaItems": {
         "sectionTitle": "Fotografie",
@@ -83,14 +81,12 @@ var localisation_dictionary_sk ={
       "dataProvider": {
         "sectionTitle": "Poskytovateľ dát",
         "website": "Webová stránka",
-        "providersReference": "Referenčné číslo poskytovateľa",
-        "license": "Licencia dát"
+        "providersReference": "Referenčné číslo poskytovateľa"
       },
       "operator": {
         "sectionTitle": "Sieť-Operátor",
         "operatorsReference": "Referenčné číslo operátora"
-      },
-      "editPrompt": "Pre úpravu, komentovanie a pridávanie fotografií"
+      }
     },
     "search": {
       "sectionTitle": "Hľadať",
@@ -209,9 +205,6 @@ var localisation_dictionary_sk ={
           "p2": "Uznanie a vďaka patrí nasledujúcim hlavným zdrojom dát, ktoré sú v súčasnosti zahrnuté v našej databáze:"
         }
       }
-    },
-    "warningsErrors":{
-      "oldData": "Táto nabíjacia stanica nebola v poslednej dobe verifikovaná and nemali by ste sa na informácie o nej spoliehať pri plánovaní cesty. <br /><br />Ak ste nedávno navštívili toto nabíjacie miesto, tak prosíme potvrďte aktuálnosť informácií pridaním komentára. <br /><br />Ak sú informácie nesprávne tak prosíme {link-edit: upravte}."
     },
     "reference": {
       "statusType": {

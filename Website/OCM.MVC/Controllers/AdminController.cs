@@ -126,6 +126,7 @@ namespace OCM.MVC.Controllers
             if (key == System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"])
             {
                 //send all pending subscription notifications
+
                 try
                 {
                     //TODO: can't run in seperate async thread becuase HttpContext is not available

@@ -26,7 +26,6 @@ namespace OCM.API.Common
                 operatorInfo = DataModel.Operators.FirstOrDefault(o => o.ID == update.ID);
             }
 
-
             operatorInfo.Title = update.Title;
             operatorInfo.WebsiteURL = update.WebsiteURL;
             operatorInfo.Comments = update.Comments;
@@ -51,7 +50,6 @@ namespace OCM.API.Common
             CacheManager.RefreshCachedData();
 
             return update;
-
         }
 
         public List<OperatorInfo> GetOperators()
@@ -62,7 +60,7 @@ namespace OCM.API.Common
                 operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
             }
 
-            return operators;
+            return operators.OrderBy(o => o.Title).ToList();
         }
     }
 }

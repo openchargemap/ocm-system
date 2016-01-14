@@ -113,7 +113,9 @@ var localisation_dictionary_fr ={
         "avaitingReview": "Attends Considération",
         "recentActivity": "Activité Récente",
         "webApp": "App Web pour Mobile",
-        "statistics": "Statistiques"
+        "statistics": "Statistiques",
+        "awaitingReviewImported": "Emplacements Importés en attente d'approbation",
+        "editqueue": "Modifications en attente d'approbation"
       },
       "develop": {
         "sectionTitle": "Dévelopez",
@@ -146,35 +148,61 @@ var localisation_dictionary_fr ={
       },
       "getStations": {
         "sectionTitle": "Obtenir les données des stations de charge",
-        "who": null,
+        "who": "Constructeurs de Véhicules, fournisseurs de Sat Nav, propriétaires de sites Web, développeurs d'applications :",
         "what": "Vous pouvez accéder et télécharger nos derniers points de charge en utilisant notre",
-        "websiteOperators": null,
+        "websiteOperators": "Si vous exploitez un site Internet et vous souhaitez inclure une carte d'emplacements de charge, vous le pouvez",
         "embedMap": "Intégrer une carte sur votre propre site Internet"
       },
       "supplyData": {
-        "sectionTitle": null,
-        "who": null,
-        "needData": null,
-        "what": null,
+        "sectionTitle": "Opérateurs et Fournisseurs de Données",
+        "who": "Fournisseurs de stations de recharge, opérateurs de réseau, registres nationaux, applications & sites d'information d'emplacements de recharge :",
+        "needData": "Nous avons besoin de vos données.",
+        "what": "Vous pouvez nous fournir vos dernières informations de emplacements de recharge indépendamment de si votre organisation possède, exploite ou simplement catalogue les emplacements de recharge disponibles. S'il vous plaît",
         "contactUs": "Contactez-nous",
-        "getStarted": null
+        "getStarted": "pour commencer"
       },
       "stats": {
         "locations": "Lieux",
         "locationSummary": "{totalStations} stations de recharge sur {totalLocations} endroits."
       },
-      "shortProjectSummary": null,
+      "shortProjectSummary": "Open Charge Map est un service non commercial, à but non lucratif, hébergé et soutenu par une communauté d'entreprises, des organismes de bienfaisance, des développeurs et des parties intéressées dans le monde entier.",
       "getApp": "Téléchargez l'app",
-      "tip": null,
+      "tip": "Astuce:",
       "searching": {
-        "quickWay": null,
+        "quickWay": "Si vous avez juste besoin d'un moyen rapide de trouver l'emplacement de recharge le plus proche vous pouvez aussi essayer notre",
         "webApp": "App Web",
-        "searchAppStore": null
+        "searchAppStore": "surtout sur les appareils mobiles. Vous pouvez également rechercher sur l'App Store de votre appareil pour une version, que vous pouvez emporter partout."
       },
+      "sponsors": null,
+      "termsNotice": null,
       "about": {
-        "funding": {
+        "ourService": null,
+        "aim": {
           "title": null,
-          "p1": null
+          "p1": null,
+          "p2": null
+        },
+        "whyOCM": {
+          "title": null,
+          "content": null
+        },
+        "funding": {
+          "title": "Financement",
+          "p1": "Open Charge Map est développée et gérée par des bénévoles. Si vous pouvez offrir du financement pour soutenir le projet ou pour financer des travaux spécifique s'il vous plaît {link-contact:get in touch}. Plus d'informations sur les coûts de financement du projet {link-funding:is available}."
+        },
+        "developersContributors": {
+          "sectionTitle": null,
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
+          "title": null,
+          "p1": null,
+          "p2": null
         }
       }
     },

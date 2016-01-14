@@ -113,7 +113,9 @@ var localisation_dictionary_nl ={
         "avaitingReview": "Wachtend op Beoordeling",
         "recentActivity": "Recente Activiteit",
         "webApp": "Web App voor Mobiel",
-        "statistics": "Statistieken"
+        "statistics": "Statistieken",
+        "awaitingReviewImported": "Geïmporteerde locaties in afwachting van goedkeuring",
+        "editqueue": "Wijzigingen in afwachting van goedkeuring."
       },
       "develop": {
         "sectionTitle": "Ontwikkelen",
@@ -171,10 +173,36 @@ var localisation_dictionary_nl ={
         "webApp": "Web App",
         "searchAppStore": "vooral op mobiele apparaten. U kunt ook zoeken op uw apparaat s' App Store voor een versie die u kunt rond dragen."
       },
+      "sponsors": "We zijn op zoek naar financiering en sponsors, denk je dat je kan helpen? {link: Find out more}.",
+      "termsNotice": "Door onze diensten te gebruiken of verzenden van gegevens naar Open Charge Map gaat U akkoord met onze {link:standard terms, privacy policy and licensing}.",
       "about": {
+        "ourService": "Onze Service",
+        "aim": {
+          "title": "Ons doel",
+          "p1": "Ons doel is om te werken met de Gemeenschap. Om te ontwikkelen en te zorgen voor een hoge kwaliteit openbare, gratis, database van locaties van oplaad apparatuur wereldwijd.",
+          "p2": "Ons doel is om te voorkomen de verspreiding van onafhankelijke strijdige  kaarten/websites/applications en (zoveel mogelijk) te verstrekken met een betrouwbare referentie voor het oplaad apparatuur. In plaats van concurreren met andere gegevensproviders willen we samenwerken met en dienstverlening aan hen, in ruil voor gegevens delen en duplicatie verwijderen."
+        },
+        "whyOCM": {
+          "title": "Waarom Open Charge Map gebruiken?",
+          "content": null
+        },
         "funding": {
+          "title": "Financiering",
+          "p1": "Open Charge Map is ontwikkeld en beheerd door vrijwilligers. Als u financiering kan bieden ter ondersteuning van het project of voor de financiering van specifieke onderdelen {link-contact: get in touch}. Meer informatie over financiering en project kosten {link-funding:is available}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Ontwikkelaars en medewerkers",
+          "p1": null,
+          "p2": null
+        },
+        "projectStats": {
+          "sectionTitle": null,
+          "general": null
+        },
+        "dataSources": {
           "title": null,
-          "p1": null
+          "p1": null,
+          "p2": null
         }
       }
     },
@@ -185,7 +213,7 @@ var localisation_dictionary_nl ={
         "value_10": "Nu Beschikbaar (Geautomatiseerde Status)",
         "value_20": "Nu In Gebruik (Geautomatiseerde Status)",
         "value_30": "Tijdelijk Niet Beschikbaar",
-        "value_50": "Operationeell",
+        "value_50": "Operationeel",
         "value_75": "Gedeeltelijk Operationeel (Gemengd)",
         "value_100": "Niet Operationeel",
         "value_150": "Gepland voor de Toekomst",
