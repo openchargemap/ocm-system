@@ -23,6 +23,8 @@ namespace OCM.Core.Util
 
         public static string GetMd5Hash(string input)
         {
+            if (input == null) return null;
+
             // Create a new instance of the MD5CryptoServiceProvider object.
             MD5 md5Hasher = MD5.Create();
 

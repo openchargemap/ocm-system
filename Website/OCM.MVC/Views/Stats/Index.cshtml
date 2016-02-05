@@ -6,12 +6,28 @@
 
 <h2><i class="fa fa-bar-chart-o"></i> Statistics</h2>
 
-<a href="@Url.Action("Index", "POI")">
-    <div class="stat">
-        <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
+<div class="row well">
+    <div class="col-md-6">
+        <a href="@Url.Action("Index", "POI")">
+            <div class="stat">
+                <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
+            </div>
+        </a>
+        <div id="datasummary"></div>
     </div>
-</a>
-<div id="datasummary"></div>
+    <div class="col-md-6">
+        <h3><i class="fa fa-line-chart"></i> Summary for Last 90 Days</h3>
+        
+        <ul>
+            <li>Total Active Editors: @Model.TotalActiveEditors.Quantity</li>
+            <li>Total Active Contributors: @Model.TotalActiveContributors.Quantity</li>
+            <li>Total Comment Contributors: @Model.TotalCommentContributors.Quantity</li>
+            <li>Total Photo Contributors: @Model.TotalPhotoContributors.Quantity</li>
+        </ul>
+    </div>
+   
+</div>
+
 <script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript">
 
@@ -41,6 +57,8 @@
 
     refreshDataSummary();
 </script>
+
+
 <div class="row">
     <div class="col-md-4">
         <h3><i class="fa fa-star"></i> Most Changes Last 90 Days</h3>

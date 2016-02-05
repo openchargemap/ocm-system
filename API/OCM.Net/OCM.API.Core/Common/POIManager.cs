@@ -222,8 +222,9 @@ namespace OCM.API.Common
                     catch (Exception exp)
                     {
                         //failed to query mirror db, will now fallback to sql server if dataList is null
-                        //TODO: send error notification
-                        if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI, "POI Cache query exception:" + exp.ToString());
+                        //mostly likely because cache is being refreshed while querying
+
+                        //if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI, "POI Cache query exception:" + exp.ToString());
                     }
                 }
 

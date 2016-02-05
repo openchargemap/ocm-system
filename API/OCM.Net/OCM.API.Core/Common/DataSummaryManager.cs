@@ -247,15 +247,29 @@ namespace OCM.API.Common.DataSummary
             return summary;
         }
 
+        public GeneralStats GetStatSingle(string statTypeCode)
+        {
+            var stat = DataModel.Statistics.FirstOrDefault(s => s.StatTypeCode == statTypeCode);
+
+            if (stat != null)
+            {
+                return new GeneralStats { Quantity = stat.NumItems };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public List<GeneralStats> GetTopNStats(string statTypeCode, int maxResults, int? countryId)
         {
-            var stats = DataModel.Statistics.Where(stat => stat.StatTypeCode == statTypeCode).OrderByDescending(s => s.NumItems).Distinct().Take(maxResults);
+            var stats = DataModel.Statistics.Where(stat => stat.StatTypeCode == statTypeCode).OrderByDescending(s => s.NumItems).Take(maxResults);
             var results = new List<GeneralStats>();
             foreach (var s in stats)
             {
                 if (s.UserID != null)
                 {
-                    var r = OCM.API.Common.Model.Extensions.User.PublicProfileFromDataModel(s.User);
+                    var r = OCM.API.Common.Model.Extensions.User.PublicProfileFromDataModel(s.User, true);
                     if (r.EmailAddress != null) r.EmailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(r.EmailAddress);
                     results.Add(new GeneralStats { User = r, Quantity = s.NumItems });
                 }

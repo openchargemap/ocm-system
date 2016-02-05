@@ -6,7 +6,6 @@ namespace OCM.API.Common.Model.Extensions
 {
     public class User
     {
-
         /// <summary>
         /// returns a User object with sensitive information removed
         /// </summary>
@@ -24,7 +23,7 @@ namespace OCM.API.Common.Model.Extensions
             };
         }
 
-        public static Model.User PublicProfileFromDataModel(Core.Data.User source)
+        public static Model.User PublicProfileFromDataModel(Core.Data.User source, bool includeEmailHash = false)
         {
             if (source == null) return null;
 
@@ -36,7 +35,8 @@ namespace OCM.API.Common.Model.Extensions
                 Location = source.Location,
                 Profile = source.Profile,
                 DateCreated = source.DateCreated,
-                DateLastLogin = source.DateLastLogin
+                DateLastLogin = source.DateLastLogin,
+                EmailHash = (includeEmailHash ? OCM.Core.Util.SecurityHelper.GetMd5Hash(source.EmailAddress) : null)
             };
         }
 
