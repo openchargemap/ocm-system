@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace OCM.API.Common.Model
 {
     public enum StandardDataProviders
@@ -12,8 +11,16 @@ namespace OCM.API.Common.Model
 
     public enum StandardStatusTypes
     {
-        Unknown = 0
+        Unknown = 0,
+        CurrentlyAvailable = 10,
+        CurrentlyInUse = 20,
+        Operational = 50,
+        PartlyOperational = 75,
+        NotOperational = 100,
+        PlannedForFutureDate = 150,
+        RemovedDecomissioned = 200
     }
+
     public enum StandardOperators
     {
         UnknownOperator = 1
@@ -26,7 +33,7 @@ namespace OCM.API.Common.Model
         PrivateRestricted = 2,
         PrivatelyOwned_NoticeRequired = 3,
         Public_MembershipRequired = 4,
-        Public_PayAtLocation= 5
+        Public_PayAtLocation = 5
     }
 
     public enum StandardSubmissionStatusTypes
@@ -69,7 +76,8 @@ namespace OCM.API.Common.Model
         J1772 = 1,
         CHAdeMO = 2,
         MennekesType2 = 25,
-        Schuko = 28
+        Schuko = 28,
+        CCSComboType2 = 33,
     }
 
     public enum StandardCurrentTypes
@@ -83,8 +91,21 @@ namespace OCM.API.Common.Model
     {
         POIType = 1,
         AccessHours = 2,
-        Attribution = 4
+        Attribution = 4,
+        VehicleType = 5
     }
+
+    public enum StandardMetadataFieldOptions
+    {
+        /*Vehicle Types*/
+        Car = 5,
+        Motorbike = 6,
+        Bus = 7,
+        DeliveryVehicle = 10,
+        Taxi = 11,
+        Cycle = 12
+    }
+
     public class CoreReferenceData
     {
         public List<ChargerType> ChargerTypes { get; set; }
@@ -108,6 +129,7 @@ namespace OCM.API.Common.Model
         /// Blank item used as template to populate/construct JSON object
         /// </summary>
         public ChargePoint ChargePoint { get; set; }
+
         public UserComment UserComment { get; set; }
     }
 }

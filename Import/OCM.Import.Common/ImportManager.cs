@@ -136,6 +136,55 @@ namespace OCM.Import
             Way to remove item (or log items) which no longer exist in data source?
          * */
 
+        public List<IImportProvider> GetImportProviders(List<OCM.API.Common.Model.DataProvider> AllDataProviders)
+        {
+            List<IImportProvider> providers = new List<IImportProvider>();
+
+            providers.Add(new ImportProvider_UKChargePointRegistry());
+            providers.Add(new ImportProvider_CarStations());
+            providers.Add(new ImportProvider_Mobie());
+            providers.Add(new ImportProvider_AFDC());
+            providers.Add(new ImportProvider_ESB_eCars());
+            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique));
+            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
+            providers.Add(new ImportProvider_NobilDotNo());
+            providers.Add(new ImportProvider_OplaadpalenNL());
+            providers.Add(new ImportProvider_ICAEN());
+
+            //populate full data provider details for each import provider
+            foreach (var provider in providers)
+            {
+                var providerDetails = (BaseImportProvider)provider;
+                var dataProviderDetails = AllDataProviders.FirstOrDefault(p => p.ID == providerDetails.DataProviderID);
+                if (dataProviderDetails != null)
+                {
+                    providerDetails.DefaultDataProvider = dataProviderDetails;
+                }
+            }
+            return providers;
+        }
+
+        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData)
+        {
+            OCMClient client = new OCMClient(IsSandboxedAPIMode);
+            var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
+
+            CoreReferenceData coreRefData = null;
+            coreRefData = await client.GetCoreReferenceData();
+
+            string outputPath = "Data\\";
+            List<IImportProvider> providers = new List<IImportProvider>();
+
+            string inputDataPathPrefix = defaultDataPath;
+
+            foreach (var provider in providers)
+            {
+                await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, false);
+            }
+
+            return true;
+        }
+
         public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false)
         {
             var stopWatch = new Stopwatch();
@@ -641,54 +690,6 @@ namespace OCM.Import
             if (sourceItem.StatusType != null) destItem.StatusType = sourceItem.StatusType;
 
             return hasDifferences;
-        }
-
-        public List<IImportProvider> GetImportProviders(List<OCM.API.Common.Model.DataProvider> AllDataProviders)
-        {
-            List<IImportProvider> providers = new List<IImportProvider>();
-
-            providers.Add(new ImportProvider_UKChargePointRegistry());
-            providers.Add(new ImportProvider_CarStations());
-            providers.Add(new ImportProvider_Mobie());
-            providers.Add(new ImportProvider_AFDC());
-            providers.Add(new ImportProvider_ESB_eCars());
-            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique));
-            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
-            providers.Add(new ImportProvider_NobilDotNo());
-            providers.Add(new ImportProvider_OplaadpalenNL());
-
-            //populate full data provider details for each import provider
-            foreach (var provider in providers)
-            {
-                var providerDetails = (BaseImportProvider)provider;
-                var dataProviderDetails = AllDataProviders.FirstOrDefault(p => p.ID == providerDetails.DataProviderID);
-                if (dataProviderDetails != null)
-                {
-                    providerDetails.DefaultDataProvider = dataProviderDetails;
-                }
-            }
-            return providers;
-        }
-
-        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData)
-        {
-            OCMClient client = new OCMClient(IsSandboxedAPIMode);
-            var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
-
-            CoreReferenceData coreRefData = null;
-            coreRefData = await client.GetCoreReferenceData();
-
-            string outputPath = "Data\\";
-            List<IImportProvider> providers = new List<IImportProvider>();
-
-            string inputDataPathPrefix = defaultDataPath;
-
-            foreach (var provider in providers)
-            {
-                await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, false);
-            }
-
-            return true;
         }
 
         public async Task<ImportReport> PerformImport(ExportType exportType, bool fetchLiveData, APICredentials credentials, CoreReferenceData coreRefData, string outputPath, IImportProvider provider, bool cacheInputData)
