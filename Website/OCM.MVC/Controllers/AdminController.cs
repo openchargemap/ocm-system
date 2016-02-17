@@ -276,6 +276,31 @@ namespace OCM.MVC.Controllers
             return View(result);
         }
 
+        [AuthSignedInOnly(Roles = "Admin"), HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ImportUpload(FormCollection collection)
+        {
+            var providerName = Request["providerName"];
+            var importManager = new Import.ImportManager(Server.MapPath("~/Temp"));
+            var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
+            var provider = providers.FirstOrDefault(p => p.GetProviderName() == Request["providerName"]);
+
+            var uploadFilename = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
+
+            var postedFile = Request.Files.Get(0);
+
+            if (postedFile != null && postedFile.ContentLength > 0)
+            {
+                //store upload
+                postedFile.SaveAs(uploadFilename);
+
+                //redirect to import processing (cached file version)
+                return RedirectToAction("Import", new { providerName = providerName, fetchLiveData = false, performImport = false });
+            }
+
+            //faileds
+            return RedirectToAction("ImportManager");
+        }
+
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult ConfigCheck()
         {

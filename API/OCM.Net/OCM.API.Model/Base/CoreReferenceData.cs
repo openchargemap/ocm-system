@@ -103,7 +103,11 @@ namespace OCM.API.Common.Model
         Bus = 7,
         DeliveryVehicle = 10,
         Taxi = 11,
-        Cycle = 12
+        Cycle = 12,
+        /*POI Types*/
+        Parking = 8,
+        Shopping = 1,
+        Hotel = 2
     }
 
     public class CoreReferenceData

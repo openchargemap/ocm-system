@@ -191,6 +191,9 @@ namespace OCM.Import.Providers
         /// </summary>
         public bool AllowDuplicatePOIWithDifferentOperator { get; set; }
 
+        /// <summary>
+        /// Intended to allow duplicates in a data source, does not currently work as intended (dedupe does too much other work)
+        /// </summary>
         public bool SkipDeduplication { get; set; }
 
         public string DataAttribution { get; set; }
@@ -310,7 +313,8 @@ namespace OCM.Import.Providers
                 {
                     //get
                     InputData = webClient.DownloadString(url);
-                } else
+                }
+                else
                 {
                     //post
                     InputData = webClient.UploadString(url, HTTPPostVariables);
@@ -536,115 +540,152 @@ namespace OCM.Import.Providers
                 {
                     switch (heading)
                     {
-                        case "ID": output += item.DataProvidersReference;
+                        case "ID":
+                            output += item.DataProvidersReference;
                             break;
 
-                        case "LocationTitle": output += GetNullableStringOutput(item.AddressInfo.Title);
+                        case "LocationTitle":
+                            output += GetNullableStringOutput(item.AddressInfo.Title);
                             break;
 
-                        case "AddressLine1": output += GetNullableStringOutput(item.AddressInfo.AddressLine1);
+                        case "AddressLine1":
+                            output += GetNullableStringOutput(item.AddressInfo.AddressLine1);
                             break;
 
-                        case "AddressLine2": output += GetNullableStringOutput(item.AddressInfo.AddressLine2);
+                        case "AddressLine2":
+                            output += GetNullableStringOutput(item.AddressInfo.AddressLine2);
                             break;
 
-                        case "Town": output += GetNullableStringOutput(item.AddressInfo.Town);
+                        case "Town":
+                            output += GetNullableStringOutput(item.AddressInfo.Town);
                             break;
 
-                        case "StateOrProvince": output += GetNullableStringOutput(item.AddressInfo.StateOrProvince);
+                        case "StateOrProvince":
+                            output += GetNullableStringOutput(item.AddressInfo.StateOrProvince);
                             break;
 
-                        case "Postcode": output += GetNullableStringOutput(item.AddressInfo.Postcode);
+                        case "Postcode":
+                            output += GetNullableStringOutput(item.AddressInfo.Postcode);
                             break;
 
-                        case "Country": output += (item.AddressInfo.Country != null ? item.AddressInfo.Country.Title : "");
+                        case "Country":
+                            output += (item.AddressInfo.Country != null ? item.AddressInfo.Country.Title : "");
                             break;
 
-                        case "Latitude": output += item.AddressInfo.Latitude.ToString();
+                        case "Latitude":
+                            output += item.AddressInfo.Latitude.ToString();
                             break;
 
-                        case "Longitude": output += item.AddressInfo.Longitude.ToString();
+                        case "Longitude":
+                            output += item.AddressInfo.Longitude.ToString();
                             break;
 
-                        case "Addr_ContactTelephone1": output += GetNullableStringOutput(item.AddressInfo.ContactTelephone1);
+                        case "Addr_ContactTelephone1":
+                            output += GetNullableStringOutput(item.AddressInfo.ContactTelephone1);
                             break;
 
-                        case "Addr_ContactTelephone2": output += GetNullableStringOutput(item.AddressInfo.ContactTelephone2);
+                        case "Addr_ContactTelephone2":
+                            output += GetNullableStringOutput(item.AddressInfo.ContactTelephone2);
                             break;
 
-                        case "Addr_ContactEmail": output += GetNullableStringOutput(item.AddressInfo.ContactEmail);
+                        case "Addr_ContactEmail":
+                            output += GetNullableStringOutput(item.AddressInfo.ContactEmail);
                             break;
 
-                        case "Addr_AccessComments": output += GetNullableStringOutput(item.AddressInfo.AccessComments);
+                        case "Addr_AccessComments":
+                            output += GetNullableStringOutput(item.AddressInfo.AccessComments);
                             break;
 
-                        case "Addr_GeneralComments": output += GetNullableStringOutput(item.AddressInfo.GeneralComments);
+                        case "Addr_GeneralComments":
+                            output += GetNullableStringOutput(item.AddressInfo.GeneralComments);
                             break;
 
-                        case "Addr_RelatedURL": output += GetNullableStringOutput(item.AddressInfo.RelatedURL);
+                        case "Addr_RelatedURL":
+                            output += GetNullableStringOutput(item.AddressInfo.RelatedURL);
                             break;
 
-                        case "NumberOfPoints": output += item.NumberOfPoints;
+                        case "NumberOfPoints":
+                            output += item.NumberOfPoints;
                             break;
 
-                        case "GeneralComments": output += item.GeneralComments;
+                        case "GeneralComments":
+                            output += item.GeneralComments;
                             break;
 
-                        case "DateLastConfirmed": output += item.DateLastConfirmed.ToString();
+                        case "DateLastConfirmed":
+                            output += item.DateLastConfirmed.ToString();
                             break;
 
-                        case "StatusType": output += (item.StatusType != null ? item.StatusType.Title : "");
+                        case "StatusType":
+                            output += (item.StatusType != null ? item.StatusType.Title : "");
                             break;
 
-                        case "DateLastStatusUpdate": output += item.DateLastStatusUpdate.ToString();
+                        case "DateLastStatusUpdate":
+                            output += item.DateLastStatusUpdate.ToString();
                             break;
 
-                        case "UsageCost": output += GetNullableStringOutput(item.UsageCost);
+                        case "UsageCost":
+                            output += GetNullableStringOutput(item.UsageCost);
                             break;
 
-                        case "Connection1_Type": output += GetConnectionFieldOutput(item.Connections, "_Type", 1);
+                        case "Connection1_Type":
+                            output += GetConnectionFieldOutput(item.Connections, "_Type", 1);
                             break;
 
-                        case "Connection1_Amps": output += GetConnectionFieldOutput(item.Connections, "_Amps", 1);
+                        case "Connection1_Amps":
+                            output += GetConnectionFieldOutput(item.Connections, "_Amps", 1);
                             break;
 
-                        case "Connection1_Volts": output += GetConnectionFieldOutput(item.Connections, "_Volts", 1);
+                        case "Connection1_Volts":
+                            output += GetConnectionFieldOutput(item.Connections, "_Volts", 1);
                             break;
 
-                        case "Connection1_Level": output += GetConnectionFieldOutput(item.Connections, "_Level", 1);
+                        case "Connection1_Level":
+                            output += GetConnectionFieldOutput(item.Connections, "_Level", 1);
                             break;
 
-                        case "Connection1_Quantity": output += GetConnectionFieldOutput(item.Connections, "_Quantity", 1);
+                        case "Connection1_Quantity":
+                            output += GetConnectionFieldOutput(item.Connections, "_Quantity", 1);
                             break;
 
-                        case "Connection2_Type": output += GetConnectionFieldOutput(item.Connections, "_Type", 2);
+                        case "Connection2_Type":
+                            output += GetConnectionFieldOutput(item.Connections, "_Type", 2);
                             break;
 
-                        case "Connection2_Amps": output += GetConnectionFieldOutput(item.Connections, "_Amps", 2);
+                        case "Connection2_Amps":
+                            output += GetConnectionFieldOutput(item.Connections, "_Amps", 2);
                             break;
 
-                        case "Connection2_Volts": output += GetConnectionFieldOutput(item.Connections, "_Volts", 2);
+                        case "Connection2_Volts":
+                            output += GetConnectionFieldOutput(item.Connections, "_Volts", 2);
                             break;
 
-                        case "Connection2_Level": output += GetConnectionFieldOutput(item.Connections, "_Level", 2);
+                        case "Connection2_Level":
+                            output += GetConnectionFieldOutput(item.Connections, "_Level", 2);
                             break;
 
-                        case "Connection2_Quantity": output += GetConnectionFieldOutput(item.Connections, "_Quantity", 2);
+                        case "Connection2_Quantity":
+                            output += GetConnectionFieldOutput(item.Connections, "_Quantity", 2);
                             break;
 
-                        case "Connection3_Type": output += GetConnectionFieldOutput(item.Connections, "_Type", 3);
+                        case "Connection3_Type":
+                            output += GetConnectionFieldOutput(item.Connections, "_Type", 3);
                             break;
 
-                        case "Connection3_Amps": output += GetConnectionFieldOutput(item.Connections, "_Amps", 3);
+                        case "Connection3_Amps":
+                            output += GetConnectionFieldOutput(item.Connections, "_Amps", 3);
                             break;
 
-                        case "Connection3_Volts": output += GetConnectionFieldOutput(item.Connections, "_Volts", 3);
+                        case "Connection3_Volts":
+                            output += GetConnectionFieldOutput(item.Connections, "_Volts", 3);
                             break;
 
-                        case "Connection3_Level": output += GetConnectionFieldOutput(item.Connections, "_Level", 3);
+                        case "Connection3_Level":
+                            output += GetConnectionFieldOutput(item.Connections, "_Level", 3);
                             break;
 
-                        case "Connection3_Quantity": output += GetConnectionFieldOutput(item.Connections, "_Quantity", 3);
+                        case "Connection3_Quantity":
+                            output += GetConnectionFieldOutput(item.Connections, "_Quantity", 3);
                             break;
                     }
                     output += delimiter;
@@ -678,7 +719,7 @@ namespace OCM.Import.Providers
 
             if (poi.Connections == null || !poi.Connections.Any()) return false;
             if (poi.AddressInfo.Title.Contains("????")) return false; //imports with invalid character encoding
-            if (includeCountryValidation && (poi.AddressInfo.CountryID==null && poi.AddressInfo.Country == null)) return false;
+            if (includeCountryValidation && (poi.AddressInfo.CountryID == null && poi.AddressInfo.Country == null)) return false;
             return true;
         }
     }
