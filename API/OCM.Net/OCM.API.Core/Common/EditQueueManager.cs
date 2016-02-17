@@ -78,7 +78,8 @@ namespace OCM.API.Common
             var sourceList =
                 DataModel.EditQueueItems.Where(
                     i => (
-                        (filter.ShowProcessed || (filter.ShowProcessed == false && i.IsProcessed == false))
+                        (filter.ID == null || (filter.ID != null && i.EntityID == filter.ID))
+                        && (filter.ShowProcessed || (filter.ShowProcessed == false && i.IsProcessed == false))
                         && (filter.DateFrom == null || (filter.DateFrom != null && i.DateSubmitted >= filter.DateFrom))
                         && (filter.DateTo == null || (filter.DateTo != null && i.DateSubmitted <= filter.DateTo))
                         && (filter.ShowEditsOnly == false || (filter.ShowEditsOnly == true && i.PreviousData != null))
