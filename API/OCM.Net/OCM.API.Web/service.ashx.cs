@@ -115,7 +115,6 @@ namespace OCM.API
                         else
                         {
                             context.Response.StatusCode = 202;
-                            //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
                         }
                     }
                     else
@@ -127,12 +126,11 @@ namespace OCM.API
                         else
                         {
                             context.Response.StatusCode = 500;
-                            //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
                         }
                     }
                 }
 
-                if (context.Request["action"] == "comment_submission")
+                if (context.Request["action"] == "comment_submission" || context.Request["action"] == "comment")
                 {
                     UserComment comment = new UserComment();
                     bool processedOK = inputProvider.ProcessUserCommentSubmission(context, ref comment);
@@ -396,6 +394,11 @@ namespace OCM.API
                     this.OutputAvailabilityResult(outputProvider, context, filter);
                 }
 
+                if (filter.Action == "profile.signin")
+                {
+                    this.OutputProfileSignInResult(outputProvider, context, filter);
+                }
+
                 if (filter.Action == "refreshmirror")
                 {
                     try
@@ -528,6 +531,29 @@ namespace OCM.API
             }
         }
 
+        private void OutputProfileSignInResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
+        {
+            User user = new OCM.API.Common.UserManager().GetUser(new LoginModel { EmailAddress = context.Request["emailaddress"], Password = context.Request["password"] });
+            string access_token = null;
+            var responseEnvelope = new APIResponseEnvelope();
+            if (user == null)
+            {
+                responseEnvelope.Metadata.StatusCode = 404;
+            }
+            else
+            {
+                access_token = Security.JWTAuth.GenerateEncodedJWT(user);
+
+                /*
+                 var validatedToken = Security.JWTAuthTicket.ValidateJWTForUser(testTicket, user);
+                 */
+            }
+
+            responseEnvelope.Data = new { UserProfile = user, access_token = access_token };
+
+            outputProvider.GetOutput(context.Response.OutputStream, responseEnvelope, filter);
+        }
+
         private void OutputGeocodingResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             GeocodingResult result = null;
@@ -567,7 +593,19 @@ namespace OCM.API
         /// <param name="context"></param>
         public void ProcessRequest(HttpContext context)
         {
-            if (context.Request.HttpMethod == "POST" && context.Request["action"].EndsWith("_submission"))
+#if DEBUG
+            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+#endif
+
+            if (context.Request.HttpMethod == "OPTIONS")
+            {
+                context.Response.AddHeader("Allow", "POST,GET,PUT,OPTIONS");
+                context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                context.Response.StatusCode = 200;
+
+                return;
+            }
+            if (context.Request.HttpMethod == "POST")
             {
                 //process input request
                 PerformInput(context);

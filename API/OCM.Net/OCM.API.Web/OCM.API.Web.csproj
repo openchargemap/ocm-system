@@ -91,6 +91,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
       <Private>True</Private>
@@ -178,10 +179,11 @@
     <Content Include="Widgets\Map\TestPage.htm" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="General\IInputProvider.cs" />
-    <Compile Include="General\InputProviderBase.cs" />
-    <Compile Include="General\IOutputProvider.cs" />
-    <Compile Include="General\OutputProviderBase.cs" />
+    <Compile Include="Core\IInputProvider.cs" />
+    <Compile Include="Core\InputProviderBase.cs" />
+    <Compile Include="Core\IOutputProvider.cs" />
+    <Compile Include="Core\JWTAuthTicket.cs" />
+    <Compile Include="Core\OutputProviderBase.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,6 +233,24 @@
     <Compile Include="v1\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
+    <Compile Include="v3\comment\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="v3\compactpoi\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="v3\geocode\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="v3\poi\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="v3\profile\signin\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="v3\referencedata\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
     <Compile Include="v2\compactpoi\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
@@ -267,6 +287,12 @@
     <Content Include="v2\geocode\service.ashx" />
     <Content Include="v2\compactpoi\service.ashx" />
     <None Include="Properties\PublishProfiles\Publish API to Sandbox.pubxml" />
+    <Content Include="v3\compactpoi\service.ashx" />
+    <Content Include="v3\geocode\service.ashx" />
+    <Content Include="v3\poi\service.ashx" />
+    <Content Include="v3\profile\signin\service.ashx" />
+    <Content Include="v3\referencedata\service.ashx" />
+    <Content Include="v3\comment\service.ashx" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

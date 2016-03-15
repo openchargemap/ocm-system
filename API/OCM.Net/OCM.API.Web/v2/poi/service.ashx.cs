@@ -6,7 +6,7 @@ using System.Web;
 namespace OCM.API.V2.POI
 {
     /// <summary>
-    /// Summary description for service
+    /// POI API Endpoint Handler
     /// </summary>
     public class APIHandler : APICoreHTTPHandler
     {
