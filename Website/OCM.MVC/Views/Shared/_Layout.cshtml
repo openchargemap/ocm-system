@@ -31,16 +31,13 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="~/Content/animate.min.css" rel="stylesheet">
 
-    
     <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
     <script type="text/javascript">
-    window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":null,"theme":"dark-bottom"};
+        window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website", "dismiss": "Got it!", "learnMore": "More info", "link": null, "theme": "dark-bottom" };
     </script>
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
     <!-- End Cookie Consent plugin -->
-
-    
 </head>
 <body>
 
@@ -183,7 +180,7 @@
                     <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
 
                     <div id="datasummary"></div>
-                    <p data-localize="ocm.infoText.sponsors">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" data-localize-id="link">Find out more</a>.</p>
+                    <p data-localize="ocm.infoText.sponsors">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" cclass="alert-link" data-localize-id="link">Find out more</a>.</p>
                     <p class="pull-right">
                         <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
                         <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
