@@ -30,6 +30,7 @@ namespace OCM.API
         {
             //http://stackoverflow.com/questions/2416182/garbled-error-page-output-using-gzip-in-asp-net-iis7
             HttpApplication app = sender as HttpApplication;
+            var filter = app.Response.Filter;
             app.Response.Filter = null;
 
             // Get the exception object.

@@ -14,6 +14,7 @@ namespace OCM.API.V3.CompactPOI
         {
             this.APIBehaviourVersion = 3;
             this.DefaultAction = "getcompactpoilist";
+            this.IsQueryByPost = false;
         }
     }
 }

@@ -62,8 +62,7 @@ namespace OCM.API.InputProviders
         public User GetUserFromAPICall(HttpContext context)
         {
             //TODO: move to security
-            string Identifier = context.Request["Identifier"];
-            string SessionToken = context.Request["SessionToken"];
+
             string JWTAuthToken = null;
 
             //attempt to read JWT Auth from request headers, or fetch from body of request
@@ -83,6 +82,9 @@ namespace OCM.API.InputProviders
 
             if (JWTAuthToken == null)
             {
+                string Identifier = context.Request["Identifier"];
+                string SessionToken = context.Request["SessionToken"];
+
                 //legacy identifier + session token method
                 if (String.IsNullOrEmpty(Identifier) || String.IsNullOrEmpty(SessionToken))
                 {

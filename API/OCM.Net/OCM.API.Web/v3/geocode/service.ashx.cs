@@ -14,6 +14,7 @@ namespace OCM.API.V3.Geocode
         {
             this.APIBehaviourVersion = 3;
             this.DefaultAction = "geocode";
+            this.IsQueryByPost = false;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace OCM.API.V3.POI
         {
             this.APIBehaviourVersion = 3;
             this.DefaultAction = "getpoilist";
+            this.IsQueryByPost = false;
         }
     }
 }

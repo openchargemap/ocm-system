@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
@@ -23,10 +24,16 @@ namespace OCM.API
 
         protected string DefaultAction { get; set; }
 
+        /// <summary>
+        /// If true, handler expects queries using POST instead of GET
+        /// </summary>
+        protected bool IsQueryByPost { get; set; }
+
         public APICoreHTTPHandler()
         {
             APIBehaviourVersion = 0;
             DefaultAction = null;
+            IsQueryByPost = false;
         }
 
         public bool IsRequestByRobot
@@ -533,7 +540,11 @@ namespace OCM.API
 
         private void OutputProfileSignInResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
-            User user = new OCM.API.Common.UserManager().GetUser(new LoginModel { EmailAddress = context.Request["emailaddress"], Password = context.Request["password"] });
+            var sr = new System.IO.StreamReader(context.Request.InputStream);
+            string jsonContent = sr.ReadToEnd();
+            var loginModel = JsonConvert.DeserializeObject<LoginModel>(jsonContent);
+
+            User user = new OCM.API.Common.UserManager().GetUser(loginModel);
             string access_token = null;
             var responseEnvelope = new APIResponseEnvelope();
             if (user == null)
@@ -605,7 +616,9 @@ namespace OCM.API
 
                 return;
             }
-            if (context.Request.HttpMethod == "POST")
+
+            //decide if we are processing a query or a write (post). Some queries are delivered by POST instead of GET.
+            if (context.Request.HttpMethod == "POST" && !IsQueryByPost)
             {
                 //process input request
                 PerformInput(context);

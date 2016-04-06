@@ -14,6 +14,7 @@ namespace OCM.API.V3.ReferenceData
         {
             this.APIBehaviourVersion = 3;
             this.DefaultAction = "getcorereferencedata";
+            this.IsQueryByPost = false;
         }
     }
 }

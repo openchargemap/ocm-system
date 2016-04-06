@@ -14,6 +14,7 @@ namespace OCM.API.V3.Profile.SignIn
         {
             this.APIBehaviourVersion = 3;
             this.DefaultAction = "profile.signin";
+            this.IsQueryByPost = true;
         }
     }
 }

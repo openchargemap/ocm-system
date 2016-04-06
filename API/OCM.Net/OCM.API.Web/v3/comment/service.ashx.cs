@@ -14,6 +14,7 @@ namespace OCM.API.V3.Comment
         {
             this.APIBehaviourVersion = 3;
             this.DefaultAction = "comment";
+            this.IsQueryByPost = false;
         }
     }
 }
