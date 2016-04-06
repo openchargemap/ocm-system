@@ -256,9 +256,10 @@ namespace OCM.Import.Providers
                         }
                         else if (connectorTypeVal == "27")
                         {
-                            //tesla super charger
+                            //Tesla Supercharger - Up to 120kW. Will be upgraded to 130kW.
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
+                            cinfo.PowerKW = 120;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
