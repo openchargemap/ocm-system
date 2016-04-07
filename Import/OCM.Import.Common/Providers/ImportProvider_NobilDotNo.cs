@@ -195,8 +195,9 @@ namespace OCM.Import.Providers
                         else if (connectorTypeVal == "11")
                         {
                             //500V DC
-                            cinfo.Amps = 200;
-                            cinfo.Voltage = 500;
+                            cinfo.Amps = 32;
+                            cinfo.Voltage = 400;
+                            cinfo.PowerKW = 22;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
@@ -274,7 +275,7 @@ namespace OCM.Import.Providers
                             System.Diagnostics.Debug.WriteLine("unknown chargingCapacity: " + chargingCapacityAttribs.InnerText);
                         }
                     }
-
+                    
                     if (cinfo.Amps > 0 && cinfo.Voltage > 0)
                     {
                         cinfo.PowerKW = (cinfo.Amps * cinfo.Voltage / 1000);
