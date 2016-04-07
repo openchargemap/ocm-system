@@ -205,14 +205,16 @@ namespace OCM.Import.Providers
                             //400V AC (3 Phase) 63A
                             cinfo.Amps = 63;
                             cinfo.Voltage = 400;
+                            cinfo.PowerKW = 43;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
                         else if (connectorTypeVal == "13")
                         {
                             //tesla super charger
-                            cinfo.Amps = 200;
+                            cinfo.Amps = 100;
                             cinfo.Voltage = 500;
+                            cinfo.PowerKw = 50;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
