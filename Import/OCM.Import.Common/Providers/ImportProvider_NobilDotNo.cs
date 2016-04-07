@@ -275,8 +275,8 @@ namespace OCM.Import.Providers
                             System.Diagnostics.Debug.WriteLine("unknown chargingCapacity: " + chargingCapacityAttribs.InnerText);
                         }
                     }
-                    
-                    if (cinfo.Amps > 0 && cinfo.Voltage > 0)
+                    //Only calculate power if power is not explicitly set.
+                    if (cinfo.Amps > 0 && cinfo.Voltage > 0 && cinfo.PowerKW != null)
                     {
                         cinfo.PowerKW = (cinfo.Amps * cinfo.Voltage / 1000);
                     }
