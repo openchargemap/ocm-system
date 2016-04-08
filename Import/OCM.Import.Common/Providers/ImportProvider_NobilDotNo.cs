@@ -215,7 +215,7 @@ namespace OCM.Import.Providers
                             //tesla super charger
                             cinfo.Amps = 100;
                             cinfo.Voltage = 500;
-                            cinfo.PowerKw = 50;
+                            cinfo.PowerKW = 50;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
@@ -294,10 +294,11 @@ namespace OCM.Import.Providers
                     if (cp.Connections == null)
                     {
                         cp.Connections = new List<ConnectionInfo>();
-                        if (!IsConnectionInfoBlank(cinfo))
-                        {
-                            cp.Connections.Add(cinfo);
-                        }
+                    }
+
+                    if (!IsConnectionInfoBlank(cinfo))
+                    {
+                        cp.Connections.Add(cinfo);
                     }
                 }
 

@@ -186,7 +186,7 @@ else
                                         <div>
                                             <strong class="ocm-label" data-localize="ocm.details.usageType">Usage</strong>:
                                             <span data-localize="ocm.reference.usageType.value_@Model.POI.UsageTypeID">
-                                            @Html.DisplayFor(m => m.POI.UsageType.Title)
+                                                @Html.DisplayFor(m => m.POI.UsageType.Title)
                                             </span>
                                         </div>
                                     }
@@ -202,7 +202,7 @@ else
                                         <div>
                                             <strong class="ocm-label" data-localize="ocm.details.operationalStatus">Operational Status</strong>:
                                             <span data-localize="ocm.reference.statusType.value_@Model.POI.StatusTypeID">
-                                            @Html.DisplayFor(m => m.POI.StatusType.Title)
+                                                @Html.DisplayFor(m => m.POI.StatusType.Title)
                                             </span>
                                         </div>
                                     }
@@ -260,6 +260,14 @@ else
                                                 <div>
                                                     <strong class="ocm-label" data-localize="ocm.details.dataProvider.license">Data License</strong>:
                                                     <p>@Model.POI.DataProvider.License</p>
+                                                </div>
+                                            }
+
+                                            @if (!String.IsNullOrEmpty(Model.POI.DataProvidersReference))
+                                            {
+                                                <div>
+                                                    <strong class="ocm-label" data-localize="ocm.details.dataProvider.providersReference">Providers Ref</strong>:
+                                                    <p>@Model.POI.DataProvidersReference</p>
                                                 </div>
                                             }
                                         </div>
@@ -478,14 +486,14 @@ else
             window.open(url, "_blank");
         }
     </script>
-}
+    }
 
 @helper formatDescription(string description)
 {
-    if (!String.IsNullOrEmpty(description) != null)
-    {
-        description = Html.Encode(description);
-        description = description.Replace("\n", "<br />");
+if (!String.IsNullOrEmpty(description) != null)
+{
+    description = Html.Encode(description);
+    description = description.Replace("\n", "<br />");
         <div class="details-description">@Html.Raw(description)</div>
-    }
+}
 }
