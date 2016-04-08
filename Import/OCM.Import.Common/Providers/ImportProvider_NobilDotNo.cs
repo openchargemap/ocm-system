@@ -238,6 +238,7 @@ namespace OCM.Import.Providers
                             //500V DC MAX 50A
                             cinfo.Amps = 50;
                             cinfo.Voltage = 500;
+                            cinfo.PowerKW = 20;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
@@ -254,6 +255,16 @@ namespace OCM.Import.Providers
                             //480VDC max 270A
                             cinfo.Amps = 270;
                             cinfo.Voltage = 480;
+                            cinfo.PowerKW = 135;
+                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
+                            cinfo.Level = new ChargerType() { ID = 3 };
+                        }
+                        else if (connectorTypeVal == "23")
+                        {
+                            //100 kW - 500VDC max 200A
+                            cinfo.Amps = 200;
+                            cinfo.Voltage = 500;
+                            cinfo.PowerKW = 100;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
