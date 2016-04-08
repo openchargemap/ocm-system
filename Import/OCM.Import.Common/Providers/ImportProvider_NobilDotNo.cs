@@ -195,8 +195,9 @@ namespace OCM.Import.Providers
                         else if (connectorTypeVal == "11")
                         {
                             //500V DC
-                            cinfo.Amps = 200;
-                            cinfo.Voltage = 500;
+                            cinfo.Amps = 32;
+                            cinfo.Voltage = 400;
+                            cinfo.PowerKW = 22;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
@@ -205,14 +206,16 @@ namespace OCM.Import.Providers
                             //400V AC (3 Phase) 63A
                             cinfo.Amps = 63;
                             cinfo.Voltage = 400;
+                            cinfo.PowerKW = 43;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
                         else if (connectorTypeVal == "13")
                         {
                             //tesla super charger
-                            cinfo.Amps = 200;
+                            cinfo.Amps = 100;
                             cinfo.Voltage = 500;
+                            cinfo.PowerKw = 50;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
@@ -256,9 +259,10 @@ namespace OCM.Import.Providers
                         }
                         else if (connectorTypeVal == "27")
                         {
-                            //tesla super charger
+                            //Tesla Supercharger - Up to 120kW. Will be upgraded to 130kW.
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
+                            cinfo.PowerKW = 120;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
@@ -271,8 +275,8 @@ namespace OCM.Import.Providers
                             System.Diagnostics.Debug.WriteLine("unknown chargingCapacity: " + chargingCapacityAttribs.InnerText);
                         }
                     }
-
-                    if (cinfo.Amps > 0 && cinfo.Voltage > 0)
+                    //Only calculate power if power is not explicitly set.
+                    if (cinfo.Amps > 0 && cinfo.Voltage > 0 && cinfo.PowerKW != null)
                     {
                         cinfo.PowerKW = (cinfo.Amps * cinfo.Voltage / 1000);
                     }
