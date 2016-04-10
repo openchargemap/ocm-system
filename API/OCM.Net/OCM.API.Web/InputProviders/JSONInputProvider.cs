@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using OCM.API.Common;
-using System.IO;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using OCM.API.Common;
 using OCM.API.Common.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace OCM.API.InputProviders
 {
@@ -46,7 +47,6 @@ namespace OCM.API.InputProviders
                 return false;
             }
         }
-
 
         public bool ProcessUserCommentSubmission(HttpContext context, ref Common.Model.UserComment comment)
         {
@@ -96,6 +96,65 @@ namespace OCM.API.InputProviders
                 System.Diagnostics.Debug.WriteLine(exp);
 
                 //submission failed
+                return false;
+            }
+        }
+
+        public System.Drawing.Image Base64ToImage(string base64String)
+        {
+            // Convert Base64 String to byte[]
+            if (base64String.StartsWith("data:")) base64String = base64String.Substring(base64String.IndexOf(',') + 1, base64String.Length - (base64String.IndexOf(',') + 1));
+            byte[] imageBytes = Convert.FromBase64String(base64String);
+            System.Drawing.Image image;
+            using (MemoryStream ms = new MemoryStream(imageBytes))
+            {
+                image = System.Drawing.Image.FromStream(ms);
+            }
+
+            return image;
+        }
+
+        public bool ProcessMediaItemSubmission(HttpContext context, ref MediaItem mediaItem, int userId)
+        {
+            try
+            {
+                var sr = new System.IO.StreamReader(context.Request.InputStream);
+                string jsonContent = sr.ReadToEnd();
+                var submission = JsonConvert.DeserializeObject<Common.Model.Submissions.MediaItemSubmission>(jsonContent);
+                if (submission.ImageDataBase64 == null) return false;
+                string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
+
+                var tempFiles = new List<string>();
+
+                string tempFolder = context.Server.MapPath("~/temp/uploads/");
+
+                string tmpFileName = tempFolder + filePrefix + submission.ChargePointID;
+                if (submission.ImageDataBase64.StartsWith("data:image/jpeg")) tmpFileName += ".jpg";
+                if (submission.ImageDataBase64.StartsWith("data:image/png")) tmpFileName += ".png";
+                if (submission.ImageDataBase64.StartsWith("data:image/tiff")) tmpFileName += ".tiff";
+
+                var image = Base64ToImage(submission.ImageDataBase64);
+                image.Save(tmpFileName);
+
+                if (submission.ImageDataBase64.StartsWith("data:")) submission.ImageDataBase64 = submission.ImageDataBase64.Substring(submission.ImageDataBase64.IndexOf(',') + 1, submission.ImageDataBase64.Length - (submission.ImageDataBase64.IndexOf(',') + 1));
+                File.WriteAllBytes(tmpFileName, Convert.FromBase64String(submission.ImageDataBase64));
+
+                tempFiles.Add(tmpFileName);
+
+                var task = Task.Factory.StartNew(() =>
+                {
+                    var mediaManager = new MediaItemManager();
+
+                    foreach (var tmpFile in tempFiles)
+                    {
+                        var photoAdded = mediaManager.AddPOIMediaItem(tempFolder, tmpFile, submission.ChargePointID, submission.Comment, false, userId);
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                return true;
+            }
+            catch
+            {
                 return false;
             }
         }

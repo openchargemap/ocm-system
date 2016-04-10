@@ -94,6 +94,7 @@
     <Compile Include="Extended\EditQueueFilter.cs" />
     <Compile Include="Extended\GeocodingResult.cs" />
     <Compile Include="Extended\LoginModel.cs" />
+    <Compile Include="Extended\MediaItemSubmission.cs" />
     <Compile Include="Extended\PasswordChangeModel.cs" />
     <Compile Include="Extended\PasswordResetRequestModel.cs" />
     <Compile Include="Extended\POIDetailsCache.cs" />
@@ -116,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extended\Submissions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

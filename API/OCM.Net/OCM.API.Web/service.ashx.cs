@@ -179,7 +179,7 @@ namespace OCM.API
 
                 if (context.Request["action"] == "mediaitem_submission")
                 {
-                    var p = inputProvider as OCM.API.InputProviders.HTMLFormInputProvider;
+                    var p = inputProvider;// as OCM.API.InputProviders.HTMLFormInputProvider;
                     MediaItem m = new MediaItem();
                     bool accepted = false;
                     string msg = "";
@@ -605,13 +605,15 @@ namespace OCM.API
         public void ProcessRequest(HttpContext context)
         {
 #if DEBUG
-            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            //   context.Response.AddHeader("Access-Control-Allow-Origin", "*");
 #endif
 
             if (context.Request.HttpMethod == "OPTIONS")
             {
                 context.Response.AddHeader("Allow", "POST,GET,PUT,OPTIONS");
-                context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                //  context.Response.AddHeader("Access-Control-Allow-Headers", "*");
+                var requiredHeaders = context.Request.Headers["Access-Control-Allow-Headers"];
+                context.Response.AppendHeader("Access-Control-Allow-Headers", requiredHeaders);
                 context.Response.StatusCode = 200;
 
                 return;

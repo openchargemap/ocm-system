@@ -17,6 +17,11 @@ namespace OCM.API.Common
             var mediaItem = new MediaItem();
 
             var poi = new POIManager().Get(chargePointId);
+            if (poi == null)
+            {
+                //POI not recognised
+                return null;
+            }
             string[] urls = UploadPOIImageToStorage(tempFolder, sourceImageFile, poi);
             if (urls == null)
             {
