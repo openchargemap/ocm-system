@@ -131,7 +131,7 @@ namespace OCM.Import.Providers
                         }
                         else if (connectorTypeVal == "50")
                         {
-                            cType.ID = 25;// type 2 + schuko both present?
+                            cType.ID = 28;// type 2 + schuko both present?
                         }
                         else if (connectorTypeVal == "30")
                         {
