@@ -131,7 +131,22 @@ namespace OCM.Import.Providers
                         }
                         else if (connectorTypeVal == "50")
                         {
-                            cType.ID = 28;// type 2 + schuko both present?
+                            // Combination Connector - Type 2 + Schuko.
+                            // Treat it as a Schuko and add a Type 2 connector.
+                            cType.ID = 28;
+                            // Add a separate Type 2 connector.
+                            ConnectionInfo cinfoType2 = new ConnectionInfo() { };
+                            ConnectionType cTypeType2 = new ConnectionType { ID = 25 };
+                            cinfoType2.Amps = 16;
+                            cinfoType2.Voltage = 230;
+                            cinfoType2.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
+                            cinfoType2.Level = new ChargerType() { ID = 2 };
+                            cinfoType2.ConnectionType = cTypeType2;
+                            if (cp.Connections == null)
+                            {
+                                cp.Connections = new List<ConnectionInfo>();
+                            }
+                            cp.Connections.Add(cinfoType2);
                         }
                         else if (connectorTypeVal == "30")
                         {
