@@ -189,6 +189,7 @@ namespace OCM.Import.Providers
                         {
                             cinfo.Amps = 16;
                             cinfo.Voltage = 400;
+                            cinfo.PowerKW = 11;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
                             cinfo.Level = new ChargerType() { ID = 2 }; //default to lvl2
                         }
