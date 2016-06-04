@@ -33,3 +33,16 @@ Non-Standard items:
           <Parameter Name="@Longitude2" Mode="In" Type="float" />
         </Function>
 
+
+
+Add the following to DataModel.Context.cs (to increase command timeout)
+
+        public OCMEntities()
+            : base("name=OCMEntities")
+        {
+            // Get the ObjectContext related to this DbContext
+            var objectContext = (this as IObjectContextAdapter).ObjectContext;
+
+            // Sets the command timeout for all the commands
+            objectContext.CommandTimeout = 120;
+        }

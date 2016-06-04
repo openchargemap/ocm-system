@@ -1,25 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
-using System.IO;
 
 namespace OCM.API.OutputProviders
 {
     public class CSVOutputProvider : OutputProviderBase, IOutputProvider
     {
-        StreamWriter output = null;
-        string currentLine = "";
+        private StreamWriter output = null;
+        private string currentLine = "";
 
         public CSVOutputProvider()
         {
             ContentType = "text/csv; header=present; charset=UTF-8;";
-           
         }
 
         private void AppendText(string val)
         {
-
             if (val == null) currentLine += ",";
             else currentLine += "\"" + val.Replace("\"", "").Trim() + "\"" + ",";
         }
@@ -37,7 +35,7 @@ namespace OCM.API.OutputProviders
             System.Web.HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename=ocm.csv");
 
             //header row
-            output.WriteLine("ID,UUID, LocationTitle,AddressLine1,AddressLine2,Town,StateOrProvince,Postcode,Country,Latitude,Longitude,Distance,DistanceUnit,Addr_ContactTelephone1,Addr_ContactTelephone2,Addr_ContactEmail,Addr_AccessComments,Addr_GeneralComments,Addr_RelatedURL,ConnectionType,ChargerType,UsageType,NumberOfPoints,GeneralComments,DateLastConfirmed,StatusType,DateLastStatusUpdate");
+            output.WriteLine("ID,UUID, LocationTitle,AddressLine1,AddressLine2,Town,StateOrProvince,Postcode,Country,Latitude,Longitude,Distance,DistanceUnit,Addr_ContactTelephone1,Addr_ContactTelephone2,Addr_ContactEmail,Addr_AccessComments,Addr_GeneralComments,Addr_RelatedURL,ConnectionType,ChargerType,UsageType,NumberOfPoints,GeneralComments,DateLastConfirmed,StatusType,DateLastStatusUpdate,DateCreated");
             foreach (var item in dataList)
             {
                 if (item.AddressInfo != null)
@@ -145,19 +143,18 @@ namespace OCM.API.OutputProviders
                     else
                         AppendValue(null);
 
+                    AppendValue(item.DateLastStatusUpdate.ToString());
                     //last item
-                    currentLine += item.DateLastStatusUpdate.ToString();
+                    currentLine += item.DateCreated.ToString();
 
                     currentLine = currentLine.Replace(System.Environment.NewLine, " ");
                     output.WriteLine(currentLine);
                 }
-
             }
 #pragma warning restore 0612
             output.Flush();
             //output.Close();
         }
-
 
         public void GetOutput(Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestParams settings)
         {

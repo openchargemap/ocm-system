@@ -125,3 +125,5 @@ UpgradeLog*.XML
 /API/OCM.Net/OCM.API.Web/Scripts/SharedLibs
 /Website/OCM.MVC/Scripts/OCM/SharedLibs
 /Localisation/build
+/API/OCM.Net/OCM.API.Web/Temp/Uploads
+*.scgdat

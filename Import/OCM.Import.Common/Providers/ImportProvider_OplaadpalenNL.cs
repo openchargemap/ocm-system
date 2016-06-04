@@ -1,24 +1,23 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
-using OCM.API.Common.Model;
-using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
-using System.Configuration;
 
 namespace OCM.Import.Providers
 {
     public class ImportProvider_OplaadpalenNL : BaseImportProvider, IImportProvider
     {
-        
         public ImportProvider_OplaadpalenNL()
         {
             AutoRefreshURL = "http://oplaadpalen.nl/api/chargingpoints/" + ConfigurationManager.AppSettings["ImportProviderAPIKey_OplaadpalenNL"].ToString() + "/json?vehicletype=car";
 
             ProviderName = "Oplaadpalen";
             OutputNamePrefix = "OplaadpalenNL_";
-            
+
             IsAutoRefreshed = true;
             IsProductionReady = true;
 
@@ -31,7 +30,6 @@ namespace OCM.Import.Providers
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
         {
-
             //TODO: operator not well matched, usage type not known, multiple connectors at same site not imported due to duplicate POI. Requires merge process.
             List<ChargePoint> outputList = new List<ChargePoint>();
 
@@ -45,7 +43,7 @@ namespace OCM.Import.Providers
 
             int itemCount = 0;
 
-            string jsonString = "{ \"data\": " + InputData + "}"; 
+            string jsonString = "{ \"data\": " + InputData + "}";
 
             JObject o = JObject.Parse(jsonString);
             var dataList = o.Values().First().ToArray();
@@ -128,18 +126,18 @@ namespace OCM.Import.Providers
 
                 var price = item["price"].ToString();
                 var pricemethod = item["pricemethod"].ToString();
-                
-                cp.UsageCost = (!String.IsNullOrEmpty(price)?price+" ":"") + pricemethod;
+
+                cp.UsageCost = (!String.IsNullOrEmpty(price) ? price + " " : "") + pricemethod;
                 //set network operators
                 //cp.OperatorInfo = new OperatorInfo { ID = 89 };
-                
+
                 //TODO: Operator, usage,price, power, connector type
                 var owner = item["owner"].ToString().ToLower();
-                var operatoInfo = coreRefData.Operators.FirstOrDefault(op=>op.Title.ToLower().Contains(owner));
+                var operatoInfo = coreRefData.Operators.FirstOrDefault(op => op.Title.ToLower().Contains(owner));
 
                 if (operatoInfo == null)
                 {
-                    Log("Unknown operator: "+owner);
+                    Log("Unknown operator: " + owner);
                 }
                 else
                 {
@@ -165,24 +163,30 @@ namespace OCM.Import.Providers
                 var power = item["power"].ToString();
                 ConnectionInfo cinfo = new ConnectionInfo();
 
-                try
+                //try
                 {
                     if (!String.IsNullOrEmpty(power))
                     {
+                        if (power.Contains(","))
+                        {
+                            power = power.Replace(",", ".");
+                        }
                         cinfo.PowerKW = double.Parse(power.Replace("kW", ""));
                     }
                 }
-                catch (System.FormatException) { }
+                //catch (System.FormatException) { }
 
                 if (connectorType.ToLower().Contains("j1772"))
                 {
                     cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772;
                     cinfo.LevelID = 2;
-                } else  if (connectorType.ToLower().Contains("mennekes"))
+                }
+                else if (connectorType.ToLower().Contains("mennekes"))
                 {
                     cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
                     cinfo.LevelID = 2;
-                } else if (connectorType.ToLower().Contains("chademo"))
+                }
+                else if (connectorType.ToLower().Contains("chademo"))
                 {
                     cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;
                     cinfo.LevelID = 3;
@@ -192,7 +196,8 @@ namespace OCM.Import.Providers
                     cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Schuko;
                     cinfo.LevelID = 2;
                 }
-                else {
+                else
+                {
                     Log("Unknown connectorType:" + connectorType);
                 }
 
@@ -202,15 +207,13 @@ namespace OCM.Import.Providers
                 }
                 if (!String.IsNullOrEmpty(chargetype))
                 {
-
                     if (chargetype.StartsWith("DC")) cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
-                    if (chargetype.StartsWith("AC simpel")) cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                    if (chargetype.StartsWith("AC ")) cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
                     //TODO: 3 phase?
-                    
                 }
-                
-               // System.Diagnostics.Debug.WriteLine("Unknown chargetype:" + chargetype+ " "+power);
-                
+
+                // System.Diagnostics.Debug.WriteLine("Unknown chargetype:" + chargetype+ " "+power);
+
                 if (cp.Connections == null)
                 {
                     cp.Connections = new List<ConnectionInfo>();
@@ -219,7 +222,7 @@ namespace OCM.Import.Providers
                         cp.Connections.Add(cinfo);
                     }
                 }
-                
+
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
                 cp.SubmissionStatus = submissionStatus;
@@ -233,7 +236,7 @@ namespace OCM.Import.Providers
             {
                 temp += ", " + countryCode;
             }
-            Log("Countries in import:"+temp);
+            Log("Countries in import:" + temp);
 
             return outputList;
         }

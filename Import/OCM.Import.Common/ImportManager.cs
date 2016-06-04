@@ -487,8 +487,15 @@ namespace OCM.Import
                     int matchCount = 0;
                     foreach (var otherPoi in importedPOIList.Where(p => p != poi))
                     {
-                        //if address matches or if address is empty and lat/long matches then merge the poi
-                        if ((!String.IsNullOrEmpty(poi.AddressInfo.ToString()) && poi.AddressInfo.ToString() == otherPoi.AddressInfo.ToString()) || (String.IsNullOrEmpty(poi.AddressInfo.ToString()) && poi.AddressInfo.Latitude == otherPoi.AddressInfo.Latitude && poi.AddressInfo.Longitude == otherPoi.AddressInfo.Longitude))
+                        bool addressIsSame = (poi.AddressInfo.AddressLine1 == otherPoi.AddressInfo.AddressLine1
+                            &&
+                            poi.AddressInfo.AddressLine2 == otherPoi.AddressInfo.AddressLine2
+                            &&
+                            poi.AddressInfo.StateOrProvince == otherPoi.AddressInfo.StateOrProvince
+                            );
+
+                        //if address matches or lat/long matches then merge the poi
+                        if (addressIsSame || poi.AddressInfo.Latitude == otherPoi.AddressInfo.Latitude && poi.AddressInfo.Longitude == otherPoi.AddressInfo.Longitude)
                         {
                             if (poi.OperatorID != otherPoi.OperatorID)
                             {

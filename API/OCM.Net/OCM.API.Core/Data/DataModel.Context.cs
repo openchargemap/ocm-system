@@ -18,6 +18,11 @@ namespace OCM.Core.Data
         public OCMEntities()
             : base("name=OCMEntities")
         {
+            // Get the ObjectContext related to this DbContext
+            var objectContext = (this as IObjectContextAdapter).ObjectContext;
+
+            // Sets the command timeout for all the commands
+            objectContext.CommandTimeout = 120;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
