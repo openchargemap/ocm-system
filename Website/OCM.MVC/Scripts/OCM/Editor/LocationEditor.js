@@ -274,5 +274,5 @@ var LocationEditor = (function () {
         }
     };
     return LocationEditor;
-})();
+}());
 //# sourceMappingURL=LocationEditor.js.map

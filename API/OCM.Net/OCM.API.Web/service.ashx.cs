@@ -36,6 +36,13 @@ namespace OCM.API
             IsQueryByPost = false;
         }
 
+        protected void ClearResponse(HttpContext context)
+        {
+            context.Response.ClearHeaders();
+            context.Response.ClearContent();
+            context.Response.Clear();
+        }
+
         public bool IsRequestByRobot
         {
             get
@@ -66,9 +73,27 @@ namespace OCM.API
         private void PerformInput(HttpContext context)
         {
             OCM.API.InputProviders.IInputProvider inputProvider = null;
+
+            var filter = new APIRequestParams();
+
+            //set defaults
+            filter.ParseParameters(context);
+
+            //override ?v=2 etc if called via /api/v2/ or /api/v1
+            if (APIBehaviourVersion > 0) filter.APIVersion = APIBehaviourVersion;
+            if (APIBehaviourVersion >= 2) filter.Action = DefaultAction;
+
+            if (context.Request.Url.Host.ToLower().StartsWith("api") && filter.APIVersion == null)
+            {
+                //API version is mandatory for api V2 onwards via api.openchargemap.* hostname
+                OutputBadRequestMessage(context, "mandatory API Version not specified in request");
+                return;
+            }
+
             bool performSubmissionCompletedRedirects = false;
 
-            if (context.Request["format"] == "json")
+            //Use JSON format submission if explictly specified or by default if API v3
+            if (context.Request["format"] == "json" || (String.IsNullOrEmpty(context.Request["format"]) && filter.APIVersion >= 3))
             {
                 inputProvider = new InputProviders.JSONInputProvider();
             }
@@ -89,8 +114,33 @@ namespace OCM.API
             }
             else
             {
+
+                //allow contact us input whether use is authenticated or not
+                if (context.Request["action"] == "contactus_submission" || filter.Action == "contact")
+                {
+                    ContactSubmission contactSubmission = new ContactSubmission();
+                    bool processedOK = inputProvider.ProcessContactUsSubmission(context, ref contactSubmission);
+
+                    bool resultOK = submissionManager.SendContactUsMessage(contactSubmission.Name, contactSubmission.Email, contactSubmission.Comment);
+                    if (resultOK == true)
+                    {
+                        context.Response.Write("OK");
+                    }
+                    else
+                    {
+                        context.Response.Write("Error");
+                    }
+                }
+
+                //if user not authenticated reject any other input
+                if (user == null)
+                {
+                    context.Response.StatusCode = 401;
+                    return;
+                }
+
                 //gather input variables
-                if (context.Request["action"] == "cp_submission")
+                if (context.Request["action"] == "cp_submission" || filter.Action == "poi")
                 {
                     //gather/process data for submission
                     OCM.API.Common.Model.ChargePoint cp = new Common.Model.ChargePoint();
@@ -137,7 +187,7 @@ namespace OCM.API
                     }
                 }
 
-                if (context.Request["action"] == "comment_submission" || context.Request["action"] == "comment")
+                if (context.Request["action"] == "comment_submission" || filter.Action == "comment")
                 {
                     UserComment comment = new UserComment();
                     bool processedOK = inputProvider.ProcessUserCommentSubmission(context, ref comment);
@@ -145,14 +195,27 @@ namespace OCM.API
                     {
                         //perform submission
                         int result = submissionManager.PerformSubmission(comment, user);
-
-                        if (result >= 0)
+                        if (filter.APIVersion >= 3)
                         {
-                            context.Response.Write("OK:" + result);
+                            if (result > 0)
+                            {
+                                OutputSubmissionReceivedMessage(context, "OK", true);
+                            }
+                            else
+                            {
+                                OutputBadRequestMessage(context, "Failed");
+                            }
                         }
                         else
                         {
-                            context.Response.Write("Error:" + result);
+                            if (result >= 0)
+                            {
+                                context.Response.Write("OK:" + result);
+                            }
+                            else
+                            {
+                                context.Response.Write("Error:" + result);
+                            }
                         }
                     }
                     else
@@ -161,23 +224,7 @@ namespace OCM.API
                     }
                 }
 
-                if (context.Request["action"] == "contactus_submission")
-                {
-                    ContactSubmission contactSubmission = new ContactSubmission();
-                    bool processedOK = inputProvider.ProcessContactUsSubmission(context, ref contactSubmission);
-
-                    bool resultOK = submissionManager.SendContactUsMessage(contactSubmission.Name, contactSubmission.Email, contactSubmission.Comment);
-                    if (resultOK == true)
-                    {
-                        context.Response.Write("OK");
-                    }
-                    else
-                    {
-                        context.Response.Write("Error");
-                    }
-                }
-
-                if (context.Request["action"] == "mediaitem_submission")
+                if (context.Request["action"] == "mediaitem_submission" || filter.Action == "mediaitem")
                 {
                     var p = inputProvider;// as OCM.API.InputProviders.HTMLFormInputProvider;
                     MediaItem m = new MediaItem();
@@ -195,12 +242,28 @@ namespace OCM.API
                     {
                         submissionManager.PerformSubmission(m, user);
                         //OutputSubmissionReceivedMessage(context, "OK :" + m.ID, true);
-                        context.Response.Write("OK");
+
+                        if (filter.APIVersion >= 3)
+                        {
+                            OutputSubmissionReceivedMessage(context, "OK", true);
+                        }
+                        else
+                        {
+                            context.Response.Write("OK");
+                        }
                     }
                     else
                     {
-                        //OutputBadRequestMessage(context, "Error, could not accept submission: " + msg);
-                        context.Response.Write("Error");
+                        if (filter.APIVersion >= 3)
+                        {
+                            OutputBadRequestMessage(context, "Failed");
+                        }
+                        else
+                        {
+                            
+                            context.Response.Write("Error");
+                        }
+                           
                     }
                 }
             }
@@ -401,7 +464,7 @@ namespace OCM.API
                     this.OutputAvailabilityResult(outputProvider, context, filter);
                 }
 
-                if (filter.Action == "profile.signin")
+                if (filter.Action == "profile.authenticate")
                 {
                     this.OutputProfileSignInResult(outputProvider, context, filter);
                 }
@@ -604,21 +667,33 @@ namespace OCM.API
         /// <param name="context"></param>
         public void ProcessRequest(HttpContext context)
         {
+            ClearResponse(context);
+
 #if DEBUG
             //   context.Response.AddHeader("Access-Control-Allow-Origin", "*");
 #endif
+            if (context.Response.Headers.Get("Access-Control-Allow-Origin") == null)
+            {
+                SetAllowCrossSiteRequestOrigin(context);
+            }
+            context.Response.AddHeader("Allow", "POST,GET,PUT,OPTIONS");
+
+            if (!String.IsNullOrEmpty(context.Request.Headers["Access-Control-Request-Headers"]))
+            {
+                context.Response.AppendHeader("Access-Control-Allow-Headers", context.Request.Headers["Access-Control-Request-Headers"]);
+            }
 
             if (context.Request.HttpMethod == "OPTIONS")
             {
-                context.Response.AddHeader("Allow", "POST,GET,PUT,OPTIONS");
-                //  context.Response.AddHeader("Access-Control-Allow-Headers", "*");
-                var requiredHeaders = context.Request.Headers["Access-Control-Allow-Headers"];
-                context.Response.AppendHeader("Access-Control-Allow-Headers", requiredHeaders);
-                context.Response.StatusCode = 200;
 
+                context.Response.StatusCode = 200;
+                context.ApplicationInstance.CompleteRequest();
                 return;
             }
-
+            else
+            {
+                SetNoCacheHeaders(context);
+            }
             //decide if we are processing a query or a write (post). Some queries are delivered by POST instead of GET.
             if (context.Request.HttpMethod == "POST" && !IsQueryByPost)
             {
@@ -636,6 +711,29 @@ namespace OCM.API
             {
                 PerformOutput(context);
             }
+
+
+            context.ApplicationInstance.CompleteRequest();
+        }
+
+        private void SetAllowCrossSiteRequestOrigin(HttpContext context)
+        {
+            string origin = context.Request.Headers["Origin"];
+            if (!String.IsNullOrEmpty(origin))
+                //You can make some sophisticated checks here
+                context.Response.AppendHeader("Access-Control-Allow-Origin", origin);
+            else
+                //This is necessary for Chrome/Safari actual request
+                context.Response.AppendHeader("Access-Control-Allow-Origin", "*");
+        }
+
+        protected void SetNoCacheHeaders(HttpContext context)
+        {
+            context.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+            context.Response.Cache.SetValidUntilExpires(false);
+            context.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            context.Response.Cache.SetNoStore();
         }
 
         public bool IsReusable

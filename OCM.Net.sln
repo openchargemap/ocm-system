@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3CC82B5C-7EA9-484D-9C6E-791BD2E55563}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,23 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCM.API.Web", "API\OCM.Net\OCM.API.Web\OCM.API.Web.csproj", "{D59550EF-227C-48CB-B97A-200BB2AEE27C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{610C828C-B14D-44F6-970C-B60C6A4B75D4}"
-	ProjectSection(SolutionItems) = preProject
-		..\Database\Schema\SQLServer\UpgradeScripts\DB_Changelog.txt = ..\Database\Schema\SQLServer\UpgradeScripts\DB_Changelog.txt
-		..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Ref Data Update 1.0 to 1.1.sql = ..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Ref Data Update 1.0 to 1.1.sql
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{7A6121E1-A031-4631-82F5-065FBF51D584}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.0 to 1.1", "1.0 to 1.1", "{79887E64-70D4-45F2-9CDF-BACCB58D9FBD}"
-	ProjectSection(SolutionItems) = preProject
-		..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Ref Data Update 1.0 to 1.1.sql = ..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Ref Data Update 1.0 to 1.1.sql
-		..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Schema Update 1.0 to 1.1.sql = ..\Database\Schema\SQLServer\UpgradeScripts\1.0 to 1.1\OCM Schema Update 1.0 to 1.1.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1 to 1.2", "1.1 to 1.2", "{ABEA90AD-3975-46BC-86AE-AB7974D83E1A}"
-	ProjectSection(SolutionItems) = preProject
-		..\Database\Schema\SQLServer\UpgradeScripts\1.1 to 1.2\UpdateSchema1.2.sql = ..\Database\Schema\SQLServer\UpgradeScripts\1.1 to 1.2\UpdateSchema1.2.sql
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{446CBE4E-1E33-4020-BB2C-8334DE1BA602}"
 EndProject
@@ -471,8 +456,6 @@ Global
 		{D59550EF-227C-48CB-B97A-200BB2AEE27C} = {446CBE4E-1E33-4020-BB2C-8334DE1BA602}
 		{610C828C-B14D-44F6-970C-B60C6A4B75D4} = {3CC82B5C-7EA9-484D-9C6E-791BD2E55563}
 		{7A6121E1-A031-4631-82F5-065FBF51D584} = {3CC82B5C-7EA9-484D-9C6E-791BD2E55563}
-		{79887E64-70D4-45F2-9CDF-BACCB58D9FBD} = {610C828C-B14D-44F6-970C-B60C6A4B75D4}
-		{ABEA90AD-3975-46BC-86AE-AB7974D83E1A} = {610C828C-B14D-44F6-970C-B60C6A4B75D4}
 		{C65726E4-1154-4A3D-B3AB-B1DD50590E34} = {5647C88F-E411-407F-9187-CD9E924FCAC7}
 		{E10DFCB9-3DF0-4EF9-9E32-2498CA0E2871} = {5647C88F-E411-407F-9187-CD9E924FCAC7}
 		{2883D58B-8484-4BEB-9732-5D878D789EE2} = {5647C88F-E411-407F-9187-CD9E924FCAC7}

@@ -66,7 +66,7 @@ var OCM;
                 this.drawVisualization();
             };
             return GeoSummary;
-        })();
+        }());
         Widgets.GeoSummary = GeoSummary;
     })(Widgets = OCM.Widgets || (OCM.Widgets = {}));
 })(OCM || (OCM = {}));

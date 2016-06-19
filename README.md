@@ -7,7 +7,7 @@ The aim of the project is to move away from the need to maintain silos of privat
 
 The code in this repository represents the backend systems ([API](http://openchargemap.org/site/develop/), [Web Site](http://openchargemap.org) and server-side Import Processing) for the project. Also included is the source for the [mobile/web app](http://openchargemap.org/app/) and example client code in various programming languages.
 
-Server-side code is developed mostly in C#, currently building under Visual Studio 2013 Community Edition with .Net 4.5.
+Server-side code is developed mostly in C#, currently building under Visual Studio 2015 Community Edition with .Net 4.5.
 
 The [Web/Mobile app](http://openchargemap.org/app/) is built purely with HTML/CSS/JavaScript and requires the NodeJS based Jake build system (see build readme) to generated the minified version of the app.
 
@@ -21,7 +21,7 @@ Please contribute in any way you can:
     - Help translate the system into other languages using the [webtranslateit](https://webtranslateit.com/en/projects/6978-Open-Charge-Map) project 
     - Help write documentation
     - Web App (HTML/CSS/JavaScript)
-    - Website development (MVC4)
+    - Website development (MVC5)
     - Map widget for embedding
     - Sample Code for developers
     - Graphic Design

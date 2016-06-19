@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace OCM.API.V3.Profile.SignIn
+namespace OCM.API.V3.Profile.Authenticate
 {
     /// <summary>
     /// POI API Endpoint Handler
@@ -13,7 +13,7 @@ namespace OCM.API.V3.Profile.SignIn
         public APIEndpoint()
         {
             this.APIBehaviourVersion = 3;
-            this.DefaultAction = "profile.signin";
+            this.DefaultAction = "profile.authenticate";
             this.IsQueryByPost = true;
         }
     }

@@ -74,7 +74,7 @@ module OCM {
 
                                 //enumerate and translate each list item
                                 for (var opt = 0; opt < optionsList.length; opt++) {
-                                    var optValue = optionsList[opt].value;
+                                    var optValue = (<any>optionsList[opt]).value;
                                     if (optValue.indexOf("-") != -1) {
                                         //can't have '-' in property name from resource dictionary, replace with "minus"
                                         optValue = optValue.replace("-", "minus");
@@ -87,7 +87,7 @@ module OCM {
                                         localisedText = this.getTranslation(optResourceKey, null, null, elementList[i]);
                                     }
                                     if (localisedText != null) {
-                                        optionsList[opt].text = localisedText;
+                                        (<any>optionsList[opt]).text = localisedText;
                                     }
                                 }
                             } else {

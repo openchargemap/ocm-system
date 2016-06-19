@@ -23,6 +23,7 @@ namespace OCM.API.Security
         {
             var claims = new List<System.Security.Claims.Claim>();
             claims.Add(new Claim("UserID", user.ID.ToString()));
+            claims.Add(new Claim("nonce", user.CurrentSessionToken.ToString()));
 
             var signingKey = new InMemorySymmetricSecurityKey(Encoding.ASCII.GetBytes(user.CurrentSessionToken));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature, SecurityAlgorithms.Sha256Digest);
@@ -50,7 +51,7 @@ namespace OCM.API.Security
             }
         }
 
-        public static SecurityToken ValidateJWTForUser(string token, Common.Model.User user)
+        public static ClaimsPrincipal ValidateJWTForUser(string token, Common.Model.User user)
         {
             var handler = new JwtSecurityTokenHandler();
 
@@ -67,7 +68,8 @@ namespace OCM.API.Security
             {
                 SecurityToken validatedToken = null;
                 var claims = handler.ValidateToken(token, validationParameters, out validatedToken);
-                return validatedToken;
+              
+                return claims;
             }
             catch (Exception e)
             {

@@ -106,10 +106,13 @@ namespace OCM.API.InputProviders
 
                     if (userProfile != null)
                     {
-                        var validatedToken = OCM.API.Security.JWTAuth.ValidateJWTForUser(JWTAuthToken, userProfile);
-                        if (validatedToken != null)
+                        var claims = OCM.API.Security.JWTAuth.ValidateJWTForUser(JWTAuthToken, userProfile);
+                        if (claims != null)
                         {
-                            return userProfile;
+                            if (claims.HasClaim(c => c.Type == "nonce" && c.Value == userProfile.CurrentSessionToken))
+                            {
+                                return userProfile;
+                            }
                         }
                     }
                 }

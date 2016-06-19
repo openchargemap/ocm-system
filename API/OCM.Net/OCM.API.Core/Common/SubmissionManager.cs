@@ -405,6 +405,11 @@ namespace OCM.API.Common
                 }
             }
 
+            /*if (dataComment.User==null)
+            {
+                return -3; //rejected, not authenticated
+            }*/
+
             try
             {
                 dataComment.ChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
