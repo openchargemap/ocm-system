@@ -245,7 +245,7 @@
     <Compile Include="v3\poi\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
-    <Compile Include="v3\profile\signin\service.ashx.cs">
+    <Compile Include="v3\profile\authenticate\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
     <Compile Include="v3\referencedata\service.ashx.cs">
@@ -290,9 +290,13 @@
     <Content Include="v3\compactpoi\service.ashx" />
     <Content Include="v3\geocode\service.ashx" />
     <Content Include="v3\poi\service.ashx" />
-    <Content Include="v3\profile\signin\service.ashx" />
+    <Content Include="v3\profile\authenticate\service.ashx" />
     <Content Include="v3\referencedata\service.ashx" />
     <Content Include="v3\comment\service.ashx" />
+    <Content Include="v3\comment\Web.config" />
+    <Content Include="v3\profile\authenticate\Web.config" />
+    <Content Include="v3\poi\Web.config" />
+    <Content Include="v2\Web.config" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
