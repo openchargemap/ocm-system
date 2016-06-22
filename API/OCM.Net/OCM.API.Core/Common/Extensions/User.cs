@@ -6,7 +6,13 @@ namespace OCM.API.Common.Model.Extensions
 {
     public class User
     {
-        /// <summary>
+        public static string GetProfileImageURL(Core.Data.User source)
+        {
+            if (String.IsNullOrEmpty(source.EmailAddress)) return null;
+            var emailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(source.EmailAddress);
+            return "http://www.gravatar.com/avatar/" + emailHash + "?s=80&d=mm";
+        }
+            /// <summary>
         /// returns a User object with sensitive information removed
         /// </summary>
         /// <param name="source"></param>
@@ -19,7 +25,8 @@ namespace OCM.API.Common.Model.Extensions
             {
                 ID = source.ID,
                 Username = source.Username,
-                ReputationPoints = source.ReputationPoints
+                ReputationPoints = source.ReputationPoints,
+                ProfileImageURL = GetProfileImageURL(source)
             };
         }
 
@@ -36,7 +43,7 @@ namespace OCM.API.Common.Model.Extensions
                 Profile = source.Profile,
                 DateCreated = source.DateCreated,
                 DateLastLogin = source.DateLastLogin,
-                EmailHash = (includeEmailHash ? OCM.Core.Util.SecurityHelper.GetMd5Hash(source.EmailAddress) : null)
+               ProfileImageURL=GetProfileImageURL(source)
             };
         }
 
@@ -65,6 +72,7 @@ namespace OCM.API.Common.Model.Extensions
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
                 EmailAddress = source.EmailAddress,
+                ProfileImageURL = GetProfileImageURL(source),
                 SyncedSettings = source.SyncedSettings
             };
         }

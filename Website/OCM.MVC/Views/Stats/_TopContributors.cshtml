@@ -15,7 +15,7 @@
 
         <tr>
             <td style="font-size:2em;color:#c0c0c0;">@positionCount</td><td>
-                                       @Html.Raw("<img class='img-thumbnail' title='Gravatar Profile Image' src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />")
+                                       @Html.Raw("<img class='img-thumbnail' title='Profile Image' src=\"" + item.ProfileImageURL + "\" />")
             </td>
             <td>
                  @if (item.IsProfilePublic != false)

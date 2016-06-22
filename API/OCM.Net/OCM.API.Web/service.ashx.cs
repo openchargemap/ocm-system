@@ -612,7 +612,9 @@ namespace OCM.API
             var responseEnvelope = new APIResponseEnvelope();
             if (user == null)
             {
-                responseEnvelope.Metadata.StatusCode = 404;
+                context.Response.StatusCode = 401;
+                context.Response.Flush();
+                return;
             }
             else
             {

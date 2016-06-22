@@ -91,6 +91,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
@@ -136,8 +137,6 @@
     <Content Include="Templates\Notifications\LocationSubmitted.htm" />
     <Content Include="Templates\Notifications\LocationCommentReceived.htm" />
     <Content Include="Temp\Uploads\readme.txt" />
-    <Content Include="Test\JSONSubmissionTest.aspx" />
-    <Content Include="Test\MailTest.aspx" />
     <Content Include="Test\TestDataSimilarity.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -169,6 +168,7 @@
     <Content Include="Widgets\Map\map.js" />
     <Content Include="Widgets\Map\mapembed.css" />
     <Content Include="Widgets\Map\mapembed.htm" />
+    <Content Include="Widgets\Map\MapRedirect.aspx" />
     <Content Include="Widgets\Map\mapwizard.htm" />
     <Content Include="Widgets\Map\scripts\Localisation\languagePack.min.js" />
     <Content Include="Widgets\Map\scripts\localisation-resource-keys.txt" />
@@ -206,20 +206,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test\JSONSubmissionTest.aspx.cs">
-      <DependentUpon>JSONSubmissionTest.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test\JSONSubmissionTest.aspx.designer.cs">
-      <DependentUpon>JSONSubmissionTest.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Test\MailTest.aspx.cs">
-      <DependentUpon>MailTest.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test\MailTest.aspx.designer.cs">
-      <DependentUpon>MailTest.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Test\OutputHandlerTest.ashx.cs">
       <DependentUpon>OutputHandlerTest.ashx</DependentUpon>
     </Compile>
@@ -240,6 +226,9 @@
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
     <Compile Include="v3\geocode\service.ashx.cs">
+      <DependentUpon>service.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="v3\mediaitem\service.ashx.cs">
       <DependentUpon>service.ashx</DependentUpon>
     </Compile>
     <Compile Include="v3\poi\service.ashx.cs">
@@ -269,6 +258,13 @@
     <Compile Include="Widgets\DataBrowser\DataSummary.ashx.cs">
       <DependentUpon>DataSummary.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Widgets\Map\MapRedirect.aspx.cs">
+      <DependentUpon>MapRedirect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Widgets\Map\MapRedirect.aspx.designer.cs">
+      <DependentUpon>MapRedirect.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="service.ashx" />
@@ -297,6 +293,16 @@
     <Content Include="v3\profile\authenticate\Web.config" />
     <Content Include="v3\poi\Web.config" />
     <Content Include="v2\Web.config" />
+    <Content Include="v2\poi\Web.config" />
+    <Content Include="v2\referencedata\Web.config" />
+    <Content Include="v1\Web.config" />
+    <Content Include="v3\referencedata\Web.config" />
+    <Content Include="v3\compactpoi\Web.config" />
+    <Content Include="v3\geocode\Web.config" />
+    <Content Include="v2\geocode\Web.config" />
+    <Content Include="v2\compactpoi\Web.config" />
+    <Content Include="v3\mediaitem\Web.config" />
+    <Content Include="v3\mediaitem\service.ashx" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

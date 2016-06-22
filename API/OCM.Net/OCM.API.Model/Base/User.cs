@@ -60,6 +60,8 @@ namespace OCM.API.Common.Model
 
         public string EmailHash { get; set; }
 
+        public string ProfileImageURL { get; set; }
+
         public bool? IsCurrentSessionTokenValid {get;set;}
 
         public string APIKey { get; set; }
