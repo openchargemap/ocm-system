@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Configuration;
 
 namespace OCM.MVC.Controllers
 {
@@ -126,20 +127,26 @@ namespace OCM.MVC.Controllers
             if (key == System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"])
             {
                 //send all pending subscription notifications
-
-                try
+                if (bool.Parse(ConfigurationManager.AppSettings["EnableSubscriptionChecks"]) == true)
                 {
-                    //TODO: can't run in seperate async thread becuase HttpContext is not available
-                    string templateFolderPath = Server.MapPath("~/templates/notifications");
 
-                    await Task.Run(() =>
+
+
+
+                    try
                     {
-                        notificationsSent = new UserSubscriptionManager().SendAllPendingSubscriptionNotifications(templateFolderPath);
-                    });
-                }
-                catch (Exception)
-                {
-                    ; ; //failed to send notifications
+                        //TODO: can't run in seperate async thread becuase HttpContext is not available
+                        string templateFolderPath = Server.MapPath("~/templates/notifications");
+
+                        await Task.Run(() =>
+                        {
+                            notificationsSent = new UserSubscriptionManager().SendAllPendingSubscriptionNotifications(templateFolderPath);
+                        });
+                    }
+                    catch (Exception)
+                    {
+                        ; ; //failed to send notifications
+                    }
                 }
 
                 //update cache mirror

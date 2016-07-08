@@ -13,6 +13,13 @@ else
     <script>var enableEditMode = true; var poiId = @(Model.ID)</script>
 }
 
+@if (ViewBag.IsReadOnlyMode!=null && ViewBag.IsReadOnlyMode == true)
+{
+    <p class="alert alert-danger">
+        This service is currently Read-Only and submission or edits are not currently being accepted.
+    </p>
+
+} 
 
 @using (Html.BeginForm("Edit", "POI", FormMethod.Post, new { @class = "form", id = "editor" }))
 {

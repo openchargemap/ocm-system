@@ -1,15 +1,15 @@
-﻿using Microsoft.Web.WebPages.OAuth;
-using OCM.API.Common;
-using OCM.Core.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Web.WebPages.OAuth;
+using OCM.API.Common;
+using OCM.Core.Data;
 
 namespace OCM.MVC.Controllers
 {
-    public class LoginProviderController : Controller
+    public class LoginProviderController : BaseController
     {
         #region Cookie Helpers
 
@@ -54,6 +54,8 @@ namespace OCM.MVC.Controllers
 
         public ActionResult BeginLogin()
         {
+            ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
+
             ViewBag.LoginProviders = OAuthWebSecurity.RegisteredClientData;
             return View(new OCM.API.Common.Model.LoginModel());
         }

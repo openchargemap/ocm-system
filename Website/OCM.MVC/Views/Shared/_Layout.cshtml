@@ -193,6 +193,14 @@
 
     <div class="container @if(ViewBag.WideContainer==true){<text>container-wide</text>}">
         <div class="content">
+            @{
+                if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
+                {
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Note: Open Charge Map is undergoing extensive maintenance and new edits/submission are not currently being accepted.
+                    </div>
+                }
+            }
             @RenderBody()
         </div>
 

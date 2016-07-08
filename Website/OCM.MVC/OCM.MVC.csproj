@@ -303,6 +303,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Chart.min.js" />
+    <None Include="Properties\PublishProfiles\Publish to Fallback Server.pubxml" />
     <None Include="Scripts\jquery-2.2.2.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.2.js" />
     <Content Include="Scripts\jquery-2.2.2.min.js" />

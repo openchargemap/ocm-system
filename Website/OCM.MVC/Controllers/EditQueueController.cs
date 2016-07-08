@@ -1,6 +1,6 @@
-﻿using OCM.API.Common;
+﻿using System.Web.Mvc;
+using OCM.API.Common;
 using OCM.API.Common.Model;
-using System.Web.Mvc;
 
 namespace OCM.MVC.Controllers
 {
@@ -42,8 +42,10 @@ namespace OCM.MVC.Controllers
             //approves/publishes the given edit directly (if user has permission)
             using (var editQueueManager = new EditQueueManager())
             {
-                editQueueManager.ProcessEditQueueItem(id, true, (int)Session["UserID"]);
-
+                if (!IsReadOnlyMode)
+                {
+                    editQueueManager.ProcessEditQueueItem(id, true, (int)Session["UserID"]);
+                }
                 return RedirectToAction("Index", "EditQueue");
             }
         }
@@ -54,8 +56,10 @@ namespace OCM.MVC.Controllers
             //marks item as processed without publishing the edit
             using (var editQueueManager = new EditQueueManager())
             {
-                editQueueManager.ProcessEditQueueItem(id, false, (int)Session["UserID"]);
-
+                if (!IsReadOnlyMode)
+                {
+                    editQueueManager.ProcessEditQueueItem(id, false, (int)Session["UserID"]);
+                }
                 return RedirectToAction("Index", "EditQueue");
             }
         }

@@ -1,11 +1,33 @@
-﻿using OCM.API.Common;
-using System;
+﻿using System;
+using System.Configuration;
+using System.Web;
 using System.Web.Mvc;
+using OCM.API.Common;
 
 namespace OCM.MVC.Controllers
 {
     public class BaseController : Controller
     {
+        public bool IsReadOnlyMode
+        {
+            get
+            {
+                if (!bool.Parse(ConfigurationManager.AppSettings["EnableDataWrites"]))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public void CheckForReadOnly()
+        {
+            if (IsReadOnlyMode) throw new HttpException(404, "Service is currently read-only.");
+        }
+
         public bool IsRequestByRobot
         {
             get
@@ -43,7 +65,8 @@ namespace OCM.MVC.Controllers
 
         public bool IsUserAdmin
         {
-            get {
+            get
+            {
                 return (Session["IsAdministrator"] != null && (bool)Session["IsAdministrator"] == true);
             }
         }

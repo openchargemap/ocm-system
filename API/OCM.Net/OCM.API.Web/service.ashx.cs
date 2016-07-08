@@ -1,9 +1,3 @@
-using Newtonsoft.Json;
-using OCM.API.Common;
-using OCM.API.Common.Model;
-using OCM.API.Common.Model.Extended;
-using OCM.API.InputProviders;
-using OCM.API.OutputProviders;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,6 +6,12 @@ using System.IO.Compression;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
+using Newtonsoft.Json;
+using OCM.API.Common;
+using OCM.API.Common.Model;
+using OCM.API.Common.Model.Extended;
+using OCM.API.InputProviders;
+using OCM.API.OutputProviders;
 
 namespace OCM.API
 {
@@ -52,7 +52,8 @@ namespace OCM.API
                     if (HttpContext.Current.Request.UserAgent != null)
                     {
                         var userAgent = HttpContext.Current.Request.UserAgent.ToLower();
-                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google") || userAgent.Contains("apache-httpclient") || userAgent.Equals("apache") || userAgent.StartsWith("nameofagent") || userAgent.StartsWith("php"))
+                        if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google") || userAgent.Contains("apache-httpclient") || userAgent.Equals("apache") || userAgent.StartsWith("nameofagent") || userAgent.StartsWith("php")) // || userAgent.Contains("EVCompany") || userAgent.Contains("MOB30")
+
                         {
                             return true;
                         }
@@ -72,6 +73,11 @@ namespace OCM.API
         /// <param name="context"></param>
         private void PerformInput(HttpContext context)
         {
+            if (!bool.Parse(ConfigurationManager.AppSettings["EnableDataWrites"]))
+            {
+                OutputBadRequestMessage(context, "API is read only. Submissions not currently being accepted.");
+                return;
+            }
             OCM.API.InputProviders.IInputProvider inputProvider = null;
 
             var filter = new APIRequestParams();
@@ -114,7 +120,6 @@ namespace OCM.API
             }
             else
             {
-
                 //allow contact us input whether use is authenticated or not
                 if (context.Request["action"] == "contactus_submission" || filter.Action == "contact")
                 {
@@ -260,10 +265,8 @@ namespace OCM.API
                         }
                         else
                         {
-                            
                             context.Response.Write("Error");
                         }
-                           
                     }
                 }
             }
@@ -687,7 +690,6 @@ namespace OCM.API
 
             if (context.Request.HttpMethod == "OPTIONS")
             {
-
                 context.Response.StatusCode = 200;
                 context.ApplicationInstance.CompleteRequest();
                 return;
@@ -713,7 +715,6 @@ namespace OCM.API
             {
                 PerformOutput(context);
             }
-
 
             context.ApplicationInstance.CompleteRequest();
         }

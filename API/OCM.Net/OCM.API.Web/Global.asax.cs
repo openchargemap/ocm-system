@@ -1,10 +1,10 @@
-﻿using OCM.API.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using OCM.API.Common;
 
 namespace OCM.API
 {
@@ -46,7 +46,10 @@ namespace OCM.API
 
             Server.ClearError();
             Response.StatusCode = 500;
-            Response.End();
+
+            HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
+            HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
+            HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
         }
 
         protected void Session_End(object sender, EventArgs e)

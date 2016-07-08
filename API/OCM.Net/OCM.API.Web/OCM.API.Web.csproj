@@ -303,6 +303,7 @@
     <Content Include="v2\compactpoi\Web.config" />
     <Content Include="v3\mediaitem\Web.config" />
     <Content Include="v3\mediaitem\service.ashx" />
+    <None Include="Properties\PublishProfiles\Publish to API Server 2.pubxml" />
     <None Include="Web.ProductionWithSecrets.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

@@ -1,9 +1,4 @@
-﻿using OCM.API.Common;
-using OCM.API.Common.DataSummary;
-using OCM.API.Common.Model;
-using OCM.Core.Common;
-using OCM.MVC.Models;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +9,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using OCM.API.Common;
+using OCM.API.Common.DataSummary;
+using OCM.API.Common.Model;
+using OCM.Core.Common;
+using OCM.MVC.Models;
 
 namespace OCM.MVC.Controllers
 {
@@ -196,6 +196,8 @@ namespace OCM.MVC.Controllers
 
         public ActionResult AddMediaItem(int id)
         {
+            ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
+
             var cpManager = new API.Common.POIManager();
             var poi = cpManager.Get(id, true);
 
@@ -208,6 +210,8 @@ namespace OCM.MVC.Controllers
         [HttpPost, AuthSignedInOnly]
         public ActionResult AddMediaItem(int id, FormCollection collection)
         {
+            CheckForReadOnly();
+
             var user = new UserManager().GetUser((int)Session["UserID"]);
             var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
 
@@ -247,6 +251,8 @@ namespace OCM.MVC.Controllers
         // GET: /POI/Edit/5
         public ActionResult Edit(int? id, bool createCopy = false)
         {
+            ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
+
             if (id > 0)
             {
                 ChargePoint poi = null;
@@ -300,6 +306,8 @@ namespace OCM.MVC.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(ChargePoint poi)
         {
+            CheckForReadOnly();
+
             var refData = new POIBrowseModel();
             refData.AllowOptionalCountrySelection = false;
             ViewBag.ReferenceData = refData;
@@ -500,6 +508,8 @@ namespace OCM.MVC.Controllers
 
         public ActionResult AddComment(int id)
         {
+            ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
+
             var cpManager = new API.Common.POIManager();
             var poi = cpManager.Get(id, true);
 
@@ -515,6 +525,8 @@ namespace OCM.MVC.Controllers
         [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
         public ActionResult Comment(POIViewModel model)
         {
+            CheckForReadOnly();
+
             var comment = model.NewComment;
             if (ModelState.IsValid)
             {
