@@ -33,7 +33,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.DataProvidersReference = source.DataProvidersReference;
 
             //populate Operator (full object or id only)
-            if (isVerboseMode && (source.OperatorID!=null || source.Operator != null))
+            if (isVerboseMode && (source.OperatorID != null || source.Operator != null))
             {
                 poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
                 poi.OperatorID = source.Operator.ID;
@@ -46,7 +46,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.OperatorsReference = source.OperatorsReference;
 
             //populate usage type (full object or id only)
-            if (isVerboseMode && (source.UsageTypeID!=null || source.UsageType != null))
+            if (isVerboseMode && (source.UsageTypeID != null || source.UsageType != null))
             {
                 poi.UsageType = UsageType.FromDataModel(source.UsageType);
                 poi.UsageTypeID = source.UsageType.ID;
@@ -59,7 +59,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.UsageCost = source.UsageCost;
 
             //populate address info
-            if (source.AddressInfoID!=null || source.AddressInfo != null)
+            if (source.AddressInfoID != null || source.AddressInfo != null)
             {
                 poi.AddressInfo = AddressInfo.FromDataModel(source.AddressInfo, isVerboseMode);
             }
@@ -71,7 +71,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.DateLastConfirmed = source.DateLastConfirmed;
 
             //populate status type (full object or id only)
-            if (isVerboseMode && (source.StatusTypeID!=null || source.StatusType != null))
+            if (isVerboseMode && (source.StatusTypeID != null || source.StatusType != null))
             {
                 poi.StatusType = StatusType.FromDataModel(source.StatusType);
                 poi.StatusTypeID = source.StatusType.ID;
@@ -86,7 +86,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.DateCreated = source.DateCreated;
 
             //populate submission status type (full object or id only)
-            if (isVerboseMode && (source.SubmissionStatusTypeID!=null || source.SubmissionStatusType != null))
+            if (isVerboseMode && (source.SubmissionStatusTypeID != null || source.SubmissionStatusType != null))
             {
                 poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
                 poi.SubmissionStatusTypeID = source.SubmissionStatusType.ID;
@@ -134,6 +134,9 @@ namespace OCM.API.Common.Model.Extensions
                     poi.MetadataValues.Add(MetadataValue.FromDataModel(metadataValue));
                 }
             }
+
+            //mapping level of detail (priority level, lower is higher priority)
+            poi.LevelOfDetail = source.LevelOfDetail;
             return poi;
         }
     }

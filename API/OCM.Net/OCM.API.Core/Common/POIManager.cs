@@ -1,8 +1,3 @@
-using KellermanSoftware.CompareNetObjects;
-using Newtonsoft.Json;
-using OCM.API.Common.Model;
-using OCM.API.Common.Model.Extended;
-using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +7,11 @@ using System.Data.Entity.Spatial;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using KellermanSoftware.CompareNetObjects;
+using Newtonsoft.Json;
+using OCM.API.Common.Model;
+using OCM.API.Common.Model.Extended;
+using OCM.Core.Data;
 
 namespace OCM.API.Common
 {
@@ -336,10 +336,20 @@ namespace OCM.API.Common
                         chargePointList = chargePointList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
                     }
 
+                    //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
                     if (settings.LevelOfDetail > 1)
                     {
-                        //return progressively less matching results (across whole data set) as Level Of Detail gets higher
-                        chargePointList = chargePointList.Where(c => c.ID % settings.LevelOfDetail == 0);
+                        //return progressively less matching results (across whole data set) as requested Level Of Detail gets higher
+                        // chargePointList = chargePointList.Where(c => c.ID % settings.LevelOfDetail == 0);
+                        if (settings.LevelOfDetail > 3)
+                        {
+                            settings.LevelOfDetail = 1; //highest priority LOD
+                        }
+                        else
+                        {
+                            settings.LevelOfDetail = 2; //include next level priority items
+                        }
+                        chargePointList = chargePointList.Where(c => c.LevelOfDetail <= settings.LevelOfDetail);
                     }
 
                     ///////////

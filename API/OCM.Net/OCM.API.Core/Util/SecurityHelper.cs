@@ -18,7 +18,7 @@ namespace OCM.Core.Util
         public static string GetGravatarURLFromHash(string hash)
         {
             if (hash == null) hash = "";
-            return "http://www.gravatar.com/avatar/" + hash + "?d=mm";
+            return "https://www.gravatar.com/avatar/" + hash + "?d=mm";
         }
 
         public static string GetMd5Hash(string input)

@@ -17,7 +17,7 @@
     </div>
     <div class="col-md-6">
         <h3><i class="fa fa-line-chart"></i> Summary for Last 90 Days</h3>
-        
+
         <ul>
             <li>Total Active Editors: @Model.TotalActiveEditors.Quantity</li>
             <li>Total Active Contributors: @Model.TotalActiveContributors.Quantity</li>
@@ -25,10 +25,9 @@
             <li>Total Photo Contributors: @Model.TotalPhotoContributors.Quantity</li>
         </ul>
     </div>
-   
 </div>
 
-<script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
+<script type="text/javascript" src="https://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript">
 
     function refreshDataSummary() {
@@ -57,7 +56,6 @@
 
     refreshDataSummary();
 </script>
-
 
 <div class="row">
     <div class="col-md-4">

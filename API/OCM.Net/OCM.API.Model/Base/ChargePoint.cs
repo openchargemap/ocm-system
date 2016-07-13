@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace OCM.API.Common.Model
 {
@@ -96,6 +96,12 @@ namespace OCM.API.Common.Model
 
         [DisplayName("Metadata")]
         public List<MetadataValue> MetadataValues { get; set; }
+
+        /// <summary>
+        /// Level of detail (map priority) for internal use only
+        /// </summary>
+        [JsonIgnoreAttribute]
+        public int? LevelOfDetail { get; set; }
 
         #region deprecated properties
 

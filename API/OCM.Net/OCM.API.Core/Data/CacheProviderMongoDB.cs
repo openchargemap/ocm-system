@@ -1,13 +1,4 @@
-﻿using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
-using MongoDB.Driver.GeoJsonObjectModel;
-using MongoDB.Driver.Linq;
-using Newtonsoft.Json;
-using OCM.API.Common;
-using OCM.API.Common.Model;
-using OCM.API.Common.Model.Extended;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
@@ -16,6 +7,15 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
+using MongoDB.Driver.GeoJsonObjectModel;
+using MongoDB.Driver.Linq;
+using Newtonsoft.Json;
+using OCM.API.Common;
+using OCM.API.Common.Model;
+using OCM.API.Common.Model.Extended;
 
 namespace OCM.Core.Data
 {
@@ -95,6 +95,7 @@ namespace OCM.Core.Data
             poi.UsageType = cp.UsageType;
             poi.UsageTypeID = cp.UsageTypeID;
             poi.UserComments = cp.UserComments;
+            poi.LevelOfDetail = cp.LevelOfDetail;
             poi.UUID = cp.UUID;
             return poi;
         }
@@ -678,9 +679,25 @@ namespace OCM.Core.Data
                     poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
                 }
 
-                if (settings.LevelOfDetail != null && settings.LevelOfDetail > 1)
+                //if (settings.LevelOfDetail != null && settings.LevelOfDetail > 1)
+                //{
+                //    poiList = poiList.Where(q => Query.Mod("ID", (int)settings.LevelOfDetail, 0).Inject());
+                //}
+
+                //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
+                if (settings.LevelOfDetail > 1)
                 {
-                    poiList = poiList.Where(q => Query.Mod("ID", (int)settings.LevelOfDetail, 0).Inject());
+                    //return progressively less matching results (across whole data set) as requested Level Of Detail gets higher
+
+                    if (settings.LevelOfDetail > 3)
+                    {
+                        settings.LevelOfDetail = 1; //highest priority LOD
+                    }
+                    else
+                    {
+                        settings.LevelOfDetail = 2; //include next level priority items
+                    }
+                    poiList = poiList.Where(c => c.LevelOfDetail <= settings.LevelOfDetail);
                 }
 
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo

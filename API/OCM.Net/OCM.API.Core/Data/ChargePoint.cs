@@ -42,6 +42,7 @@ namespace OCM.Core.Data
         public Nullable<System.DateTime> DateCreated { get; set; }
         public Nullable<int> SubmissionStatusTypeID { get; set; }
         public string UsageCost { get; set; }
+        public Nullable<short> LevelOfDetail { get; set; }
     
         public virtual AddressInfo AddressInfo { get; set; }
         public virtual ICollection<ChargePoint> ChildChargePoints { get; set; }

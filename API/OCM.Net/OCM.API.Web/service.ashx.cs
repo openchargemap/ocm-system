@@ -704,7 +704,7 @@ namespace OCM.API
                 //process input request
                 PerformInput(context);
 
-                //flush output caching
+                //flush output caching (because a change has been applied)
                 var cacheEnum = HttpContext.Current.Cache.GetEnumerator();
                 while (cacheEnum.MoveNext())
                 {

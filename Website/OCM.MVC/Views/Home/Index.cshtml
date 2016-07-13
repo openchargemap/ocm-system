@@ -12,6 +12,9 @@
         <a href="/app" target="_blank">
             <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
         </a>
+        <p class="alert alert-info">
+            <i class="fa fa-exclamation-circle"></i> Try our the <a class="alert-link" href="http://map.openchargemap.io" target="_blank">new beta version</a> of our app.
+        </p>
     </div>
     <div class="col-md-6 card">
         <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
@@ -48,9 +51,9 @@
     </div>
 </div>
 
-<script type="text/javascript" src="http://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
+<script type="text/javascript" src="https://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
 <script type="text/javascript">
-    var ocmCommonUI=null;
+    var ocmCommonUI = null;
 
     function refreshDataSummary() {
         // <!--data summary-->
@@ -71,7 +74,7 @@
         var translationUtil = _i18nUtils; //global OCM i18n util
         var summaryText = translationUtil.getTranslation("ocm.infoText.stats.locationSummary", "{totalStations} charging stations across {totalLocations} locations.", { totalStations: totalStations, totalLocations: totalLocations });
 
-        summaryContent += "<strong>"+summaryText+"</strong>";
+        summaryContent += "<strong>" + summaryText + "</strong>";
         document.getElementById("datasummary").innerHTML = summaryContent;
 
     }
@@ -81,7 +84,7 @@
     }
 
     //when localisation is ready we can render the summary count
-    document.addEventListener("ocm-i18n-ready", function(event){
+    document.addEventListener("ocm-i18n-ready", function (event) {
         refreshDataSummary(event.detail);
     }, false);
 </script>

@@ -26,6 +26,7 @@ namespace OCM.Core.Data
         public Nullable<System.DateTime> DateAPIKeyLastUsed { get; set; }
         public System.DateTime DateCreated { get; set; }
         public int UserID { get; set; }
+        public string AppID { get; set; }
     
         public virtual User User { get; set; }
     }

@@ -10,9 +10,10 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (String.IsNullOrEmpty(source.EmailAddress)) return null;
             var emailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(source.EmailAddress);
-            return "http://www.gravatar.com/avatar/" + emailHash + "?s=80&d=mm";
+            return "https://www.gravatar.com/avatar/" + emailHash + "?s=80&d=mm";
         }
-            /// <summary>
+
+        /// <summary>
         /// returns a User object with sensitive information removed
         /// </summary>
         /// <param name="source"></param>
@@ -43,7 +44,7 @@ namespace OCM.API.Common.Model.Extensions
                 Profile = source.Profile,
                 DateCreated = source.DateCreated,
                 DateLastLogin = source.DateLastLogin,
-               ProfileImageURL=GetProfileImageURL(source)
+                ProfileImageURL = GetProfileImageURL(source)
             };
         }
 

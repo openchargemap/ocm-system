@@ -60,6 +60,7 @@
           <Property Name="DateCreated" Type="smalldatetime" />
           <Property Name="SubmissionStatusTypeID" Type="int" />
           <Property Name="UsageCost" Type="nvarchar" MaxLength="200" />
+          <Property Name="LevelOfDetail" Type="smallint" />
         </EntityType>
         <EntityType Name="ChargerType">
           <Key>
@@ -258,6 +259,7 @@
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
           <Property Name="IsWriteEnabled" Type="bit" Nullable="false" />
+          <Property Name="AppID" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="PrimaryAPIKey" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="DeprecatedAPIKey" Type="nvarchar" MaxLength="100" />
           <Property Name="SharedSecret" Type="nvarchar" MaxLength="100" Nullable="false" />
@@ -1310,6 +1312,7 @@
           <NavigationProperty Name="MetadataValues" Relationship="OCM.Core.Data.OCMEntities.FK_MetadataValue_ChargePoint" FromRole="ChargePoint" ToRole="MetadataValue" />
           <NavigationProperty Name="UserComments" Relationship="OCM.Core.Data.OCMEntities.FK_UserComment_ChargePoint" FromRole="ChargePoint" ToRole="UserComment" />
           <NavigationProperty Name="MediaItems" Relationship="OCM.Core.Data.OCMEntities.FK_MediaItem_ChargePoint" FromRole="ChargePoint" ToRole="MediaItem" />
+          <Property Name="LevelOfDetail" Type="Int16" />
         </EntityType>
         <EntityType Name="ChargerType">
           <Key>
@@ -2056,6 +2059,7 @@
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="OCM.Core.Data.OCMEntities.FK_RegisteredApplication_User" FromRole="RegisteredApplication" ToRole="User" />
+          <Property Name="AppID" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_RegisteredApplication_User">
           <End Type="OCM.Core.Data.OCMEntities.User" Role="User" Multiplicity="1" />
@@ -2226,6 +2230,7 @@
           <EntitySetMapping Name="ChargePoints">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.ChargePoint">
               <MappingFragment StoreEntitySet="ChargePoint">
+                <ScalarProperty Name="LevelOfDetail" ColumnName="LevelOfDetail" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UUID" ColumnName="UUID" />
                 <ScalarProperty Name="ParentChargePointID" ColumnName="ParentChargePointID" />
@@ -2552,6 +2557,7 @@
           <EntitySetMapping Name="RegisteredApplications">
             <EntityTypeMapping TypeName="OCM.Core.Data.OCMEntities.RegisteredApplication">
               <MappingFragment StoreEntitySet="RegisteredApplication">
+                <ScalarProperty Name="AppID" ColumnName="AppID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="DateAPIKeyLastUsed" ColumnName="DateAPIKeyLastUsed" />
