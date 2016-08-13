@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Xml;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
+using System.Xml;
 
 namespace OCM.API.OutputProviders
 {
@@ -23,7 +23,6 @@ namespace OCM.API.OutputProviders
             ContentType = "application/vnd.google-earth.kml+xml";
             SelectedKMLVersion = version;
         }
-
 
         public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
@@ -48,24 +47,24 @@ namespace OCM.API.OutputProviders
 
             //start xml document
             xml.WriteStartDocument();
-            if (this.SelectedKMLVersion== KMLVersion.V2) xml.WriteStartElement("kml", "http://www.opengis.net/kml/2.2");
+            if (this.SelectedKMLVersion == KMLVersion.V2) xml.WriteStartElement("kml", "http://www.opengis.net/kml/2.2");
             xml.WriteStartElement("Document");
-            xml.WriteElementString("name","Open Charge Map - Electric Vehicle Charging Locations");
+            xml.WriteElementString("name", "Open Charge Map - Electric Vehicle Charging Locations");
             xml.WriteElementString("description", "Data from http://openchargemap.org/");
             foreach (var item in dataList)
             {
                 if (item.AddressInfo != null)
                 {
                     xml.WriteStartElement("Placemark");
-                    xml.WriteAttributeString("id", "OCM-"+item.ID.ToString());
-                    xml.WriteElementString("name", item.AddressInfo.Title);
-                    
+                    xml.WriteAttributeString("id", "OCM-" + item.ID.ToString());
+                    xml.WriteElementString("name", System.Security.SecurityElement.Escape(item.AddressInfo.Title));
+
                     //remove invalid character ranges before serializing to XML
-                    var description = Regex.Replace(item.GetSummaryDescription(true), @"[^\u0009\u000a\u000d\u0020-\uD7FF\uE000-\uFFFD]", string.Empty);
+                    //var description = Regex.Replace(item.GetSummaryDescription(true), @"[^\u0009\u000a\u000d\u0020-\uD7FF\uE000-\uFFFD]", string.Empty);
                     xml.WriteStartElement("description");
-                    xml.WriteCData(description);
+                    xml.WriteCData(System.Security.SecurityElement.Escape(item.GetSummaryDescription(true)));
                     xml.WriteEndElement();
-                    
+
                     xml.WriteStartElement("Point");
                     string coords = item.AddressInfo.Longitude.ToString() + "," + item.AddressInfo.Latitude.ToString();
                     xml.WriteElementString("coordinates", coords);

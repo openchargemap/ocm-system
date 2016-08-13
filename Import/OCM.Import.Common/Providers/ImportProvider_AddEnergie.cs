@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -112,7 +112,7 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Longitude = double.Parse(item["Longitude"].ToString());
 
                 //default to canada
-                cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "ca");
+                //cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "ca");
                 //todo: detect country
 
                 //set network operators
