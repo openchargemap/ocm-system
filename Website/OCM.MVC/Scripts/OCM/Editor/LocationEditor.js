@@ -130,7 +130,7 @@ var LocationEditor = (function () {
         var lat = pos.lat();
         var lng = pos.lng();
         var appContext = this;
-        $.getJSON("http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1", function (data) {
+        $.getJSON("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1", function (data) {
             if (data != null) {
                 appContext.addressResult = data;
             }
@@ -252,7 +252,7 @@ var LocationEditor = (function () {
         }
         for (var i = 0; i < poiList.length; i++) {
             var poi = poiList[i];
-            var url = "http://openchargemap.org/site/poi/details/" + poi.ID;
+            var url = "https://openchargemap.org/site/poi/details/" + poi.ID;
             if (poi.ID === poiId) {
                 output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title + " <span class='label label-info'>Being Edited</span></li>";
             }

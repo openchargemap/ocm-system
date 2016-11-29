@@ -79,7 +79,7 @@ module OCM {
 
         ///Begin Standard data formatting methods ///
         static formatMapLinkFromPosition(poi, searchLatitude, searchLongitude, distance, distanceunit) {
-            return '<a href="http://maps.google.com/maps?saddr=' + searchLatitude + ',' + searchLongitude + '&daddr=' + poi.AddressInfo.Latitude + ',' + poi.AddressInfo.Longitude + '">Map (' + Math.ceil(distance) + ' ' + distanceunit + ')</a>';
+            return '<a href="https://maps.google.com/maps?saddr=' + searchLatitude + ',' + searchLongitude + '&daddr=' + poi.AddressInfo.Latitude + ',' + poi.AddressInfo.Longitude + '">Map (' + Math.ceil(distance) + ' ' + distanceunit + ')</a>';
         }
 
         static formatSystemWebLink(linkURL, linkTitle) {
@@ -92,14 +92,14 @@ module OCM {
                     return this.formatSystemWebLink("maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
                     //return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
                 } else if (device && device.platform == "iOS") {
-                    return this.formatSystemWebLink("http://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
+                    return this.formatSystemWebLink("https://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
                     //return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"http://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
                 } else {
-                    return this.formatSystemWebLink("http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
+                    return this.formatSystemWebLink("https://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
                 }
             }
             //default to google maps online link
-            return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
+            return "<a target=\"_blank\"  href=\"https://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
         }
 
         static formatURL(url, title: string = null) {
@@ -112,11 +112,11 @@ module OCM {
             var output = "";
             if (includeLineBreaks) {
                 output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
-                this.formatTextField(poi.AddressInfo.AddressLine2) +
-                this.formatTextField(poi.AddressInfo.Town) +
-                this.formatTextField(poi.AddressInfo.StateOrProvince) +
-                this.formatTextField(poi.AddressInfo.Postcode) +
-                (poi.AddressInfo.Country != null ? this.formatTextField(poi.AddressInfo.Country.Title) : "");
+                    this.formatTextField(poi.AddressInfo.AddressLine2) +
+                    this.formatTextField(poi.AddressInfo.Town) +
+                    this.formatTextField(poi.AddressInfo.StateOrProvince) +
+                    this.formatTextField(poi.AddressInfo.Postcode) +
+                    (poi.AddressInfo.Country != null ? this.formatTextField(poi.AddressInfo.Country.Title) : "");
             } else {
                 output = this.formatStringArray([
                     poi.AddressInfo.AddressLine1,
@@ -196,7 +196,7 @@ module OCM {
             var drivingInfo = "";
 
             if (poi.AddressInfo.Distance != null) {
-                var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
+                var directionsUrl = "https://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
                 drivingInfo += "<strong id='addr_distance'><span data-localize='ocm.details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
             }
             drivingInfo += "<p>" + this.formatSystemWebLink(directionsUrl, "Get Directions") + "</p>";
@@ -261,23 +261,23 @@ module OCM {
                         if (con.PowerKW == "") con.PowerKW = null;
 
                         equipmentInfo += "<tr>" +
-                        "<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" +
-                        "<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") +
-                        (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
-                        (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
-                        (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
-                        (con.CurrentType != null ? con.CurrentType.Title : "") + "<br/>" +
-                        (con.Quantity != null ? this.formatString(con.Quantity) : "1") + " Present" +
-                        "</td>" +
-                        "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
-                        "</tr>";
+                            "<td>" + (con.ConnectionType != null ? con.ConnectionType.Title : "") + "</td>" +
+                            "<td>" + (con.Level != null ? "<strong>" + con.Level.Title + "</strong><br/>" : "") +
+                            (con.Amps != null ? this.formatString(con.Amps) + "A/ " : "") +
+                            (con.Voltage != null ? this.formatString(con.Voltage) + "V/ " : "") +
+                            (con.PowerKW != null ? this.formatString(con.PowerKW) + "kW <br/>" : "") +
+                            (con.CurrentType != null ? con.CurrentType.Title : "") + "<br/>" +
+                            (con.Quantity != null ? this.formatString(con.Quantity) : "1") + " Present" +
+                            "</td>" +
+                            "<td>" + (con.StatusType != null ? con.StatusType.Title : "-") + "</td>" +
+                            "</tr>";
                     }
                     equipmentInfo += "</table>";
                 }
             }
 
             var advancedInfo = "";
-            advancedInfo += this.formatTextField("<a target='_blank' href='http://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, true, "ocm.details.refNumber");
+            advancedInfo += this.formatTextField("<a target='_blank' href='https://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, true, "ocm.details.refNumber");
             if (poi.DataProvider != null) {
                 advancedInfo += this.formatTextField(poi.DataProvider.Title, "Data Provider", false, true, "ocm.details.dataProviderTitle");
                 if (poi.DataProvider.WebsiteURL != null) {

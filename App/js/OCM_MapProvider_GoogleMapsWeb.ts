@@ -100,13 +100,13 @@ module OCM {
             * @param parentContext  parent app context
             */
             showPOIListOnMap(poiList: Array<any>, parentContext: OCM.App) {
-                var clearMarkersOnRefresh = false;
+                var clearMarkersOnRefresh: boolean = false;
                 var map = this.map;
                 var bounds = new google.maps.LatLngBounds();
                 var markersAdded = 0;
 
                 //clear existing markers (if enabled)
-                if (clearMarkersOnRefresh == true) {
+                if (clearMarkersOnRefresh) {
                     if (this.markerList != null) {
                         for (var i = 0; i < this.markerList.size(); i++) {
                             if (this.markerList[i]) {

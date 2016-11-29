@@ -11,16 +11,15 @@
   "author": "Christopher Cook",
   "license": "MIT",
   "dependencies": {
-    "http-server": "^0.8.0",
-    "jake": "^8.0.12",
-    "moment": "*",
-    "typedoc": "^0.3.4",
-    "typescript": "^1.5.0-beta",
-    "uglify-js": "*",
-    "wrench": "*"
+    "moment": "*"
   },
   "devDependencies": {
     "node-sass": "^3.1.2",
-    "jake": ""
+    "jake": "8.0.15",
+    "typescript": "2.0.10",
+    "typedoc": "^0.3.4",
+    "http-server": "^0.8.0",
+    "uglify-js": "*",
+    "wrench": "*"
   }
 }

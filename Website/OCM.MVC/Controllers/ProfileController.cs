@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using OCM.API.Common;
-using OCM.API.Common.Model;
-using OCM.MVC.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using OCM.API.Common;
+using OCM.API.Common.Model;
+using OCM.MVC.Models;
 
 namespace OCM.MVC.Controllers
 {
@@ -177,7 +177,7 @@ namespace OCM.MVC.Controllers
             UserManager userManager = new UserManager();
 
             var user = userManager.GetUser(int.Parse(Session["UserID"].ToString()));
-            var list = new UserCommentManager().GetUserComments(user.ID);
+            var list = new UserCommentManager().GetUserComments(user.ID).OrderByDescending(c => c.DateCreated);
             return View(list);
         }
 
@@ -203,7 +203,7 @@ namespace OCM.MVC.Controllers
             UserManager userManager = new UserManager();
 
             var user = userManager.GetUser(int.Parse(Session["UserID"].ToString()));
-            var list = new MediaItemManager().GetUserMediaItems(user.ID);
+            var list = new MediaItemManager().GetUserMediaItems(user.ID).OrderByDescending(m => m.DateCreated);
             return View(list);
         }
 

@@ -69,8 +69,8 @@ module OCM {
 
             this.appConfig.maxResults = 1000;
 
-            this.appConfig.baseURL = "http://openchargemap.org/app/";
-            this.appConfig.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+            this.appConfig.baseURL = "https://openchargemap.org/app/";
+            this.appConfig.loginProviderRedirectBaseURL = "https://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
             this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
             this.appConfig.newsHomeUrl = null;
 
@@ -86,7 +86,7 @@ module OCM {
             this.appConfig.launchMapOnStartup = true;
             this.appState.mapLaunched = false;
 
-            this.appState.appMode = AppMode.STANDARD;
+            this.appState.appMode = OCM.AppMode.STANDARD;
             //this.appState.appMode = AppMode.LOCALDEV;
             this.appConfig.enableLiveMapQuerying = true;
             this.appConfig.enablePOIListView = false;
@@ -94,21 +94,21 @@ module OCM {
 
             this.enableLogging = true;
 
-            if (this.appState.appMode == AppMode.LOCALDEV) {
-                this.appConfig.baseURL = "http://localhost:81/app";
-                this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
-                this.apiClient.serviceBaseURL = "http://localhost:8080/v2";
-                this.apiClient.serviceBaseURL_Standard = "http://localhost:8080/v2";
-                //this.apiClient.serviceBaseURL = "http://localhost:81/api/v2";
-                //this.apiClient.serviceBaseURL_Standard = "http://localhost:81/api/v2";
-                this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
-            }
+            /*  if (this.appState.appMode === OCM.AppMode.LOCALDEV) {
+                  this.appConfig.baseURL = "http://localhost:81/app";
+                  this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+                  this.apiClient.serviceBaseURL = "http://localhost:8080/v2";
+                  this.apiClient.serviceBaseURL_Standard = "http://localhost:8080/v2";
+                  //this.apiClient.serviceBaseURL = "http://localhost:81/api/v2";
+                  //this.apiClient.serviceBaseURL_Standard = "http://localhost:81/api/v2";
+                  this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
+              }
 
-            if (this.appState.appMode == AppMode.SANDBOXED) {
-                this.appConfig.baseURL = "http://localhost:81/app";
-                this.apiClient.serviceBaseURL = "http://sandbox.api.openchargemap.io/v2";
-                this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
-            }
+              if (this.appState.appMode === OCM.AppMode.SANDBOXED) {
+                  this.appConfig.baseURL = "http://localhost:81/app";
+                  this.apiClient.serviceBaseURL = "http://sandbox.api.openchargemap.io/v2";
+                  this.appConfig.loginProviderRedirectURL = this.appConfig.loginProviderRedirectBaseURL + this.appConfig.baseURL;
+              }*/
 
             if (this.getParameter("mode") === "embedded") {
                 this.appState.isEmbeddedAppMode = true;
@@ -1329,7 +1329,7 @@ module OCM {
             var viewWidth = $(window).width();
             this.mappingManager.showPOIOnStaticMap("details-map", poi, true, this.appState.isRunningUnderCordova, viewWidth, 200);
 
-            var streetviewUrl = "http://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
+            var streetviewUrl = "https://maps.googleapis.com/maps/api/streetview?size=192x96&location=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&fov=90&heading=0&pitch=0&sensor=false";
             var streetViewLink = "https://maps.google.com/maps?q=&layer=c&cbll=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "&cbp=11,0,0,0,0";
             $("#details-streetview").html("<a href='#' onclick=\"window.open('" + streetViewLink + "', '_system');\"><img src=\"" + streetviewUrl + "\" width=\"192\" height=\"96\" title=\"Approximate Streetview (if available): " + poi.AddressInfo.Title + "\" /></a>");
 
@@ -1376,11 +1376,11 @@ module OCM {
                         var mediaItemThumbnail = mediaItem.ItemThumbnailURL;
                         var mediumSizeThumbnail = mediaItemThumbnail.replace(".thmb.", ".medi.");
                         mediaItemOutput += "<div class='card comment'><div class='row'>" +
-                        "<div class='col-xs-6'><a class='swipebox' href='" + mediumSizeThumbnail + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img class='img-responsive img-thumbnail' src='" + mediaItem.ItemThumbnailURL + "'/></a></div>" +
-                        "<div class='col-xs-6'><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
-                        "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " " + itemDate.toLocaleDateString() + "</cite></small>" +
-                        "</div>" +
-                        "</div></div>";
+                            "<div class='col-xs-6'><a class='swipebox' href='" + mediumSizeThumbnail + "' target='_blank' title='" + ((mediaItem.Comment != null && mediaItem.Comment != "") ? mediaItem.Comment : poi.AddressInfo.Title) + "'><img class='img-responsive img-thumbnail' src='" + mediaItem.ItemThumbnailURL + "'/></a></div>" +
+                            "<div class='col-xs-6'><p>" + (mediaItem.Comment != null ? mediaItem.Comment : "(No Comment)") + "</p> " +
+                            "<small><cite>" + ((mediaItem.User != null) ? mediaItem.User.Username : "(Anonymous)") + " " + itemDate.toLocaleDateString() + "</cite></small>" +
+                            "</div>" +
+                            "</div></div>";
                     }
                 }
 

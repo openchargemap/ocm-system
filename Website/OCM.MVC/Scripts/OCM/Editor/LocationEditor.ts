@@ -5,7 +5,6 @@ declare var poiId: number; //global for current POI
 //TODO: shadow marker for original marker pos, show duplicates nearby
 
 class LocationEditor {
-
     private $: any;
     private map: any;
     private marker: any;
@@ -34,7 +33,6 @@ class LocationEditor {
     }
 
     public initializeMap() {
-
         // Enable the visual refresh
         google.maps.visualRefresh = true;
 
@@ -72,12 +70,10 @@ class LocationEditor {
             //reset pos of marker to current map centre, including reverse geocode of final position
             appContext.setNewPOIPos(appContext.map.getCenter(), true);
         });
-
     }
 
     public addMapMarker() {
         if (!(this.poiPos.lat() === 0 && this.poiPos.lng() === 0)) {
-
             this.marker = new google.maps.Marker({
                 map: this.map,
                 draggable: false,
@@ -88,7 +84,6 @@ class LocationEditor {
 
             //google.maps.event.addListener(this.marker, 'drag', this.setNewPOIPos);
         } else {
-
             //centre map on a default position
             this.map.setCenter(new google.maps.LatLng(51.6256067484225, -0.505837798118591));
         }
@@ -105,11 +100,9 @@ class LocationEditor {
             this.addMapMarker();
             this.beginReverseGeocode();
         }
-
     }
 
     public setNewPOIPos(newPos, performReverseGeocode) {
-
         this.poiPos = newPos;
 
         //update lat/lng in ui
@@ -147,7 +140,6 @@ class LocationEditor {
             google.maps.event.trigger(appContext.map, "resize");
             appContext.map.setCenter(appContext.poiPos);
         }, 300);
-
     }
 
     public getUserLocation() {
@@ -178,7 +170,6 @@ class LocationEditor {
                         break;
                         }
                     }
-            
                 }
                 */
             }
@@ -186,20 +177,17 @@ class LocationEditor {
             //OSM Nomanitim results
             if (this.addressResult.address) {
                 $("#nearest-address").html(this.addressResult.display_name);
-
             }
         }
     }
 
     public reverseGeocodePosition_OSM(pos, completedCallback) {
-
         var lat = pos.lat();
         var lng = pos.lng();
         var appContext = this;
 
-        $.getJSON("http://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1",
+        $.getJSON("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1",
             function (data) {
-
                 if (data != null) {
                     appContext.addressResult = data;
                 } else {
@@ -211,7 +199,6 @@ class LocationEditor {
     }
 
     public reverseGeocodePosition(pos, completedCallback) {
-
         var serviceprovider = "osm";
 
         if (serviceprovider === "osm") {
@@ -241,22 +228,18 @@ class LocationEditor {
                                 }
                             }
                         }*/
-
                     } else {
                         //no result
                         appContext.addressResult = null;
-
                     }
                 }
                 appContext.geocodeRequested = false;
                 completedCallback();
-
             });
         }
     }
 
     public useSuggestedAddress() {
-
         if (this.addressResult != null) {
             //osm
             if (this.addressResult.address) {
@@ -338,10 +321,8 @@ class LocationEditor {
     }
 
     public getNearbyPOI() {
-
         console.log("Fetching nearby POI list");
         if (this.poiPos != null) {
-
             var ocm_api = new (<any>OCM).API();
             var params = new (<any>OCM).POI_SearchParams();
 
@@ -368,13 +349,12 @@ class LocationEditor {
 
         for (var i = 0; i < poiList.length; i++) {
             var poi = poiList[i];
-            var url = "http://openchargemap.org/site/poi/details/" + poi.ID;
+            var url = "https://openchargemap.org/site/poi/details/" + poi.ID;
             if (poi.ID === poiId) {
-                output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title+" <span class='label label-info'>Being Edited</span></li>";
+                output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title + " <span class='label label-info'>Being Edited</span></li>";
             } else {
                 output += "<li><a target='_blank' href=\"" + url + "\">OCM-" + poi.ID + " : " + poi.AddressInfo.Title + "</a> (" + (Math.round(poi.AddressInfo.Distance * 10) / 10) + " Miles)</li>";
             }
-            
         }
 
         output += "</ul>";
