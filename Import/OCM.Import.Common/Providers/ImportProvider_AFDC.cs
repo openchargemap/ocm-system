@@ -218,6 +218,11 @@ namespace OCM.Import.Providers
 
                         if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionTypeID = 1; //J1772
 
+                        if (evconnectors.Any(c => c.Value<string>() == "TESLA"))
+                        {
+                            cinfo.ConnectionTypeID = 30; //tesla model S North America proprietary
+                        }
+                       
                         if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
                         {
                             //unknown connection type
