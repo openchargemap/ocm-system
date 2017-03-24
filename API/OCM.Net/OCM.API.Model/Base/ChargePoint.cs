@@ -159,7 +159,7 @@ namespace OCM.API.Common.Model
                 description += "<p>Usage: " + this.UsageType.Title + "</p>";
             }
 
-            description += "<a href=\"http://openchargemap.org/site/poi/details/" + this.ID + "\">View More Details (OCM-" + this.ID + ")</a>";
+            description += "<a href=\"https://openchargemap.org/site/poi/details/" + this.ID + "\">View More Details (OCM-" + this.ID + ")</a>";
 
             if (this.DataProvider != null)
             {

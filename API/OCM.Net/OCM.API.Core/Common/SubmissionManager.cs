@@ -318,7 +318,7 @@ namespace OCM.API.Common
                 Hashtable msgParams = new Hashtable();
                 msgParams.Add("Description", "OCM-" + cpData.ID + " : " + poi.AddressInfo.Title);
                 msgParams.Add("SubmissionStatusType", approvalStatus);
-                msgParams.Add("ItemURL", "http://openchargemap.org/site/poi/details/" + cpData.ID);
+                msgParams.Add("ItemURL", "https://openchargemap.org/site/poi/details/" + cpData.ID);
                 msgParams.Add("ChargePointID", cpData.ID);
                 msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
                 msgParams.Add("MessageBody",
@@ -348,7 +348,7 @@ namespace OCM.API.Common
                 var msgParams = new Hashtable();
                 msgParams.Add("Description", "OCM-" + poi.ID + " : " + poi.AddressInfo.Title);
                 msgParams.Add("SubmissionStatusType", approvalStatus);
-                msgParams.Add("ItemURL", "http://openchargemap.org/site/poi/details/" + poi.ID);
+                msgParams.Add("ItemURL", "https://openchargemap.org/site/poi/details/" + poi.ID);
                 msgParams.Add("ChargePointID", poi.ID);
                 msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
                 msgParams.Add("MessageBody",
@@ -447,7 +447,7 @@ namespace OCM.API.Common
                 Hashtable msgParams = new Hashtable();
                 msgParams.Add("Description", "");
                 msgParams.Add("ChargePointID", comment.ChargePointID);
-                msgParams.Add("ItemURL", "http://openchargemap.org/site/poi/details/" + comment.ChargePointID);
+                msgParams.Add("ItemURL", "https://openchargemap.org/site/poi/details/" + comment.ChargePointID);
                 msgParams.Add("UserName", user != null ? user.Username : comment.UserName);
                 msgParams.Add("MessageBody", "Comment (" + dataComment.UserCommentType.Title + ") added to OCM-" + comment.ChargePointID + ": " + dataComment.Comment);
 

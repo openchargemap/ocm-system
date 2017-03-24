@@ -50,7 +50,7 @@ namespace OCM.API.OutputProviders
             if (this.SelectedKMLVersion == KMLVersion.V2) xml.WriteStartElement("kml", "http://www.opengis.net/kml/2.2");
             xml.WriteStartElement("Document");
             xml.WriteElementString("name", "Open Charge Map - Electric Vehicle Charging Locations");
-            xml.WriteElementString("description", "Data from http://openchargemap.org/");
+            xml.WriteElementString("description", "Data from https://openchargemap.org/");
             foreach (var item in dataList)
             {
                 if (item.AddressInfo != null)

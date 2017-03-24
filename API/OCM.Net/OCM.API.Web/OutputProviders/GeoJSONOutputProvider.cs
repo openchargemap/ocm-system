@@ -73,7 +73,7 @@ namespace OCM.API.OutputProviders
                     var featureProperties = new Dictionary<string, object> {
                         { "Name", poi.AddressInfo.Title},
                         { "Description", poi.AddressInfo.ToString()},
-                        { "URL", "http://openchargemap.org/site/poi/details/"+poi.ID},
+                        { "URL", "https://openchargemap.org/site/poi/details/"+poi.ID},
                         { "Level", (maxConnection!=null && maxConnection.LevelID!=null?maxConnection.LevelID.ToString():null)},
                         { "ConnectionType", (maxConnection!=null && maxConnection.ConnectionType!=null?maxConnection.ConnectionType.Title:null)},
                     };

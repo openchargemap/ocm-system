@@ -40,9 +40,9 @@
             border-radius: 0px;
         }
 
-        .container {margin:0;}
-        
-        
+        .container {
+            margin: 0;
+        }
     </style>
 
     <script type="text/javascript">
@@ -67,7 +67,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/app/images/icons/AppIcon_72x72.png" />
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/app/images/icons/AppIcon_57x57.png" />
     <link rel="icon" type="image/png" href="/app/images/icons/AppIcon_57x57.png" />
-    <link href="http://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="container">
@@ -80,6 +80,6 @@
 
     @RenderSection("scripts", required: false)
 
-    @Html.Raw(OCM.MVC.CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"),this.ViewContext.RouteData.Values["languagecode"] as string))
+    @Html.Raw(OCM.MVC.CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"), this.ViewContext.RouteData.Values["languagecode"] as string))
 </body>
 </html>

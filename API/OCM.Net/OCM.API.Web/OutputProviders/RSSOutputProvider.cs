@@ -41,7 +41,7 @@ namespace OCM.API.OutputProviders
             //output feed details
             xml.WriteStartElement("channel");
             xml.WriteElementString("title", "OpenChargeMap Charge Points");
-            xml.WriteElementString("link", "http://openchargemap.org");
+            xml.WriteElementString("link", "https://openchargemap.org");
             xml.WriteElementString("description", "Charge Point data contributed by OpenChargeMap community");
             xml.WriteElementString("copyright", "openchargemap.org");
 
@@ -52,7 +52,7 @@ namespace OCM.API.OutputProviders
                 {
                     xml.WriteStartElement("item");
                     xml.WriteStartElement("guid");
-                    xml.WriteAttributeString("isPermaLink","false");
+                    xml.WriteAttributeString("isPermaLink", "false");
                     xml.WriteString(item.UUID);
                     xml.WriteEndElement();
 
@@ -79,12 +79,11 @@ namespace OCM.API.OutputProviders
                         if (item.AddressInfo.ContactTelephone1 != null) xml.WriteElementString("carwings:tel", item.AddressInfo.ContactTelephone1);
                         xml.WriteElementString("carwings:lat", item.AddressInfo.Latitude.ToString());
                         xml.WriteElementString("carwings:lon", item.AddressInfo.Longitude.ToString());
-                        
                     }
 
                     if (EnableGeoRSS)
                     {
-                        xml.WriteElementString("georss:point", item.AddressInfo.Latitude.ToString()+" "+item.AddressInfo.Longitude.ToString());
+                        xml.WriteElementString("georss:point", item.AddressInfo.Latitude.ToString() + " " + item.AddressInfo.Longitude.ToString());
                     }
 
                     xml.WriteEndElement();
@@ -98,6 +97,7 @@ namespace OCM.API.OutputProviders
             //xml.Close();
 
             #region example rss
+
             /*
             <?xml version="1.0" encoding="UTF-8"?>
             <rss version="2.0" xmlns:carwings="http://www.nissan.co.jp/dtd/carwings.dtd">
@@ -108,7 +108,7 @@ namespace OCM.API.OutputProviders
                 <language>en</ language>
                 <copyright> Copyright NISSAN MOTOR CO., LTD. 2005 All Rights Reserved. </ copyright>
                 <lastBuildDate> Wed, 25 Oct 2006 12:18:36 +0900 </ lastBuildDate>
-                <docs> http://blogs.law.harvard.edu/tech/rss </ docs> 
+                <docs> http://blogs.law.harvard.edu/tech/rss </ docs>
                 <item>
 	            <title>update information</ title>
     	            <carwings:readtitle> Trail Jam update information </ carwings: readtitle>
@@ -130,7 +130,7 @@ namespace OCM.API.OutputProviders
               </channel>
             </rss>
              * */
-            #endregion 
+            #endregion example rss
 
         }
 

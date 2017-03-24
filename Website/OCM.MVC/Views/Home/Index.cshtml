@@ -13,7 +13,7 @@
             <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
         </a>
         <p class="alert alert-info">
-            <i class="fa fa-exclamation-circle"></i> Try our the <a class="alert-link" href="http://map.openchargemap.io" target="_blank">new beta version</a> of our app.
+            <i class="fa fa-exclamation-circle"></i> Try our the <a class="alert-link" href="https://map.openchargemap.io" target="_blank">new beta version</a> of our app.
         </p>
     </div>
     <div class="col-md-6 card">
@@ -80,7 +80,7 @@
     }
 
     function loadCountryMap(countryName, isoCode) {
-        document.getElementById("countrymap").src = "http://openchargemap.org/api/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage,status&clustering=true";
+        document.getElementById("countrymap").src = "https://openchargemap.org/api/widgets/map/?maptitle=Charging%20Locations: " + countryName + "&maxresults=10000&countrycode=" + isoCode + "&filtercontrols=,nearlocation,distance,country,operator,connectiontype,level,usage,status&clustering=true";
     }
 
     //when localisation is ready we can render the summary count

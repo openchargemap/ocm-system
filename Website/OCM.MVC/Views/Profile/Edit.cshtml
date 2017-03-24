@@ -71,7 +71,7 @@
 
             <fieldset>
                 <legend>Your Private Info</legend>
-                <div class="alert alert-info">The following information is not shared with other users or displayed to the public. Your email address is only used if we need to contact you or if you want to use a <a target="_new" href="http://www.gravatar.com" class="alert-link">Gravatar</a> profile image.</div>
+                <div class="alert alert-info">The following information is not shared with other users or displayed to the public. Your email address is only used if we need to contact you or if you want to use a <a target="_new" href="https://www.gravatar.com" class="alert-link">Gravatar</a> profile image.</div>
                 <div class="form-group">
 
                     @Html.LabelFor(model => model.EmailAddress)
@@ -124,7 +124,7 @@
         var map = new L.Map('editor_map_canvas');
 
         // create the tile layer with correct attribution
-        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib = 'Map data © OpenStreetMap contributors';
         var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
 

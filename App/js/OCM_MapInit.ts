@@ -41,7 +41,7 @@ function loadGoogleMaps() {
 
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places&signed_in=true&callback=initGoogleMapsCompleted'; //key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&callback=initGoogleMapsCompleted';
     document.body.appendChild(script);
 }
 

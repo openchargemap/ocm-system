@@ -99,7 +99,7 @@ namespace OCM.API.Common
             double maxx = longitude + 0.1;
             double miny = latitude - 0.1;
             double maxy = latitude + 0.1;
-            string url = "http://www.panoramio.com/map/get_panoramas.php?set=full&from=0&to=10&minx=" + minx + "&miny=" + miny + "&maxx=" + maxx + "&maxy=" + maxy + "&size=medium&mapfilter=false";
+            string url = "https://www.panoramio.com/map/get_panoramas.php?set=full&from=0&to=10&minx=" + minx + "&miny=" + miny + "&maxx=" + maxx + "&maxy=" + maxy + "&size=medium&mapfilter=false";
 
             using (System.Net.WebClient wc = new System.Net.WebClient())
             {
@@ -152,7 +152,7 @@ namespace OCM.API.Common
 
             if (!String.IsNullOrWhiteSpace(address))
             {
-                string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=" + address;
+                string url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=" + address;
 
                 if (IncludeQueryURL) result.QueryURL = url;
 
@@ -203,7 +203,7 @@ namespace OCM.API.Common
             GeocodingResult result = new GeocodingResult();
             result.Service = "MapQuest Open";
 
-            string url = "http://open.mapquestapi.com/geocoding/v1/address?key=" + ConfigurationManager.AppSettings["MapQuestOpen_API_Key"] + "&location=" + Uri.EscapeDataString(address.ToString());
+            string url = "https://open.mapquestapi.com/geocoding/v1/address?key=" + ConfigurationManager.AppSettings["MapQuestOpen_API_Key"] + "&location=" + Uri.EscapeDataString(address.ToString());
             if (IncludeQueryURL) result.QueryURL = url;
 
             string data = "";
@@ -266,7 +266,7 @@ namespace OCM.API.Common
             }
             else
             {
-                string url = "http://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationManager.AppSettings["OSM_API_Key"];
+                string url = "https://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationManager.AppSettings["OSM_API_Key"];
 
                 if (IncludeQueryURL) result.QueryURL = url;
 
@@ -314,7 +314,7 @@ namespace OCM.API.Common
                     WebClient url = new WebClient();
 
                     //http://freegeoip.net/json/{ip}
-                    string urlString = "http://freegeoip.net/json/" + ipAddress;
+                    string urlString = "https://freegeoip.net/json/" + ipAddress;
 
                     string result = url.DownloadString(urlString);
                     LocationLookupResult lookup = JsonConvert.DeserializeObject<LocationLookupResult>(result);
