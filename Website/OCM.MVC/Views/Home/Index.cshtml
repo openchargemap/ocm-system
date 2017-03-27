@@ -4,50 +4,56 @@
     ViewBag.EnableAppMarkeplaceLinks = true;
 }
 
-<div class="row">
-    <div class="col-md-6 card">
-        <h2 data-localize="ocm.general.linkWebApp">Find Charging Locations</h2>
-        <i class="fa fa-search pull-left home-icons"></i>
+<style>
+    
+</style>
 
-        <a href="/app" target="_blank">
-            <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
-        </a>
-        <p class="alert alert-info">
-            <i class="fa fa-exclamation-circle"></i> Try our the <a class="alert-link" href="https://map.openchargemap.io" target="_blank">new beta version</a> of our app.
-        </p>
-    </div>
-    <div class="col-md-6 card">
-        <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
-        <i class="fa fa-tachometer pull-left home-icons"></i>
-        <p>
-            <em data-localize="ocm.infoText.supplyData.who">EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
-        </p>
-        <p>
-            <strong data-localize="ocm.infoText.supplyData.needData">We need your data.</strong> <span data-localize="ocm.infoText.supplyData.what">You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please</span> <a href="@Url.Action("Contact", "About")" data-localize="ocm.infoText.supplyData.contactUs">contact us</a> <span data-localize="ocm.infoText.supplyData.getStarted">to get started</span>.
-        </p>
-    </div>
-</div>
+<div style="background-color:rgba(0,0,0,0.4);padding:2em;color:white;margin-top:3em;">
+    <div class="row">
+        <div class="col-md-6 card">
+            <h2 data-localize="ocm.general.linkWebApp">Find Charging Locations</h2>
+            <i class="fa fa-search pull-left home-icons"></i>
 
-<div class="row">
-    <div class="col-md-6 card">
-        <h2 data-localize="ocm.navigation.develop.getInvolved">Get Involved</h2>
-        <i class="fa fa-users pull-left home-icons"></i>
-        <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
-        <p>
-            <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-sm btn-warning" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span> </a>
-        </p>
+            <a href="/app" target="_blank">
+                <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
+            </a>
+            <p class="alert alert-info" style="margin:1em;">
+                <i class="fa fa-exclamation-circle"></i> Try out the <a class="alert-link" href="https://map.openchargemap.io" target="_blank">next version</a> of our app.
+            </p>
+        </div>
+        <div class="col-md-6 card">
+            <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
+            <i class="fa fa-tachometer pull-left home-icons"></i>
+            <p>
+                <em data-localize="ocm.infoText.supplyData.who">EVSE Suppliers, Network operators, national registries, local charging info apps & sites:</em>
+            </p>
+            <p>
+                <strong data-localize="ocm.infoText.supplyData.needData">We need your data.</strong> <span data-localize="ocm.infoText.supplyData.what">You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please</span> <a href="@Url.Action("Contact", "About")" data-localize="ocm.infoText.supplyData.contactUs">contact us</a> <span data-localize="ocm.infoText.supplyData.getStarted">to get started</span>.
+            </p>
+        </div>
     </div>
-    <div class="col-md-6 card">
-        <h2 data-localize="ocm.infoText.getStations.sectionTitle">Get Charging Station Data</h2>
 
-        <i class="fa fa-cloud-download pull-left home-icons"></i>
-        <p>
-            <em data-localize="ocm.infoText.getStations.who">Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> <span data-localize="ocm.infoText.getStations.what">
-                You can access and download
-                our latest charging locations using our
-            </span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.navigation.develop.api">API</a>.
-        </p>
-        <p> <span data-localize="ocm.infoText.getStations.websiteOperators">If you operate a website and would like to include a charging location map, you can</span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.infoText.getStations.embedMap">embed a map on your own website</a>.</p>
+    <div class="row">
+        <div class="col-md-6 card">
+            <h2 data-localize="ocm.navigation.develop.getInvolved">Get Involved</h2>
+            <i class="fa fa-users pull-left home-icons"></i>
+            <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
+            <p>
+                <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-sm btn-warning" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span> </a>
+            </p>
+        </div>
+        <div class="col-md-6 card">
+            <h2 data-localize="ocm.infoText.getStations.sectionTitle">Get Charging Station Data</h2>
+
+            <i class="fa fa-cloud-download pull-left home-icons"></i>
+            <p>
+                <em data-localize="ocm.infoText.getStations.who">Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em> <span data-localize="ocm.infoText.getStations.what">
+                    You can access and download
+                    our latest charging locations using our
+                </span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.navigation.develop.api">API</a>.
+            </p>
+            <p> <span data-localize="ocm.infoText.getStations.websiteOperators">If you operate a website and would like to include a charging location map, you can</span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.infoText.getStations.embedMap">embed a map on your own website</a>.</p>
+        </div>
     </div>
 </div>
 

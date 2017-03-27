@@ -239,6 +239,7 @@
     <Content Include="Content\images\AppIcon_36x36.png" />
     <Content Include="Content\images\branding.png" />
     <Content Include="Content\images\branding_sm.png" />
+    <Content Include="Content\images\gustavo-quepon-129114_sm.jpg" />
     <Content Include="Content\images\loginproviders\facebook.jpg" />
     <Content Include="Content\images\loginproviders\google.jpg" />
     <Content Include="Content\images\loginproviders\microsoft.jpg" />
@@ -298,6 +299,10 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Properties\PublishProfiles\LocalDev.pubxml" />
     <None Include="Properties\PublishProfiles\Publish Site to Sandbox.pubxml" />
     <Content Include="Scripts\bootstrap.js" />

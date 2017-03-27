@@ -37,6 +37,14 @@
     </script>
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-6771534742911508",
+            enable_page_level_ads: true
+        });
+    </script>
     <!-- End Cookie Consent plugin -->
 </head>
 <body>
@@ -154,37 +162,43 @@
 
     @if (ViewBag.IsHome == true)
     {
-        <div class="banner-container">
+        <!--<div class="visible-xs" style="padding:2em;color:white">
+            <div style="position:absolute;z-index:-10;margin-top:-21px;margin-left:-2em">
+                <img style="height:100%;" src="~/Content/images/gustavo-quepon-129114_sm.jpg" />
+            </div>
+            <h2>Open Charge Map<br /> <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h2>
+            </div>-->
+        <div style="padding-bottom:1em;">
+            <div style="position:absolute;z-index:-10;margin-top:-21px;">
+                <img class="hidden-sm hidden-xs" style="width:100%;" src="~/Content/images/gustavo-quepon-129114_sm.jpg" />
+                <img class="visible-sm visible-xs" style="height:100%;" src="~/Content/images/gustavo-quepon-129114_sm.jpg" />
+            </div>
+            <div class="banner-container" style="padding-top:2em;background-image:none;">
 
-            <div class="banner-backdrop">
+                <div class="banner-backdrop">
+                    <div style="padding:0 4em 0 4em;width:80%;">
+                        <h3>Open Charge Map <br /><small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
 
-                <div class="banner-foreground">
-                    <div class="applinks pull-right animated fadeInDown">
-                        <span data-localize="ocm.infoText.getApp">Get the app</span>:
-                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
-                        <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
-                        <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
-                        <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
+                        <h2 style="color:white;font-size:4em;">Navigate the world of electric vehicle charging</h2>
                     </div>
-
-                    <div style="margin-left:1em; margin-top:0;margin-right: 2em;" class="pull-left animated fadeIn">
-                        <a href="@Url.Action("Index", "POI")">
-                            <div class="stat">
-                                <h2><span id="summary-locationcount">-----</span><br /><small data-localize="ocm.infoText.stats.locations">Locations</small></h2>
-                            </div>
-                        </a>
+                    <div class="banner-foreground">
+                        <div class="applinks pull-right animated fadeInDown">
+                            <span data-localize="ocm.infoText.getApp">Get the app</span>:
+                            <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Google Play</a>
+                            <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> App Store</a>
+                            <a target="_blank" href="http://www.windowsphone.com/en-us/store/app/open-charge-map/8ce2514e-7b93-4781-856d-e75ede44017a"><i class="fa fa-windows"></i> Windows Phone</a>
+                            <a target="_blank" href="https://marketplace.firefox.com/app/openchargemap"><i class="fa fa-html5"></i> Firefox OS</a>
+                        </div>
                     </div>
-                </div>
-                <div class="animated fadeIn container-fluid">
+                    <div style="margin-left:4em">
 
-                    <h3>Open Charge Map <small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
-
-                    <div id="datasummary"></div>
-                    <p data-localize="ocm.infoText.sponsors">We are seeking funding and sponsors, think you can help? <a href="@Url.Action("Funding","About")" cclass="alert-link" data-localize-id="link">Find out more</a>.</p>
-                    <p class="pull-right">
-                        <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
-                        <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
-                    </p>
+                        <div id="datasummary"></div>
+                        <p data-localize="ocm.infoText.sponsors">We are seeking sponsors, think you can help? <a href="@Url.Action("Funding","About")" cclass="alert-link" data-localize-id="link">Find out more</a>.</p>
+                        <p class="pull-right">
+                            <a class="btn btn-info btn-sm" href="@Url.Action("Index", "POI")"><span class="glyphicon glyphicon-search"></span> <span data-localize="ocm.general.linkBrowsePOI">Browse All Locations</span></a>
+                            <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
