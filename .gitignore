@@ -127,3 +127,4 @@ UpgradeLog*.XML
 /Localisation/build
 /API/OCM.Net/OCM.API.Web/Temp/Uploads
 *.scgdat
+*.pubxml

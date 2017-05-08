@@ -283,6 +283,19 @@ else
                                 </div>
                             }
 
+                            <div>
+                                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                <!-- OCM Ad 1 -->
+                                <ins class="adsbygoogle"
+                                     style="display:block"
+                                     data-ad-client="ca-pub-6771534742911508"
+                                     data-ad-slot="6105535073"
+                                     data-ad-format="auto"></ins>
+                                <script>
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
+                            </div>
+
                             @if (Model.DataQualityReport != null)
                             {
                                 @Html.DisplayFor(m => m.DataQualityReport);
@@ -445,7 +458,7 @@ else
          */
         function constructYelpURL(lat, lng, radius) {
 
-            var URL = "https://api.yelp.com/" +
+            var URL = "https://api.yelp.com/v2/search?" +
                 "business_review_search?" +
                 "callback=?&limit=10" +
                 "&lat=" + lat +

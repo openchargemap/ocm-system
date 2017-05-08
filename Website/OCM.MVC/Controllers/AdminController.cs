@@ -119,6 +119,41 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Details", "POI");
         }
 
+        [AuthSignedInOnly(Roles = "Admin")]
+        public ActionResult MediaExportTest()
+        {
+            var files = System.IO.File.ReadAllLines(@"d:\temp\ocm-images\export.txt");
+
+            var itemManager = new MediaItemManager();
+
+            //for each file, download original, medium and thumnail, then upload s3
+            foreach (var f in files)
+            {
+                var fields = f.Split('\t');
+
+                var sourceURL = fields[1];
+
+                System.Diagnostics.Debug.WriteLine(sourceURL);
+                using (var client = new System.Net.WebClient())
+                {
+                    //https://ocm.blob.core.windows.net/images/IT/OCM85012/OCM-85012.orig.2017043019024667.jpg
+                    var filename = sourceURL.Replace("https://ocm.blob.core.windows.net/images/", "");
+
+                    var output = System.IO.Path.Combine(@"d:\temp\ocm-images-export\", filename);
+
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output));
+                    client.DownloadFile(sourceURL, output);
+
+                    var medURL = sourceURL.Replace(".orig.", ".medi.");
+                    client.DownloadFile(medURL, output.Replace(".orig.", ".medi."));
+
+                    var thmbURL = sourceURL.Replace(".orig.", ".thmb.");
+                    client.DownloadFile(medURL, output.Replace(".orig.", ".thmb."));
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
         public async Task<JsonResult> PollForTasks(string key)
         {
             int notificationsSent = 0;
@@ -129,10 +164,6 @@ namespace OCM.MVC.Controllers
                 //send all pending subscription notifications
                 if (bool.Parse(ConfigurationManager.AppSettings["EnableSubscriptionChecks"]) == true)
                 {
-
-
-
-
                     try
                     {
                         //TODO: can't run in seperate async thread becuase HttpContext is not available

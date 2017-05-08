@@ -49,6 +49,13 @@ namespace OCM.API.Common
 
                 new UserManager().AddReputationPoints(userId, 1);
 
+                try
+                {
+                    //fire and forget cache update
+                    CacheManager.RefreshCachedPOI(poi.ID);
+                }
+                catch { }
+
                 return mediaItem;
             }
         }
@@ -124,10 +131,10 @@ namespace OCM.API.Common
                             success = true;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception exp)
                     {
                         //failed to store blobs
-                        AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to upload images to azure (attempt " + attemptCount + "): OCM-" + poi.ID, "");
+                        AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to upload images to azure (attempt " + attemptCount + "): OCM-" + poi.ID, exp.ToString());
                         //return null;
                     }
                     attemptCount++;

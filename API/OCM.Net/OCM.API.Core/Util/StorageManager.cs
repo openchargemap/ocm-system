@@ -3,12 +3,32 @@ using System.Collections.Generic;
 using System.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Amazon.S3.Model;
+using Amazon.S3;
 
 namespace OCM.Core.Util
 {
     public class BlobStorageHelper
     {
-        public static string UploadImageBlob(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
+        public enum StorageProvider
+        {
+            Azure,
+            AmazonS3
+        }
+
+        public static string UploadImageBlob(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags, StorageProvider provider = StorageProvider.AmazonS3)
+        {
+            if (provider == StorageProvider.Azure)
+            {
+                return UploadImageBlobAzure(fileName, blobName, metadataTags);
+            }
+            else
+            {
+                return UploadImageBlobAmazonS3(fileName, blobName, metadataTags);
+            }
+        }
+
+        public static string UploadImageBlobAzure(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
         {
             try
             {
@@ -43,6 +63,61 @@ namespace OCM.Core.Util
             {
                 //failed to upload to azure, return null
                 return null;
+            }
+        }
+
+        public static string UploadImageBlobAmazonS3(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
+        {
+            string bucketName = ConfigurationManager.AppSettings["AWSMediaItemsContainerName"];
+            string accessKey = ConfigurationManager.AppSettings["AWSAccessKey"];
+            string accessSecret = ConfigurationManager.AppSettings["AWSAccessSecret"];
+
+            using (var client = new Amazon.S3.AmazonS3Client(accessKey, accessSecret, Amazon.RegionEndpoint.APSoutheast2))
+            {
+                //upload: http://docs.aws.amazon.com/AmazonS3/latest/dev/UploadObjSingleOpNET.html
+                try
+                {
+                    PutObjectRequest putRequest1 = new PutObjectRequest
+                    {
+                        BucketName = bucketName,
+                        Key = "images/" + blobName,
+                        FilePath = fileName,
+                        CannedACL = S3CannedACL.PublicRead
+                    };
+
+                    PutObjectResponse response1 = client.PutObject(putRequest1);
+                    return "https://s3-ap-southeast-2.amazonaws.com/openchargemap/images/" + blobName;
+                    /* // 2. Put object-set ContentType and add metadata.
+                     PutObjectRequest putRequest2 = new PutObjectRequest
+                     {
+                         BucketName = bucketName,
+                         Key = keyName,
+                         FilePath = filePath,
+                         ContentType = "text/plain"
+                     };
+                     putRequest2.Metadata.Add("x-amz-meta-title", "someTitle");
+
+                     PutObjectResponse response2 = client.PutObject(putRequest2);*/
+                }
+                catch (AmazonS3Exception amazonS3Exception)
+                {
+                    if (amazonS3Exception.ErrorCode != null &&
+                        (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId")
+                        ||
+                        amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
+                    {
+                        Console.WriteLine("Check the provided AWS Credentials.");
+                        Console.WriteLine(
+                            "For service sign up go to http://aws.amazon.com/s3");
+                    }
+                    else
+                    {
+                        Console.WriteLine(
+                            "Error occurred. Message:'{0}' when writing an object"
+                            , amazonS3Exception.Message);
+                    }
+                    return null;
+                }
             }
         }
     }

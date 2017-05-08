@@ -59,13 +59,13 @@ namespace OCM.Core.Data
             {
                 return await new CacheProviderMongoDB().PopulatePOIMirror(updateStrategy);
             }
-            catch (Exception)
+            catch (Exception exp)
             {
-                return null;
+                return new MirrorStatus { Description = exp.ToString(), StatusCode = System.Net.HttpStatusCode.ExpectationFailed };
             }
         }
 
-        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck =false)
+        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck = false)
         {
             try
             {
@@ -73,7 +73,6 @@ namespace OCM.Core.Data
                 {
                     return new CacheProviderMongoDB().GetMirrorStatus(includeDupeCheck, true);
                 });
-                
             }
             catch (Exception)
             {
@@ -83,7 +82,8 @@ namespace OCM.Core.Data
 
         public async static Task<MirrorStatus> RefreshCachedPOI(int poiId)
         {
-            if (poiId == 0) {
+            if (poiId == 0)
+            {
                 return await RefreshCachedData();
             }
 
@@ -96,6 +96,7 @@ namespace OCM.Core.Data
                 return null;
             }
         }
+
         public static List<CountryExtendedInfo> GetExtendedCountryInfo()
         {
             return new CacheProviderMongoDB().GetExtendedCountryInfo();
