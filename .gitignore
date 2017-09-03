@@ -128,3 +128,5 @@ UpgradeLog*.XML
 /API/OCM.Net/OCM.API.Web/Temp/Uploads
 *.scgdat
 *.pubxml
+
+\.vs/
