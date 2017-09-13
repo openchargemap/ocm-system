@@ -31,6 +31,7 @@ namespace OCM.MVC.Controllers
             continents.Add("NA", "North America");
             continents.Add("OC", "Oceania");
             continents.Add("SA", "South America");
+            continents.Add("AF", "Africa");
 
             ViewBag.Continents = continents;
             ViewBag.CountryStats = countryStats;
