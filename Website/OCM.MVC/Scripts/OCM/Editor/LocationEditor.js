@@ -53,6 +53,7 @@ var LocationEditor = (function () {
                 position: this.poiPos,
                 title: "Equipment Location"
             });
+            //google.maps.event.addListener(this.marker, 'drag', this.setNewPOIPos);
         }
         else {
             //centre map on a default position
@@ -119,6 +120,15 @@ var LocationEditor = (function () {
             if (this.addressResult.address_components) {
                 var addressComponents = this.addressResult.address_components;
                 $("#nearest-address").html(this.addressResult.formatted_address);
+                //find address component in result with type 'postal_code'
+                /*for (var i = addressComponents.length - 1; i >= 0; i--) {
+                    for (var t = 0; t < addressComponents[i].types.length; t++) {
+                      if (addressComponents[i].types[t] === "postal_code") {
+                        break;
+                        }
+                    }
+                }
+                */
             }
             //OSM Nomanitim results
             if (this.addressResult.address) {
@@ -155,6 +165,16 @@ var LocationEditor = (function () {
                         //got an address for this location
                         var addressResult = results[0];
                         appContext.addressResult = addressResult;
+                        /*$("#full-address").html(addressResult.formatted_address);
+
+                        //find address component in result with type 'postal_code'
+                        for (var i = addressComponents.length - 1; i >= 0; i--) {
+                            for (var t = 0; t < addressComponents[i].types.length; t++) {
+                                if (addressComponents[i].types[t] == "postal_code") {
+                                    break;
+                                }
+                            }
+                        }*/
                     }
                     else {
                         //no result
