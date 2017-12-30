@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OCM.Import.Providers
 {
@@ -13,7 +12,7 @@ namespace OCM.Import.Providers
         {
             ProviderName = "ICAEN";
             OutputNamePrefix = "icaen";
-            AutoRefreshURL = "http://icaen.gencat.cat/web/sites/icaen/.content/12_opendata/arxius/CATALUNYA_PdR_VEHICLES_ELECTRICS.csv";
+            AutoRefreshURL = "http://icaen.gencat.cat/web/.content/10_ICAEN/16_dades_obertes/arxius/CATALUNYA_PdR_VEHICLES_ELECTRICS.csv";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             SourceEncoding = Encoding.GetEncoding("Windows-1252");

@@ -1,6 +1,6 @@
 //Note: this class is built using TypeScript, only the .ts file should be edited
 //TODO: shadow marker for original marker pos, show duplicates nearby
-var LocationEditor = (function () {
+var LocationEditor = /** @class */ (function () {
     function LocationEditor(startLat, startLng, latControlId, lngControlId) {
         this.map = null;
         this.marker = null;

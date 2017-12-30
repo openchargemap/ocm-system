@@ -4,7 +4,7 @@ var OCM;
 (function (OCM) {
     var Widgets;
     (function (Widgets) {
-        var GeoSummary = (function () {
+        var GeoSummary = /** @class */ (function () {
             function GeoSummary(chartContainerId, summaryContainerId) {
                 this.geochartContainerId = chartContainerId;
                 this.datasummaryContainerId = summaryContainerId;
