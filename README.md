@@ -9,7 +9,7 @@ The code in this repository represents the backend systems ([API](http://opencha
 
 Server-side code is developed mostly in C#, currently building under Visual Studio 2015 Community Edition with .Net 4.5.
 
-The [Web/Mobile app](http://openchargemap.org/app/) is built purely with HTML/CSS/JavaScript and requires the NodeJS based Jake build system (see build readme) to generated the minified version of the app.
+The [Web/Mobile app](https://openchargemap.org/app/) is built purely with HTML/CSS/JavaScript and requires the NodeJS based Jake build system (see build readme) to generated the minified version of the app. This is gradually being replaced by an Ionic (Angular/TypeScript) based app https://map.openchargemap.io the source for which is at https://github.com/openchargemap/ocm-app
 
 Contributing
 -----------
