@@ -150,7 +150,7 @@ else
                                 <div class="col-sm-4">
                                     <strong class="ocm-label" data-localize="ocm.details.location.streetView">Street View</strong>:
                                     <div>
-                                        <a target="_blank" href="http://maps.google.com/?q=@Model.POI.AddressInfo.ToString()"><img class="img-thumbnail" src="http://maps.googleapis.com/maps/api/streetview?size=240x160&location=@Model.POI.AddressInfo.Latitude,@Model.POI.AddressInfo.Longitude&heading=235&sensor=false" /></a>
+                                        <a target="_blank" href="https://maps.google.com/?q=@Model.POI.AddressInfo.ToString()"><img class="img-thumbnail" src="https://maps.googleapis.com/maps/api/streetview?key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&size=240x160&location=@Model.POI.AddressInfo.Latitude,@Model.POI.AddressInfo.Longitude&heading=235&sensor=false" /></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -283,24 +283,25 @@ else
                                 </div>
                             }
 
-                            <div>
-                                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                                <!-- OCM Ad 1 -->
-                                <ins class="adsbygoogle"
-                                     style="display:block"
-                                     data-ad-client="ca-pub-6771534742911508"
-                                     data-ad-slot="6105535073"
-                                     data-ad-format="auto"></ins>
-                                <script>
-                                    (adsbygoogle = window.adsbygoogle || []).push({});
-                                </script>
-                            </div>
-
-                            @if (Model.DataQualityReport != null)
-                            {
-                                @Html.DisplayFor(m => m.DataQualityReport);
-                            }
+                            <!--<div>
+                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-6771534742911508"
+                                 data-ad-slot="6105535073"
+                                 data-ad-format="auto"></ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
                         </div>
+                        -->
+
+                        @if (Model.DataQualityReport != null)
+                        {
+                            @Html.DisplayFor(m => m.DataQualityReport);
+                        }
+                    </div>
                     </div>
                 </div>
                 <div id="tab-map" class="tab-pane">
