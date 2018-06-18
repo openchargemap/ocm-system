@@ -3,7 +3,7 @@ Open Charge Map
 
 [Open Charge Map](http://openchargemap.org) is the global public registry of electric vehicle charging locations. 
 
-The aim of the project is to crowd source a high quality, well maintained public Open Data set with the greatest breadth possible. 
+The aim of the project is to crowd source a high quality, well maintained public Open Data set with the greatest breadth possible. Our data set is a mixture of manually entered information and imported open data sources (such as government run registries or charging networks with an open data license).
 
 OCM was first established in 2011 and freely provides data to drivers via hundreds of apps and sites, as well to researchers, EV market analysts and government policy makers.
 
