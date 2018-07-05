@@ -1,29 +1,24 @@
-Open Charge Map
+Open Charge Map (OCM)
 ==========
 
 [Open Charge Map](http://openchargemap.org) is the global public registry of electric vehicle charging locations. 
 
-The aim of the project is to crowd source a high quality, well maintained public Open Data set with the greatest breadth possible. Our data set is a mixture of manually entered information and imported open data sources (such as government run registries or charging networks with an open data license).
+### About the project
 
-OCM was first established in 2011 and freely provides data to drivers via hundreds of apps and sites, as well to researchers, EV market analysts and government policy makers.
+This project was first established in 2011 and it aims to crowdsource a high quality, well maintained open data set with the greatest breadth possible. Our data set is a mixture of manually entered information and imported open data sources (such as government run registries and charging networks with an open data license). OCM provides data to drivers (via hundreds of apps and sites), as well to researchers, EV market analysts and government policy makers. 
 
-Access to the data set is provided via our [API](http://openchargemap.org/site/develop/). Developers can use this to build their own [apps](http://openchargemap.org/site/develop/apps/).
+The code in this repository represents the backend systems ([API](http://openchargemap.org/site/develop/), [Web Site](http://openchargemap.org) and server-side Import Processing) for the project. Server-side code is developed mostly in C#, currently building under Visual Studio 2017 Community Edition with .Net 4.5. Data is stored in SQL Server with an additional caching layer using MongoDB.
 
-The code in this repository represents the backend systems ([API](http://openchargemap.org/site/develop/), [Web Site](http://openchargemap.org) and server-side Import Processing) for the project.
-
-Server-side code is developed mostly in C#, currently building under Visual Studio 2017 Community Edition with .Net 4.5. Data is stored in SQL Server with an additional caching layer using MongoDB.
-
-The [app](https://map.openchargemap.io) source can be found in it's own repo at https://github.com/openchargemap/ocm-app
+Developers can use our [API](http://openchargemap.org/site/develop/) to access the data set and build their own [apps](http://openchargemap.org/site/develop/apps/). The [app](https://map.openchargemap.io) source can be found in its own repo at https://github.com/openchargemap/ocm-app
 
 
-Basic build prerequisites
+### Basic build prerequisites
 
 - Windows 7 or Higher (or Windows Server 2008 or higher)
 - Visual Studio 2015 Professional or the equivalent Express Editions (Web, Windows) with latest NuGet package manager installed and latest TypeScript add-in installed
 - MS SQL Express 2008 R2 onwards
 - NodeJS
 - MongoDB
-	- 
 
 Note: it is possible to most of the /App development on non-windows machines without Visual Studio however it is not officially supported.
 
