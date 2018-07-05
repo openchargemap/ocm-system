@@ -5,7 +5,7 @@ Open Charge Map (OCM)
 
 ### About the project
 
-This project was first established in 2011 and it aims to crowdsource a high quality, well maintained open data set with the greatest breadth possible. Our data set is a mixture of manually entered information and imported open data sources (such as government run registries and charging networks with an open data license). OCM provides data to drivers (via hundreds of apps and sites), as well to researchers, EV market analysts and government policy makers. 
+OCM was first established in 2011 and aims to crowdsource a high quality, well maintained open data set with the greatest breadth possible. Our data set is a mixture of manually entered information and imported open data sources (such as government run registries and charging networks with an open data license). OCM provides data to drivers (via hundreds of apps and sites), as well to researchers, EV market analysts and government policy makers. 
 
 The code in this repository represents the backend systems ([API](http://openchargemap.org/site/develop/), [Web Site](http://openchargemap.org) and server-side Import Processing) for the project. Server-side code is developed mostly in C#, currently building under Visual Studio 2017 Community Edition with .Net 4.5. Data is stored in SQL Server with an additional caching layer using MongoDB.
 
@@ -15,14 +15,14 @@ Developers can use our [API](http://openchargemap.org/site/develop/) to access t
 ### Basic build prerequisites
 
 - Windows 7 or Higher (or Windows Server 2008 or higher)
-- Visual Studio 2015 Professional or the equivalent Express Editions (Web, Windows) with latest NuGet package manager installed and latest TypeScript add-in installed
+- Visual Studio 2015 Professional or the equivalent express editions (Web, Windows) with the latest NuGet package manager installed and latest TypeScript add-in installed
 - MS SQL Express 2008 R2 onwards
 - NodeJS
 - MongoDB
 
 Note: it is possible to most of the /App development on non-windows machines without Visual Studio however it is not officially supported.
 
-Deployment:
+### Deployment:
  - Configure MongoDB as services and initialise ocm_mirror database
  - Set ASP.net State Services to Automatic Startup and Start services
  - Install SQL Server 2012 CLR Data Types (Version 11.x) - required by entity framework
@@ -30,27 +30,11 @@ Deployment:
  - Enable read/write for app pool user for \Temp folders
  - Configure web.config
 
-
-OCM Data Model V3
-------------------
-
-The following changes are part of the V3 data model:
-
-ChargePoint has been renamed Site
-ChargingDevice is a new item to optionally parent ConnectionInfo into a single device (multiple per site)
-MetadataValue can now be optionally associated with a specific ChargingDevice as well as a Site.
-
-Charging Device may support one or more vehicle types - defaults to Car)
-Network Operator is now identified at ChargingDevice level
-
-Metadata Values
-
-
 Contributing
 -----------
 Please contribute in any way you can:
   - Improve the data (anyone can do this):
-    - Submit comments, checkins and photos via the web site
+    - Submit comments, checkins and photos via the website
     - Submit new data, become an editor for your country
   - Grow the user base
     - Advocacy, tell people about [Open Charge Map](https://openchargemap.org) and help them use it.
