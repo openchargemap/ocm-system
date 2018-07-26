@@ -3,17 +3,16 @@ using OCM.API.Common.Model;
 using OCM.Core.Data;
 using OCM.Import.Providers;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Configuration;
 
 namespace OCM.MVC.Controllers
 {
     public class AdminController : AsyncController
     {
-        //
         // GET: /Admin/
         [AuthSignedInOnly(Roles = "Admin")]
         public ActionResult Index()
@@ -285,7 +284,7 @@ namespace OCM.MVC.Controllers
         }
 
         [AuthSignedInOnly(Roles = "Admin")]
-        public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport = false)
+        public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport = false, bool includeResults = true)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -308,6 +307,16 @@ namespace OCM.MVC.Controllers
                 });
             }
 
+            if (!includeResults)
+            {
+                result.Added = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                result.Delisted = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                result.Duplicates = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                result.ImportItems = new System.Collections.Generic.List<Import.ImportItem>();
+                result.LowDataQuality = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                result.Unchanged = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                result.Updated = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+            }
             stopwatch.Stop();
             result.Log += "\r\nImport processing time (seconds): " + stopwatch.Elapsed.TotalSeconds;
 
