@@ -159,7 +159,11 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(context.Request["dataproviderid"])) settings.DataProviderIDs = ParseIntList(context.Request["dataproviderid"]);
             if (!String.IsNullOrEmpty(context.Request["opendata"])) settings.IsOpenData = ParseBoolNullable(context.Request["opendata"]);
 
-            if (!String.IsNullOrEmpty(context.Request["minpowerkw"])) settings.MinPowerKW = ParseDouble(context.Request["minpowerkw"]);
+            if (!String.IsNullOrEmpty(context.Request["minpowerkw"]))
+            {
+                settings.MinPowerKW = ParseDouble(context.Request["minpowerkw"]);
+                if (settings.MinPowerKW < 1) settings.MinPowerKW = null;
+            }
 
             if (!String.IsNullOrEmpty(context.Request["dataprovidername"])) settings.DataProviderName = ParseString(context.Request["dataprovidername"]);
             if (!String.IsNullOrEmpty(context.Request["locationtitle"])) settings.LocationTitle = ParseString(context.Request["locationtitle"]);
