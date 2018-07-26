@@ -3,7 +3,6 @@ using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace OCM.Import.Providers
 {
@@ -13,7 +12,7 @@ namespace OCM.Import.Providers
         {
             ProviderName = "afdc.energy.gov";
             OutputNamePrefix = "afdc";
-            AutoRefreshURL = "http://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key=df771c4ffab663f91428bc63224c9e266357179d&download=true&fuel_type=ELEC&status=all";
+            AutoRefreshURL = "http://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key=df771c4ffab663f91428bc63224c9e266357179d&download=true&fuel_type=ELEC&status=all&country=US,CA";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             DataProviderID = 2; //ADFC
@@ -192,7 +191,7 @@ namespace OCM.Import.Providers
                         if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
                         {
                             //unknown connection type
-                            Log("Unknown Lvl 1 Connection Type or top many types:" + evconnectors.ToString());
+                            Log("Unknown Lvl 1 Connection Type or too many types:" + evconnectors.ToString());
                         }
 
                         if (!IsConnectionInfoBlank(cinfo))
