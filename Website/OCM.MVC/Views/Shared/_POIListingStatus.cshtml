@@ -2,5 +2,10 @@
 
 @if (ViewBag.EnablePreviewMode != true && Model.SubmissionStatus != null && Model.SubmissionStatus.IsLive == false)
 {
-    <div class="alert alert-danger">This listing is marked <strong>@Model.SubmissionStatus.Title</strong> and is not currently shown publically.</div>
+    <div class="alert alert-danger">This listing is marked <strong>@Model.SubmissionStatus.Title</strong> and is not currently shown publically.
+    
+    @if (ViewBag.CanUserEditPOI==true && Model.SubmissionStatusTypeID== (int)OCM.API.Common.Model.StandardSubmissionStatusTypes.Submitted_UnderReview) {
+        <button class="btn btn-success" href="@Url.Action("Approve","POI",new { id= Model.ID})">Publish Now</button>
+    }
+    </div>
 }

@@ -176,6 +176,18 @@ namespace OCM.MVC.Controllers
                     //{
                     viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
                     //}
+
+                    ViewBag.UserCanEditPOI = true;
+                    if (IsUserSignedIn)
+                    {
+                        var user = new UserManager().GetUser((int)Session["UserID"]);
+                        if (POIManager.CanUserEditPOI(poi, user))
+                        {
+                            ViewBag.UserCanEditPOI = true;
+                            
+                        }
+                    }
+                   
                 }
                 else
                 {
@@ -302,6 +314,29 @@ namespace OCM.MVC.Controllers
 
         //
         // POST: /POI/Edit/
+
+            [AuthSignedInOnly]
+        public ActionResult ApprovePOI(int id)
+        {
+            CheckForReadOnly();
+
+            // if poi is awaiting review, publish now
+            var poiManager = new POIManager();
+
+            var poi = poiManager.Get(id, true);
+            if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID== (int)StandardSubmissionStatusTypes.Imported_UnderReview)
+            {
+                var user = new UserManager().GetUser((int)Session["UserID"]);
+                if (POIManager.CanUserEditPOI(poi, user))
+                {
+                    poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
+                    int poiSubmissionID = new SubmissionManager().PerformPOISubmission(poi, user);
+                }
+            }
+
+            // return to approval queue
+            return RedirectToAction("Index", "POI", new { submissionStatusTypeId=1});
+        }
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(ChargePoint poi)
