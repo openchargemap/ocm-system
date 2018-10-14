@@ -498,7 +498,7 @@ module OCM {
                     color: 'darkpurple'
                 });
 
-                this.editMarker = new L.Marker(new L.LatLng(currentLat, currentLng), <L.MarkerOptions>{ draggable: true });
+                this.editMarker = new (<any>L).Marker(new (<any>L).LatLng(currentLat, currentLng), { draggable: true });
 
                 this.editMarker.addTo(this.editorMap);
                 $("#editor-map-canvas").show();

@@ -1342,7 +1342,7 @@ module OCM {
                     var fragment =
                         "<div class='card comment'>" +
                         "<div class='row'>" +
-                        "<div class='col-sm-3'>" + (comment.User != null ? "<img class='user' src='http://www.gravatar.com/avatar/" + comment.User.EmailHash + "?d=mm' />" : "<img class='user' src='http://www.gravatar.com/avatar/00?f=y&d=mm'/>") + "<br/>" +
+                        "<div class='col-sm-3'>" + (comment.User != null ? "<img class='user' src='https://www.gravatar.com/avatar/" + comment.User.EmailHash + "?d=mm' />" : "<img class='user' src='https://www.gravatar.com/avatar/00?f=y&d=mm'/>") + "<br/>" +
                         ((comment.UserName != null && comment.UserName != "") ? comment.UserName : "(Anonymous)") +
                         "</div>" +
                         "<div class='col-sm-7'>" +

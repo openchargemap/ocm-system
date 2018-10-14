@@ -152,7 +152,7 @@ namespace OCM.API.Common
 
             if (!String.IsNullOrWhiteSpace(address))
             {
-                string url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=" + address;
+                string url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&address=" + address;
 
                 if (IncludeQueryURL) result.QueryURL = url;
 

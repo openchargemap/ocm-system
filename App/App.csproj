@@ -14,7 +14,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.6</TypeScriptToolsVersion>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="config.xml">
@@ -196,6 +196,7 @@
     <TypeScriptCompile Include="js\OCM_MapProvider_GoogleMapsNative.ts" />
     <TypeScriptCompile Include="js\OCM_MapProvider_GoogleMapsWeb.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\collections\collections.d.ts" />
+    <TypeScriptCompile Include="js\TypeScriptReferences\geojson\geojson.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\history\history.d.ts" />
     <TypeScriptCompile Include="js\TypeScriptReferences\jquery\jquery.d.ts" />

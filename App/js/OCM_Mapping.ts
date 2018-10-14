@@ -388,7 +388,7 @@ module OCM {
 
                                     markerTitle += " (" + powerTitle + ", " + usageTitle + ")";
 
-                                    var marker = <any>new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{ icon: markerIcon, title: markerTitle, draggable: false, clickable: true });
+                                    var marker = <any>new (<any>L).Marker(new (<any>L).LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), { icon: markerIcon, title: markerTitle, draggable: false, clickable: true });
                                     marker._isClicked = false; //workaround for double click event
                                     marker.poi = poi;
                                     marker.on('click',
@@ -421,9 +421,9 @@ module OCM {
 
         createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
             // create a map in the "map" div, set the view to a given place and zoom
-            var map = new L.Map(mapcanvasID);
+            var map = new (<any>L).Map(mapcanvasID);
             if (currentLat != null && currentLng != null) {
-                map.setView(new L.LatLng(currentLat, currentLng), zoomLevel, true);
+                map.setView(new (<any>L).LatLng(currentLat, currentLng), zoomLevel, true);
             }
             map.setZoom(zoomLevel);
 
@@ -434,7 +434,7 @@ module OCM {
             }
 
             // add an OpenStreetMap tile layer
-            new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            new (<any>L).TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 

@@ -77,7 +77,7 @@ OCM_CommonUI.prototype.showPOIOnStaticMap = function (mapcanvasID, poi, includeM
         var width = 200;
         var height = 200;
 
-        var mapImageURL = "https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
+        var mapImageURL = "https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
         var mapHTML = "";
         if (includeMapLink == true) {
             mapHTML += "<div>" + this.formatMapLink(poi, "<div><img width=\"" + width + "\" height=\"" + height + "\" src=\"" + mapImageURL + "\" /></div>") + "</div>";

@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Helpers;
-using System.Web.Mvc;
-using OCM.API.Common;
+﻿using OCM.API.Common;
 using OCM.API.Common.DataSummary;
 using OCM.API.Common.Model;
 using OCM.Core.Common;
 using OCM.MVC.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.Mvc;
 
 namespace OCM.MVC.Controllers
 {
     public class POIController : BaseController
     {
-        //
         // GET: /POI/
 
         public ActionResult Index(POIBrowseModel filter)
@@ -129,7 +123,6 @@ namespace OCM.MVC.Controllers
             return regex.IsMatch(text);
         }
 
-        //
         // GET: /POI/Details/5
 
         //[OutputCache(Duration=240, VaryByParam="id")]
@@ -184,10 +177,8 @@ namespace OCM.MVC.Controllers
                         if (POIManager.CanUserEditPOI(poi, user))
                         {
                             ViewBag.UserCanEditPOI = true;
-                            
                         }
                     }
-                   
                 }
                 else
                 {
@@ -216,7 +207,6 @@ namespace OCM.MVC.Controllers
             return View(poi);
         }
 
-        //
         // POST: /POI/AddMediaItem
 
         [HttpPost, AuthSignedInOnly]
@@ -259,7 +249,6 @@ namespace OCM.MVC.Controllers
             return View("Edit", coreReferenceData.ChargePoint);
         }
 
-        //
         // GET: /POI/Edit/5
         public ActionResult Edit(int? id, bool createCopy = false)
         {
@@ -312,11 +301,9 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index", "POI");
         }
 
-        //
-        // POST: /POI/Edit/
-
-            [AuthSignedInOnly]
-        public ActionResult ApprovePOI(int id)
+        [HttpGet]
+        [AuthSignedInOnly]
+        public ActionResult Approve(int id)
         {
             CheckForReadOnly();
 
@@ -324,7 +311,7 @@ namespace OCM.MVC.Controllers
             var poiManager = new POIManager();
 
             var poi = poiManager.Get(id, true);
-            if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID== (int)StandardSubmissionStatusTypes.Imported_UnderReview)
+            if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
             {
                 var user = new UserManager().GetUser((int)Session["UserID"]);
                 if (POIManager.CanUserEditPOI(poi, user))
@@ -335,7 +322,7 @@ namespace OCM.MVC.Controllers
             }
 
             // return to approval queue
-            return RedirectToAction("Index", "POI", new { submissionStatusTypeId=1});
+            return RedirectToAction("Index", "POI", new { submissionStatusTypeId = 1 });
         }
 
         [HttpPost, ValidateAntiForgeryToken]

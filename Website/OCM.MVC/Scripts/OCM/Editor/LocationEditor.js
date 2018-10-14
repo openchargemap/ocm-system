@@ -96,11 +96,13 @@ var LocationEditor = /** @class */ (function () {
     LocationEditor.prototype.refreshMap = function () {
         this.logMessage("Refreshing map..");
         var appContext = this;
-        //TODO: support google or osm
         setTimeout(function () {
-            google.maps.event.trigger(appContext.map, "resize");
-            appContext.map.setCenter(appContext.poiPos);
-        }, 300);
+            if (appContext.map && google && google.maps) {
+                //TODO: support google or osm
+                google.maps.event.trigger(appContext.map, "resize");
+                appContext.map.setCenter(appContext.poiPos);
+            }
+        }, 1500);
     };
     LocationEditor.prototype.getUserLocation = function () {
         var appContext = this;

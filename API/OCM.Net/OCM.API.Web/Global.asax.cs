@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using OCM.API.Common;
+using System;
 using System.Web;
-using System.Web.Security;
-using System.Web.SessionState;
-using OCM.API.Common;
 
 namespace OCM.API
 {
@@ -12,6 +8,7 @@ namespace OCM.API
     {
         protected void Application_Start(object sender, EventArgs e)
         {
+            SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
         }
 
         protected void Session_Start(object sender, EventArgs e)
