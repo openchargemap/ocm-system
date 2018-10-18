@@ -286,6 +286,7 @@ namespace OCM.MVC.Controllers
         [AuthSignedInOnly(Roles = "Admin")]
         public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport = false, bool includeResults = true)
         {
+            GC.Collect();
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 

@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
-using System.Threading.Tasks;
 using System.Net.Http;
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace OCM.API.Client
 {
@@ -47,26 +46,17 @@ namespace OCM.API.Client
         public bool IsSandboxMode { get; set; }
         public string ServiceBaseURL { get; set; }
 
-        public OCMClient(bool sandBoxMode= false)
+        public OCMClient(bool sandBoxMode = false)
         {
             this.IsSandboxMode = sandBoxMode;
 
             if (!IsSandboxMode)
             {
-#if DEBUG
-                ServiceBaseURL = "http://localhost:8080/v2/";
-                //ServiceBaseURL = "http://api.openchargemap.io/v2/";
-#else 
-                ServiceBaseURL = "http://api.openchargemap.io/v2/";
-#endif
+                ServiceBaseURL = "https://api.openchargemap.io/v3/";
             }
             else
             {
-#if DEBUG
                 ServiceBaseURL = "http://sandbox.api.openchargemap.io/v2/";
-#else
-                ServiceBaseURL = "http://sandbox.api.openchargemap.io/v2/";
-#endif
             }
         }
 
@@ -79,7 +69,7 @@ namespace OCM.API.Client
             int lat = 52;
             int lng = 1;
 
-            SearchFilters filters = new SearchFilters{Distance=100, MaxResults=1000, Latitude=lat, Longitude=lng, EnableCaching=false, IncludeUserComments=false};
+            SearchFilters filters = new SearchFilters { Distance = 100, MaxResults = 1000, Latitude = lat, Longitude = lng, EnableCaching = false, IncludeUserComments = false };
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
@@ -89,15 +79,15 @@ namespace OCM.API.Client
                 //TODO; pass same sample lat/lng list to tests
                 var r = new Random(DateTime.Now.Second);
                 filters.Latitude = r.Next(50, 55);
-                filters.Longitude = r.Next(-1,1);
+                filters.Longitude = r.Next(-1, 1);
 
                 var list = await this.GetLocations(filters);
-                System.Diagnostics.Debug.WriteLine(i+": POIs: "+list.Count);
+                System.Diagnostics.Debug.WriteLine(i + ": POIs: " + list.Count);
             }
-            
+
             stopwatch.Stop();
 
-            System.Diagnostics.Debug.WriteLine("total ms "+this.ServiceBaseURL+" : "+stopwatch.Elapsed.TotalMilliseconds +" for "+testIterations+" iterations. avg "+(stopwatch.Elapsed.TotalMilliseconds/testIterations)+"ms per request" );
+            System.Diagnostics.Debug.WriteLine("total ms " + this.ServiceBaseURL + " : " + stopwatch.Elapsed.TotalMilliseconds + " for " + testIterations + " iterations. avg " + (stopwatch.Elapsed.TotalMilliseconds / testIterations) + "ms per request");
             return true;
         }
 
@@ -107,8 +97,8 @@ namespace OCM.API.Client
 
             Task<bool> test1 = client.RunAPITest("http://localhost:3000/v2", 10000);
             test1.Wait();
-           // Task<bool> test2 = client.RunAPITest("http://localhost:8080/v2",1000);
-            //test2.Wait();   
+            // Task<bool> test2 = client.RunAPITest("http://localhost:8080/v2",1000);
+            //test2.Wait();
         }
 
 #endif
@@ -116,7 +106,7 @@ namespace OCM.API.Client
         /// <summary>
         /// Get core reference data such as lookup lists
         /// </summary>
-        /// <returns></returns>
+        /// <returns>  </returns>
         public async Task<CoreReferenceData> GetCoreReferenceData()
         {
             //get core reference data
@@ -136,12 +126,11 @@ namespace OCM.API.Client
             }
         }
 
-
         /// <summary>
-        /// get list of matching POIs via API 
+        /// get list of matching POIs via API
         /// </summary>
-        /// <param name="cp"></param>
-        /// <returns></returns>
+        /// <param name="cp">  </param>
+        /// <returns>  </returns>
         public async Task<List<ChargePoint>> GetLocations(SearchFilters filters)
         {
             string url = ServiceBaseURL + "/poi/?output=json&verbose=false";
@@ -154,7 +143,6 @@ namespace OCM.API.Client
             if (filters.Distance != null)
             {
                 url += "&distance=" + filters.Distance + "&distanceunit=" + filters.DistanceUnit.ToString();
-
             }
 
             if (filters.EnableCaching == false)
@@ -170,7 +158,7 @@ namespace OCM.API.Client
             if (filters.SubmissionStatusTypeIDs != null && filters.SubmissionStatusTypeIDs.Any())
             {
                 url += "&submissionstatustypeid=";
-                foreach(var id in filters.SubmissionStatusTypeIDs)
+                foreach (var id in filters.SubmissionStatusTypeIDs)
                 {
                     url += id + ",";
                 }
@@ -198,7 +186,7 @@ namespace OCM.API.Client
 
             try
             {
-                System.Diagnostics.Debug.WriteLine("Client: Fetching data from "+url);
+                System.Diagnostics.Debug.WriteLine("Client: Fetching data from " + url);
                 string data = await FetchDataStringFromURLAsync(url);
                 System.Diagnostics.Debug.WriteLine("Client: completed fetch");
                 JObject o = JObject.Parse("{\"root\": " + data + "}");
@@ -214,6 +202,7 @@ namespace OCM.API.Client
         }
 
 #if !PORTABLE
+
         public List<ChargePoint> FindSimilar(ChargePoint cp, int MinimumPercentageSimilarity)
         {
             List<ChargePoint> results = new List<ChargePoint>();
@@ -251,11 +240,13 @@ namespace OCM.API.Client
             catch (Exception)
             {
                 //update failed
-                System.Diagnostics.Debug.WriteLine("Update Item Failed: {"+cp.ID+": "+cp.AddressInfo.Title+"}");
+                System.Diagnostics.Debug.WriteLine("Update Item Failed: {" + cp.ID + ": " + cp.AddressInfo.Title + "}");
                 return false;
             }
         }
+
 #endif
+
         public APICredentials GetCredentials(string APIKey)
         {
             //TODO: implement in API, when API Key provided, return current credentials
@@ -270,15 +261,15 @@ namespace OCM.API.Client
 
             string value = await response.Content.ReadAsStringAsync();
             return value;
-            
         }
 
 #if !PORTABLE
+
         public string PostDataToURL(string url, string data)
         {
             //http://msdn.microsoft.com/en-us/library/debx8sh9.aspx
 
-            // Create a request using a URL that can receive a post. 
+            // Create a request using a URL that can receive a post.
             WebRequest request = WebRequest.Create(url);
 
             // Set the Method property of the request to POST.
@@ -315,7 +306,7 @@ namespace OCM.API.Client
                 }
             }
         }
+
 #endif
     }
-
 }

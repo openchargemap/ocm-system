@@ -1,5 +1,4 @@
-﻿using i4o.i4o;
-using KellermanSoftware.CompareNetObjects;
+﻿using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common;
@@ -141,14 +140,14 @@ namespace OCM.Import
             List<IImportProvider> providers = new List<IImportProvider>();
 
             providers.Add(new ImportProvider_UKChargePointRegistry());
-            providers.Add(new ImportProvider_CarStations());
+            //providers.Add(new ImportProvider_CarStations());
             providers.Add(new ImportProvider_Mobie());
             providers.Add(new ImportProvider_AFDC());
             providers.Add(new ImportProvider_ESB_eCars());
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique));
             providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER));
             providers.Add(new ImportProvider_NobilDotNo());
-            providers.Add(new ImportProvider_OplaadpalenNL());
+            //providers.Add(new ImportProvider_OplaadpalenNL());
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
 
@@ -165,7 +164,7 @@ namespace OCM.Import
             return providers;
         }
 
-        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData)
+        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData, bool fetchExistingFromAPI = false)
         {
             OCMClient client = new OCMClient(IsSandboxedAPIMode);
             var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
@@ -174,33 +173,51 @@ namespace OCM.Import
             coreRefData = await client.GetCoreReferenceData();
 
             string outputPath = "Data\\";
-            List<IImportProvider> providers = new List<IImportProvider>();
+            var providers = new List<IImportProvider>();
+            providers = GetImportProviders(coreRefData.DataProviders);
 
             string inputDataPathPrefix = defaultDataPath;
 
             foreach (var provider in providers)
             {
-                await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, false);
+                await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, false, fetchExistingFromAPI);
             }
 
             return true;
         }
 
-        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false)
+        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
+
+            var poiManager = new POIManager();
 
             //get list of all current POIs (in relevant countries) including most delisted ones
             int[] countryIds = (from poi in cpList
                                 where poi.AddressInfo.Country != null
                                 select poi.AddressInfo.Country.ID).Distinct().ToArray();
 
-            APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = false, SubmissionStatusTypeID = 0 };
-            //List<ChargePoint> masterList = await new OCMClient(IsSandboxedAPIMode).GetLocations(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
-            var poiManager = new POIManager();
+            APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = true, SubmissionStatusTypeID = 0 };
 
-            List<ChargePoint> masterListCollection = poiManager.GetChargePoints(filters); //new OCMClient().FindSimilar(null, 10000); //fetch all charge points regardless of status
+            List<ChargePoint> masterListCollection = new List<ChargePoint>();
+            if (fetchExistingFromAPI)
+            {
+                // fetch from API
+                masterListCollection = await new OCMClient(false).GetLocations(new SearchFilters
+                {
+                    CountryIDs = countryIds,
+                    MaxResults = 1000000,
+                    EnableCaching = true,
+                    SubmissionStatusTypeIDs = new int[0]
+                });
+            }
+            else
+            {
+                // use local database
+
+                masterListCollection = poiManager.GetChargePoints(filters);
+            }
 
             var spec = new i4o.IndexSpecification<ChargePoint>()
                     .Add(i => i.DataProviderID)
@@ -239,7 +256,9 @@ namespace OCM.Import
 
                 //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
                 var dupeList = masterList.Where(c =>
-                        (c.DataProvider != null && c.DataProviderID == item.DataProviderID && c.DataProvidersReference == item.DataProvidersReference)
+                        (
+                        // c.DataProvider != null &&
+                        c.DataProviderID == item.DataProviderID && c.DataProvidersReference == item.DataProvidersReference)
                         || (c.AddressInfo.Title == item.AddressInfo.Title && c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 && c.AddressInfo.Postcode == item.AddressInfo.Postcode)
                         || (GeoManager.IsClose(c.AddressInfo.Latitude, c.AddressInfo.Longitude, item.AddressInfo.Latitude, item.AddressInfo.Longitude) && new System.Device.Location.GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS) //meters distance apart
                 );
@@ -536,10 +555,11 @@ namespace OCM.Import
         }
 
         /// <summary>
-        /// Given a list of POIs, returns list of those which are low data quality based on their content (address etc)
+        /// Given a list of POIs, returns list of those which are low data quality based on their
+        /// content (address etc)
         /// </summary>
-        /// <param name="allPOIs"></param>
-        /// <returns></returns>
+        /// <param name="allPOIs">  </param>
+        /// <returns>  </returns>
         public List<ChargePoint> GetLowDataQualityPOIs(List<ChargePoint> allPOIs)
         {
             return allPOIs.Where(p => p.AddressInfo == null ||
@@ -555,9 +575,9 @@ namespace OCM.Import
         /// <summary>
         /// Determine if 2 CPs have the same location details or very close lat/lng
         /// </summary>
-        /// <param name="current"></param>
-        /// <param name="previous"></param>
-        /// <returns></returns>
+        /// <param name="current">  </param>
+        /// <param name="previous">  </param>
+        /// <returns>  </returns>
         public bool IsDuplicateLocation(ChargePoint current, ChargePoint previous, bool compareTitle)
         {
             //is duplicate item if latlon is exact match for previous item or latlon is within few meters of previous item
@@ -700,7 +720,7 @@ namespace OCM.Import
             return hasDifferences;
         }
 
-        public async Task<ImportReport> PerformImport(ExportType exportType, bool fetchLiveData, APICredentials credentials, CoreReferenceData coreRefData, string outputPath, IImportProvider provider, bool cacheInputData)
+        public async Task<ImportReport> PerformImport(ExportType exportType, bool fetchLiveData, APICredentials credentials, CoreReferenceData coreRefData, string outputPath, IImportProvider provider, bool cacheInputData, bool fetchExistingFromAPI = false)
         {
             var p = ((BaseImportProvider)provider);
             p.ExportType = exportType;
@@ -783,6 +803,8 @@ namespace OCM.Import
                         }
                     }
 
+                    GC.Collect();
+
                     List<ChargePoint> finalList = new List<ChargePoint>();
 
                     if (!p.SkipDeduplication)
@@ -791,7 +813,7 @@ namespace OCM.Import
 
                         //de-duplicate and clean list based on existing data
                         //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
-                        finalList = await DeDuplicateList(list.ToList(), true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator);
+                        finalList = await DeDuplicateList(list.ToList(), true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, fetchExistingFromAPI);
                         //var finalList = list;
                     }
                     else
@@ -805,6 +827,8 @@ namespace OCM.Import
                         finalList = finalList.Where(l => l.ID > 0).ToList();
                     }
                     //finalList = client.GetLocations(new SearchFilters { MaxResults = 10000 });
+
+                    GC.Collect();
 
                     //export/apply updates
                     if (p.ExportType == ExportType.XML)
@@ -867,10 +891,11 @@ namespace OCM.Import
         }
 
         /// <summary>
-        /// For a list of ChargePoint objects, attempt to populate the AddressInfo (at least country) based on lat/lon if not already populated
+        /// For a list of ChargePoint objects, attempt to populate the AddressInfo (at least country)
+        /// based on lat/lon if not already populated
         /// </summary>
-        /// <param name="itemList"></param>
-        /// <param name="coreRefData"></param>
+        /// <param name="itemList">  </param>
+        /// <param name="coreRefData">  </param>
 
         public void UpdateImportedPOIList(ImportReport poiResults, User user)
         {

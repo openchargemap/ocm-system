@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using OCM.Import;
 using OCM.Import.Providers;
-using OCM.Import;
-using OCM.API.NetworkServices;
+using System;
+using System.Windows.Forms;
 
 namespace Import
 {
@@ -35,23 +28,22 @@ namespace Import
             importManager.IsSandboxedAPIMode = false;
 
             ExportType exportType = ExportType.JSON;
-            
+
             if (lstOutputType.SelectedItem.ToString().StartsWith("XML")) exportType = ExportType.XML;
             if (lstOutputType.SelectedItem.ToString().StartsWith("API")) exportType = ExportType.API;
             if (lstOutputType.SelectedItem.ToString().StartsWith("CSV")) exportType = ExportType.CSV;
             if (lstOutputType.SelectedItem.ToString().StartsWith("JSON")) exportType = ExportType.JSON;
-            
+
             importManager.GeonamesAPIUserName = txtGeonamesAPIUserID.Text;
             importManager.ImportUpdatesOnly = chkUpdatesOnly.Checked;
 
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
-            
-            await importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked);
+
+            await importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked, fetchExistingFromAPI: true);
             this.Cursor = Cursors.Default;
             this.btnProcessImports.Enabled = true;
             MessageBox.Show("Processing Completed");
-
         }
 
         private void AppMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -72,7 +64,6 @@ namespace Import
         {
             //ServiceManager networkSVCManager = new ServiceManager();
             //string jsonResult = networkSVCManager.GetAllResultsAsJSON(ServiceProvider.CoulombChargePoint, txtAPIKey_Coulomb.Text, txtAPIPwd_Coulomb.Text);
-
 
             new ImportManager("").GeocodingTest();
         }
