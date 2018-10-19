@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OCM.API.Common.Model
 {
@@ -23,7 +21,8 @@ namespace OCM.API.Common.Model
 
     public enum StandardOperators
     {
-        UnknownOperator = 1
+        UnknownOperator = 1,
+        Tesla = 23
     }
 
     public enum StandardUsageTypes
@@ -78,6 +77,8 @@ namespace OCM.API.Common.Model
         MennekesType2 = 25,
         Schuko = 28,
         CCSComboType2 = 33,
+        Nema5_15 = 22,
+        Nema5_20 = 9
     }
 
     public enum StandardCurrentTypes

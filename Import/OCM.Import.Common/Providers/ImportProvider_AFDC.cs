@@ -77,20 +77,20 @@ namespace OCM.Import.Providers
                     }
                     if (item["station_phone"] != null) cp.AddressInfo.ContactTelephone1 = item["station_phone"].ToString();
 
-                    int? countryID = null;
-                    if (cp.AddressInfo.StateOrProvince != null && cp.AddressInfo.StateOrProvince.Length == 2)
+                    if (item["country"] != null)
                     {
-                        //state specified, assume US
-                        countryID = 2;
-                    }
-
-                    if (countryID == null)
-                    {
-                        this.Log("Country Not Matched, will require Geolocation:" + item["state"].ToString());
+                        if (item["country"].ToString() == "US")
+                        {
+                            cp.AddressInfo.CountryID = 2;
+                        }
+                        else if (item["country"].ToString() == "CA")
+                        {
+                            cp.AddressInfo.CountryID = 44;
+                        }
                     }
                     else
                     {
-                        cp.AddressInfo.CountryID = countryID;
+                        this.Log("Unknown country code:" + item["country"]);
                     }
 
                     //operator from ev_network
@@ -104,6 +104,10 @@ namespace OCM.Import.Providers
                         if (deviceOperatorInfo != null)
                         {
                             cp.OperatorID = deviceOperatorInfo.ID;
+                        }
+                        else if (deviceController == "tesla destination")
+                        {
+                            cp.OperatorID = (int)StandardOperators.Tesla;
                         }
                         else
                         {
@@ -186,7 +190,8 @@ namespace OCM.Import.Providers
 
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
 
-                        if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = 9; //nema 5-20
+                        if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_20;
+                        if (evconnectors.Any(c => c.Value<string>() == "NEMA515")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_15;
 
                         if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
                         {

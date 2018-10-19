@@ -1,8 +1,5 @@
 ﻿using OCM.API.Common.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace OCM.API.Common
 {
@@ -19,11 +16,11 @@ namespace OCM.API.Common
         /// <summary>
         /// very approximate distance check for data filtering, with 2 decimal places being approx 1km
         /// </summary>
-        /// <param name="lat1"></param>
-        /// <param name="long1"></param>
-        /// <param name="lat2"></param>
-        /// <param name="long2"></param>
-        /// <param name="decimals"></param>
+        /// <param name="lat1">  </param>
+        /// <param name="long1">  </param>
+        /// <param name="lat2">  </param>
+        /// <param name="long2">  </param>
+        /// <param name="decimals">  </param>
         public static bool IsClose(double lat1,
                   double long1, double lat2, double long2, int decimals = 2)
         {
@@ -45,10 +42,10 @@ namespace OCM.API.Common
         /// <summary>
         /// Aproximately add KM to given longitude value (with wrapping)
         /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lon"></param>
-        /// <param name="km"></param>
-        /// <returns></returns>
+        /// <param name="lat">  </param>
+        /// <param name="lon">  </param>
+        /// <param name="km">  </param>
+        /// <returns>  </returns>
         public static double AddKMToLongitude(double lat, double lon, double km)
         {
             //var kmFactor = KMToLongitudeConversion/100
@@ -69,10 +66,10 @@ namespace OCM.API.Common
         /// <summary>
         /// Aproximately add KM to given latitude value (with wrapping)
         /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lon"></param>
-        /// <param name="km"></param>
-        /// <returns></returns>
+        /// <param name="lat">  </param>
+        /// <param name="lon">  </param>
+        /// <param name="km">  </param>
+        /// <returns>  </returns>
         public static double AddKMToLatitude(double lat, double lon, double km)
         {
             var deg = (km / DegLatitudeConversionToKM);

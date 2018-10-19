@@ -1,4 +1,4 @@
-﻿using KellermanSoftware.CompareNetObjects;
+using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common;
