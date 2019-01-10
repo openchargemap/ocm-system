@@ -2,7 +2,7 @@
     ViewBag.Title = "API Documentation";
 
     var siteBaseUrl = "https://openchargemap.org/site/";
-    var apiBaseUrl = "https://api.openchargemap.io/v2/";
+    var apiBaseUrl = "https://api.openchargemap.io/v3/";
     var apiSandboxBaseUrl = "https://sandbox.api.openchargemap.io/v2/";
 }
 
@@ -19,7 +19,7 @@
 
                 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
 
-                <p><em>API V2 (documentation last updated March 2017) - Please join the discussion forum to discuss development.</em></p>
+                <p><em>API V3 (documentation last updated Jan 2018) - Please join the discussion forum to discuss development.</em></p>
                 <h3>Service Base URL: </h3>
                 <p>
                     <code>@Html.Raw(apiBaseUrl)</code>
@@ -167,6 +167,31 @@
                     <tr>
                         <td>chargepointid</td>
                         <td>exact match on a given POI id (comma separated list).</td>
+                        <td>(blank)</td>
+                    </tr>
+                </table>
+
+                <p>Additionally from v3 of the API onwards you can query using a bounding box, polygon or polyline (for a route etc). See <a href="https://developers.google.com/maps/documentation/utilities/polylinealgorithm">here</a> for more info on polyline encoding. :</p>
+                <table class="table table-striped table-bordered table-condensed">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr>
+                        <td>boundingbox</td>
+                        <td>specify top left and bottom right box corners as: (lat,lng),(lat2,lng2)</td>
+                        <td>(blank)</td>
+                    </tr>
+                    <tr>
+                        <td>polygon</td>
+                        <td>Specify an encoded polyline for the polygon shape. Polygon will be automatically closed from the last point to the first point.</td>
+                        <td>(blank)</td>
+                    </tr>
+
+                    <tr>
+                        <td>polyline</td>
+                        <td>encoded polyline, use with distance param to increase search distance along line. Polyline is expanded into a polygon to cover the search distance. </td>
                         <td>(blank)</td>
                     </tr>
                 </table>
