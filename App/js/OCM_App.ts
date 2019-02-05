@@ -216,7 +216,7 @@ module OCM {
             this.switchLanguage($("#option-language").val());
 
             //lazy update of favourite POI details (if any)
-            setTimeout(app.syncFavourites(), 10000);
+            setTimeout(() => { app.syncFavourites() }, 10000);
 
             //hide splashscreen if present
             if (app.appState.isRunningUnderCordova) {

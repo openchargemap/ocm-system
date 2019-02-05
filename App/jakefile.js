@@ -242,7 +242,7 @@ desc("Compile typescript]");
 task("ts-compile", function () {
     console.log("Compiling TypeScript files");
 
-    var cmd = "tsc js/OCM_App.ts --outDir js/Compiled --rootDir js/ --sourceRoot js/Compiled  --sourceMap -d";
+    var cmd = "npx tsc js/OCM_App.ts --outDir js/Compiled --rootDir js/ --sourceRoot js/Compiled  --sourceMap -d";
 
     var ex = jake.createExec([cmd]);
 

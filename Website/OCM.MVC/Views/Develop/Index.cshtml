@@ -13,9 +13,19 @@
             <p>Open Charge Map provides an API for apps and sites to consume and contribute data. To learn more, check out the <a href="@Url.Action("API","Develop")">API Documentation</a>. You can use this API to retrieve charging location information, user comments, checkins and photos and to submit new comments/checkins. </p>
 
             <a id="widgets"></a>
-            <h2>Widgets for your own sites</h2>
+            <h2>Embedding on your own website</h2>
             <p>
-                You can embed the <a href="https://map.openchargemap.io/">Open Charge Map web app</a> into your own site using an iframe tag pointing to <code>https://map.openchargemap.io/?mode=embedded</code>. The app is also designed for tablets, phones and web-enabled in-car touch screens.
+                You can embed the <a href="https://map.openchargemap.io/">Open Charge Map web app (https://map.openchargemp.io)</a> into your own site using an iframe tag like this:
+            </p>
+            <p>
+                <code>
+                    &#x3C;iframe src=&#x22;https://map.openchargemap.io/?mode=embedded&#x22; allow=&#x22;geolocation&#x22; frameborder=&#x22;0&#x22; width=&#x22;100%&#x22; height=&#x22;500px&#x22;&#x3E;&#x3C;/iframe&#x3E;
+                </code>
+            </p>
+            <p>You can optionally pass <code>&amp;operatorid=&lt;operator id&gt;</code> to set the default filter to a specific network/networks. See the Operators collection of https://api.openchargemap.io/v3/referencedata/ for reference ids.</p>
+            <p>You can optionally pass <code>&amp;latitude=</code> and <code>&amp;longitude=</code> to set the start position. Otherwise the app will attempt to geolocate the user.</p>
+            <p>
+                The web app is also designed for tablets, phones and web-enabled in-car touch screens running modern browsers.
             </p>
 
             <h2>Sites and Apps using OCM data and services</h2>

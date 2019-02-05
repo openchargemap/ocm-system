@@ -6,11 +6,12 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
-        <div class="form-group">
+        <div class="alert alert-info form-group">
             <label class="control-label col-md-2" for="search-location" data-localize="ocm.search.locationInput">Location</label>
             <div class="col-md-8">
                 <div class="input-group">
                     <input type="text" class="form-control" value="@Model.SearchLocation" id="search-location" name="searchlocation" placeholder="Place name or Post/Zip Code" data-toggle="tooltip" title="Enter the place name or part of the address to search for locations near a particular place" />
+                    <a class="input-group-addon btn btn-success btn-sm" title="Search By Name" id="search-byname" href="#"><i class="glyphicon glyphicon-zoom-in"></i></a>
                     <a class="input-group-addon btn btn-success btn-sm" title="Search Near Me" id="search-nearme" href="#"><i class="glyphicon glyphicon-map-marker"></i></a>
                 </div>
             </div>
@@ -124,12 +125,22 @@
 
     @Html.HiddenFor(model => model.ShowAdvancedOptions)
 }
-
+<script src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
 <script>
     $(document).ready(function () {
 
         $("#search-nearme").on("click", function () {
             getUserLocation();
+        });
+
+        $("#search-byname").on("click", function () {
+            searchPlaceName();
+        });
+
+        mapkit.init({
+            authorizationCallback: function (done) {
+                done('@System.Configuration.ConfigurationManager.AppSettings["MapKitAPI"]');
+            }
         });
 
     });
@@ -144,5 +155,39 @@
 
     function gotUserLocation(pos) {
         $("#search-location").val(pos.coords.latitude + "," + pos.coords.longitude);
+    }
+
+    function searchPlaceName() {
+        var keywordForSearch = $("#search-location").val();
+        let searchService = new mapkit.Search({ getUsersLocation: true });
+
+        searchService.search(keywordForSearch, (error, data) => {
+            this.searchInProgress = false;
+            this.placeSearchActive = true;
+
+            if (error) {
+                // Handle search error
+                return;
+            }
+
+            this.placeList = [];
+            data.places.map((place) => {
+
+                let placeResult = {};
+
+                placeResult.Title = place.name;
+                //placeResult.ReferenceID = (<any>place).place_id;
+                placeResult.Address = place.formattedAddress;
+                placeResult.Type = "place";
+                placeResult.Location = { lat: place.coordinate.latitude, lng: place.coordinate.longitude };
+
+                this.placeList.push(placeResult);
+            });
+
+            if (this.placeList.length > 0) {
+                var place = this.placeList[0];
+                $("#search-location").val(place.Location.lat + "," + place.Location.lng);
+            }
+        });
     }
 </script>

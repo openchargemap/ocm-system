@@ -12,10 +12,13 @@
     <ul>
         @foreach (var qualityItem in i.ReportItems)
         {
-            <li><span class="label @(qualityItem.IsPositive?"label-success":"label-danger")">
-            @qualityItem.Category -
-            @qualityItem.Comment
-        </span></li>
+            <li>
+                <span class="label @(qualityItem.IsPositive?"label-success":"label-warning")">
+                    <span class="glyphicon @(qualityItem.IsPositive?"glyphicon-ok":"glyphicon-warning-sign")" aria-hidden="true"></span>
+                </span> &nbsp;
+                    @qualityItem.Category -
+                    @qualityItem.Comment
+                </li>
         }
         
     </ul>

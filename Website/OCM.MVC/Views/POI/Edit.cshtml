@@ -13,13 +13,13 @@ else
     <script>var enableEditMode = true; var poiId = @(Model.ID)</script>
 }
 
-@if (ViewBag.IsReadOnlyMode!=null && ViewBag.IsReadOnlyMode == true)
+@if (ViewBag.IsReadOnlyMode != null && ViewBag.IsReadOnlyMode == true)
 {
     <p class="alert alert-danger">
         This service is currently Read-Only and submission or edits are not currently being accepted.
     </p>
 
-} 
+}
 
 @using (Html.BeginForm("Edit", "POI", FormMethod.Post, new { @class = "form", id = "editor" }))
 {
@@ -78,7 +78,7 @@ else
     else
     {
         <text>
-            <div class="alert alert-info">
+            <div class="text-info">
                 Thanks for taking the time to contribute information, please provide as much detail as you can about this charging location. Please <strong>do not</strong> submit private residences (such as your home).
 
                 @if (Session["UserID"] == null)
@@ -93,7 +93,7 @@ else
     @Html.Partial("_POIListingStatus", Model)
 
     @Html.ValidationSummary()
-    
+
     <div class="panel-group" id="wizardsteps">
 
         @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
@@ -264,7 +264,7 @@ else
                                         if (connectionItem.ID > 0)
                                         {
                                             @:OCM-CN-@connectionItem.ID
-                                    }
+                                        }
                                     }
                                     <input type="button" id="remove-equipment-@(i + "-" + connectionItem.ID)" value="Remove" class="btn btn-danger" />
                                 </h4>
@@ -310,6 +310,9 @@ else
     @Scripts.Render("~/bundles/jqueryval")
 }
 
+
+<script src="@Url.Content("~/Scripts/OCM/SharedLibs/OCM_Base.js")"></script>
+
 <script src="@Url.Content("~/Scripts/OCM/SharedLibs/OCM_Base.js")"></script>
 <script src="@Url.Content("~/Scripts/OCM/SharedLibs/OCM_Data.js")"></script>
 <script src="@Url.Content("~/Scripts/OCM/SharedLibs/OCM_Geolocation.js")"></script>
@@ -318,6 +321,7 @@ else
 
     $(document).ready(function () {
 
+       
         $("#editExtendedMode").change(function () {
             refreshEditorMode();
         });
@@ -339,7 +343,7 @@ else
                 $("#editoption").val(this.id);
                 $("#editor").submit();
             }
-            );
+        );
 
         $("#preview").click(function () {
             //submit form and request additional equipment
@@ -371,21 +375,21 @@ else
     });
 
 
-    function refreshEditorMode() {
-        var extendedMode = false;
-        if (document.getElementById('editExtendedMode') != null) {
-            extendedMode = document.getElementById('editExtendedMode').checked;
-        }
-
-        if (extendedMode === true) {
-            $("[data-editormode='extended']").show();
-        } else {
-            $("[data-editormode='extended']").hide();
-            $("[data-editormode='advanced']").hide();
-        }
-
-        //TODO: advanced mode
+function refreshEditorMode() {
+    var extendedMode = false;
+    if (document.getElementById('editExtendedMode') != null) {
+        extendedMode = document.getElementById('editExtendedMode').checked;
     }
+
+    if (extendedMode === true) {
+        $("[data-editormode='extended']").show();
+    } else {
+        $("[data-editormode='extended']").hide();
+        $("[data-editormode='advanced']").hide();
+    }
+
+    //TODO: advanced mode
+}
 
 
 </script>

@@ -1,6 +1,8 @@
 ﻿/// <reference path="OCM_Base.ts" />
 /// <reference path="OCM_CommonUI.ts" />
 
+/// <reference path="OCM_MapProvider_GoogleMapsWeb.ts" />
+
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
@@ -151,11 +153,11 @@ module OCM {
             this.mapOptions.mapAPI = api;
 
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                this.mapProvider = new OCM.MapProviders.GoogleMapsNative();
+                this.mapProvider = new (<any>OCM).MapProviders.GoogleMapsNative();
             }
 
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
-                this.mapProvider = new OCM.MapProviders.GoogleMapsWeb();
+                this.mapProvider = new (<any>OCM).MapProviders.GoogleMapsWeb();
             }
         }
 

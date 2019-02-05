@@ -1,4 +1,4 @@
-﻿using OCM.API.Common;
+using OCM.API.Common;
 using OCM.API.Common.DataSummary;
 using OCM.API.Common.Model;
 using OCM.Core.Common;
@@ -83,8 +83,23 @@ namespace OCM.MVC.Controllers
                         searchCountryName = searchCountry.Title;
                     }
 
-                    var position = geocode.GeolocateAddressInfo_Google(filter.SearchLocation.Trim() + (searchCountryName != null ? ", " + searchCountryName : ""));
+                    API.Common.Model.Extended.GeocodingResult position = null;
 
+                    // FIXME: geocoding is disabled, find an laternative service to use
+                    //geocode.GeolocateAddressInfo_Google(filter.SearchLocation.Trim() + (searchCountryName != null ? ", " + searchCountryName : ""));
+
+                    if (filter.SearchLocation.Contains(","))
+                    {
+                        var vals = filter.SearchLocation.Split(',');
+                        if (IsNumeric(vals[0]) && IsNumeric(vals[1]))
+                        {
+                            position = new API.Common.Model.Extended.GeocodingResult
+                            {
+                                Latitude = double.Parse(vals[0]),
+                                Longitude = double.Parse(vals[1])
+                            };
+                        }
+                    }
                     if (position != null)
                     {
                         filter.Latitude = position.Latitude;
@@ -94,7 +109,7 @@ namespace OCM.MVC.Controllers
                         //TODO: distance unit KM
                         //if (distanceunit == "km") searchfilters.DistanceUnit = API.Common.Model.DistanceUnit.KM;
 
-                        ViewBag.FormattedAddress = position.Address;
+                        ViewBag.FormattedAddress = position.Address??"";
                     }
                 }
             }

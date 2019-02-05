@@ -5,8 +5,6 @@
 
 /// <reference path="OCM_CommonUI.ts" />
 
-declare var escape: any;
-declare var unescape: any; //TODO: replace with newer escaping methods
 declare var bootbox: any;
 
 module OCM {

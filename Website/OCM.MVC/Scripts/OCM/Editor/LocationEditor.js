@@ -5,6 +5,8 @@ var LocationEditor = /** @class */ (function () {
         this.map = null;
         this.marker = null;
         this.poiPos = null;
+        if (startLat && startLng)
+            this.poiPos = new mapkit.Coordinate(startLat, startLng);
         this.addressResult = null;
         this.geocodeRequested = false;
         this.startLat = startLat;
@@ -13,55 +15,57 @@ var LocationEditor = /** @class */ (function () {
         this.lngControlId = lngControlId;
     }
     LocationEditor.prototype.initializeMap = function () {
-        // Enable the visual refresh
-        google.maps.visualRefresh = true;
-        this.poiPos = new google.maps.LatLng(this.startLat, this.startLng);
-        var mapOptions = {
-            zoom: 16,
-            center: this.poiPos,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            panControl: true,
-            zoomControl: true,
-            scaleControl: true
-        };
-        this.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        var _this = this;
+        this.map = new mapkit.Map('map-canvas', { center: new mapkit.Coordinate(this.startLat, this.startLng) });
+        if (!this.poiPos)
+            this.poiPos = this.map.center;
         this.addMapMarker();
         if (this.marker != null) {
             //begin lookup of nearest address if we have a position
             this.beginReverseGeocode();
         }
         //google map event setup
-        var appContext = this;
-        google.maps.event.addListenerOnce(this.map, "idle", function () {
-            appContext.refreshMap();
+        /* var appContext = this;
+         google.maps.event.addListenerOnce(this.map, "idle", function () {
+             appContext.refreshMap();
+         });
+ 
+         google.maps.event.addListener(this.map, "drag", function () {
+             //reset pos of marker to current map centre
+             appContext.setNewPOIPos(appContext.map.getCenter(), false);
+         });
+ 
+         google.maps.event.addListener(this.map, "dragend", function () {
+             //reset pos of marker to current map centre, including reverse geocode of final position
+             appContext.setNewPOIPos(appContext.map.getCenter(), true);
+         });*/
+        mapkit.addEventListener("configuration-change", function (event) {
+            _this.refreshMap();
         });
-        google.maps.event.addListener(this.map, "drag", function () {
+        this.map.addEventListener("scroll-end", function (event) {
             //reset pos of marker to current map centre
-            appContext.setNewPOIPos(appContext.map.getCenter(), false);
+            _this.setNewPOIPos(_this.map.center, true);
         });
-        google.maps.event.addListener(this.map, "dragend", function () {
+        this.map.addEventListener("zoom-end", function (event) {
             //reset pos of marker to current map centre, including reverse geocode of final position
-            appContext.setNewPOIPos(appContext.map.getCenter(), true);
+            _this.setNewPOIPos(_this.map.center, true);
         });
     };
     LocationEditor.prototype.addMapMarker = function () {
-        if (!(this.poiPos.lat() === 0 && this.poiPos.lng() === 0)) {
-            this.marker = new google.maps.Marker({
-                map: this.map,
-                draggable: false,
-                animation: google.maps.Animation.DROP,
-                position: this.poiPos,
-                title: "Equipment Location"
+        if (!(this.poiPos.latitude === 0 && this.poiPos.longitude === 0)) {
+            this.marker = new mapkit.MarkerAnnotation(this.poiPos, {
+                title: "Equipment Location",
+                subtitle: "Subtitle"
             });
-            //google.maps.event.addListener(this.marker, 'drag', this.setNewPOIPos);
+            this.map.addAnnotation(this.marker);
         }
         else {
             //centre map on a default position
-            this.map.setCenter(new google.maps.LatLng(51.6256067484225, -0.505837798118591));
+            this.map.setCenterAnimated(new mapkit.Coordinate(51.6256067484225, -0.505837798118591));
         }
     };
     LocationEditor.prototype.setPosFromGeolocation = function (geoPos) {
-        var posLatLng = new google.maps.LatLng(geoPos.coords.latitude, geoPos.coords.longitude);
+        var posLatLng = new mapkit.Coordinate(geoPos.coords.latitude, geoPos.coords.longitude);
         this.setNewPOIPos(posLatLng, true);
         this.refreshMap();
         //add the marker if we haven't already
@@ -73,11 +77,11 @@ var LocationEditor = /** @class */ (function () {
     LocationEditor.prototype.setNewPOIPos = function (newPos, performReverseGeocode) {
         this.poiPos = newPos;
         //update lat/lng in ui
-        $("#" + this.latControlId).val(newPos.lat());
-        $("#" + this.lngControlId).val(newPos.lng());
+        $("#" + this.latControlId).val(newPos.latitude);
+        $("#" + this.lngControlId).val(newPos.longitude);
         //move marker to new pos
         if (this.marker != null) {
-            this.marker.setPosition(newPos);
+            this.marker.coordinate = newPos;
             //geocode address
             if (performReverseGeocode === true) {
                 this.beginReverseGeocode();
@@ -97,10 +101,13 @@ var LocationEditor = /** @class */ (function () {
         this.logMessage("Refreshing map..");
         var appContext = this;
         setTimeout(function () {
-            if (appContext.map && google && google.maps) {
+            if (appContext.map && mapkit) {
                 //TODO: support google or osm
-                google.maps.event.trigger(appContext.map, "resize");
-                appContext.map.setCenter(appContext.poiPos);
+                // google.maps.event.trigger(appContext.map, "resize");
+                appContext.map.setCenterAnimated(appContext.poiPos);
+                // zoom to local region
+                var region = new mapkit.CoordinateRegion(appContext.poiPos, new mapkit.CoordinateSpan(0.1, 0.1));
+                appContext.map.region = region;
             }
         }, 1500);
     };
@@ -139,8 +146,8 @@ var LocationEditor = /** @class */ (function () {
         }
     };
     LocationEditor.prototype.reverseGeocodePosition_OSM = function (pos, completedCallback) {
-        var lat = pos.lat();
-        var lng = pos.lng();
+        var lat = pos.latitude;
+        var lng = pos.longitude;
         var appContext = this;
         $.getJSON("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1", function (data) {
             if (data != null) {
@@ -254,8 +261,8 @@ var LocationEditor = /** @class */ (function () {
         if (this.poiPos != null) {
             var ocm_api = new OCM.API();
             var params = new OCM.POI_SearchParams();
-            params.latitude = this.poiPos.lat();
-            params.longitude = this.poiPos.lng();
+            params.latitude = this.poiPos.latitude;
+            params.longitude = this.poiPos.longitude;
             params.distance = 5;
             params.distanceUnit = "Miles";
             params.maxResults = 5;
@@ -267,7 +274,7 @@ var LocationEditor = /** @class */ (function () {
     LocationEditor.prototype.renderNearbyPOI = function (poiList) {
         var output = "<h4>Charging Locations Nearby</h4>";
         if (poiList.length > 0) {
-            output += "<p class='alert alert-danger'>The following locations already exist nearby. Please ensure you are not adding a duplicate. You can edit any of these listings if required instead:</p>";
+            output += "<p class='alert alert-warning'>The following locations already exist nearby. Please ensure you are not adding a duplicate. You can edit any of these listings if required instead:</p>";
         }
         else {
             output += "<p class='alert alert-info'>There are no locations listed nearby.</p>";

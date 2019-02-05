@@ -1,8 +1,8 @@
 /* TEAM */
 
 Christopher Cook
-Site: http://webprofusion.com
-Twitter: @webprofusion & @electriccarbuyr
+Site: https://webprofusion.com
+Twitter: @webprofusion
 Location: Perth, WA, Australia & Aberdeen, UK
 
 OCM Editors are constantly providing new and edited data to the Open Charge Map system. The usefulness of the system is largely thanks to them.
