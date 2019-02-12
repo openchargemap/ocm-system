@@ -1,8 +1,32 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Web;
+using System.Web.Hosting;
 using System.Web.Optimization;
 
 namespace OCM.MVC
 {
+    internal static class BundleExtensions
+    {
+        // https://stackoverflow.com/questions/15005481/mvc4-stylebundle-can-you-add-a-cache-busting-query-string-in-debug-mode
+
+        public static Bundle WithLastModifiedToken(this Bundle sb)
+        {
+            sb.Transforms.Add(new LastModifiedBundleTransform());
+            return sb;
+        }
+        public class LastModifiedBundleTransform : IBundleTransform
+        {
+            public void Process(BundleContext context, BundleResponse response)
+            {
+                foreach (var file in response.Files)
+                {
+                    var lastWrite = File.GetLastWriteTime(HostingEnvironment.MapPath(file.IncludedVirtualPath)).Ticks.ToString();
+                    file.IncludedVirtualPath = string.Concat(file.IncludedVirtualPath, "?v=", lastWrite);
+                }
+            }
+        }
+    }
+
     public class BundleConfig
     {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
@@ -27,7 +51,7 @@ namespace OCM.MVC
                         "~/Scripts/modernizr-*"));
 
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/OCM.css"));
+            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/OCM.css").WithLastModifiedToken());
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

@@ -4,24 +4,27 @@
     ViewBag.EnableAppMarkeplaceLinks = true;
 }
 
-<style>
-    
-</style>
 
-
-
-<div style="background-color:rgba(0,0,0,0.4);padding:2em;color:white;margin-top:3em;">
+<div class="intro">
     <div class="row">
         <div class="col-md-6 card">
             <h2 data-localize="ocm.general.linkWebApp">Map of Charging Locations</h2>
             <i class="fa fa-search pull-left home-icons"></i>
 
-            <a href="/app" target="_blank">
+            <a href="https://map.openchargemap.io" target="_blank">
                 <img src="~/Content/images/app.png" class="img-responsive img-thumbnail" alt="Find charging stations near you." />
             </a>
      
         </div>
         <div class="col-md-6 card">
+            <h2 data-localize="ocm.navigation.develop.getInvolved">Get Involved</h2>
+            <i class="fa fa-users pull-left home-icons"></i>
+            <p>Help fund Open Charge Map via our <a href="https://opencollective.com/openchargemap" target="_blank">Open Collective</a></p>
+            <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
+            <p>
+                <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-sm btn-warning" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span> </a>
+            </p>
+
             <h2 data-localize="ocm.infoText.supplyData.sectionTitle">Operators and Data Providers</h2>
             <i class="fa fa-tachometer pull-left home-icons"></i>
             <p>
@@ -30,31 +33,7 @@
             <p>
                 <strong data-localize="ocm.infoText.supplyData.needData">We need your data.</strong> <span data-localize="ocm.infoText.supplyData.what">You can supply us with your latest charging location information regardless of whether your organisation owns, operates or simply catalogs the available charging locations. Please</span> <a href="@Url.Action("Contact", "About")" data-localize="ocm.infoText.supplyData.contactUs">contact us</a> <span data-localize="ocm.infoText.supplyData.getStarted">to get started</span>.
             </p>
-        </div>
-    </div>
 
-    <!--
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
- 
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-6771534742911508"
-         data-ad-slot="6105535073"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    -->
-    <div class="row">
-        <div class="col-md-6 card">
-            <h2 data-localize="ocm.navigation.develop.getInvolved">Get Involved</h2>
-            <i class="fa fa-users pull-left home-icons"></i>
-            <p> <span data-localize="ocm.infoText.getInvolved.youCan">You can</span> <a href="@Url.Action("Index","POI")" data-localize="ocm.infoText.getInvolved.browseLocations">browse for locations near you</a> <span data-localize="ocm.infoText.getInvolved.commentsPhotos"> and add your own comments and photos</span>.</p>
-            <p>
-                <span data-localize="ocm.infoText.getInvolved.dontSeePOI">Can't see a charging location you know exists?</span> <a class="btn btn-sm btn-warning" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span> </a>
-            </p>
-        </div>
-        <div class="col-md-6 card">
             <h2 data-localize="ocm.infoText.getStations.sectionTitle">Get Charging Station Data</h2>
 
             <i class="fa fa-cloud-download pull-left home-icons"></i>
@@ -65,8 +44,10 @@
                 </span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.navigation.develop.api">API</a>.
             </p>
             <p> <span data-localize="ocm.infoText.getStations.websiteOperators">If you operate a website and would like to include a charging location map, you can</span> <a href="@Url.Action("Index", "Develop")" data-localize="ocm.infoText.getStations.embedMap">embed a map on your own website</a>.</p>
+
         </div>
     </div>
+
 </div>
 
 <script type="text/javascript" src="https://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>

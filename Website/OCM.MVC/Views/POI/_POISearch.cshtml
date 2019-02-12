@@ -1,19 +1,31 @@
 ﻿@model OCM.MVC.Models.POIBrowseModel
 
+@Scripts.Render("~/bundles/jqueryui")
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
-        <div class="alert alert-info form-group">
-            <label class="control-label col-md-2" for="search-location" data-localize="ocm.search.locationInput">Location</label>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="search-autocomplete">Place Search</label>
+            <div class="col-md-8">
+
+                <input type="text" class="form-control" autocomplete="off" id="search-autocomplete" name="noautocomplete" placeholder="Place name or Post/Zip Code" data-toggle="tooltip" title="Enter the place name or part of the address to search for locations near a particular place" />
+                <span id="place-name"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="search-location">Latitude, Longitude (optional)</label>
             <div class="col-md-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" value="@Model.SearchLocation" id="search-location" name="searchlocation" placeholder="Place name or Post/Zip Code" data-toggle="tooltip" title="Enter the place name or part of the address to search for locations near a particular place" />
-                    <a class="input-group-addon btn btn-success btn-sm" title="Search By Name" id="search-byname" href="#"><i class="glyphicon glyphicon-zoom-in"></i></a>
+                    <input type="text" class="form-control" value="@Model.SearchLocation" id="search-location" name="searchlocation" placeholder="Optional Latitude, Longitude - or an OCM Ref ID" data-toggle="tooltip" title="Enter the location to search around" />
                     <a class="input-group-addon btn btn-success btn-sm" title="Search Near Me" id="search-nearme" href="#"><i class="glyphicon glyphicon-map-marker"></i></a>
                 </div>
+               
             </div>
         </div>
         <div class="form-group">
@@ -125,26 +137,46 @@
 
     @Html.HiddenFor(model => model.ShowAdvancedOptions)
 }
-<script src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
 <script>
     $(document).ready(function () {
 
         $("#search-nearme").on("click", function () {
+            $("#place-name").html("");
             getUserLocation();
         });
 
-        $("#search-byname").on("click", function () {
-            searchPlaceName();
-        });
+        $("#search-autocomplete").autocomplete({
+            source: function (request, response) {
 
-        mapkit.init({
-            authorizationCallback: function (done) {
-                done('@System.Configuration.ConfigurationManager.AppSettings["MapKitAPI"]');
+                var apiUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/"+request.term+".json?access_token=@System.Configuration.ConfigurationManager.AppSettings["MapBoxAPI"]";
+
+                $.ajax({
+                    url: apiUrl,
+                    dataType: "json",
+                    success: function (data) {
+                        response(data.features);
+                    }
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {
+                $("#search-location").val(ui.item.center[1] + "," + ui.item.center[0]);
+
+                $("#place-name").html("Searching Near: "+ ui.item.place_name);
             }
-        });
+        }) 
+        .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .append("<div>" + item.place_name + "</div>")
+                .appendTo(ul);
+        };
 
     });
 
+    function geocoderResults(results) {
+
+    }
     function getUserLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(gotUserLocation);

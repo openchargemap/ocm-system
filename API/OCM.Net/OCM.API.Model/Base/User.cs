@@ -30,7 +30,7 @@ namespace OCM.API.Common.Model
         [DataType(System.ComponentModel.DataAnnotations.DataType.Url)]
         public string WebsiteURL { get; set; }
 
-        [DisplayName("Reputation Points")]
+        [DisplayName("Contributor Points")]
         public int? ReputationPoints { get; set; }
 
         public string Permissions { get; set; }

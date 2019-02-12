@@ -216,8 +216,10 @@
     </div>
 </div>
 
-<script src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
-<script src="@Url.Content("~/Scripts/OCM/Editor/LocationEditor.js")"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+
+<script src="@Url.Content("~/Scripts/OCM/Editor/LocationEditor.js")?v=200"></script>
 
 <script>
     //go-go-gadget map
@@ -227,29 +229,22 @@
 
     @Html.Raw(scriptContent)
 
-   // google.maps.event.addDomListener(window, 'load', $.proxy(locationEditor.initializeMap, locationEditor));
-
     var _context = this;
-    mapkit.init({
-        authorizationCallback: function (done) {
-            done("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkZZQ1lESkdHNTMifQ.eyJpc3MiOiIyTDdMUDk1MlhZIiwiaWF0IjoxNTQ4OTkxNDU4LCJleHAiOjE1ODM4MTA2NTh9.2HZSX7x7K_OG-TLGldYQtouuC3GpSruyJtU8bRIFhKHuyVr-QnRb3IxnfBuFr3J0Ofu2R2dU7ORBn4bgbNHdcw");
-            _context.startEditor();
-        }
-    });
+
 
     function startEditor() {
-        locationEditor.initializeMap();
-        
+        locationEditor.initializeMap('@System.Configuration.ConfigurationManager.AppSettings["MapBoxAPI"]');
+
          @if (Model.ID <= 0 && ViewBag.EnableEditView == false)
     {
         //adding new location, get user location as starting pos
         <text>
-    //for add only, get user current position by default
-    locationEditor.getUserLocation();
-    </text>
+        //for add only, get user current position by default
+        locationEditor.getUserLocation();
+        </text>
+        }
     }
-    }
-   
+
 
     $(document).ready(function () {
         $("#positionMarkerAtUserLocation").click(function () {
@@ -287,6 +282,8 @@
         $('#copyAddress').popover();
         $('#copyAddress').hide();
         $('#positionMarkerFromAddress').popover();
+
+        _context.startEditor();
 
     });
 </script>

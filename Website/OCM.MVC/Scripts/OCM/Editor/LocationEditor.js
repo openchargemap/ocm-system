@@ -6,7 +6,7 @@ var LocationEditor = /** @class */ (function () {
         this.marker = null;
         this.poiPos = null;
         if (startLat && startLng)
-            this.poiPos = new mapkit.Coordinate(startLat, startLng);
+            this.poiPos = new mapboxgl.LngLat(startLng, startLat);
         this.addressResult = null;
         this.geocodeRequested = false;
         this.startLat = startLat;
@@ -14,11 +14,17 @@ var LocationEditor = /** @class */ (function () {
         this.latControlId = latControlId;
         this.lngControlId = lngControlId;
     }
-    LocationEditor.prototype.initializeMap = function () {
+    LocationEditor.prototype.initializeMap = function (apiToken) {
         var _this = this;
-        this.map = new mapkit.Map('map-canvas', { center: new mapkit.Coordinate(this.startLat, this.startLng) });
+        mapboxgl.accessToken = apiToken;
+        this.map = new mapboxgl.Map({
+            container: 'map-canvas',
+            style: 'mapbox://styles/mapbox/streets-v10',
+            center: [this.startLng, this.startLat],
+            zoom: 20 // starting zoom
+        });
         if (!this.poiPos)
-            this.poiPos = this.map.center;
+            this.poiPos = this.map.getCenter();
         this.addMapMarker();
         if (this.marker != null) {
             //begin lookup of nearest address if we have a position
@@ -39,33 +45,36 @@ var LocationEditor = /** @class */ (function () {
              //reset pos of marker to current map centre, including reverse geocode of final position
              appContext.setNewPOIPos(appContext.map.getCenter(), true);
          });*/
-        mapkit.addEventListener("configuration-change", function (event) {
-            _this.refreshMap();
-        });
-        this.map.addEventListener("scroll-end", function (event) {
+        /*  this.map.on("configuration-change", (event) => {
+              this.refreshMap();
+          });*/
+        this.map.on("moveend", function (event) {
             //reset pos of marker to current map centre
-            _this.setNewPOIPos(_this.map.center, true);
+            _this.setNewPOIPos(_this.map.getCenter(), true);
         });
-        this.map.addEventListener("zoom-end", function (event) {
+        this.map.on("zoomend", function (event) {
             //reset pos of marker to current map centre, including reverse geocode of final position
-            _this.setNewPOIPos(_this.map.center, true);
+            _this.setNewPOIPos(_this.map.getCenter(), true);
         });
     };
     LocationEditor.prototype.addMapMarker = function () {
         if (!(this.poiPos.latitude === 0 && this.poiPos.longitude === 0)) {
-            this.marker = new mapkit.MarkerAnnotation(this.poiPos, {
-                title: "Equipment Location",
-                subtitle: "Subtitle"
-            });
-            this.map.addAnnotation(this.marker);
+            this.marker = new mapboxgl.Marker()
+                .setLngLat(this.poiPos)
+                .addTo(this.map);
+            /*  this.marker = new mapkit.MarkerAnnotation(this.poiPos, {
+                  title: "Equipment Location",
+                  subtitle: "Subtitle"
+              });*/
+            // this.map.addAnnotation(this.marker);
         }
         else {
             //centre map on a default position
-            this.map.setCenterAnimated(new mapkit.Coordinate(51.6256067484225, -0.505837798118591));
+            this.map.setCenter(new mapboxgl.LngLat(-0.505837798118591, 51.6256067484225));
         }
     };
     LocationEditor.prototype.setPosFromGeolocation = function (geoPos) {
-        var posLatLng = new mapkit.Coordinate(geoPos.coords.latitude, geoPos.coords.longitude);
+        var posLatLng = new mapboxgl.LngLat(geoPos.coords.longitude, geoPos.coords.latitude);
         this.setNewPOIPos(posLatLng, true);
         this.refreshMap();
         //add the marker if we haven't already
@@ -77,11 +86,11 @@ var LocationEditor = /** @class */ (function () {
     LocationEditor.prototype.setNewPOIPos = function (newPos, performReverseGeocode) {
         this.poiPos = newPos;
         //update lat/lng in ui
-        $("#" + this.latControlId).val(newPos.latitude);
-        $("#" + this.lngControlId).val(newPos.longitude);
+        $("#" + this.latControlId).val(newPos.lat);
+        $("#" + this.lngControlId).val(newPos.lng);
         //move marker to new pos
         if (this.marker != null) {
-            this.marker.coordinate = newPos;
+            this.marker.setLngLat(newPos);
             //geocode address
             if (performReverseGeocode === true) {
                 this.beginReverseGeocode();
@@ -101,13 +110,13 @@ var LocationEditor = /** @class */ (function () {
         this.logMessage("Refreshing map..");
         var appContext = this;
         setTimeout(function () {
-            if (appContext.map && mapkit) {
+            if (appContext.map && mapboxgl) {
                 //TODO: support google or osm
                 // google.maps.event.trigger(appContext.map, "resize");
-                appContext.map.setCenterAnimated(appContext.poiPos);
+                appContext.map.setCenter(appContext.poiPos);
                 // zoom to local region
-                var region = new mapkit.CoordinateRegion(appContext.poiPos, new mapkit.CoordinateSpan(0.1, 0.1));
-                appContext.map.region = region;
+                // var region = new mapkit.CoordinateRegion(appContext.poiPos, new mapkit.CoordinateSpan(0.1, 0.1));
+                // appContext.map.region = region;
             }
         }, 1500);
     };
@@ -146,8 +155,8 @@ var LocationEditor = /** @class */ (function () {
         }
     };
     LocationEditor.prototype.reverseGeocodePosition_OSM = function (pos, completedCallback) {
-        var lat = pos.latitude;
-        var lng = pos.longitude;
+        var lat = pos.lat;
+        var lng = pos.lng;
         var appContext = this;
         $.getJSON("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1", function (data) {
             if (data != null) {
@@ -261,8 +270,8 @@ var LocationEditor = /** @class */ (function () {
         if (this.poiPos != null) {
             var ocm_api = new OCM.API();
             var params = new OCM.POI_SearchParams();
-            params.latitude = this.poiPos.latitude;
-            params.longitude = this.poiPos.longitude;
+            params.latitude = this.poiPos.lat;
+            params.longitude = this.poiPos.lng;
             params.distance = 5;
             params.distanceUnit = "Miles";
             params.maxResults = 5;

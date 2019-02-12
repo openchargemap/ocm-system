@@ -118,12 +118,37 @@ div.footer {
 }
 i.home-icons {
   font-size: 64px;
-  font-size: 6vw;
   color: white;
 }
 .tab-pane {
   padding: 1em;
 }
 .container {
+  width: 100%;
+}
+.intro {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 2em;
+  color: white;
+  margin-top: 3em;
+}
+.intro a {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.ui-autocomplete {
+  padding: 1em;
+}
+.alert-info {
+  background-color: #56a52d;
+}
+.banner-background {
+  position: absolute;
+  z-index: -10;
+  background-color: #8cc63f;
+  background-image: url(images/gustavo-quepon-129114_sm.jpg);
+  background-size: cover;
+  height: 100%;
   width: 100%;
 }

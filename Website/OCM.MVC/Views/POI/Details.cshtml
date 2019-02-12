@@ -117,7 +117,7 @@ else
                                 </a>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-xs-6">
+                                <div class="col-md-4">
                                     <strong class="ocm-label" data-localize="ocm.details.location.address">Nearest Address</strong>:
                                     <address>
                                         <div>@Html.DisplayFor(m => m.POI.AddressInfo.AddressLine1)</div>
@@ -147,16 +147,7 @@ else
                                         }
                                     </address>
                                 </div>
-
-                                <div class="col-sm-4">
-
-                                    @if (!Model.POI.IsRecentlyVerified)
-                                    {
-                                        <div class="alert alert-warning" data-localize="ocm.warningsErrors.oldData">
-                                            This charging location has not been recently verified and you should not rely on this information for journeys. <br /><br />If you have visited this charging location recently please confirm that the information is accurate by adding a Comment or Check-In. <br /><br />If the details are inaccurate please <a href="@Url.Action("Edit","POI",new {id=@Model.POI.ID})" class="alert-link" data-localize-id="link-edit">edit</a> them.
-                                        </div>
-                                    }
-
+                                <div class="col-md-4">
                                     @if (!String.IsNullOrEmpty(Model.POI.GeneralComments))
                                     {
 
@@ -166,129 +157,146 @@ else
                                         </div>
                                     }
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    @if (Model.POI.NumberOfPoints != null)
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.numberOfPoints">Number Of Stations/Bays</strong>:
-                                            @Html.DisplayFor(m => m.POI.NumberOfPoints)
-                                        </div>
-                                    }
-                                    @if (Model.POI.UsageType != null)
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.usageType">Usage</strong>:
-                                            <span data-localize="ocm.reference.usageType.value_@Model.POI.UsageTypeID">
-                                                @Html.DisplayFor(m => m.POI.UsageType.Title)
-                                            </span>
-                                        </div>
-                                    }
-                                    @if (Model.POI.UsageCost != null)
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.usageCost">Usage Cost</strong>:
-                                            @Html.DisplayFor(m => m.POI.UsageCost)
-                                        </div>
-                                    }
-                                    @if (Model.POI.StatusType != null)
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.operationalStatus">Operational Status</strong>:
-                                            <span data-localize="ocm.reference.statusType.value_@Model.POI.StatusTypeID">
-                                                @Html.DisplayFor(m => m.POI.StatusType.Title)
-                                            </span>
-                                        </div>
-                                    }
 
-                                    <div>
-                                        <strong class="ocm-label" data-localize="ocm.details.location.latitude">Latitude</strong>:
-                                        @Html.DisplayFor(m => m.POI.AddressInfo.Latitude)
-                                    </div>
-                                    <div>
-                                        <strong class="ocm-label" data-localize="ocm.details.location.longitude">Longitude</strong>:
-                                        @Html.DisplayFor(m => m.POI.AddressInfo.Longitude)
-                                    </div>
-                                    <div>
-                                        <strong class="ocm-label" data-localize="ocm.details.refNumber">OCM Ref</strong>: OCM-@Model.POI.ID
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    @if (!String.IsNullOrEmpty(Model.POI.AddressInfo.AccessComments))
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.accessComments">Access Information</strong>:
-                                            <p>@formatDescription(Model.POI.AddressInfo.AccessComments)</p>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="col-md-4">
-                                    @if (Model.POI.OperatorInfo != null)
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.operator.sectionTitle">Network/Operator</strong>
-                                            <p>
-                                                @Html.DisplayFor(m => m.POI.OperatorInfo.Title)
-                                                @Html.DisplayFor(m => m.POI.OperatorInfo.WebsiteURL)
-                                                @Html.DisplayFor(m => m.POI.OperatorInfo.PhonePrimaryContact)
-                                            </p>
-                                        </div>
+                                    <div class="col-md-4">
 
-                                    }
-
-                                    @if (Model.POI.DataProvider != null)
-                                    {
-                                        <div>
-                                            <strong class="ocm-label" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</strong>:
-                                            <p>
-                                                @Html.DisplayFor(m => m.POI.DataProvider.Title)
-                                                @Html.DisplayFor(m => m.POI.DataProvider.WebsiteURL)
-                                            </p>
-                                            @if (Model.POI.DataProvider.DataProviderStatusType != null && Model.POI.DataProvider.DataProviderStatusType.ID == 20)
-                                            {
-                                                <div class="alert alert-info" data-localize="ocm.details.importedDataNotice">Note: This data is sourced automatically, changes should ideally be submitted to the data provider directly.</div>
-                                            }
-
-                                            @if (!String.IsNullOrEmpty(Model.POI.DataProvider.License))
-                                            {
-                                                <div>
-                                                    <strong class="ocm-label" data-localize="ocm.details.dataProvider.license">Data License</strong>:
-                                                    <p>@Model.POI.DataProvider.License</p>
+                                        @if (!Model.POI.IsRecentlyVerified)
+                                        {
+                                            <div>
+                                                <div class="alert alert-warning" data-localize="ocm.warningsErrors.oldData">
+                                                    <i class="glyphicon glyphicon-alert"></i>
+                                                    This charging location has not been recently verified and you should not rely solely on this information for journeys.
                                                 </div>
-                                            }
+                                                <p style="color:#929292">If you have visited this charging location recently please confirm that the information is accurate by adding a Comment or Check-In. <br /><br />If the details are inaccurate please <a href="@Url.Action("Edit","POI",new {id=@Model.POI.ID})" class="alert-link" data-localize-id="link-edit">edit</a> them.</p>
+                                            </div>
+                                           
+                                        }
 
-                                            @if (!String.IsNullOrEmpty(Model.POI.DataProvidersReference))
-                                            {
-                                                <div>
-                                                    <strong class="ocm-label" data-localize="ocm.details.dataProvider.providersReference">Providers Ref</strong>:
-                                                    <p>@Model.POI.DataProvidersReference</p>
-                                                </div>
-                                            }
+                                      
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @if (Model.POI.NumberOfPoints != null)
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.numberOfPoints">Number Of Stations/Bays</strong>:
+                                                @Html.DisplayFor(m => m.POI.NumberOfPoints)
+                                            </div>
+                                        }
+                                        @if (Model.POI.UsageType != null)
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.usageType">Usage</strong>:
+                                                <span data-localize="ocm.reference.usageType.value_@Model.POI.UsageTypeID">
+                                                    @Html.DisplayFor(m => m.POI.UsageType.Title)
+                                                </span>
+                                            </div>
+                                        }
+                                        @if (Model.POI.UsageCost != null)
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.usageCost">Usage Cost</strong>:
+                                                @Html.DisplayFor(m => m.POI.UsageCost)
+                                            </div>
+                                        }
+                                        @if (Model.POI.StatusType != null)
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.operationalStatus">Operational Status</strong>:
+                                                <span data-localize="ocm.reference.statusType.value_@Model.POI.StatusTypeID">
+                                                    @Html.DisplayFor(m => m.POI.StatusType.Title)
+                                                </span>
+                                            </div>
+                                        }
+
+                                        <div>
+                                            <strong class="ocm-label" data-localize="ocm.details.location.latitude">Latitude</strong>:
+                                            @Html.DisplayFor(m => m.POI.AddressInfo.Latitude)
                                         </div>
-                                    }
+                                        <div>
+                                            <strong class="ocm-label" data-localize="ocm.details.location.longitude">Longitude</strong>:
+                                            @Html.DisplayFor(m => m.POI.AddressInfo.Longitude)
+                                        </div>
+                                        <div>
+                                            <strong class="ocm-label" data-localize="ocm.details.refNumber">OCM Ref</strong>: OCM-@Model.POI.ID
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @if (!String.IsNullOrEmpty(Model.POI.AddressInfo.AccessComments))
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.accessComments">Access Information</strong>:
+                                                <p>@formatDescription(Model.POI.AddressInfo.AccessComments)</p>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-md-4">
+                                        @if (Model.POI.OperatorInfo != null)
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.operator.sectionTitle">Network/Operator</strong>
+                                                <p>
+                                                    @Html.DisplayFor(m => m.POI.OperatorInfo.Title)
+                                                    @Html.DisplayFor(m => m.POI.OperatorInfo.WebsiteURL)
+                                                    @Html.DisplayFor(m => m.POI.OperatorInfo.PhonePrimaryContact)
+                                                </p>
+                                            </div>
+
+                                        }
+
+                                        @if (Model.POI.DataProvider != null)
+                                        {
+                                            <div>
+                                                <strong class="ocm-label" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</strong>:
+                                                <p>
+                                                    @Html.DisplayFor(m => m.POI.DataProvider.Title)
+                                                    @Html.DisplayFor(m => m.POI.DataProvider.WebsiteURL)
+                                                </p>
+                                                @if (Model.POI.DataProvider.DataProviderStatusType != null && Model.POI.DataProvider.DataProviderStatusType.ID == 20)
+                                                {
+                                                    <div class="alert alert-info" data-localize="ocm.details.importedDataNotice">Note: This data is sourced automatically, changes should ideally be submitted to the data provider directly.</div>
+                                                }
+
+                                                @if (!String.IsNullOrEmpty(Model.POI.DataProvider.License))
+                                                {
+                                                    <div>
+                                                        <strong class="ocm-label" data-localize="ocm.details.dataProvider.license">Data License</strong>:
+                                                        <p>@Model.POI.DataProvider.License</p>
+                                                    </div>
+                                                }
+
+                                                @if (!String.IsNullOrEmpty(Model.POI.DataProvidersReference))
+                                                {
+                                                    <div>
+                                                        <strong class="ocm-label" data-localize="ocm.details.dataProvider.providersReference">Providers Ref</strong>:
+                                                        <p>@Model.POI.DataProvidersReference</p>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
+                                @if (Model.POI.MetadataValues != null && Model.POI.MetadataValues.Any())
+                                {
+
+                                    <div>
+                                        <strong class="ocm-label" data-localize="ocm.details.metadataValues.sectionTitle">Additional Tags</strong>:
+                                        @Html.DisplayFor(m => m.POI.MetadataValues)
+                                    </div>
+                                }
+
+
+                                @if (Model.DataQualityReport != null)
+                                {
+                                    @Html.DisplayFor(m => m.DataQualityReport);
+                                }
                             </div>
-                            @if (Model.POI.MetadataValues != null && Model.POI.MetadataValues.Any())
-                            {
-
-                                <div>
-                                    <strong class="ocm-label" data-localize="ocm.details.metadataValues.sectionTitle">Additional Tags</strong>:
-                                    @Html.DisplayFor(m => m.POI.MetadataValues)
-                                </div>
-                            }
-
-
-                            @if (Model.DataQualityReport != null)
-                            {
-                                @Html.DisplayFor(m => m.DataQualityReport);
-                            }
-                        </div>
                     </div>
                 </div>
                 <div id="tab-map" class="tab-pane">
                     <div id="map-container">
-                        <iframe id="map-app" src="about:blank" frameborder="0" allowtransparency="geolocation" width="100%" height="500px"></iframe>
+                        <iframe id="map-app" src="about:blank" frameborder="0" allow="geolocation" style="width:100%;height:500px"></iframe>
                     </div>
                 </div>
                 <div id="tab-equipment" class="tab-pane">
