@@ -44,8 +44,8 @@
                         @Html.DisplayFor(m => m.UserName)
                     }
                     else
-                    {<text>(Anonymous)</text> }
-                }
+                    {<text>(Anonymous)</text>}
+            }
             </cite> @Html.DisplayFor(m => m.DateCreated)
         </small>
 
@@ -54,6 +54,19 @@
             <p>
                 <a class="btn btn-danger" href="@Url.Action("CommentDelete", "Admin", new { id=Model.ID})" target="_blank"><span class="glyphicon glyphicon-remove"></span> Delete (as Admin)</a>
             </p>
+        }
+
+        @if (ViewBag.UserCanEditPOI == true)
+        {
+            if (Model.IsActionedByEditor != true)
+            {
+            <p>
+                <a class="btn btn-warning" href="@Url.Action("CommentActioned", "POI", new { poiId = Model.ChargePointID, commentId = Model.ID })" target="_blank"><span class="glyphicon glyphicon-check"></span> Mark as Actioned</a>
+            </p>
+            } else
+            {
+                <em class="text-info">Comment Actioned By Editor</em>
+            }
         }
     </blockquote>
 </div>

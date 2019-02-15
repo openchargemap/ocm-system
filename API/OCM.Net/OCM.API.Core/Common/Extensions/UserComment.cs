@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OCM.API.Common.Model.Extensions
+﻿namespace OCM.API.Common.Model.Extensions
 {
     public class UserComment
     {
@@ -16,7 +12,8 @@ namespace OCM.API.Common.Model.Extensions
                 RelatedURL = source.RelatedURL,
                 DateCreated = source.DateCreated,
                 ChargePointID = source.ChargePointID,
-                User = User.BasicFromDataModel(source.User)
+                User = User.BasicFromDataModel(source.User),
+                IsActionedByEditor = source.IsActionedByEditor
             };
 
             if (isVerboseMode && source.UserCommentType != null)
@@ -29,8 +26,7 @@ namespace OCM.API.Common.Model.Extensions
                 userComment.CommentTypeID = source.UserCommentTypeID;
             }
 
-
-            if (isVerboseMode && source.CheckinStatusType!=null)
+            if (isVerboseMode && source.CheckinStatusType != null)
             {
                 userComment.CheckinStatusType = CheckinStatusType.FromDataModel(source.CheckinStatusType);
                 userComment.CheckinStatusTypeID = source.CheckinStatusTypeID;
@@ -39,7 +35,6 @@ namespace OCM.API.Common.Model.Extensions
             {
                 userComment.CheckinStatusTypeID = source.CheckinStatusTypeID;
             }
-
 
             if (userComment.User != null)
             {

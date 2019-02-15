@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -109,7 +110,7 @@ namespace OCM.MVC.Controllers
                         //TODO: distance unit KM
                         //if (distanceunit == "km") searchfilters.DistanceUnit = API.Common.Model.DistanceUnit.KM;
 
-                        ViewBag.FormattedAddress = position.Address??"";
+                        ViewBag.FormattedAddress = position.Address ?? "";
                     }
                 }
             }
@@ -557,6 +558,28 @@ namespace OCM.MVC.Controllers
             ViewBag.ReferenceData = new POIBrowseModel();
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [AuthSignedInOnly]
+        public async Task<ActionResult> CommentActioned(int poiId, int commentId)
+        {
+            CheckForReadOnly();
+
+            // if poi is awaiting review, publish now
+            var poiManager = new POIManager();
+
+            var poi = poiManager.Get(poiId, true);
+            var comment = poi.UserComments.Find(c => c.ID == commentId);
+
+            var user = new UserManager().GetUser((int)Session["UserID"]);
+            if (POIManager.CanUserEditPOI(poi, user))
+            {
+                await new UserCommentManager().ActionComment(user.ID, commentId);
+            }
+
+            // return to approval queue
+            return RedirectToAction("details", "POI", new { id = poiId });
         }
 
         [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]

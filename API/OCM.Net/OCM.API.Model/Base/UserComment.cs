@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace OCM.API.Common.Model
 {
@@ -12,6 +10,7 @@ namespace OCM.API.Common.Model
         public int ChargePointID { get; set; }
 
         public int? CommentTypeID { get; set; }
+
         [DisplayName("Comment Type")]
         public UserCommentType CommentType { get; set; }
 
@@ -34,7 +33,11 @@ namespace OCM.API.Common.Model
         public User User { get; set; }
 
         public int? CheckinStatusTypeID { get; set; }
+
         [DisplayName("Check-In Status")]
         public CheckinStatusType CheckinStatusType { get; set; }
+
+        [DisplayName("Actioned By Editor")]
+        public bool? IsActionedByEditor { get; set; }
     }
 }
