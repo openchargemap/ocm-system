@@ -10,7 +10,7 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (String.IsNullOrEmpty(source.EmailAddress)) return null;
             var emailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(source.EmailAddress);
-            return "https://www.gravatar.com/avatar/" + emailHash + "?s=80&d=mm";
+            return "https://www.gravatar.com/avatar/" + emailHash + "?s=80&d=robohash";
         }
 
         /// <summary>
