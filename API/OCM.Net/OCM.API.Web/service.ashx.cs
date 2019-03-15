@@ -432,7 +432,7 @@ namespace OCM.API
                             context.Response.AppendHeader("Content-Encoding", "gzip");
                             //context.Trace.Warn("GZIP Compression on");
                         }
-                        else
+                        else if (encodings.ToLower().Contains("deflate"))
                         {
                             context.Response.Filter = new DeflateStream(context.Response.Filter, CompressionMode.Compress);
                             context.Response.AppendHeader("Content-Encoding", "deflate");
@@ -470,6 +470,11 @@ namespace OCM.API
                 if (filter.Action == "profile.authenticate")
                 {
                     this.OutputProfileSignInResult(outputProvider, context, filter);
+                }
+
+                if (filter.Action == "profile.register")
+                {
+                    this.OutputProfileRegisterResult(outputProvider, context, filter);
                 }
 
                 if (filter.Action == "refreshmirror")
@@ -614,6 +619,49 @@ namespace OCM.API
             string access_token = null;
             var responseEnvelope = new APIResponseEnvelope();
             if (user == null)
+            {
+                context.Response.StatusCode = 401;
+                context.Response.Flush();
+                return;
+            }
+            else
+            {
+                access_token = Security.JWTAuth.GenerateEncodedJWT(user);
+
+                /*
+                 var validatedToken = Security.JWTAuthTicket.ValidateJWTForUser(testTicket, user);
+                 */
+            }
+
+            responseEnvelope.Data = new { UserProfile = user, access_token = access_token };
+
+            outputProvider.GetOutput(context.Response.OutputStream, responseEnvelope, filter);
+        }
+
+        private void OutputProfileRegisterResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
+        {
+            var sr = new System.IO.StreamReader(context.Request.InputStream);
+            string jsonContent = sr.ReadToEnd();
+            var registration = JsonConvert.DeserializeObject<RegistrationModel>(jsonContent);
+
+            User user = null;
+
+            if (!string.IsNullOrEmpty(registration.EmailAddress) && registration.EmailAddress.Trim().Length > 5 && registration.EmailAddress.Contains("@"))
+            {
+                if (!string.IsNullOrWhiteSpace(registration.Password) && registration.Password.Trim().Length>4)
+                {
+                    user = new OCM.API.Common.UserManager().RegisterNewUser(registration);
+                }
+            }
+            else
+            {
+                context.Response.StatusCode = 401;
+            }
+
+            string access_token = null;
+            var responseEnvelope = new APIResponseEnvelope();
+
+            if (user !=null)
             {
                 context.Response.StatusCode = 401;
                 context.Response.Flush();
