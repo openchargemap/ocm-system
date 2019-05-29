@@ -18,7 +18,7 @@ var OCM;
                 data.addColumn("string", "Country");
                 data.addColumn("number", "Charging Locations");
                 for (var i = 0; i < ocm_summary.length; i++) {
-                    data.setValue(i, 0, ocm_summary[i].country);
+                    data.setValue(i, 0, ocm_summary[i].isocode);
                     data.setValue(i, 1, ocm_summary[i].itemcount);
                     totalLocations += ocm_summary[i].itemcount;
                 }
@@ -27,7 +27,7 @@ var OCM;
                     height: 380,
                     backgroundColor: "#B3D1FF",
                     displayMode: "regions",
-                    colorAxis: { colors: ["#5cb85c", "#9fdc9f"] }
+                    colorAxis: { colors: ["#9fdc9f", "#5cb85c"] }
                 };
                 var geochart = new google.visualization.GeoChart(document.getElementById("visualization"));
                 google.visualization.events.addListener(geochart, "regionClick", function (eventData) {

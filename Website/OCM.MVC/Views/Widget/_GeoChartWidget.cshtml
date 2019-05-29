@@ -1,6 +1,8 @@
-﻿<script type="text/javascript" src="~/Scripts/OCM/GeoSummary.js"></script>
+<script type="text/javascript" src="~/Scripts/OCM/GeoSummary.js?v=2"></script>
 <script type="text/javascript" src="https://api.openchargemap.io/widgets/databrowser/datasummary.ashx"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 
 <div class="geochart" id="geochart" style="display:none;">
     <div class="well well-sm">
@@ -24,6 +26,13 @@
         }
     }
 
-    google.load('visualization', '1', { packages: ['geochart'] });
-    google.setOnLoadCallback(initChart);
+     google.charts.load('current', {
+        'packages': ['geochart'],
+        // Note: you will need to get a mapsApiKey for your project.
+        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+        'mapsApiKey': ''
+    });
+    google.charts.setOnLoadCallback(initChart);
+    
+    
 </script>
