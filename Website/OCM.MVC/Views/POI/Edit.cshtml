@@ -79,8 +79,7 @@ else
     {
         <text>
             <div class="text-info">
-                Thanks for taking the time to contribute information, please provide as much detail as you can about this charging location. Please <strong>do not</strong> submit private residences (such as your home).
-
+                
                 @if (Session["UserID"] == null)
                 {
                     <div class="text text-warning">You are not signed in. You can proceed with your submission but certain features may be unavailable.</div>
@@ -94,41 +93,134 @@ else
 
     @Html.ValidationSummary()
 
-    <div class="panel-group" id="wizardsteps">
+<div class="panel-group" id="wizardsteps">
+
+    @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
+    {
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver">
+                        <span class="glyphicon glyphicon-map-marker"></span> Approver Options
+                    </a>
+                </h4>
+            </div>
+            <div id="step-approver" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <p class="text-info">To make a new listing public it's Submission Status must be set to <strong>Submission Published</strong>.</p>
+                    <div class="form-group">
+                        <div class="editor-label" data-localize="ocm.details.submissionStatus">
+                            @Html.LabelFor(model => model.SubmissionStatus)
+                        </div>
+                        <div class="editor-field">
+                            @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
+                            @Html.ValidationMessageFor(model => model.SubmissionStatus)
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Save Changes" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    }
+
+        <!--step 1-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step1">
+                        <span class="glyphicon glyphicon-map-marker"></span> Step 1 - <span data-localize="ocm.details.location.sectionTitle">Location Details</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="step1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <p>
+                        <strong>Thanks for taking the time to contribute information, please provide as much detail as you can about this charging location. Please <strong>do not</strong> submit private residences (such as your home). Listings without basic charging equipment information will be rejected without notice, so please provide as much information as you can.</strong>
+
+                    </p>
+                    <!--begin location editor-->
+                    @Html.EditorFor(model => model.AddressInfo)
+
+                    <!--end location editor-->
+                </div>
+            </div>
+        </div>
+
+        <!--step 2-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step2">
+                        <span class="glyphicon glyphicon-info-sign"></span> Step 2 - Basic Charging Details
+                    </a>
+                </h4>
+            </div>
+            <div id="step2" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <!--begin basic detail editor-->
+                    <div class="container">
+                        @Html.Partial("_EditPOIBasicDetails", Model)
+                    </div>
+                    <!--end basic details editor-->
+                </div>
+            </div>
+        </div>
+
+        <!--step 3-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step3">
+                        <span class="glyphicon glyphicon-flash"></span> Step 3 - <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="step3" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <!--begin basic detail editor-->
+                    <div id="tab-equipment">
+
+                        <p>This section details the exact type and power level of connections available at this site. Please provide as much info as possible. Listings with no equipment information will be rejected.</p>
+                        @if (Model.Connections != null)
+                        {
+                            for (int i = 0; i < Model.Connections.Count; i++)
+                            {
+                                var connectionItem = Model.Connections[i];
+                                <h4>
+                                    Equipment Item @(i + 1) :
+                                    @if (connectionItem.Reference == null)
+                                    {
+                                        if (connectionItem.ID > 0)
+                                        {
+                                            @:OCM-CN-@connectionItem.ID
+                                        }
+                                    }
+                                    <input type="button" id="remove-equipment-@(i + "-" + connectionItem.ID)" value="Remove" class="btn btn-danger" />
+                                </h4>
+                                @Html.EditorFor(m => Model.Connections[i])
+                            }
+                        }
+
+
+
+                        <input type="button" id="additional-equipment" value="Add Additional Equipment" class="btn btn-info" />
+                        <input type="hidden" id="editoption" name="editoption" />
+                    </div>
+                    <!--end basic details editor-->
+                </div>
+            </div>
+        </div>
 
         @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
         {
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver">
-                            <span class="glyphicon glyphicon-map-marker"></span> Approver Options
-                        </a>
-                    </h4>
-                </div>
-                <div id="step-approver" class="panel-collapse collapse in">
-                    <div class="panel-body">
 
-                        <p class="text-info">To make a new listing public it's Submission Status must be set to <strong>Submission Published</strong>.</p>
-                        <div class="form-group">
-                            <div class="editor-label" data-localize="ocm.details.submissionStatus">
-                                @Html.LabelFor(model => model.SubmissionStatus)
-                            </div>
-                            <div class="editor-field">
-                                @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
-                                @Html.ValidationMessageFor(model => model.SubmissionStatus)
-                            </div>
-                        </div>
-
-                        <input type="submit" value="Save Changes" class="btn btn-success" />
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-danger">
+            <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver-adv">
-                            <span class="glyphicon glyphicon-wrench"></span> Advanced
+                            <span class="glyphicon glyphicon-wrench"></span> Advanced Options
                         </a>
                     </h4>
                 </div>
@@ -197,90 +289,6 @@ else
             @Html.HiddenFor(model => model.DataProviderID)
         }
 
-
-        <!--step 1-->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step1">
-                        <span class="glyphicon glyphicon-map-marker"></span> Step 1 - <span data-localize="ocm.details.location.sectionTitle">Location Details</span>
-                    </a>
-                </h4>
-            </div>
-            <div id="step1" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <!--begin location editor-->
-                    @Html.EditorFor(model => model.AddressInfo)
-
-                    <!--end location editor-->
-                </div>
-            </div>
-        </div>
-
-        <!--step 2-->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step2">
-                        <span class="glyphicon glyphicon-info-sign"></span> Step 2 - Basic Charging Details
-                    </a>
-                </h4>
-            </div>
-            <div id="step2" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <!--begin basic detail editor-->
-                    <div class="container">
-                        @Html.Partial("_EditPOIBasicDetails", Model)
-                    </div>
-                    <!--end basic details editor-->
-                </div>
-            </div>
-        </div>
-
-        <!--step 3-->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#wizardsteps" href="#step3">
-                        <span class="glyphicon glyphicon-flash"></span> Step 3 - <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
-                    </a>
-                </h4>
-            </div>
-            <div id="step3" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <!--begin basic detail editor-->
-                    <div id="tab-equipment">
-
-                        <p>This section details the exact type and power level of connections available at this site. All details are optional but please provide as much info as possible. </p>
-                        @if (Model.Connections != null)
-                        {
-                            for (int i = 0; i < Model.Connections.Count; i++)
-                            {
-                                var connectionItem = Model.Connections[i];
-                                <h4>
-                                    Equipment Item @(i + 1) :
-                                    @if (connectionItem.Reference == null)
-                                    {
-                                        if (connectionItem.ID > 0)
-                                        {
-                                            @:OCM-CN-@connectionItem.ID
-                                        }
-                                    }
-                                    <input type="button" id="remove-equipment-@(i + "-" + connectionItem.ID)" value="Remove" class="btn btn-danger" />
-                                </h4>
-                                @Html.EditorFor(m => Model.Connections[i])
-                            }
-                        }
-
-
-
-                        <input type="button" id="additional-equipment" value="Add Additional Equipment" class="btn btn-info" />
-                        <input type="hidden" id="editoption" name="editoption" />
-                    </div>
-                    <!--end basic details editor-->
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="form-actions">
