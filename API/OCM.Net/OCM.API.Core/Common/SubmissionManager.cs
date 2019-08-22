@@ -380,15 +380,32 @@ namespace OCM.API.Common
             var dataModel = new Core.Data.OCMEntities();
             int cpID = comment.ChargePointID;
             var dataComment = new Core.Data.UserComment();
-            dataComment.ChargePoint = dataModel.ChargePoints.FirstOrDefault(c => c.ID == cpID);
+            var dataChargePoint = dataModel.ChargePoints.FirstOrDefault(c => c.ID == cpID);
 
-            if (dataComment.ChargePoint == null) return -1; //invalid charge point specified
+            if (dataChargePoint == null) return -1; //invalid charge point specified
+
+            dataComment.ChargePointID = dataChargePoint.ID;
 
             dataComment.Comment = comment.Comment;
-            int commentTypeID = 10; //default to General Comment
-            if (comment.CommentType != null) commentTypeID = comment.CommentType.ID;
-            dataComment.UserCommentType = dataModel.UserCommentTypes.FirstOrDefault(t => t.ID == commentTypeID);
-            if (comment.CheckinStatusType != null) dataComment.CheckinStatusType = dataModel.CheckinStatusTypes.FirstOrDefault(t => t.ID == comment.CheckinStatusType.ID);
+            int commentTypeID = comment.CommentTypeID ?? 10; //default to General Comment
+
+            // some clients may post a CommentType object instead of just an ID
+            if (comment.CommentType != null)
+            {
+                commentTypeID = comment.CommentType.ID;
+            }
+
+            dataComment.UserCommentTypeID = commentTypeID;
+
+            int? checkinStatusType = comment.CheckinStatusTypeID;
+            dataComment.CheckinStatusTypeID = (byte?)comment.CheckinStatusTypeID;
+
+            // some clients may post a CheckinStatusType object instead of just an ID
+            if (dataComment.CheckinStatusTypeID == null && comment.CheckinStatusType != null)
+            {
+                dataComment.CheckinStatusTypeID = (byte?)comment.CheckinStatusType.ID;
+            }
+
             dataComment.UserName = comment.UserName;
             dataComment.Rating = comment.Rating;
             dataComment.RelatedURL = comment.RelatedURL;
@@ -400,19 +417,14 @@ namespace OCM.API.Common
 
                 if (ocmUser != null)
                 {
-                    dataComment.User = ocmUser;
+                    dataComment.UserID = ocmUser.ID;
                     dataComment.UserName = ocmUser.Username;
                 }
             }
 
-            /*if (dataComment.User==null)
-            {
-                return -3; //rejected, not authenticated
-            }*/
-
             try
             {
-                dataComment.ChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
+                dataChargePoint.DateLastStatusUpdate = DateTime.UtcNow;
                 dataModel.UserComments.Add(dataComment);
 
                 dataModel.SaveChanges();
@@ -431,7 +443,7 @@ namespace OCM.API.Common
 
                 return dataComment.ID;
             }
-            catch (Exception)
+            catch (Exception exp)
             {
                 return -2; //error saving
             }

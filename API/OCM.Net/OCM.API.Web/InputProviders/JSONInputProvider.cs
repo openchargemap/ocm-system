@@ -58,8 +58,14 @@ namespace OCM.API.InputProviders
 
             try
             {
-                JObject o = JObject.Parse(jsonString);
+                // patch invalid property name from older client
+                if (jsonString.Contains("UserCommentTypeID"))
+                {
+                    jsonString = jsonString.Replace("UserCommentTypeID", "CommentTypeID");
+                }
 
+                JObject o = JObject.Parse(jsonString);
+                
                 JsonSerializer serializer = new JsonSerializer();
                 comment = (Common.Model.UserComment)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.UserComment));
 
