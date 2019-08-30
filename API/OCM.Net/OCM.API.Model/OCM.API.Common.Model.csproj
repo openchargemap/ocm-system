@@ -118,6 +118,8 @@
     <Compile Include="Base\UserComment.cs" />
     <Compile Include="Base\UserCommentType.cs" />
     <Compile Include="Extended\ToJsonExtension.cs" />
+    <Compile Include="OCPI\OCPI.cs" />
+    <Compile Include="OCPI\OCPIDataAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
