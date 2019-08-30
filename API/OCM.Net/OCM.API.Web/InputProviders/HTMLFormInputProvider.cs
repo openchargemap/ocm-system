@@ -10,9 +10,9 @@ namespace OCM.API.InputProviders
 {
     public class HTMLFormInputProvider : InputProviderBase, IInputProvider
     {
-        public bool ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
+        public ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
         {
-            return false; //html input provider no longer supported
+            return new ValidationResult { IsValid = false, Message = "HTML Input not supported" }; //html input provider no longer supported
 
             /*
             //construct simple model view of new CP based on input, to then be used to contruct data model version

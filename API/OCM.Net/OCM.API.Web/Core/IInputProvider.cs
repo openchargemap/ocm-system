@@ -10,7 +10,7 @@ namespace OCM.API.InputProviders
 {
     internal interface IInputProvider
     {
-        bool ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp);
+        ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp);
 
         bool ProcessUserCommentSubmission(HttpContext context, ref OCM.API.Common.Model.UserComment comment);
 

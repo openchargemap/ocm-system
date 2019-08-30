@@ -13,7 +13,7 @@ namespace OCM.API.V2.POI
         public APIHandler()
         {
             this.APIBehaviourVersion = 2;
-            this.DefaultAction = "getpoilist";
+            this.DefaultAction = "poi";
         }
     }
 }

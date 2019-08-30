@@ -78,6 +78,7 @@ namespace OCM.API
                 OutputBadRequestMessage(context, "API is read only. Submissions not currently being accepted.");
                 return;
             }
+
             OCM.API.InputProviders.IInputProvider inputProvider = null;
 
             var filter = new APIRequestParams();
@@ -108,6 +109,7 @@ namespace OCM.API
                 inputProvider = new InputProviders.HTMLFormInputProvider();
                 performSubmissionCompletedRedirects = true;
             }
+
             SubmissionManager submissionManager = new SubmissionManager();
 
             //attempt to determine user from api call
@@ -150,29 +152,20 @@ namespace OCM.API
                     //gather/process data for submission
                     OCM.API.Common.Model.ChargePoint cp = new Common.Model.ChargePoint();
 
-                    bool processedOK = inputProvider.ProcessEquipmentSubmission(context, ref cp);
-                    bool submittedOK = false;
+                    var processingResult = inputProvider.ProcessEquipmentSubmission(context, ref cp);
+                    ValidationResult submissionResult = new ValidationResult { IsValid = false };
 
-                    if (processedOK == true)
+                    if (processingResult.IsValid)
                     {
                         //perform submission
-
-                        int submissionId = submissionManager.PerformPOISubmission(cp, user);
-                        if (submissionId > -1) submittedOK = true;
+                        submissionResult = submissionManager.PerformPOISubmission(cp, user);
                     }
 
-                    if (processedOK && submittedOK)
+                    if (processingResult.IsValid && submissionResult.IsValid)
                     {
                         if (performSubmissionCompletedRedirects)
                         {
-                            if (submittedOK)
-                            {
-                                context.Response.Redirect("http://openchargemap.org/submissions/complete.aspx", true);
-                            }
-                            else
-                            {
-                                context.Response.Redirect("http://openchargemap.org/submissions/error.aspx", true);
-                            }
+                            context.Response.Redirect("http://openchargemap.org/submissions/complete.aspx", true);
                         }
                         else
                         {
@@ -181,13 +174,15 @@ namespace OCM.API
                     }
                     else
                     {
+                        // validation or submission failed
                         if (performSubmissionCompletedRedirects)
                         {
                             context.Response.Redirect("http://openchargemap.org/submissions/error.aspx", true);
                         }
                         else
                         {
-                            context.Response.StatusCode = 500;
+                            context.Response.StatusCode = 400;
+                            context.Response.Write(processingResult.IsValid ? submissionResult.Message : processingResult.Message);
                         }
                     }
                 }
@@ -440,7 +435,7 @@ namespace OCM.API
                         }
                     }
                 }
-                if (filter.Action == "getchargepoints" || filter.Action == "getpoilist")
+                if (filter.Action == "getchargepoints" || filter.Action == "poi")
                 {
                     System.Diagnostics.Debug.WriteLine("At getpoilist output: " + stopwatch.ElapsedMilliseconds + "ms");
                     OutputPOIList(outputProvider, context, filter);
@@ -648,7 +643,7 @@ namespace OCM.API
 
             if (!string.IsNullOrEmpty(registration.EmailAddress) && registration.EmailAddress.Trim().Length > 5 && registration.EmailAddress.Contains("@"))
             {
-                if (!string.IsNullOrWhiteSpace(registration.Password) && registration.Password.Trim().Length>4)
+                if (!string.IsNullOrWhiteSpace(registration.Password) && registration.Password.Trim().Length > 4)
                 {
                     user = new OCM.API.Common.UserManager().RegisterNewUser(registration);
                 }
@@ -661,7 +656,7 @@ namespace OCM.API
             string access_token = null;
             var responseEnvelope = new APIResponseEnvelope();
 
-            if (user !=null)
+            if (user != null)
             {
                 context.Response.StatusCode = 401;
                 context.Response.Flush();

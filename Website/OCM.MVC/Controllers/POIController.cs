@@ -333,7 +333,7 @@ namespace OCM.MVC.Controllers
                 if (POIManager.CanUserEditPOI(poi, user))
                 {
                     poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
-                    int poiSubmissionID = new SubmissionManager().PerformPOISubmission(poi, user);
+                    new SubmissionManager().PerformPOISubmission(poi, user);
                 }
             }
 
@@ -402,12 +402,12 @@ namespace OCM.MVC.Controllers
                     if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID == -1) ModelState.AddModelError("Country", "Required");
 
                     //perform actual POI submission, then redirect to POI details if we can
-                    int poiSubmissionID = new SubmissionManager().PerformPOISubmission(poi, user);
-                    if (poiSubmissionID > -1)
+                    var poiSubmissionResult = new SubmissionManager().PerformPOISubmission(poi, user);
+                    if (poiSubmissionResult.IsValid)
                     {
-                        if (poiSubmissionID > 0)
+                        if (poiSubmissionResult.ItemId > 0)
                         {
-                            return RedirectToAction("Details", "POI", new { id = poiSubmissionID, status = "editsubmitted" });
+                            return RedirectToAction("Details", "POI", new { id = poiSubmissionResult.ItemId, status = "editsubmitted" });
                         }
                         else
                         {
@@ -417,6 +417,8 @@ namespace OCM.MVC.Controllers
                     else
                     {
                         ViewBag.ValidationFailed = true;
+                        ModelState.AddModelError("Country", "Required");
+
                     }
                 }
                 catch

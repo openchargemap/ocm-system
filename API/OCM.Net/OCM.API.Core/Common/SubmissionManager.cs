@@ -57,7 +57,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="submission">ChargePoint info for submission, if ID and UUID set will be treated as an update</param>
         /// <returns>false on error or not enough data supplied</returns>
-        public int PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding = false)
+        public ValidationResult PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding = false)
         {
             try
             {
@@ -94,20 +94,21 @@ namespace OCM.API.Common
                         if (userCanEditWithoutApproval) AllowUpdates = true;
                         if (!AllowUpdates && !enableEditQueueLogging)
                         {
-                            return -1; //valid update requested but updates not allowed
+                            //valid update requested but updates not allowed
+                            return new ValidationResult { IsValid = false, Message = "Updates are disabled" };
                         }
                     }
                     else
                     {
                         //update does not correctly identify an existing poi
-                        return -1;
+                        return new ValidationResult { IsValid = false, Message = "Update does not correctly match an existing POI" };
                     }
                 }
 
                 //validate if minimal required data is present
                 if (updatedPOI.AddressInfo.Title == null || (updatedPOI.AddressInfo.Country == null && updatedPOI.AddressInfo.CountryID == null))
                 {
-                    return -1;
+                    return new ValidationResult { IsValid = false, Message = "Update failed basic validation" };
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
@@ -144,7 +145,7 @@ namespace OCM.API.Common
                         if (!poiManager.HasDifferences(oldPOI, updatedPOI))
                         {
                             System.Diagnostics.Debug.WriteLine("POI Update has no changes, discarding change.");
-                            return updatedPOI.ID;
+                            return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message = "No POI changes detected" };
                         }
                         else
                         {
@@ -186,7 +187,7 @@ namespace OCM.API.Common
                     //SendEditSubmissionNotification(updatedPOI, user);
 
                     //user is not an editor, item is now pending in edit queue for approval.
-                    return updatedPOI.ID;
+                    return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message="Update submitted for review" };
                 }
 
                 if (isUpdate && updatedPOI.SubmissionStatusTypeID >= 1000)
@@ -295,7 +296,7 @@ namespace OCM.API.Common
                     cacheTask.Wait();
                 }
 
-                return updatedPOI.ID;
+                return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message = "Update submitted." }; 
             }
             catch (Exception exp)
             {
@@ -303,7 +304,7 @@ namespace OCM.API.Common
                 AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorWeb);
                 //throw exp;
                 //error performing submission
-                return -1;
+                return new ValidationResult { IsValid = false, Message = "Submission Failed with an Exception: " + exp.Message };
             }
         }
 

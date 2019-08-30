@@ -122,6 +122,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Global.asax" />
+    <Content Include="map\index.html" />
     <Content Include="OData\OData.svc" />
     <Content Include="Scripts\SharedLibs\OCM_App.js" />
     <Content Include="Scripts\SharedLibs\OCM_AppBase.js" />

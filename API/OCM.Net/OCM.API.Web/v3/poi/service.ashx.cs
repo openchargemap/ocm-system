@@ -13,7 +13,7 @@ namespace OCM.API.V3.POI
         public APIEndpoint()
         {
             this.APIBehaviourVersion = 3;
-            this.DefaultAction = "getpoilist";
+            this.DefaultAction = "poi";
             this.IsQueryByPost = false;
         }
     }

@@ -13,7 +13,7 @@ namespace OCM.API.InputProviders
 {
     public class JSONInputProvider : InputProviderBase, IInputProvider
     {
-        public bool ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
+        public ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
         {
             System.IO.StreamReader sr = new System.IO.StreamReader(context.Request.InputStream);
             //TODO: handle encoding (UTF etc) correctly
@@ -29,22 +29,14 @@ namespace OCM.API.InputProviders
                 cp = (Common.Model.ChargePoint)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.ChargePoint));
 
                 //validate cp submission
-
-                if (POIManager.IsValid(cp))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return POIManager.IsValid(cp);
             }
             catch (Exception exp)
             {
                 System.Diagnostics.Debug.WriteLine(exp);
 
                 //submission failed
-                return false;
+                return new ValidationResult { IsValid=false, Message="Exception processing submission:"+exp.Message};
             }
         }
 
