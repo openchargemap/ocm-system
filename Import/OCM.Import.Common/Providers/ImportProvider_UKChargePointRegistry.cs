@@ -49,7 +49,7 @@ namespace OCM.Import.Providers
             {
                 bool skipPOI = false;
                 var item = dataItem;
-                ChargePoint cp = new ChargePoint();
+                var cp = new POIDetails();
 
                 var deviceName = item["ChargeDeviceName"].ToString();
 
@@ -70,7 +70,7 @@ namespace OCM.Import.Providers
                 }
 
                 //parse reset of POI data
-                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //UK National Charge Point Registry
+                cp.DataProviderID = this.DataProviderID; //UK National Charge Point Registry
                 cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -144,7 +144,7 @@ namespace OCM.Import.Providers
                     }
                     else
                     {
-                        cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(cy => cy.ID == countryID);
+                        cp.AddressInfo.CountryID = countryID;
                     }
                 }
                 else
@@ -160,7 +160,7 @@ namespace OCM.Import.Providers
                 var deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.Contains(deviceController["OrganisationName"].ToString()));
                 if (deviceOperator != null)
                 {
-                    cp.OperatorInfo = deviceOperator;
+                    cp.OperatorID = deviceOperator.ID;
                 }
                 else
                 {
@@ -169,31 +169,31 @@ namespace OCM.Import.Providers
                     deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.Contains(devOwner["OrganisationName"].ToString()));
                     if (deviceOperator != null)
                     {
-                        cp.OperatorInfo = deviceOperator;
+                        cp.OperatorID = deviceOperator.ID;
                     }
                 }
 
                 //determine most likely usage type
-                cp.UsageType = usageTypeUnknown;
+                cp.UsageTypeID = usageTypeUnknown.ID;
 
                 if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE")
                 {
                     //membership required
-                    cp.UsageType = usageTypePublicMembershipRequired;
+                    cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
                 }
                 else
                 {
                     if (item["PaymentRequiredFlag"].ToString().ToUpper() == "TRUE")
                     {
                         //payment required
-                        cp.UsageType = usageTypePublicPayAtLocation;
+                        cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
                     }
                     else
                     {
                         //accessible 24 hours, payment not required and membership not required, assume public
                         if (item["Accessible24Hours"].ToString().ToUpper() == "TRUE")
                         {
-                            cp.UsageType = usageTypePublic;
+                            cp.UsageTypeID = usageTypePublic.ID;
                         }
                     }
                 }
@@ -201,105 +201,108 @@ namespace OCM.Import.Providers
                 //special usage cases detected from text
                 if (cp.AddressInfo.ToString().ToLower().Contains("no public access"))
                 {
-                    cp.UsageType = usageTypePrivate;
+                    cp.UsageTypeID = usageTypePrivate.ID;
                 }
 
                 //add connections
                 var connectorList = item["Connector"].ToArray();
                 foreach (var conn in connectorList)
                 {
+                    ConnectionInfo cinfo = new ConnectionInfo() { };
+
+                    if (conn["RatedOutputkW"] != null)
+                    {
+                        double tmpKw = 0;
+                        if (double.TryParse(conn["RatedOutputkW"].ToString(), out tmpKw))
+                        {
+                            cinfo.PowerKW = tmpKw;
+                        }
+                    }
+
+                    if (conn["RatedOutputVoltage"] != null)
+                    {
+                        int tmpV = 0;
+                        if (int.TryParse(conn["RatedOutputVoltage"].ToString(), out tmpV))
+                        {
+                            cinfo.Voltage = tmpV;
+                        }
+                    }
+
+                    if (conn["RatedOutputCurrent"] != null)
+                    {
+                        int tmpA = 0;
+                        if (int.TryParse(conn["RatedOutputCurrent"].ToString(), out tmpA))
+                        {
+                            cinfo.Amps = tmpA;
+                        }
+                    }
+
                     string connectorType = conn["ConnectorType"].ToString();
+
                     if (!String.IsNullOrEmpty(connectorType))
                     {
-                        ConnectionInfo cinfo = new ConnectionInfo() { };
-                        ConnectionType cType = new ConnectionType { ID = 0 };
-                        ChargerType level = null;
+
                         cinfo.Reference = conn["ConnectorId"].ToString();
 
                         if (connectorType.ToUpper().Contains("BS 1363") || connectorType.ToUpper().Contains("3-PIN TYPE G (BS1363)"))
                         {
-                            cType = new ConnectionType();
-                            cType.ID = 3; //UK 13 amp plug
-                            level = new ChargerType { ID = 2 };//default to level 2
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.BS1363TypeG; //UK 13 amp plug
+                            cinfo.LevelID = 2; // default to level 2
                         }
 
                         if (connectorType.ToUpper() == "IEC 62196-2 TYPE 1 (SAE J1772)" || connectorType.ToUpper() == "TYPE 1 SAEJ1772 (IEC 62196)")
                         {
-                            cType = new ConnectionType();
-                            cType.ID = 1; //J1772
-                            level = new ChargerType { ID = 2 };//default to level 2
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772;
+                            cinfo.LevelID = 2; // default to level 2
                         }
 
-                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 2" || connectorType.ToUpper().Contains("TYPE 2 MENNEKES (IEC62196)"))
+                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 2" || connectorType.ToUpper().Contains("(IEC62196)"))
                         {
-                            cType = new ConnectionType();
-                            cType.ID = 25; //Mennkes Type 2
-                            level = new ChargerType { ID = 2 };//default to level 2
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
+                            cinfo.LevelID = 2;
+
+                            if (cinfo.Amps > 32)
+                            {
+                                // assume connector is tethered due to high current
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2Tethered;
+                            }
+
+                            // handle Type 2 Tesla (IEC62196) DC which are Type 2 but tesla access only 
+                            if (connectorType.ToUpper()== "TYPE 2 TESLA (IEC62196) DC")
+                            {
+
+                                cinfo.Comments = "Tesla Only";
+                            }
                         }
 
                         if (connectorType.ToUpper() == "JEVS G 105 (CHADEMO)" || connectorType.ToUpper() == "JEVS G105 (CHADEMO) DC")
                         {
-                            cType = new ConnectionType();
-                            cType.ID = 2; //CHadeMO
-                            level = new ChargerType { ID = 3 };//default to level 3
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;
+                            cinfo.LevelID = 3;
                         }
+
                         if (connectorType.ToUpper() == "IEC 62196-2 TYPE 3")
                         {
-                            cType = new ConnectionType();
-                            cType.ID = 26; //IEC 62196-2 type 3
-
-                            level = new ChargerType { ID = 2 };//default to level 2
+                            cinfo.ConnectionTypeID = 26; //IEC 62196-2 type 3
+                            cinfo.LevelID = 2;
                         }
 
                         if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
                         {
-                            cType = new ConnectionType();
-                            cType.ID = 33; //CCS with Type 2
-
-                            level = new ChargerType { ID = 3 };//default to level 3
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                            cinfo.LevelID = 3;
                         }
 
-                        if (cType.ID == 0)
+                        if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
                         {
-                            var conType = coreRefData.ConnectionTypes.FirstOrDefault(ct => ct.Title.ToLower().Contains(conn.ToString().ToLower()));
-                            if (conType != null) cType = conType;
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                            cinfo.LevelID = 3;
                         }
-
-                        if (!String.IsNullOrEmpty(conn["RatedOutputVoltage"].ToString())) cinfo.Voltage = int.Parse(conn["RatedOutputVoltage"].ToString());
-                        if (!String.IsNullOrEmpty(conn["RatedOutputCurrent"].ToString())) cinfo.Amps = int.Parse(conn["RatedOutputCurrent"].ToString());
-                        //TODO: use AC/DC/3 Phase data
 
                         if (conn["ChargePointStatus"] != null)
                         {
-                            cinfo.StatusType = operationalStatus;
-                            if (conn["ChargePointStatus"].ToString() == "Out of service") cinfo.StatusType = nonoperationalStatus;
-                        }
-
-                        if (conn["RatedOutputkW"] != null)
-                        {
-                            double tmpKw = 0;
-                            if (double.TryParse(conn["RatedOutputkW"].ToString(), out tmpKw))
-                            {
-                                cinfo.PowerKW = tmpKw;
-                            }
-                        }
-
-                        if (conn["RatedOutputVoltage"] != null)
-                        {
-                            int tmpV = 0;
-                            if (int.TryParse(conn["RatedOutputVoltage"].ToString(), out tmpV))
-                            {
-                                cinfo.Voltage = tmpV;
-                            }
-                        }
-
-                        if (conn["RatedOutputCurrent"] != null)
-                        {
-                            int tmpA = 0;
-                            if (int.TryParse(conn["RatedOutputCurrent"].ToString(), out tmpA))
-                            {
-                                cinfo.Amps = tmpA;
-                            }
+                            cinfo.StatusTypeID = (int)StandardStatusTypes.Operational;
+                            if (conn["ChargePointStatus"].ToString() == "Out of service") cinfo.StatusTypeID = (int)StandardStatusTypes.NotOperational;
                         }
 
                         if (conn["ChargeMethod"] != null && !String.IsNullOrEmpty(conn["ChargeMethod"].ToString()))
@@ -310,16 +313,15 @@ namespace OCM.Import.Providers
                             if (method == "Three Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
                             if (method == "DC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
                         }
-                        cinfo.ConnectionType = cType;
-                        cinfo.Level = level;
 
-                        if ((cinfo.ConnectionType == null && cinfo.ConnectionTypeID == null) || cinfo.ConnectionType != null && cinfo.ConnectionType.ID == 0)
+                        if (cinfo.ConnectionTypeID == null)
                         {
                             if (!String.IsNullOrEmpty(connectorType))
                             {
                                 Log("Unknown connector type:" + connectorType);
                             }
                         }
+
                         if (cp.Connections == null)
                         {
                             cp.Connections = new List<ConnectionInfo>();
@@ -338,11 +340,11 @@ namespace OCM.Import.Providers
 
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
-                if (cp.SubmissionStatus == null) cp.SubmissionStatus = submissionStatus;
+                if (cp.SubmissionStatusTypeID == null) cp.SubmissionStatusTypeID = submissionStatus.ID;
 
                 if (!skipPOI)
                 {
-                    outputList.Add(cp);
+                    outputList.Add(new ChargePoint(cp));
                     itemCount++;
                 }
             }
