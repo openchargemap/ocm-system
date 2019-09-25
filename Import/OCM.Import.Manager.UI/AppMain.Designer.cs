@@ -31,6 +31,7 @@
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabPageImport = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lstProvider = new System.Windows.Forms.ComboBox();
             this.chkFetchLiveData = new System.Windows.Forms.CheckBox();
             this.chkUpdatesOnly = new System.Windows.Forms.CheckBox();
             this.lstOutputType = new System.Windows.Forms.ComboBox();
@@ -51,12 +52,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtAPIIdentifier = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.lstProvider = new System.Windows.Forms.ComboBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnUpload = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtImportJSONPath = new System.Windows.Forms.TextBox();
             this.tabSettings.SuspendLayout();
             this.tabPageImport.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPageTest.SuspendLayout();
             this.tabPageSettings.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabSettings
@@ -68,16 +73,17 @@
             this.tabSettings.Location = new System.Drawing.Point(0, 0);
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.SelectedIndex = 0;
-            this.tabSettings.Size = new System.Drawing.Size(431, 307);
+            this.tabSettings.Size = new System.Drawing.Size(448, 352);
             this.tabSettings.TabIndex = 0;
             // 
             // tabPageImport
             // 
+            this.tabPageImport.Controls.Add(this.groupBox2);
             this.tabPageImport.Controls.Add(this.groupBox1);
             this.tabPageImport.Location = new System.Drawing.Point(4, 22);
             this.tabPageImport.Name = "tabPageImport";
             this.tabPageImport.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageImport.Size = new System.Drawing.Size(423, 281);
+            this.tabPageImport.Size = new System.Drawing.Size(440, 326);
             this.tabPageImport.TabIndex = 0;
             this.tabPageImport.Text = "Import";
             this.tabPageImport.UseVisualStyleBackColor = true;
@@ -92,10 +98,20 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(9, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(405, 263);
+            this.groupBox1.Size = new System.Drawing.Size(405, 179);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Processing";
+            // 
+            // lstProvider
+            // 
+            this.lstProvider.DisplayMember = "Title";
+            this.lstProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lstProvider.FormattingEnabled = true;
+            this.lstProvider.Location = new System.Drawing.Point(10, 66);
+            this.lstProvider.Name = "lstProvider";
+            this.lstProvider.Size = new System.Drawing.Size(121, 21);
+            this.lstProvider.TabIndex = 13;
             // 
             // chkFetchLiveData
             // 
@@ -292,21 +308,49 @@
             this.label3.TabIndex = 17;
             this.label3.Text = "API Identifier";
             // 
-            // lstProvider
+            // groupBox2
             // 
-            this.lstProvider.DisplayMember = "Title";
-            this.lstProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.lstProvider.FormattingEnabled = true;
-            this.lstProvider.Location = new System.Drawing.Point(10, 66);
-            this.lstProvider.Name = "lstProvider";
-            this.lstProvider.Size = new System.Drawing.Size(121, 21);
-            this.lstProvider.TabIndex = 13;
+            this.groupBox2.Controls.Add(this.btnUpload);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.txtImportJSONPath);
+            this.groupBox2.Location = new System.Drawing.Point(9, 191);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(405, 131);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Upload";
+            // 
+            // btnUpload
+            // 
+            this.btnUpload.Location = new System.Drawing.Point(115, 50);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(75, 23);
+            this.btnUpload.TabIndex = 19;
+            this.btnUpload.Text = "Upload";
+            this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Click += new System.EventHandler(this.BtnUpload_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(9, 31);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(101, 13);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "JSON file for upload";
+            // 
+            // txtImportJSONPath
+            // 
+            this.txtImportJSONPath.Location = new System.Drawing.Point(9, 50);
+            this.txtImportJSONPath.Name = "txtImportJSONPath";
+            this.txtImportJSONPath.Size = new System.Drawing.Size(100, 20);
+            this.txtImportJSONPath.TabIndex = 17;
             // 
             // AppMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 307);
+            this.ClientSize = new System.Drawing.Size(448, 352);
             this.Controls.Add(this.tabSettings);
             this.Name = "AppMain";
             this.Text = "Import Manager";
@@ -318,6 +362,8 @@
             this.tabPageTest.ResumeLayout(false);
             this.tabPageSettings.ResumeLayout(false);
             this.tabPageSettings.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -348,5 +394,9 @@
         private System.Windows.Forms.TextBox txtAPIIdentifier;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox lstProvider;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnUpload;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtImportJSONPath;
     }
 }

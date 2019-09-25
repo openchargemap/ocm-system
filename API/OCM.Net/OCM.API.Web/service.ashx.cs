@@ -187,6 +187,43 @@ namespace OCM.API
                     }
                 }
 
+                if (context.Request["action"] == "cp_batch_submission")
+                {
+                    var sr = new System.IO.StreamReader(context.Request.InputStream);
+                    string contentJson = sr.ReadToEnd().Trim();
+
+                    var list = JsonConvert.DeserializeObject<List<ChargePoint>>(contentJson);
+                    foreach(var cp in list)
+                    {
+                        var validationResult= POIManager.IsValid(cp);
+                      
+                        ValidationResult submissionResult = new ValidationResult { IsValid = false };
+
+                        if (validationResult.IsValid)
+                        {
+                            //perform submission
+                            submissionResult = submissionManager.PerformPOISubmission(cp, user, performCacheRefresh:false);
+                        }else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Invalid POI: " + cp.ID);
+                        }
+
+                        
+                    }
+
+                    // refresh cache
+                 
+                    var cacheTask = System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        return await Core.Data.CacheManager.RefreshCachedData();
+                    });
+                    cacheTask.Wait();
+                    
+                    context.Response.StatusCode = 202;
+
+
+                }
+
                 if (context.Request["action"] == "comment_submission" || filter.Action == "comment")
                 {
                     UserComment comment = new UserComment();

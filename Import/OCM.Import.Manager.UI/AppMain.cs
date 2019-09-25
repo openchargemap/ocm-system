@@ -80,5 +80,16 @@ namespace Import
 
             new ImportManager("").GeocodingTest();
         }
+
+        private void BtnUpload_Click(object sender, EventArgs e)
+        {
+            ImportManager importManager = new ImportManager(txtDataFolderPath.Text);
+            importManager.IsSandboxedAPIMode = true;
+            string json = System.IO.File.ReadAllText(txtImportJSONPath.Text);
+
+            string result = importManager.UploadPOIList(json, txtAPIIdentifier.Text, txtAPISessionToken.Text);
+
+            MessageBox.Show(result);
+        }
     }
 }

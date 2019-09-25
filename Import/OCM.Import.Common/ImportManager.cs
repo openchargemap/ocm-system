@@ -798,7 +798,7 @@ namespace OCM.Import
                 var list = provider.Process(coreRefData);
 
 #if DEBUG
-                list = list.Take(100).ToList();
+               // list = list.Take(100).ToList();
 #endif
 
 
@@ -917,6 +917,21 @@ namespace OCM.Import
             return resultReport;
         }
 
+        public string UploadPOIList(string json, string apiIdentifier,string apiToken)
+        {
+            var credentials = GetAPISessionCredentials(apiIdentifier, apiToken);
+
+            int numAdded = 0;
+            int numUpdated = 0;
+
+            List<ChargePoint> poiList = JsonConvert.DeserializeObject<List<ChargePoint>>(json);
+            OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
+            Log("Publishing via API..");
+           
+            ocmClient.UpdateItems(poiList, credentials);
+           
+            return $"Added: {numAdded} Updated: {numUpdated}";
+        }
         /// <summary>
         /// For a list of ChargePoint objects, attempt to populate the AddressInfo (at least country)
         /// based on lat/lon if not already populated

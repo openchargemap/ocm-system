@@ -56,7 +56,7 @@ namespace OCM.API.Client
             }
             else
             {
-                ServiceBaseURL = "http://sandbox.api.openchargemap.io/v2/";
+                ServiceBaseURL = "http://localhost:8080/v3/";
             }
         }
 
@@ -241,6 +241,27 @@ namespace OCM.API.Client
             {
                 //update failed
                 System.Diagnostics.Debug.WriteLine("Update Item Failed: {" + cp.ID + ": " + cp.AddressInfo.Title + "}");
+                return false;
+            }
+        }
+
+        public bool UpdateItems(List<ChargePoint> list, APICredentials credentials)
+        {
+            //TODO: implement batch update based on item list?
+            try
+            {
+                string url = ServiceBaseURL + "?action=cp_batch_submission&format=json";
+                url += "&Identifier=" + credentials.Identifier;
+                url += "&SessionToken=" + credentials.SessionToken;
+
+                string json = JsonConvert.SerializeObject(list);
+                string result = PostDataToURL(url, json);
+                return true;
+            }
+            catch (Exception exp)
+            {
+                //update failed
+                System.Diagnostics.Debug.WriteLine("Update Items Failed: {" + exp.Message+ "}");
                 return false;
             }
         }
