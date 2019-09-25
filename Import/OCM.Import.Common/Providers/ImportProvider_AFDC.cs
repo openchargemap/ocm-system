@@ -12,7 +12,7 @@ namespace OCM.Import.Providers
         {
             ProviderName = "afdc.energy.gov";
             OutputNamePrefix = "afdc";
-            AutoRefreshURL = "http://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key=df771c4ffab663f91428bc63224c9e266357179d&download=true&fuel_type=ELEC&status=all&country=US,CA";
+            AutoRefreshURL = "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key=df771c4ffab663f91428bc63224c9e266357179d&download=true&fuel_type=ELEC&status=all&country=US,CA";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             DataProviderID = 2; //ADFC
@@ -44,10 +44,12 @@ namespace OCM.Import.Providers
             var chrgLevel3 = coreRefData.ChargerTypes.First(c => c.ID == 3);
 
             int itemCount = 0;
+            int plannedItems = 0;
 
             foreach (var dataItem in dataList)
             {
                 bool skipItem = false;
+
                 ChargePoint cp = new ChargePoint();
 
                 try
@@ -99,6 +101,10 @@ namespace OCM.Import.Providers
                     if (!String.IsNullOrEmpty(deviceController))
                     {
                         deviceController = deviceController.ToLower().Replace(" network", "");
+                        if (deviceController == "circuit ã©lectrique")
+                        {
+                            deviceController = "circuit electrique";
+                        }
 
                         var deviceOperatorInfo = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Contains(deviceController) == true);
                         if (deviceOperatorInfo != null)
@@ -117,48 +123,138 @@ namespace OCM.Import.Providers
 
                     //determine most likely usage type
                     cp.UsageTypeID = usageTypePrivate.ID;
-                    if (item["groups_with_access_code"] != null)
+                    if (item["access_code"] != null)
                     {
-                        string accessDesc = item["groups_with_access_code"].ToString().ToLower();
-                        if (accessDesc.StartsWith("public - see hours"))
+                        string accessCode = item["access_code"].ToString().ToLower();
+                        if (accessCode.Equals("public"))
                         {
                             cp.UsageTypeID = usageTypePublic.ID;
-                        }
-                        else if (accessDesc.Trim() == "public")
-                        {
-                            cp.UsageTypeID = usageTypePublic.ID;
-                        }
-                        else if (accessDesc.StartsWith("private access only"))
-                        {
-                            cp.UsageTypeID = usageTypePrivate.ID;
-                        }
-                        else if (accessDesc.StartsWith("public - card key at all times"))
-                        {
-                            cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
-                        }
-                        else if (accessDesc.StartsWith("public - call ahead"))
-                        {
-                            cp.UsageTypeID = usageTypePublicNoticeRequired.ID;
-                        }
-                        else if (accessDesc.StartsWith("public - credit card at all times"))
-                        {
-                            cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
-                        }
-                        else if (accessDesc.StartsWith("private"))
-                        {
-                            cp.UsageTypeID = usageTypePrivate.ID;
-                        }
-                        else if (accessDesc.StartsWith("planned"))
-                        {
-                            cp.UsageTypeID = usageTypePrivate.ID;
-                            cp.StatusTypeID = nonoperationalStatus.ID;
-                            skipItem = true;
                         }
                         else
                         {
-                            this.Log("Uknown usage type:" + item["groups_with_access_code"].ToString());
+                            cp.UsageTypeID = usageTypePrivate.ID;
                         }
                     }
+
+                    if (cp.UsageTypeID == usageTypePublic.ID)
+                    {
+                        string accessDetail = item["access_detail_code"]?.ToString().ToLower();
+                        if (!string.IsNullOrEmpty(accessDetail))
+                        {
+                            if (cp.AddressInfo.AccessComments == null) cp.AddressInfo.AccessComments = "";
+                            else cp.AddressInfo.AccessComments += "\r\n";
+
+                            if (accessDetail == "key_always")
+                            {
+                                // Card key at all times.
+                                cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
+                            }
+                            else if (accessDetail == "credit_card_always")
+                            {
+                                // 	Credit card at all times.
+                                cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
+                            }
+                            else if (accessDetail == "credit_card_after_hours")
+                            {
+                                // Credit card after hours.
+                                cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
+                            }
+                            else if (accessDetail == "fleet")
+                            {
+                                // 	Fleet customers only.
+                                cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
+                            }
+                            else if (accessDetail == "government")
+                            {
+                                // Government only.
+                                cp.AddressInfo.AccessComments = item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
+                            }
+                            else if (accessDetail == "key_after_hours")
+                            {
+                                // Card key after hours.
+                                cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
+                            }
+                            else if (accessDetail == "call")
+                            {
+                                // 	Call ahead.
+                                cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
+                                cp.UsageTypeID = usageTypePublicNoticeRequired.ID;
+                            }
+
+                        }
+
+                    }
+
+                    string status_code = item["status_code"]?.ToString().ToLower();
+                    if (!string.IsNullOrEmpty(status_code))
+                    {
+                        if (status_code == "e")
+                        {
+                            cp.StatusTypeID = (int)StandardStatusTypes.Operational;
+                        }
+                        else if (status_code == "t")
+                        {
+                            cp.StatusTypeID = (int)StandardStatusTypes.TemporarilyUnavailable;
+                            if (!string.IsNullOrEmpty(item["expected_date"]?.ToString()))
+                            {
+                                cp.DatePlanned = DateTime.Parse(item["expected_date"].ToString());
+                            }
+                        }
+                        else if (status_code == "p")
+                        {
+                            cp.StatusTypeID = (int)StandardStatusTypes.PlannedForFutureDate;
+                            if (!string.IsNullOrEmpty(item["expected_date"]?.ToString()))
+                            {
+                                cp.DatePlanned = DateTime.Parse(item["expected_date"].ToString());
+                            }
+
+                            // we set usage type to private for planned sites to reduce likelihood of people travelling to the location
+                            cp.GeneralComments = "Planned for future date. Not Operational.";
+
+                            cp.UsageTypeID = usageTypePrivate.ID;
+
+                            plannedItems++;
+                        }
+                    }
+                    /*
+
+                    else if (accessDesc.StartsWith("private access only") || accessDesc.Contains("(private)"))
+                    {
+                        cp.UsageTypeID = usageTypePrivate.ID;
+                    }
+                    else if (accessDesc.StartsWith("public - card key at all times"))
+                    {
+                        cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
+                    }
+                    else if (accessDesc.Contains("public - call ahead"))
+                    {
+                        cp.UsageTypeID = usageTypePublicNoticeRequired.ID;
+                    }
+                    else if (accessDesc.Contains("public - credit card at all times"))
+                    {
+                        cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
+                    }
+                    else if (accessDesc.StartsWith("private"))
+                    {
+                        cp.UsageTypeID = usageTypePrivate.ID;
+                    }
+                    else if (accessDesc.StartsWith("planned"))
+                    {
+                        cp.UsageTypeID = usageTypePrivate.ID;
+                        cp.StatusTypeID = nonoperationalStatus.ID;
+                        skipItem = true;
+                    }
+                    else
+                    {
+                        this.Log("Unknown usage type:" + item["groups_with_access_code"].ToString());
+                    }
+                    }*/
 
                     string ev_other_evse = null;
                     if (item["ev_other_evse"] != null) ev_other_evse = item["ev_other_evse"].ToString();
@@ -192,6 +288,7 @@ namespace OCM.Import.Providers
 
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_20;
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA515")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_15;
+                        if (evconnectors.Any(c => c.Value<string>() == "NEMA1450")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema14_50;
 
                         if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
                         {
@@ -220,13 +317,13 @@ namespace OCM.Import.Providers
 
                         cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
 
-                        if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionTypeID = 1; //J1772
+                        if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772; //J1772
 
                         if (evconnectors.Any(c => c.Value<string>() == "TESLA"))
                         {
-                            cinfo.ConnectionTypeID = 30; //tesla model S North America proprietary
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.TeslaProprietary; //tesla model S North America proprietary
                         }
-                       
+
                         if (cinfo.ConnectionTypeID == 0 && evconnectors.Any())
                         {
                             //unknown connection type
@@ -242,7 +339,13 @@ namespace OCM.Import.Providers
                     if (numLevel3 > 0)
                     {
                         //for each level 3 type connector identified, add an equipment entry. We don't have full information as data may say 3 * Lvl3, including CHADEMO & J1772COMBO, but we don't know which is which.
-                        var allConnectors = evconnectors.Where(c => c.Value<string>() == "CHADEMO" || c.Value<string>() == "TESLA" || c.Value<string>() == "J1772COMBO");
+                        var allConnectors = evconnectors.Where(c => c.Value<string>() == "CHADEMO" || c.Value<string>() == "TESLA" || c.Value<string>() == "J1772COMBO").Select(c => c.Value<string>()).ToList();
+
+                        if (evconnectors.Length == 1 && evconnectors[0].Value<string>() == "J1772")
+                        {
+                            allConnectors.Add("J1772COMBO");
+                        }
+
                         bool lvl3Added = false;
                         foreach (var lvl3Connector in allConnectors)
                         {
@@ -258,22 +361,23 @@ namespace OCM.Import.Providers
                                 //assume basic level 3 power
                                 Voltage = 400,
                                 Amps = 100,
-                                CurrentTypeID = 10 //DC
+                                PowerKW = 50,
+                                CurrentTypeID = (int)StandardCurrentTypes.DC //DC
                             };
 
                             cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
 
-                            if (lvl3Connector.Value<string>() == "CHADEMO")
+                            if (lvl3Connector == "CHADEMO")
                             {
                                 cinfo.ConnectionTypeID = 2; //CHADEMO
                             }
 
-                            if (lvl3Connector.Value<string>() == "TESLA")
+                            if (lvl3Connector == "TESLA")
                             {
                                 cinfo.ConnectionTypeID = 27; //tesla supercharger
                             }
 
-                            if (lvl3Connector.Value<string>() == "J1772COMBO")
+                            if (lvl3Connector == "J1772COMBO")
                             {
                                 cinfo.ConnectionTypeID = 32; //SAE Combo (DC Fast J1772 Version)
                             }
@@ -301,10 +405,13 @@ namespace OCM.Import.Providers
                     Log("Exception parsing imported item " + itemCount + ":" + exp.ToString());
                     skipItem = true;
                 }
+
                 if (!skipItem) outputList.Add(cp);
 
                 itemCount++;
             }
+
+            Log($"Items Parsed:{outputList.Count} PlannedItems: {plannedItems}");
 
             return outputList.ToList();
         }
