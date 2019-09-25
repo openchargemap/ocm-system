@@ -34,12 +34,13 @@ namespace OCM.API.Common.Model.OCPI
         }
         public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source)
         {
-            List<OCM.API.Common.Model.ChargePoint> output = new List<ChargePoint>();
+            var output = new List<ChargePoint>();
+
             foreach(var i in source) {
 
                 var iso2Code = GetCountryCodeFromISO3(i.Country);
 
-                output.Add(new ChargePoint
+                var cp = new ChargePoint
                 {
                     DataProvidersReference = i.Id,
                     AddressInfo = new AddressInfo
@@ -51,10 +52,21 @@ namespace OCM.API.Common.Model.OCPI
                         //i.AdditionalProperties
                         Latitude = double.Parse(i.Coordinates.Latitude),
                         Longitude = double.Parse(i.Coordinates.Longitude),
-                        CountryID = _coreReferenceData.Countries.FirstOrDefault(c=>c.ISOCode==iso2Code)?.ID
-
+                        CountryID = _coreReferenceData.Countries.FirstOrDefault(c => c.ISOCode == iso2Code)?.ID,
+                        AccessComments = i.Directions?.Select(d => d.Text).ToString()
                     }
-                });
+                };
+
+              if (i.AdditionalProperties.ContainsKey("evses"))
+                {
+                    List<OCM.Model.OCPI.EVSE> evse = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.EVSE>>(i.AdditionalProperties["evses"].ToString());
+
+                    foreach(var e in evse)
+                    {
+                       //TODO:
+                    }
+                }
+                output.Add(cp);
             }
             return output;
         }

@@ -1,1 +1,0 @@
-Download the help file here: https://github.com/GregFinzer/Compare-Net-Objects/raw/master/Compare-NET-Objects-Help/Compare-NET-Objects-Help.chm

@@ -389,7 +389,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppReadme\Compare-NET-Objects-Help.txt" />
     <Content Include="Data\DataModelRefreshNotes.txt" />
   </ItemGroup>
   <ItemGroup>

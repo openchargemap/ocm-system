@@ -7,7 +7,10 @@ using Newtonsoft.Json;
 
 namespace OCM.API.Common.Model
 {
-    public class ChargePoint
+    /// <summary>
+    /// Core POI details (without expanded object properties)
+    /// </summary>
+    public class POIDetails
     {
         [DisplayName("OCM Ref")]
         public int ID { get; set; }
@@ -21,17 +24,11 @@ namespace OCM.API.Common.Model
 
         public int? DataProviderID { get; set; }
 
-        [DisplayName("Data Provider")]
-        public DataProvider DataProvider { get; set; }
-
         [DisplayName("Data Providers Reference")]
         [StringLength(100)]
         public string DataProvidersReference { get; set; }
 
         public int? OperatorID { get; set; }
-
-        [DisplayName("Network/Operator")]
-        public OperatorInfo OperatorInfo { get; set; }
 
         [DisplayName("Operators Own Ref")]
         [StringLength(100)]
@@ -39,15 +36,15 @@ namespace OCM.API.Common.Model
 
         public int? UsageTypeID { get; set; }
 
-        [DisplayName("Usage Type")]
-        public UsageType UsageType { get; set; }
-
         [DisplayName("Usage Cost")]
         [StringLength(200)]
         public string UsageCost { get; set; }
 
         [DisplayName("Nearest Address")]
         public AddressInfo AddressInfo { get; set; }
+
+        [DisplayName("Equipment Info")]
+        public List<ConnectionInfo> Connections { get; set; }
 
         [DisplayName("Number Of Stations/Bays")]
         [Range(0, 100)]
@@ -64,11 +61,11 @@ namespace OCM.API.Common.Model
 
         public int? StatusTypeID { get; set; }
 
-        [DisplayName("Operational Status")]
-        public StatusType StatusType { get; set; }
-
         [DisplayName("Date Status Last Updated")]
         public DateTime? DateLastStatusUpdate { get; set; }
+
+        [DisplayName("Metadata")]
+        public List<MetadataValue> MetadataValues { get; set; }
 
         [DisplayName("Data Quality Level")]
         [Range(1, 5)]
@@ -78,6 +75,46 @@ namespace OCM.API.Common.Model
         public DateTime? DateCreated { get; set; }
 
         public int? SubmissionStatusTypeID { get; set; }
+    }
+    public class ChargePoint : POIDetails
+    {
+        public ChargePoint() { }
+        public ChargePoint(POIDetails poi)
+        {
+            ID = poi.ID;
+            UUID = poi.UUID;
+            ParentChargePointID = poi.ParentChargePointID;
+            DataProviderID = poi.DataProviderID;
+            DataProvidersReference = poi.DataProvidersReference;
+            OperatorID = poi.OperatorID;
+            OperatorsReference = poi.OperatorsReference;
+            UsageTypeID = poi.UsageTypeID;
+            UsageCost = poi.UsageCost;
+            AddressInfo = poi.AddressInfo;
+            Connections = poi.Connections;
+            NumberOfPoints = poi.NumberOfPoints;
+            GeneralComments = poi.GeneralComments;
+            DatePlanned = poi.DatePlanned;
+            DateLastConfirmed = poi.DateLastConfirmed;
+            StatusTypeID = poi.StatusTypeID;
+            DateLastStatusUpdate = poi.DateLastStatusUpdate;
+            MetadataValues = poi.MetadataValues;
+            DataQualityLevel = poi.DataQualityLevel;
+            DateCreated = poi.DateCreated;
+            SubmissionStatusTypeID = poi.SubmissionStatusTypeID;
+        }
+
+        [DisplayName("Data Provider")]
+        public DataProvider DataProvider { get; set; }
+
+        [DisplayName("Network/Operator")]
+        public OperatorInfo OperatorInfo { get; set; }
+
+        [DisplayName("Usage Type")]
+        public UsageType UsageType { get; set; }
+
+        [DisplayName("Operational Status")]
+        public StatusType StatusType { get; set; }
 
         [DisplayName("Submission Status")]
         public SubmissionStatusType SubmissionStatus { get; set; }
@@ -88,14 +125,8 @@ namespace OCM.API.Common.Model
         [DisplayName("% Similarity")]
         public int? PercentageSimilarity { get; set; }
 
-        [DisplayName("Equipment Info")]
-        public List<ConnectionInfo> Connections { get; set; }
-
         [DisplayName("Media Items")]
         public List<MediaItem> MediaItems { get; set; }
-
-        [DisplayName("Metadata")]
-        public List<MetadataValue> MetadataValues { get; set; }
 
         /// <summary>
         /// Level of detail (map priority) for internal use only

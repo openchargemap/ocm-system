@@ -84,14 +84,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestAnalysis.cs" />
-    <Compile Include="TestOCPIConversions.cs" />
+    <Compile Include="ImportTests\TestOCPIConversions.cs" />
     <Compile Include="TestPOIQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="Assets\ocpi_location_example.json">
+    <Content Include="Assets\ocpi_3_0_0_location_example.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_1_1_locations-fastned.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
   </ItemGroup>
