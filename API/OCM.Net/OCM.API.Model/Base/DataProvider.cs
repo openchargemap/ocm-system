@@ -18,5 +18,10 @@ namespace OCM.API.Common.Model
         public bool? IsApprovedImport { get; set; }
         public string License { get; set; }
         public DateTime? DateLastImported { get; set; }
+
+        public override string ToString()
+        {
+            return this.Title;
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace OCM.API.Common.Model
         Unknown = 0,
         CurrentlyAvailable = 10,
         CurrentlyInUse = 20,
+        TemporarilyUnavailable = 30,
         Operational = 50,
         PartlyOperational = 75,
         NotOperational = 100,
@@ -74,11 +75,15 @@ namespace OCM.API.Common.Model
         Unknown = 0,
         J1772 = 1,
         CHAdeMO = 2,
+        BS1363TypeG = 3,
         MennekesType2 = 25,
+        MennekesType2Tethered = 1036,
         Schuko = 28,
         CCSComboType2 = 33,
         Nema5_15 = 22,
-        Nema5_20 = 9
+        Nema5_20 = 9,
+        Nema14_50 = 11,
+        TeslaProprietary =30
     }
 
     public enum StandardCurrentTypes

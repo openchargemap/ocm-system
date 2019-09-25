@@ -16,7 +16,7 @@ namespace OCM.API.OutputProviders
 
         public void GetOutput(System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
-            bool isVerboseMode = true;
+            bool isVerboseMode = settings.IsVerboseOutput;
 
             XmlTextWriter xml = new XmlTextWriter(outputStream, Encoding.UTF8);
 
@@ -158,7 +158,7 @@ namespace OCM.API.OutputProviders
                         {   
                             xml.WriteStartElement("ChargerType");
                             xml.WriteAttributeString("ID", cg.ChargerType.ID.ToString());
-                            if (isVerboseMode)
+                            if (isVerboseMode && !settings.IsCompactOutput)
                             {
                                 xml.WriteAttributeString("Title", cg.ChargerType.Title);
                                 xml.WriteAttributeString("IsFastChargeCapable", cg.ChargerType.IsFastChargeCapable.ToString());
@@ -196,7 +196,7 @@ namespace OCM.API.OutputProviders
                 {
                     xml.WriteStartElement("StatusType");
                     xml.WriteAttributeString("ID", item.StatusType.ID.ToString());
-                    if (isVerboseMode)
+                    if (isVerboseMode && !settings.IsCompactOutput)
                     {
                         xml.WriteAttributeString("Title", item.StatusType.Title);
                     }
@@ -210,8 +210,8 @@ namespace OCM.API.OutputProviders
                     foreach (var comment in item.UserComments)
                     {
                         xml.WriteStartElement("UserComment");
-                        xml.WriteAttributeString("CommentTypeID", comment.CommentType.ID.ToString());
-                        if (isVerboseMode)
+                        xml.WriteAttributeString("CommentTypeID", comment.CommentTypeID.ToString());
+                        if (isVerboseMode && !settings.IsCompactOutput)
                         {
                             xml.WriteAttributeString("CommentType", comment.CommentType.Title);
                         }

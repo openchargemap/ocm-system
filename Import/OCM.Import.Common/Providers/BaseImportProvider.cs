@@ -251,6 +251,8 @@ namespace OCM.Import.Providers
         public void Log(string message)
         {
             this.ProcessingLog += "\r\n[" + ProviderName + "]: " + message;
+
+            System.Diagnostics.Debug.WriteLine(message);
         }
 
         public EVSE GetEVSEFromCP(ChargePoint cp)
@@ -319,6 +321,13 @@ namespace OCM.Import.Providers
                     //post
                     InputData = webClient.UploadString(url, HTTPPostVariables);
                 }
+
+                // cache result if we received a response
+                /*if (InputData.Length > 512)
+                {
+                    var cacheFile = InputPath + "\\cache_" + ProviderName + ".dat";
+                    System.IO.File.WriteAllText(cacheFile, InputData);
+                }*/
 
                 return true;
             }

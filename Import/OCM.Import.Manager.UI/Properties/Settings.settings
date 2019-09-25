@@ -12,7 +12,7 @@
       <Value Profile="(Default)">demo</Value>
     </Setting>
     <Setting Name="Import_DataFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">..\..\..\..\..\..\..\import_sample_data\</Value>
+      <Value Profile="(Default)">C:\Temp\ocm\data\import\</Value>
     </Setting>
     <Setting Name="APIKey_Coulomb" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

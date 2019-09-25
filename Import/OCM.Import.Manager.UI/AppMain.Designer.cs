@@ -51,6 +51,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtAPIIdentifier = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.lstProvider = new System.Windows.Forms.ComboBox();
             this.tabSettings.SuspendLayout();
             this.tabPageImport.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -83,6 +84,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lstProvider);
             this.groupBox1.Controls.Add(this.chkFetchLiveData);
             this.groupBox1.Controls.Add(this.chkUpdatesOnly);
             this.groupBox1.Controls.Add(this.lstOutputType);
@@ -290,6 +292,16 @@
             this.label3.TabIndex = 17;
             this.label3.Text = "API Identifier";
             // 
+            // lstProvider
+            // 
+            this.lstProvider.DisplayMember = "Title";
+            this.lstProvider.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lstProvider.FormattingEnabled = true;
+            this.lstProvider.Location = new System.Drawing.Point(10, 66);
+            this.lstProvider.Name = "lstProvider";
+            this.lstProvider.Size = new System.Drawing.Size(121, 21);
+            this.lstProvider.TabIndex = 13;
+            // 
             // AppMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -335,5 +347,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtAPIIdentifier;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox lstProvider;
     }
 }

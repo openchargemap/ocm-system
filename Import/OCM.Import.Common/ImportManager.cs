@@ -99,6 +99,8 @@ namespace OCM.Import
 
         public string ImportLog { get; set; }
 
+        public bool UseDataModelComparison { get; set; } = false;
+
         public ImportManager(string tempFolderPath)
         {
             GeonamesAPIUserName = "openchargemap";
@@ -164,7 +166,7 @@ namespace OCM.Import
             return providers;
         }
 
-        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData, bool fetchExistingFromAPI = false)
+        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData, bool fetchExistingFromAPI = false, string providerName = null)
         {
             OCMClient client = new OCMClient(IsSandboxedAPIMode);
             var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
@@ -172,7 +174,7 @@ namespace OCM.Import
             CoreReferenceData coreRefData = null;
             coreRefData = await client.GetCoreReferenceData();
 
-            string outputPath = "Data\\";
+            string outputPath = defaultDataPath;
             var providers = new List<IImportProvider>();
             providers = GetImportProviders(coreRefData.DataProviders);
 
@@ -180,7 +182,10 @@ namespace OCM.Import
 
             foreach (var provider in providers)
             {
-                await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, false, fetchExistingFromAPI);
+                if (providerName == null || providerName == provider.GetProviderName())
+                {
+                    await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, !fetchLiveData, fetchExistingFromAPI);
+                }
             }
 
             return true;
@@ -195,8 +200,8 @@ namespace OCM.Import
 
             //get list of all current POIs (in relevant countries) including most delisted ones
             int[] countryIds = (from poi in cpList
-                                where poi.AddressInfo.Country != null
-                                select poi.AddressInfo.Country.ID).Distinct().ToArray();
+                                where poi.AddressInfo.CountryID != null
+                                select (int)poi.AddressInfo.CountryID).Distinct().ToArray();
 
             APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = true, SubmissionStatusTypeID = 0 };
 
@@ -431,17 +436,25 @@ namespace OCM.Import
             foreach (var poi in report.Updated)
             {
                 var origPOI = masterListCopy.FirstOrDefault(p => p.ID == poi.ID);
-                var updatedPOI = poiManager.PreviewPopulatedPOIFromModel(poi);
+
+                var updatedPOI = UseDataModelComparison? poiManager.PreviewPopulatedPOIFromModel(poi): poi;
+
                 var differences = poiManager.CheckDifferences(origPOI, updatedPOI);
                 differences.RemoveAll(d => d.Context == ".MetadataValues");
                 differences.RemoveAll(d => d.Context == ".DateLastStatusUpdate");
                 differences.RemoveAll(d => d.Context == ".UUID");
+                differences.RemoveAll(d => d.Context == ".LevelOfDetail");
 
                 differences.RemoveAll(d => d.Context == ".DataProvider.DateLastImported");
                 differences.RemoveAll(d => d.Context == ".IsRecentlyVerified");
                 differences.RemoveAll(d => d.Context == ".DateLastVerified");
                 differences.RemoveAll(d => d.Context == ".UserComments");
                 differences.RemoveAll(d => d.Context == ".MediaItems");
+
+                differences.RemoveAll(d => d.Context == ".OperatorInfo");
+                differences.RemoveAll(d => d.Context == ".UsageType");
+                differences.RemoveAll(d => d.Context == ".ChargerType");
+                differences.RemoveAll(d => d.Context == ".CurrentType");
 
                 if (!differences.Any())
                 {
@@ -552,6 +565,8 @@ namespace OCM.Import
         private void Log(string message)
         {
             this.ImportLog += message + "\r\n";
+
+            System.Diagnostics.Debug.WriteLine(message);
         }
 
         /// <summary>
@@ -735,6 +750,12 @@ namespace OCM.Import
                 {
                     ((IImportProviderWithInit)provider).InitImportProvider();
                 }
+
+                if (string.IsNullOrEmpty(p.InputPath))
+                {
+                    p.InputPath = outputPath + "\\cache_" + p.ProviderName + ".dat";
+                }
+
                 if (fetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
                 {
                     Log("Loading input data from URL..");
@@ -745,6 +766,7 @@ namespace OCM.Import
                     if (p.IsStringData && !p.UseCustomReader)
                     {
                         Log("Loading input data from file..");
+                       
                         loadOK = p.LoadInputFromFile(p.InputPath);
                     }
                     else
@@ -774,6 +796,11 @@ namespace OCM.Import
                 Log("Processing input..");
 
                 var list = provider.Process(coreRefData);
+
+#if DEBUG
+                list = list.Take(100).ToList();
+#endif
+
 
                 int numAdded = 0;
                 int numUpdated = 0;
@@ -806,14 +833,14 @@ namespace OCM.Import
                     GC.Collect();
 
                     List<ChargePoint> finalList = new List<ChargePoint>();
-
+                    // p.SkipDeduplication = true;
                     if (!p.SkipDeduplication)
                     {
                         Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
 
                         //de-duplicate and clean list based on existing data
                         //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
-                        finalList = await DeDuplicateList(list.ToList(), true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, fetchExistingFromAPI);
+                        finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, fetchExistingFromAPI);
                         //var finalList = list;
                     }
                     else

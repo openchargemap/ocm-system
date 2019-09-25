@@ -151,6 +151,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj">
+      <Project>{F330ECA1-D079-4EE0-AEB4-30A3FD67FE03}</Project>
+      <Name>OCM.API.Common.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OCM.Import.Common\OCM.Import.Common.csproj">
       <Project>{c65726e4-1154-4a3d-b3ab-b1dd50590e34}</Project>
       <Name>OCM.Import.Common</Name>

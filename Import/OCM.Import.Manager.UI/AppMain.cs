@@ -1,12 +1,17 @@
-﻿using OCM.Import;
+﻿using OCM.API.Common.Model;
+using OCM.Import;
 using OCM.Import.Providers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Import
 {
     public partial class AppMain : Form
     {
+
+        List<IImportProvider> _providers;
         public AppMain()
         {
             InitializeComponent();
@@ -20,6 +25,14 @@ namespace Import
             this.txtAPISessionToken.Text = Properties.Settings.Default.OCM_API_SessionToken;
             this.txtAPIKey_Coulomb.Text = Properties.Settings.Default.APIKey_Coulomb;
             this.txtAPIPwd_Coulomb.Text = Properties.Settings.Default.APIPwd_Coulomb;
+
+
+            //populate provider list
+            _providers = new List<IImportProvider>();
+            _providers = new ImportManager(this.txtDataFolderPath.Text).GetImportProviders(new List<DataProvider>());
+
+            lstProvider.DataSource = _providers.ToArray().Select(s=>s.GetProviderName()).ToList();
+
         }
 
         private async void btnProcessImports_Click(object sender, EventArgs e)
@@ -40,7 +53,7 @@ namespace Import
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
-            await importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked, fetchExistingFromAPI: true);
+            await importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked, fetchExistingFromAPI: true, lstProvider.SelectedValue.ToString());
             this.Cursor = Cursors.Default;
             this.btnProcessImports.Enabled = true;
             MessageBox.Show("Processing Completed");
