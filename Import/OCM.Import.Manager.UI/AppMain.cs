@@ -1,5 +1,6 @@
 ﻿using OCM.API.Common.Model;
 using OCM.Import;
+using OCM.Import.Manager.UI.Properties;
 using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,12 @@ namespace Import
             lstOutputType.SelectedItem = "JSON Export";
 
             //load settings
-            this.txtDataFolderPath.Text = Properties.Settings.Default.Import_DataFolder;
-            this.txtGeonamesAPIUserID.Text = Properties.Settings.Default.Geonames_API_Username;
-            this.txtAPIIdentifier.Text = Properties.Settings.Default.OCM_API_Identitifer;
-            this.txtAPISessionToken.Text = Properties.Settings.Default.OCM_API_SessionToken;
-            this.txtAPIKey_Coulomb.Text = Properties.Settings.Default.APIKey_Coulomb;
-            this.txtAPIPwd_Coulomb.Text = Properties.Settings.Default.APIPwd_Coulomb;
+            this.txtDataFolderPath.Text = Settings.Default.Import_DataFolder;
+            this.txtGeonamesAPIUserID.Text = Settings.Default.Geonames_API_Username;
+            this.txtAPIIdentifier.Text = Settings.Default.OCM_API_Identitifer;
+            this.txtAPISessionToken.Text = Settings.Default.OCM_API_SessionToken;
+            this.txtAPIKey_Coulomb.Text = Settings.Default.APIKey_Coulomb;
+            this.txtAPIPwd_Coulomb.Text = Settings.Default.APIPwd_Coulomb;
 
 
             //populate provider list
@@ -63,14 +64,14 @@ namespace Import
         {
             //save settings
 
-            Properties.Settings.Default.Import_DataFolder = this.txtDataFolderPath.Text;
-            Properties.Settings.Default.Geonames_API_Username = this.txtGeonamesAPIUserID.Text;
-            Properties.Settings.Default.OCM_API_Identitifer = this.txtAPIIdentifier.Text;
-            Properties.Settings.Default.OCM_API_SessionToken = this.txtAPISessionToken.Text;
-            Properties.Settings.Default.APIKey_Coulomb = this.txtAPIKey_Coulomb.Text;
-            Properties.Settings.Default.APIPwd_Coulomb = this.txtAPIPwd_Coulomb.Text;
+            Settings.Default.Import_DataFolder = this.txtDataFolderPath.Text;
+            Settings.Default.Geonames_API_Username = this.txtGeonamesAPIUserID.Text;
+            Settings.Default.OCM_API_Identitifer = this.txtAPIIdentifier.Text;
+            Settings.Default.OCM_API_SessionToken = this.txtAPISessionToken.Text;
+            Settings.Default.APIKey_Coulomb = this.txtAPIKey_Coulomb.Text;
+            Settings.Default.APIPwd_Coulomb = this.txtAPIPwd_Coulomb.Text;
 
-            Properties.Settings.Default.Save();
+            Settings.Default.Save();
         }
 
         private void btnServiceTest1_Click(object sender, EventArgs e)

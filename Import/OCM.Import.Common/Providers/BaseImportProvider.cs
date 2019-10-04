@@ -13,7 +13,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Web.Script.Serialization;
+
 
 namespace OCM.Import.Providers
 {
@@ -25,66 +25,6 @@ namespace OCM.Import.Providers
         JSON,
         POIModelList
     }
-
-    #region dynamic javascript JSON objects http://www.drowningintechnicaldebt.com/ShawnWeisfeld/archive/2010/08/22/using-c-4.0-and-dynamic-to-parse-json.aspx
-
-    public class DynamicJsonObject : DynamicObject
-    {
-        private IDictionary<string, object> Dictionary { get; set; }
-
-        public DynamicJsonObject(IDictionary<string, object> dictionary)
-        {
-            this.Dictionary = dictionary;
-        }
-
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = this.Dictionary[binder.Name];
-
-            if (result is IDictionary<string, object>)
-            {
-                result = new DynamicJsonObject(result as IDictionary<string, object>);
-            }
-            else if (result is ArrayList && (result as ArrayList) is IDictionary<string, object>)
-            {
-                result = new List<DynamicJsonObject>((result as ArrayList).ToArray().Select(x => new DynamicJsonObject(x as IDictionary<string, object>)));
-            }
-            else if (result is ArrayList)
-            {
-                result = new List<object>((result as ArrayList).ToArray());
-            }
-
-            return this.Dictionary.ContainsKey(binder.Name);
-        }
-    }
-
-    public class DynamicJsonConverter : JavaScriptConverter
-    {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
-        {
-            if (dictionary == null)
-                throw new ArgumentNullException("dictionary");
-
-            if (type == typeof(object))
-            {
-                return new DynamicJsonObject(dictionary);
-            }
-
-            return null;
-        }
-
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new ReadOnlyCollection<Type>(new List<Type>(new Type[] { typeof(object) })); }
-        }
-    }
-
-    #endregion dynamic javascript JSON objects http://www.drowningintechnicaldebt.com/ShawnWeisfeld/archive/2010/08/22/using-c-4.0-and-dynamic-to-parse-json.aspx
 
     public class CommonImportRefData
     {
@@ -235,7 +175,7 @@ namespace OCM.Import.Providers
             OutputNamePrefix = "output";
             ExportType = Providers.ExportType.XML;
             IsProductionReady = false;
-            SourceEncoding = Encoding.GetEncoding(1252); //default to ANSI 1252 western europe
+            SourceEncoding = UTF32Encoding.UTF8; //default to ANSI 1252 western europe
 
             webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
             webClient.Encoding = SourceEncoding;

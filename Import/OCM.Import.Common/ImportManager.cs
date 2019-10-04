@@ -1,3 +1,4 @@
+using GeoCoordinatePortable;
 using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
 using OCM.API.Client;
@@ -257,7 +258,7 @@ namespace OCM.Import
 
             foreach (var item in cpListSortedByPos)
             {
-                var itemGeoPos = new System.Device.Location.GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
+                var itemGeoPos = new GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
 
                 //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
                 var dupeList = masterList.Where(c =>
@@ -265,7 +266,7 @@ namespace OCM.Import
                         // c.DataProvider != null &&
                         c.DataProviderID == item.DataProviderID && c.DataProvidersReference == item.DataProvidersReference)
                         || (c.AddressInfo.Title == item.AddressInfo.Title && c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 && c.AddressInfo.Postcode == item.AddressInfo.Postcode)
-                        || (GeoManager.IsClose(c.AddressInfo.Latitude, c.AddressInfo.Longitude, item.AddressInfo.Latitude, item.AddressInfo.Longitude) && new System.Device.Location.GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS) //meters distance apart
+                        || (GeoManager.IsClose(c.AddressInfo.Latitude, c.AddressInfo.Longitude, item.AddressInfo.Latitude, item.AddressInfo.Longitude) && new GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS) //meters distance apart
                 );
 
                 if (dupeList.Any())
@@ -597,7 +598,7 @@ namespace OCM.Import
         {
             //is duplicate item if latlon is exact match for previous item or latlon is within few meters of previous item
             if (
-                (GeoManager.IsClose(current.AddressInfo.Latitude, current.AddressInfo.Longitude, previous.AddressInfo.Latitude, previous.AddressInfo.Longitude) && new System.Device.Location.GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS) //meters distance apart
+                (GeoManager.IsClose(current.AddressInfo.Latitude, current.AddressInfo.Longitude, previous.AddressInfo.Latitude, previous.AddressInfo.Longitude) && new GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS) //meters distance apart
                 || (compareTitle && (previous.AddressInfo.Title == current.AddressInfo.Title))
                 //&& previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1
                 || (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
@@ -611,7 +612,7 @@ namespace OCM.Import
                 {
                     Log(current.AddressInfo.ToString() + " is Duplicate due to exact equal latlon to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
-                else if (new System.Device.Location.GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS)
+                else if (new GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS)
                 {
                     Log(current.AddressInfo.ToString() + " is Duplicate due to close proximity to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }

@@ -1,118 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FBD1BB19-0912-4A8C-BE95-197CCDC27CF3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OCM.Import.Analysis</RootNamespace>
-    <AssemblyName>OCM.Import.Analysis</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>27f6bbc5</NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyTitle>OCM.Import.Analysis</AssemblyTitle>
+    <Product>OCM.Import.Analysis</Product>
+    <Copyright>Copyright ©  2015</Copyright>
+    <AssemblyTitle>OCM.Import.Analysis</AssemblyTitle>
+    <Product>OCM.Import.Analysis</Product>
+    <Copyright>Copyright ©  2015</Copyright>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureMirror|AnyCPU'">
-    <OutputPath>bin\AzureMirror\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotSpatial.Analysis">
-      <HintPath>..\..\packages\DotSpatial.Analysis.1.7\lib\net40-Client\DotSpatial.Analysis.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Controls">
-      <HintPath>..\..\packages\DotSpatial.Controls.1.7\lib\net40-Client\DotSpatial.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Data">
-      <HintPath>..\..\packages\DotSpatial.Data.1.7\lib\net40-Client\DotSpatial.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Data.Forms">
-      <HintPath>..\..\packages\DotSpatial.Data.Forms.1.7\lib\net40-Client\DotSpatial.Data.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Extensions">
-      <HintPath>..\..\packages\DotSpatial.Extensions.1.7\lib\net40-Client\DotSpatial.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Modeling.Forms">
-      <HintPath>..\..\packages\DotSpatial.Modeling.Forms.1.7\lib\net40-Client\DotSpatial.Modeling.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Mono">
-      <HintPath>..\..\packages\DotSpatial.Mono.1.7\lib\net40-Client\DotSpatial.Mono.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Projections">
-      <HintPath>..\..\packages\DotSpatial.Projections.1.7\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Projections.Forms">
-      <HintPath>..\..\packages\DotSpatial.Projections.Forms.1.7\lib\net40-Client\DotSpatial.Projections.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Serialization">
-      <HintPath>..\..\packages\DotSpatial.Serialization.1.7\lib\net40-Client\DotSpatial.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Symbology">
-      <HintPath>..\..\packages\DotSpatial.Symbology.1.7\lib\net40-Client\DotSpatial.Symbology.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Symbology.Forms">
-      <HintPath>..\..\packages\DotSpatial.Symbology.Forms.1.7\lib\net40-Client\DotSpatial.Symbology.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Topology">
-      <HintPath>..\..\packages\DotSpatial.Topology.1.7\lib\net40-Client\DotSpatial.Topology.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="DotSpatial.Analysis" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Controls" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Data" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Data.Forms" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Extensions" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Modeling.Forms" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Mono" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Projections" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Projections.Forms" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Serialization" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Symbology" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Symbology.Forms" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Topology" Version="1.9.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpatialAnalysis.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj" />
+    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj">
-      <Project>{ac9dbd28-f8b3-4e2e-a2c6-6a7f6a65b160}</Project>
-      <Name>OCM.API.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj">
-      <Project>{f330eca1-d079-4ee0-aeb4-30a3fd67fe03}</Project>
-      <Name>OCM.API.Common.Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

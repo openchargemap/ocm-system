@@ -15,7 +15,6 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "http://icaen.gencat.cat/web/.content/10_ICAEN/16_dades_obertes/arxius/CATALUNYA_PdR_VEHICLES_ELECTRICS.csv";
             IsAutoRefreshed = true;
             IsProductionReady = true;
-            SourceEncoding = Encoding.GetEncoding("Windows-1252");
             DataProviderID = 25;//ICAEN
         }
 

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Import;
+using OCM.Import.Manager.UI.Properties;
 using OCM.Import.Providers;
-using Import.Properties;
+
 
 namespace OCM.Import.Manager.UI
 {
