@@ -1,135 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9D70A3A3-3A16-4E40-AADD-1D1A79673344}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OCM.API.Data</RootNamespace>
-    <AssemblyName>OCM.API.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net45</TargetFramework>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <AssemblyTitle>OCM.API.Data</AssemblyTitle>
+    <Product>OCM.API.Data</Product>
+    <Copyright>Copyright ©  2013</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Sandbox|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Sandpit\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
+    <PackageReference Include="EntityFramework" Version="6.1.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\AddressInfo.cs" />
-    <Compile Include="Models\AuditLog.cs" />
-    <Compile Include="Models\ChargePoint.cs" />
-    <Compile Include="Models\ChargerType.cs" />
-    <Compile Include="Models\CheckinStatusType.cs" />
-    <Compile Include="Models\ConnectionInfo.cs" />
-    <Compile Include="Models\ConnectionType.cs" />
-    <Compile Include="Models\Country.cs" />
-    <Compile Include="Models\CurrentType.cs" />
-    <Compile Include="Models\DataProvider.cs" />
-    <Compile Include="Models\DataProviderStatusType.cs" />
-    <Compile Include="Models\DataProviderUser.cs" />
-    <Compile Include="Models\DataType.cs" />
-    <Compile Include="Models\EditQueueItem.cs" />
-    <Compile Include="Models\EntityType.cs" />
-    <Compile Include="Models\Mapping\AddressInfoMap.cs" />
-    <Compile Include="Models\Mapping\AuditLogMap.cs" />
-    <Compile Include="Models\Mapping\ChargePointMap.cs" />
-    <Compile Include="Models\Mapping\ChargerTypeMap.cs" />
-    <Compile Include="Models\Mapping\CheckinStatusTypeMap.cs" />
-    <Compile Include="Models\Mapping\ConnectionInfoMap.cs" />
-    <Compile Include="Models\Mapping\ConnectionTypeMap.cs" />
-    <Compile Include="Models\Mapping\CountryMap.cs" />
-    <Compile Include="Models\Mapping\CurrentTypeMap.cs" />
-    <Compile Include="Models\Mapping\DataProviderMap.cs" />
-    <Compile Include="Models\Mapping\DataProviderStatusTypeMap.cs" />
-    <Compile Include="Models\Mapping\DataProviderUserMap.cs" />
-    <Compile Include="Models\Mapping\DataTypeMap.cs" />
-    <Compile Include="Models\Mapping\EditQueueItemMap.cs" />
-    <Compile Include="Models\Mapping\EntityTypeMap.cs" />
-    <Compile Include="Models\Mapping\MediaItemMap.cs" />
-    <Compile Include="Models\Mapping\MetadataFieldMap.cs" />
-    <Compile Include="Models\Mapping\MetadataFieldOptionMap.cs" />
-    <Compile Include="Models\Mapping\MetadataGroupMap.cs" />
-    <Compile Include="Models\Mapping\MetadataValueMap.cs" />
-    <Compile Include="Models\Mapping\OperatorMap.cs" />
-    <Compile Include="Models\Mapping\StatusTypeMap.cs" />
-    <Compile Include="Models\Mapping\SubmissionStatusTypeMap.cs" />
-    <Compile Include="Models\Mapping\SystemConfigMap.cs" />
-    <Compile Include="Models\Mapping\UsageTypeMap.cs" />
-    <Compile Include="Models\Mapping\UserCommentMap.cs" />
-    <Compile Include="Models\Mapping\UserCommentTypeMap.cs" />
-    <Compile Include="Models\Mapping\UserMap.cs" />
-    <Compile Include="Models\Mapping\ViewAllEquipmentMap.cs" />
-    <Compile Include="Models\Mapping\ViewAllLocationMap.cs" />
-    <Compile Include="Models\MediaItem.cs" />
-    <Compile Include="Models\MetadataField.cs" />
-    <Compile Include="Models\MetadataFieldOption.cs" />
-    <Compile Include="Models\MetadataGroup.cs" />
-    <Compile Include="Models\MetadataValue.cs" />
-    <Compile Include="Models\OCMModelContext.cs" />
-    <Compile Include="Models\Operator.cs" />
-    <Compile Include="Models\StatusType.cs" />
-    <Compile Include="Models\SubmissionStatusType.cs" />
-    <Compile Include="Models\SystemConfig.cs" />
-    <Compile Include="Models\UsageType.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserComment.cs" />
-    <Compile Include="Models\UserCommentType.cs" />
-    <Compile Include="Models\ViewAllEquipment.cs" />
-    <Compile Include="Models\ViewAllLocation.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

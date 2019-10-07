@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OCM.API.Security
 {
@@ -25,11 +26,13 @@ namespace OCM.API.Security
             claims.Add(new Claim("UserID", user.ID.ToString()));
             claims.Add(new Claim("nonce", user.CurrentSessionToken.ToString()));
 
-            var signingKey = new InMemorySymmetricSecurityKey(Encoding.ASCII.GetBytes(user.CurrentSessionToken));
-            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature, SecurityAlgorithms.Sha256Digest);
-            var token = new JwtSecurityToken(ISSUER, AUDIENCE, claims, DateTime.UtcNow, DateTime.UtcNow.AddMonths(1), signingCredentials);
+            
+            var signingKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.ASCII.GetBytes(user.CurrentSessionToken));
 
-            var handler = new JwtSecurityTokenHandler();
+            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature, SecurityAlgorithms.Sha256Digest);
+            var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(ISSUER, AUDIENCE, claims, DateTime.UtcNow, DateTime.UtcNow.AddMonths(1), signingCredentials);
+
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
 
             var jwt = handler.WriteToken(token);
 
@@ -59,7 +62,7 @@ namespace OCM.API.Security
             {
                 ValidIssuer = ISSUER,
                 ValidAudience = AUDIENCE,
-                IssuerSigningKey = new InMemorySymmetricSecurityKey(Encoding.ASCII.GetBytes(user.CurrentSessionToken)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(user.CurrentSessionToken)),
                 RequireExpirationTime = true,
                 ValidateIssuer = true
             };
