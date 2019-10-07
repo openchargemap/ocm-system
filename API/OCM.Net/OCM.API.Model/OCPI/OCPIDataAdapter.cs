@@ -59,7 +59,7 @@ namespace OCM.API.Common.Model.OCPI
 
               if (i.AdditionalProperties.ContainsKey("evses"))
                 {
-                    List<OCM.Model.OCPI.EVSE> evse = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.EVSE>>(i.AdditionalProperties["evses"].ToString());
+                    List<OCM.Model.OCPI.EVSE> evse = (List<OCM.Model.OCPI.EVSE>)(i.AdditionalProperties["evses"]);
 
                     foreach(var e in evse)
                     {
