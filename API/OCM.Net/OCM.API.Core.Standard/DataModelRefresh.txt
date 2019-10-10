@@ -1,0 +1,24 @@
+﻿Set OCM.Import..Core.Standard as startup project
+
+if not installed, Install-Package Microsoft.EntityFrameworkCore.Tools
+
+Install-Package Bricelam.EntityFrameworkCore.Pluralizer
+
+Run:
+Scaffold-DbContext "Server=(local)\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data -Force -Context OCMEntities
+
+
+OnConfiguring
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseLoggerFactory(ConsoleLogger);
+                optionsBuilder.UseLazyLoadingProxies();
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=(local)\\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True", x => x.UseNetTopologySuite());
+
+#if DEBUG
+                optionsBuilder.EnableDetailedErrors(true);
+                optionsBuilder.EnableSensitiveDataLogging(true);
+#endif
+            }

@@ -43,7 +43,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj" />
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />
   </ItemGroup>
 </Project>
