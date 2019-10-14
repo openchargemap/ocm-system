@@ -11,7 +11,7 @@ namespace OCM.API.Common.Model.Extensions
             if (source == null) return null;
 
             Model.AddressInfo a = new Model.AddressInfo();
-            a.ID = source.ID;
+            a.ID = source.Id;
             a.Title = source.Title;
             a.AddressLine1 = source.AddressLine1;
             a.AddressLine2 = source.AddressLine2;
@@ -23,11 +23,11 @@ namespace OCM.API.Common.Model.Extensions
             if (isVerboseMode)
             {
                 a.Country = Model.Extensions.Country.FromDataModel(source.Country);
-                a.CountryID = source.Country.ID;
+                a.CountryID = source.Country.Id;
             }
             else
             {
-                a.CountryID = source.CountryID;
+                a.CountryID = source.CountryId;
             }
 
             a.Latitude = source.Latitude;
@@ -39,7 +39,7 @@ namespace OCM.API.Common.Model.Extensions
 #pragma warning disable 612 //suppress obsolete warning
             a.GeneralComments = source.GeneralComments;
 #pragma warning restore 612 //restore warning
-            a.RelatedURL = source.RelatedURL;
+            a.RelatedURL = source.RelatedUrl;
 
             if (!String.IsNullOrEmpty(a.RelatedURL) && !a.RelatedURL.StartsWith("http")) a.RelatedURL = "http://" + a.RelatedURL;
             return a;

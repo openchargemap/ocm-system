@@ -22,7 +22,7 @@ namespace OCM.API.Common
 
             countryISO = countryISO.Trim().ToUpper();
 
-            var selectedCountry = dataModel.Countries.FirstOrDefault(c => c.ISOCode == countryISO);
+            var selectedCountry = dataModel.Countries.FirstOrDefault(c => c.Isocode == countryISO);
             return OCM.API.Common.Model.Extensions.Country.FromDataModel(selectedCountry);
         }
 
@@ -41,7 +41,7 @@ namespace OCM.API.Common
                                        where cp.SubmissionStatus.IsLive == true
                                        select cp.AddressInfo.CountryID).Distinct();
 
-                return OCM.API.Common.Model.Extensions.Country.FromDataModel(dataModel.Countries.Where(c => allPOICountries.Contains(c.ID)).OrderBy(c => c.Title));
+                return OCM.API.Common.Model.Extensions.Country.FromDataModel(dataModel.Countries.Where(c => allPOICountries.Contains(c.Id)).OrderBy(c => c.Title));
             }
             else
             {
@@ -54,7 +54,7 @@ namespace OCM.API.Common
             if (countryId != null)
             {
                 return OCM.API.Common.Model.Extensions.OperatorInfo.FromDataModel(
-                    dataModel.Operators.Where(c => c.ChargePoints.Any(cp => cp.AddressInfo.CountryID == countryId && cp.SubmissionStatusType.IsLive == true)).OrderBy(c => c.Title)
+                    dataModel.Operators.Where(c => c.ChargePoints.Any(cp => cp.AddressInfo.CountryId == countryId && cp.SubmissionStatusType.IsLive == true)).OrderBy(c => c.Title)
                     );
             }
             else

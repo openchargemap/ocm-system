@@ -12,7 +12,7 @@ namespace OCM.API.Common.Model.Extensions
             {
                 return new Model.UserCommentType
                 {
-                    ID = source.ID,
+                    ID = source.Id,
                     Title = source.Title
                 };
             }

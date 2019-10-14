@@ -12,11 +12,11 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.OperatorInfo
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
                 Comments = source.Comments,
-                WebsiteURL = source.WebsiteURL,
-                BookingURL = source.BookingURL,
+                WebsiteURL = source.WebsiteUrl,
+                BookingURL = source.BookingUrl,
                 IsPrivateIndividual = source.IsPrivateIndividual,
                 PhonePrimaryContact = source.PhonePrimaryContact,
                 PhoneSecondaryContact = source.PhoneSecondaryContact,

@@ -11,7 +11,7 @@ namespace OCM.API.Common.Model.Extensions
             if (source == null) return null;
 
             return new Model.UsageType { 
-                ID = source.ID, 
+                ID = source.Id, 
                 Title = source.Title, 
                 IsAccessKeyRequired = source.IsAccessKeyRequired, 
                 IsMembershipRequired = source.IsMembershipRequired, 

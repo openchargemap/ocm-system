@@ -12,7 +12,7 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.CheckinStatusType
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
                 IsPositive = source.IsPositive,
                 IsAutomatedCheckin = source.IsAutomatedCheckin

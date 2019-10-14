@@ -1,9 +1,10 @@
-﻿using DotSpatial.Data;
-using DotSpatial.Topology;
-using OCM.API.Common;
+﻿using OCM.API.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using System.Linq;
 
 namespace OCM.Core.Util
 {
@@ -119,44 +120,15 @@ namespace OCM.Core.Util
 
         public static IEnumerable<OCM.API.Common.LatLon> SearchPolygonFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
         {
-            List<OCM.API.Common.LatLon> polyPoints = new List<OCM.API.Common.LatLon>();
 
-            //http://dotspatial.codeplex.com/wikipage?title=CycleThroughVerticesCS&referringTitle=Desktop_SampleCode
+            //TODO: validate refactored version
 
-            //create feature set from points
-            Feature f = new Feature();
-            FeatureSet fs = new FeatureSet(f.FeatureType);
+            LineString polyLine = LineString.DefaultFactory.CreateLineString(points.Select(p=>new Coordinate((double)p.Latitude, (double)p.Longitude)).ToArray());
 
-            Coordinate[] coord = new Coordinate[points.Count];
-            for (int i = 0; i < points.Count; i++)
-            {
-                coord[i] = new Coordinate((double)points[i].Latitude, (double)points[i].Longitude);
-            }
-            LineString ls = new LineString(coord);
-            f = new Feature(ls);
-            fs.Features.Add(f);
-            //fs.Buffer(distanceKM, false); //TODO: approx km to lat/long coord value
-            IFeatureSet iF = fs.Buffer(0.02, false);
-
-            //export polygon points
-
-            Extent extent = new Extent(-180, -90, 180, 90);
-            foreach (ShapeRange shape in iF.ShapeIndices)
-            {
-                //if (shape.Intersects(extent))
-                foreach (PartRange part in shape.Parts)
-                {
-                    foreach (Vertex vertex in part)
-                    {
-                        // if (vertex.X > 0 && vertex.Y > 0)
-                        {
-                            // prepare export of polygon points
-
-                            polyPoints.Add(new OCM.API.Common.LatLon { Latitude = vertex.X, Longitude = vertex.Y });
-                        }
-                    }
-                }
-            }
+            var searchPolygon = polyLine.Buffer(distanceKM) as Polygon;
+         
+            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.Coordinates.Select(p => new LatLon { Latitude = p.X, Longitude = p.Y }).ToList();
+            
 
             return polyPoints;
         }

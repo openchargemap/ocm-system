@@ -1,1 +1,0 @@
-﻿<%@ WebHandler Language="C#" CodeBehind="service.ashx.cs" Class="OCM.API.V3.ReferenceData.APIEndpoint" %>

@@ -1,13 +1,32 @@
-﻿using OCM.API.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
+using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
+
+    public class NullSafeDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TValue : class
+    {
+        // https://stackoverflow.com/questions/14150508/how-to-get-null-instead-of-the-keynotfoundexception-accessing-dictionary-value-b/14150668#14150668
+        public new TValue this[TKey key]
+        {
+            get
+            {
+                if (!ContainsKey(key))
+                    return null;
+                else
+                    return base[key];
+            }
+            set
+            {
+                if (!ContainsKey(key))
+                    Add(key, value);
+                else
+                    base[key] = value;
+            }
+        }
+    }
+
     public class APIRequestParams : ServiceParameterParser
     {
         private const int MAX_API_VERSION = 2;
@@ -134,83 +153,78 @@ namespace OCM.API.Common
             }
         }
 
-        public void ParseParameters(HttpContext context)
-        {
-            this.ParseParameters(this, context);
-        }
-
-        public void ParseParameters(APIRequestParams settings, HttpContext context)
+        public void ParseParameters(APIRequestParams settings, NullSafeDictionary<string,string> requestParams)
         {
             //get parameter values if any
-            if (!String.IsNullOrEmpty(context.Request["v"])) settings.APIVersion = ParseInt(context.Request["v"]);
+            if (!String.IsNullOrEmpty(requestParams["v"])) settings.APIVersion = ParseInt(requestParams["v"]);
             if (settings.APIVersion > MAX_API_VERSION) settings.APIVersion = MAX_API_VERSION;
 
-            if (!String.IsNullOrEmpty(context.Request["action"])) settings.Action = ParseString(context.Request["action"]);
+            if (!String.IsNullOrEmpty(requestParams["action"])) settings.Action = ParseString(requestParams["action"]);
 
-            if (!String.IsNullOrEmpty(context.Request["apikey"])) settings.APIKey = ParseString(context.Request["apikey"]);
-            if (!String.IsNullOrEmpty(context.Request["chargepointid"])) settings.ChargePointIDs = ParseIntList(context.Request["chargepointid"]);
-            if (!String.IsNullOrEmpty(context.Request["operatorname"])) settings.OperatorName = ParseString(context.Request["operatorname"]);
-            if (!String.IsNullOrEmpty(context.Request["operatorid"])) settings.OperatorIDs = ParseIntList(context.Request["operatorid"]);
-            if (!String.IsNullOrEmpty(context.Request["connectiontypeid"])) settings.ConnectionTypeIDs = ParseIntList(context.Request["connectiontypeid"]);
-            if (!String.IsNullOrEmpty(context.Request["countryid"])) settings.CountryIDs = ParseIntList(context.Request["countryid"]);
-            if (!String.IsNullOrEmpty(context.Request["levelid"])) settings.LevelIDs = ParseIntList(context.Request["levelid"]);
-            if (!String.IsNullOrEmpty(context.Request["usagetypeid"])) settings.UsageTypeIDs = ParseIntList(context.Request["usagetypeid"]);
-            if (!String.IsNullOrEmpty(context.Request["statustypeid"])) settings.StatusTypeIDs = ParseIntList(context.Request["statustypeid"]);
-            if (!String.IsNullOrEmpty(context.Request["dataproviderid"])) settings.DataProviderIDs = ParseIntList(context.Request["dataproviderid"]);
-            if (!String.IsNullOrEmpty(context.Request["opendata"])) settings.IsOpenData = ParseBoolNullable(context.Request["opendata"]);
+            if (!String.IsNullOrEmpty(requestParams["apikey"])) settings.APIKey = ParseString(requestParams["apikey"]);
+            if (!String.IsNullOrEmpty(requestParams["chargepointid"])) settings.ChargePointIDs = ParseIntList(requestParams["chargepointid"]);
+            if (!String.IsNullOrEmpty(requestParams["operatorname"])) settings.OperatorName = ParseString(requestParams["operatorname"]);
+            if (!String.IsNullOrEmpty(requestParams["operatorid"])) settings.OperatorIDs = ParseIntList(requestParams["operatorid"]);
+            if (!String.IsNullOrEmpty(requestParams["connectiontypeid"])) settings.ConnectionTypeIDs = ParseIntList(requestParams["connectiontypeid"]);
+            if (!String.IsNullOrEmpty(requestParams["countryid"])) settings.CountryIDs = ParseIntList(requestParams["countryid"]);
+            if (!String.IsNullOrEmpty(requestParams["levelid"])) settings.LevelIDs = ParseIntList(requestParams["levelid"]);
+            if (!String.IsNullOrEmpty(requestParams["usagetypeid"])) settings.UsageTypeIDs = ParseIntList(requestParams["usagetypeid"]);
+            if (!String.IsNullOrEmpty(requestParams["statustypeid"])) settings.StatusTypeIDs = ParseIntList(requestParams["statustypeid"]);
+            if (!String.IsNullOrEmpty(requestParams["dataproviderid"])) settings.DataProviderIDs = ParseIntList(requestParams["dataproviderid"]);
+            if (!String.IsNullOrEmpty(requestParams["opendata"])) settings.IsOpenData = ParseBoolNullable(requestParams["opendata"]);
 
-            if (!String.IsNullOrEmpty(context.Request["minpowerkw"]))
+            if (!String.IsNullOrEmpty(requestParams["minpowerkw"]))
             {
-                settings.MinPowerKW = ParseDouble(context.Request["minpowerkw"]);
+                settings.MinPowerKW = ParseDouble(requestParams["minpowerkw"]);
                 if (settings.MinPowerKW < 1) settings.MinPowerKW = null;
             }
 
-            if (!String.IsNullOrEmpty(context.Request["dataprovidername"])) settings.DataProviderName = ParseString(context.Request["dataprovidername"]);
-            if (!String.IsNullOrEmpty(context.Request["locationtitle"])) settings.LocationTitle = ParseString(context.Request["locationtitle"]);
-            if (!String.IsNullOrEmpty(context.Request["address"])) settings.Address = ParseString(context.Request["address"]);
-            if (!String.IsNullOrEmpty(context.Request["countrycode"])) settings.CountryCode = ParseString(context.Request["countrycode"]);
+            if (!String.IsNullOrEmpty(requestParams["dataprovidername"])) settings.DataProviderName = ParseString(requestParams["dataprovidername"]);
+            if (!String.IsNullOrEmpty(requestParams["locationtitle"])) settings.LocationTitle = ParseString(requestParams["locationtitle"]);
+            if (!String.IsNullOrEmpty(requestParams["address"])) settings.Address = ParseString(requestParams["address"]);
+            if (!String.IsNullOrEmpty(requestParams["countrycode"])) settings.CountryCode = ParseString(requestParams["countrycode"]);
 
-            if (!String.IsNullOrEmpty(context.Request["latitude"]))
+            if (!String.IsNullOrEmpty(requestParams["latitude"]))
             {
-                settings.Latitude = ParseDouble(context.Request["latitude"]);
+                settings.Latitude = ParseDouble(requestParams["latitude"]);
                 if (settings.Latitude < -90 || settings.Latitude > 90) settings.Latitude = null;
             }
 
-            if (!String.IsNullOrEmpty(context.Request["longitude"]))
+            if (!String.IsNullOrEmpty(requestParams["longitude"]))
             {
-                settings.Longitude = ParseDouble(context.Request["longitude"]);
+                settings.Longitude = ParseDouble(requestParams["longitude"]);
                 if (settings.Longitude < -180 || settings.Longitude > 180) settings.Longitude = null;
             }
 
-            if (!String.IsNullOrEmpty(context.Request["distance"])) settings.Distance = ParseDouble(context.Request["distance"]);
-            if (!String.IsNullOrEmpty(context.Request["distanceunit"])) settings.DistanceUnit = ParseDistanceUnit(context.Request["distanceunit"]);
+            if (!String.IsNullOrEmpty(requestParams["distance"])) settings.Distance = ParseDouble(requestParams["distance"]);
+            if (!String.IsNullOrEmpty(requestParams["distanceunit"])) settings.DistanceUnit = ParseDistanceUnit(requestParams["distanceunit"]);
 
-            if (!String.IsNullOrEmpty(context.Request["polyline"])) settings.Polyline = ParsePolyline(context.Request["polyline"]);
+            if (!String.IsNullOrEmpty(requestParams["polyline"])) settings.Polyline = ParsePolyline(requestParams["polyline"]);
             //e.g. |k~aEm|bbUewBx}C_kEnyCi}Edn@d\ssFb\kyN
             //settings.Polyline = ParsePolyline("_p~iF~ps|U_ulLnnqC_mqNvxq`@");
             //settings.Polyline = ParsePolyline("(38.5, -120.2), (40.7, -120.95), (43.252, -126.453)");
 
-            if (!String.IsNullOrEmpty(context.Request["boundingbox"])) settings.BoundingBox = ParseBoundingBox(context.Request["boundingbox"]);     //e.g. (-31.947017,115.803974),(-31.956672,115.819968)
-            if (!String.IsNullOrEmpty(context.Request["polygon"])) settings.Polygon = ParsePolygon(context.Request["polygon"], true);
+            if (!String.IsNullOrEmpty(requestParams["boundingbox"])) settings.BoundingBox = ParseBoundingBox(requestParams["boundingbox"]);     //e.g. (-31.947017,115.803974),(-31.956672,115.819968)
+            if (!String.IsNullOrEmpty(requestParams["polygon"])) settings.Polygon = ParsePolygon(requestParams["polygon"], true);
 
-            if (!String.IsNullOrEmpty(context.Request["connectiontype"])) settings.ConnectionType = ParseString(context.Request["connectiontype"]);
-            if (!String.IsNullOrEmpty(context.Request["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(context.Request["submissionstatustypeid"]);
-            if (!String.IsNullOrEmpty(context.Request["modifiedsince"])) settings.ChangesFromDate = ParseDate(context.Request["modifiedsince"]);
+            if (!String.IsNullOrEmpty(requestParams["connectiontype"])) settings.ConnectionType = ParseString(requestParams["connectiontype"]);
+            if (!String.IsNullOrEmpty(requestParams["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(requestParams["submissionstatustypeid"]);
+            if (!String.IsNullOrEmpty(requestParams["modifiedsince"])) settings.ChangesFromDate = ParseDate(requestParams["modifiedsince"]);
 
-            if (!String.IsNullOrEmpty(context.Request["levelofdetail"])) settings.LevelOfDetail = ParseInt(context.Request["levelofdetail"]);
-            if (!String.IsNullOrEmpty(context.Request["enablecaching"])) settings.EnableCaching = ParseBool(context.Request["enablecaching"], true);
-            if (!String.IsNullOrEmpty(context.Request["allowmirror"])) settings.AllowMirrorDB = ParseBool(context.Request["allowmirror"], false);
-            if (!String.IsNullOrEmpty(context.Request["includecomments"])) settings.IncludeComments = ParseBool(context.Request["includecomments"], false);
-            if (!String.IsNullOrEmpty(context.Request["verbose"])) settings.IsVerboseOutput = ParseBool(context.Request["verbose"], false);
-            if (!String.IsNullOrEmpty(context.Request["compact"])) settings.IsCompactOutput = ParseBool(context.Request["compact"], false);
-            if (!String.IsNullOrEmpty(context.Request["camelcase"])) settings.IsCamelCaseOutput = ParseBool(context.Request["camelcase"], false);
-            if (!String.IsNullOrEmpty(context.Request["callback"])) settings.Callback = ParseString(context.Request["callback"]);
+            if (!String.IsNullOrEmpty(requestParams["levelofdetail"])) settings.LevelOfDetail = ParseInt(requestParams["levelofdetail"]);
+            if (!String.IsNullOrEmpty(requestParams["enablecaching"])) settings.EnableCaching = ParseBool(requestParams["enablecaching"], true);
+            if (!String.IsNullOrEmpty(requestParams["allowmirror"])) settings.AllowMirrorDB = ParseBool(requestParams["allowmirror"], false);
+            if (!String.IsNullOrEmpty(requestParams["includecomments"])) settings.IncludeComments = ParseBool(requestParams["includecomments"], false);
+            if (!String.IsNullOrEmpty(requestParams["verbose"])) settings.IsVerboseOutput = ParseBool(requestParams["verbose"], false);
+            if (!String.IsNullOrEmpty(requestParams["compact"])) settings.IsCompactOutput = ParseBool(requestParams["compact"], false);
+            if (!String.IsNullOrEmpty(requestParams["camelcase"])) settings.IsCamelCaseOutput = ParseBool(requestParams["camelcase"], false);
+            if (!String.IsNullOrEmpty(requestParams["callback"])) settings.Callback = ParseString(requestParams["callback"]);
 
-            if (!String.IsNullOrEmpty(context.Request["maxresults"]))
+            if (!String.IsNullOrEmpty(requestParams["maxresults"]))
             {
                 try
                 {
-                    settings.MaxResults = int.Parse(context.Request["maxresults"]);
+                    settings.MaxResults = int.Parse(requestParams["maxresults"]);
                 }
                 catch (Exception)
                 {
@@ -227,7 +241,7 @@ namespace OCM.API.Common
             //handle deprecated items
             if (settings.APIVersion == null || settings.APIVersion == 1)
             {
-                if (!String.IsNullOrEmpty(context.Request["fastchargeonly"])) settings.FastChargeOnly = ParseBool(context.Request["fastchargeonly"], false);
+                if (!String.IsNullOrEmpty(requestParams["fastchargeonly"])) settings.FastChargeOnly = ParseBool(requestParams["fastchargeonly"], false);
             }
         }
 

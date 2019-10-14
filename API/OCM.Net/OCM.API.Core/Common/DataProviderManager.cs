@@ -10,7 +10,7 @@ namespace OCM.API.Common
     {
         public void UpdateDateLastImport(int dataProviderID)
         {
-            var dataProvider = dataModel.DataProviders.FirstOrDefault(dp=>dp.ID==dataProviderID);
+            var dataProvider = dataModel.DataProviders.FirstOrDefault(dp=>dp.Id==dataProviderID);
             dataProvider.DateLastImported = DateTime.UtcNow;
             dataModel.SaveChanges();
         }

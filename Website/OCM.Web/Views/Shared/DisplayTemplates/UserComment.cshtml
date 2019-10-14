@@ -1,0 +1,77 @@
+﻿@model OCM.API.Common.Model.UserComment
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Html;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    bool isAdministrator = bool.Parse(HttpContextAccessor.HttpContext.Session.GetString("IsAdministrator") ?? "false");
+}
+
+<div>
+    @if (ViewBag.ShowPOILink == true)
+    {
+        <a href="@Url.Action("Details", "POI", new { id = Model.ChargePointID })">OCM-@Model.ChargePointID</a>
+    }
+    <blockquote>
+        @if (Model.Rating != null)
+        {
+            <strong>Rating: @Html.Raw(Model.Rating) out of 5</strong>
+        }
+        [
+        @if (Model.CommentType != null)
+        {
+            <strong>@Model.CommentType.Title</strong>
+        }
+
+        @if (Model.CheckinStatusType != null)
+        {
+            <strong>, @Model.CheckinStatusType.Title</strong>
+        }
+
+        ]
+        <p>@Html.DisplayFor(m => m.Comment)</p>
+        @if (Model.RelatedURL != null)
+        {
+            @Html.DisplayFor(m => m.RelatedURL)
+        }
+        <small>
+            Comment by
+            <cite title="Source Title">
+                @if (Model.User != null)
+                {
+                    <a href="@Url.Action("View", "Profile", new {id=Model.User.ID })">@Html.DisplayFor(m => m.User.Username)</a>
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(Model.UserName))
+                    {
+                        @Html.DisplayFor(m => m.UserName)
+                    }
+                    else
+                    {<text>(Anonymous)</text>}
+            }
+            </cite> @Html.DisplayFor(m => m.DateCreated)
+        </small>
+
+        @if (isAdministrator)
+        {
+            <p>
+                <a class="btn btn-danger" href="@Url.Action("CommentDelete", "Admin", new { id=Model.ID})" target="_blank"><span class="glyphicon glyphicon-remove"></span> Delete (as Admin)</a>
+            </p>
+        }
+
+        @if (ViewBag.UserCanEditPOI == true)
+        {
+            if (Model.IsActionedByEditor != true)
+            {
+                <p>
+                    <a class="btn btn-warning" href="@Url.Action("CommentActioned", "POI", new { poiId = Model.ChargePointID, commentId = Model.ID })" target="_blank"><span class="glyphicon glyphicon-check"></span> Mark as Actioned</a>
+                </p>
+            }
+            else
+            {
+                <em class="text-info">Comment Actioned By Editor</em>
+            }
+        }
+    </blockquote>
+</div>

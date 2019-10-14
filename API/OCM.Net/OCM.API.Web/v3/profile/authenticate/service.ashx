@@ -1,1 +1,0 @@
-﻿<%@ WebHandler Class="OCM.API.V3.Profile.Authenticate.APIEndpoint" %>

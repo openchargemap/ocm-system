@@ -11,7 +11,7 @@ namespace OCM.API.Common.Model.Extensions
             if (source == null) return null;
 
             return new Model.ChargerType { 
-                ID = source.ID, 
+                ID = source.Id, 
                 Title = source.Title, 
                 Comments = source.Comments, 
                 IsFastChargeCapable = source.IsFastChargeCapable 

@@ -1,0 +1,144 @@
+﻿@model OCM.API.Common.Model.User
+
+@{
+    ViewBag.Title = "Edit Your Profile";
+}
+
+<link rel="stylesheet" href="~/scripts/leafletjs/leaflet.min.css" />
+<script src="~/scripts/leafletjs/leaflet.min.js"></script>
+
+<h2>Edit Your Profile</h2>
+
+@if (TempData["UpdatedFailed"] != null && (bool)TempData["UpdatedFailed"] == true)
+{
+    <p class="alert alert-danger">
+        Warning: Your profile update failed. You cannot change your email address to match that of another registered user. If you are seeing this message please contact us to help fix your account details.
+    </p>
+}
+
+@using (Html.BeginForm("Edit", "Profile", null, FormMethod.Post, null, new { @class = "form" }))
+{ @Html.AntiForgeryToken()  @Html.ValidationSummary(true)
+    <div class="row">
+        <div class="col-md-6">
+            <fieldset>
+                <legend>Your Public Profile</legend>
+                @Html.HiddenFor(model => model.ID)
+
+                <div class="form-actions">
+                    The following profile information is visible to everyone if Show Profile To Public is set to Yes. All information on your profile is optional.
+                    <input type="submit" value="Save Changes" class="btn btn-success" />
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.Username)
+
+                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Name or Screen Name" } })
+                    @Html.ValidationMessageFor(model => model.Username)
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.Profile)
+                    @Html.TextAreaFor(model => model.Profile, new { @class = "form-control", placeholder = "About you (optional)" })
+                    @Html.ValidationMessageFor(model => model.Profile)
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.Location)
+
+                    @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", placeholder = "Your Country, Town or City" } })
+                    @Html.ValidationMessageFor(model => model.Location)
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.WebsiteURL)
+
+                    @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control", placeholder = "Your website" } })
+                    @Html.ValidationMessageFor(model => model.WebsiteURL)
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.IsProfilePublic)
+
+                    @Html.EditorFor(model => model.IsProfilePublic, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.IsProfilePublic)
+                </div>
+
+                @Html.HiddenFor(model => model.IsPublicChargingProvider)
+                @Html.HiddenFor(model => model.IsEmergencyChargingProvider)
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+
+            <fieldset>
+                <legend>Your Private Info</legend>
+                <div class="alert alert-info">The following information is not shared with other users or displayed to the public. Your email address is only used if we need to contact you or if you want to use a <a target="_new" href="https://www.gravatar.com" class="alert-link">Gravatar</a> profile image.</div>
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.EmailAddress)
+
+                    @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EmailAddress)
+                </div>
+
+                @Html.HiddenFor(model => model.Latitude)
+                @Html.HiddenFor(model => model.Longitude)
+            </fieldset>
+        </div>
+    </div>
+
+}
+@*
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+    *@
+
+<script>
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(gotUserLocation);
+        } else {
+            alert("Sorry, your browser cannot supply your location information.");
+        }
+    }
+
+    function gotUserLocation(pos) {
+        showPosInEditor(pos.coords.latitude, pos.coords.longitude);
+        setupMap(pos.coords.latitude, pos.coords.longitude);
+    }
+
+    function showPosInEditor(lat, lng) {
+        $("#@Html.NameFor(model => model.Latitude)").val(lat);
+        $("#@Html.NameFor(model => model.Longitude)").val(lng);
+    }
+
+    function setupMap(currentLat, currentLng) {
+        $("#editor_map_canvas").show();
+        //setup map
+
+        var lat = currentLat;
+        var lng = currentLng;
+
+        var itemPos = [lat, lng];
+
+        //setup map
+        var map = new L.Map('editor_map_canvas');
+
+        // create the tile layer with correct attribution
+        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © OpenStreetMap contributors';
+        var osm = new L.TileLayer(osmUrl, { minZoom: 10, maxZoom: 18, attribution: osmAttrib });
+
+        // start the map centred on location
+        map.setView(new L.LatLng(itemPos[0], itemPos[1]), 17);
+        map.addLayer(osm);
+
+        var marker = L.marker(itemPos, { draggable: true });
+        marker.addTo(map);
+        marker.on("move", function (e) {
+            showPosInEditor(e.latlng.lat, e.latlng.lng);
+        });
+
+        map.invalidateSize(false);
+    }
+</script>

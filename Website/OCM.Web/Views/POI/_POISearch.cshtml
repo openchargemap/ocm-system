@@ -1,0 +1,228 @@
+﻿@model OCM.MVC.Models.POIBrowseModel
+
+@*
+@Scripts.Render("~/bundles/jqueryui")
+    *@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="search-autocomplete">Place Search</label>
+            <div class="col-md-8">
+
+                <input type="text" class="form-control" autocomplete="off" id="search-autocomplete" name="noautocomplete" placeholder="Place name or Post/Zip Code" data-toggle="tooltip" title="Enter the place name or part of the address to search for locations near a particular place" />
+                <span id="place-name"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="search-location">Latitude, Longitude (optional)</label>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" value="@Model.SearchLocation" id="search-location" name="searchlocation" placeholder="Optional Latitude, Longitude - or an OCM Ref ID" data-toggle="tooltip" title="Enter the location to search around" />
+                    <a class="input-group-addon btn btn-success btn-sm" title="Search Near Me" id="search-nearme" href="#"><i class="glyphicon glyphicon-map-marker"></i></a>
+                </div>
+               
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="countryids" data-localize="ocm.search.countries">Country</label>
+            <div class="col-md-8">
+                @Html.DropDownList("countryids", Model.CountryList, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label class="control-label col-md-2" data-localize="ocm.search.distance">Distance</label>
+
+            <div class="col-md-4">
+                <select id="distance" name="distance" class="form-control">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="40">40</option>
+                    <option value="60">60</option>
+                    <option value="100" selected="selected">100</option>
+                    <option value="250">250</option>
+                    <option value="500">500</option>
+                    <option value="2000">2000</option>
+                    <option value="10000">10000</option>
+                    <option value="20000">20000</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select id="distanceunit" name="distanceunit" class="form-control">
+                    <option value="miles">Miles</option>
+                    <option value="km">km</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="advanced" class="hidden-xs hidden-sm">
+
+            <div class="form-group">
+
+                <label class="control-label col-md-2" for="locationtitle" data-localize="ocm.details.location.title">Title</label>
+
+                <div class="col-md-8">
+                    <input type="text" value="@Model.LocationTitle" class="form-control" name="locationtitle" placeholder="Title of place or business" data-toggle="tooltip" title="You can optionally search location titles for a business name etc. " />
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="control-label col-md-2" data-localize="ocm.search.chargingLevels">Level</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("levelids", Model.LevelList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="control-label col-md-2" data-localize="ocm.search.connectionTypes">Connection Type</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("connectiontypeids", Model.ConnectionTypeList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="control-label col-md-2" data-localize="ocm.search.usageTypes">Usage</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("usagetypeids", Model.UsageTypeList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="control-label col-md-2" data-localize="ocm.search.networkOperators">Network / Operator</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("operatorids", Model.OperatorList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="control-label col-md-2" data-localize="ocm.search.operationalStatusTypes">Status Type</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("statustypeids", Model.StatusTypeList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="control-label col-md-2" data-localize="ocm.details.dataProvider.sectionTitle">Data Provider</label>
+
+                <div class="col-md-8">
+                    @Html.DropDownList("dataproviderids", Model.DataProviderList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" data-localize="ocm.search.submissionStatus">Submission Status</label>
+                <div class="col-md-8">
+                    @Html.DropDownList("submissionstatustypeid", Model.SubmissionTypeList, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-7">
+
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <a class="btn btn-warning" href="@Url.Action("Add", "POI")"> <span data-localize="ocm.general.addLocation">Add A Location</span> <span class="glyphicon glyphicon-pencil"></span></a>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.ShowAdvancedOptions)
+}
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+<script>
+    $(document).ready(function () {
+
+        $("#search-nearme").on("click", function () {
+            $("#place-name").html("");
+            getUserLocation();
+        });
+
+        $("#search-autocomplete").autocomplete({
+            source: function (request, response) {
+
+                var apiUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/"+request.term+".json?access_token=@System.Configuration.ConfigurationManager.AppSettings["MapBoxAPI"]";
+
+                $.ajax({
+                    url: apiUrl,
+                    dataType: "json",
+                    success: function (data) {
+                        response(data.features);
+                    }
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {
+                $("#search-location").val(ui.item.center[1] + "," + ui.item.center[0]);
+
+                $("#place-name").html("Searching Near: "+ ui.item.place_name);
+            }
+        }) 
+        .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .append("<div>" + item.place_name + "</div>")
+                .appendTo(ul);
+        };
+
+    });
+
+    function geocoderResults(results) {
+
+    }
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(gotUserLocation);
+        } else {
+            alert("Sorry, your browser cannot supply your location information.");
+        }
+    }
+
+    function gotUserLocation(pos) {
+        $("#search-location").val(pos.coords.latitude + "," + pos.coords.longitude);
+    }
+
+    function searchPlaceName() {
+        var keywordForSearch = $("#search-location").val();
+        let searchService = new mapkit.Search({ getUsersLocation: true });
+
+        searchService.search(keywordForSearch, (error, data) => {
+            this.searchInProgress = false;
+            this.placeSearchActive = true;
+
+            if (error) {
+                // Handle search error
+                return;
+            }
+
+            this.placeList = [];
+            data.places.map((place) => {
+
+                let placeResult = {};
+
+                placeResult.Title = place.name;
+                //placeResult.ReferenceID = (<any>place).place_id;
+                placeResult.Address = place.formattedAddress;
+                placeResult.Type = "place";
+                placeResult.Location = { lat: place.coordinate.latitude, lng: place.coordinate.longitude };
+
+                this.placeList.push(placeResult);
+            });
+
+            if (this.placeList.length > 0) {
+                var place = this.placeList[0];
+                $("#search-location").val(place.Location.lat + "," + place.Location.lng);
+            }
+        });
+    }
+</script>

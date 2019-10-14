@@ -12,9 +12,9 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.DataProviderStatusType
             {
-                 ID = s.ID,
+                 ID = s.Id,
                  Title = s.Title,
-                 IsProviderEnabled = s.IsProviderEnabled
+                 IsProviderEnabled = (bool)s.IsProviderEnabled
             };
         }
     }

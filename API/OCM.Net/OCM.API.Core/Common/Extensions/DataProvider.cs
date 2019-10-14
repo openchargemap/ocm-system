@@ -12,9 +12,9 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.DataProvider
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
-                WebsiteURL = source.WebsiteURL,
+                WebsiteURL = source.WebsiteUrl,
                 Comments = source.Comments,
                 DataProviderStatusType = DataProviderStatusType.FromDataModel(source.DataProviderStatusType),
                 IsRestrictedEdit = source.IsRestrictedEdit,

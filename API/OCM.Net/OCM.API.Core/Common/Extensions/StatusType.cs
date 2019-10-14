@@ -12,10 +12,10 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.StatusType
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
                 IsOperational = source.IsOperational,
-                IsUserSelectable = source.IsUserSelectable
+                IsUserSelectable = (bool)source.IsUserSelectable
             };
         }
     }

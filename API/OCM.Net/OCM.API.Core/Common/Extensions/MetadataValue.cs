@@ -12,8 +12,8 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.MetadataValue
             {
-                ID = source.ID,
-                MetadataFieldID =source.MetadataFieldID,
+                ID = source.Id,
+                MetadataFieldID =source.MetadataFieldId,
                 MetadataFieldOption = MetadataFieldOption.FromDataModel(source.MetadataFieldOption),
                 ItemValue = source.ItemValue
             };

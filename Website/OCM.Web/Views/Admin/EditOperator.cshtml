@@ -1,0 +1,119 @@
+﻿@model OCM.API.Common.Model.OperatorInfo
+
+@{
+    ViewBag.Title = "EditOperator";
+}
+
+<h2>Edit Operator</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>OperatorInfo</legend>
+
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Title)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Title)
+                        @Html.ValidationMessageFor(model => model.Title)
+                        </div>
+                    </div>
+
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.WebsiteURL)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.WebsiteURL)
+                @Html.ValidationMessageFor(model => model.WebsiteURL)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Comments)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Comments)
+                @Html.ValidationMessageFor(model => model.Comments)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PhonePrimaryContact)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.PhonePrimaryContact)
+                @Html.ValidationMessageFor(model => model.PhonePrimaryContact)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PhoneSecondaryContact)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.PhoneSecondaryContact)
+                @Html.ValidationMessageFor(model => model.PhoneSecondaryContact)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IsPrivateIndividual)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IsPrivateIndividual)
+                @Html.ValidationMessageFor(model => model.IsPrivateIndividual)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.BookingURL)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.BookingURL)
+                @Html.ValidationMessageFor(model => model.BookingURL)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.ContactEmail)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.ContactEmail)
+                @Html.ValidationMessageFor(model => model.ContactEmail)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.FaultReportEmail)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.FaultReportEmail)
+                @Html.ValidationMessageFor(model => model.FaultReportEmail)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IsRestrictedEdit)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IsRestrictedEdit)
+                @Html.ValidationMessageFor(model => model.IsRestrictedEdit)
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.ID)
+    
+        <p>
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

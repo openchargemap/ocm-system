@@ -1,0 +1,93 @@
+﻿@model OCM.API.Common.Model.User
+
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Html;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    bool isAdministrator = bool.Parse(HttpContextAccessor.HttpContext.Session.GetString("IsAdministrator") ?? "false");
+
+    ViewBag.Title = "Add Comment";
+}
+
+@if (Model != null)
+{
+
+    ViewBag.Title = "OCM User Profile - " + Model.Username;
+    <h2>@Model.Username - Profile and Stats</h2>
+
+    if (Model.IsProfilePublic == true)
+    {
+        @Html.Partial("_PublicProfile", Model)
+    }
+    else
+    {
+        <p>This user profile is not public.</p>
+    }
+
+    if (isAdministrator)
+    {
+        <div class="well well-lg">
+            <h2>Admin Options</h2>
+            <a class="btn btn-danger" href="@Url.Action("EditUser", "Admin", new { id=Model.ID})">Edit User Details</a>
+
+            <p>
+                You can assign country editor permissions here. Assigning Country Editor permissions will automatically create a country subscription for that user - this is not deleted if the permission is removed.
+            </p>
+            <div class="text-info">
+                Current Permissions:
+                <ul>
+                    @if (!String.IsNullOrEmpty(Model.Permissions))
+                    {
+
+                        var permissions = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.API.Common.Model.UserPermissionsContainer>(Model.Permissions);
+                        var allCountries = (SelectList)ViewBag.CountryList;
+                        foreach (var permission in permissions.Permissions)
+                        {
+                            if (permission.CountryID != null)
+                            {
+                                var country = allCountries.FirstOrDefault(s => s.Value == permission.CountryID.ToString());
+                                <li>@country.Text : @permission.Level.ToString()</li>
+                            }
+                            else
+                            {
+                                <li>All Countries: @permission.Level.ToString()</li>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        <li>No special permissions (Standard User)</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="form-group" style="padding:1em;">
+
+                <div class="col-md-6">
+                    @Html.DropDownList("CountryCode", (SelectList)ViewBag.CountryList, new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" onclick="toggleCountryEditor(false);">Assign Country Editor</button>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-default" onclick="toggleCountryEditor(true);">Remove Country Editor</button>
+                </div>
+                <script>
+                    function toggleCountryEditor(removePermission) {
+                        var countryId = $("#CountryCode").val();
+                        var url = "@Url.Action("PromoteUserToEditor","Admin")?userId=@Model.ID&autoCreateSubscriptions=true&removePermission=" + removePermission + "&countryID=" + countryId;
+
+                        window.location.href = url;
+                    }
+                </script>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-warning">The specified user profile does not exist</div>
+}

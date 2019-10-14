@@ -12,7 +12,7 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.SubmissionStatusType
             {
-                 ID = s.ID,
+                 ID = s.Id,
                  Title = s.Title,
                  IsLive = s.IsLive
             };

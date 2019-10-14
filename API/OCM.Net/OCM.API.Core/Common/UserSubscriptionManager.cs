@@ -60,7 +60,7 @@ namespace OCM.API.Common
         public List<Model.UserSubscription> GetUserSubscriptions(int userId)
         {
             var dataModel = new OCM.Core.Data.OCMEntities();
-            var list = dataModel.UserSubscriptions.Where(u => u.UserID == userId);
+            var list = dataModel.UserSubscriptions.Where(u => u.UserId == userId);
 
             var results = new List<Model.UserSubscription>();
 
@@ -74,14 +74,14 @@ namespace OCM.API.Common
         public Model.UserSubscription GetUserSubscription(int userId, int subscriptionId)
         {
             var dataModel = new OCM.Core.Data.OCMEntities();
-            var item = dataModel.UserSubscriptions.FirstOrDefault(u => u.ID == subscriptionId && u.UserID == userId);
+            var item = dataModel.UserSubscriptions.FirstOrDefault(u => u.Id == subscriptionId && u.UserId == userId);
             return OCM.API.Common.Model.Extensions.UserSubscription.FromDataModel(item, true);
         }
 
         public void DeleteSubscription(int userId, int subscriptionId)
         {
             var dataModel = new OCM.Core.Data.OCMEntities();
-            var item = dataModel.UserSubscriptions.FirstOrDefault(u => u.ID == subscriptionId && u.UserID == userId);
+            var item = dataModel.UserSubscriptions.FirstOrDefault(u => u.Id == subscriptionId && u.UserId == userId);
             if (item != null)
             {
                 dataModel.UserSubscriptions.Remove(item);
@@ -96,12 +96,12 @@ namespace OCM.API.Common
             if (subscription.ID > 0)
             {
                 //edit
-                update = dataModel.UserSubscriptions.FirstOrDefault(u => u.ID == subscription.ID && u.UserID == subscription.UserID);
+                update = dataModel.UserSubscriptions.FirstOrDefault(u => u.Id == subscription.ID && u.UserId == subscription.UserID);
             }
             else
             {
                 //new item
-                update.User = dataModel.Users.FirstOrDefault(u => u.ID == subscription.UserID);
+                update.User = dataModel.Users.FirstOrDefault(u => u.Id == subscription.UserID);
                 update.DateCreated = DateTime.UtcNow;
                 update.DateLastNotified = update.DateCreated;
             }
@@ -111,15 +111,15 @@ namespace OCM.API.Common
                 update.IsEnabled = subscription.IsEnabled;
                 if (subscription.CountryID != null)
                 {
-                    update.Country = dataModel.Countries.FirstOrDefault(c => c.ID == subscription.CountryID);
+                    update.Country = dataModel.Countries.FirstOrDefault(c => c.Id == subscription.CountryID);
                 }
                 else
                 {
                     update.Country = null;
-                    update.CountryID = null;
+                    update.CountryId = null;
                 }
 
-                update.DistanceKM = subscription.DistanceKM;
+                update.DistanceKm = subscription.DistanceKM;
 
                 if (subscription.FilterSettings != null)
                 {
@@ -137,12 +137,12 @@ namespace OCM.API.Common
                 update.NotifyEmergencyChargingRequests = subscription.NotifyEmergencyChargingRequests;
                 update.NotifyGeneralChargingRequests = subscription.NotifyGeneralChargingRequests;
                 update.NotifyMedia = subscription.NotifyMedia;
-                update.NotifyPOIAdditions = subscription.NotifyPOIAdditions;
-                update.NotifyPOIEdits = subscription.NotifyPOIEdits;
-                update.NotifyPOIUpdates = subscription.NotifyPOIUpdates;
+                update.NotifyPoiadditions = subscription.NotifyPOIAdditions;
+                update.NotifyPoiedits = subscription.NotifyPOIEdits;
+                update.NotifyPoiupdates = subscription.NotifyPOIUpdates;
             }
 
-            if (update.ID == 0)
+            if (update.Id == 0)
             {
                 dataModel.UserSubscriptions.Add(update);
             }
@@ -156,7 +156,7 @@ namespace OCM.API.Common
             var dataModel = new OCM.Core.Data.OCMEntities();
             var poiManager = new POIManager();
 
-            var subscription = dataModel.UserSubscriptions.FirstOrDefault(s => s.ID == subscriptionId && s.UserID == userId);
+            var subscription = dataModel.UserSubscriptions.FirstOrDefault(s => s.Id == subscriptionId && s.UserId == userId);
             if (subscription != null)
             {
                 return GetSubscriptionMatches(dataModel, poiManager, subscription, dateFrom);
@@ -173,9 +173,9 @@ namespace OCM.API.Common
 
             bool isMatch = true;
 
-            if (subscription.CountryID != null)
+            if (subscription.CountryId != null)
             {
-                if (poi.AddressInfo.CountryID != subscription.CountryID) isMatch = false;
+                if (poi.AddressInfo.CountryID != subscription.CountryId) isMatch = false;
             }
 
             if (filter == null) return isMatch; //no more filtering to do
@@ -231,7 +231,8 @@ namespace OCM.API.Common
 
             subscriptionMatchGroup.DateFrom = checkFromDate;
 
-            System.Data.Entity.Spatial.DbGeography searchPos = null;
+            //FIXME: re-test with updated coordinate objects (nettopology etc)
+            GeoCoordinatePortable.GeoCoordinate searchPos = null;
 
             UserSubscriptionFilter filter = null;
             if (subscription.FilterSettings != null)
@@ -246,7 +247,7 @@ namespace OCM.API.Common
                 }
             }
 
-            if (subscription.Latitude != null && subscription.Longitude != null) searchPos = System.Data.Entity.Spatial.DbGeography.PointFromText("POINT(" + subscription.Longitude + " " + subscription.Latitude + ")", 4326);
+            if (subscription.Latitude != null && subscription.Longitude != null) searchPos = new GeoCoordinatePortable.GeoCoordinate((double)subscription.Latitude, (double)subscription.Longitude);
 
             if (subscription.NotifyEmergencyChargingRequests)
             {
@@ -258,7 +259,7 @@ namespace OCM.API.Common
                     //filter on location
                     if (searchPos != null)
                     {
-                        if (GeoManager.CalcDistance(chargingRequest.Latitude, chargingRequest.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKM)
+                        if (GeoManager.CalcDistance(chargingRequest.Latitude, chargingRequest.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKm)
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = chargingRequest });
                         }
@@ -281,7 +282,7 @@ namespace OCM.API.Common
                 {
                     if (searchPos != null)
                     {
-                        if (GeoManager.CalcDistance(gc.Latitude, gc.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKM)
+                        if (GeoManager.CalcDistance(gc.Latitude, gc.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKm)
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = gc });
                         }
@@ -296,7 +297,7 @@ namespace OCM.API.Common
             }
 
             //check if any POI Edits (pending approval) match this subscription
-            if (subscription.NotifyPOIEdits)
+            if (subscription.NotifyPoiedits)
             {
                 var poiEdits = dataModel.EditQueueItems.Where(c => c.DateSubmitted >= checkFromDate && c.PreviousData != null && c.IsProcessed == false);
                 if (poiEdits.Any())
@@ -311,7 +312,7 @@ namespace OCM.API.Common
                             {
                                 if (searchPos != null)
                                 {
-                                    if (GeoManager.CalcDistance(updatedPOI.AddressInfo.Latitude, updatedPOI.AddressInfo.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKM)
+                                    if (GeoManager.CalcDistance(updatedPOI.AddressInfo.Latitude, updatedPOI.AddressInfo.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKm)
                                     {
                                         subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = p, POI = updatedPOI });
                                     }
@@ -332,7 +333,7 @@ namespace OCM.API.Common
             }
 
             //check if any new POIs
-            if (subscription.NotifyPOIAdditions)
+            if (subscription.NotifyPoiadditions)
             {
                 /* var newPOIs = dataModel.ChargePoints.Where(c => c.DateCreated >= checkFromDate && c.SubmissionStatusType.IsLive == true &&
                       (searchPos == null ||
@@ -345,13 +346,13 @@ namespace OCM.API.Common
                 if (searchPos != null)
                 {
                     filterParams.DistanceUnit = DistanceUnit.KM;
-                    filterParams.Distance = subscription.DistanceKM;
+                    filterParams.Distance = subscription.DistanceKm;
                     filterParams.Latitude = searchPos.Latitude;
                     filterParams.Longitude = searchPos.Longitude;
                 }
-                if (subscription.CountryID != null)
+                if (subscription.CountryId != null)
                 {
-                    filterParams.CountryIDs = new int[] { (int)subscription.CountryID };
+                    filterParams.CountryIDs = new int[] { (int)subscription.CountryId };
                 }
                 var poiCollection = poiManager.GetChargePoints(filterParams);
 
@@ -371,7 +372,7 @@ namespace OCM.API.Common
             }
 
             //check if any POI Updates match this subscription
-            if (subscription.NotifyPOIUpdates)
+            if (subscription.NotifyPoiupdates)
             {
                 var poiUpdates = dataModel.EditQueueItems.Where(c => c.DateProcessed >= checkFromDate && c.IsProcessed == true && c.PreviousData != null);
                 if (poiUpdates.Any())
@@ -386,7 +387,7 @@ namespace OCM.API.Common
                             {
                                 if (searchPos != null)
                                 {
-                                    if (GeoManager.CalcDistance(updatedPOI.AddressInfo.Latitude, updatedPOI.AddressInfo.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKM)
+                                    if (GeoManager.CalcDistance(updatedPOI.AddressInfo.Latitude, updatedPOI.AddressInfo.Longitude, (double)searchPos.Latitude, (double)searchPos.Longitude, DistanceUnit.KM) < subscription.DistanceKm)
                                     {
                                         subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = p, POI = updatedPOI });
                                     }
@@ -412,7 +413,7 @@ namespace OCM.API.Common
                 var newComments = dataModel.UserComments.Where(c => c.DateCreated >= checkFromDate &&
                     (searchPos == null ||
                         (searchPos != null &&
-                            c.ChargePoint.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < subscription.DistanceKM
+                            c.ChargePoint.AddressInfo.SpatialPosition.Distance(new NetTopologySuite.Geometries.Point((double)searchPos.Latitude, (double)searchPos.Longitude)) / 1000 < subscription.DistanceKm
                         ))
                       );
                 if (newComments.Any())
@@ -436,7 +437,7 @@ namespace OCM.API.Common
                 var newMedia = dataModel.MediaItems.Where(c => c.DateCreated >= checkFromDate &&
                      (searchPos == null ||
                         (searchPos != null &&
-                            c.ChargePoint.AddressInfo.SpatialPosition.Distance(searchPos) / 1000 < subscription.DistanceKM
+                            c.ChargePoint.AddressInfo.SpatialPosition.Distance(new NetTopologySuite.Geometries.Point((double)searchPos.Latitude, (double)searchPos.Longitude)) / 1000 < subscription.DistanceKm
                         ))
                       );
                 if (newMedia.Any())

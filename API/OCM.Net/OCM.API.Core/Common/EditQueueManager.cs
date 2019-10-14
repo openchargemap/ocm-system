@@ -78,7 +78,7 @@ namespace OCM.API.Common
             var sourceList =
                 DataModel.EditQueueItems.Where(
                     i => (
-                        (filter.ID == null || (filter.ID != null && i.EntityID == filter.ID))
+                        (filter.ID == null || (filter.ID != null && i.EntityId == filter.ID))
                         && (filter.ShowProcessed || (filter.ShowProcessed == false && i.IsProcessed == false))
                         && (filter.DateFrom == null || (filter.DateFrom != null && i.DateSubmitted >= filter.DateFrom))
                         && (filter.DateTo == null || (filter.DateTo != null && i.DateSubmitted <= filter.DateTo))
@@ -101,11 +101,11 @@ namespace OCM.API.Common
         {
             //prepare poi details
             int updatePOIId = 0;
-            var queueItem = DataModel.EditQueueItems.FirstOrDefault(e => e.ID == id);
+            var queueItem = DataModel.EditQueueItems.FirstOrDefault(e => e.Id == id);
 
             if (queueItem != null && queueItem.IsProcessed == false)
             {
-                if (queueItem.EntityType.ID == (int)StandardEntityTypes.POI)
+                if (queueItem.EntityType.Id == (int)StandardEntityTypes.POI)
                 {
                     //check current user is authorized to approve edits for this POIs country
                     bool hasEditPermission = false;
@@ -157,9 +157,9 @@ namespace OCM.API.Common
                             var poiData = poiManager.PopulateChargePoint_SimpleToData(poiB, DataModel);
 
                             //set status type to published if previously unset
-                            if (poiData.SubmissionStatusTypeID == null)
+                            if (poiData.SubmissionStatusTypeId == null)
                             {
-                                poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                                poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_Published);
                             }
 
                             poiData.DateLastStatusUpdate = DateTime.UtcNow;
@@ -167,18 +167,18 @@ namespace OCM.API.Common
                             //publish edit
                             DataModel.SaveChanges();
 
-                            updatePOIId = poiData.ID;
+                            updatePOIId = poiData.Id;
 
                             //attribute submitter with reputation points
-                            if (queueItem.UserID != null)
+                            if (queueItem.UserId != null)
                             {
-                                new UserManager().AddReputationPoints((int)queueItem.UserID, 1);
+                                new UserManager().AddReputationPoints((int)queueItem.UserId, 1);
                             }
                         }
 
                         //update edit queue item as processed
                         queueItem.IsProcessed = true;
-                        queueItem.ProcessedByUser = DataModel.Users.FirstOrDefault(u => u.ID == userId);
+                        queueItem.ProcessedByUser = DataModel.Users.FirstOrDefault(u => u.Id == userId);
                         queueItem.DateProcessed = DateTime.UtcNow;
                         DataModel.SaveChanges();
 

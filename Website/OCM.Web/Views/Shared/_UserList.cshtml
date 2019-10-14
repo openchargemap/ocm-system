@@ -1,0 +1,17 @@
+﻿@model IEnumerable<OCM.API.Common.Model.User>
+<div class="result-list">
+@foreach (var item in Model) {
+    <div class="result">
+            @Html.DisplayFor(modelItem => item.Username)
+            @Html.DisplayFor(modelItem => item.Profile)
+            @Html.DisplayFor(modelItem => item.Location)
+            @Html.DisplayFor(modelItem => item.WebsiteURL)
+            @Html.DisplayFor(modelItem => item.ReputationPoints)
+            @Html.DisplayFor(modelItem => item.IsProfilePublic)
+            @Html.DisplayFor(modelItem => item.IsEmergencyChargingProvider)
+            @Html.DisplayFor(modelItem => item.IsPublicChargingProvider)
+        
+    </div>
+}
+
+</div>

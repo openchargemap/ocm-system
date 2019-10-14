@@ -1,16 +1,19 @@
-﻿using ImageResizer;
-using OCM.Core.Data;
+﻿using OCM.Core.Data;
 using OCM.Core.Util;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
     public class MediaItemManager
     {
-        public MediaItem AddPOIMediaItem(string tempFolder, string sourceImageFile, int chargePointId, string comment, bool isVideo, int userId)
+        public async Task<MediaItem> AddPOIMediaItem(string tempFolder, string sourceImageFile, int chargePointId, string comment, bool isVideo, int userId)
         {
             var dataModel = new OCMEntities();
 
@@ -22,7 +25,7 @@ namespace OCM.API.Common
                 //POI not recognised
                 return null;
             }
-            string[] urls = UploadPOIImageToStorage(tempFolder, sourceImageFile, poi);
+            string[] urls = await UploadPOIImageToStorage(tempFolder, sourceImageFile, poi);
             if (urls == null)
             {
                 //failed to upload, preserve submission data
@@ -31,11 +34,11 @@ namespace OCM.API.Common
             }
             else
             {
-                mediaItem.ItemURL = urls[0];
-                mediaItem.ItemThumbnailURL = urls[1];
+                mediaItem.ItemUrl = urls[0];
+                mediaItem.ItemThumbnailUrl = urls[1];
 
-                mediaItem.User = dataModel.Users.FirstOrDefault(u => u.ID == userId);
-                mediaItem.ChargePoint = dataModel.ChargePoints.FirstOrDefault(cp => cp.ID == chargePointId);
+                mediaItem.User = dataModel.Users.FirstOrDefault(u => u.Id == userId);
+                mediaItem.ChargePoint = dataModel.ChargePoints.FirstOrDefault(cp => cp.Id == chargePointId);
                 mediaItem.Comment = comment;
                 mediaItem.DateCreated = DateTime.UtcNow;
                 mediaItem.IsEnabled = true;
@@ -62,10 +65,27 @@ namespace OCM.API.Common
 
         private void GenerateImageThumbnails(string sourceFile, string destFile, int maxWidth)
         {
-            ImageBuilder.Current.Build(sourceFile, destFile, new ResizeSettings("width=" + maxWidth + "&autorotate=true"));
+            
+            using (Image<Rgba32> image = Image.Load(sourceFile) as Image<Rgba32>) 
+            {
+                int width = image.Width;
+                int height = image.Height;
+                float ratio = 1;
+
+                if (width > maxWidth) {
+                    ratio = (float)image.Width / (float)maxWidth;
+                    width = maxWidth;
+                    height = (int) (height / ratio);
+                }
+                
+                // image is now in a file format agnositic structure in memory as a series of Rgba32 pixels
+                image.Mutate(ctx => ctx.Resize(width, height)); // resize the image in place and return it for chaining
+                image.Save(destFile); // based on the file extension pick an encoder then encode and write the data to disk
+            }
+          
         }
 
-        public string[] UploadPOIImageToStorage(string tempFolder, string sourceImageFile, Model.ChargePoint poi)
+        public async Task<string[]> UploadPOIImageToStorage(string tempFolder, string sourceImageFile, Model.ChargePoint poi)
         {
             string extension = sourceImageFile.Substring(sourceImageFile.LastIndexOf('.'), sourceImageFile.Length - sourceImageFile.LastIndexOf('.')).ToLower();
             if (extension != ".jpg" && extension != ".jpeg" && extension != ".png" && extension != ".gif") return null;
@@ -114,17 +134,17 @@ namespace OCM.API.Common
                     {
                         if (urls[0] == null)
                         {
-                            urls[0] = storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
+                            urls[0] = await storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
                         }
 
                         if (urls[1] == null)
                         {
-                            urls[1] = storage.UploadImage(tempFolder + thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
+                            urls[1] = await storage.UploadImage(tempFolder + thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
                         }
 
                         if (urls[2] == null)
                         {
-                            urls[2] = storage.UploadImage(tempFolder + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
+                            urls[2] = await storage.UploadImage(tempFolder + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
                         }
                         if (urls[0] != null && urls[1] != null && urls[2] != null)
                         {
@@ -170,7 +190,7 @@ namespace OCM.API.Common
         {
             var dataModel = new OCMEntities();
 
-            var list = dataModel.MediaItems.Where(u => u.UserID == userId);
+            var list = dataModel.MediaItems.Where(u => u.UserId == userId);
 
             var results = new List<OCM.API.Common.Model.MediaItem>();
             foreach (var mediaItem in list)
@@ -185,11 +205,11 @@ namespace OCM.API.Common
         {
             var dataModel = new OCMEntities();
 
-            var item = dataModel.MediaItems.FirstOrDefault(c => c.ID == mediaItemId);
+            var item = dataModel.MediaItems.FirstOrDefault(c => c.Id == mediaItemId);
 
             if (item != null)
             {
-                var cpID = item.ChargePointID;
+                var cpID = item.ChargePointId;
                 dataModel.MediaItems.Remove(item);
                 dataModel.ChargePoints.Find(cpID).DateLastStatusUpdate = DateTime.UtcNow;
                 dataModel.SaveChanges();

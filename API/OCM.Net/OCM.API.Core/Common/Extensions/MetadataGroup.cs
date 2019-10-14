@@ -12,9 +12,9 @@ namespace OCM.API.Common.Model.Extensions
 
             var group= new Model.MetadataGroup
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
-                DataProviderID = source.DataProviderID,
+                DataProviderID = source.DataProviderId,
                 IsRestrictedEdit = source.IsRestrictedEdit,
                 IsPublicInterest = source.IsPublicInterest,
                 MetadataFields = new List<Model.MetadataField>()

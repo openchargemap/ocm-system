@@ -10,7 +10,7 @@ namespace OCM.API.Common
     {
         public List<OCM.API.Common.Model.UserComment> GetUserComments(int userId)
         {
-            var list = DataModel.UserComments.Where(u => u.UserID == userId);
+            var list = DataModel.UserComments.Where(u => u.UserId == userId);
 
             var results = new List<OCM.API.Common.Model.UserComment>();
             foreach (var c in list)
@@ -23,11 +23,11 @@ namespace OCM.API.Common
 
         public void DeleteComment(int userId, int commentId)
         {
-            var comment = DataModel.UserComments.FirstOrDefault(c => c.ID == commentId);
+            var comment = DataModel.UserComments.FirstOrDefault(c => c.Id == commentId);
 
             if (comment != null)
             {
-                var cpID = comment.ChargePointID;
+                var cpID = comment.ChargePointId;
                 DataModel.UserComments.Remove(comment);
                 DataModel.ChargePoints.Find(cpID).DateLastStatusUpdate = DateTime.UtcNow;
                 DataModel.SaveChanges();
@@ -42,15 +42,15 @@ namespace OCM.API.Common
 
         public async Task ActionComment(int userId, int commentId)
         {
-            var comment = DataModel.UserComments.FirstOrDefault(c => c.ID == commentId);
+            var comment = DataModel.UserComments.FirstOrDefault(c => c.Id == commentId);
             comment.IsActionedByEditor = true;
             DataModel.SaveChanges();
 
             var user = new UserManager().GetUser(userId);
-            AuditLogManager.Log(user, AuditEventType.UpdatedItem, "{EntityType:\"Comment\",EntityID:" + commentId + ",ChargePointID:" + comment.ChargePointID + "}", "User marked comment as actioned");
+            AuditLogManager.Log(user, AuditEventType.UpdatedItem, "{EntityType:\"Comment\",EntityID:" + commentId + ",ChargePointID:" + comment.ChargePointId + "}", "User marked comment as actioned");
 
             //refresh cached POI data
-            await CacheManager.RefreshCachedPOI(comment.ChargePointID);
+            await CacheManager.RefreshCachedPOI(comment.ChargePointId);
         }
     }
 }

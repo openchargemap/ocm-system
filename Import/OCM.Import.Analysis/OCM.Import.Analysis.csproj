@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{FBD1BB19-0912-4A8C-BE95-197CCDC27CF3}</ProjectGuid>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyTitle>OCM.Import.Analysis</AssemblyTitle>
     <Product>OCM.Import.Analysis</Product>
     <Copyright>Copyright ©  2015</Copyright>
@@ -37,10 +37,6 @@
     <PackageReference Include="DotSpatial.Symbology" Version="1.9.0" />
     <PackageReference Include="DotSpatial.Symbology.Forms" Version="1.9.0" />
     <PackageReference Include="DotSpatial.Topology" Version="1.9.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />

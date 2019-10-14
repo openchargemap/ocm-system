@@ -87,7 +87,7 @@ namespace OCM.API.Common
                 //if poi is an update, validate if update can be performed
                 if (updatedPOI.ID > 0 && !String.IsNullOrEmpty(updatedPOI.UUID))
                 {
-                    if (dataModel.ChargePoints.Any(c => c.ID == updatedPOI.ID && c.UUID == updatedPOI.UUID))
+                    if (dataModel.ChargePoints.Any(c => c.Id == updatedPOI.ID && c.Uuid == updatedPOI.UUID))
                     {
                         //update is valid poi, check if user has permission to perform an update
                         isUpdate = true;
@@ -125,8 +125,8 @@ namespace OCM.API.Common
                 var editQueueItem = new Core.Data.EditQueueItem { DateSubmitted = DateTime.UtcNow };
                 if (enableEditQueueLogging)
                 {
-                    editQueueItem.EntityID = updatedPOI.ID;
-                    editQueueItem.EntityType = dataModel.EntityTypes.FirstOrDefault(t => t.ID == 1);
+                    editQueueItem.EntityId = updatedPOI.ID;
+                    editQueueItem.EntityType = dataModel.EntityTypes.FirstOrDefault(t => t.Id == 1);
                     //charging point location entity type id
 
                     //serialize cp as json
@@ -153,16 +153,16 @@ namespace OCM.API.Common
                         }
                     }
 
-                    if (user != null) editQueueItem.User = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
+                    if (user != null) editQueueItem.User = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
                     editQueueItem.IsProcessed = false;
-                    editQueueItem = dataModel.EditQueueItems.Add(editQueueItem);
+                    dataModel.EditQueueItems.Add(editQueueItem);
                     //TODO: send notification of new item for approval
 
                     //save edit queue item
                     dataModel.SaveChanges();
 
                     //if previous edit queue item exists by same user for same POI, mark as processed
-                    var previousEdits = dataModel.EditQueueItems.Where(e => e.UserID == editQueueItem.UserID && e.EntityID == editQueueItem.EntityID && e.EntityTypeID == editQueueItem.EntityTypeID && e.ID != editQueueItem.ID && e.IsProcessed != true);
+                    var previousEdits = dataModel.EditQueueItems.Where(e => e.UserId == editQueueItem.UserId && e.EntityId == editQueueItem.EntityId && e.EntityTypeId == editQueueItem.EntityTypeId && e.Id != editQueueItem.Id && e.IsProcessed != true);
                     foreach (var previousEdit in previousEdits)
                     {
                         previousEdit.IsProcessed = true;
@@ -172,7 +172,7 @@ namespace OCM.API.Common
                         }
                         else
                         {
-                            editQueueItem.ProcessedByUser = dataModel.Users.FirstOrDefault(u => u.ID == (int)StandardUsers.System);
+                            editQueueItem.ProcessedByUser = dataModel.Users.FirstOrDefault(u => u.Id == (int)StandardUsers.System);
                         }
                         previousEdit.DateProcessed = DateTime.UtcNow;
                     }
@@ -214,15 +214,15 @@ namespace OCM.API.Common
                 var cpData = poiManager.PopulateChargePoint_SimpleToData(updatedPOI, dataModel);
 
                 //if item has no submission status and user permitted to edit, set to published
-                if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeID == null)
+                if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeId == null)
                 {
-                    cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_Published);
-                    cpData.SubmissionStatusTypeID = cpData.SubmissionStatusType.ID; //hack due to conflicting state change for SubmissionStatusType
+                    cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                    cpData.SubmissionStatusTypeId = cpData.SubmissionStatusType.Id; //hack due to conflicting state change for SubmissionStatusType
                 }
                 else
                 {
                     //no submission status, set to 'under review'
-                    if (cpData.SubmissionStatusType == null) cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
+                    if (cpData.SubmissionStatusType == null) cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
                 }
 
                 cpData.DateLastStatusUpdate = DateTime.UtcNow;
@@ -230,7 +230,7 @@ namespace OCM.API.Common
                 if (!isUpdate)
                 {
                     //new data objects need added to data model before save
-                    if (cpData.AddressInfo != null) dataModel.AddressInfoList.Add(cpData.AddressInfo);
+                    if (cpData.AddressInfo != null) dataModel.AddressInfoes.Add(cpData.AddressInfo);
 
                     dataModel.ChargePoints.Add(cpData);
                 }
@@ -239,15 +239,15 @@ namespace OCM.API.Common
                 dataModel.SaveChanges();
 
                 //get id of update/new poi
-                int newPoiID = cpData.ID;
+                int newPoiID = cpData.Id;
 
                 //this is an authorised update, reflect change in edit queue item
                 if (enableEditQueueLogging && user != null && user.ID > 0)
                 {
-                    var editUser = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
+                    var editUser = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
                     editQueueItem.User = editUser;
 
-                    if (newPoiID > 0) editQueueItem.EntityID = newPoiID;
+                    if (newPoiID > 0) editQueueItem.EntityId = newPoiID;
 
                     //if user is authorised to edit, process item automatically without review
                     if (userCanEditWithoutApproval)
@@ -265,23 +265,23 @@ namespace OCM.API.Common
                     //anonymous submission, update edit queue item
                     if (enableEditQueueLogging && user == null)
                     {
-                        if (newPoiID > 0) editQueueItem.EntityID = newPoiID;
+                        if (newPoiID > 0) editQueueItem.EntityId = newPoiID;
                         dataModel.SaveChanges();
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Added/Updated CP:" + cpData.ID);
+                System.Diagnostics.Debug.WriteLine("Added/Updated CP:" + cpData.Id);
 
                 //if user is not anonymous, log their submission and update their reputation points
                 if (user != null)
                 {
-                    AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem, "Modified OCM-" + cpData.ID, null);
+                    AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem, "Modified OCM-" + cpData.Id, null);
                     //add reputation points
                     new UserManager().AddReputationPoints(user, 1);
                 }
 
                 //preserve new POI Id for caller
-                updatedPOI.ID = cpData.ID;
+                updatedPOI.ID = cpData.Id;
 
                 if (performCacheRefresh)
                 {
@@ -301,8 +301,8 @@ namespace OCM.API.Common
             catch (Exception exp)
             {
                 System.Diagnostics.Debug.WriteLine(exp.ToString());
-                AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorWeb);
-                //throw exp;
+                AuditLogManager.ReportWebException(null, AuditEventType.SystemErrorWeb, "POI Submission Failed", exp);
+
                 //error performing submission
                 return new ValidationResult { IsValid = false, Message = "Submission Failed with an Exception: " + exp.Message };
             }
@@ -317,13 +317,13 @@ namespace OCM.API.Common
                 //send notification
                 NotificationManager notification = new NotificationManager();
                 Hashtable msgParams = new Hashtable();
-                msgParams.Add("Description", "OCM-" + cpData.ID + " : " + poi.AddressInfo.Title);
+                msgParams.Add("Description", "OCM-" + cpData.Id + " : " + poi.AddressInfo.Title);
                 msgParams.Add("SubmissionStatusType", approvalStatus);
-                msgParams.Add("ItemURL", "https://openchargemap.org/site/poi/details/" + cpData.ID);
-                msgParams.Add("ChargePointID", cpData.ID);
+                msgParams.Add("ItemURL", "https://openchargemap.org/site/poi/details/" + cpData.Id);
+                msgParams.Add("ChargePointID", cpData.Id);
                 msgParams.Add("UserName", user != null ? user.Username : "Anonymous");
                 msgParams.Add("MessageBody",
-                              "New Location " + approvalStatus + " OCM-" + cpData.ID + " Submitted: " +
+                              "New Location " + approvalStatus + " OCM-" + cpData.Id + " Submitted: " +
                               poi.AddressInfo.Title);
 
                 notification.PrepareNotification(NotificationType.LocationSubmitted, msgParams);
@@ -381,11 +381,11 @@ namespace OCM.API.Common
             var dataModel = new Core.Data.OCMEntities();
             int cpID = comment.ChargePointID;
             var dataComment = new Core.Data.UserComment();
-            var dataChargePoint = dataModel.ChargePoints.FirstOrDefault(c => c.ID == cpID);
+            var dataChargePoint = dataModel.ChargePoints.FirstOrDefault(c => c.Id == cpID);
 
             if (dataChargePoint == null) return -1; //invalid charge point specified
 
-            dataComment.ChargePointID = dataChargePoint.ID;
+            dataComment.ChargePointId = dataChargePoint.Id;
 
             dataComment.Comment = comment.Comment;
             int commentTypeID = comment.CommentTypeID ?? 10; //default to General Comment
@@ -396,29 +396,29 @@ namespace OCM.API.Common
                 commentTypeID = comment.CommentType.ID;
             }
 
-            dataComment.UserCommentTypeID = commentTypeID;
+            dataComment.UserCommentTypeId = commentTypeID;
 
             int? checkinStatusType = comment.CheckinStatusTypeID;
-            dataComment.CheckinStatusTypeID = (byte?)comment.CheckinStatusTypeID;
+            dataComment.CheckinStatusTypeId = (byte?)comment.CheckinStatusTypeID;
 
             // some clients may post a CheckinStatusType object instead of just an ID
-            if (dataComment.CheckinStatusTypeID == null && comment.CheckinStatusType != null)
+            if (dataComment.CheckinStatusTypeId == null && comment.CheckinStatusType != null)
             {
-                dataComment.CheckinStatusTypeID = (byte?)comment.CheckinStatusType.ID;
+                dataComment.CheckinStatusTypeId = (byte?)comment.CheckinStatusType.ID;
             }
 
             dataComment.UserName = comment.UserName;
             dataComment.Rating = comment.Rating;
-            dataComment.RelatedURL = comment.RelatedURL;
+            dataComment.RelatedUrl = comment.RelatedURL;
             dataComment.DateCreated = DateTime.UtcNow;
 
             if (user != null && user.ID > 0)
             {
-                var ocmUser = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
+                var ocmUser = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
 
                 if (ocmUser != null)
                 {
-                    dataComment.UserID = ocmUser.ID;
+                    dataComment.UserId = ocmUser.Id;
                     dataComment.UserName = ocmUser.Username;
                 }
             }
@@ -432,7 +432,7 @@ namespace OCM.API.Common
 
                 if (user != null)
                 {
-                    AuditLogManager.Log(user, AuditEventType.CreatedItem, "Added Comment " + dataComment.ID + " to OCM-" + cpID, null);
+                    AuditLogManager.Log(user, AuditEventType.CreatedItem, "Added Comment " + dataComment.Id + " to OCM-" + cpID, null);
                     //add reputation points
                     new UserManager().AddReputationPoints(user, 1);
                 }
@@ -440,9 +440,9 @@ namespace OCM.API.Common
                 //SendPOICommentSubmissionNotifications(comment, user, dataComment);
 
                 //TODO: only refresh cache for specific POI
-                CacheManager.RefreshCachedPOI(dataComment.ChargePoint.ID);
+                CacheManager.RefreshCachedPOI(dataComment.ChargePoint.Id);
 
-                return dataComment.ID;
+                return dataComment.Id;
             }
             catch (Exception exp)
             {
@@ -465,7 +465,7 @@ namespace OCM.API.Common
                 msgParams.Add("MessageBody", "Comment (" + dataComment.UserCommentType.Title + ") added to OCM-" + comment.ChargePointID + ": " + dataComment.Comment);
 
                 //if fault report, attempt to notify operator
-                if (dataComment.UserCommentType.ID == (int)StandardCommentTypes.FaultReport)
+                if (dataComment.UserCommentType.Id == (int)StandardCommentTypes.FaultReport)
                 {
                     //decide if we can send a fault notification to the operator
                     notification.PrepareNotification(NotificationType.FaultReport, msgParams);

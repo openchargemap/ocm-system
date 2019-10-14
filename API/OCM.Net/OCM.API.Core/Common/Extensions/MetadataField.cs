@@ -12,10 +12,10 @@ namespace OCM.API.Common.Model.Extensions
 
             var f = new Model.MetadataField
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
-                MetadataGroupID = source.MetadataGroupID,
-                DataTypeID = source.DataTypeID
+                MetadataGroupID = source.MetadataGroupId,
+                DataTypeID = source.DataTypeId
             };
 
             if (source.MetadataFieldOptions!=null)

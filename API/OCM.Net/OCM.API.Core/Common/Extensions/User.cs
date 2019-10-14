@@ -24,7 +24,7 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.User()
             {
-                ID = source.ID,
+                ID = source.Id,
                 Username = source.Username,
                 ReputationPoints = source.ReputationPoints,
                 ProfileImageURL = GetProfileImageURL(source)
@@ -37,7 +37,7 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.User()
             {
-                ID = source.ID,
+                ID = source.Id,
                 Username = source.Username,
                 ReputationPoints = source.ReputationPoints,
                 Location = source.Location,
@@ -54,14 +54,14 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.User()
             {
-                ID = source.ID,
+                ID = source.Id,
                 IdentityProvider = source.IdentityProvider,
                 Identifier = source.Identifier,
                 CurrentSessionToken = source.CurrentSessionToken,
                 Username = source.Username,
                 Profile = source.Profile,
                 Location = source.Location,
-                WebsiteURL = source.WebsiteURL,
+                WebsiteURL = source.WebsiteUrl,
                 ReputationPoints = source.ReputationPoints,
                 Permissions = source.Permissions,
                 PermissionsRequested = source.PermissionsRequested,

@@ -1,1 +1,0 @@
-﻿temp uploads go here so the IIS App pool identity requires read/write permission to this folder.

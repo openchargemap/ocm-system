@@ -42,7 +42,7 @@ namespace OCM.API.Common
 
         public bool HasPassword(int userId)
         {
-            var user = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+            var user = dataModel.Users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
                 if (!String.IsNullOrEmpty(user.PasswordHash))
@@ -78,7 +78,7 @@ namespace OCM.API.Common
             if (user != null)
             {
                 //update session token and send as verification token
-                AssignNewSessionToken(user.ID);
+                AssignNewSessionToken(user.Id);
                 string resetConfirmationURL = "https://openchargemap.org/site/loginprovider/confirmpasswordreset?token=" + System.Web.HttpUtility.UrlEncode(user.CurrentSessionToken) + "&email=" + System.Web.HttpUtility.UrlEncode(email.ToLower());
                 //send notification
 
@@ -99,7 +99,7 @@ namespace OCM.API.Common
 
         public bool SetNewPassword(int userId, API.Common.Model.PasswordChangeModel model)
         {
-            var userDetails = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.Id == userId);
             if (userDetails != null)
             {
                 if (model.IsCurrentPasswordRequired && !IsCorrectPassword(userDetails.PasswordHash, model.CurrentPassword))
@@ -150,15 +150,15 @@ namespace OCM.API.Common
             dataModel.Users.Add(userDetails);
             dataModel.SaveChanges();
 
-            SetNewPassword(userDetails.ID, (PasswordChangeModel)model);
-            AssignNewSessionToken(userDetails.ID);
+            SetNewPassword(userDetails.Id, (PasswordChangeModel)model);
+            AssignNewSessionToken(userDetails.Id);
 
             return API.Common.Model.Extensions.User.BasicFromDataModel(userDetails);
         }
 
         public User GetUser(int id)
         {
-            var userDetails = dataModel.Users.FirstOrDefault(u => u.ID == id);
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.Id == id);
             if (userDetails != null)
             {
                 return Model.Extensions.User.FromDataModel(userDetails);
@@ -203,7 +203,7 @@ namespace OCM.API.Common
 
         public void AddReputationPoints(int userId, int amount)
         {
-            var user = Model.Extensions.User.FromDataModel(dataModel.Users.FirstOrDefault(u => u.ID == userId));
+            var user = Model.Extensions.User.FromDataModel(dataModel.Users.FirstOrDefault(u => u.Id == userId));
             this.AddReputationPoints(user, amount);
         }
 
@@ -220,7 +220,7 @@ namespace OCM.API.Common
                 {
                     if (user.ID > 0)
                     {
-                        var userData = dataModel.Users.First(u => u.ID == user.ID);
+                        var userData = dataModel.Users.First(u => u.Id == user.ID);
                         if (userData != null)
                         {
                             if (userData.ReputationPoints == null) userData.ReputationPoints = 0;
@@ -238,7 +238,7 @@ namespace OCM.API.Common
 
         public void AssignNewSessionToken(int userId, bool updateDateLastLogin = false)
         {
-            var user = dataModel.Users.FirstOrDefault(u => u.ID == userId);
+            var user = dataModel.Users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
                 user.CurrentSessionToken = Guid.NewGuid().ToString();
@@ -264,7 +264,7 @@ namespace OCM.API.Common
                 {
                     if (updatedProfile.ID > 0)
                     {
-                        var userData = dataModel.Users.First(u => u.ID == updatedProfile.ID);
+                        var userData = dataModel.Users.First(u => u.Id == updatedProfile.ID);
                         if (userData != null)
                         {
                             if (userData.IdentityProvider == "OCM" && String.IsNullOrWhiteSpace(updatedProfile.EmailAddress))
@@ -275,7 +275,7 @@ namespace OCM.API.Common
                             if (userData.EmailAddress != updatedProfile.EmailAddress && !string.IsNullOrWhiteSpace(updatedProfile.EmailAddress))
                             {
                                 //ensure email address is not in use by another account before changing
-                                if (dataModel.Users.Any(e => e.ID != userData.ID && e.EmailAddress != null && e.EmailAddress.Trim().ToLower() == updatedProfile.EmailAddress.ToLower().Trim()))
+                                if (dataModel.Users.Any(e => e.Id != userData.Id && e.EmailAddress != null && e.EmailAddress.Trim().ToLower() == updatedProfile.EmailAddress.ToLower().Trim()))
                                 {
                                     //cannot proceed, user is trying to change email address to match another user
                                     return false;
@@ -285,7 +285,7 @@ namespace OCM.API.Common
                             userData.Location = updatedProfile.Location;
                             userData.Profile = updatedProfile.Profile;
                             userData.Username = updatedProfile.Username;
-                            userData.WebsiteURL = updatedProfile.WebsiteURL;
+                            userData.WebsiteUrl = updatedProfile.WebsiteURL;
 
                             userData.IsProfilePublic = (updatedProfile.IsProfilePublic != null ? (bool)updatedProfile.IsProfilePublic : false);
                             userData.IsPublicChargingProvider = (updatedProfile.IsPublicChargingProvider != null ? (bool)updatedProfile.IsPublicChargingProvider : false);
@@ -408,7 +408,7 @@ namespace OCM.API.Common
         public bool GrantPermission(User user, StandardPermissionAttributes permissionAttribute, string attributeValue, bool removeOnly, User administrator)
         {
             //to apply permissions we add or remove from the permissions list attached to the user details, we also maintain a string in the legacy semicolon seperated format for apps/code which still requires the older format.
-            var userDetails = dataModel.Users.FirstOrDefault(u => u.ID == user.ID);
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
             if (userDetails != null)
             {
                 UserPermissionsContainer userPermissions = new UserPermissionsContainer();
@@ -526,7 +526,7 @@ namespace OCM.API.Common
 
                             if (!parsedOK)
                             {
-                                throw new Exception("Failed to parse permission: User" + user.ID + " :" + user.Permissions);
+                                throw new Exception("Failed to parse permission: User" + user.Id + " :" + user.Permissions);
                             }
                             else
                             {

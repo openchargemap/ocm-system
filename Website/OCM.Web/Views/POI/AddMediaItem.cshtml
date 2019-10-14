@@ -1,0 +1,54 @@
+﻿@model OCM.API.Common.Model.ChargePoint
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Html;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewBag.Title = "Add Photos";
+
+    int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
+
+}
+
+@if (ViewBag.UploadCompleted == true)
+{
+    <h2>Upload in Progress</h2>
+    <p>Thanks for your contribution, it takes a few seconds for uploads to be processed, in the meantime you can @Html.ActionLink("return to the location details", "Details", "POI", new { id = ViewBag.PoiId }, null)</p>
+}
+else
+{
+    if (userId != null)
+    {
+        using (Html.BeginForm("AddMediaItem", "POI", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+            <h2>Add Your Photos <small>@Model.AddressInfo.Title</small></h2>
+            <p>Thanks for going to the effort of uploading new content, you are awesome! Please choose your images to upload, then hit the upload button. If you encounter any problems please try using an image smaller than 2MB in size.</p>
+
+            <div class="container">
+                <div class="form-group">
+
+                    <!--FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add More Images", uploadText: "Upload File")
+                    -->
+                </div>
+
+                <div class="form-group">
+                    <label for="comment" class="control-label">Comment:</label>
+
+                    <textarea id="comment" class="form-control" name="comment" maxlength="1000" placeholder="Comment or description to accompany the image"></textarea>
+                </div>
+            </div>
+            @Html.Partial("_TermsLink")
+            <input class="btn btn-primary" type="submit" name="submit" value="Upload!" />
+        }
+    }
+    else
+    {
+        <h2>Add Your Photos <small>@Model.AddressInfo.Title</small></h2>
+        @Html.Partial("_POISummary", Model)
+        <p>
+            Please Sign In to proceed: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("AddMediaItem", "POI", new { id = Model.ID }) }, new { @class = "btn btn-primary" })
+        </p>
+    }
+}

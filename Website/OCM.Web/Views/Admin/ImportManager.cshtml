@@ -1,0 +1,72 @@
+﻿@model OCM.MVC.Models.ImportManager
+
+
+<h2>Import Manager</h2>
+<p class="alert alert-danger">This feature is still under development and is not ready for general use.</p>
+<table class="table table-bordered table-striped">
+    <tr><th>Data Provider</th><th>License</th><th>Import Provider</th><th>Date Last Imported</th><th></th></tr>
+    @foreach (var item in Model.ImportProviders)
+    {
+        var itemDetails = (OCM.Import.Providers.BaseImportProvider)item;
+
+        <tr>
+            <td>
+                @(itemDetails.DefaultDataProvider != null ? itemDetails.DefaultDataProvider.Title : "Data Provider Not Set")
+            </td>
+
+            <td>
+                @(itemDetails.DefaultDataProvider != null ? itemDetails.DefaultDataProvider.License : "")
+            </td>
+            <td>@itemDetails.ProviderName</td>
+            <td>@(itemDetails.DefaultDataProvider != null ? (itemDetails.DefaultDataProvider.DateLastImported.HasValue ? itemDetails.DefaultDataProvider.DateLastImported.ToString() : "Unknown") : "")</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cloud-download"></i> Import <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("Preview Import (Live Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = true, performImport = false })</li>
+                        <li>@Html.ActionLink("Preview Import (Cached Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = false, performImport = false })</li>
+                        <li class="divider"></li>
+                        <li>@Html.ActionLink("Perform Import (Live Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = true, performImport = true })</li>
+                        <li>@Html.ActionLink("Perform Import (Cached Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = false, performImport = true })</li>
+                        <li class="divider"></li>
+                        <li><a href="javascript:showFileUpload('@itemDetails.ProviderName', false)">Upload File (Preview)..</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+
+    }
+</table>
+
+<div class="well" id="upload" style="display:none;">
+    @using (Html.BeginForm("ImportUpload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <input type="text" name="providerName" id="upload-provider" class="form-control" value="" />
+        <input type="hidden" name="fetchLiveData" value="false" />
+        <input type="hidden" name="performImport" id="upload-performimport" value="false" />
+        <h2>Upload file for Import</h2>
+
+        <div class="container">
+            <div class="form-group">
+
+                <!--
+        FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add File", uploadText: "Upload File")
+        -->
+            </div>
+        </div>
+
+        <input class="btn btn-primary" type="submit" name="submit" value="Upload" />
+    }
+</div>
+
+<script>
+    function showFileUpload(providerName, performImport) {
+        $("#upload-performimport").val(performImport);
+        $("#upload-provider").val(providerName);
+        $("#upload").show();
+    }
+</script>

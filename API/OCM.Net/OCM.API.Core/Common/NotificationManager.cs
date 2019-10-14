@@ -1,6 +1,4 @@
-﻿using Mandrill;
-using Mandrill.Models;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -119,7 +117,7 @@ namespace OCM.API.Common
             }
             else
             {
-                templateFolder = HttpContext.Current.Server.MapPath("~/templates/notifications");
+                throw new Exception("Template path not specified");
             }
             string BaseTemplate = System.IO.File.ReadAllText(templateFolder + "\\BaseTemplate.htm");
 
@@ -229,68 +227,7 @@ namespace OCM.API.Common
 
                     return true;
                 }
-                else
-                {
-                    //send via bulk mailing api
-                    var apiKey = System.Configuration.ConfigurationManager.AppSettings["MandrillAPIKey"];
-                    if (!String.IsNullOrEmpty(apiKey))
-                    {
-                        MandrillApi api = new MandrillApi(apiKey);
-                        var message = new EmailMessage();
-
-                        string[] addresses = toEmail.Split(';');
-                        var emailToList = new List<EmailAddress>();
-                        foreach (string emailAddress in addresses)
-                        {
-                            emailToList.Add(new EmailAddress(emailAddress));
-                        }
-                        message.To = emailToList;
-
-                        if (!String.IsNullOrEmpty(bccEmail) && !isDebugOnly)
-                        {
-                            addresses = bccEmail.Split(';');
-                            var bccToList = new List<EmailAddress>();
-                            foreach (string emailAddress in addresses)
-                            {
-                                bccToList.Add(new EmailAddress(emailAddress));
-                            }
-                        }
-
-                        message.FromEmail = ConfigurationManager.AppSettings["DefaultSenderEmailAddress"];
-                        message.FromName = "Open Charge Map - Automated Notification";
-                        message.Subject = this.Subject;
-
-                        message.AutoText = true;
-                        message.Html = this.MessageBody;
-
-                        var messageRequest = new Mandrill.Requests.Messages.SendMessageRequest(message);
-
-                        var messageTask = Task.Run(async () =>
-                        {
-                            return await api.SendMessage(messageRequest);
-                        });
-
-                        messageTask.Wait();
-                        var result = messageTask.Result;
-                        if (result != null && result.Any())
-                        {
-                            //optional notification result logging
-                            LogEvent(Newtonsoft.Json.JsonConvert.SerializeObject(new { eventDate = DateTime.UtcNow, result = result }));
-
-                            var r = result.First();
-                            if (r.Status == EmailResultStatus.Invalid || r.Status == EmailResultStatus.Rejected)
-                            {
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            LogEvent(Newtonsoft.Json.JsonConvert.SerializeObject(new { eventDate = DateTime.UtcNow, result = result }));
-                        }
-
-                        return true;
-                    }
-                }
+               
             }
             catch (Exception ex)
             {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Amazon.S3.Model;
 using Amazon.S3;
+using System.Threading.Tasks;
 
 namespace OCM.Core.Util
 {
@@ -16,20 +15,22 @@ namespace OCM.Core.Util
             AmazonS3
         }
 
-        public static string UploadImageBlob(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags, StorageProvider provider = StorageProvider.AmazonS3)
+        public async static Task<string> UploadImageBlob(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags, StorageProvider provider = StorageProvider.AmazonS3)
         {
             if (provider == StorageProvider.Azure)
             {
-                return UploadImageBlobAzure(fileName, blobName, metadataTags);
+                return await UploadImageBlobAzure(fileName, blobName, metadataTags);
             }
             else
             {
-                return UploadImageBlobAmazonS3(fileName, blobName, metadataTags);
+                return await UploadImageBlobAmazonS3(fileName, blobName, metadataTags);
             }
         }
 
-        public static string UploadImageBlobAzure(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
+        public static Task<string> UploadImageBlobAzure(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 string storageConnectionString = ConfigurationManager.ConnectionStrings["AzureStorage"].ConnectionString;
@@ -64,9 +65,11 @@ namespace OCM.Core.Util
                 //failed to upload to azure, return null
                 return null;
             }
+
+            */
         }
 
-        public static string UploadImageBlobAmazonS3(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
+        public static async Task<string> UploadImageBlobAmazonS3(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
         {
             string bucketName = ConfigurationManager.AppSettings["AWSMediaItemsContainerName"];
             string accessKey = ConfigurationManager.AppSettings["AWSAccessKey"];
@@ -85,7 +88,7 @@ namespace OCM.Core.Util
                         CannedACL = S3CannedACL.PublicRead
                     };
 
-                    PutObjectResponse response1 = client.PutObject(putRequest1);
+                    PutObjectResponse response1 = await client.PutObjectAsync(putRequest1);
                     return "https://s3-ap-southeast-2.amazonaws.com/openchargemap/images/" + blobName;
                     /* // 2. Put object-set ContentType and add metadata.
                      PutObjectRequest putRequest2 = new PutObjectRequest
@@ -124,9 +127,9 @@ namespace OCM.Core.Util
 
     public class StorageManager
     {
-        public string UploadImage(string sourceFile, string destName, List<KeyValuePair<string, string>> metadataTags)
+        public async Task<string> UploadImage(string sourceFile, string destName, List<KeyValuePair<string, string>> metadataTags)
         {
-            string result = BlobStorageHelper.UploadImageBlob(sourceFile, destName, metadataTags);
+            string result = await BlobStorageHelper.UploadImageBlob(sourceFile, destName, metadataTags);
 
             //auto apply https instead of http in image url
             if (result != null && result.StartsWith("http://"))

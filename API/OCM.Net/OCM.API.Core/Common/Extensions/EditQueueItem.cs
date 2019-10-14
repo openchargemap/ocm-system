@@ -9,7 +9,7 @@ namespace OCM.API.Common.Model.Extensions
         public static Model.EditQueueItem FromDataModel(Core.Data.EditQueueItem source)
         {
             return new Model.EditQueueItem { 
-                ID = source.ID,
+                ID = source.Id,
                 User = User.BasicFromDataModel(source.User),
                 Comment = source.Comment, 
                 IsProcessed = source.IsProcessed,
@@ -18,7 +18,7 @@ namespace OCM.API.Common.Model.Extensions
                 DateProcessed = source.DateProcessed,
                 EditData = source.EditData,
                 PreviousData = source.PreviousData,
-                EntityID = source.EntityID,
+                EntityID = source.EntityId,
                 EntityType = EntityType.FromDataModel(source.EntityType)
             };
         }

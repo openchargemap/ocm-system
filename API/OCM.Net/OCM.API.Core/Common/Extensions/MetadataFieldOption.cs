@@ -12,9 +12,9 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.MetadataFieldOption
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
-                MetadataFieldID = source.MetadataFieldID
+                MetadataFieldID = source.MetadataFieldId
             };
         }
     }

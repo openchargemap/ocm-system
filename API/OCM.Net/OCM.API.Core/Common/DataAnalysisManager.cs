@@ -1,4 +1,5 @@
-﻿using OCM.API.Common;
+﻿using GeoCoordinatePortable;
+using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using System;
@@ -31,7 +32,7 @@ namespace OCM.Core.Common
                 var dupePOIs = allPOIs.Where(p => p.ID != poi.ID &&
                     (
                         p.DataProvidersReference != null && p.DataProvidersReference.Length > 0 && p.DataProvidersReference == poi.DataProvidersReference
-                        || new System.Device.Location.GeoCoordinate(p.AddressInfo.Latitude, p.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude)) < POSSIBLE_DUPLICATE_DISTANCE_METERS
+                        || new GeoCoordinate(p.AddressInfo.Latitude, p.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude)) < POSSIBLE_DUPLICATE_DISTANCE_METERS
                     )
                     );
 
@@ -51,7 +52,7 @@ namespace OCM.Core.Common
                         }
                         else
                         {
-                            double distanceMeters = new System.Device.Location.GeoCoordinate(dupe.AddressInfo.Latitude, dupe.AddressInfo.Longitude).GetDistanceTo(new System.Device.Location.GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
+                            double distanceMeters = new GeoCoordinate(dupe.AddressInfo.Latitude, dupe.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude));
                             if (distanceMeters < DUPLICATE_DISTANCE_METERS)
                             {
                                 dupePoi.Reasons.Add("POI location is close proximity (" + distanceMeters + "m) to OCM-" + poi.ID);

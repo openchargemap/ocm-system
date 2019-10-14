@@ -12,12 +12,12 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.MediaItem()
             {
-                ID = source.ID,
-                ChargePointID = source.ChargePointID,
-                ItemURL = source.ItemURL,
-                ItemThumbnailURL = source.ItemThumbnailURL,
+                ID = source.Id,
+                ChargePointID = source.ChargePointId,
+                ItemURL = source.ItemUrl,
+                ItemThumbnailURL = source.ItemThumbnailUrl,
                 Comment = source.Comment,
-                IsEnabled =  source.IsEnabled,
+                IsEnabled =  (bool)source.IsEnabled,
                 IsVideo = source.IsVideo,
                 IsFeaturedItem = source.IsFeaturedItem,
                 IsExternalResource = source.IsExternalResource,

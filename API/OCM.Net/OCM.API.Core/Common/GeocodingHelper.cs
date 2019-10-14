@@ -8,7 +8,6 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web.Script.Serialization;
 
 namespace OCM.API.Common
 {
@@ -90,105 +89,13 @@ namespace OCM.API.Common
 
         public bool IncludeQueryURL { get; set; }
 
-        public List<LocationImage> GetGeneralLocationImages(double latitude, double longitude)
-        {
-            List<LocationImage> imageList = new List<LocationImage>();
-
-            //TODO: proper method of add/subtract a 2.5(?) mile window around the latitude, with caching of results
-            double minx = longitude - 0.1;
-            double maxx = longitude + 0.1;
-            double miny = latitude - 0.1;
-            double maxy = latitude + 0.1;
-            string url = "https://www.panoramio.com/map/get_panoramas.php?set=full&from=0&to=10&minx=" + minx + "&miny=" + miny + "&maxx=" + maxx + "&maxy=" + maxy + "&size=medium&mapfilter=false";
-
-            using (System.Net.WebClient wc = new System.Net.WebClient())
-            {
-                wc.Encoding = System.Text.Encoding.UTF8;
-                wc.Headers["User-Agent"] = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-                try
-                {
-                    string result = wc.DownloadString(url);
-
-                    JavaScriptSerializer jss = new JavaScriptSerializer();
-                    var parsedResult = jss.Deserialize<dynamic>(result);
-
-                    var list = parsedResult["photos"];
-                    foreach (var i in list)
-                    {
-                        var image = new LocationImage();
-                        image.ImageID = i["photo_id"].ToString();
-                        image.ImageURL = i["photo_file_url"].ToString();
-                        image.DetailsURL = i["photo_url"].ToString();
-                        image.Width = (int)double.Parse(i["width"].ToString());
-                        image.Height = (int)double.Parse(i["height"].ToString());
-                        image.Submitter = i["owner_name"].ToString();
-                        image.SubmitterURL = i["owner_url"].ToString();
-                        image.ImageRepositoryID = "Panoramio.com";
-
-                        imageList.Add(image);
-                    }
-                }
-                catch (Exception)
-                {
-                    //failed to get any images
-                    return null;
-                }
-            }
-            return imageList;
-        }
-
-        public GeocodingResult GeolocateAddressInfo_Google(AddressInfo address)
+       /* public GeocodingResult GeolocateAddressInfo_Google(AddressInfo address)
         {
             var result = GeolocateAddressInfo_Google(address.ToString());
             result.AddressInfoID = address.ID;
 
             return result;
-        }
-
-        public GeocodingResult GeolocateAddressInfo_Google(string address)
-        {
-            GeocodingResult result = new GeocodingResult();
-            result.Service = "Google Maps";
-
-            if (!String.IsNullOrWhiteSpace(address))
-            {
-                string url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&address=" + address;
-
-                if (IncludeQueryURL) result.QueryURL = url;
-
-                using (System.Net.WebClient wc = new System.Net.WebClient())
-                {
-                    wc.Encoding = System.Text.Encoding.UTF8;
-                    wc.Headers["User-Agent"] = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-                    try
-                    {
-                        string queryResult = wc.DownloadString(url);
-
-                        if (IncludeExtendedData) result.ExtendedData = queryResult;
-
-                        JavaScriptSerializer jss = new JavaScriptSerializer();
-                        var parsedResult = jss.Deserialize<dynamic>(queryResult);
-
-                        string lat = parsedResult["results"][0]["geometry"]["location"]["lat"].ToString();
-                        string lng = parsedResult["results"][0]["geometry"]["location"]["lng"].ToString();
-                        string desc = parsedResult["results"][0]["formatted_address"].ToString();
-
-                        result.Latitude = Double.Parse(lat);
-                        result.Longitude = Double.Parse(lng);
-                        result.Address = desc;
-
-                        result.ResultsAvailable = true;
-                    }
-                    catch (Exception)
-                    {
-                        //failed to geocode
-                        result.ResultsAvailable = false;
-                    }
-                }
-            }
-
-            return result;
-        }
+        }*/
 
         public GeocodingResult GeolocateAddressInfo_MapquestOSM(AddressInfo address)
         {

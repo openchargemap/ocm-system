@@ -23,7 +23,7 @@ namespace OCM.API.Common
 
     public class AuditLogManager
     {
-        public static void ReportWebException(HttpServerUtility Server, AuditEventType eventType, string msg = null)
+        public static void ReportWebException(string contextUrl, AuditEventType eventType, string msg = null, Exception exp = null)
         {
             bool ignoreException = false;
             string body = "An error has occurred while a user was browsing OCM:<br><br>";
@@ -33,11 +33,11 @@ namespace OCM.API.Common
                 body = msg;
             }
 
-            object exceptionObject = null;
-            if (Server.GetLastError() != null)
+
+            if (exp != null)
             {
-                Exception exp = Server.GetLastError();
-                exceptionObject = exp;
+
+                object exceptionObject = exp;
 
                 if (exp.InnerException != null)
                 {
@@ -46,25 +46,22 @@ namespace OCM.API.Common
 
                 body += ((Exception)exceptionObject).ToString();
 
-                if (HttpContext.Current != null)
+
+                if (contextUrl != null)
                 {
-                    HttpContext con = HttpContext.Current;
-                    if (con.Request.Url != null)
-                    {
-                        body += "<br><br>Request Url:" + con.Request.Url.ToString();
+                    body += "<br><br>Request Url:" + contextUrl.ToString();
 
-                        //special case to avoid reporting /trackback url exceptions
-                        if (con.Request.Url.ToString().EndsWith("/trackback/")) ignoreException = true;
-                    }
-                    if (con.Request.UserAgent != null)
-                    {
-                        body += "<br>User Agent: " + con.Request.UserAgent;
-                    }
+                    //special case to avoid reporting /trackback url exceptions
+                    if (contextUrl.ToString().EndsWith("/trackback/")) ignoreException = true;
                 }
-                body += "<br><br>" + DateTime.UtcNow.ToString();
+                /*if (con.Request.UserAgent != null)
+                {
+                    body += "<br>User Agent: " + con.Request.UserAgent;
+                }*/
             }
+            body += "<br><br>" + DateTime.UtcNow.ToString();
 
-            if (exceptionObject is System.Web.HttpRequestValidationException || exceptionObject is System.Web.UI.ViewStateException) ignoreException = true;
+            //if (exp is System.Web.HttpRequestValidationException || exceptionObject is System.Web.UI.ViewStateException) ignoreException = true;
 
             if (!ignoreException)
             {
@@ -96,11 +93,11 @@ namespace OCM.API.Common
 
                 if (user == null)
                 {
-                    auditEntry.User = dataModel.Users.First(u => u.ID == (int)StandardUsers.System);
+                    auditEntry.User = dataModel.Users.First(u => u.Id == (int)StandardUsers.System);
                 }
                 else
                 {
-                    auditEntry.UserID = user.ID;
+                    auditEntry.UserId = user.ID;
                 }
 
                 auditEntry.EventDescription = "[" + eventType.ToString() + "]:" + (eventDescription != null ? eventDescription : "");
@@ -123,7 +120,7 @@ namespace OCM.API.Common
             OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
             var list = dataModel.AuditLogs.Where(a =>
                     (fromDate == null || (fromDate != null && a.EventDate >= fromDate))
-                    && (userID == null || (userID != null && a.UserID == userID))
+                    && (userID == null || (userID != null && a.UserId == userID))
                 ).OrderByDescending(a => a.EventDate);
 
             List<AuditLog> auditLog = new List<AuditLog>();

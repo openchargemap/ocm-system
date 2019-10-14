@@ -1,0 +1,171 @@
+﻿@model IEnumerable<OCM.API.Common.Model.UserSubscription>
+
+<p>
+    @Html.ActionLink("Create New Subscription", "SubscriptionEdit", null, new { @class = "btn btn-primary" })
+</p>
+
+<div class="results-list">
+    @foreach (var item in Model)
+    {
+        <div class="result">
+            <h3>@item.Title</h3>
+            <div style="padding:1em;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Country:</h4>
+                        @if (item.Country != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Country.Title)
+                        }
+                        else
+                        {
+                            <p>All Countries</p>
+                        }
+                        @if (item.Latitude != null && item.Longitude != null)
+                        {
+                            <h4>Watch for updates up to @item.DistanceKM KM from:</h4>
+                            <p>
+                                Latitude: @Html.DisplayFor(modelItem => item.Latitude)
+                                Longitude: @Html.DisplayFor(modelItem => item.Longitude)
+                            </p>
+                            <img src="http://maps.googleapis.com/maps/api/staticmap?center=@item.Latitude,@item.Longitude&zoom=14&size=240x240&markers=color:blue%7Clabel:S%7C @item.Latitude,@item.Longitude" />
+
+                        }
+
+                        @if (item.FilterSettings != null)
+                        {
+
+                            <h4>Filter By</h4>
+                            if (item.FilterSettings.OperatorIDs != null && item.FilterSettings.OperatorIDs.Any())
+                            {
+                                <div>Operators: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).Operators, item.FilterSettings.OperatorIDs)</div>
+                            }
+                            if (item.FilterSettings.UsageTypeIDs != null && item.FilterSettings.UsageTypeIDs.Any())
+                            {
+                                <div>Usage: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).UsageTypes, item.FilterSettings.UsageTypeIDs)</div>
+                            }
+                            if (item.FilterSettings.ConnectionTypeIDs != null && item.FilterSettings.ConnectionTypeIDs.Any())
+                            {
+                                <div>Connection Types: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).ConnectionTypes, item.FilterSettings.ConnectionTypeIDs)</div>
+                            }
+                            if (item.FilterSettings.LevelIDs != null && item.FilterSettings.LevelIDs.Any())
+                            {
+                                <div>Level: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).ChargerTypes, item.FilterSettings.LevelIDs)</div>
+                            }
+                            if (item.FilterSettings.StatusTypeIDs != null && item.FilterSettings.StatusTypeIDs.Any())
+                            {
+                                <div>Status: @FormatFilterList(((OCM.API.Common.Model.CoreReferenceData)ViewBag.ReferenceData).StatusTypes, item.FilterSettings.StatusTypeIDs)</div>
+                            }
+                        }
+                    </div>
+                    <div class="col-md-6">
+
+                        <h4>Receive Notifications When:</h4>
+
+                        <ul>
+                            @if (item.NotifyPOIAdditions)
+                            {
+                                <li>
+                                    @Html.DisplayNameFor(model => model.NotifyPOIAdditions)
+                                </li>
+                            }
+
+                            @if (item.NotifyPOIEdits)
+                            {
+                                <li>
+                                    @Html.DisplayNameFor(model => model.NotifyPOIEdits)
+                                </li>
+                            }
+
+                            @if (item.NotifyComments)
+                            {
+                                <li>
+                                    @Html.DisplayNameFor(model => model.NotifyComments)
+                                </li>
+                            }
+
+                            @if (item.NotifyMedia)
+                            {
+                                <li>
+                                    @Html.DisplayNameFor(model => model.NotifyMedia)
+                                </li>
+                            }
+                            @if (item.NotifyEmergencyChargingRequests)
+                            {
+                                <li>
+                                    @Html.DisplayNameFor(model => model.NotifyEmergencyChargingRequests)
+                                </li>
+                            }
+                            @if (item.NotifyGeneralChargingRequests)
+                            {
+                                <li>
+                                    @Html.DisplayNameFor(model => model.NotifyGeneralChargingRequests)
+                                </li>
+                            }
+                        </ul>
+
+                        <p>
+
+                            @Html.DisplayNameFor(model => model.IsEnabled):
+                            @Html.DisplayFor(modelItem => item.IsEnabled)
+                        </p>
+
+                        <p>
+                            @Html.DisplayNameFor(model => model.NotificationFrequencyMins):
+                            @FormatNotificationFrequency(item.NotificationFrequencyMins)
+                        </p>
+                    </div>
+                </div>
+
+                <p>
+                    @Html.ActionLink("Edit", "SubscriptionEdit", new { id = item.ID }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Delete", "SubscriptionDelete", new { id = item.ID }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("View Matches", "SubscriptionMatches", new { SubscriptionID = item.ID }, new { @class = "btn btn-warning" })
+                </p>
+            </div>
+        </div>
+    }
+</div>
+<!--
+@helper FormatNotificationFrequency(int frequencyMins)
+{
+    switch (frequencyMins)
+    {
+        case 5: <span>Every 5 Minutes</span>
+            break;
+        case 30: <span>Every 30 Minutes</span>
+            break;
+        case 60: <span>Every Hour</span>
+            break;
+        case 60 * 12: <span>Every 12 Hours</span>
+            break;
+        case 60 * 24: <span>Every Day</span>
+            break;
+        case 60 * 24 * 7: <span>Every Week</span>
+            break;
+        case 60 * 24 * 7 * 31: <span>Every Month</span>
+            break;
+    }
+
+}
+
+    -->
+<!--
+helper FormatFilterList(IEnumerable<OCM.API.Common.Model.SimpleReferenceDataType>
+    refData, List<int>
+        itemIds)
+        {
+        var output = "";
+        foreach (var itemId in itemIds)
+        {
+        try
+        {
+        var refItem = refData.FirstOrDefault(r => r.ID == itemId);
+        output += (output != "" ? ", " + refItem.Title : refItem.Title);
+        }
+        catch (Exception) { }
+        }
+
+        <text>output</text>
+        }
+    -->

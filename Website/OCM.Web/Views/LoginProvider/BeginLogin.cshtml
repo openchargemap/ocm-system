@@ -1,0 +1,26 @@
+﻿@model OCM.API.Common.Model.LoginModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Open Charge Map - Sign In</h2>
+@if (TempData["LoginFailed"] != null && (bool)TempData["LoginFailed"] == true)
+{
+    <div class="alert alert-danger">
+        There was a problem Signing In. This can be caused by intermittent issues with your chosen identify provider or because the login was refused. Please try again in a moment.
+    </div>
+}
+<p>Please choose your preferred login method:</p>
+
+<div class="row">
+   
+    <div class="col-md-6">
+
+        @Html.EditorFor(m => m)
+    </div>
+</div>
+
+<p class="alert alert-warning ">
+    <img style="margin-right:8px;width:32px" src="@Url.Content("~/content/images/loginproviders/google.jpg")">
+    Google is no longer supported as a Sign In method. If you have previously Signed In with Google you can <a href="@Url.Action("PasswordReset","LoginProvider")" class="alert-link">set a new password</a> then login with your Google email address instead.
+</p>

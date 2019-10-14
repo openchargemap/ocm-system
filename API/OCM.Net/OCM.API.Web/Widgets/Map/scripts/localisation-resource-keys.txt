@@ -1,9 +1,0 @@
-﻿New as of 27/05/20132:
-
-"ocm.details.placesNearby", "Nearby Places", "List of local businesses and possibly other charging sites near the currently selected location"
-"ocm.details.mediaItems", "Photos", "List of photos uploaded ny users, will expand to contain videos"
-"ocm.details.generalComments"
-"ocm.details.accessComments"
-"ocm.details.importedNotice", "..", "Describes that the data being viewd has been imported from another source and the user should go back to that source to provide corrections"
-"ocm.details.map", "Map", "Heading for Map section"
-"ocm.details.title", "charging location", "Small title used on details page"

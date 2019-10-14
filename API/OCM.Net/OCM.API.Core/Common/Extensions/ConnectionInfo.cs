@@ -12,11 +12,11 @@ namespace OCM.API.Common.Model.Extensions
 
             var connectionInfo = new Model.ConnectionInfo()
             {
-                ID = s.ID,
+                ID = s.Id,
                 Reference = s.Reference,
                 Amps = s.Amps,
                 Voltage = s.Voltage,
-                PowerKW = s.PowerKW,
+                PowerKW = s.PowerKw,
                 Quantity = s.Quantity,
                 Comments = s.Comments
             };
@@ -25,43 +25,43 @@ namespace OCM.API.Common.Model.Extensions
             if (isVerboseMode)
             {
                 connectionInfo.ConnectionType = ConnectionType.FromDataModel(s.ConnectionType);
-                connectionInfo.ConnectionTypeID = (s.ConnectionType != null ? s.ConnectionType.ID : s.ConnectionTypeID);
+                connectionInfo.ConnectionTypeID = (s.ConnectionType != null ? s.ConnectionType.Id : s.ConnectionTypeId);
             }
             else
             {
-                connectionInfo.ConnectionTypeID = s.ConnectionTypeID;
+                connectionInfo.ConnectionTypeID = s.ConnectionTypeId;
             }
 
             //status type (full object or id only)
-            if (isVerboseMode && (s.StatusTypeID != null || s.StatusType != null))
+            if (isVerboseMode && (s.StatusTypeId != null || s.StatusType != null))
             {
                 connectionInfo.StatusType = StatusType.FromDataModel(s.StatusType);
-                connectionInfo.StatusTypeID = s.StatusTypeID;
+                connectionInfo.StatusTypeID = s.StatusTypeId;
             }
             else
             {
-                if (s.StatusTypeID != null) connectionInfo.StatusTypeID = s.StatusTypeID;
+                if (s.StatusTypeId != null) connectionInfo.StatusTypeID = s.StatusTypeId;
             }
 
             //charging level type (full object or id only)
-            if (isVerboseMode && (s.LevelTypeID != null || s.ChargerType != null))
+            if (isVerboseMode && (s.LevelTypeId != null || s.LevelType != null))
             {
-                connectionInfo.Level = ChargerType.FromDataModel(s.ChargerType);
-                connectionInfo.LevelID = s.ChargerType.ID;
+                connectionInfo.Level = ChargerType.FromDataModel(s.LevelType);
+                connectionInfo.LevelID = s.LevelTypeId;
             }
             else
             {
-                if (s.LevelTypeID != null) connectionInfo.LevelID = s.LevelTypeID;
+                if (s.LevelTypeId != null) connectionInfo.LevelID = s.LevelTypeId;
             }
 
-            if (isVerboseMode && (s.CurrentTypeID != null || s.CurrentType != null))
+            if (isVerboseMode && (s.CurrentTypeId != null || s.CurrentType != null))
             {
                 connectionInfo.CurrentType = CurrentType.FromDataModel(s.CurrentType);
-                connectionInfo.CurrentTypeID = s.CurrentType.ID;
+                connectionInfo.CurrentTypeID = s.CurrentTypeId;
             }
             else
             {
-                if (s.CurrentTypeID != null) connectionInfo.CurrentTypeID = s.CurrentTypeID;
+                if (s.CurrentTypeId != null) connectionInfo.CurrentTypeID = s.CurrentTypeId;
             }
 
             return connectionInfo;

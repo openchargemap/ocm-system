@@ -13,25 +13,25 @@ namespace OCM.API.Common.Model.Extensions
 
             var item = new Model.UserSubscription
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
-                CountryID = source.CountryID,
-                DistanceKM = source.DistanceKM,
+                CountryID = source.CountryId,
+                DistanceKM = source.DistanceKm,
                 
-                IsEnabled = source.IsEnabled,
+                IsEnabled = (bool)source.IsEnabled,
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
                 NotifyComments = source.NotifyComments,
                 NotifyEmergencyChargingRequests = source.NotifyEmergencyChargingRequests,
                 NotifyGeneralChargingRequests = source.NotifyGeneralChargingRequests,
                 NotifyMedia = source.NotifyMedia,
-                NotifyPOIAdditions = source.NotifyPOIAdditions,
-                NotifyPOIUpdates = source.NotifyPOIUpdates,
-                NotifyPOIEdits = source.NotifyPOIEdits,
+                NotifyPOIAdditions = source.NotifyPoiadditions,
+                NotifyPOIUpdates = source.NotifyPoiupdates,
+                NotifyPOIEdits = source.NotifyPoiedits,
                 NotificationFrequencyMins = source.NotificationFrequencyMins,
                 DateCreated = source.DateCreated,
                 DateLastNotified = source.DateLastNotified,
-                UserID = source.UserID
+                UserID = source.UserId
             };
 
             if (source.FilterSettings!=null){

@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using OCM.API.Common.Model;
 using OCM.Core.Util;
 using System;
@@ -63,6 +64,7 @@ namespace OCM.API.Common.DataSummary
             try
             {
                 var paramList = new object[] { };
+
                 this.dataModel.Database.ExecuteSqlCommand("procUpdateOCMStats", paramList);
                 AuditLogManager.Log(null, AuditEventType.StatisticsUpdated, "Statistics Updated", "");
             }
@@ -90,7 +92,7 @@ namespace OCM.API.Common.DataSummary
                 {
                     var c = item.g.First().AddressInfo.Country;
                     string countryName = textInfo.ToTitleCase(c.Title.ToLower());
-                    string isoCode = c.ISOCode;
+                    string isoCode = c.Isocode;
                     list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.NumItems, LocationCount = item.NumItems, StationCount = (int)item.NumStations, ItemType = "LocationsPerCountry" });
                 }
             }
@@ -184,16 +186,13 @@ namespace OCM.API.Common.DataSummary
 
         public string GetTotalsPerCountrySummary(bool outputAsFunction, string functionName, APIRequestParams filterSettings)
         {
-            //TODO: optionally output as normal JSON
+            //FIXME: move caching to caller
             string output = "function " + functionName + "() { var ocm_summary = new Array(); \r\n";
 
-            if (HttpContext.Current.Cache["ocm_summary"] == null)
-            {
-                var list = GetAllCountryStats();
-                HttpContext.Current.Cache["ocm_summary"] = list.OrderByDescending(i => i.ItemCount).ToList();
-            }
-            var cachedresults = (List<CountrySummary>)HttpContext.Current.Cache["ocm_summary"];
-            foreach (var item in cachedresults)
+            var list = GetAllCountryStats();
+            list.OrderByDescending(i => i.ItemCount).ToList();
+
+            foreach (var item in list)
             {
                 output += "ocm_summary[ocm_summary.length]={\"country\":\"" + item.CountryName + "\", \"isocode\":\"" + item.ISOCode + "\", \"itemcount\":" + item.LocationCount + ", \"locationcount\":" + item.LocationCount + ", \"stationcount\":" + item.StationCount + "}; \r\n";
             }
@@ -267,7 +266,7 @@ namespace OCM.API.Common.DataSummary
             var results = new List<GeneralStats>();
             foreach (var s in stats)
             {
-                if (s.UserID != null)
+                if (s.UserId != null)
                 {
                     var r = OCM.API.Common.Model.Extensions.User.PublicProfileFromDataModel(s.User, true);
                     if (r.EmailAddress != null) r.EmailHash = OCM.Core.Util.SecurityHelper.GetMd5Hash(r.EmailAddress);

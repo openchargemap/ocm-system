@@ -12,7 +12,7 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.ConnectionType
             {
-                ID = source.ID,
+                ID = source.Id,
                 Title = source.Title,
                 FormalName = source.FormalName,
                 IsDiscontinued = source.IsDiscontinued,

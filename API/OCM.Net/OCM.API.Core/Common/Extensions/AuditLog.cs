@@ -12,9 +12,9 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.AuditLog()
             {
-                ID = source.ID,
+                ID = source.Id,
                 EventDate = source.EventDate,
-                UserID = source.UserID,
+                UserID = source.UserId,
                 EventDescription = source.EventDescription,
                 Comment = source.Comment
             };

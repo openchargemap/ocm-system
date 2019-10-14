@@ -12,7 +12,7 @@ namespace OCM.API.Common
     {
         public OperatorInfo GetOperatorInfo(int id)
         {
-            var operatorInfo = DataModel.Operators.FirstOrDefault(o => o.ID == id);
+            var operatorInfo = DataModel.Operators.FirstOrDefault(o => o.Id == id);
 
             return Model.Extensions.OperatorInfo.FromDataModel(operatorInfo);
         }
@@ -23,21 +23,21 @@ namespace OCM.API.Common
             if (update.ID > 1)
             {
                 //existing operator
-                operatorInfo = DataModel.Operators.FirstOrDefault(o => o.ID == update.ID);
+                operatorInfo = DataModel.Operators.FirstOrDefault(o => o.Id == update.ID);
             }
 
             operatorInfo.Title = update.Title;
-            operatorInfo.WebsiteURL = update.WebsiteURL;
+            operatorInfo.WebsiteUrl = update.WebsiteURL;
             operatorInfo.Comments = update.Comments;
             operatorInfo.PhonePrimaryContact = update.PhonePrimaryContact;
             operatorInfo.PhoneSecondaryContact = update.PhoneSecondaryContact;
             operatorInfo.IsPrivateIndividual = update.IsPrivateIndividual;
             operatorInfo.IsRestrictedEdit = update.IsRestrictedEdit;
-            operatorInfo.BookingURL = update.BookingURL;
+            operatorInfo.BookingUrl = update.BookingURL;
             operatorInfo.ContactEmail = update.ContactEmail;
             operatorInfo.FaultReportEmail = update.FaultReportEmail;
 
-            if (operatorInfo.ID == 0)
+            if (operatorInfo.Id == 0)
             {
                 //add new
                 DataModel.Operators.Add(operatorInfo);
