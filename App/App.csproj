@@ -263,8 +263,8 @@
 
 REM -- build problem: xcopy should run after jake but won't. so build twice to update web/api to latest js.
 
-xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.MVC\Scripts\OCM\SharedLibs
-xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
+xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\Website\OCM.Web\wwwroot\js\OCM\SharedLibs
+REM xcopy /Y  $(ProjectDir)\js\Compiled\OCM_*.js $(ProjectDir)\..\API\OCM.Net\OCM.API.Web\Scripts\SharedLibs
 jake --jakefile $(ProjectDir)\jakefile.js build-web-no-ts
 
 </PostBuildEvent>
