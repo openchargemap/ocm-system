@@ -262,7 +262,7 @@ namespace OCM.API.Common.DataSummary
 
         public List<GeneralStats> GetTopNStats(string statTypeCode, int maxResults, int? countryId)
         {
-            var stats = DataModel.Statistics.Where(stat => stat.StatTypeCode == statTypeCode).OrderByDescending(s => s.NumItems).Take(maxResults);
+            var stats = DataModel.Statistics.Where(stat => stat.StatTypeCode == statTypeCode).OrderByDescending(s => s.NumItems).Take(maxResults).ToList();
             var results = new List<GeneralStats>();
             foreach (var s in stats)
             {

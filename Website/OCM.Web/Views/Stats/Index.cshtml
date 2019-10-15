@@ -4,6 +4,7 @@
     ViewBag.Title = "Statistics";
 }
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
 <h2><i class="fa fa-bar-chart-o"></i> Statistics</h2>
 
 <div class="row well">
@@ -65,17 +66,14 @@
     </div>
     <div class="col-md-4">
 
-        <script src="~/Scripts/Chart.min.js"></script>
 
-        <h2><i class="fa fa-users"></i> New Users Per Month</h2>
+        <h2><i class="fa fa-users"></i> Community Activity</h2>
 
         @Html.Partial("_UserRegistrations", Model.UserRegistrations)
 
-        <h2><i class="fa fa-map-marker"></i> User Added Locations Per Month</h2>
-
+        
         @Html.Partial("_EditStatistics", Model.UserEdits)
 
-        <h2><i class="fa fa-comments"></i> User Comments/Check-Ins</h2>
 
         @Html.Partial("_UserComments", Model.UserComments)
     </div>

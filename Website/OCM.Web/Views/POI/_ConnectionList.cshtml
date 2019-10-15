@@ -34,7 +34,7 @@
             <h4>
                 <span class="glyphicon glyphicon-link"></span>
                 <span data-localize="ocm.reference.connectionType.value_@item.ConnectionTypeID">
-                    @Html.DisplayFor(modelItem => item.ConnectionType.Title)
+                    @item.ConnectionType.Title
                 </span>
             </h4>
             <div>
@@ -46,7 +46,7 @@
                 else
                 {
                     <span data-localize="ocm.reference.levelType.value_@item.LevelID">
-                        @Html.DisplayFor(modelItem => item.Level.Title).ToString())
+                        @item.Level.Title
                     </span>
                 }
             </div>
@@ -60,7 +60,7 @@
                 else
                 {
                     <span data-localize="ocm.reference.statusType.value_@item.StatusTypeID">
-                        @Html.DisplayFor(modelItem => item.StatusType.Title).ToString())
+                        @item.StatusType.Title
                     </span>
                 }
             </div>
@@ -78,23 +78,23 @@
                 OCM-CN-@item.ID
             </div>
             <div>
-                @(item.PowerKW == null ? "" : Html.DisplayFor(modelItem => item.PowerKW).ToString() + " kW")
+                @(item.PowerKW == null ? "" : item.PowerKW + " kW")
                 @if (item.CurrentType != null)
                 {
                     <span data-localize="ocm.reference.supplyType.value_@item.CurrentTypeID">
-                        @Html.DisplayFor(modelItem => item.CurrentType.Title)
+                        @item.CurrentType.Title
                     </span>
                 }
             </div>
             <div>
-                @(item.Voltage == null ? "" : Html.DisplayFor(modelItem => item.Voltage).ToString() + " V")
+                @(item.Voltage == null ? "" :item.Voltage + " V")
             </div>
             <div>
-                @(item.Amps == null ? "" : Html.DisplayFor(modelItem => item.Amps).ToString() + " A")
+                @(item.Amps == null ? "" : item.Amps + " A")
             </div>
         </div>
         <div class="col-sm-3">
-            <p>@Html.DisplayFor(modelItem => item.Comments)</p>
+            <p>@item.Comments</p>
         </div>
     </div>
 }

@@ -34,4 +34,8 @@
     <ProjectReference Include="..\..\Import\OCM.Import.Common\OCM.Import.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

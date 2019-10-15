@@ -12,6 +12,7 @@
         ],
         datasets: [
             {
+                label:'New Users per Month',
                 fillColor: "rgba(220,220,220,0.5)",
                 strokeColor: "rgba(220,220,220,1)",
                 pointColor: "rgba(220,220,220,1)",
@@ -25,5 +26,10 @@
             }
         ]
     }
-    var userRegistrationsChart = new Chart(ctx).Line(data, {});
+
+     var config = {
+        type: 'line',
+        data: data
+    };
+    var userRegistrationsChart = new Chart(ctx, config);
 </script>

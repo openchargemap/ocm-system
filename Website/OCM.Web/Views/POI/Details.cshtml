@@ -8,9 +8,10 @@
 
     int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
 
-    
-     Func<String, IHtmlContent> formatDescription = @<div>Say </div>;
-    
+
+    Func<string, IHtmlContent> formatDescription = str => Html.Raw(Html.Encode(str).Replace("\n","<br>"));
+   
+
 }
 <style>
     html, body, .container, .tab-content, .tab-pane {
