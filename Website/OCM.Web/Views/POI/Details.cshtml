@@ -9,8 +9,8 @@
     int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
 
 
-    Func<string, IHtmlContent> formatDescription = str => Html.Raw(Html.Encode(str).Replace("\n","<br>"));
-   
+    Func<string, IHtmlContent> formatDescription = str => Html.Raw(Html.Encode(str).Replace("\n", "<br>"));
+
 
 }
 <style>
@@ -33,21 +33,23 @@ else
 
     var detailsCss = "details-container details-plain";
 
-    if (ViewBag.EnableSimpleView != null && !ViewBag.EnableSimpleView == true)
-    {
+    <nav aria-label="breadcrumb">
+
         <ol class="breadcrumb">
-            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-            <li>@Html.ActionLink("Browse", "Index", "POI")</li>
-            <li class="active">@Model.POI.AddressInfo.Title, @Model.POI.AddressInfo.Country.Title <small>OCM-@Model.POI.ID</small></li>
+            <li class="breadcrumb-item">@Html.ActionLink("Home", "Index", "Home")</li>
+            <li class="breadcrumb-item">@Html.ActionLink("Browse", "Index", "POI")</li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.POI.AddressInfo.Title, @Model.POI.AddressInfo.Country.Title <small>OCM-@Model.POI.ID</small></li>
         </ol>
-    }
+
+    </nav>
+
 
     if (ViewBag.EnablePreviewMode != true)
     {
         if (userId != null)
         {
 
-            <div class="form-actions">
+            <div class="well">
 
                 @if (ViewBag.Status == "editsubmitted")
                 {
@@ -60,7 +62,10 @@ else
         }
         else
         {
-            <div class="form-actions"> <span data-localize="ocm.details.editPrompt">To edit, add comments or upload photos</span>: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary", target = "_blank" }) </div>
+            <div class="alert alert-light" role="alert">
+                <span data-localize="ocm.details.editPrompt">To edit, add comments or upload photos</span>: @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("Details", "POI", new { id = Model.POI.ID }) }, new { @class = "btn btn-primary", target = "_blank" })
+            </div>
+
         }
     }
 
@@ -342,16 +347,10 @@ else
                         </div>
                     </div>
                     <div id="tab-nearby" class="tab-pane">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h2 data-localize="ocm.details.placesNearby.pois">Points Of Interest</h2>
-                                <div id="nearby-poi"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <h2 data-localize="ocm.details.placesNearby.chargingLocations">Other Charging Locations</h2>
-                                @Html.Partial("_POIList", Model.POIListNearby)
-                            </div>
-                        </div>
+
+                        <h2 data-localize="ocm.details.placesNearby.chargingLocations">Other Charging Locations</h2>
+                        @Html.Partial("_POIList", Model.POIListNearby)
+
                     </div>
                     <div id="tab-media" class="tab-pane">
                         <p>

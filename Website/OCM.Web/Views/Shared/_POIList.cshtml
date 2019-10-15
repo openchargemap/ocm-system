@@ -13,25 +13,29 @@
 <div class="results-list">
     @foreach (var item in Model.Take(100))
     {
-        <div class="result row">
+        <h3>
             <a href="@Url.Action("Details","POI",new{ID=item.ID})">
-                <h3>
-                    @Html.DisplayFor(m => item.AddressInfo.Title)
-                    <div class="pull-right">
-                        @if (item.UserComments != null)
-                        {
-                            <i class="fa fa-comment-o"></i> @item.UserComments.Count
 
-                        }
-                        &nbsp;
-                        @if (item.MediaItems != null)
-                        {
-                            <i class="fa fa-camera"></i> @item.MediaItems.Count
-                        }
-                    </div>
+                @Html.DisplayFor(m => item.AddressInfo.Title)
+                <div class="pull-right">
+                    @if (item.UserComments != null)
+                    {
+                        <i class="fa fa-comment-o"></i> @item.UserComments.Count
 
-                </h3>
+                    }
+                    &nbsp;
+                    @if (item.MediaItems != null)
+                    {
+                        <i class="fa fa-camera"></i> @item.MediaItems.Count
+                    }
+                </div>
+
+
             </a>
+        </h3>
+        <div class="result row">
+
+
             <div class="col-sm-6">
                 @Html.DisplayFor(m => item.AddressInfo)
 

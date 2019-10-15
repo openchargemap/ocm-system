@@ -14,7 +14,7 @@
   padding-left: 46px;
 }
 
-h3> small, h2>small {
+h3> small, h2>small, h1>small {
   color: rgba(26,26,26,0.5);
 }
 
@@ -28,4 +28,15 @@ h3> small, h2>small {
     max-width:fit-content;
     margin:10%;
   }
+}
+
+.ocm-label{
+  font-weight: bold;
+  color: #536957;
+  min-width: 80px;
+  display:inline-block;
+}
+
+.content{
+  width:100%;
 }
