@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 
 namespace OCM.MVC.Controllers
 {
-    [AuthSignedInOnly]
+    [Authorize(Roles = "StandardUser")]
     public class EditQueueController : BaseController
     {
         //
@@ -25,7 +26,7 @@ namespace OCM.MVC.Controllers
             }
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Cleanup()
         {
             using (var editQueueManager = new EditQueueManager())
@@ -36,7 +37,7 @@ namespace OCM.MVC.Controllers
             }
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Publish(int id)
         {
             //approves/publishes the given edit directly (if user has permission)
@@ -50,7 +51,7 @@ namespace OCM.MVC.Controllers
             }
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult MarkAsProcessed(int id)
         {
             //marks item as processed without publishing the edit

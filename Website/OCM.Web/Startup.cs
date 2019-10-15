@@ -29,15 +29,8 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews(options =>
-            {
-
-                /* var policy = new AuthorizationPolicyBuilder()
-                         .RequireAuthenticatedUser()
-                         .Build();
-                 options.Filters.Add(new AuthorizeFilter(policy));*/
-
-            });
+            services.AddControllersWithViews()
+                    .AddRazorRuntimeCompilation();
 
             services.AddAuthentication(CustomAuthOptions.DefaultScheme)
                         .AddScheme<CustomAuthOptions, CustomAuthHandler>(CustomAuthOptions.DefaultScheme, CustomAuthOptions.DefaultScheme
@@ -47,10 +40,8 @@ namespace OCM.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
 
-
-
-            services.AddTransient<IAuthorizationHandler, IsUserSignedInRequirementHandler>();
-            services.AddTransient<IAuthorizationHandler, IsUserAdminRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsUserSignedInRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsUserAdminRequirementHandler>();
 
             services.AddAuthorization(options =>
             {

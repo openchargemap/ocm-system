@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,7 +31,7 @@ namespace OCM.MVC.Controllers
         //
         // GET: /Profile/
 
-        [AuthSignedInOnly]
+        [Authorize(Roles ="StandardUser")]
         public ActionResult Index()
         {
             var userManager = new UserManager();
@@ -67,7 +68,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult View(int id)
         {
             var userManager = new UserManager();
@@ -79,7 +80,7 @@ namespace OCM.MVC.Controllers
             return View(user);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Edit()
         {
             var userManager = new UserManager();
@@ -88,7 +89,7 @@ namespace OCM.MVC.Controllers
             return View(user);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(User updateProfile)
@@ -125,7 +126,7 @@ namespace OCM.MVC.Controllers
             return View(updateProfile);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult ChangePassword()
         {
             bool requireCurrentPassword = true;
@@ -144,7 +145,7 @@ namespace OCM.MVC.Controllers
             return View(new PasswordChangeModel { IsCurrentPasswordRequired = requireCurrentPassword });
         }
 
-        [AuthSignedInOnly, HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles ="StandardUser"), HttpPost, ValidateAntiForgeryToken]
         public ActionResult ChangePassword(API.Common.Model.PasswordChangeModel model)
         {
             if (ModelState.IsValid)
@@ -163,7 +164,7 @@ namespace OCM.MVC.Controllers
             return View(model);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Comments()
         {
             UserManager userManager = new UserManager();
@@ -173,7 +174,7 @@ namespace OCM.MVC.Controllers
             return View(list);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult CommentDelete(int id)
         {
             var user = new UserManager().GetUser((int)UserID);
@@ -189,7 +190,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Comments");
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Media()
         {
             UserManager userManager = new UserManager();
@@ -199,7 +200,7 @@ namespace OCM.MVC.Controllers
             return View(list);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult MediaDelete(int id)
         {
             var user = new UserManager().GetUser((int)UserID);
@@ -215,7 +216,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Media");
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Subscriptions()
         {
             UserManager userManager = new UserManager();
@@ -229,7 +230,7 @@ namespace OCM.MVC.Controllers
             return View(list);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult SubscriptionEdit(int? id)
         {
             var subscription = new UserSubscription();
@@ -323,7 +324,7 @@ namespace OCM.MVC.Controllers
             }
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SubscriptionEdit(UserSubscription userSubscription)
@@ -371,7 +372,7 @@ namespace OCM.MVC.Controllers
             return model;
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult SubscriptionMatches(SubscriptionBrowseModel model)
         {
             if (model.SubscriptionID != null)
@@ -381,7 +382,7 @@ namespace OCM.MVC.Controllers
             return View(model);
         }
 
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult SubscriptionDelete(int id)
         {
             var subscriptionManager = new UserSubscriptionManager();

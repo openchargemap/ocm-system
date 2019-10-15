@@ -35,6 +35,7 @@ namespace OCM.MVC
                 if (Request.HttpContext.Session.GetString("IsAdministrator") != null && bool.Parse(Request.HttpContext.Session.GetString("IsAdministrator")) == true)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    claims.Add(new Claim(ClaimTypes.Role, "StandardUser"));
                 }
                 else
                 {
@@ -115,13 +116,5 @@ namespace OCM.MVC
 
         }
     }
-}
-
-/// <summary>
-/// Custom authorization attribute [AuthSignedInOnly] to set specific controller actions to be Access Denied if user not signed in
-/// </summary>
-public class AuthSignedInOnlyAttribute : AuthorizeAttribute
-{
-
 }
 

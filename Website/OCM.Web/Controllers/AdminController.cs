@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OCM.MVC.Controllers
 {
@@ -28,27 +29,27 @@ namespace OCM.MVC.Controllers
         }
 
         // GET: /Admin/
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View();
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Users()
         {
             var userList = new UserManager().GetUsers().OrderByDescending(u => u.DateCreated);
             return View(userList);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult EditUser(int id)
         {
             var user = new UserManager().GetUser(id);
             return View(user);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditUser(OCM.API.Common.Model.User userDetails)
         {
@@ -66,14 +67,14 @@ namespace OCM.MVC.Controllers
             return View(userDetails);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult PromoteUserToEditor(int userId, int countryId, bool autoCreateSubscriptions, bool removePermission)
         {
             new UserManager().PromoteUserToCountryEditor((int)HttpContext.Session.GetInt32("UserID"), userId, countryId, autoCreateSubscriptions, removePermission);
             return RedirectToAction("View", "Profile", new { id = userId });
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult ConvertPermissions()
         {
             //convert all user permission to new format where applicable
@@ -81,7 +82,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index", "Admin", new { result = "processed" });
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Operators()
         {
             var operatorInfoManager = new OperatorInfoManager();
@@ -89,7 +90,7 @@ namespace OCM.MVC.Controllers
             return View(operatorInfoManager.GetOperators());
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult EditOperator(int? id)
         {
             var operatorInfo = new OperatorInfo();
@@ -98,7 +99,7 @@ namespace OCM.MVC.Controllers
             return View(operatorInfo);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditOperator(OperatorInfo operatorInfo)
         {
@@ -114,7 +115,7 @@ namespace OCM.MVC.Controllers
             return View(operatorInfo);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult CommentDelete(int id)
         {
             var commentManager = new UserCommentManager();
@@ -123,7 +124,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult MediaDelete(int id)
         {
             var itemManager = new MediaItemManager();
@@ -132,7 +133,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Details", "POI");
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult MediaExportTest()
         {
             var files = System.IO.File.ReadAllLines(@"d:\temp\ocm-images\export.txt");
@@ -219,7 +220,7 @@ namespace OCM.MVC.Controllers
             return Json(new { NotificationsSent = notificationsSent, MirrorStatus = mirrorStatus });
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CheckPOIMirrorStatus(bool includeDupeCheck = false)
         {
             var status = await CacheManager.GetCacheStatus(includeDupeCheck);
@@ -239,7 +240,7 @@ namespace OCM.MVC.Controllers
             return View(status);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<JsonResult> RefreshPOIMirror(string mode)
         {
             MirrorStatus status = new MirrorStatus();
@@ -289,7 +290,7 @@ namespace OCM.MVC.Controllers
             return Json(status);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult ImportManager()
         {
             var tempPath = Path.GetTempPath();
@@ -301,7 +302,7 @@ namespace OCM.MVC.Controllers
             return View(model);
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport = false, bool includeResults = true)
         {
             GC.Collect();
@@ -344,7 +345,7 @@ namespace OCM.MVC.Controllers
             return View(result);
         }
 
-        [AuthSignedInOnly(Roles = "Admin"), HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin"), HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ImportUpload(FormCollection collection)
         {
             var providerName = Request.Form["providerName"];
@@ -375,13 +376,13 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("ImportManager");
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult ConfigCheck()
         {
             return View();
         }
 
-        [AuthSignedInOnly(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Benchmarks()
         {
             CacheProviderMongoDB cache = new CacheProviderMongoDB();

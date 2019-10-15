@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OCM.MVC.Controllers
 {
@@ -227,7 +228,7 @@ namespace OCM.MVC.Controllers
 
         // POST: /POI/AddMediaItem
 
-        [HttpPost, AuthSignedInOnly]
+        [HttpPost, Authorize(Roles = "StandardUser")]
         public ActionResult AddMediaItem(int id, FormCollection collection)
         {
             CheckForReadOnly();
@@ -248,7 +249,7 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
-        //[AuthSignedInOnly]
+        //[Authorize(Roles = "StandardUser")]
         public ActionResult Add()
         {
             var refData = new POIBrowseModel();
@@ -321,7 +322,7 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpGet]
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Approve(int id)
         {
             CheckForReadOnly();
@@ -566,7 +567,7 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpGet]
-        [AuthSignedInOnly]
+        [Authorize(Roles = "StandardUser")]
         public async Task<ActionResult> CommentActioned(int poiId, int commentId)
         {
             CheckForReadOnly();
@@ -587,7 +588,7 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("details", "POI", new { id = poiId });
         }
 
-        [HttpPost, AuthSignedInOnly, ValidateAntiForgeryToken]
+        [HttpPost, Authorize(Roles = "StandardUser"), ValidateAntiForgeryToken]
         public ActionResult Comment(POIViewModel model)
         {
             CheckForReadOnly();
