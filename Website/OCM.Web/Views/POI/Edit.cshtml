@@ -47,11 +47,14 @@
 
             <!--begin preview dialog-->
             <div class="modal fade" id="modalpreview" tabindex="-1" role="dialog" aria-labelledby="modalpreviewtitle" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg " role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="modaltitle">Preview Submission</h4>
+
+                            <h5 class="modal-title" id="modaltitle">Preview Submission</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <div class="modal-body">
                             <div>
@@ -64,7 +67,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
                         </div>
                     </div>
@@ -102,27 +105,27 @@
 
         @Html.ValidationSummary()
 
-        <div class="panel-group" id="wizardsteps">
+        <div class="accordion" id="wizardsteps">
 
             @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
             {
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        
                             <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver">
-                                <span class="glyphicon glyphicon-map-marker"></span> Approver Options
+                                <i class="fa fa-edit"></i> Approver Options
                             </a>
-                        </h4>
+                        
                     </div>
-                    <div id="step-approver" class="panel-collapse collapse in">
-                        <div class="panel-body">
+                    <div id="step-approver" class="collapse show">
+                        <div class="card-body">
 
                             <p class="text-info">To make a new listing public it's Submission Status must be set to <strong>Submission Published</strong>.</p>
-                            <div class="form-group">
+                            <div class="form-group col-sm-4">
                                 <div class="editor-label" data-localize="ocm.details.submissionStatus">
                                     @Html.LabelFor(model => model.SubmissionStatus)
                                 </div>
-                                <div class="editor-field">
+                                <div class="editor-field col-sm-8">
                                     @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
                                     @Html.ValidationMessageFor(model => model.SubmissionStatus)
                                 </div>
@@ -135,18 +138,18 @@
             }
 
             <!--step 1-->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
                         <a data-toggle="collapse" data-parent="#wizardsteps" href="#step1">
-                            <span class="glyphicon glyphicon-map-marker"></span> Step 1 - <span data-localize="ocm.details.location.sectionTitle">Location Details</span>
+                            <i class="fa fa-map-marker"></i> Step 1 - <span data-localize="ocm.details.location.sectionTitle">Location Details</span>
                         </a>
                     </h4>
                 </div>
-                <div id="step1" class="panel-collapse collapse in">
-                    <div class="panel-body">
+                <div id="step1" class="collapse collapse show">
+                    <div class="card-body">
                         <p>
-                            <strong>Thanks for taking the time to contribute information, please provide as much detail as you can about this charging location. Please <strong>do not</strong> submit private residences (such as your home). Listings without basic charging equipment information will be rejected without notice, so please provide as much information as you can.</strong>
+                            <strong>Thanks for taking the time to contribute. Please provide as much detail as you can about this charging location. Please <strong>do not</strong> submit private residences (such as your home). Listings without basic charging equipment information will be rejected without notice, so please provide as much information as you can.</strong>
 
                         </p>
                         <!--begin location editor-->
@@ -158,36 +161,36 @@
             </div>
 
             <!--step 2-->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">
                         <a data-toggle="collapse" data-parent="#wizardsteps" href="#step2">
-                            <span class="glyphicon glyphicon-info-sign"></span> Step 2 - Basic Charging Details
+                            <i class="fa fa-info-circle"></i> Step 2 - Basic Charging Details
                         </a>
                     </h4>
                 </div>
-                <div id="step2" class="panel-collapse collapse in">
-                    <div class="panel-body">
+                <div id="step2" class="collapse">
+                    <div class="card-body">
                         <!--begin basic detail editor-->
-                        <div class="container">
+                     
                             @Html.Partial("_EditPOIBasicDetails", Model)
-                        </div>
+                       
                         <!--end basic details editor-->
                     </div>
                 </div>
             </div>
 
             <!--step 3-->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">
                         <a data-toggle="collapse" data-parent="#wizardsteps" href="#step3">
-                            <span class="glyphicon glyphicon-flash"></span> Step 3 - <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
+                            <i class="fa fa-flash"></i> Step 3 - <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
                         </a>
                     </h4>
                 </div>
-                <div id="step3" class="panel-collapse collapse in">
-                    <div class="panel-body">
+                <div id="step3" class="collapse">
+                    <div class="card-body">
                         <!--begin basic detail editor-->
                         <div id="tab-equipment">
 
@@ -225,16 +228,16 @@
             @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
             {
 
-                <div class="panel panel-warning">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
                             <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver-adv">
-                                <span class="glyphicon glyphicon-wrench"></span> Advanced Options
+                                <i class="fa fa-wrench"></i> Advanced Options
                             </a>
                         </h4>
                     </div>
-                    <div id="step-approver-adv" class="panel-collapse collapse">
-                        <div class="panel-body">
+                    <div id="step-approver-adv" class="collapse">
+                        <div class="card-body">
                             <p class="text-info">This section contains options which are not usually changed or are deprecated.</p>
                             <div class="form-group">
                                 <div class="editor-label" data-localize="ocm.details.dataProvider.sectionTitle">
