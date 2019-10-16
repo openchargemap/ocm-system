@@ -83,7 +83,7 @@ namespace OCM.API.Common
                         && (filter.DateFrom == null || (filter.DateFrom != null && i.DateSubmitted >= filter.DateFrom))
                         && (filter.DateTo == null || (filter.DateTo != null && i.DateSubmitted <= filter.DateTo))
                         && (filter.ShowEditsOnly == false || (filter.ShowEditsOnly == true && i.PreviousData != null))
-                        )).OrderByDescending(e => e.DateSubmitted);
+                        )).OrderByDescending(e => e.DateSubmitted).ToList();
 
             var cpManager = new POIManager();
             var outputList = new List<Model.EditQueueItem>();

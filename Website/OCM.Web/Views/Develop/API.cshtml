@@ -13,8 +13,8 @@
     <div class="col-sm-8 col-xs-12">
         <article>
             <section>
-                <i class="fa fa-cogs fa-4x pull-left"></i>
-                <h2 id="intro">The Open Charge Map API</h2>
+                
+                <h2 id="intro"><i class="fa fa-cogs"></i> The Open Charge Map API</h2>
                 <div class="alert alert-danger">Use of the OCM API is subject to <a href="@Url.Action("Terms","About")" class="alert-link">terms and conditions</a>. By using the API you indicate acceptance of these terms.</div>
 
                 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
@@ -30,8 +30,8 @@
             </section>
 
             <section>
-                <i class="fa fa-map-marker fa-4x pull-left"></i>
-                <h2 id="POI">Retrieving POI Data</h2>
+               
+                <h2 id="POI"><i class="fa fa-map-marker"></i> Retrieving POI Data</h2>
                 <p>
                     <code>@Html.Raw(apiBaseUrl + "poi/")</code>
                 </p>
@@ -198,8 +198,8 @@
             </section>
 
             <section>
-                <i class="fa fa-table fa-4x pull-left"></i>
-                <h2 id="referencedata">Retrieving Core Reference Data</h2>
+              
+                <h2 id="referencedata"><i class="fa fa-table"></i> Retrieving Core Reference Data</h2>
                 <p>Our core list of lookup values is termed Core Reference Data. This is the data you would require in order to present the user with Dropdown lists etc of possible values for Connection Type etc. This only returns content in JSON format.</p>
                 <p>
                     <code>@Html.Raw(apiBaseUrl + "referencedata/")</code>
@@ -209,8 +209,8 @@
                 <p>Return all reference data in JSON format: <code><a href="@Html.Raw(apiBaseUrl + "referencedata/")">@Html.Raw(apiBaseUrl + "referencedata/")</a></code></p>
             </section>
             <section>
-                <i class="fa fa-comment fa-4x pull-left"></i>
-                <h2 id="comments">Add New Comment/Check-In</h2>
+                
+                <h2 id="comments"><i class="fa fa-comment"></i> Add New Comment/Check-In</h2>
                 <p>To submit a new comment or check-in again a specific POI, use the following API endpoint to POST a JSON format comment</p>
                 <p>
                     <code>@Html.Raw(apiBaseUrl + "?action=comment_submission&format=json")</code>
@@ -255,8 +255,8 @@
             </p>
                 -->
             <section>
-                <i class="fa fa-external-link fa-4x pull-left"></i>
-                <h2 id="linking">Linking to OCM Content and Features</h2>
+                
+                <h2 id="linking"><i class="fa fa-external-link"></i> Linking to OCM Content and Features</h2>
                 <p>In addition to the API there are a number of standardised URLs which can be used to initiate certain actions, this can be useful to launch from within an app or for hyperlinking. The user can then sign in/register as required and proceed with the required action:</p>
                 <h3>POI related actions</h3>
                 <table class="table table-striped">
@@ -270,8 +270,8 @@
         </article>
     </div>
 </div>
-<script type="text/javascript" src="~/scripts/OCM/SharedLibs/OCM_Data.js"></script>
-<script type="text/javascript" src="~/scripts/OCM/TableOfContents.js"></script>
+<script type="text/javascript" src="~/js/OCM/SharedLibs/OCM_Data.js"></script>
+<script type="text/javascript" src="~/js/OCM/TableOfContents.js"></script>
 <script type="text/javascript">
     $(function () {
         prepareTableOfContents();

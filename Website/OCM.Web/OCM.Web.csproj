@@ -43,4 +43,10 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\js\OCM\Localisation\languagePack.min.js" />
+    <None Include="wwwroot\js\OCM\Subscriptions\distancewidget.js" />
+    <None Include="wwwroot\js\OCM\Subscriptions\jquery.dynamicrangevalidator.js" />
+  </ItemGroup>
+
 </Project>
