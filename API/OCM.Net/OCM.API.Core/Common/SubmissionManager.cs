@@ -536,8 +536,9 @@ namespace OCM.API.Common
                 //notify default system recipients
                 return notification.SendNotification(NotificationType.ContactUsMessage);
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                System.Diagnostics.Debug.WriteLine(exp.ToString());
                 return false; //failed
             }
         }

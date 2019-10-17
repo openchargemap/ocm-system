@@ -1,7 +1,7 @@
 declare var mapboxgl: any;
 declare var $: any;
 declare var poiId: number; //global for current POI
-declare var OCM: any;
+//declare var OCM: any;
 declare var google: any;
 //Note: this class is built using TypeScript, only the .ts file should be edited
 //TODO: shadow marker for original marker pos, show duplicates nearby

@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -107,6 +109,15 @@ namespace OCM.API.Common
             }
         }
 
+        private string GetAppPath()
+        {
+            // http://codebuckets.com/2017/10/19/getting-the-root-directory-path-for-net-core-applications/
+            var exePath = Path.GetDirectoryName(System.Reflection
+                              .Assembly.GetExecutingAssembly().CodeBase);
+
+            return exePath.Replace("file:\\", "");
+        }
+
         public void PrepareNotification(NotificationType notificationType, Hashtable templateParams)
         {
             string templateFolder = "";
@@ -117,7 +128,7 @@ namespace OCM.API.Common
             }
             else
             {
-                throw new Exception("Template path not specified");
+                templateFolder = GetAppPath() + "\\Templates\\Notifications";
             }
             string BaseTemplate = System.IO.File.ReadAllText(templateFolder + "\\BaseTemplate.htm");
 
@@ -219,15 +230,16 @@ namespace OCM.API.Common
                     {
                         smtp.Send(mail);
                     }
-                    catch (Exception)
+                    catch (Exception exp)
                     {
-                        ; ;// failed to send
+                        // failed to send
+                        System.Diagnostics.Debug.WriteLine("Failed to send email notification: "+ exp.ToString());
                         return false;
                     }
 
                     return true;
                 }
-               
+
             }
             catch (Exception ex)
             {

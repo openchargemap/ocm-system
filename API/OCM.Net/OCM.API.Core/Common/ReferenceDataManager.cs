@@ -96,7 +96,7 @@ namespace OCM.API.Common
 
             //list of connection types
             data.ConnectionTypes = new List<Model.ConnectionType>();
-            foreach (var ct in dataModel.ConnectionTypes)
+            foreach (var ct in dataModel.ConnectionTypes.OrderBy(d=>d.Title))
             {
                 data.ConnectionTypes.Add(Model.Extensions.ConnectionType.FromDataModel(ct));
             }

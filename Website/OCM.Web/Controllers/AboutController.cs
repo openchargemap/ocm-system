@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using System;
@@ -7,10 +8,17 @@ using System.Linq;
 
 namespace OCM.MVC.Controllers
 {
-    public class AboutController : Controller
+    public class AboutController : BaseController
     {
+        IWebHostEnvironment _host;
+        
         //
         // GET: /About/
+
+        public AboutController(IWebHostEnvironment host)
+        {
+            _host = host;
+        }
 
         public ActionResult Index()
         {
