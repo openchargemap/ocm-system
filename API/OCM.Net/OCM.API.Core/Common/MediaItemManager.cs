@@ -190,7 +190,7 @@ namespace OCM.API.Common
         {
             var dataModel = new OCMEntities();
 
-            var list = dataModel.MediaItems.Where(u => u.UserId == userId);
+            var list = dataModel.MediaItems.Where(u => u.UserId == userId).ToList();
 
             var results = new List<OCM.API.Common.Model.MediaItem>();
             foreach (var mediaItem in list)

@@ -10,7 +10,7 @@ namespace OCM.API.Common
     {
         public List<OCM.API.Common.Model.UserComment> GetUserComments(int userId)
         {
-            var list = DataModel.UserComments.Where(u => u.UserId == userId);
+            var list = DataModel.UserComments.Where(u => u.UserId == userId).ToList();
 
             var results = new List<OCM.API.Common.Model.UserComment>();
             foreach (var c in list)
