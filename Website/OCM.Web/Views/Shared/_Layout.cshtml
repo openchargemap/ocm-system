@@ -135,10 +135,13 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> <span data-localize="ocm.navigation.profile.sectionTitle">my profile</span> <b class="caret"></b></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item"><span class="navbar-text">@Html.Encode(username)</span></a>
+                            <div class="dropdown-item">
+
+                                <span class="navbar-text text-primary">@Html.Encode(username)</span>
+                            </div>
                             <div class="dropdown-divider"></div>
                             @Html.ActionLink("my profile", "Index", "Profile", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("my subscriptions", "Subscriptions", "Profile", null, new { @class = "dropdown-item" })
+                            <!--@Html.ActionLink("my subscriptions", "Subscriptions", "Profile", null, new { @class = "dropdown-item" })-->
                             @Html.ActionLink("my comments", "Comments", "Profile", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("my uploads", "Media", "Profile", null, new { @class = "dropdown-item" })
                             <div class="nav-divider"></div>
@@ -218,7 +221,7 @@
             </div>
         </div>
 
-        <div id="map-loading" style="width:100%;height:500px;background-color:gainsboro;padding:24px;font-size:24px;">
+        <div id="map-loading" style="width:100%;height:500px;background-color:gainsboro;padding:24px;font-size:24px;position:absolute;">
            <i class="fa fa-map"></i> Map Loading..
             </div>
         <div id="map-container">

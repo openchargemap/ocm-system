@@ -33,9 +33,17 @@
         <div class="col-sm-4 equipment-core">
             <h4>
                 <span class="glyphicon glyphicon-link"></span>
-                <span data-localize="ocm.reference.connectionType.value_@item.ConnectionTypeID">
-                    @item.ConnectionType.Title
-                </span>
+
+                @if (item.ConnectionType == null)
+                {
+                    <span data-localize="ocm.reference.connectionType.value_0"> Connection Type Unknown</span>
+                }
+                else
+                {
+                    <span data-localize="ocm.reference.connectionType.value_@item.ConnectionTypeID">
+                        @item.ConnectionType.Title
+                    </span>
+                }
             </h4>
             <div>
                 <span class="glyphicon glyphicon-flash"></span>
