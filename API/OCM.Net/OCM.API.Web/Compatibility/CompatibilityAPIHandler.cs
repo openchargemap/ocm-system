@@ -257,7 +257,7 @@ namespace OCM.API
                 if (context.Request.Query["action"] == "comment_submission" || filter.Action == "comment")
                 {
                     UserComment comment = new UserComment();
-                    bool processedOK = inputProvider.ProcessUserCommentSubmission(context, ref comment);
+                    bool processedOK = await inputProvider.ProcessUserCommentSubmission(context, comment);
                     if (processedOK == true)
                     {
                         //perform submission
@@ -299,7 +299,13 @@ namespace OCM.API
                     string msg = "";
                     try
                     {
-                        accepted = p.ProcessMediaItemSubmission("temp/uploads/",context, ref m, user.ID);
+                        var tempPath = System.IO.Path.GetTempPath() + "\\_ocm";
+                        if (!System.IO.Directory.Exists(tempPath))
+                        {
+                            System.IO.Directory.CreateDirectory(tempPath);
+                        }
+
+                        accepted = await p.ProcessMediaItemSubmission(tempPath, context, m, user.ID);
                     }
                     catch (Exception exp)
                     {
@@ -338,8 +344,6 @@ namespace OCM.API
         {
             context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync("{\"status\":\"error\",\"description\":\"" + message + "\"}");
-            await context.Response.CompleteAsync();
-            //context.Response.End();
         }
 
         private async Task OutputSubmissionReceivedMessage(HttpContext context, string message, bool processed)
@@ -356,7 +360,6 @@ namespace OCM.API
             try
             {
                 await context.Response.WriteAsync("{\"status\":\"OK\",\"description\":\"" + message + "\"}");
-                await context.Response.CompleteAsync();
             }
             catch (Exception)
             {
@@ -367,7 +370,7 @@ namespace OCM.API
         /// Handle output from API
         /// </summary>
         /// <param name="context"></param>
-        private async void PerformOutput(HttpContext context)
+        private async Task PerformOutput(HttpContext context)
         {
             //context.Sc.Server.ScriptTimeout = 120; //max script execution time is 2 minutes
 
@@ -632,7 +635,7 @@ namespace OCM.API
             var refDataManager = new ReferenceDataManager();
             CoreReferenceData data = null;
 
-            data = refDataManager.GetCoreReferenceData();
+            data = refDataManager.GetCoreReferenceData(filter);
 
             /*
             //cache result
@@ -679,7 +682,7 @@ namespace OCM.API
         private async Task OutputProfileSignInResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             var sr = new System.IO.StreamReader(context.Request.Body);
-            string jsonContent = sr.ReadToEnd();
+            string jsonContent = await sr.ReadToEndAsync();
             var loginModel = JsonConvert.DeserializeObject<LoginModel>(jsonContent);
 
             User user = new OCM.API.Common.UserManager().GetUser(loginModel);
@@ -688,7 +691,6 @@ namespace OCM.API
             if (user == null)
             {
                 context.Response.StatusCode = 401;
-                await context.Response.CompleteAsync();
                 return;
             }
             else
@@ -731,7 +733,6 @@ namespace OCM.API
             if (user != null)
             {
                 context.Response.StatusCode = 401;
-                await context.Response.CompleteAsync();
                 return;
             }
             else
@@ -780,6 +781,7 @@ namespace OCM.API
 
         private void SetAPIDefaults(HttpContext context)
         {
+            // determine default api bebaviours based on the expected settings for each api version
             APIBehaviourVersion = 1;
 
             if (context.Request.Path.ToString().StartsWith("/v2/"))
@@ -794,12 +796,42 @@ namespace OCM.API
                 this.DefaultAction = "nop";
             }
 
-            if (context.Request.Path.ToString().EndsWith("/poi"))
+            if (context.Request.Path.ToString().Contains("/referencedata"))
+            {
+                this.APIBehaviourVersion = 3;
+                this.DefaultAction = "getcorereferencedata";
+                this.IsQueryByPost = false;
+            }
+
+            if (context.Request.Path.ToString().Contains("/poi"))
             {
                 this.APIBehaviourVersion = 3;
                 this.DefaultAction = "poi";
                 this.IsQueryByPost = false;
             }
+
+            if (context.Request.Path.ToString().Contains("profile/authenticate"))
+            {
+                this.APIBehaviourVersion = 3;
+                this.DefaultAction = "profile.authenticate";
+                this.IsQueryByPost = true;
+            }
+
+            if (context.Request.Path.ToString().Contains("comment"))
+            {
+                this.APIBehaviourVersion = 3;
+                this.DefaultAction = "comment";
+                this.IsQueryByPost = false;
+            }
+
+            if (context.Request.Path.ToString().Contains("mediaitem"))
+            {
+                this.APIBehaviourVersion = 3;
+                this.DefaultAction = "mediaitem";
+                this.IsQueryByPost = false;
+            }
+
+
         }
 
         /// <summary>
@@ -853,7 +885,7 @@ namespace OCM.API
             }
             else
             {
-                PerformOutput(context);
+                await PerformOutput(context);
             }
 
             //context.ApplicationInstance.CompleteRequest();

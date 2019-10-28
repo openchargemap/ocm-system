@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace OCM.API.InputProviders
 {
@@ -13,11 +13,11 @@ namespace OCM.API.InputProviders
     {
         ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp);
 
-        bool ProcessUserCommentSubmission(HttpContext context, ref OCM.API.Common.Model.UserComment comment);
+        Task<bool> ProcessUserCommentSubmission(HttpContext context, OCM.API.Common.Model.UserComment comment);
 
         bool ProcessContactUsSubmission(HttpContext context, ref ContactSubmission comment);
 
-        bool ProcessMediaItemSubmission(string uploadPath, HttpContext context, ref MediaItem mediaItem, int userId);
+        Task<bool> ProcessMediaItemSubmission(string uploadPath, HttpContext context, MediaItem mediaItem, int userId);
 
         User GetUserFromAPICall(HttpContext context);
     }

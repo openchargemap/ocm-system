@@ -426,7 +426,7 @@ namespace OCM.API.Common
 #if DEBUG
                     System.Diagnostics.Debug.WriteLine(polygonWKT);
 #endif
-                    var polygon = new NetTopologySuite.IO.WKTReader().Read(polygonWKT); // PolygonFromText(polygonWKT, 4326)
+                    var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory).Read(polygonWKT);
                     chargePointList = chargePointList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
                 }
 

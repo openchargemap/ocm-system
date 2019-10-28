@@ -80,7 +80,11 @@ namespace OCM.API.Common
                 
                 // image is now in a file format agnositic structure in memory as a series of Rgba32 pixels
                 image.Mutate(ctx => ctx.Resize(width, height)); // resize the image in place and return it for chaining
-                image.Save(destFile); // based on the file extension pick an encoder then encode and write the data to disk
+
+               
+                    image.Save(destFile); // based on the file extension pick an encoder then encode and write the data to disk
+                
+                
             }
           
         }
@@ -139,12 +143,12 @@ namespace OCM.API.Common
 
                         if (urls[1] == null)
                         {
-                            urls[1] = await storage.UploadImage(tempFolder + thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
+                            urls[1] = await storage.UploadImage(tempFolder + "\\"+ thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
                         }
 
                         if (urls[2] == null)
                         {
-                            urls[2] = await storage.UploadImage(tempFolder + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
+                            urls[2] = await storage.UploadImage(tempFolder + "\\" + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
                         }
                         if (urls[0] != null && urls[1] != null && urls[2] != null)
                         {

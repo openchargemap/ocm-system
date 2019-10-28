@@ -10,7 +10,7 @@ using OCM.API.Common.Model;
 namespace OCM.API.Web.Standard.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("/v4/[controller]")]
     public class POIController : ControllerBase
     {
         private readonly ILogger<POIController> _logger;

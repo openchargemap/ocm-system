@@ -20,7 +20,7 @@
     "OCM.API.Web.Standard": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "v3/poi",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

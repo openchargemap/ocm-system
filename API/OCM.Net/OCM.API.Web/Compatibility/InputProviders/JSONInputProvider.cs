@@ -40,13 +40,13 @@ namespace OCM.API.InputProviders
             }
         }
 
-        public bool ProcessUserCommentSubmission(HttpContext context, ref Common.Model.UserComment comment)
+        public async Task<bool> ProcessUserCommentSubmission(HttpContext context, Common.Model.UserComment comment)
         {
             System.IO.StreamReader sr = new System.IO.StreamReader(context.Request.Body);
             //TODO: handle encoding (UTF etc) correctly
-            string responseContent = sr.ReadToEnd().Trim();
+            string responseContent = await sr.ReadToEndAsync();
 
-            string jsonString = responseContent;
+            string jsonString = responseContent.Trim(); 
 
             try
             {
@@ -59,7 +59,16 @@ namespace OCM.API.InputProviders
                 JObject o = JObject.Parse(jsonString);
                 
                 JsonSerializer serializer = new JsonSerializer();
-                comment = (Common.Model.UserComment)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.UserComment));
+                var parsedComment = (Common.Model.UserComment)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.UserComment));
+
+                comment.ID = parsedComment.ID; 
+                comment.ChargePointID = parsedComment.ChargePointID;
+                comment.CheckinStatusTypeID = parsedComment.CheckinStatusTypeID;
+                comment.CommentTypeID = parsedComment.CommentTypeID;
+                comment.UserName = parsedComment.UserName;
+                comment.Rating = parsedComment.Rating;
+                comment.RelatedURL = parsedComment.RelatedURL;
+                comment.Comment = parsedComment.Comment;
 
                 return true;
             }
@@ -107,19 +116,19 @@ namespace OCM.API.InputProviders
             return imageBytes;
         }
 
-        public bool ProcessMediaItemSubmission(string uploadPath, HttpContext context, ref MediaItem mediaItem, int userId)
+        public async Task<bool> ProcessMediaItemSubmission(string uploadPath, HttpContext context, MediaItem mediaItem, int userId)
         {
             try
             {
                 var sr = new System.IO.StreamReader(context.Request.Body);
-                string jsonContent = sr.ReadToEnd();
+                string jsonContent = await sr.ReadToEndAsync();
                 var submission = JsonConvert.DeserializeObject<Common.Model.Submissions.MediaItemSubmission>(jsonContent);
                 if (submission.ImageDataBase64 == null) return false;
                 string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
 
                 var tempFiles = new List<string>();
 
-                string tempFolder = uploadPath;
+                string tempFolder = uploadPath+"\\";
 
                 string tmpFileName = tempFolder + filePrefix + submission.ChargePointID;
                 if (submission.ImageDataBase64.StartsWith("data:image/jpeg")) tmpFileName += ".jpg";
