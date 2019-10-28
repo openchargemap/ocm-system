@@ -343,7 +343,7 @@ namespace OCM.Core.Data
                 }
             }
 
-            CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(false);
+            CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { });
             if (coreRefData != null)
             {
                 database.DropCollection("reference");

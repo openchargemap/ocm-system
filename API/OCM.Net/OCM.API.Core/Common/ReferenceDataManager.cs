@@ -8,6 +8,13 @@ namespace OCM.API.Common
 {
     public class ReferenceDataManager : ManagerBase
     {
+        /// <summary>
+        /// When filtering, min instance count of a connection type before it is included in results
+        /// </summary>
+        private const int MINFILTER_CONNECTIONTYPE_INSTANCES = 3;
+
+        private const int MINFILTER_OPERATOR_INSTANCES = 1;
+
         public Country GetCountryByName(string country)
         {
             if (country == null) return null;
@@ -73,11 +80,11 @@ namespace OCM.API.Common
             return dataProviders;
         }
 
-        public CoreReferenceData GetCoreReferenceData(bool enableCaching = true)
+        public CoreReferenceData GetCoreReferenceData(APIRequestParams filter)
         {
             CoreReferenceData data = null;
 
-            if (enableCaching)
+            if (filter.EnableCaching && !filter.CountryIDs?.Any() == true)
             {
                 data = OCM.Core.Data.CacheManager.GetCoreReferenceData();
 
@@ -96,9 +103,34 @@ namespace OCM.API.Common
 
             //list of connection types
             data.ConnectionTypes = new List<Model.ConnectionType>();
-            foreach (var ct in dataModel.ConnectionTypes.OrderBy(d=>d.Title))
+
+            if (filter.CountryIDs?.Any() == true)
             {
-                data.ConnectionTypes.Add(Model.Extensions.ConnectionType.FromDataModel(ct));
+                // fetch connection types used in the list of given countries, with count of usage in the set
+                var usedConnectionTypes = dataModel.ConnectionTypes
+                    .Distinct()
+                    .Where(c => c.ConnectionInfoes.Any(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) && 
+                            (ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published 
+                                || ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)))
+                    .Select(s => new
+                    {
+                        connectionType = s,
+                        count = s.ConnectionInfoes.Where(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) &&
+                        (ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published
+                                || ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)).Count()
+                    });
+
+                foreach (var ct in usedConnectionTypes.Where(d => d.count > MINFILTER_CONNECTIONTYPE_INSTANCES).OrderBy(d => d.connectionType.Title))
+                {
+                    data.ConnectionTypes.Add(Model.Extensions.ConnectionType.FromDataModel(ct.connectionType));
+                }
+            }
+            else
+            {
+                foreach (var ct in dataModel.ConnectionTypes.OrderBy(d => d.Title))
+                {
+                    data.ConnectionTypes.Add(Model.Extensions.ConnectionType.FromDataModel(ct));
+                }
             }
 
             //list of power source types (AC/DC etc)
@@ -124,9 +156,37 @@ namespace OCM.API.Common
 
             //list of Operators
             data.Operators = new List<Model.OperatorInfo>();
-            foreach (var source in dataModel.Operators.OrderBy(o => o.Title))
+
+            if (filter.CountryIDs?.Any() == true)
             {
-                data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
+                // fetch connection types used in the list of given countries, with count of usage in the set
+                var usedNetworks = dataModel.Operators
+                    .Distinct()
+                    .Where(c => c.ChargePoints
+                                        .Where(cp => cp.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published || cp.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                                        .Any(poi => filter.CountryIDs.Contains(poi.AddressInfo.CountryId))
+                                        )
+                    .Select(o => new
+                    {
+                        operatorInfo = o,
+                        count = o.ChargePoints.Where(poi => 
+                                                        filter.CountryIDs.Contains(poi.AddressInfo.CountryId)
+                                                        && (poi.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                                                        )
+                        .Count()
+                    });
+
+                foreach (var ct in usedNetworks.Where(d => d.count > MINFILTER_OPERATOR_INSTANCES).OrderBy(d => d.operatorInfo.Title))
+                {
+                    data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(ct.operatorInfo));
+                }
+            }
+            else
+            {
+                foreach (var source in dataModel.Operators.OrderBy(o => o.Title))
+                {
+                    data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
+                }
             }
 
             //list of Status Types
