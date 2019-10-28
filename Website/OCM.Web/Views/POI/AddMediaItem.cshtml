@@ -18,25 +18,25 @@ else
 {
     if (userId != null)
     {
-        using (Html.BeginForm("AddMediaItem", "POI", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+        using (Html.BeginForm("MediaItem", "POI", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
             @Html.HiddenFor(model => model.ID)
-            <h2>Add Your Photos <small>@Model.AddressInfo.Title</small></h2>
-            <p>Thanks for going to the effort of uploading new content, you are awesome! Please choose your images to upload, then hit the upload button. If you encounter any problems please try using an image smaller than 2MB in size.</p>
+            <h2>Add Your Photos <small>@Model.AddressInfo?.Title</small></h2>
+            <p>Thanks for contributing. Please choose your image to upload, then hit the upload button. If you encounter any problems please try using an image smaller than 2MB in size.</p>
 
-            <div class="container">
+            <div>
                 <div class="form-group">
-
-                    <!--FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add More Images", uploadText: "Upload File")
-                    -->
+                   
+                    <input type="file" name="files"  />
+                 
                 </div>
 
                 <div class="form-group">
                     <label for="comment" class="control-label">Comment:</label>
 
-                    <textarea id="comment" class="form-control" name="comment" maxlength="1000" placeholder="Comment or description to accompany the image"></textarea>
+                    <textarea id="comment" class="form-control" name="comment" maxlength="1000" placeholder="(Optional) Comment or description to accompany the image"></textarea>
                 </div>
             </div>
             @Html.Partial("_TermsLink")

@@ -216,6 +216,7 @@ namespace OCM.MVC.Controllers
 
         }
 
+        [HttpGet, Authorize(Roles = "StandardUser")]
         public ActionResult AddMediaItem(int id)
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
@@ -229,7 +230,7 @@ namespace OCM.MVC.Controllers
         // POST: /POI/AddMediaItem
 
         [HttpPost, Authorize(Roles = "StandardUser")]
-        public ActionResult AddMediaItem(int id, FormCollection collection)
+        public async Task<ActionResult> MediaItem(int id)
         {
             CheckForReadOnly();
 
@@ -239,8 +240,12 @@ namespace OCM.MVC.Controllers
             if (user != null)
             {
                 var mediaItem = new MediaItem();
-                //FIXME: upload path
-                bool uploaded = htmlInputProvider.ProcessMediaItemSubmission(_host.ContentRootPath, HttpContext, ref mediaItem, user.ID);
+                var tempPath = System.IO.Path.GetTempPath() +"//_ocm";
+                if (!System.IO.Directory.Exists(tempPath))
+                {
+                    System.IO.Directory.CreateDirectory(tempPath);
+                }
+                bool uploaded = await htmlInputProvider.ProcessMediaItemSubmission(tempPath, HttpContext, mediaItem, user.ID);
                 ViewBag.PoiId = id;
                 ViewBag.UploadCompleted = true;
                 return View();
