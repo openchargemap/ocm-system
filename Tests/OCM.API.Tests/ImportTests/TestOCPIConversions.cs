@@ -18,7 +18,7 @@ namespace OCM.API.Tests
             var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_3_0_0_location_example.json");
 
             var refDataManager = new ReferenceDataManager();
-            var coreRefData = refDataManager.GetCoreReferenceData();
+            var coreRefData = refDataManager.GetCoreReferenceData(new APIRequestParams());
 
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 
@@ -35,7 +35,7 @@ namespace OCM.API.Tests
             var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_1_1_locations-fastned.json");
 
             var refDataManager = new ReferenceDataManager();
-            var coreRefData = refDataManager.GetCoreReferenceData();
+            var coreRefData = refDataManager.GetCoreReferenceData(new APIRequestParams());
 
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 

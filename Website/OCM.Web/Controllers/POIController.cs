@@ -265,7 +265,7 @@ namespace OCM.MVC.Controllers
             ViewBag.EnableEditView = false;
 
             //get a default new POI using std core reference data
-            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
+            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
             coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
             coreReferenceData.ChargePoint.StatusType.ID = 50; //Operational
             coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors

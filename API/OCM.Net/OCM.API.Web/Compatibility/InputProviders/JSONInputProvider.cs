@@ -13,20 +13,20 @@ namespace OCM.API.InputProviders
 {
     public class JSONInputProvider : InputProviderBase, IInputProvider
     {
-        public ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
+        public async Task<ValidationResult> ProcessEquipmentSubmission(HttpContext context)
         {
             System.IO.StreamReader sr = new System.IO.StreamReader(context.Request.Body);
             //TODO: handle encoding (UTF etc) correctly
-            string responseContent = sr.ReadToEnd().Trim();
+            string responseContent = await sr.ReadToEndAsync();
 
-            string jsonString = responseContent;
+            string jsonString = responseContent.Trim();
 
             try
             {
                 JObject o = JObject.Parse(jsonString);
 
                 JsonSerializer serializer = new JsonSerializer();
-                cp = (Common.Model.ChargePoint)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.ChargePoint));
+                var cp = (Common.Model.ChargePoint)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.ChargePoint));
 
                 //validate cp submission
                 return POIManager.IsValid(cp);

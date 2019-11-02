@@ -179,15 +179,14 @@ namespace OCM.API
                 if (context.Request.Query["action"] == "cp_submission" || filter.Action == "poi")
                 {
                     //gather/process data for submission
-                    OCM.API.Common.Model.ChargePoint cp = new Common.Model.ChargePoint();
+                    var processingResult = await inputProvider.ProcessEquipmentSubmission(context);
 
-                    var processingResult = inputProvider.ProcessEquipmentSubmission(context, ref cp);
                     ValidationResult submissionResult = new ValidationResult { IsValid = false };
 
                     if (processingResult.IsValid)
                     {
                         //perform submission
-                        submissionResult = submissionManager.PerformPOISubmission(cp, user);
+                        submissionResult = submissionManager.PerformPOISubmission((ChargePoint)processingResult.Item, user);
                     }
 
                     if (processingResult.IsValid && submissionResult.IsValid)
@@ -764,7 +763,14 @@ namespace OCM.API
             var geocoder = new GeocodingHelper();
             geocoder.IncludeExtendedData = true;
 
-            result = geocoder.GeolocateAddressInfo_OSM(filter.Address);
+            if (!string.IsNullOrEmpty(filter.Address))
+            {
+                result = geocoder.GeolocateAddressInfo_MapquestOSM(filter.Address);
+            }
+            else if (filter.Latitude != null && filter.Longitude != null)
+            {
+                result = geocoder.ReverseGecode_MapquestOSM((double)filter.Latitude, (double)filter.Longitude, new ReferenceDataManager());
+            }
 
             //send API response
             if (filter.IsEnvelopedResponse)
@@ -828,6 +834,13 @@ namespace OCM.API
             {
                 this.APIBehaviourVersion = 3;
                 this.DefaultAction = "mediaitem";
+                this.IsQueryByPost = false;
+            }
+
+            if (context.Request.Path.ToString().Contains("geocode"))
+            {
+                this.APIBehaviourVersion = 3;
+                this.DefaultAction = "geocode";
                 this.IsQueryByPost = false;
             }
 

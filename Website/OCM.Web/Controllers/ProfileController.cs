@@ -224,7 +224,7 @@ namespace OCM.MVC.Controllers
             var user = userManager.GetUser((int)UserID);
             ViewBag.UserProfile = user;
 
-            ViewBag.ReferenceData = new ReferenceDataManager().GetCoreReferenceData();
+            ViewBag.ReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
 
             var list = new UserSubscriptionManager().GetUserSubscriptions(user.ID);
             return View(list);
@@ -290,7 +290,7 @@ namespace OCM.MVC.Controllers
         {
             using (var refDataManager = new ReferenceDataManager())
             {
-                var coreRefData = refDataManager.GetCoreReferenceData();
+                var coreRefData = refDataManager.GetCoreReferenceData(new APIRequestParams());
 
                 var allCountries = coreRefData.Countries;
 

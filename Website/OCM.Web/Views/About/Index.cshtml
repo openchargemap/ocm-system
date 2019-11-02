@@ -44,7 +44,7 @@
 </p>
 <p data-localize="ocm.infoText.about.dataSources.p2">Credit and our thanks goes to following major data sources currently included in our database:</p>
 @{
-    var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData().DataProviders;
+    var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData(new OCM.API.Common.APIRequestParams()).DataProviders;
 }
 
 @foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))

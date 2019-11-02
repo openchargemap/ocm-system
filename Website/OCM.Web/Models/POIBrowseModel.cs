@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using OCM.API.Common;
 using OCM.API.Common.Model;
 using System;
 using System.Collections;
@@ -11,7 +12,7 @@ namespace OCM.MVC.Models
     {
         public POIBrowseModel()
         {
-            this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData();
+            this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
             this.AllowOptionalCountrySelection = true;
             //this.CountryIDs = new int[] { 1 }; //default to uk
         }

@@ -11,7 +11,7 @@ namespace OCM.API.InputProviders
 {
     internal interface IInputProvider
     {
-        ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp);
+        Task<ValidationResult> ProcessEquipmentSubmission(HttpContext context);
 
         Task<bool> ProcessUserCommentSubmission(HttpContext context, OCM.API.Common.Model.UserComment comment);
 

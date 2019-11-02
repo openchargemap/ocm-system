@@ -11,7 +11,7 @@ namespace OCM.API.InputProviders
 {
     public class HTMLFormInputProvider : InputProviderBase, IInputProvider
     {
-        public ValidationResult ProcessEquipmentSubmission(HttpContext context, ref OCM.API.Common.Model.ChargePoint cp)
+        public async Task<ValidationResult> ProcessEquipmentSubmission(HttpContext context)
         {
             return new ValidationResult { IsValid = false, Message = "HTML Input not supported" }; //html input provider no longer supported
         }

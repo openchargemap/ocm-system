@@ -315,7 +315,7 @@ namespace OCM.MVC.Controllers
 
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
-            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData();
+            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
             ((BaseImportProvider)provider).InputPath = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
             var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, fetchLiveData, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider, true);
 

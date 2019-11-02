@@ -241,6 +241,7 @@ namespace OCM.Core.Data
 
                 //determine POI updated since last status update we have in cache
                 //db.poi.find().sort({DateLastStatusUpdate:-1})
+                var stopwatch = Stopwatch.StartNew();
 
                 //"AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User"
                 var dataList = new Data.OCMEntities().ChargePoints
@@ -251,29 +252,69 @@ namespace OCM.Core.Data
                     .Include(a1 => a1.MediaItems)
                     .OrderBy(o => o.DateLastStatusUpdate)
                     .Where(o => o.DateLastStatusUpdate > dateLastModified).ToList();
+
+                stopwatch.Stop();
+
+                System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
+                stopwatch.Restart();
+
                 foreach (var cp in dataList)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
                 }
+
+                System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds } seconds");
+
                 return poiList;
             }
             if (updateStrategy == CacheUpdateStrategy.All)
             {
+                var stopwatch = Stopwatch.StartNew();
+
+                // get data list, include navigation properties to improve query performance
                 var dataList = new Data.OCMEntities().ChargePoints
                    .Include(a1 => a1.AddressInfo)
+                        .ThenInclude(a => a.Country)
                    .Include(a1 => a1.ConnectionInfoes)
+                        .ThenInclude(c => c.ConnectionType)
+                   .Include(a1 => a1.ConnectionInfoes)
+                        .ThenInclude(c => c.StatusType)
+                   .Include(a1 => a1.ConnectionInfoes)
+                        .ThenInclude(c => c.LevelType)
+                   .Include(a1 => a1.ConnectionInfoes)
+                        .ThenInclude(c => c.CurrentType)
+                   .Include(a1 => a1.Operator)
+                   .Include(a1 => a1.UsageType)
+                   .Include(a1 => a1.StatusType)
                    .Include(a1 => a1.MetadataValues)
+                        .ThenInclude(m=>m.MetadataFieldOption)
                    .Include(a1 => a1.UserComments)
+                        .ThenInclude(c=>c.User)
+                    .Include(a1 => a1.UserComments)
+                        .ThenInclude(c => c.CheckinStatusType)
                    .Include(a1 => a1.MediaItems)
                    .OrderBy(o => o.Id)
                    .ToList();
 
+                stopwatch.Stop();
+
+                System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
+                stopwatch.Restart();
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
+
+                    if (poiList.Count % 100 == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"POIs processed { poiList.Count} in {stopwatch.Elapsed.TotalSeconds } seconds");
+                    }
                 }
+
+                System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds } seconds");
+
+
                 return poiList;
             }
 
