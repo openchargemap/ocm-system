@@ -105,6 +105,86 @@ namespace OCM.API.Common
             return result;
         }
 
+        public GeocodingResult ReverseGecode_MapquestOSM(double latitude, double longitude, ReferenceDataManager refDataManager )
+        {
+            GeocodingResult result = new GeocodingResult();
+            result.Service = "MapQuest Open";
+
+            string url = "http://open.mapquestapi.com/geocoding/v1/reverse?location=" + latitude + "," + longitude + "&key=" + ConfigurationManager.AppSettings["MapQuestOpen_API_Key"];
+            if (IncludeQueryURL) result.QueryURL = url;
+            string data = "";
+            try
+            {
+                WebClient client = new WebClient();
+                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+                client.Encoding = Encoding.GetEncoding("UTF-8");
+                data = client.DownloadString(url);
+
+                if (IncludeExtendedData) result.ExtendedData = data;
+
+                if (data == "[]")
+                {
+                    System.Diagnostics.Debug.WriteLine("No geocoding results:" + url);
+                    result.ResultsAvailable = false;
+                }
+                else
+                {
+                    JObject o = JObject.Parse(data);
+                    var locations = o["results"][0]["locations"];
+                    if (locations.Any())
+                    {
+                        var item = o["results"][0]["locations"][0];
+
+                        
+                        result.AddressInfo = new AddressInfo();
+                        result.AddressInfo.Title = item["street"]?.ToString();
+                        result.AddressInfo.Postcode = item["postalCode"]?.ToString();
+                        result.AddressInfo.AddressLine1 = item["street"]?.ToString();
+
+                        if (item["adminArea5Type"]?.ToString() == "City")
+                        {
+                            result.AddressInfo.Town = item["adminArea5"]?.ToString();
+                        }
+
+                        if (item["adminArea3Type"]?.ToString() == "State")
+                        {
+                            result.AddressInfo.StateOrProvince = item["adminArea3"]?.ToString();
+                        }
+
+                        if (item["adminArea3Type"]?.ToString() == "State")
+                        {
+                            result.AddressInfo.StateOrProvince = item["adminArea3"]?.ToString();
+                        }
+                        if (item["adminArea1Type"]?.ToString() == "Country")
+                        {
+                            var countryCode = item["adminArea1"]?.ToString();
+                            var country = refDataManager.GetCountryByISO(countryCode);
+                            if (country != null)
+                            {
+                                result.AddressInfo.CountryID = country.ID;    
+                            }
+                        }
+
+                        result.Latitude = latitude;
+                        result.Longitude = longitude;
+                        result.Attribution = "Portions © OpenStreetMap contributors"; // using mapquest open so results are from OSM
+                        result.AddressInfo.Latitude = latitude;
+                        result.AddressInfo.Longitude = longitude;
+
+                        result.ResultsAvailable = true;
+                    }
+                    else
+                    {
+                        result.ResultsAvailable = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //
+            }
+            return result;
+        }
         public GeocodingResult GeolocateAddressInfo_MapquestOSM(string address)
         {
             GeocodingResult result = new GeocodingResult();

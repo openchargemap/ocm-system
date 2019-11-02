@@ -17,6 +17,8 @@ namespace OCM.API.Common.Model.Extended
         public string ExtendedData { get; set; }
         public string Address { get; set; }
         public string Attribution { get; set; }
+
+        public AddressInfo AddressInfo { get; set; }
     }
 
 }

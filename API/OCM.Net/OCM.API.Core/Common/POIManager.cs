@@ -27,6 +27,8 @@ namespace OCM.API.Common
         public int? ItemId { get; set; }
         public bool IsValid { get; set; }
         public string Message { get; set; }
+
+        public object Item { get; set; }
     }
 
     public class POIManager
@@ -592,24 +594,25 @@ namespace OCM.API.Common
 
         public static ValidationResult IsValid(Model.ChargePoint cp)
         {
+
             //determine if the basic CP details are valid as a submission or edit
-            if (cp.AddressInfo == null) return new ValidationResult { IsValid = false, Message = "AddressInfo is required" };
+            if (cp.AddressInfo == null) return new ValidationResult { IsValid = false, Message = "AddressInfo is required", Item=cp };
 
-            if (String.IsNullOrEmpty(cp.AddressInfo.Title)) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Title" }; ;
+            if (String.IsNullOrEmpty(cp.AddressInfo.Title)) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Title", Item = cp }; ;
 
-            if (cp.AddressInfo.Country == null && cp.AddressInfo.CountryID == null) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Country" };
+            if (cp.AddressInfo.Country == null && cp.AddressInfo.CountryID == null) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Country", Item = cp };
 
-            if (cp.AddressInfo.Latitude == 0 && cp.AddressInfo.Longitude == 0) return new ValidationResult { IsValid = false, Message = "AddressInfo requires latitude and longitude" };
+            if (cp.AddressInfo.Latitude == 0 && cp.AddressInfo.Longitude == 0) return new ValidationResult { IsValid = false, Message = "AddressInfo requires latitude and longitude", Item = cp };
 
             double lat = (double)cp.AddressInfo.Latitude;
             double lon = (double)cp.AddressInfo.Longitude;
-            if (lat < -90 || lat > 90) return new ValidationResult { IsValid = false, Message = "AddressInfo latitude is out of range" };
-            if (lon < -180 || lon > 180) return new ValidationResult { IsValid = false, Message = "AddressInfo longitude is out of range" }; ;
+            if (lat < -90 || lat > 90) return new ValidationResult { IsValid = false, Message = "AddressInfo latitude is out of range", Item = cp };
+            if (lon < -180 || lon > 180) return new ValidationResult { IsValid = false, Message = "AddressInfo longitude is out of range", Item = cp }; ;
 
-            if (cp.Connections == null || cp.Connections?.Count == 0) return new ValidationResult { IsValid = false, Message = "One or more Connections required" };
+            if (cp.Connections == null || cp.Connections?.Count == 0) return new ValidationResult { IsValid = false, Message = "One or more Connections required", Item = cp };
 
             //otherwise, looks basically valid
-            return new ValidationResult { IsValid = true, Message = "Passed basic validation" };
+            return new ValidationResult { IsValid = true, Message = "Passed basic validation", Item = cp };
         }
 
         private static string GetDisplayName(Type dataType, string fieldName)
