@@ -1,4 +1,3 @@
-/// <reference path="References/jquery.d.ts" />
 //OCM.Widgets.GeoSummary
 var OCM;
 (function (OCM) {

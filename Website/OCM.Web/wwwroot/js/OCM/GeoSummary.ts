@@ -1,4 +1,3 @@
-/// <reference path="References/jquery.d.ts" />
 
 //external declarations
 declare var google;
