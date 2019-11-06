@@ -232,7 +232,7 @@ namespace OCM.API.Common.DataSummary
             //populate recently modified charge points TODO: differentiate between updated since and created since?
             var poiManager = new POIManager();
 
-            var allRecentPOIChanges = poiManager.GetChargePoints(filterSettings);
+            var allRecentPOIChanges = poiManager.GetPOIList(filterSettings);
             summary.POIRecentlyAdded = allRecentPOIChanges.Where(p => p.DateCreated >= dateFrom).OrderByDescending(p => p.DateCreated).Take(10).ToList();
             summary.POIRecentlyUpdated = allRecentPOIChanges.Where(p => p.DateLastStatusUpdate >= dateFrom && p.DateCreated != p.DateLastStatusUpdate).OrderByDescending(p => p.DateLastStatusUpdate).Take(10).ToList();
 

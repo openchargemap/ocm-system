@@ -21,7 +21,7 @@ namespace OCM.API.Tests
             Assert.Equal(r2.CountryCode, "GB");
 
             var poiManager = new OCM.API.Common.POIManager();
-            var list = poiManager.GetChargePoints(new Common.APIRequestParams { MaxResults = 100 });
+            var list = poiManager.GetPOIList(new Common.APIRequestParams { MaxResults = 100 });
             foreach (var poi in list)
             {
                 var result = analysis.ClassifyPoint(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);

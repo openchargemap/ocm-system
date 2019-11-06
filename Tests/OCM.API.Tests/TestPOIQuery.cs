@@ -20,7 +20,7 @@ namespace OCM.API.Tests
             var myConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
 
             var api = new OCM.API.Common.POIManager();
-            var results = api.GetChargePoints(new Common.APIRequestParams { ChargePointIDs = new int[] { 10000 } });
+            var results = api.GetPOIList(new Common.APIRequestParams { ChargePointIDs = new int[] { 10000 } });
             Assert.Equal(1, results.Count);
 
             var poi = results.FirstOrDefault();
@@ -36,7 +36,7 @@ namespace OCM.API.Tests
             //var myConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
 
             var api = new OCM.API.Common.POIManager();
-            var results = api.GetChargePoints(new Common.APIRequestParams { EnableCaching=false, IsVerboseOutput=false });
+            var results = api.GetPOIList(new Common.APIRequestParams { EnableCaching=false, IsVerboseOutput=false });
             Assert.True(results.Count>0);
 
             var poi = results.FirstOrDefault();

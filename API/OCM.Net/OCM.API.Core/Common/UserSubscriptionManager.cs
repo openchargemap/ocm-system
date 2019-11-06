@@ -354,7 +354,7 @@ namespace OCM.API.Common
                 {
                     filterParams.CountryIDs = new int[] { (int)subscription.CountryId };
                 }
-                var poiCollection = poiManager.GetChargePoints(filterParams);
+                var poiCollection = poiManager.GetPOIList(filterParams);
 
                 if (poiCollection.Any())
                 {

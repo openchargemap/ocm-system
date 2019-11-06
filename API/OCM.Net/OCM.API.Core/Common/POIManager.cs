@@ -34,7 +34,6 @@ namespace OCM.API.Common
     public class POIManager
     {
         public bool LoadUserComments = false;
-
         public POIManager()
         {
             LoadUserComments = false;
@@ -207,7 +206,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> GetChargePoints(APIRequestParams settings)
+        public List<Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
@@ -227,7 +226,8 @@ namespace OCM.API.Common
             {
                 try
                 {
-                    dataList = new CacheProviderMongoDB().GetPOIList(settings);
+                    var cache = new CacheProviderMongoDB();
+                    dataList = cache.GetPOIList(settings);
                 }
                 catch (Exception exp)
                 {

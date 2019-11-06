@@ -222,7 +222,7 @@ namespace OCM.Import
             {
                 // use local database
 
-                masterListCollection = poiManager.GetChargePoints(filters);
+                masterListCollection = poiManager.GetPOIList(filters);
             }
 
             var spec = new i4o.IndexSpecification<ChargePoint>()

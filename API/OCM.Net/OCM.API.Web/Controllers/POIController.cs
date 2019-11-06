@@ -25,7 +25,7 @@ namespace OCM.API.Web.Standard.Controllers
         {
             var api = new POIManager();
             
-            var list = api.GetChargePoints(new APIRequestParams { });
+            var list = api.GetPOIList(new APIRequestParams { });
 
             return list;
         }

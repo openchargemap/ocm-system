@@ -125,7 +125,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-            filter.POIList = cpManager.GetChargePoints((OCM.API.Common.APIRequestParams)filter);
+            filter.POIList = cpManager.GetPOIList((OCM.API.Common.APIRequestParams)filter);
             return View(filter);
         }
 
@@ -182,7 +182,7 @@ namespace OCM.MVC.Controllers
 
                     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
-                    viewModel.POIListNearby = cpManager.GetChargePoints(new APIRequestParams { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
+                    viewModel.POIListNearby = cpManager.GetPOIList(new APIRequestParams { MaxResults = 10, Latitude = poi.AddressInfo.Latitude, Longitude = poi.AddressInfo.Longitude, Distance = 15, DistanceUnit = DistanceUnit.Miles, AllowMirrorDB = true });
                     viewModel.POIListNearby.RemoveAll(p => p.ID == poi.ID); //don't include the current item in nearby POI list
                     sw.Stop();
                     System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
