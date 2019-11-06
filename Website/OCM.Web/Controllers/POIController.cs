@@ -196,7 +196,7 @@ namespace OCM.MVC.Controllers
                     viewModel.DataQualityReport = new DataAnalysisManager().GetDataQualityReport(poi);
                     //}
 
-                    ViewBag.UserCanEditPOI = true;
+                    ViewBag.UserCanEditPOI = false;
                     if (IsUserSignedIn)
                     {
                         var user = new UserManager().GetUser((int)UserID);
