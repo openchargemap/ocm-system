@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.3.104.33" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.106.1" />
     <PackageReference Include="Bricelam.EntityFrameworkCore.Pluralizer" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
