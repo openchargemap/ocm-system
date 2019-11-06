@@ -438,7 +438,7 @@ namespace OCM.Import
             {
                 var origPOI = masterListCopy.FirstOrDefault(p => p.ID == poi.ID);
 
-                var updatedPOI = UseDataModelComparison? poiManager.PreviewPopulatedPOIFromModel(poi): poi;
+                var updatedPOI = UseDataModelComparison ? poiManager.PreviewPopulatedPOIFromModel(poi) : poi;
 
                 var differences = poiManager.CheckDifferences(origPOI, updatedPOI);
                 differences.RemoveAll(d => d.Context == ".MetadataValues");
@@ -767,7 +767,7 @@ namespace OCM.Import
                     if (p.IsStringData && !p.UseCustomReader)
                     {
                         Log("Loading input data from file..");
-                       
+
                         loadOK = p.LoadInputFromFile(p.InputPath);
                     }
                     else
@@ -918,7 +918,7 @@ namespace OCM.Import
             return resultReport;
         }
 
-        public string UploadPOIList(string json, string apiIdentifier,string apiToken)
+        public string UploadPOIList(string json, string apiIdentifier, string apiToken)
         {
             var credentials = GetAPISessionCredentials(apiIdentifier, apiToken);
 
@@ -928,9 +928,9 @@ namespace OCM.Import
             List<ChargePoint> poiList = JsonConvert.DeserializeObject<List<ChargePoint>>(json);
             OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
             Log("Publishing via API..");
-           
+
             ocmClient.UpdateItems(poiList, credentials);
-           
+
             return $"Added: {numAdded} Updated: {numUpdated}";
         }
         /// <summary>
@@ -994,7 +994,8 @@ namespace OCM.Import
 
         public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
-            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(TempFolder + "\\Shapefiles\\World\\ne_10m_admin_0_map_units.shp");
+            var shapefilesPath = System.Configuration.ConfigurationManager.AppSettings["GeolocationShapefilePath"];
+            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(shapefilesPath + "\\ne_10m_admin_0_map_units.shp");
 
             //process list of locations, populating country refreshing cache where required
             foreach (var item in itemList)
