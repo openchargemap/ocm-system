@@ -12,13 +12,6 @@
     <Compile Remove="Utils\CommonUtil.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="Views\Profile\_UserSubscriptions.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Utils\CommonUtil.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
@@ -27,6 +20,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.2.26">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -43,10 +40,12 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\js\OCM\Localisation\languagePack.min.js" />
-    <None Include="wwwroot\js\OCM\Subscriptions\distancewidget.js" />
-    <None Include="wwwroot\js\OCM\Subscriptions\jquery.dynamicrangevalidator.js" />
-  </ItemGroup>
+    <ItemGroup>
+      <Content Update="App.config">
+        <TransformOnBuild>true</TransformOnBuild>
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 
 </Project>
