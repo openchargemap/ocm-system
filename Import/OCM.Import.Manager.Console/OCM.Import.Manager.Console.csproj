@@ -9,7 +9,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Client\OCM.API.Client.csproj" />
-    <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core.Standard\OCM.API.Core.Standard.csproj" />
     <ProjectReference Include="..\OCM.Import.Common\OCM.Import.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
