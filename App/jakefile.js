@@ -71,7 +71,7 @@ task("minify-js", function () {
 
         // extract script names
         var match;
-        while ((match = regexScriptName.exec(scriptSection)) != null) {
+        while ((match = regexScriptName.exec(scriptSection)) !== null) {
             var script = match[1];
             scriptNames.push(script);
         }
@@ -151,7 +151,7 @@ task("copy-index", [], function () { //"remove-debug","use-min-js"
 
             //apply search/replace modifications
             //append version to prevent script caching web build
-            if (trg == "web") {
+            if (trg === "web") {
                 console.log("Preventing cached scripts: " + trg);
                 finalIndexFile = indexFile.replace(/(.js")/gmi, ".js?v=" + releaseVersion + "\"");
                 finalIndexFile = finalIndexFile.replace(/(main.css")/gmi, "main.css?v=" + releaseVersion + "\"");
