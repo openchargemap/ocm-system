@@ -126,46 +126,52 @@
         </div>
     }
 </div>
-<!--
-@helper FormatNotificationFrequency(int frequencyMins)
-{
-    switch (frequencyMins)
+@functions {
+
+    string FormatNotificationFrequency(int frequencyMins)
     {
-        case 5: <span>Every 5 Minutes</span>
-            break;
-        case 30: <span>Every 30 Minutes</span>
-            break;
-        case 60: <span>Every Hour</span>
-            break;
-        case 60 * 12: <span>Every 12 Hours</span>
-            break;
-        case 60 * 24: <span>Every Day</span>
-            break;
-        case 60 * 24 * 7: <span>Every Week</span>
-            break;
-        case 60 * 24 * 7 * 31: <span>Every Month</span>
-            break;
+        switch (frequencyMins)
+        {
+            case 5:
+                return "Every 5 Minutes";
+                break;
+            case 30:
+                return "Every 30 Minutes";
+                break;
+            case 60:
+                return "Every Hour";
+                break;
+            case 60 * 12:
+                return "Every 12 Hours";
+                break;
+            case 60 * 24:
+                return "Every Day";
+                break;
+            case 60 * 24 * 7:
+                return "Every Week";
+                break;
+            case 60 * 24 * 7 * 31:
+                return "Every Month";
+                break;
+        }
+        return "";
+
     }
 
-}
-
-    -->
-<!--
-helper FormatFilterList(IEnumerable<OCM.API.Common.Model.SimpleReferenceDataType>
-    refData, List<int>
-        itemIds)
-        {
+    string FormatFilterList(IEnumerable<OCM.API.Common.Model.SimpleReferenceDataType> refData, List<int> itemIds)
+    {
         var output = "";
         foreach (var itemId in itemIds)
         {
-        try
-        {
-        var refItem = refData.FirstOrDefault(r => r.ID == itemId);
-        output += (output != "" ? ", " + refItem.Title : refItem.Title);
-        }
-        catch (Exception) { }
+            try
+            {
+                var refItem = refData.FirstOrDefault(r => r.ID == itemId);
+                output += (output != "" ? ", " + refItem.Title : refItem.Title);
+            }
+            catch (Exception) { }
         }
 
-        <text>output</text>
-        }
-    -->
+        return output;
+    }
+}
+
