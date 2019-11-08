@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OCM.MVC.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
 
         /// <summary>
@@ -25,11 +25,19 @@ namespace OCM.MVC.Controllers
         /// <returns></returns>
         public ActionResult NotSignedIn()
         {
-            return View();
+            return View("NotSignedIn");
         }
 
-        public ActionResult GeneralError()
+        public ActionResult Error(int code)
         {
+            if (code>=400 && code<= 500)
+            {
+                if (!IsUserSignedIn)
+                {
+                    return RedirectToAction("SignIn","Profile");
+                }
+                
+            } 
             return View();
         }
     }

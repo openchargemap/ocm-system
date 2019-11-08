@@ -2,6 +2,6 @@
     ViewBag.Title = "Not Signed In";
 }
 
-<h2>Oops, you need to sign in</h2>
-Sorry, the feature you tried to access requires you to be signed in.
-<a href="@Url.Action("SignIn","Profile")" class="btn btn-primary">Sign In</a>
+<h2>Please sign in</h2>
+To continue you need to sign in or register:
+<a href="@Url.Action("SignIn","Profile", new { _redirectUrl=Context.Items["_postLoginRedirect"]?.ToString()})" class="btn btn-primary">Sign In or Register</a>

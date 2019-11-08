@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -53,7 +58,7 @@ namespace OCM.MVC
             else
             {
                 // user not authenticated
-                return Task.FromResult(AuthenticateResult.Fail("Not signed in"));
+                return Task.FromResult(AuthenticateResult.NoResult());
             }
         }
     }
@@ -115,6 +120,64 @@ namespace OCM.MVC
             return Task.CompletedTask;
 
         }
+    }
+    public class CustomAuthorizeActionFilter : IAsyncAuthorizationFilter
+    {
+
+        string _roles = "";
+
+        public CustomAuthorizeActionFilter(string roles)
+        {
+            _roles = roles;
+
+        }
+
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            if (context.HttpContext.User != null)
+            {
+               
+                // check user is in one of required roles
+                if (context.HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Role && _roles.Split(",").Contains(c.Value)))
+                {
+                    return;
+                }
+            }
+
+            // not handled, fail
+            context.Result = new UnauthorizedResult();
+
+            if (!context.HttpContext.Session.Keys.Any(k => k == "_redirectURL"))
+            {
+                context.HttpContext.Session.SetString("_redirectURL", Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(context.HttpContext.Request));
+            }
+
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    public class AuthorizeAttribute : TypeFilterAttribute
+    {
+        public AuthorizeAttribute()
+            : base(typeof(CustomAuthorizeActionFilter))
+        {
+
+
+        }
+
+        public string Roles
+        {
+            get
+            {
+                return Arguments[0]?.ToString();
+            }
+            set
+            {
+
+                Arguments = new object[] { value };
+            }
+        }
+
     }
 }
 

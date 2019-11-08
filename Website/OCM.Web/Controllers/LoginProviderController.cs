@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +48,56 @@ namespace OCM.MVC.Controllers
         #endregion Cookie Helpers
 
         #region Login Workflow Handlers
+
+
+        private string ComputePayloadSig(string secret, string payload)
+        {
+            // from : https://github.com/laktak/discourse-sso/blob/master/src/Handler.cs
+            var hash = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(secret)).ComputeHash(Encoding.UTF8.GetBytes(payload));
+            return string.Join("", hash.Select(b => String.Format("{0:x2}", b)));
+        }
+
+        [Authorize(Roles = "StandardUser")]
+        public ActionResult CommunitySSO(string sso, string sig)
+        {
+            // implement SSO for Discourse
+            // https://meta.discourse.org/t/official-single-sign-on-for-discourse-sso/13045
+
+            var secret = ConfigurationManager.AppSettings["CommunitySSOSecret"];
+
+            var computedSig = ComputePayloadSig(secret, sso);
+
+            if (sig != computedSig)
+            {
+                // secrets don't match;
+                return Unauthorized();
+            }
+
+            string decodedSso = Encoding.UTF8.GetString(Convert.FromBase64String(sso));
+            var args = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(decodedSso);
+            var nonce = args["nonce"];
+
+            if (IsUserSignedIn)
+            {
+                var userManager = new UserManager();
+                var user = userManager.GetUser((int)UserID);
+
+                // create payload, base64 encode & url encode
+                string returnPayload = $"nonce={nonce}&email={user.EmailAddress}&require_activation=true&external_id={user.ID}&username={user.Username}";
+
+                string base64Payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(returnPayload));
+                string urlEncodedPayload = Uri.EscapeUriString(base64Payload);
+                string returnSig = ComputePayloadSig(secret, urlEncodedPayload);
+
+                // send auth request back to Discourse
+                string redirectTo = $"{ConfigurationManager.AppSettings["CommunityUrl"]}/session/sso_login?sso={urlEncodedPayload}&sig={returnSig}";
+                return Redirect(redirectTo);
+
+            } else
+            {
+                return Unauthorized();
+            }
+        }
 
         public ActionResult BeginLogin()
         {
@@ -289,6 +342,11 @@ namespace OCM.MVC.Controllers
             dataModel.SaveChanges();
 
             PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
+            /*if (HttpContext.Items.ContainsKey("_postLoginRedirect"))
+            {
+                string returnURL = HttpContext.Items["_postLoginRedirect"].ToString();
+                return Redirect(returnURL);
+            }*/
 
             if (!String.IsNullOrEmpty(Session.GetString("_redirectURL")))
             {
