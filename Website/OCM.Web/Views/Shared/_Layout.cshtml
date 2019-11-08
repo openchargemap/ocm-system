@@ -91,19 +91,14 @@
                 <li class="nav-item dropdown">
                     <a href="@Url.Action("Index", "POI")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.navigation.browse.sectionTitle">browse</span> <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="https://map.openchargemap.io" data-localize="ocm.general.map">Map</a>
+                        <a class="dropdown-item" href="https://map.openchargemap.io" data-localize="ocm.general.map">map</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a>
                         <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>
-                        <a class="dropdown-item" href="@Url.Action("Activity", "POI")" data-localize="ocm.navigation.browse.recentActivity">recent activity</a>
 
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Index", "Stats")" data-localize="ocm.navigation.browse.statistics">statistics</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">new locations awaiting approval</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">imported locations awaiting approval</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edits awaiting approval</a>
+
+                        
                     </div>
                 </li>
 
@@ -117,7 +112,22 @@
                     </div>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" href="https://github.com/openchargemap/ocm-system/issues" data-localize="ocm.navigation.discuss">discuss</a></li>
+                <li class="nav-item dropdown">
+                    <a href="https://community.openchargemap.org" class="nav-link dropdown-toggle" data-toggle="dropdown">community <b class="caret"></b></a>
+                    <div class="dropdown-menu">
+
+                        <a class="dropdown-item" href="https://community.openchargemap.org">discussions</a>
+                        <a class="dropdown-item" href="https://github.com/openchargemap/ocm-system/issue">github</a>
+                        <a class="dropdown-item" href="https://twitter.com/#!/open_charge_map">twitter</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="@Url.Action("Activity", "POI")" data-localize="ocm.navigation.browse.recentActivity">recent activity</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Stats")" data-localize="ocm.navigation.browse.statistics">statistics</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">new locations awaiting approval</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">imported locations awaiting approval</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edits awaiting approval</a>
+                    </div>
+                </li>
 
                 <li class="nav-item dropdown">
                     <a href="@Url.Action("Index", "About")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.general.about">about</span> <b class="caret"></b></a>
@@ -156,15 +166,15 @@
                 }
 
                 @*
-                    <li class="dropdown ">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="_langTitle">language</span> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            @foreach (var language in CommonUtil.SupportedLanguages)
-                            {
-                                <li><a rel="nofollow" href="?languagecode=@language.Key">@language.Value</a></li>
-                            }
-                        </ul>
-                    </li>
+        <li class="dropdown ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="_langTitle">language</span> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                @foreach (var language in CommonUtil.SupportedLanguages)
+                {
+                    <li><a rel="nofollow" href="?languagecode=@language.Key">@language.Value</a></li>
+                }
+            </ul>
+        </li>
                 *@
 
                 @if (isAdministrator == true)
