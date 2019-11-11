@@ -8,12 +8,12 @@
 
 <div class="row">
 
-    @foreach (var item in Model.Where(i => i.IsEnabled))
+    @foreach (var item in Model.Where(i => i.IsEnabled && i.ItemURL!=null))
     {
         <div class="col-sm-6 col-md-3">
             <div class="img-thumbnail">
 
-                <img class="img-responsive" src="@item.ItemThumbnailURL.Replace("thmb", "medi")" onclick="showLightBox('@item.ItemURL');" />
+                <img class="img-fluid" src="@(item.ItemThumbnailURL!=null?item.ItemThumbnailURL.Replace("thmb", "medi"):item.ItemURL)" onclick="showLightBox('@item.ItemURL');" />
 
                 <blockquote>
                     <p>@Html.DisplayFor(modelItem => item.Comment)</p>
@@ -62,7 +62,7 @@
 <script>
 
     function showLightBox(imgUrl) {
-        $("#modal-lightbox-content").html("<img src='" + imgUrl + "' class='img-responsive' />");
+        $("#modal-lightbox-content").html("<img src='" + imgUrl + "' class='img-fluid' />");
         $('#modal-lightbox').modal("show");
     }
 </script>

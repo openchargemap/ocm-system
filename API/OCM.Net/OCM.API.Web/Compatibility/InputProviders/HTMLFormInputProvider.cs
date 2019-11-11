@@ -31,7 +31,8 @@ namespace OCM.API.InputProviders
 
         public async Task<bool> ProcessMediaItemSubmission(string uploadPath, HttpContext context, MediaItem mediaItem, int userId)
         {
-  
+            if (context.Request.Form.Files.Count==0) return false;
+
             try
             {
                 var files = context.Request.Form.Files;

@@ -29,7 +29,7 @@ namespace OCM.API.Common
             if (urls == null)
             {
                 //failed to upload, preserve submission data
-                System.IO.File.WriteAllText(tempFolder + "//OCM_" + chargePointId + "_" + (DateTime.Now.ToFileTimeUtc().ToString()) + ".json", "{userId:" + userId + ",comment:\"" + comment + "\"}");
+                System.IO.File.WriteAllText(tempFolder + "\\OCM_" + chargePointId + "_" + (DateTime.Now.ToFileTimeUtc().ToString()) + ".json", "{userId:" + userId + ",comment:\"" + comment + "\"}");
                 return null;
             }
             else
@@ -65,28 +65,26 @@ namespace OCM.API.Common
 
         private void GenerateImageThumbnails(string sourceFile, string destFile, int maxWidth)
         {
-            
-            using (Image<Rgba32> image = Image.Load(sourceFile) as Image<Rgba32>) 
+
+            using (Image<Rgba32> image = Image.Load(sourceFile) as Image<Rgba32>)
             {
                 int width = image.Width;
                 int height = image.Height;
                 float ratio = 1;
 
-                if (width > maxWidth) {
+                if (width > maxWidth)
+                {
                     ratio = (float)image.Width / (float)maxWidth;
                     width = maxWidth;
-                    height = (int) (height / ratio);
+                    height = (int)(height / ratio);
                 }
-                
+
                 // image is now in a file format agnositic structure in memory as a series of Rgba32 pixels
                 image.Mutate(ctx => ctx.Resize(width, height)); // resize the image in place and return it for chaining
 
-               
-                    image.Save(destFile); // based on the file extension pick an encoder then encode and write the data to disk
-                
-                
+
+                image.Save(destFile); // based on the file extension pick an encoder then encode and write the data to disk
             }
-          
         }
 
         public async Task<string[]> UploadPOIImageToStorage(string tempFolder, string sourceImageFile, Model.ChargePoint poi)
@@ -116,11 +114,11 @@ namespace OCM.API.Common
                 try
                 {
                     //generate thumbnail max 100 wide
-                    GenerateImageThumbnails(sourceImageFile, tempFolder + thumbFileName, 100);
+                    GenerateImageThumbnails(sourceImageFile, tempFolder + "\\" + thumbFileName, 100);
                     //generate medium max 400 wide
-                    GenerateImageThumbnails(sourceImageFile, tempFolder + mediumFileName, 400);
+                    GenerateImageThumbnails(sourceImageFile, tempFolder + "\\" + mediumFileName, 400);
                     //resize original max 2048
-                    GenerateImageThumbnails(sourceImageFile, tempFolder + largeFileName, 2048);
+                    GenerateImageThumbnails(sourceImageFile, tempFolder + "\\" + largeFileName, 2048);
                 }
                 catch (Exception)
                 {
@@ -138,17 +136,17 @@ namespace OCM.API.Common
                     {
                         if (urls[0] == null)
                         {
-                            urls[0] = await storage.UploadImage(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
+                            urls[0] = await storage.UploadImageAsync(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
                         }
 
                         if (urls[1] == null)
                         {
-                            urls[1] = await storage.UploadImage(tempFolder + "\\"+ thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
+                            urls[1] = await storage.UploadImageAsync(tempFolder + "\\" + thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
                         }
 
                         if (urls[2] == null)
                         {
-                            urls[2] = await storage.UploadImage(tempFolder + "\\" + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
+                            urls[2] = await storage.UploadImageAsync(tempFolder + "\\" + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
                         }
                         if (urls[0] != null && urls[1] != null && urls[2] != null)
                         {
@@ -159,20 +157,20 @@ namespace OCM.API.Common
                     {
                         //failed to store blobs
                         AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to upload images to azure (attempt " + attemptCount + "): OCM-" + poi.ID, exp.ToString());
-                        //return null;
+
+                        Thread.Sleep(1000); //wait a bit then try again
                     }
                     attemptCount++;
-                    Thread.Sleep(5000); //wait a bit then try again
+                  
                 }
 
-                Thread.Sleep(5000);
                 //attempt to delete temp files
                 try
                 {
                     System.IO.File.Delete(sourceImageFile);
-                    System.IO.File.Delete(tempFolder + thumbFileName);
-                    System.IO.File.Delete(tempFolder + mediumFileName);
-                    System.IO.File.Delete(tempFolder + largeFileName);
+                    System.IO.File.Delete(tempFolder + "\\" + thumbFileName);
+                    System.IO.File.Delete(tempFolder + "\\" + mediumFileName);
+                    System.IO.File.Delete(tempFolder + "\\" + largeFileName);
                 }
                 catch (Exception)
                 {

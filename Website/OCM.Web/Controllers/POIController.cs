@@ -234,24 +234,32 @@ namespace OCM.MVC.Controllers
         {
             CheckForReadOnly();
 
-            var user = new UserManager().GetUser((int)UserID);
-            var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                var mediaItem = new MediaItem();
-                var tempPath = System.IO.Path.GetTempPath() +"//_ocm";
-                if (!System.IO.Directory.Exists(tempPath))
+
+                var user = new UserManager().GetUser((int)UserID);
+                var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
+
+                if (user != null)
                 {
-                    System.IO.Directory.CreateDirectory(tempPath);
+                    var mediaItem = new MediaItem();
+                    var tempPath = System.IO.Path.GetTempPath() + "\\_ocm";
+                    if (!System.IO.Directory.Exists(tempPath))
+                    {
+                        System.IO.Directory.CreateDirectory(tempPath);
+                    }
+                    bool uploaded = await htmlInputProvider.ProcessMediaItemSubmission(tempPath, HttpContext, mediaItem, user.ID).ConfigureAwait(true);
+                    ViewBag.PoiId = id;
+
+                    if (uploaded)
+                    {
+                        ViewBag.UploadCompleted = true;
+                    }
+
                 }
-                bool uploaded = await htmlInputProvider.ProcessMediaItemSubmission(tempPath, HttpContext, mediaItem, user.ID);
-                ViewBag.PoiId = id;
-                ViewBag.UploadCompleted = true;
-                return View();
             }
 
-            return View();
+            return View("AddMediaItem");
         }
 
         //[Authorize(Roles = "StandardUser")]

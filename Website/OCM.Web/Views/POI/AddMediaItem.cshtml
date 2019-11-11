@@ -1,11 +1,10 @@
 ﻿@model OCM.API.Common.Model.ChargePoint
 @using Microsoft.AspNetCore.Http;
-@using Microsoft.AspNetCore.Html;
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewBag.Title = "Add Photos";
 
-    int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
+    int? userId = Context.Session.GetInt32("UserID");
 
 }
 
@@ -40,7 +39,7 @@ else
                 </div>
             </div>
             @Html.Partial("_TermsLink")
-            <input class="btn btn-primary" type="submit" name="submit" value="Upload!" />
+            <input class="btn btn-primary" type="submit" name="submit" value="Upload" />
         }
     }
     else
