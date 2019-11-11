@@ -47,3 +47,14 @@ h3 > small, h2 > small, h1 > small {
 .content {
     width: 100%;
 }
+
+
+footer {
+    color:gainsboro;
+    font-size: 80%;
+    text-align:center;
+}
+
+.results-list .result{
+    margin-bottom:1em;
+}
