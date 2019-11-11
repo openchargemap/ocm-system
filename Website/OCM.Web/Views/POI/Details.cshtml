@@ -1,16 +1,13 @@
 @model OCM.MVC.Models.POIViewModel
 @using Microsoft.AspNetCore.Http;
 @using Microsoft.AspNetCore.Html;
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewBag.Title = ViewBag.FullTitle;
 
-    int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
-
+    int? userId = Context.Session.GetInt32("UserID");
 
     Func<string, IHtmlContent> formatDescription = str => Html.Raw(Html.Encode(str).Replace("\n", "<br>"));
-
 
 }
 <style>

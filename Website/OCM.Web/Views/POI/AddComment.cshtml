@@ -1,10 +1,7 @@
 ﻿@model OCM.MVC.Models.POIViewModel
 @using Microsoft.AspNetCore.Http;
-@using Microsoft.AspNetCore.Html;
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
 @{
-    int? userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
+    int? userId = Context.Session.GetInt32("UserID");
 
     ViewBag.Title = "Add Comment";
 }

@@ -98,7 +98,7 @@
                         <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>
 
 
-                        
+
                     </div>
                 </li>
 
@@ -142,54 +142,54 @@
 
                 @if (username != null)
                 {
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> <span data-localize="ocm.navigation.profile.sectionTitle">my profile</span> <b class="caret"></b></a>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-item">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> <span data-localize="ocm.navigation.profile.sectionTitle">my profile</span> <b class="caret"></b></a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item">
 
-                                <span class="navbar-text text-primary">@Html.Encode(username)</span>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            @Html.ActionLink("my profile", "Index", "Profile", null, new { @class = "dropdown-item" })
-                            <!--@Html.ActionLink("my subscriptions", "Subscriptions", "Profile", null, new { @class = "dropdown-item" })-->
-                            @Html.ActionLink("my comments", "Comments", "Profile", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("my uploads", "Media", "Profile", null, new { @class = "dropdown-item" })
-                            <div class="nav-divider"></div>
-                            <a class="dropdown-item" href="@Url.Action("SignOut", "Profile")" data-localize="ocm.general.signOut">sign out</a>
+                            <span class="navbar-text text-primary">@Html.Encode(username)</span>
                         </div>
-                    </li>
+                        <div class="dropdown-divider"></div>
+                        @Html.ActionLink("my profile", "Index", "Profile", null, new { @class = "dropdown-item" })
+                        <!--@Html.ActionLink("my subscriptions", "Subscriptions", "Profile", null, new { @class = "dropdown-item" })-->
+                        @Html.ActionLink("my comments", "Comments", "Profile", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("my uploads", "Media", "Profile", null, new { @class = "dropdown-item" })
+                        <div class="nav-divider"></div>
+                        <a class="dropdown-item" href="@Url.Action("SignOut", "Profile")" data-localize="ocm.general.signOut">sign out</a>
+                    </div>
+                </li>
 
                 }
                 else
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("SignIn", "Profile", new { redirectUrl = HttpContextAccessor.HttpContext.Request.GetUri()?.AbsoluteUri })" data-localize="ocm.general.signIn">sign in</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("SignIn", "Profile", new { redirectUrl = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(Context.Request) })" data-localize="ocm.general.signIn">sign in</a></li>
                 }
 
                 @*
-        <li class="dropdown ">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="_langTitle">language</span> <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                @foreach (var language in CommonUtil.SupportedLanguages)
-                {
-                    <li><a rel="nofollow" href="?languagecode=@language.Key">@language.Value</a></li>
-                }
-            </ul>
-        </li>
+                    <li class="dropdown ">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-localize="_langTitle">language</span> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @foreach (var language in CommonUtil.SupportedLanguages)
+                            {
+                                <li><a rel="nofollow" href="?languagecode=@language.Key">@language.Value</a></li>
+                            }
+                        </ul>
+                    </li>
                 *@
 
                 @if (isAdministrator == true)
                 {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="@Url.Action("Index", "Admin")" data-toggle="dropdown">admin <b class="caret"></b></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="@Url.Action("Index", "Admin")">dashboard</a>
-                            <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")">edit queue</a>
-                            <a class="dropdown-item" href="@Url.Action("Users", "Admin")">users</a>
-                            <a class="dropdown-item" href="@Url.Action("Operators", "Admin")">operators</a>
-                            <div class="nav-divider"></div>
-                            <a class="dropdown-item" href="@Url.Action("PollForTasks", "Admin", new { key = System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"] })">poll for system tasks</a>
-                        </div>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="@Url.Action("Index", "Admin")" data-toggle="dropdown">admin <b class="caret"></b></a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="@Url.Action("Index", "Admin")">dashboard</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")">edit queue</a>
+                        <a class="dropdown-item" href="@Url.Action("Users", "Admin")">users</a>
+                        <a class="dropdown-item" href="@Url.Action("Operators", "Admin")">operators</a>
+                        <div class="nav-divider"></div>
+                        <a class="dropdown-item" href="@Url.Action("PollForTasks", "Admin", new { key = System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"] })">poll for system tasks</a>
+                    </div>
+                </li>
                 }
             </ul>
         </div>
@@ -199,61 +199,61 @@
     @if (ViewBag.IsHome == true)
     {
 
-        <div style="margin-top:40px;padding:0px 30px;">
-            <div class="banner-background">
+    <div style="margin-top:60px;padding:0px 30px;">
+        <div class="banner-background">
 
 
-            </div>
-            <div class="banner-container" style="padding-top:2em;background-image:none;">
+        </div>
+        <div class="banner-container" style="padding-top:2em;background-image:none;">
 
-                <div class="banner-backdrop">
-                    <div>
-                        <h3>Open Charge Map <br /><small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
+            <div class="banner-backdrop">
+                <div>
+                    <h3>Open Charge Map <br /><small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
+                </div>
+                <div class="banner-foreground">
+                    <div class="applinks pull-right animated fadeInDown">
+                        <span data-localize="ocm.infoText.getApp">Get the app</span>:
+                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Android</a>
+                        <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> iOS</a>
+                        <a target="_blank" href="https://map.openchargemap.io"><i class="fa fa-rocket"></i> Web App</a>
                     </div>
-                    <div class="banner-foreground">
-                        <div class="applinks pull-right animated fadeInDown">
-                            <span data-localize="ocm.infoText.getApp">Get the app</span>:
-                            <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Android</a>
-                            <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> iOS</a>
-                            <a target="_blank" href="https://map.openchargemap.io"><i class="fa fa-rocket"></i> Web App</a>
-                        </div>
-                    </div>
-                    <div>
+                </div>
+                <div>
 
-                        <div id="datasummary"></div>
-                        <p>
-                            <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
-                        </p>
-                    </div>
+                    <div id="datasummary"></div>
+                    <p>
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
+                    </p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="map-loading" style="width:100%;height:500px;background-color:gainsboro;padding:24px;font-size:24px;position:absolute;">
-           <i class="fa fa-map"></i> Map Loading..
-            </div>
-        <div id="map-container">
-            <iframe id="map-app" src="https://map.openchargemap.io" onload="mapLoaded();" frameborder="0" allow="geolocation" style="width:100%;height:600px"></iframe>
-        </div>
+    <div id="map-loading" style="width:100%;height:500px;background-color:gainsboro;padding:24px;font-size:24px;position:absolute;">
+        <i class="fa fa-map"></i> Map Loading..
+    </div>
+    <div id="map-container">
+        <iframe id="map-app" src="https://map.openchargemap.io" onload="mapLoaded();" frameborder="0" allow="geolocation" style="width:100%;height:600px"></iframe>
+    </div>
 
-        @RenderBody()
+    @RenderBody()
 
     }
     else
     {
-        <div class="container" style="margin-top: 120px;">
-            <div class="content">
-                @{
+    <div class="container" style="margin-top: 120px;">
+        <div class="content">
+            @{
                     if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
                     {
-                        <div class="alert alert-warning">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Note: Open Charge Map is undergoing extensive maintenance and new edits/submission are not currently being accepted.
-                        </div>
+                <div class="alert alert-warning">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Note: Open Charge Map is undergoing extensive maintenance and new edits/submission are not currently being accepted.
+                </div>
                     }
-                }
-                @RenderBody()
-            </div>
+            }
+            @RenderBody()
         </div>
+    </div>
     }
 
     <footer class="footer mt-auto py-3">

@@ -1,48 +1,49 @@
-﻿.navbar{
-  max-height: 50px;
-  margin-bottom: 20px;
+﻿.navbar {
+    margin-bottom: 20px;
+    padding: 8px;
 }
 
-.navbar-expand-md{
-  /*max-height: fit-content;*/
+.navbar-expand-md {
+    /*max-height: fit-content;*/
 }
 
-.navbar-brand{
-  background-image: url('/images/AppIcon_36x36.png');
-  background-repeat: no-repeat;
-  background-position: 0px 0px;
-  padding-left: 46px;
+.navbar-brand {
+    background-image: url('../images/appicon_36x36.png');
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    padding-left: 46px;
 }
+
 h1 {
-    margin-top:6px;
+    margin-top: 6px;
 }
 
 small {
-    font-size:60%;
+    font-size: 60%;
 }
+
 h3 > small, h2 > small, h1 > small {
     color: rgba(26, 26, 26, 0.22);
 }
 
-.tab-content{
-  padding-top:12px;
+.tab-content {
+    padding-top: 12px;
 }
 
-@media (min-width: 1200px)
-{
-  .container{
-    max-width:fit-content;
-    margin:10%;
-  }
+@media (min-width: 1200px) {
+    .container {
+        max-width: fit-content;
+        margin: 10%;
+    }
 }
 
-.ocm-label{
-  font-weight: bold;
-  color: #536957;
-  min-width: 80px;
-  display:inline-block;
+.ocm-label {
+    font-weight: bold;
+    color: #536957;
+    min-width: 80px;
+    display: inline-block;
 }
 
-.content{
-  width:100%;
+.content {
+    width: 100%;
 }

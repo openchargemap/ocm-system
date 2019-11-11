@@ -13,7 +13,7 @@
         {
             <div class="col-md-1 col-sm-1">
                 <a class="thumbnail" href="@Url.Action("Details","POI", new {id=item.ChargePointID})">
-                    <img class="img-responsive" src="@item.ItemThumbnailURL"/>
+                    <img class="img-fluid" src="@item.ItemThumbnailURL"/>
                 </a>
             </div>    
         }
@@ -21,11 +21,11 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h2>New Locations <small>recently added</small></h2>
         @Html.Partial("_POIList", Model.POIRecentlyAdded)
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
         <h2>Recent Comments <small>added by users</small></h2>
         @Html.DisplayFor(poiSummary => poiSummary.RecentComments)
     </div>
