@@ -153,7 +153,12 @@ namespace OCM.API.Common
                         }
                     }
 
-                    if (user != null) editQueueItem.User = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
+                    if (user != null)
+                    {
+                        editQueueItem.User = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
+                    }
+                    var processedByUser = editQueueItem.User ?? dataModel.Users.FirstOrDefault(u => u.Id == (int)StandardUsers.System);
+
                     editQueueItem.IsProcessed = false;
                     dataModel.EditQueueItems.Add(editQueueItem);
                     //TODO: send notification of new item for approval
@@ -166,14 +171,8 @@ namespace OCM.API.Common
                     foreach (var previousEdit in previousEdits)
                     {
                         previousEdit.IsProcessed = true;
-                        if (editQueueItem.User != null)
-                        {
-                            previousEdit.ProcessedByUser = editQueueItem.User;
-                        }
-                        else
-                        {
-                            editQueueItem.ProcessedByUser = dataModel.Users.FirstOrDefault(u => u.Id == (int)StandardUsers.System);
-                        }
+                        previousEdit.ProcessedByUser = processedByUser;
+                        
                         previousEdit.DateProcessed = DateTime.UtcNow;
                     }
                     //save updated edit queue items
