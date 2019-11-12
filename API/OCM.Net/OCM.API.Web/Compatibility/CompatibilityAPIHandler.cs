@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.IO.Compression;
-using System.Text;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using OCM.API.Common;
@@ -13,8 +11,6 @@ using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using OCM.API.InputProviders;
 using OCM.API.OutputProviders;
-using Microsoft.AspNetCore.Http.Extensions;
-using System.Threading.Tasks;
 
 namespace OCM.API
 {
@@ -110,7 +106,7 @@ namespace OCM.API
             var paramList = new NullSafeDictionary<string, string>();
             foreach (var k in context.Request.Query.Keys)
             {
-                paramList.Add(k, context.Request.Query[k]);
+                paramList.Add(k.ToLower(), context.Request.Query[k]);
             }
 
             filter.ParseParameters(filter, paramList);
@@ -390,7 +386,7 @@ namespace OCM.API
             var paramList = new NullSafeDictionary<string, string>();
             foreach (var k in context.Request.Query.Keys)
             {
-                paramList.Add(k, context.Request.Query[k]);
+                paramList.Add(k.ToLower(), context.Request.Query[k]);
             }
             filter.ParseParameters(filter, paramList);
 
