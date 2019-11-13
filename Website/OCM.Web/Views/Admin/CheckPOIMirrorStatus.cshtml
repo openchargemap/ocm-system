@@ -27,7 +27,7 @@
         </dt>
 
         <dd>
-            <span class="@(Model.TotalPOIInCache!=Model.TotalPOIInDB?"label label-danger":"")">
+            <span class="@(Model.TotalPOIInCache!=Model.TotalPOIInDB?"badge badge-danger":"")">
                 @Html.DisplayFor(model => model.TotalPOIInCache)
             </span>
         </dd>
@@ -46,7 +46,7 @@
             </dt>
 
             <dd>
-                <span class="@(Model.TotalPOIInCache!=Model.NumDistinctPOIs?"label label-danger":"")">
+                <span class="@(Model.TotalPOIInCache!=Model.NumDistinctPOIs?"badge badge-danger":"")">
                     @Html.DisplayFor(model => model.NumDistinctPOIs)
                 </span>
             </dd>
