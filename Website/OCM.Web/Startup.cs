@@ -29,6 +29,14 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString;
+                options.SchemaName = "dbo";
+                options.TableName = "SessionState";
+               
+            });
+
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation();
             
@@ -38,9 +46,22 @@ namespace OCM.Web
                         .AddScheme<CustomAuthOptions, CustomAuthHandler>(CustomAuthOptions.DefaultScheme, CustomAuthOptions.DefaultScheme
                         , opts => { });
 
-            services.AddMemoryCache();
+            //services.AddMemoryCache();
+
+          
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSession();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+     
+            });
+
 
             services.AddSingleton<IAuthorizationHandler, IsUserSignedInRequirementHandler>();
             services.AddSingleton<IAuthorizationHandler, IsUserAdminRequirementHandler>();
@@ -58,6 +79,9 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseSession();
+
             app.UseStatusCodePagesWithRedirects("~/Home/Error?code={0}");
 #if DEBUG
             if (env.IsDevelopment())
@@ -79,8 +103,6 @@ namespace OCM.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
