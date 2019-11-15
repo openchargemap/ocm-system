@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using OCM.Core.Data;
 using System;
@@ -30,11 +31,45 @@ namespace OCM.API.Common
 
         public void CleanupRedundantEditQueueitems()
         {
-            var sourceList = DataModel.EditQueueItems;
+            var cpManager = new POIManager();
+
+            // cleanup new items not marked as processed but not awaiting review
+            var sourceList = DataModel
+                .EditQueueItems
+                .Include(e => e.User)
+                .Include(e => e.ProcessedByUser)
+                .Include(e => e.EntityType)
+                .Where(e => e.IsProcessed == false && e.PreviousData == null);
+
+            System.Diagnostics.Debug.WriteLine($"Cleanup of added items: {sourceList.Count()}");
+
+            var processedEdits = new List<Model.EditQueueItem>();
+
+            foreach (var item in sourceList)
+            {
+                var p = cpManager.Get((int)item.EntityId);
+                if (p != null)
+                {
+                    if (p.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Submitted_UnderReview && p.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Submitted_UnderReview)
+                    {
+                        item.IsProcessed = true;
+                        item.ProcessedByUserId = (int)StandardUsers.System;
+                        item.DateProcessed = p.DateCreated;
+                    }
+                }
+            }
+            DataModel.SaveChanges();
+
+            // cleanup edits with no differences
+
+            sourceList = DataModel
+                .EditQueueItems
+                .Include(e => e.User)
+                .Include(e => e.ProcessedByUser)
+                .Include(e => e.EntityType)
+                .AsNoTracking().Where(e => e.IsProcessed == false && e.PreviousData != null);
 
             var redundantEdits = new List<Model.EditQueueItem>();
-
-            var cpManager = new POIManager();
 
             foreach (var item in sourceList)
             {
@@ -52,6 +87,7 @@ namespace OCM.API.Common
                 DataModel.EditQueueItems.Remove(delItem);
             }
             DataModel.SaveChanges();
+
         }
 
         public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, POIManager cpManager, bool loadCurrentItem)

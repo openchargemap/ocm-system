@@ -765,7 +765,7 @@ namespace OCM.API
             }*/
 
             var geocoder = new GeocodingHelper();
-            geocoder.IncludeExtendedData = true;
+            geocoder.IncludeExtendedData = false;
 
             if (!string.IsNullOrEmpty(filter.Address))
             {

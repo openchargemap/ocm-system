@@ -89,13 +89,13 @@ namespace OCM.API.Common
 
         public bool IncludeQueryURL { get; set; }
 
-       /* public GeocodingResult GeolocateAddressInfo_Google(AddressInfo address)
-        {
-            var result = GeolocateAddressInfo_Google(address.ToString());
-            result.AddressInfoID = address.ID;
+        /* public GeocodingResult GeolocateAddressInfo_Google(AddressInfo address)
+         {
+             var result = GeolocateAddressInfo_Google(address.ToString());
+             result.AddressInfoID = address.ID;
 
-            return result;
-        }*/
+             return result;
+         }*/
 
         public GeocodingResult GeolocateAddressInfo_MapquestOSM(AddressInfo address)
         {
@@ -105,7 +105,7 @@ namespace OCM.API.Common
             return result;
         }
 
-        public GeocodingResult ReverseGecode_MapquestOSM(double latitude, double longitude, ReferenceDataManager refDataManager )
+        public GeocodingResult ReverseGecode_MapquestOSM(double latitude, double longitude, ReferenceDataManager refDataManager)
         {
             GeocodingResult result = new GeocodingResult();
             result.Service = "MapQuest Open";
@@ -120,7 +120,14 @@ namespace OCM.API.Common
                 client.Encoding = Encoding.GetEncoding("UTF-8");
                 data = client.DownloadString(url);
 
-                if (IncludeExtendedData) result.ExtendedData = data;
+                if (IncludeExtendedData)
+                {
+                    result.ExtendedData = data;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine(data);
+                }
 
                 if (data == "[]")
                 {
@@ -135,7 +142,7 @@ namespace OCM.API.Common
                     {
                         var item = o["results"][0]["locations"][0];
 
-                        
+
                         result.AddressInfo = new AddressInfo();
                         result.AddressInfo.Title = item["street"]?.ToString();
                         result.AddressInfo.Postcode = item["postalCode"]?.ToString();
@@ -161,7 +168,7 @@ namespace OCM.API.Common
                             var country = refDataManager.GetCountryByISO(countryCode);
                             if (country != null)
                             {
-                                result.AddressInfo.CountryID = country.ID;    
+                                result.AddressInfo.CountryID = country.ID;
                             }
                         }
 

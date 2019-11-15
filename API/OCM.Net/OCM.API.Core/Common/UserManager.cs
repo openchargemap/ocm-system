@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OCM.API.Common.Model;
+using OCM.API.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
@@ -339,15 +342,49 @@ namespace OCM.API.Common
             return false;
         }
 
-        public List<User> GetUsers()
+        public async Task<PaginatedCollection<User>> GetUsers(string sortOrder, string keyword, int pageIndex = 1, int pageSize = 50)
         {
             List<User> list = new List<User>();
-            var userList = dataModel.Users.Where(u => u.Identifier != null).OrderBy(u => u.Username);
-            foreach (var user in userList)
+            var userList = dataModel.Users.Where(u => u.Identifier != null);
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                userList = userList.Where(u => u.EmailAddress.Contains(keyword) || u.Username.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                if (sortOrder == "datecreated_asc")
+                {
+                    userList = userList.OrderBy(u => u.DateCreated);
+                }
+                else if (sortOrder == "datecreated_desc")
+                {
+                    userList = userList.OrderBy(u => u.DateCreated);
+                }
+                else if (sortOrder == "datelastlogin_asc")
+                {
+                    userList = userList.OrderBy(u => u.DateLastLogin);
+                }
+                else if (sortOrder == "datelastlogin_desc")
+                {
+                    userList = userList.OrderBy(u => u.DateLastLogin);
+                }
+            }
+            else
+            {
+                userList = userList.OrderByDescending(u => u.DateCreated);
+            }
+
+            var count = await userList.CountAsync();
+            var items = await userList.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            foreach (var user in items)
             {
                 list.Add(Model.Extensions.User.FromDataModel(user));
             }
-            return list;
+
+            return new PaginatedCollection<User>(list, count, pageIndex, pageSize);
         }
 
         public static bool HasUserPermission(User user, StandardPermissionAttributes permissionAttribute, string attributeValue)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using System;
 using System.Collections;
@@ -60,7 +61,7 @@ namespace OCM.API.Common
         public List<Model.UserSubscription> GetUserSubscriptions(int userId)
         {
             var dataModel = new OCM.Core.Data.OCMEntities();
-            var list = dataModel.UserSubscriptions.Where(u => u.UserId == userId);
+            var list = dataModel.UserSubscriptions.Where(u => u.UserId == userId).AsNoTracking();
 
             var results = new List<Model.UserSubscription>();
 
