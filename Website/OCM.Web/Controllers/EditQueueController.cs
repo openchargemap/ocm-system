@@ -33,7 +33,7 @@ namespace OCM.MVC.Controllers
             {
                 editQueueManager.CleanupRedundantEditQueueitems();
 
-                return View();
+                return RedirectToAction("Index", "EditQueue");
             }
         }
 

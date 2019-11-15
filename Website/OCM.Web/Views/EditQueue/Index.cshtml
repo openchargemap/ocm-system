@@ -3,11 +3,17 @@
 
 @{
     ViewBag.Title = "Edit Queue";
+
+    var isUserAdmin = ViewBag.IsUserAdmin;
 }
 
 <h2>Edit Queue</h2>
 <p>The Edit Queue shows pending edits which have been proposed by other Open Charge Map users. Country Editors can see edits and approve or reject them here. The easiest way to approve new additions is using the <a href="@Url.Action("Index", "POI", new { submissionstatustypeid=1})">new locations awaiting approval</a> page.</p>
 
+@if (isUserAdmin)
+{
+    <a asp-action="Cleanup" class="btn btn-outline-primary">Auto Cleanup</a>
+}
 @Html.Partial("_EditQueueFilter", (EditQueueFilter)ViewBag.EditFilter)
 
 <p>Note: A maximum of 200 results will be shown:</p>
