@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OCM.API.Common.Model.User>
+﻿@model OCM.API.Utils.PaginatedCollection<OCM.API.Common.Model.User>
 
 @{
     ViewBag.Title = "Users";
@@ -6,79 +6,106 @@
 
 <h2>Users</h2>
 
+
+<form asp-action="Users" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by keyword: <input type="text" name="keyword" value="@ViewData["keyword"]" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </p>
+    </div>
+</form>
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Users"
+   asp-route-sortOrder="@ViewData["sortorder"]"
+   asp-route-pageIndex="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["keyword"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+
+
+Page @Model.PageIndex of @Model.TotalPages  - Total Results: @Model.TotalResults
+
+<a asp-action="Users"
+   asp-route-sortOrder="@ViewData["sortorder"]"
+   asp-route-pageIndex="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["keyword"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+
 <table class="table table-striped">
+
     <tr>
         <th></th>
         <th></th>
         <th>
-            @Html.DisplayNameFor(model => model.Username)
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]">Username</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IdentityProvider)
+            Reputation Points
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.Identifier)
-        </th>
-       
-        <th>
-            @Html.DisplayNameFor(model => model.ReputationPoints)
+            Permissions
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Permissions)
+            Created
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateCreated)
+            Last Login
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateLastLogin)
-        </th>
- <th></th>
-        
+        <th></th>
+
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @(item.EmailHash != null ? Html.Raw("<img src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />") : Html.Raw(""))
-        </td>
-        <td>
-            <a href="@Url.Action("View","Profile", new { id = item.ID })">Profile</a>
-        </td>
-        <td>
-            @if (item.IdentityProvider == "Twitter")
-            {
-                <a href="https://twitter.com/@item.Identifier" target="_blank">@Html.DisplayFor(modelItem => item.Username)</a>
-            }
-            else
-            {
-                @Html.DisplayFor(modelItem => item.Username)
-            }
-            <br />@Html.DisplayFor(modelItem => item.EmailAddress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdentityProvider)
-        </td>
-        <td style="overflow:hidden; max-width:120px;">
-            <a href="@Url.Action("EditUser", "Admin", new {id=item.ID })"> @Html.DisplayFor(modelItem => item.Identifier)</a>
-        </td>
-       
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.ReputationPoints)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Permissions)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateCreated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateLastLogin)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "EditUser", new { id = item.ID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @(item.EmailHash != null ? Html.Raw("<img src=\"" + OCM.Core.Util.SecurityHelper.GetGravatarURLFromHash(item.EmailHash) + "\" />") : Html.Raw(""))
+            </td>
+            <td>
+                <a href="@Url.Action("View","Profile", new { id = item.ID })">Profile</a>
+            </td>
+            <td>
+                @if (item.IdentityProvider == "Twitter")
+                {
+                    <a href="https://twitter.com/@item.Identifier" target="_blank">@Html.DisplayFor(modelItem => item.Username)</a>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Username)
+                }
+                <br />@Html.DisplayFor(modelItem => item.EmailAddress)
+
+                <br />
+                @Html.DisplayFor(modelItem => item.IdentityProvider)
+            </td>
+
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ReputationPoints)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Permissions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateLastLogin)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditUser", new { id = item.ID })
+            </td>
+        </tr>
+    }
 
 </table>

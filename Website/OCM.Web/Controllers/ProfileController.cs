@@ -75,7 +75,7 @@ namespace OCM.MVC.Controllers
             var user = userManager.GetUser(id);
             using (var refDataManager = new ReferenceDataManager())
             {
-                ViewBag.CountryList = new SelectList(refDataManager.GetCountries(true), "ID", "Title");
+                ViewBag.CountryList = new SelectList(refDataManager.GetCountries(false), "ID", "Title");
             }
             return View(user);
         }

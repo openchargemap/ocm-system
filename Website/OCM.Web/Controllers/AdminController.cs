@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using OCM.API.Utils;
 
 namespace OCM.MVC.Controllers
 {
@@ -35,11 +36,19 @@ namespace OCM.MVC.Controllers
             return View();
         }
 
+
+
         [Authorize(Roles = "Admin")]
-        public ActionResult Users()
+        public async Task<IActionResult> Users(string sortOrder, string keyword, int pageIndex=1, int pageSize=50)
         {
-            var userList = new UserManager().GetUsers().OrderByDescending(u => u.DateCreated);
+
+            ViewData["keyword"] = keyword;
+            ViewData["sortorder"] = sortOrder;
+
+            PaginatedCollection<API.Common.Model.User> userList = await new UserManager().GetUsers(sortOrder, keyword, pageIndex, pageSize);
             return View(userList);
+
+   
         }
 
         [Authorize(Roles = "Admin")]
