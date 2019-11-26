@@ -120,17 +120,36 @@ namespace OCM.Core.Util
 
         public static IEnumerable<OCM.API.Common.LatLon> SearchPolygonFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
         {
+            var searchPolygon = CreatePolygonFromPolyLine(points, distanceKM);
 
-            //TODO: validate refactored version
+         //   if (!searchPolygon.Shell.IsCCW) searchPolygon = searchPolygon.Reverse();
 
-            LineString polyLine = LineString.DefaultFactory.CreateLineString(points.Select(p=>new Coordinate((double)p.Latitude, (double)p.Longitude)).ToArray());
-
-            var searchPolygon = polyLine.Buffer(distanceKM) as Polygon;
-         
-            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.Coordinates.Select(p => new LatLon { Latitude = p.X, Longitude = p.Y }).ToList();
-            
+            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();   
 
             return polyPoints;
+        }
+
+        public static string SearchPolygonWKTFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
+        {
+            var searchPolygon = CreatePolygonFromPolyLine(points, distanceKM);
+            return searchPolygon.AsText();
+        }
+
+        /// <summary>
+        /// Simplifies provided polyline and expands into polygon containing the search distance as a buffer
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="distanceKM"></param>
+        /// <returns></returns>
+        private static Polygon CreatePolygonFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
+        {
+            var factory = new OgcCompliantGeometryFactory(); //helps make polygon shell counter clockwise
+            LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
+           
+            var searchPolygon = polyLine.Buffer(distanceKM / 2 / 100, points.Count) as Polygon;
+            searchPolygon = NetTopologySuite.Simplify.TopologyPreservingSimplifier.Simplify(searchPolygon, 0.001) as Polygon;
+
+            return searchPolygon;
         }
     }
 }

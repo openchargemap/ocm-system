@@ -71,7 +71,20 @@ namespace OCM.API
                 if (context.Request.UserAgent() != null)
                 {
                     var userAgent = context.Request.UserAgent().ToLower();
-                    if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot") || userAgent.Contains("kml-google") || userAgent.Contains("apache-httpclient") || userAgent.Equals("apache") || userAgent.StartsWith("nameofagent") || userAgent.StartsWith("php") || userAgent.Contains("okhttp/3.9.1")) // || userAgent.Contains("EVCompany") || userAgent.Contains("MOB30")
+                    if (
+                        userAgent.Contains("robot") 
+                        || userAgent.Contains("crawler") 
+                        || userAgent.Contains("spider") 
+                        || userAgent.Contains("slurp") 
+                        || userAgent.Contains("googlebot") 
+                        || userAgent.Contains("kml-google") 
+                        || userAgent.Contains("apache-httpclient") 
+                        || userAgent.Equals("apache") 
+                        || userAgent.StartsWith("nameofagent") 
+                        || userAgent.StartsWith("php") 
+                        || userAgent.Contains("okhttp/3.9.1")
+                        || userAgent.Contains("dart:io")
+                        ) // || userAgent.Contains("EVCompany") || userAgent.Contains("MOB30")
 
                     {
                         return true;

@@ -103,6 +103,7 @@ namespace OCM.Core.Data
 
     public class CacheProviderMongoDB
     {
+        private const int DefaultSearchDistance = 5;
         private MongoDatabase database = null;
         private MongoClient client = null;
         private MongoServer server = null;
@@ -168,13 +169,7 @@ namespace OCM.Core.Data
 
             var connectionString = ConfigurationManager.AppSettings["MongoDB_ConnectionString"].ToString();
             client = new MongoClient(connectionString);
-            server = client.GetServer();
             database = server.GetDatabase(ConfigurationManager.AppSettings["MongoDB_Database"]);
-            /*if (BsonSerializer.LookupSerializer(typeof(DateTime)) == null)
-            {
-                BsonSerializer.RegisterSerializer(typeof(DateTime),
-                 new DateTimeSerializer(DateTimeSerializationOptions.LocalInstance));
-            }*/
             status = GetMirrorStatus(false, false);
         }
 
@@ -240,7 +235,6 @@ namespace OCM.Core.Data
                 if (maxPOI != null) { dateLastModified = maxPOI.DateLastStatusUpdate.Value.AddMinutes(-10); }
 
                 //determine POI updated since last status update we have in cache
-                //db.poi.find().sort({DateLastStatusUpdate:-1})
                 var stopwatch = Stopwatch.StartNew();
 
                 //"AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User"
@@ -464,19 +458,6 @@ namespace OCM.Core.Data
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
                     var distinctPOI = poiCollection.Distinct("ID");
                     currentStatus.NumDistinctPOIs = distinctPOI.Count();
-
-                    /*
-                    string dupePOIs = "";
-                    foreach (var poi in poiCollection.FindAll())
-                    {
-                        var itemCount = poiCollection.Count(Query.EQ("ID", poi.ID));
-                        if (itemCount > 1)
-                        {
-                            dupePOIs += " " + poi.ID + " (" + itemCount + "),";
-                        }
-                    }
-                    currentStatus.Description += "Dupe POIs:"+dupePOIs;
-                     */
                 }
                 return currentStatus;
             }
@@ -564,13 +545,13 @@ namespace OCM.Core.Data
             {
                 requiresDistance = true;
 
-                if (settings.Distance == null) settings.Distance = 100;
+                if (settings.Distance == null) settings.Distance = DefaultSearchDistance;
                 searchPoint = GeoJson.Point(GeoJson.Geographic((double)settings.Longitude, (double)settings.Latitude));
             }
             else
             {
                 searchPoint = GeoJson.Point(GeoJson.Geographic(0, 0));
-                settings.Distance = 100;
+                if (settings.Distance == null) settings.Distance = DefaultSearchDistance;
             }
 
             //if distance filter provided in miles, convert to KM before use
@@ -652,12 +633,14 @@ namespace OCM.Core.Data
                     settings.Longitude = null;
 
                     double[,] pointList;
-                    //filter by locationwithin polylinne expanded to a polygon
-                    //TODO; conversion to Km if required
+
+                    //filter by location within polyline expanded to a polygon
+
                     IEnumerable<LatLon> searchPolygon = null;
 
                     if (settings.Polyline != null && settings.Polyline.Any())
                     {
+                        if (settings.Distance == null) settings.Distance = DefaultSearchDistance;
                         searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
                     }
 
@@ -696,13 +679,12 @@ namespace OCM.Core.Data
                 poiList = (from c in poiList
                            where
 
-                                       (c.AddressInfo != null) && //c.AddressInfo.Latitude != null && c.AddressInfo.Longitude != null && c.AddressInfo.CountryID != null)
+                                       (c.AddressInfo != null) &&
                                        ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
                                              || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
                                              || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
                                              ) //by default return live cps only, otherwise use specific submission statusid
                                        && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
-                                       //&& (settings.ChargePointID == null || (settings.ChargePointID!=null && (c.ID!=null && c.ID == settings.ChargePointID)))
                                        && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
                                        && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
                                        && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
@@ -723,11 +705,6 @@ namespace OCM.Core.Data
                 {
                     poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
                 }
-
-                //if (settings.LevelOfDetail != null && settings.LevelOfDetail > 1)
-                //{
-                //    poiList = poiList.Where(q => Query.Mod("ID", (int)settings.LevelOfDetail, 0).Inject());
-                //}
 
                 //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
                 if (settings.LevelOfDetail > 1)
@@ -808,14 +785,6 @@ namespace OCM.Core.Data
                                 c.CommentType = null;
                             }
                         }
-
-                        /* if (p.MediaItems != null)
-                         {
-                             foreach (var c in p.MediaItems)
-                             {
-                                 c.User = null;
-                             }
-                         }*/
                     }
                 }
 
