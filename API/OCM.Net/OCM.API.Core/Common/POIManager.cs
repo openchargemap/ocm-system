@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -21,7 +20,6 @@ namespace OCM.API.Common
         {
         }
     }
-
     public struct ValidationResult
     {
         public int? ItemId { get; set; }
@@ -206,8 +204,12 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> GetPOIList(APIRequestParams settings)
+        public List<Model.ChargePoint> GetPOIList(APIRequestParams filter)
         {
+
+            // clone filter settings to remove mutation side effects in callers
+            var settings = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filter));
+
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
             var stopwatch = Stopwatch.StartNew();
@@ -229,12 +231,10 @@ namespace OCM.API.Common
                     var cache = new CacheProviderMongoDB();
                     dataList = cache.GetPOIList(settings);
                 }
-                catch (Exception exp)
+                catch (Exception)
                 {
                     //failed to query mirror db, will now fallback to sql server if dataList is null
                     //mostly likely because cache is being refreshed while querying
-
-                    //if (HttpContext.Current != null) AuditLogManager.ReportWebException(HttpContext.Current.Server, AuditEventType.SystemErrorAPI, "POI Cache query exception:" + exp.ToString());
                 }
             }
 
@@ -252,10 +252,8 @@ namespace OCM.API.Common
                 }
 
                 dataList = new List<Model.ChargePoint>();
+
                 var dataModel = new OCMEntities();
-                // dataModel.Configuration.LazyLoadingEnabled = true;
-                // dataModel.Configuration.AutoDetectChangesEnabled = false;
-                //  ((IObjectContextAdapter)dataModel).ObjectContext.CommandTimeout = 180; //allow longer time for query to complete
 
                 //if distance filter provided in miles, convert to KM before use
                 if (settings.DistanceUnit == Model.DistanceUnit.Miles && settings.Distance != null)
@@ -316,18 +314,9 @@ namespace OCM.API.Common
 
                 if (settings.SubmissionStatusTypeID == -1) settings.SubmissionStatusTypeID = null;
 
-                //compile initial list of locations
+                // compile initial list of locations
                 // FIXME: lazy loading properties causes several queries per POI.
                 var chargePointList = from c in dataModel.ChargePoints
-                                      /* .Include(c => c.AddressInfo).ThenInclude(a => a.Country);
-                                       .Include(c => c.Operator)
-                                       .Include(c => c.DataProvider).ThenInclude(d => d.DataProviderStatusType)
-                                       .Include(c => c.UsageType)
-                                       .Include(c => c.StatusType)
-                                       .Include(c => c.SubmissionStatusType)*/
-
-                                      //.Include(c=>c.ConnectionInfoes).ThenInclude(d=>d.ConnectionType)
-                                      //.AsNoTracking()
                                       where
                                           (c.AddressInfo != null)
                                           && ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeId == null || c.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published))
@@ -374,7 +363,7 @@ namespace OCM.API.Common
                 }
 
                 ///////////
-                //filter by points along polyline or bounding box (TODO: polygon)
+                //filter by points along polyline or bounding box
                 if (
                     (settings.Polyline != null && settings.Polyline.Any())
                     || (settings.BoundingBox != null && settings.BoundingBox.Any())
@@ -385,12 +374,13 @@ namespace OCM.API.Common
                     settings.Latitude = null;
                     settings.Longitude = null;
 
-                    //filter by locationwithin polylinne expanded to a polygon
-                    //TODO; conversion to Km if required
-                    IEnumerable<LatLon> searchPolygon = null;
+                    //filter by location within polyline expanded to a polygon (by search distance)
 
+                    IEnumerable<LatLon> searchPolygon = null;
+                 
                     if (settings.Polyline != null && settings.Polyline.Any())
                     {
+                        if (settings.Distance == null) settings.Distance = 5;
                         searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
                     }
 
@@ -409,6 +399,7 @@ namespace OCM.API.Common
                     requiresDistance = false;
 
                     int numPoints = searchPolygon.Count();
+
                     string polygonText = "";
                     foreach (var p in searchPolygon)
                     {
@@ -416,7 +407,6 @@ namespace OCM.API.Common
 #if DEBUG
                         System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
 #endif
-
                         polygonText += ", ";
                     }
                     //close polygon
@@ -424,15 +414,12 @@ namespace OCM.API.Common
                     polygonText += closingPoint.Longitude + " " + closingPoint.Latitude;
 
                     string polygonWKT = "POLYGON((" + polygonText + "))";
-
 #if DEBUG
                     System.Diagnostics.Debug.WriteLine(polygonWKT);
 #endif
                     var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory).Read(polygonWKT);
                     chargePointList = chargePointList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
                 }
-
-                /////////////////
 
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
                 if (settings.ConnectionType != null || settings.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
@@ -502,7 +489,11 @@ namespace OCM.API.Common
                     if (requiresDistance && c.AddressInfo != null)
                     {
                         c.AddressInfo.Distance = item.DistanceKM;
-                        if (settings.DistanceUnit == Model.DistanceUnit.Miles && c.AddressInfo.Distance != null) c.AddressInfo.Distance = GeoManager.ConvertKMToMiles(c.AddressInfo.Distance);
+
+                        if (settings.DistanceUnit == Model.DistanceUnit.Miles && c.AddressInfo.Distance != null)
+                        {
+                            c.AddressInfo.Distance = GeoManager.ConvertKMToMiles(c.AddressInfo.Distance);
+                        }
                         c.AddressInfo.DistanceUnit = settings.DistanceUnit;
                     }
 
