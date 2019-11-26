@@ -47,8 +47,6 @@ namespace OCM.MVC.Controllers
 
             PaginatedCollection<API.Common.Model.User> userList = await new UserManager().GetUsers(sortOrder, keyword, pageIndex, pageSize);
             return View(userList);
-
-   
         }
 
         [Authorize(Roles = "Admin")]
@@ -122,6 +120,19 @@ namespace OCM.MVC.Controllers
                 return RedirectToAction("Operators", "Admin");
             }
             return View(operatorInfo);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisteredApplications(string sortOrder, string keyword, int pageIndex = 1, int pageSize = 50)
+        {
+
+            ViewData["keyword"] = keyword;
+            ViewData["sortorder"] = sortOrder;
+            using (var appManager = new RegisteredApplicationManager())
+            {
+                PaginatedCollection<API.Common.Model.RegisteredApplication> list = await appManager.Search(sortOrder, keyword, pageIndex, pageSize);
+                return View(list);
+            }
         }
 
         [Authorize(Roles = "Admin")]

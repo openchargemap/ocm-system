@@ -186,6 +186,7 @@
                         <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")">edit queue</a>
                         <a class="dropdown-item" href="@Url.Action("Users", "Admin")">users</a>
                         <a class="dropdown-item" href="@Url.Action("Operators", "Admin")">operators</a>
+                        <a class="dropdown-item" href="@Url.Action("RegisteredApplications", "Admin")">apps</a>
                         <div class="nav-divider"></div>
                         <a class="dropdown-item" href="@Url.Action("PollForTasks", "Admin", new { key = System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"] })">poll for system tasks</a>
                     </div>

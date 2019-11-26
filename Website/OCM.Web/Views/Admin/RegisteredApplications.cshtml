@@ -1,0 +1,89 @@
+﻿@model OCM.API.Utils.PaginatedCollection<OCM.API.Common.Model.RegisteredApplication>
+
+<h2>Registered Applications</h2>
+<p>The following applications are registered to use the Open Charge Map API and may submit changes to OCM depending on user permissions.</p>
+
+<form asp-action="RegisteredApplications" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by keyword: <input type="text" name="keyword" value="@ViewData["keyword"]" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </p>
+    </div>
+</form>
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="RegisteredApplications"
+   asp-route-sortOrder="@ViewData["sortorder"]"
+   asp-route-pageIndex="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["keyword"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+
+
+Page @Model.PageIndex of @Model.TotalPages  - Total Results: @Model.TotalResults
+
+<a asp-action="RegisteredApplications"
+   asp-route-sortOrder="@ViewData["sortorder"]"
+   asp-route-pageIndex="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["keyword"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+
+<table class="table table-striped">
+
+    <tr>
+        <th>
+            <a asp-action="RegisteredApplications" asp-route-sortOrder="@ViewData["TitleSort"]">Title</a>
+        </th>
+        <th>
+           Website
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Enabled
+        </th>
+        <th>
+            Created
+        </th>
+        
+        <th></th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+
+    <td>
+
+        @Html.DisplayFor(modelItem => item.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.WebsiteURL)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.IsEnabled)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "RegisteredApplication", new { id = item.ID })
+    </td>
+</tr>
+    }
+
+</table>
