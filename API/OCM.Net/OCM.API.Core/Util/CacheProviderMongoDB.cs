@@ -169,6 +169,7 @@ namespace OCM.Core.Data
 
             var connectionString = ConfigurationManager.AppSettings["MongoDB_ConnectionString"].ToString();
             client = new MongoClient(connectionString);
+            server = client.GetServer();
             database = server.GetDatabase(ConfigurationManager.AppSettings["MongoDB_Database"]);
             status = GetMirrorStatus(false, false);
         }
