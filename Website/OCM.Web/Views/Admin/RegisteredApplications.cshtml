@@ -81,7 +81,7 @@ Page @Model.PageIndex of @Model.TotalPages  - Total Results: @Model.TotalResults
         @Html.DisplayFor(modelItem => item.DateCreated)
     </td>
     <td>
-        @Html.ActionLink("Edit", "RegisteredApplication", new { id = item.ID })
+        @Html.ActionLink("Edit", "AppEdit", new { id = item.ID })
     </td>
 </tr>
     }

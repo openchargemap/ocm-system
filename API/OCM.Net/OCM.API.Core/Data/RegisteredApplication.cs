@@ -16,6 +16,7 @@ namespace OCM.Core.Data
         public string Description { get; set; }
         public bool IsEnabled { get; set; }
         public bool IsWriteEnabled { get; set; }
+        public bool IsPublicListing { get; set; }
         public string AppId { get; set; }
         public string PrimaryApikey { get; set; }
         public string DeprecatedApikey { get; set; }

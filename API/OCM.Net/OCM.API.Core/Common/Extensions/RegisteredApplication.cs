@@ -18,6 +18,7 @@ namespace OCM.API.Common.Model.Extensions
                 WebsiteURL = source.WebsiteUrl,
                 IsEnabled = source.IsEnabled,
                 IsWriteEnabled = source.IsWriteEnabled,
+                IsPublicListing = source.IsPublicListing,
                 DateCreated = source.DateCreated
             };
 

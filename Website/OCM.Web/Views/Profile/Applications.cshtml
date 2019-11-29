@@ -35,17 +35,21 @@ else
     <a asp-action="AppEdit" asp-controller="Profile" class="btn btn-primary">Register an Application</a>
 </p>
 <table class="table table-striped">
-    <tr><th>App</th><th>Website</th><th>Created</th><th>Enabled</th><th> API Key</th></tr>
+    <tr><th>App</th><th>Website</th><th>Created</th><th>Enabled</th><th>Public</th><th> API Key</th><th></th></tr>
     @foreach (var item in Model.RegisteredApplications)
     {
-        <tr>
-            <td>@item.Title</td>
-            <td>@item.WebsiteURL</td>
-            <td>@item.DateCreated</td>
-            <td>@item.IsEnabled</td>
-            <td>@item.PrimaryAPIKey</td>
+<tr>
+    <td>@item.Title</td>
+    <td>@item.WebsiteURL</td>
+    <td>@item.DateCreated</td>
+    <td>@item.IsEnabled</td>
+    <td>@item.IsPublicListing</td>
+    <td>@item.PrimaryAPIKey</td>
+    <td>
+        @Html.ActionLink("Edit", "AppEdit", new { id = item.ID })
+    </td>
 
-        </tr>
+</tr>
     }
 
 </table>

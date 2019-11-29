@@ -75,7 +75,7 @@ namespace OCM.API.Common
 
             if (update.ID > 0)
             {
-                item = dataModel.RegisteredApplications.FirstOrDefault(a => a.Id == update.ID && update.UserID==userId);
+                item = dataModel.RegisteredApplications.FirstOrDefault(a => a.Id == update.ID &&( userId == null || (userId!=null && update.UserID==userId)));
  
             } else
             {
@@ -89,8 +89,14 @@ namespace OCM.API.Common
 
             item.Title = update.Title;
             item.WebsiteUrl = update.WebsiteURL;
-            item.IsWriteEnabled = update.IsWriteEnabled;
             item.Description = update.Description;
+            item.IsPublicListing = update.IsPublicListing;
+
+            if (userId == null)
+            {
+                item.IsEnabled = update.IsEnabled;
+                item.IsWriteEnabled = update.IsWriteEnabled;
+            }
 
             if (item.Id == 0)
             {

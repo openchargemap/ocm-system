@@ -1,7 +1,7 @@
 ﻿@model OCM.API.Common.Model.RegisteredApplication
 
 
-@using (Html.BeginForm("AppEdit", "Profile", FormMethod.Post))
+@using (Html.BeginForm("AppEdit", ViewBag.IsAdmin==true?"Admin":"Profile", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -10,8 +10,14 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
         @Html.HiddenFor(model => model.DateCreated)
-        @Html.HiddenFor(model => model.IsEnabled)
+
         @Html.HiddenFor(model => model.UserID)
+
+        @if (ViewBag.IsAdmin != true)
+        {
+            @Html.HiddenFor(model => model.IsEnabled)
+            @Html.HiddenFor(model => model.IsWriteEnabled)
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -37,7 +43,37 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsPublicListing, htmlAttributes: new { @class = "control-label col-md-10" })
+            <div class="col-md-2">
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.IsPublicListing)
+                    @Html.ValidationMessageFor(model => model.IsPublicListing, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
 
+        @if (ViewBag.IsAdmin == true)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsEnabled, htmlAttributes: new { @class = "control-label col-md-10" })
+                <div class="col-md-2">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(model => model.IsEnabled)
+                        @Html.ValidationMessageFor(model => model.IsEnabled, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsWriteEnabled, htmlAttributes: new { @class = "control-label col-md-10" })
+                <div class="col-md-2">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(model => model.IsWriteEnabled)
+                        @Html.ValidationMessageFor(model => model.IsWriteEnabled, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        }
         <div class="form-actions">
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">

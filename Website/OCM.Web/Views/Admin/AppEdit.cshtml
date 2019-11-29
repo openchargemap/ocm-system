@@ -1,0 +1,10 @@
+﻿@model OCM.API.Common.Model.RegisteredApplication
+
+@{
+    ViewBag.Title = "Edit Application";
+}
+
+
+<h2>@if (Model.ID==0) {<text>Create New Application</text>} else {<text>Edit Application</text> }</h2>
+
+@Html.EditorFor(model=>model)

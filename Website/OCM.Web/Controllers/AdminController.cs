@@ -136,6 +136,46 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        public ActionResult AppEdit(int? id)
+        {
+            var app = new API.Common.Model.RegisteredApplication();
+            var userId = (int)UserID;
+            ViewBag.IsAdmin = true;
+
+            if (id != null)
+            {
+                using (var appManager = new RegisteredApplicationManager())
+                {
+                    app = appManager.GetRegisteredApplication((int)id, null);
+                }
+            }
+            else
+            {
+                app.UserID = userId;
+                app.IsEnabled = true;
+                app.IsWriteEnabled = true;
+            }
+
+            return View("AppEdit", app);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AppEdit(API.Common.Model.RegisteredApplication app)
+        {
+            ViewBag.IsAdmin = true;
+            if (ModelState.IsValid)
+            {
+
+                app = new RegisteredApplicationManager().UpdateRegisteredApplication(app, null);
+                return RedirectToAction("RegisteredApplications", "Admin");
+            }
+
+            return View(app);
+        }
+
+        [Authorize(Roles = "Admin")]
         public ActionResult CommentDelete(int id)
         {
             var commentManager = new UserCommentManager();
