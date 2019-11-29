@@ -41,17 +41,17 @@
 
         @if (Model.NumDistinctPOIs > 0)
         {
-            <dt>
-                @Html.DisplayNameFor(model => model.NumDistinctPOIs)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.NumDistinctPOIs)
+        </dt>
 
-            <dd>
-                <span class="@(Model.TotalPOIInCache!=Model.NumDistinctPOIs?"badge badge-danger":"")">
-                    @Html.DisplayFor(model => model.NumDistinctPOIs)
-                </span>
-            </dd>
+        <dd>
+            <span class="@(Model.TotalPOIInCache!=Model.NumDistinctPOIs?"badge badge-danger":"")">
+                @Html.DisplayFor(model => model.NumDistinctPOIs)
+            </span>
+        </dd>
         }
-        
+
         <dt>
             @Html.DisplayNameFor(model => model.LastUpdated)
         </dt>
@@ -59,15 +59,23 @@
         <dd>
             @Html.DisplayFor(model => model.LastUpdated)
         </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Server)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Server)
+        </dd>
         <dt>Mirror Enabled in Config</dt>
         <dd>
             @if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]))
             {
-                <text>Yes</text>
+            <text>Yes</text>
             }
             else
             {
-                <text>No</text>
+            <text>No</text>
             }
         </dd>
     </dl>

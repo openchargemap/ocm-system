@@ -13,20 +13,26 @@
     <div class="col-sm-8 col-xs-12">
         <article>
             <section>
-                
+
                 <h2 id="intro"><i class="fa fa-cogs"></i> The Open Charge Map API</h2>
                 <div class="alert alert-danger">Use of the OCM API is subject to <a href="@Url.Action("Terms","About")" class="alert-link">terms and conditions</a>. By using the API you indicate acceptance of these terms.</div>
 
                 <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
 
-                <p><em>API V3 (documentation last updated Jan 2018) - Please join the discussion forum to discuss development.</em></p>
+                <p><em>API V3 (documentation last updated Nov 2019)</em></p>
                 <h3>Service Base URL: </h3>
                 <p>
                     <code>@Html.Raw(apiBaseUrl)</code>
                 </p>
-                <!--<p>In addition you can test against a sandboxed copy of the API. Data submitted to the sandbox API is not preserved, making it ideal for testing write operations such as submitting comments or edits:</p>
-                <p><code>@Html.Raw(apiSandboxBaseUrl)</code></p>
-                    -->
+                <h4>Fair Usage Policy</h4>
+                <p>
+                    <strong class="text text-danger">The basic API is provided as a free service with no warranty or service level agreement. Providing this API to you costs us actual money for server resources and data transfer fees. See funding: <a href="">https://opencollective.com/openchargemap</a></strong>
+                </p>
+                <p>
+                    If you will be calling the API regularly (from an app or server) you should set your http User Agent header to a custom value identifying your app and you will need provide your API key as an 'X-API-Key' header (case sensitive). To obtain a free API key Sign In and choose 'my apps' from the profile menu.
+
+                    <strong>Do not 'crawl' the API, examples including systematically querying along a grid or along a route, downloading for each country or network operator individually. If you are unsure who to get teh results you need please post a question to our community forum: <a href="https://community.openchargemap.org/">https://community.openchargemap.org/</a></strong>
+                </p>
             </section>
 
             <section>

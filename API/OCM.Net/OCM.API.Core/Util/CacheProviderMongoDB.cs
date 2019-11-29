@@ -34,6 +34,8 @@ namespace OCM.Core.Data
         public long NumPOILastUpdated { get; set; }
 
         public int NumDistinctPOIs { get; set; }
+
+        public string Server { get; set; }
     }
 
     public class BenchmarkResult
@@ -167,7 +169,11 @@ namespace OCM.Core.Data
                 ; ;
             }
 
+#if DEBUG
             var connectionString = ConfigurationManager.AppSettings["MongoDB_ConnectionString"].ToString();
+#else
+            var connectionString = ConfigurationManager.AppSettings["MongoDB_ConnectionString_Prod"].ToString();
+#endif
             client = new MongoClient(connectionString);
             server = client.GetServer();
             database = server.GetDatabase(ConfigurationManager.AppSettings["MongoDB_Database"]);
@@ -283,9 +289,9 @@ namespace OCM.Core.Data
                    .Include(a1 => a1.UsageType)
                    .Include(a1 => a1.StatusType)
                    .Include(a1 => a1.MetadataValues)
-                        .ThenInclude(m=>m.MetadataFieldOption)
+                        .ThenInclude(m => m.MetadataFieldOption)
                    .Include(a1 => a1.UserComments)
-                        .ThenInclude(c=>c.User)
+                        .ThenInclude(c => c.User)
                     .Include(a1 => a1.UserComments)
                         .ThenInclude(c => c.CheckinStatusType)
                    .Include(a1 => a1.MediaItems)
@@ -460,6 +466,8 @@ namespace OCM.Core.Data
                     var distinctPOI = poiCollection.Distinct("ID");
                     currentStatus.NumDistinctPOIs = distinctPOI.Count();
                 }
+
+                currentStatus.Server = server.Settings.Server.Host + ":" + server.Settings.Server.Port;
                 return currentStatus;
             }
             catch (Exception exp)

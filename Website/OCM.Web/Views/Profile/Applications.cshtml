@@ -1,0 +1,59 @@
+﻿@model OCM.API.Common.Model.ApplicationSummary
+
+@{
+    ViewBag.Title = "My Applications";
+}
+
+<h2>Authorized Applications</h2>
+<p>
+    Some applications may request an 'access token' in order contribute to Open Charge Map as you without using your username and password.
+</p>
+@if (Model.AuthorizedApplications.Any())
+{
+    <p>The following applications are authorized to act as your account when posting content (check-ins, photos, edits) to Open Charge Map</p>
+
+
+    <div class="results-list">
+        @foreach (var item in Model.AuthorizedApplications)
+        {
+            <div class="result">
+                <h3>@item.RegisteredApplication.Title</h3>
+            </div>
+        }
+
+        }
+    </div>
+}
+else
+{
+    <p>There are no applications authorized to access your Open Charge Map account. </p>
+}
+<h2>My API Keys</h2>
+<p>
+    If you are a software developer you may need an API key to use the <a href="@Url.Action("API", "Develop")">Open Charge Map API</a>. You can manage your API keys here.
+
+    <a asp-action="AppEdit" asp-controller="Profile" class="btn btn-primary">Register an Application</a>
+</p>
+<table class="table table-striped">
+    <tr><th>App</th><th>Website</th><th>Created</th><th>Enabled</th><th> API Key</th></tr>
+    @foreach (var item in Model.RegisteredApplications)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.WebsiteURL</td>
+            <td>@item.DateCreated</td>
+            <td>@item.IsEnabled</td>
+            <td>@item.PrimaryAPIKey</td>
+
+        </tr>
+    }
+
+</table>
+
+@if (ViewBag.UserProfile != null)
+{
+    if (String.IsNullOrEmpty(((OCM.API.Common.Model.User)ViewBag.UserProfile).EmailAddress))
+    {
+        <div class="text text-danger">Your profile does not have an email address set. Your email address is required in order to notify you about API changes. <a href="@Url.Action("Edit","Profile")" class="alert-link">Edit Your Profile</a></div>
+    }
+}
