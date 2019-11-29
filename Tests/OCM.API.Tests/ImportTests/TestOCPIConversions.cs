@@ -11,7 +11,7 @@ namespace OCM.API.Tests
 {
     public class TestOCPIConversions
     {
-        [Fact]
+        [Fact(Skip ="Incomplete")]
         void CanConvertFromOCPI_Example()
         {
             var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -28,7 +28,7 @@ namespace OCM.API.Tests
             Assert.Single(poiResults);
         }
 
-        [Fact]
+        [Fact(Skip = "Incomplete")]
         void CanConvertFromOCPI_Fastned()
         {
             var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

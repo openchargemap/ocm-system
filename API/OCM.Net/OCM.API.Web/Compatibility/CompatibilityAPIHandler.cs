@@ -58,8 +58,6 @@ namespace OCM.API
 
         protected void ClearResponse(HttpContext context)
         {
-            //context.Response.ClearHeaders();
-            //context.Response.ClearContent();
             context.Response.Clear();
         }
 
@@ -84,7 +82,7 @@ namespace OCM.API
                         || userAgent.StartsWith("php") 
                         || userAgent.Contains("okhttp/3.9.1")
                         || userAgent.Contains("dart:io")
-                        ) // || userAgent.Contains("EVCompany") || userAgent.Contains("MOB30")
+                        ) 
 
                     {
                         return true;
@@ -123,6 +121,14 @@ namespace OCM.API
             }
 
             filter.ParseParameters(filter, paramList);
+
+            if (string.IsNullOrEmpty(filter.APIKey))
+            {
+                if (context.Request.Headers.ContainsKey("X-API-Key"))
+                {
+                    filter.APIKey = context.Request.Headers["X-API-Key"];
+                }
+            }
 
             //override ?v=2 etc if called via /api/v2/ or /api/v1
             if (APIBehaviourVersion > 0) filter.APIVersion = APIBehaviourVersion;
@@ -402,6 +408,14 @@ namespace OCM.API
                 paramList.Add(k.ToLower(), context.Request.Query[k]);
             }
             filter.ParseParameters(filter, paramList);
+            
+            if (string.IsNullOrEmpty(filter.APIKey))
+            {
+                if (context.Request.Headers.ContainsKey("X-API-Key"))
+                {
+                    filter.APIKey = context.Request.Headers["X-API-Key"];
+                }
+            }
 
             //override ?v=2 etc if called via /api/v2/ or /api/v1
             if (APIBehaviourVersion > 0) filter.APIVersion = APIBehaviourVersion;
@@ -875,13 +889,11 @@ namespace OCM.API
 
             ClearResponse(context);
 
-#if DEBUG
-            //   context.Response.AddHeader("Access-Control-Allow-Origin", "*");
-#endif
             if (!context.Response.Headers.ContainsKey("Access-Control-Allow-Origin"))
             {
                 SetAllowCrossSiteRequestOrigin(context);
             }
+
             context.Response.Headers.TryAdd("Allow", "POST,GET,PUT,OPTIONS");
 
             if (!String.IsNullOrEmpty(context.Request.Headers["Access-Control-Request-Headers"]))
@@ -892,7 +904,6 @@ namespace OCM.API
             if (context.Request.Method == "OPTIONS")
             {
                 context.Response.StatusCode = 200;
-                //context.ApplicationInstance.CompleteRequest();
                 return;
             }
             else
@@ -917,8 +928,6 @@ namespace OCM.API
             {
                 await PerformOutput(context);
             }
-
-            //context.ApplicationInstance.CompleteRequest();
         }
 
         private void SetAllowCrossSiteRequestOrigin(HttpContext context)

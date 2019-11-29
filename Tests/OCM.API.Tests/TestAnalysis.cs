@@ -12,7 +12,7 @@ namespace OCM.API.Tests
         [Fact]
         public void TestCountryPointMatch()
         {
-            var analysis = new OCM.Import.Analysis.SpatialAnalysis("");
+            var analysis = new OCM.Import.Analysis.SpatialAnalysis(@"C:\Temp\ocm\data\import\Shapefiles\World\ne_10m_admin_0_map_units.shp");
 
             var r1 = analysis.ClassifyPoint(38.58431244, -121.4956055);
             Assert.Equal(r1.CountryCode, "US");

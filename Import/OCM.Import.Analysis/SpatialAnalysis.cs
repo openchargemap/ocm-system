@@ -34,6 +34,8 @@ namespace OCM.Import.Analysis
 
         public SpatialAnalysis(string globalShapeFileDataPath)
         {
+            System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             string dataPath = globalShapeFileDataPath;
             fsWorldCountries = FeatureSet.Open(dataPath);
             fsWorldCountries.Reproject(DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984);

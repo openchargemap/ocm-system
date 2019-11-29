@@ -21,12 +21,9 @@ namespace OCM.API.Tests
         [Fact]
         public void FilterOnChargePointID()
         {
-
-            var myConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
-
             var api = new OCM.API.Common.POIManager();
             var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, ChargePointIDs = new int[] { 23190 } });
-            Assert.Equal(1, results.Count);
+            Assert.True(results.Count == 1, "Should return a single result");
 
             var poi = results.FirstOrDefault();
             Assert.NotNull(poi);
@@ -38,17 +35,184 @@ namespace OCM.API.Tests
         [Fact]
         public void ReturnPOIResults()
         {
-
-            //var myConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
-
             var api = new OCM.API.Common.POIManager();
             var results = api.GetPOIList(new Common.APIRequestParams { EnableCaching = false, IsVerboseOutput = false });
             Assert.True(results.Count > 0);
 
             var poi = results.FirstOrDefault();
             Assert.NotNull(poi);
-
         }
+
+        [Fact]
+        public void ReturnPOIResultsAroundPointWithDistanceLimit()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            // mongodb cache results
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = 5,
+                Latitude = 51.5077,
+                Longitude = -0.134
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count > 0);
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            Assert.True(AreResultsNearPolyline(
+                new List<Common.LatLon> { new Common.LatLon { Latitude = 51.507729, Longitude = -0.13457 } },
+                searchParams,
+                cacheResults),
+                "One or more POIs in result set are not near the polyline");
+
+            // database results
+            searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = false,
+                AllowDataStoreDB = true,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = 5,
+                Latitude = 51.5077,
+                Longitude = -0.134
+            };
+            var dbresults = api.GetPOIList(searchParams);
+            Assert.True(dbresults.Count > 0);
+
+            poi = dbresults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            Assert.True(AreResultsNearPolyline(
+                new List<Common.LatLon> { new Common.LatLon { Latitude = 51.507729, Longitude = -0.13457 } },
+                searchParams,
+                cacheResults),
+                "One or more POIs in result set are not near the polyline");
+
+            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+        }
+
+        [Fact]
+        public void ReturnPOIResultsAroundPointNoDistanceLimit()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            // mongodb cache results
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = null,
+                MaxResults = 20,
+                Latitude = 51.5077,
+                Longitude = -0.134
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count > 0);
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            // database results
+            searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = false,
+                AllowDataStoreDB = true,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = null,
+                MaxResults = 20,
+                Latitude = 51.5077,
+                Longitude = -0.134
+            };
+            var dbresults = api.GetPOIList(searchParams);
+            Assert.True(dbresults.Count > 0);
+
+            poi = dbresults.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+        }
+
+        [Fact]
+        public void ReturnPOIResultsInBoundingBox()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            // mongodb cache results
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                IsCompactOutput = true,
+                MaxResults = 100000,
+                BoundingBox = new List<Common.LatLon> {
+                    new Common.LatLon { Latitude= 51.45580747856863, Longitude = -0.27510331130017107 } ,
+                    new Common.LatLon { Latitude = 51.53701250046424, Longitude =  0.009162470112983101 }
+                }
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count > 0);
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            // ensure all points are within the bounding box
+            var bbox = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(searchParams.BoundingBox);
+
+            foreach (var p in cacheResults)
+            {
+                Assert.True(bbox.Intersects(new NetTopologySuite.Geometries.Point(p.AddressInfo.Longitude, p.AddressInfo.Latitude)));
+            }
+
+            // database results
+            searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = false,
+                AllowDataStoreDB = true,
+                IsVerboseOutput = false,
+                IsCompactOutput = true,
+                MaxResults = 100000,
+                BoundingBox = new List<Common.LatLon> {
+                    new Common.LatLon { Latitude= 51.45580747856863, Longitude = -0.27510331130017107 } ,
+                    new Common.LatLon { Latitude = 51.53701250046424, Longitude =  0.009162470112983101 }
+                }
+            };
+
+            var dbresults = api.GetPOIList(searchParams);
+            Assert.True(dbresults.Count > 0);
+
+            poi = dbresults.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            // ensure all points are within the bounding box
+            bbox = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(searchParams.BoundingBox);
+
+            foreach (var p in cacheResults)
+            {
+                Assert.True(bbox.Intersects(new NetTopologySuite.Geometries.Point(p.AddressInfo.Longitude, p.AddressInfo.Latitude)));
+            }
+
+
+            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+        }
+
 
         [Fact]
         public void ReturnPOIResultsAlongSimplePolyline()
@@ -119,6 +283,9 @@ namespace OCM.API.Tests
 
         private static bool AreResultsNearPolyline(List<Common.LatLon> polyline, Common.APIRequestParams searchParams, List<Common.Model.ChargePoint> results)
         {
+
+            if (searchParams.Distance == null) throw new Exception("Distance filter not specified, cannot check if near points");
+
             bool areAllResultsNearLine = true;
 
             foreach (var r in results)

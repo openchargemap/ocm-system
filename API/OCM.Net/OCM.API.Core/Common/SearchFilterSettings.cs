@@ -74,7 +74,15 @@ namespace OCM.API.Common
 
         public bool IsEnvelopedResponse { get; set; }
 
-        public bool AllowMirrorDB { get; set; } //if true, api will try to use mongodb to read
+        /// <summary>
+        /// if true, api will try to use mongodb to query
+        /// </summary>
+        public bool AllowMirrorDB { get; set; }
+
+        /// <summary>
+        /// if true, api will try to use backing store database (SQL) to query
+        /// </summary>
+        public bool AllowDataStoreDB { get; set; }
 
         public bool? IsOpenData { get; set; }
 
@@ -136,6 +144,7 @@ namespace OCM.API.Common
             IsVerboseOutput = true;
             IsCompactOutput = false;
             AllowMirrorDB = true;
+            AllowDataStoreDB = true;
         }
 
         public bool IsLegacyAPICall

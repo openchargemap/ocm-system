@@ -145,11 +145,18 @@ namespace OCM.Core.Util
         {
             var factory = new OgcCompliantGeometryFactory(); //helps make polygon shell counter clockwise
             LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
-           
+       
             var searchPolygon = polyLine.Buffer(distanceKM / 2 / 100, points.Count) as Polygon;
             searchPolygon = NetTopologySuite.Simplify.TopologyPreservingSimplifier.Simplify(searchPolygon, 0.001) as Polygon;
 
             return searchPolygon;
+        }
+
+        public static Geometry ConvertPointsToBoundingBox(List<LatLon> boundingBoxPoints)
+        {
+            var factory = new NetTopologySuite.Geometries.OgcCompliantGeometryFactory(); //helps make polygon shell counter clockwise
+            var polyLine = factory.CreateLineString(boundingBoxPoints.Select(p => new NetTopologySuite.Geometries.Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
+            return polyLine.Envelope;
         }
     }
 }

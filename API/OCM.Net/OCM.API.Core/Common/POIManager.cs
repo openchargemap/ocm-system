@@ -31,6 +31,9 @@ namespace OCM.API.Common
 
     public class POIManager
     {
+        private const int DefaultPolylineSearchDistanceKM = 5;
+        private const int DefaultLatLngSearchDistanceKM = 1000;
+
         public bool LoadUserComments = false;
         public POIManager()
         {
@@ -213,15 +216,12 @@ namespace OCM.API.Common
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
             var stopwatch = Stopwatch.StartNew();
-            stopwatch.Start();
 
-            string enableCaching = System.Configuration.ConfigurationManager.AppSettings["EnableInMemoryCaching"];
-            bool cachingConfigEnabled = bool.Parse(enableCaching);
-            if (cachingConfigEnabled == false) settings.EnableCaching = false;
+            bool enableCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableInMemoryCaching"].ToString());
+            if (enableCaching == false) settings.EnableCaching = false;
 
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
-
 
             bool enableNoSQLCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]);
             if (enableNoSQLCaching && settings.AllowMirrorDB)
@@ -231,15 +231,16 @@ namespace OCM.API.Common
                     var cache = new CacheProviderMongoDB();
                     dataList = cache.GetPOIList(settings);
                 }
-                catch (Exception)
+                catch (Exception exp)
                 {
                     //failed to query mirror db, will now fallback to sql server if dataList is null
                     //mostly likely because cache is being refreshed while querying
+                    System.Diagnostics.Debug.WriteLine("Failed to query MongoDB cache: " + exp.ToString());
                 }
             }
 
             //if dataList is null we didn't get any cache DB results, use SQL DB
-            if (dataList == null)
+            if (dataList == null && settings.AllowDataStoreDB)
             {
                 int maxResults = settings.MaxResults;
                 this.LoadUserComments = settings.IncludeComments;
@@ -248,7 +249,6 @@ namespace OCM.API.Common
                 if (settings.Latitude != null && settings.Longitude != null)
                 {
                     requiresDistance = true;
-                    //maxResults = 10000; //TODO find way to prefilter on distance.
                 }
 
                 dataList = new List<Model.ChargePoint>();
@@ -377,16 +377,21 @@ namespace OCM.API.Common
                     //filter by location within polyline expanded to a polygon (by search distance)
 
                     IEnumerable<LatLon> searchPolygon = null;
-                 
+
                     if (settings.Polyline != null && settings.Polyline.Any())
                     {
-                        if (settings.Distance == null) settings.Distance = 5;
+                        if (settings.Distance == null) settings.Distance = DefaultPolylineSearchDistanceKM;
                         searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
                     }
 
                     if (settings.BoundingBox != null && settings.BoundingBox.Any())
                     {
-                        searchPolygon = settings.BoundingBox;
+
+                        var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(settings.BoundingBox)
+                                            .Coordinates
+                                            .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+
+                        searchPolygon = polyPoints;
                     }
 
                     if (settings.Polygon != null && settings.Polygon.Any())
@@ -440,6 +445,7 @@ namespace OCM.API.Common
                 if (requiresDistance && settings.Latitude != null && settings.Longitude != null)
                 {
                     searchPos = geometryFactory.CreatePoint(new NetTopologySuite.Geometries.Coordinate((double)settings.Longitude, (double)settings.Latitude));
+                    if (settings.Distance == null) settings.Distance = DefaultLatLngSearchDistanceKM;
                 }
 
                 //compute/filter by distance (if required)
@@ -532,6 +538,12 @@ namespace OCM.API.Common
 
             }
 
+            if (dataList == null)
+            {
+                // no results
+                dataList = new List<Model.ChargePoint>();
+            }
+
             System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
 
             return dataList.Take(settings.MaxResults).ToList();
@@ -587,7 +599,7 @@ namespace OCM.API.Common
         {
 
             //determine if the basic CP details are valid as a submission or edit
-            if (cp.AddressInfo == null) return new ValidationResult { IsValid = false, Message = "AddressInfo is required", Item=cp };
+            if (cp.AddressInfo == null) return new ValidationResult { IsValid = false, Message = "AddressInfo is required", Item = cp };
 
             if (String.IsNullOrEmpty(cp.AddressInfo.Title)) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Title", Item = cp }; ;
 

@@ -105,7 +105,8 @@ namespace OCM.Core.Data
 
     public class CacheProviderMongoDB
     {
-        private const int DefaultSearchDistance = 5;
+        private const int DefaultPolylineSearchDistanceKM = 5;
+        private const int DefaultLatLngSearchDistanceKM = 1000;
         private MongoDatabase database = null;
         private MongoClient client = null;
         private MongoServer server = null;
@@ -553,14 +554,11 @@ namespace OCM.Core.Data
             if (settings.Latitude != null && settings.Longitude != null)
             {
                 requiresDistance = true;
-
-                if (settings.Distance == null) settings.Distance = DefaultSearchDistance;
                 searchPoint = GeoJson.Point(GeoJson.Geographic((double)settings.Longitude, (double)settings.Latitude));
             }
             else
             {
                 searchPoint = GeoJson.Point(GeoJson.Geographic(0, 0));
-                if (settings.Distance == null) settings.Distance = DefaultSearchDistance;
             }
 
             //if distance filter provided in miles, convert to KM before use
@@ -649,13 +647,18 @@ namespace OCM.Core.Data
 
                     if (settings.Polyline != null && settings.Polyline.Any())
                     {
-                        if (settings.Distance == null) settings.Distance = DefaultSearchDistance;
+                        if (settings.Distance == null) settings.Distance = DefaultPolylineSearchDistanceKM;
                         searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
                     }
 
                     if (settings.BoundingBox != null && settings.BoundingBox.Any())
                     {
-                        searchPolygon = settings.BoundingBox;
+                        // bounding box points could be in any order, so normalise here:
+                        var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(settings.BoundingBox)
+                                            .Coordinates
+                                            .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+
+                        searchPolygon = polyPoints;
                     }
 
                     if (settings.Polygon != null && settings.Polygon.Any())
@@ -681,6 +684,7 @@ namespace OCM.Core.Data
                     if (requiresDistance)
                     {
                         //filter by distance from lat/lon first
+                        if (settings.Distance == null) settings.Distance = DefaultLatLngSearchDistanceKM;
                         poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject());//.Take(settings.MaxResults);
                     }
                 }
