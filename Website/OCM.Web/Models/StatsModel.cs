@@ -18,5 +18,8 @@ namespace OCM.MVC.Models
         public GeneralStats TotalActiveContributors { get; set; }//TotalChangeContributorsLast90Days
         public GeneralStats TotalCommentContributors { get; set; }//TotalCommentContributorsLast90Days
         public GeneralStats TotalPhotoContributors { get; set; }//TotalPhotoContributorsLast90Days
+
+        public int TotalLocations { get; set; }
+        public int TotalStations { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace OCM.MVC.Controllers
     public class StatsController : Controller
     {
         // GET: Stats
-        // [OutputCache(Duration = 60)] //can't cache as user options won't be rendered
+        [ResponseCache(Duration = 60)] 
         public ActionResult Index()
         {
             var dataSummary = new DataSummaryManager();
@@ -32,6 +32,9 @@ namespace OCM.MVC.Controllers
             model.TotalCommentContributors = dataSummary.GetStatSingle("TotalCommentContributorsLast90Days");
             model.TotalPhotoContributors = dataSummary.GetStatSingle("TotalPhotoContributorsLast90Days");
 
+            var countryStats = dataSummary.GetAllCountryStats();
+            model.TotalLocations = countryStats.Sum(c=>c.LocationCount);
+            model.TotalStations = countryStats.Sum(c => c.StationCount);
             return View(model);
         }
     }
