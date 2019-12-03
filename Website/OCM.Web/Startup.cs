@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,8 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataProtection().SetApplicationName("OCM.Web");
+
             services.AddDistributedSqlServerCache(options =>
             {
                 options.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString;
