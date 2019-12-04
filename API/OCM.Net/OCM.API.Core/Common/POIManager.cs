@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using OCM.Core.Data;
+using OCM.Core.Util;
 
 namespace OCM.API.Common
 {
@@ -35,16 +36,17 @@ namespace OCM.API.Common
         private const int DefaultLatLngSearchDistanceKM = 1000;
 
         public bool LoadUserComments = false;
+
         public POIManager()
         {
             LoadUserComments = false;
         }
 
-        public POIDetailsCache GetFromCache(int id)
+        public POIDetailsCache GetFromCache(int id, string path)
         {
             try
             {
-                string cachePath = System.Configuration.ConfigurationManager.AppSettings["CachePath"] + "\\POI_" + id + ".json";
+                string cachePath = path + "\\POI_" + id + ".json";
                 if (System.IO.File.Exists(cachePath))
                 {
                     POIDetailsCache cachedPOI = JsonConvert.DeserializeObject<POIDetailsCache>(System.IO.File.ReadAllText(cachePath));
@@ -59,11 +61,11 @@ namespace OCM.API.Common
             return null;
         }
 
-        public void CachePOIDetails(Model.ChargePoint poi, List<Model.ChargePoint> nearbyPOI = null)
+        public void CachePOIDetails(string path, Model.ChargePoint poi, List<Model.ChargePoint> nearbyPOI = null)
         {
             try
             {
-                string cachePath = System.Configuration.ConfigurationManager.AppSettings["CachePath"] + "\\POI_" + poi.ID + ".json";
+                string cachePath = path + "\\POI_" + poi.ID + ".json";
                 if (!System.IO.File.Exists(cachePath))
                 {
                     POIDetailsCache cachedPOI = new POIDetailsCache { POI = poi, DateCached = DateTime.UtcNow, POIListNearby = nearbyPOI };
@@ -133,23 +135,8 @@ namespace OCM.API.Common
                 var dataModel = new OCMEntities();
                 var item = dataModel.ChargePoints.Find(id);
 
-                if (allowDiskCache)
-                {
-                    var poiCache = GetFromCache(id);
-                    if (poiCache != null && poiCache.POI.DateLastStatusUpdate == item.DateLastStatusUpdate)
-                    {
-                        //found a cached version of POI which is up to date
-                        return poiCache.POI;
-                    }
-                }
-
                 var poi = Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
 
-                if (allowDiskCache && poi != null)
-                {
-                    //cache results
-                    CachePOIDetails(poi);
-                }
                 return poi;
             }
             catch (Exception)
@@ -217,14 +204,12 @@ namespace OCM.API.Common
 
             var stopwatch = Stopwatch.StartNew();
 
-            bool enableCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableInMemoryCaching"].ToString());
-            if (enableCaching == false) settings.EnableCaching = false;
+            settings.EnableCaching = false;
 
             string cacheKey = settings.HashKey;
             List<Model.ChargePoint> dataList = null;
 
-            bool enableNoSQLCaching = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]);
-            if (enableNoSQLCaching && settings.AllowMirrorDB)
+            if (settings.AllowMirrorDB)
             {
                 try
                 {
@@ -472,11 +457,11 @@ namespace OCM.API.Common
                 if (requiresDistance)
                 {
                     //if distance was a required output, sort results by distance
-                    filteredList = filteredList.OrderBy(d => d.DistanceKM).Take(settings.MaxResults);
+                    filteredList = filteredList.OrderBy(d => d.DistanceKM);
                 }
                 else
                 {
-                    filteredList = filteredList.OrderByDescending(p => p.c.DateCreated);
+                    filteredList = filteredList.OrderByDescending(p => p.c.Id);
                 }
 
                 var additionalFilteredList = filteredList.Take(maxResults).ToList();
@@ -546,7 +531,7 @@ namespace OCM.API.Common
 
             System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
 
-            return dataList.Take(settings.MaxResults).ToList();
+            return dataList;
         }
 
         /// <summary>

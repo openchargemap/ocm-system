@@ -530,10 +530,13 @@ namespace OCM.Core.Data
 
         public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
-            var stopwatch = Stopwatch.StartNew();
+           
 
             bool freshCache = false;
             int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
+
+            var stopwatch = Stopwatch.StartNew();
+
             if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
             {
                 freshCache = true;
@@ -753,7 +756,7 @@ namespace OCM.Core.Data
                 if (!requiresDistance || (settings.Latitude == null || settings.Longitude == null))
                 {
                     //distance is not required or can't be provided
-                    results = poiList.OrderByDescending(p => p.DateCreated).Take(settings.MaxResults).ToList();
+                    results = poiList.OrderByDescending(p => p.ID).Take(settings.MaxResults).ToList(); //OrderByDescending(p => p.DateCreated).
                 }
                 else
                 {
