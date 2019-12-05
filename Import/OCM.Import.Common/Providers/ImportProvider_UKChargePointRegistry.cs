@@ -325,11 +325,11 @@ namespace OCM.Import.Providers
                         if (cp.Connections == null)
                         {
                             cp.Connections = new List<ConnectionInfo>();
-                            if (!IsConnectionInfoBlank(cinfo))
-                            {
-                                //TODO: skip items with blank address info
-                                cp.Connections.Add(cinfo);
-                            }
+                        } 
+                        if (!IsConnectionInfoBlank(cinfo))
+                        {
+                            //TODO: skip items with blank address info
+                            cp.Connections.Add(cinfo);
                         }
                     }
                 }
