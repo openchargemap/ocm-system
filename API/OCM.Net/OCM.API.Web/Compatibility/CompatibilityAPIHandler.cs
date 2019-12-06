@@ -457,6 +457,12 @@ namespace OCM.API
                 }
             }
 
+            if (_settings.IsCacheOnlyMode)
+            {
+                filter.AllowMirrorDB = true;
+                filter.AllowDataStoreDB = false;
+            }
+
             if (IsRequestByRobot(context))
             {
                 await OutputBadRequestMessage(context, "API requests by robots are temporarily disabled.", statusCode: 503);
