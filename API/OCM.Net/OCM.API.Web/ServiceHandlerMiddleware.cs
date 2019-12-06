@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using OCM.Core.Settings;
 using System.Threading.Tasks;
 namespace OCM.API.Web.Standard
 {
@@ -8,8 +10,13 @@ namespace OCM.API.Web.Standard
     {
         private readonly RequestDelegate _next;
 
-        public CompatibilityAPIMiddleware(RequestDelegate next)
+        private CoreSettings _settings;
+
+        public CompatibilityAPIMiddleware(RequestDelegate next, IConfiguration config)
         {
+            _settings = new CoreSettings();
+            config.GetSection("CoreSettings").Bind(_settings);
+
             _next = next;
         }
 
@@ -22,7 +29,7 @@ namespace OCM.API.Web.Standard
 
             if (!context.Request.Path.ToString().StartsWith("/v4/"))
             {
-                await new CompatibilityAPICoreHTTPHandler().ProcessRequest(context);
+                await new CompatibilityAPICoreHTTPHandler(_settings).ProcessRequest(context);
             }
             else
             {

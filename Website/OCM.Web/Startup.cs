@@ -23,6 +23,12 @@ namespace OCM.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            // use config to init the default caching provider instance
+            var settings = new Core.Settings.CoreSettings();
+            configuration.GetSection("CoreSettings").Bind(settings);
+
+            Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
         }
 
         public IConfiguration Configuration { get; }

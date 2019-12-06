@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using OCM.Core.Settings;
 
 namespace OCM.MVC.Controllers
 {
@@ -21,10 +23,14 @@ namespace OCM.MVC.Controllers
         // GET: /POI/
         private IHostEnvironment _host;
         private IMemoryCache _cache;
-        public POIController(IHostEnvironment host, IMemoryCache memoryCache)
+
+        private CoreSettings _settings;
+        public POIController(IHostEnvironment host, IMemoryCache memoryCache, IConfiguration config)
         {
             _host = host;
             _cache = memoryCache;
+
+            _settings = GetSettingsFromConfig(config);
         }
 
         public ActionResult Index(POIBrowseModel filter)
@@ -86,7 +92,7 @@ namespace OCM.MVC.Controllers
                 else
                 {
                     //attempt to geocode
-                    var geocode = new GeocodingHelper();
+                    var geocode = new GeocodingHelper(_settings);
                     string searchCountryName = null;
                     if (filter.CountryIDs != null && filter.CountryIDs.Count() > 0)
                     {

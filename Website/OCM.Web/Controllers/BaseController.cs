@@ -3,12 +3,22 @@ using System.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Session;
+using Microsoft.Extensions.Configuration;
 using OCM.API.Common;
+using OCM.Core.Settings;
 
 namespace OCM.MVC.Controllers
 {
     public class BaseController : Controller
     {
+
+        public static CoreSettings GetSettingsFromConfig(IConfiguration config)
+        {
+            var settings = new CoreSettings();
+            config.GetSection("CoreSettings").Bind(settings);
+            return settings;
+        }
+
         public bool IsReadOnlyMode
         {
             get

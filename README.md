@@ -45,3 +45,19 @@ Please contribute in any way you can:
     - Sample Code for developers
     - Graphic Design
     - Testing
+
+
+	### Linux build
+	- Install dotnet core 3.x sdk for your system (~350MB), check with `dotnet --version`
+		- `sudo snap install dotnet-sdk --channel=3.1/stable --classic`
+	- Install latest monogdb for your system, set service to run on startup
+	`git clone https://github.com/openchargemap/ocm-system`
+	
+	- `cd ocm-system/API/OCM.Net/OCM.API.Web`
+	- `dotnet build`
+
+	To run API server on port 5000 bound to default public network interface:
+	- `dotnet run --urls http://0.0.0.0:5000`
+
+
+

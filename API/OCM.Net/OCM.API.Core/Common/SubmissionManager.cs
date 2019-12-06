@@ -300,7 +300,7 @@ namespace OCM.API.Common
             catch (Exception exp)
             {
                 System.Diagnostics.Debug.WriteLine(exp.ToString());
-                AuditLogManager.ReportWebException(null, AuditEventType.SystemErrorWeb, "POI Submission Failed", exp);
+                AuditLogManager.ReportWebException(true, null, AuditEventType.SystemErrorWeb, "POI Submission Failed", exp);
 
                 //error performing submission
                 return new ValidationResult { IsValid = false, Message = "Submission Failed with an Exception: " + exp.Message };

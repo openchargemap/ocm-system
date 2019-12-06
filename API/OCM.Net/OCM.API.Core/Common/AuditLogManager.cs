@@ -23,7 +23,7 @@ namespace OCM.API.Common
 
     public class AuditLogManager
     {
-        public static void ReportWebException(string contextUrl, AuditEventType eventType, string msg = null, Exception exp = null)
+        public static void ReportWebException(bool enableNotifications, string contextUrl, AuditEventType eventType, string msg = null, Exception exp = null)
         {
             bool ignoreException = false;
             string body = "An error has occurred while a user was browsing OCM:<br><br>";
@@ -65,7 +65,7 @@ namespace OCM.API.Common
 
             if (!ignoreException)
             {
-                if (ConfigurationManager.AppSettings["EnableErrorNotifications"] == "true")
+                if (enableNotifications)
                 {
                     NotificationManager notification = new NotificationManager();
 

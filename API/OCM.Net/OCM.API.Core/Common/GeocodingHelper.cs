@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
+using OCM.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -89,6 +90,13 @@ namespace OCM.API.Common
 
         public bool IncludeQueryURL { get; set; }
 
+        private CoreSettings _settings;
+
+        public GeocodingHelper(CoreSettings settings)
+        {
+            _settings = settings;
+        }
+
         /* public GeocodingResult GeolocateAddressInfo_Google(AddressInfo address)
          {
              var result = GeolocateAddressInfo_Google(address.ToString());
@@ -110,9 +118,12 @@ namespace OCM.API.Common
             GeocodingResult result = new GeocodingResult();
             result.Service = "MapQuest Open";
 
-            string url = "http://open.mapquestapi.com/geocoding/v1/reverse?location=" + latitude + "," + longitude + "&key=" + ConfigurationManager.AppSettings["MapQuestOpen_API_Key"];
+            string url = "http://open.mapquestapi.com/geocoding/v1/reverse?location=" + latitude + "," + longitude + "&key=" + _settings.ApiKeys.MapQuestOpenAPIKey;
+
             if (IncludeQueryURL) result.QueryURL = url;
+
             string data = "";
+
             try
             {
                 WebClient client = new WebClient();
@@ -197,7 +208,7 @@ namespace OCM.API.Common
             GeocodingResult result = new GeocodingResult();
             result.Service = "MapQuest Open";
 
-            string url = "https://open.mapquestapi.com/geocoding/v1/address?key=" + ConfigurationManager.AppSettings["MapQuestOpen_API_Key"] + "&location=" + Uri.EscapeDataString(address.ToString());
+            string url = "https://open.mapquestapi.com/geocoding/v1/address?key=" + _settings.ApiKeys.MapQuestOpenAPIKey + "&location=" + Uri.EscapeDataString(address.ToString());
             if (IncludeQueryURL) result.QueryURL = url;
 
             string data = "";
@@ -260,7 +271,7 @@ namespace OCM.API.Common
             }
             else
             {
-                string url = "https://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + ConfigurationManager.AppSettings["OSM_API_Key"];
+                string url = "https://nominatim.openstreetmap.org/search?q=" + address.ToString() + "&format=json&polygon=0&addressdetails=1&email=" + _settings.ApiKeys.OSMApiKey;
 
                 if (IncludeQueryURL) result.QueryURL = url;
 

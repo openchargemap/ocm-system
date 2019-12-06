@@ -11,6 +11,7 @@ using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using OCM.API.InputProviders;
 using OCM.API.OutputProviders;
+using OCM.Core.Settings;
 
 namespace OCM.API
 {
@@ -49,11 +50,15 @@ namespace OCM.API
         /// </summary>
         protected bool IsQueryByPost { get; set; }
 
-        public CompatibilityAPICoreHTTPHandler()
+        private CoreSettings _settings;
+
+        public CompatibilityAPICoreHTTPHandler(CoreSettings settings)
         {
             APIBehaviourVersion = 0;
             DefaultAction = null;
             IsQueryByPost = false;
+
+            _settings = settings;
         }
 
         protected void ClearResponse(HttpContext context)
@@ -103,7 +108,7 @@ namespace OCM.API
         /// <param name="context"></param>
         private async Task PerformInput(HttpContext context)
         {
-            if (!bool.Parse(ConfigurationManager.AppSettings["EnableDataWrites"]))
+            if (!_settings.EnableDataWrites)
             {
                 await OutputBadRequestMessage(context, "API is read only. Submissions not currently being accepted.");
                 return;
@@ -791,7 +796,7 @@ namespace OCM.API
                 //context.Cache.Add("Geocoding_" + filter.HashKey, result, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
             }*/
 
-            var geocoder = new GeocodingHelper();
+            var geocoder = new GeocodingHelper(_settings);
             geocoder.IncludeExtendedData = false;
 
             if (!string.IsNullOrEmpty(filter.Address))
