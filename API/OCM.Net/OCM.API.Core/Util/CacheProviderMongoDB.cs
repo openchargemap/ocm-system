@@ -301,7 +301,7 @@ namespace OCM.Core.Data
                 return poiList;
             }
 
-           
+
 
             //update based on POI last modified since last status update
             if (updateStrategy == CacheUpdateStrategy.Modified)
@@ -445,7 +445,8 @@ namespace OCM.Core.Data
                 if (updateStrategy == CacheUpdateStrategy.All)
                 {
                     poiCollection.RemoveAll();
-                }else
+                }
+                else
                 {
                     RemoveAllPOI(poiList, poiCollection);
                 }
@@ -531,18 +532,26 @@ namespace OCM.Core.Data
             }
         }
 
+        public bool IsCacheReady()
+        {
+            if (status != null && (_settings.MongoDBSettings.MaxCacheAgeMinutes == 0 || status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow))
+            {
+                return true;
+            }
+            else
+            {
+                status = GetMirrorStatus(false, false);
+                return false;
+            }
+        }
         public CoreReferenceData GetCoreReferenceData()
         {
             try
             {
-                if (status != null && status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow)
+                if (IsCacheReady())
                 {
                     var refData = database.GetCollection<CoreReferenceData>("reference");
                     return refData.FindOne();
-                } else
-                {
-                    // refresh status
-                    status = GetMirrorStatus(false, false);
                 }
             }
             catch (Exception)
@@ -560,42 +569,28 @@ namespace OCM.Core.Data
         /// <returns></returns>
         public OCM.API.Common.Model.ChargePoint GetPOI(int id)
         {
-            if (status != null && status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow)
+            if (IsCacheReady())
             {
                 var poiCollection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi").AsQueryable();
                 return poiCollection.FirstOrDefault(p => p.ID == id);
             }
             else
             {
-                // refresh status
-                status = GetMirrorStatus(false, false);
-
                 return null;
             }
         }
 
         public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
-           
-            bool freshCache = false;
-
-            var stopwatch = Stopwatch.StartNew();
-
-            if (status != null && status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow)
+          
+            if (!IsCacheReady())
             {
-                freshCache = true;
-            }
-
-            if (!freshCache)
-            {
-                // refresh status
-                status = GetMirrorStatus(false, false);
-
                 System.Diagnostics.Debug.Print("MongoDB cache is outdated, returning null result.");
                 return null;
             }
 
-            //TODO: share common between POIManager and this
+            var stopwatch = Stopwatch.StartNew();
+
             int maxResults = settings.MaxResults;
 
             bool requiresDistance = false;
