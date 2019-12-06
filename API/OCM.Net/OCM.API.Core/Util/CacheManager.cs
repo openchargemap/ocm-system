@@ -1,4 +1,4 @@
-﻿using OCM.API.Common;
+using OCM.API.Common;
 using OCM.API.Common.Model.Extended;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace OCM.Core.Data
         {
             try
             {
-                return new CacheProviderMongoDB().GetPOI(id);
+                return CacheProviderMongoDB.DefaultInstance.GetPOI(id);
             }
             catch (Exception)
             {
@@ -33,7 +33,7 @@ namespace OCM.Core.Data
         {
             try
             {
-                return new CacheProviderMongoDB().GetCoreReferenceData();
+                return CacheProviderMongoDB.DefaultInstance.GetCoreReferenceData();
             }
             catch (Exception)
             {
@@ -45,7 +45,7 @@ namespace OCM.Core.Data
         {
             try
             {
-                return new CacheProviderMongoDB().GetPOIList(filter);
+                return CacheProviderMongoDB.DefaultInstance.GetPOIList(filter);
             }
             catch (Exception)
             {
@@ -53,11 +53,15 @@ namespace OCM.Core.Data
             }
         }
 
+        public static void InitCaching(Settings.CoreSettings settings)
+        {
+            CacheProviderMongoDB.CreateDefaultInstance(settings);
+        }
         public async static Task<MirrorStatus> RefreshCachedData(CacheUpdateStrategy updateStrategy = CacheUpdateStrategy.Modified)
         {
             try
             {
-                return await new CacheProviderMongoDB().PopulatePOIMirror(updateStrategy);
+                return await CacheProviderMongoDB.DefaultInstance.PopulatePOIMirror(updateStrategy);
             }
             catch (Exception exp)
             {
@@ -71,7 +75,7 @@ namespace OCM.Core.Data
             {
                 return await Task.Run<MirrorStatus>(() =>
                 {
-                    return new CacheProviderMongoDB().GetMirrorStatus(includeDupeCheck, true);
+                    return CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, true);
                 });
             }
             catch (Exception)
@@ -89,7 +93,7 @@ namespace OCM.Core.Data
 
             try
             {
-                return await new CacheProviderMongoDB().PopulatePOIMirror(CacheUpdateStrategy.Modified);
+                return await CacheProviderMongoDB.DefaultInstance.PopulatePOIMirror(CacheUpdateStrategy.Modified);
             }
             catch (Exception)
             {
@@ -99,7 +103,7 @@ namespace OCM.Core.Data
 
         public static List<CountryExtendedInfo> GetExtendedCountryInfo()
         {
-            return new CacheProviderMongoDB().GetExtendedCountryInfo();
+            return CacheProviderMongoDB.DefaultInstance.GetExtendedCountryInfo();
         }
     }
 }

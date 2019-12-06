@@ -1,4 +1,6 @@
-﻿using OCM.API.Common.Model;
+﻿using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +44,9 @@ namespace OCM.API.Common
         {
             if (withPOIOnly)
             {
-                var poiCollection = new OCM.Core.Data.CacheProviderMongoDB().GetPOICollection();
+                var poiCollection = Core.Data.CacheProviderMongoDB.DefaultInstance.GetPOICollection();
                 //determine all countries with live POI
-                var allPOICountries = (from cp in poiCollection.FindAll()
+                var allPOICountries = (from cp in poiCollection.AsQueryable()
                                        where cp.SubmissionStatus.IsLive == true
                                        select cp.AddressInfo.CountryID).Distinct();
 

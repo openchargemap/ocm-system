@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
+using OCM.Core.Settings;
 
 namespace OCM.Core.Data
 {
@@ -112,6 +113,52 @@ namespace OCM.Core.Data
         private MongoServer server = null;
         private MirrorStatus status = null;
 
+        private static readonly object _mutex = new object();
+        private static volatile CacheProviderMongoDB _instance = null;
+        private static CoreSettings _settings;
+
+        public static CacheProviderMongoDB CreateDefaultInstance(CoreSettings settings)
+        {
+            _settings = settings;
+            return DefaultInstance;
+        }
+
+        public static bool IsDefaultInstanceInitialized
+        {
+            get
+            {
+                if (_settings == null || _instance == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        public static CacheProviderMongoDB DefaultInstance
+        {
+            get
+            {
+
+                if (_instance == null)
+                {
+                    lock (_mutex)
+                    {
+                        if (_instance == null)
+                        {
+                            if (_settings == null) throw new Exception("Cache Provider Default Instance requires init using CreateDefaultInstance");
+
+                            _instance = new CacheProviderMongoDB();
+                        }
+                    }
+                }
+
+                return _instance;
+            }
+        }
+
         public CacheProviderMongoDB()
         {
             try
@@ -170,14 +217,9 @@ namespace OCM.Core.Data
                 ; ;
             }
 
-#if DEBUG
-            var connectionString = ConfigurationManager.AppSettings["MongoDB_ConnectionString"].ToString();
-#else
-            var connectionString = ConfigurationManager.AppSettings["MongoDB_ConnectionString_Prod"].ToString();
-#endif
-            client = new MongoClient(connectionString);
+            client = new MongoClient(_settings.MongoDBSettings.ConnectionString);
             server = client.GetServer();
-            database = server.GetDatabase(ConfigurationManager.AppSettings["MongoDB_Database"]);
+            database = server.GetDatabase(_settings.MongoDBSettings.DatabaseName);
             status = GetMirrorStatus(false, false);
         }
 
@@ -218,6 +260,30 @@ namespace OCM.Core.Data
             }
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
 
+            var dataList = new Data.OCMEntities().ChargePoints
+                 .Include(a1 => a1.AddressInfo)
+                      .ThenInclude(a => a.Country)
+                 .Include(a1 => a1.ConnectionInfoes)
+                      .ThenInclude(c => c.ConnectionType)
+                 .Include(a1 => a1.ConnectionInfoes)
+                      .ThenInclude(c => c.StatusType)
+                 .Include(a1 => a1.ConnectionInfoes)
+                      .ThenInclude(c => c.LevelType)
+                 .Include(a1 => a1.ConnectionInfoes)
+                      .ThenInclude(c => c.CurrentType)
+                 .Include(a1 => a1.Operator)
+                 .Include(a1 => a1.UsageType)
+                 .Include(a1 => a1.StatusType)
+                 .Include(a1 => a1.MetadataValues)
+                      .ThenInclude(m => m.MetadataFieldOption)
+                 .Include(a1 => a1.UserComments)
+                      .ThenInclude(c => c.User)
+                  .Include(a1 => a1.UserComments)
+                      .ThenInclude(c => c.CheckinStatusType)
+                 .Include(a1 => a1.MediaItems)
+                 .OrderBy(o => o.Id);
+
+
             //incremental update based on POI Id - up to 100 results at a time
             if (updateStrategy == CacheUpdateStrategy.Incremental)
             {
@@ -226,7 +292,7 @@ namespace OCM.Core.Data
                 if (maxPOI != null) { maxId = maxPOI.ID; }
 
                 //from max poi we have in mirror to next 100 results in order of ID
-                var dataList = dataModel.ChargePoints.Include("AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User").OrderBy(o => o.Id).Where(o => o.Id > maxId).Take(100);
+                var list = dataList.Where(o => o.Id > maxId).Take(100);
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
@@ -234,6 +300,8 @@ namespace OCM.Core.Data
                 }
                 return poiList;
             }
+
+           
 
             //update based on POI last modified since last status update
             if (updateStrategy == CacheUpdateStrategy.Modified)
@@ -245,15 +313,7 @@ namespace OCM.Core.Data
                 //determine POI updated since last status update we have in cache
                 var stopwatch = Stopwatch.StartNew();
 
-                //"AddressInfo,ConnectionInfo,MetadataValue,UserComment,MediaItem,User"
-                var dataList = new Data.OCMEntities().ChargePoints
-                    .Include(a1 => a1.AddressInfo)
-                    .Include(a1 => a1.ConnectionInfoes)
-                    .Include(a1 => a1.MetadataValues)
-                    .Include(a1 => a1.UserComments)
-                    .Include(a1 => a1.MediaItems)
-                    .OrderBy(o => o.DateLastStatusUpdate)
-                    .Where(o => o.DateLastStatusUpdate > dateLastModified).ToList();
+                var list = dataList.Where(o => o.DateLastStatusUpdate > dateLastModified).ToList();
 
                 stopwatch.Stop();
 
@@ -261,7 +321,7 @@ namespace OCM.Core.Data
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 stopwatch.Restart();
 
-                foreach (var cp in dataList)
+                foreach (var cp in list)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
                 }
@@ -275,36 +335,14 @@ namespace OCM.Core.Data
                 var stopwatch = Stopwatch.StartNew();
 
                 // get data list, include navigation properties to improve query performance
-                var dataList = new Data.OCMEntities().ChargePoints
-                   .Include(a1 => a1.AddressInfo)
-                        .ThenInclude(a => a.Country)
-                   .Include(a1 => a1.ConnectionInfoes)
-                        .ThenInclude(c => c.ConnectionType)
-                   .Include(a1 => a1.ConnectionInfoes)
-                        .ThenInclude(c => c.StatusType)
-                   .Include(a1 => a1.ConnectionInfoes)
-                        .ThenInclude(c => c.LevelType)
-                   .Include(a1 => a1.ConnectionInfoes)
-                        .ThenInclude(c => c.CurrentType)
-                   .Include(a1 => a1.Operator)
-                   .Include(a1 => a1.UsageType)
-                   .Include(a1 => a1.StatusType)
-                   .Include(a1 => a1.MetadataValues)
-                        .ThenInclude(m => m.MetadataFieldOption)
-                   .Include(a1 => a1.UserComments)
-                        .ThenInclude(c => c.User)
-                    .Include(a1 => a1.UserComments)
-                        .ThenInclude(c => c.CheckinStatusType)
-                   .Include(a1 => a1.MediaItems)
-                   .OrderBy(o => o.Id)
-                   .ToList();
+                var list = dataList.ToList();
 
                 stopwatch.Stop();
 
                 System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
                 stopwatch.Restart();
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
-                foreach (var cp in dataList)
+                foreach (var cp in list)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
 
@@ -407,15 +445,18 @@ namespace OCM.Core.Data
                 if (updateStrategy == CacheUpdateStrategy.All)
                 {
                     poiCollection.RemoveAll();
+                }else
+                {
+                    RemoveAllPOI(poiList, poiCollection);
                 }
 
-                RemoveAllPOI(poiList, poiCollection);
                 Thread.Sleep(300);
                 InsertAllPOI(poiList, poiCollection);
 
                 poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
                 poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
                 poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
+                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
 
                 if (updateStrategy == CacheUpdateStrategy.All)
                 {
@@ -430,7 +471,7 @@ namespace OCM.Core.Data
         private MirrorStatus RefreshMirrorStatus(long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB)
         {
             var statusCollection = database.GetCollection<MirrorStatus>("status");
-            statusCollection.RemoveAll();
+            statusCollection.Drop();
 
             //new status
             MirrorStatus status = new MirrorStatus();
@@ -494,11 +535,14 @@ namespace OCM.Core.Data
         {
             try
             {
-                int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
-                if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
+                if (status != null && status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow)
                 {
                     var refData = database.GetCollection<CoreReferenceData>("reference");
                     return refData.FindOne();
+                } else
+                {
+                    // refresh status
+                    status = GetMirrorStatus(false, false);
                 }
             }
             catch (Exception)
@@ -516,14 +560,16 @@ namespace OCM.Core.Data
         /// <returns></returns>
         public OCM.API.Common.Model.ChargePoint GetPOI(int id)
         {
-            int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
-            if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
+            if (status != null && status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow)
             {
                 var poiCollection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi").AsQueryable();
                 return poiCollection.FirstOrDefault(p => p.ID == id);
             }
             else
             {
+                // refresh status
+                status = GetMirrorStatus(false, false);
+
                 return null;
             }
         }
@@ -531,19 +577,20 @@ namespace OCM.Core.Data
         public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
            
-
             bool freshCache = false;
-            int maxCacheAgeMinutes = int.Parse(ConfigurationManager.AppSettings["MaxCacheAgeMinutes"]);
 
             var stopwatch = Stopwatch.StartNew();
 
-            if (status != null && status.LastUpdated.AddMinutes(maxCacheAgeMinutes) > DateTime.UtcNow)
+            if (status != null && status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow)
             {
                 freshCache = true;
             }
 
             if (!freshCache)
             {
+                // refresh status
+                status = GetMirrorStatus(false, false);
+
                 System.Diagnostics.Debug.Print("MongoDB cache is outdated, returning null result.");
                 return null;
             }
@@ -628,8 +675,13 @@ namespace OCM.Core.Data
             /////////////////////////////////////
             if (database != null)
             {
+
+                System.Diagnostics.Debug.Print($"MongoDB cache building query @ {stopwatch.ElapsedMilliseconds}ms");
+
                 var collection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
                 IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
+
+                System.Diagnostics.Debug.Print($"MongoDB got poiList as Queryable @ {stopwatch.ElapsedMilliseconds}ms");
 
                 //filter by points along polyline or bounding box (TODO: polygon)
                 if (
@@ -752,6 +804,8 @@ namespace OCM.Core.Data
                               select c;
                 }
 
+                System.Diagnostics.Debug.Print($"MongoDB executing query to list @ {stopwatch.ElapsedMilliseconds}ms");
+
                 List<API.Common.Model.ChargePoint> results = null;
                 if (!requiresDistance || (settings.Latitude == null || settings.Longitude == null))
                 {
@@ -805,7 +859,7 @@ namespace OCM.Core.Data
                 }
 
                 stopwatch.Stop();
-                System.Diagnostics.Debug.WriteLine("Cache Provider POI Query Time:" + stopwatch.ElapsedMilliseconds + "ms");
+                System.Diagnostics.Debug.WriteLine("Cache Provider POI Total Query Time:" + stopwatch.ElapsedMilliseconds + "ms");
 
                 return results;
             }

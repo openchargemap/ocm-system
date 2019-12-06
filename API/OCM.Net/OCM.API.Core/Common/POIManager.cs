@@ -123,7 +123,7 @@ namespace OCM.API.Common
         {
             if (allowMirrorDB)
             {
-                var p = new CacheProviderMongoDB().GetPOI(id);
+                var p = CacheProviderMongoDB.DefaultInstance.GetPOI(id);
                 if (p != null)
                 {
                     return p;
@@ -213,8 +213,7 @@ namespace OCM.API.Common
             {
                 try
                 {
-                    var cache = new CacheProviderMongoDB();
-                    dataList = cache.GetPOIList(settings);
+                    dataList = CacheProviderMongoDB.DefaultInstance.GetPOIList(settings);
                 }
                 catch (Exception exp)
                 {
@@ -487,7 +486,7 @@ namespace OCM.API.Common
                         }
                         c.AddressInfo.DistanceUnit = settings.DistanceUnit;
                     }
-
+                    
                     if (settings.IsLegacyAPICall && !(settings.APIVersion >= 2))
                     {
                         //for legacy callers, produce artificial list of Charger items
@@ -512,7 +511,7 @@ namespace OCM.API.Common
                             }
                         }
                     }
-
+                    
 #pragma warning restore 612
 
                     if (c != null)
@@ -520,6 +519,7 @@ namespace OCM.API.Common
                         dataList.Add(c);
                     }
                 }
+                System.Diagnostics.Debug.WriteLine("POI List filter time: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
 
             }
 
@@ -529,8 +529,7 @@ namespace OCM.API.Common
                 dataList = new List<Model.ChargePoint>();
             }
 
-            System.Diagnostics.Debug.WriteLine("POI List Conversion to simple data model: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
-
+           
             return dataList;
         }
 
