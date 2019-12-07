@@ -216,7 +216,7 @@ namespace OCM.API.Common
                 if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeId == null)
                 {
                     cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_Published);
-                    cpData.SubmissionStatusTypeId = cpData.SubmissionStatusType.Id; //hack due to conflicting state change for SubmissionStatusType
+                    cpData.SubmissionStatusTypeId = (int)StandardSubmissionStatusTypes.Submitted_Published; //hack due to conflicting state change for SubmissionStatusType
                 }
                 else
                 {
