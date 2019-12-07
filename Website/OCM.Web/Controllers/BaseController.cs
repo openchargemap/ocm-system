@@ -54,7 +54,19 @@ namespace OCM.MVC.Controllers
                 try
                 {
                     var userAgent = Request.UserAgent().ToLower();
-                    if (userAgent.Contains("robot") || userAgent.Contains("crawler") || userAgent.Contains("spider") || userAgent.Contains("slurp") || userAgent.Contains("googlebot"))
+                    if (
+                        userAgent.Contains("robot") 
+                        || userAgent.Contains("crawler") 
+                        || userAgent.Contains("spider") 
+                        || userAgent.Contains("slurp") 
+                        || userAgent.Contains("googlebot")
+                        || userAgent.Contains("SEOkicks")
+                        || userAgent.Contains("DotBot")
+                        || userAgent.Contains("bingbot")
+                        || userAgent.Contains("AhrefsBot")
+                        || userAgent.Contains("SemrushBot")
+                        || userAgent.Contains("MJ12bot")
+                        )
                     {
                         return true;
                     }

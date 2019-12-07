@@ -56,6 +56,7 @@ namespace OCM.MVC.Controllers
             {
                 //force mirror db when browser is a robot
                 filter.AllowMirrorDB = true;
+                filter.AllowDataStoreDB = false;
             }
 
             if (!String.IsNullOrWhiteSpace(filter.Country))
