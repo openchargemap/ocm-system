@@ -24,7 +24,7 @@ namespace OCM.API.OutputProviders
             SelectedKMLVersion = version;
         }
 
-        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
+        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             /*<Document>
                   <Placemark>

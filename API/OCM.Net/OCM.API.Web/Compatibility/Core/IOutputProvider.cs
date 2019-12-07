@@ -12,7 +12,7 @@ namespace OCM.API.OutputProviders
     interface IOutputProvider
     {
         string ContentType { get; set; }
-        Task GetOutput(HttpContext context, Stream outputStream, List<OCM.API.Common.Model.ChargePoint> dataList, APIRequestParams settings);
+        Task GetOutput(HttpContext context, Stream outputStream, IEnumerable<OCM.API.Common.Model.ChargePoint> dataList, APIRequestParams settings);
         Task GetOutput(HttpContext context, Stream outputStream, CoreReferenceData data, APIRequestParams settings);
         Task GetOutput(HttpContext context, Stream outputStream, Object data, APIRequestParams settings);
     }

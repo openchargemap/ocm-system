@@ -221,6 +221,11 @@ namespace OCM.Core.Data
             server = client.GetServer();
             database = server.GetDatabase(_settings.MongoDBSettings.DatabaseName);
             status = GetMirrorStatus(false, false);
+
+            if (status.StatusCode == HttpStatusCode.ExpectationFailed && _settings.IsCacheOnlyMode)
+            {
+                throw new Exception("MongoDB Cache Unavailable. Check configuration settings for connection string. ::" + status.Description);
+            }
         }
 
         public MongoCollection<POIMongoDB> GetPOICollection()
@@ -272,6 +277,7 @@ namespace OCM.Core.Data
                  .Include(a1 => a1.ConnectionInfoes)
                       .ThenInclude(c => c.CurrentType)
                  .Include(a1 => a1.Operator)
+                 .Include(a1 => a1.DataProvider)
                  .Include(a1 => a1.UsageType)
                  .Include(a1 => a1.StatusType)
                  .Include(a1 => a1.MetadataValues)
@@ -580,9 +586,14 @@ namespace OCM.Core.Data
             }
         }
 
-        public List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
+        public IEnumerable<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams settings)
         {
-          
+            return GetPOIListAsync(settings).Result;
+        }
+
+        public async Task<IEnumerable<OCM.API.Common.Model.ChargePoint>> GetPOIListAsync(APIRequestParams settings)
+        {
+
             if (!IsCacheReady())
             {
                 System.Diagnostics.Debug.Print("MongoDB cache is outdated, returning null result.");
@@ -799,30 +810,43 @@ namespace OCM.Core.Data
                               select c;
                 }
 
-                System.Diagnostics.Debug.Print($"MongoDB executing query to list @ {stopwatch.ElapsedMilliseconds}ms");
+                System.Diagnostics.Debug.Print($"MongoDB executing query @ {stopwatch.ElapsedMilliseconds}ms");
 
-                List<API.Common.Model.ChargePoint> results = null;
+                IEnumerable<API.Common.Model.ChargePoint> results = null;
                 if (!requiresDistance || (settings.Latitude == null || settings.Longitude == null))
                 {
                     //distance is not required or can't be provided
-                    results = poiList.OrderByDescending(p => p.ID).Take(settings.MaxResults).ToList(); //OrderByDescending(p => p.DateCreated).
+                    System.Diagnostics.Debug.Print($"MongoDB starting query to list @ {stopwatch.ElapsedMilliseconds}ms");
+                    results = poiList.OrderByDescending(p => p.ID).Take(settings.MaxResults).AsEnumerable();
+                    System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
                 }
                 else
                 {
                     //distance is required, calculate and populate in results
-                    results = poiList.ToList();
+                    results = poiList.ToArray();
                     //populate distance
                     foreach (var p in results)
                     {
                         p.AddressInfo.Distance = GeoManager.CalcDistance((double)settings.Latitude, (double)settings.Longitude, p.AddressInfo.Latitude, p.AddressInfo.Longitude, settings.DistanceUnit);
                         p.AddressInfo.DistanceUnit = settings.DistanceUnit;
                     }
-                    results = results.OrderBy(r => r.AddressInfo.Distance).Take(settings.MaxResults).ToList();
+                    results = results.OrderBy(r => r.AddressInfo.Distance).Take(settings.MaxResults);
                 }
 
                 if (settings.IsCompactOutput)
                 {
-                    //dehydrate POI object by removing navigation properties which are based on reference data. Client can then rehydrate using reference data, saving on data transfer KB
+                    System.Diagnostics.Debug.Print($"MongoDB begin conversion to compact output @ {stopwatch.ElapsedMilliseconds}ms");
+
+                    // we will be mutating the results so need to convert to object we can update
+                    if (!(results is Array))
+                    {
+                        results = results.ToArray();
+                    }
+
+                    System.Diagnostics.Debug.Print($"MongoDB converted to array @ {stopwatch.ElapsedMilliseconds}ms");
+
+                    // dehydrate POI object by removing navigation properties which are based on reference data. Client can then rehydrate using reference data, saving on data transfer KB
+                    // TODO: find faster method or replace with custom serialization
                     foreach (var p in results)
                     {
                         //need to null reference data objects so they are not included in output. caution required here to ensure compact output via SQL is same as Cache DB output
@@ -842,6 +866,13 @@ namespace OCM.Core.Data
                                 c.StatusType = null;
                             }
                         }
+
+                        if (!settings.IncludeComments)
+                        {
+                            p.UserComments = null;
+                            p.MediaItems = null;
+                        }
+
                         if (p.UserComments != null)
                         {
                             foreach (var c in p.UserComments)
@@ -896,7 +927,7 @@ namespace OCM.Core.Data
                     stopwatch.Start();
                     var poiList = this.GetPOIList(filter);
                     stopwatch.Stop();
-                    result.Description += " results:" + poiList.Count;
+                    result.Description += " results:" + poiList.ToArray().Count();
                     result.TimeMS = stopwatch.ElapsedMilliseconds;
                 }
                 catch (Exception exp)

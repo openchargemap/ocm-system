@@ -25,7 +25,7 @@ namespace OCM.API.OutputProviders
             EnableGeoRSS = true;
         }
 
-        public async Task GetOutput(HttpContext context, Stream outputStream, List<Common.Model.ChargePoint> dataList, APIRequestParams settings)
+        public async Task GetOutput(HttpContext context, Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, APIRequestParams settings)
         {
             XmlTextWriter xml = new XmlTextWriter(outputStream, Encoding.UTF8);
 

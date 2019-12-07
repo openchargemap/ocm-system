@@ -55,7 +55,7 @@ namespace OCM.API.OutputProviders
             ContentType = "application/json";
         }
 
-        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
+        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             if (settings.APIVersion >= 2)
             {

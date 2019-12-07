@@ -206,7 +206,7 @@ namespace OCM.Import
 
             APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = true, SubmissionStatusTypeID = 0 };
 
-            List<ChargePoint> masterListCollection = new List<ChargePoint>();
+            IEnumerable<ChargePoint> masterListCollection = new List<ChargePoint>();
             if (fetchExistingFromAPI)
             {
                 // fetch from API
@@ -240,7 +240,7 @@ namespace OCM.Import
             }
 
             //if we failed to get a master list, quit with no result
-            if (masterListCollection.Count == 0) return new List<ChargePoint>();
+            if (masterListCollection.Count() == 0) return new List<ChargePoint>();
 
             List<ChargePoint> duplicateList = new List<ChargePoint>();
             List<ChargePoint> updateList = new List<ChargePoint>();

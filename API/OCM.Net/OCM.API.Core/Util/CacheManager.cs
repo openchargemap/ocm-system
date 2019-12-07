@@ -41,11 +41,11 @@ namespace OCM.Core.Data
             }
         }
 
-        public static List<OCM.API.Common.Model.ChargePoint> GetPOIList(APIRequestParams filter)
+        public async static Task<IEnumerable<OCM.API.Common.Model.ChargePoint>> GetPOIList(APIRequestParams filter)
         {
             try
             {
-                return CacheProviderMongoDB.DefaultInstance.GetPOIList(filter);
+                return await CacheProviderMongoDB.DefaultInstance.GetPOIListAsync(filter);
             }
             catch (Exception)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -189,12 +190,17 @@ namespace OCM.API.Common
             throw new NotSupportedException("Direct calls are not supported.");
         }
 
+        public IEnumerable<Model.ChargePoint> GetPOIList(APIRequestParams filter)
+        {
+            return GetPOIListAsync(filter).Result;
+        }
+
         /// <summary>
         /// For given query/output settings, return list of charge points. May be a cached response.
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> GetPOIList(APIRequestParams filter)
+        public async Task<IEnumerable<Model.ChargePoint>> GetPOIListAsync(APIRequestParams filter)
         {
 
             // clone filter settings to remove mutation side effects in callers
@@ -207,13 +213,18 @@ namespace OCM.API.Common
             settings.EnableCaching = false;
 
             string cacheKey = settings.HashKey;
-            List<Model.ChargePoint> dataList = null;
+            IEnumerable<Model.ChargePoint> dataList = null;
 
             if (settings.AllowMirrorDB)
             {
                 try
                 {
-                    dataList = CacheProviderMongoDB.DefaultInstance.GetPOIList(settings);
+                    dataList = await CacheProviderMongoDB.DefaultInstance.GetPOIListAsync(settings);
+
+                    if (dataList != null)
+                    {
+                        return dataList;
+                    }
                 }
                 catch (Exception exp)
                 {
@@ -373,7 +384,7 @@ namespace OCM.API.Common
 
                         var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(settings.BoundingBox)
                                             .Coordinates
-                                            .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+                                            .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).AsEnumerable();
 
                         searchPolygon = polyPoints;
                     }
@@ -463,7 +474,9 @@ namespace OCM.API.Common
                     filteredList = filteredList.OrderByDescending(p => p.c.Id);
                 }
 
-                var additionalFilteredList = filteredList.Take(maxResults).ToList();
+                var additionalFilteredList = filteredList
+                    .Take(maxResults)
+                    .ToList();
 
                 stopwatch.Stop();
 
@@ -471,7 +484,9 @@ namespace OCM.API.Common
 
                 stopwatch.Restart();
 
-                foreach (var item in additionalFilteredList) //.ToList
+                var poiResults = new List<Model.ChargePoint>(maxResults);
+
+                foreach (var item in additionalFilteredList)
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
                     Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput);
@@ -486,7 +501,7 @@ namespace OCM.API.Common
                         }
                         c.AddressInfo.DistanceUnit = settings.DistanceUnit;
                     }
-                    
+
                     if (settings.IsLegacyAPICall && !(settings.APIVersion >= 2))
                     {
                         //for legacy callers, produce artificial list of Charger items
@@ -511,26 +526,24 @@ namespace OCM.API.Common
                             }
                         }
                     }
-                    
+
 #pragma warning restore 612
 
                     if (c != null)
                     {
-                        dataList.Add(c);
+                        poiResults.Add(c);
                     }
                 }
-                System.Diagnostics.Debug.WriteLine("POI List filter time: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
+                //System.Diagnostics.Debug.WriteLine("POI List filter time: " + stopwatch.ElapsedMilliseconds + "ms for " + dataList.Count + " results");
 
+                return poiResults;
             }
-
-            if (dataList == null)
+            else
             {
-                // no results
-                dataList = new List<Model.ChargePoint>();
+                return new List<Model.ChargePoint>();
             }
 
-           
-            return dataList;
+
         }
 
         /// <summary>

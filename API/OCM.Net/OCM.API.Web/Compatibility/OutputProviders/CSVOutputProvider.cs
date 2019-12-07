@@ -29,7 +29,7 @@ namespace OCM.API.OutputProviders
             else currentLine += val.ToString() + ",";
         }
 
-        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
+        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             output = new StreamWriter(outputStream, System.Text.Encoding.UTF8);
 

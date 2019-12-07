@@ -15,7 +15,7 @@ namespace OCM.API.OutputProviders
             ContentType = "text/xml";
         }
 
-        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, List<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
+        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             bool isVerboseMode = settings.IsVerboseOutput;
 
