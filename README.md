@@ -57,7 +57,8 @@ Please contribute in any way you can:
 	- `dotnet build`
 
 	To run API server on port 5000 bound to default public network interface:
-	- `dotnet run --urls http://0.0.0.0:5000`
+	- Debug: `dotnet run --urls http://0.0.0.0:5000`
+    - Release: `dotnet run -c Release --urls http://0.0.0.0:5000`
 
 
 

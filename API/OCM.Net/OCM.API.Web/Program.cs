@@ -21,7 +21,7 @@ namespace OCM.API.Web.Standard
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .ConfigureKestrel(serverOptions => serverOptions.AllowSynchronousIO = true)
+                        .ConfigureKestrel(serverOptions => serverOptions.AllowSynchronousIO = true) // allow sync IO for legacy outputs
                         .UseStartup<Startup>();
                 });
     }
