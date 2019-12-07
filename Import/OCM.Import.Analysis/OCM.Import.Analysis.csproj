@@ -37,7 +37,7 @@
     <PackageReference Include="DotSpatial.Symbology" Version="1.9.0" />
     <PackageReference Include="DotSpatial.Symbology.Forms" Version="1.9.0" />
     <PackageReference Include="DotSpatial.Topology" Version="1.9.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.6.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />
