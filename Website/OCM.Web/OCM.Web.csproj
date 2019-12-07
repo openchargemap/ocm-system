@@ -9,6 +9,10 @@
     <UserSecretsId>6b1d77f1-f07f-40ab-aa55-13fbb5e2efbd</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702; MVC1000;CA1801;CA1307;CS0162;CA1822; CA2007;CA1304;</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Utils\CommonUtil.cs" />
   </ItemGroup>

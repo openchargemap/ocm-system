@@ -6,25 +6,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="5.6.0" />
-    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.2.26">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OCM.API.Core\OCM.API.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Compatibility\OutputProviders\XMLOutputProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="App.config">
-      <TransformOnBuild>true</TransformOnBuild>
-    </Content>
   </ItemGroup>
 </Project>

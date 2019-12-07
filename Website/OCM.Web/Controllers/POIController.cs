@@ -61,10 +61,13 @@ namespace OCM.MVC.Controllers
             if (!String.IsNullOrWhiteSpace(filter.Country))
             {
                 //TODO: cache country id lookup
-                var countrySelected = new OCM.API.Common.ReferenceDataManager().GetCountryByName(filter.Country);
-                if (countrySelected != null)
+                using (var refData = new OCM.API.Common.ReferenceDataManager())
                 {
-                    filter.CountryIDs = new int[] { countrySelected.ID };
+                    var countrySelected = refData.GetCountryByName(filter.Country);
+                    if (countrySelected != null)
+                    {
+                        filter.CountryIDs = new int[] { countrySelected.ID };
+                    }
                 }
             }
             else
