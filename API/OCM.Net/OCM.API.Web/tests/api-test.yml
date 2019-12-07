@@ -1,0 +1,12 @@
+config:
+  target: 'http://localhost'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+  defaults:
+    headers:
+      X-API-Key: 'ABC123'
+scenarios:
+  - flow:
+    - get:
+        url: "/OCM.API.Web/v3/poi/?client=artillery&verbose=false&output=json&includecomments=true&maxresults=250&compact=true&boundingbox=(-32.71144969837674,113.70105133361056),(-31.19070990696366,117.83727017450582)"

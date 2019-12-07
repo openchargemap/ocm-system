@@ -229,7 +229,7 @@ namespace OCM.API.OutputProviders
 
             xml.WriteEndElement(); //end charge points list
             xml.WriteEndDocument(); //end xml
-            await xml.FlushAsync();
+            xml.Flush();
             //xml.Close();
         }
 
