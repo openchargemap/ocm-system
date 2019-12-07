@@ -59,8 +59,8 @@ namespace OCM.API.Tests
         {
             var api = new OCM.API.Common.POIManager();
             var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false, MaxResults = 10 }); ;
-            Assert.True(results.Count > 0, "Results should be greater than 0");
-            Assert.True(results.Count == 10, "Results should be limited to 10");
+            Assert.True(results.Count() > 0, "Results should be greater than 0");
+            Assert.True(results.Count() == 10, "Results should be limited to 10");
 
             var poi = results.FirstOrDefault();
             Assert.NotNull(poi);

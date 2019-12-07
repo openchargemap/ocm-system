@@ -50,7 +50,7 @@ namespace OCM.API.Tests
         {
             var api = new OCM.API.Common.POIManager();
             var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, ChargePointIDs = new int[] { 23190 } });
-            Assert.True(results.Count == 1, "Should return a single result");
+            Assert.True(results.Count() == 1, "Should return a single result");
 
             var poi = results.FirstOrDefault();
             Assert.NotNull(poi);
@@ -59,7 +59,7 @@ namespace OCM.API.Tests
             Assert.True(poi.AddressInfo.CountryID == 112, "Country should be Italy"); // Italy
 
             results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = false, AllowDataStoreDB = true, ChargePointIDs = new int[] { 23190 } });
-            Assert.True(results.Count == 1, "Should return a single result");
+            Assert.True(results.Count() == 1, "Should return a single result");
 
             poi = results.FirstOrDefault();
             Assert.NotNull(poi);
@@ -72,19 +72,42 @@ namespace OCM.API.Tests
         public void ReturnPOIResults()
         {
             var api = new OCM.API.Common.POIManager();
-            var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false, MaxResults=10 }); ;
-            Assert.True(results.Count > 0);
-            Assert.True(results.Count == 10);
+            var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false, MaxResults = 10 }); ;
+            Assert.True(results.Count() > 0);
+            Assert.True(results.Count() == 10);
 
             var poi = results.FirstOrDefault();
             Assert.NotNull(poi);
 
-            var dbResults = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = false, AllowDataStoreDB = true, IsVerboseOutput = false, MaxResults=10 }); ;
-            Assert.True(dbResults.Count > 0);
-            Assert.True(results.Count == 10);
+            var dbResults = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = false, AllowDataStoreDB = true, IsVerboseOutput = false, MaxResults = 10 }); ;
+            Assert.True(dbResults.Count() > 0);
+            Assert.True(results.Count() == 10);
 
             poi = dbResults.FirstOrDefault();
             Assert.NotNull(poi);
+        }
+
+        [Fact]
+        public void ReturnCompactPOIResults()
+        {
+            var api = new OCM.API.Common.POIManager();
+            var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsCompactOutput = true, IsVerboseOutput = false, MaxResults = 10 }); ;
+            Assert.True(results.Count() > 0);
+            Assert.True(results.Count() == 10);
+
+            var poi = results.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.Null(poi.DataProvider);
+            Assert.Null(poi.SubmissionStatus);
+
+            var dbResults = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = false, AllowDataStoreDB = true, IsCompactOutput = true, IsVerboseOutput = false, MaxResults = 10 }); ;
+            Assert.True(dbResults.Count() > 0);
+            Assert.True(results.Count() == 10);
+
+            poi = dbResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.Null(poi.DataProvider);
+            Assert.Null(poi.SubmissionStatus);
         }
 
         [Fact]
@@ -95,11 +118,11 @@ namespace OCM.API.Tests
             var stopwatch = Stopwatch.StartNew();
             var totalRuns = 10;
             var maxResults = 1;
-            for(var i=0; i < totalRuns; i++)
+            for (var i = 0; i < totalRuns; i++)
             {
                 var results = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false, MaxResults = maxResults }); ;
-                Assert.True(results.Count > 0);
-                Assert.True(results.Count == maxResults);
+                Assert.True(results.Count() > 0);
+                Assert.True(results.Count() == maxResults);
             }
 
             stopwatch.Stop();
@@ -126,7 +149,7 @@ namespace OCM.API.Tests
             };
 
             var cacheResults = api.GetPOIList(searchParams);
-            Assert.True(cacheResults.Count > 0);
+            Assert.True(cacheResults.Count() > 0);
 
             var poi = cacheResults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -150,7 +173,7 @@ namespace OCM.API.Tests
                 Longitude = -0.134
             };
             var dbresults = api.GetPOIList(searchParams);
-            Assert.True(dbresults.Count > 0);
+            Assert.True(dbresults.Count() > 0);
 
             poi = dbresults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -162,7 +185,7 @@ namespace OCM.API.Tests
                 cacheResults),
                 "One or more POIs in result set are not near the polyline");
 
-            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+            Assert.True(cacheResults.Count() == dbresults.Count(), "Cached results and db results should be the same");
         }
 
         [Fact]
@@ -184,8 +207,8 @@ namespace OCM.API.Tests
             };
 
             var cacheResults = api.GetPOIList(searchParams);
-            Assert.True(cacheResults.Count > 0);
-            Assert.True(cacheResults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             var poi = cacheResults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -204,16 +227,16 @@ namespace OCM.API.Tests
                 Longitude = -0.134
             };
             var dbresults = api.GetPOIList(searchParams);
-            Assert.True(dbresults.Count > 0);
+            Assert.True(dbresults.Count() > 0);
 
-            Assert.True(dbresults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(dbresults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             poi = dbresults.FirstOrDefault();
             Assert.NotNull(poi);
 
             Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
 
-            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+            Assert.True(cacheResults.Count() == dbresults.Count(), "Cached results and db results should be the same");
         }
 
         [Fact]
@@ -242,8 +265,8 @@ namespace OCM.API.Tests
 
             var msAllowance = 2;
             Assert.True(stopwatch.ElapsedMilliseconds < cacheResults.Count() * msAllowance, $"Results must return in less than {cacheResults.Count() * msAllowance} ms (numResults * {msAllowance}ms) actual: {stopwatch.ElapsedMilliseconds}");
-            Assert.True(cacheResults.Count > 0);
-            Assert.True(cacheResults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             var poi = cacheResults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -271,8 +294,8 @@ namespace OCM.API.Tests
             };
 
             var dbresults = api.GetPOIList(searchParams);
-            Assert.True(dbresults.Count > 0);
-            Assert.True(dbresults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(dbresults.Count() > 0);
+            Assert.True(dbresults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             poi = dbresults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -286,7 +309,7 @@ namespace OCM.API.Tests
             }
 
 
-            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+            Assert.True(cacheResults.Count() == dbresults.Count(), "Cached results and db results should be the same");
         }
 
 
@@ -305,8 +328,8 @@ namespace OCM.API.Tests
             // mongodb cache results
             var searchParams = new Common.APIRequestParams { AllowMirrorDB = true, IsVerboseOutput = false, Polyline = polyline, DistanceUnit = Common.Model.DistanceUnit.KM, Distance = 1 };
             var cacheResults = api.GetPOIList(searchParams);
-            Assert.True(cacheResults.Count > 0);
-            Assert.True(cacheResults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             var poi = cacheResults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -316,15 +339,15 @@ namespace OCM.API.Tests
             // database results
             searchParams = new Common.APIRequestParams { AllowMirrorDB = false, IsVerboseOutput = false, Polyline = polyline, DistanceUnit = Common.Model.DistanceUnit.KM, Distance = 1 };
             var dbresults = api.GetPOIList(searchParams);
-            Assert.True(dbresults.Count > 0);
-            Assert.True(dbresults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(dbresults.Count() > 0);
+            Assert.True(dbresults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             poi = dbresults.FirstOrDefault();
             Assert.NotNull(poi);
 
             Assert.True(AreResultsNearPolyline(polyline, searchParams, dbresults), "One or more POIs in result set are not near the polyline");
 
-            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+            Assert.True(cacheResults.Count() == dbresults.Count(), "Cached results and db results should be the same");
         }
 
 
@@ -341,8 +364,8 @@ namespace OCM.API.Tests
             // POI cache db
             var cacheResults = api.GetPOIList(searchParams);
 
-            Assert.True(cacheResults.Count > 0);
-            Assert.True(cacheResults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             var poi = cacheResults.FirstOrDefault();
             Assert.NotNull(poi);
@@ -353,15 +376,15 @@ namespace OCM.API.Tests
             searchParams = new Common.APIRequestParams { AllowMirrorDB = false, AllowDataStoreDB = true, IsVerboseOutput = false, Polyline = polyline, DistanceUnit = Common.Model.DistanceUnit.KM, Distance = 5 };
             var dbresults = api.GetPOIList(searchParams);
 
-            Assert.True(dbresults.Count > 0);
-            Assert.True(dbresults.Count <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+            Assert.True(dbresults.Count() > 0);
+            Assert.True(dbresults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
             Assert.True(AreResultsNearPolyline(polyline, searchParams, dbresults), "One or more POIs in result set are not near the polyline");
 
-            Assert.True(cacheResults.Count == dbresults.Count, "Cached results and db results should be the same");
+            Assert.True(cacheResults.Count() == dbresults.Count(), "Cached results and db results should be the same");
         }
 
-        private static bool AreResultsNearPolyline(List<Common.LatLon> polyline, Common.APIRequestParams searchParams, List<Common.Model.ChargePoint> results)
+        private static bool AreResultsNearPolyline(List<Common.LatLon> polyline, Common.APIRequestParams searchParams, IEnumerable<Common.Model.ChargePoint> results)
         {
 
             if (searchParams.Distance == null) throw new Exception("Distance filter not specified, cannot check if near points");
