@@ -6,6 +6,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;NU1701;</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="App.config" />
     <None Remove="Assets\ocpi_2_1_1_locations-fastned.json" />
