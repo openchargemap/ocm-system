@@ -75,19 +75,19 @@ namespace OCM.API
                 {
                     var userAgent = context.Request.UserAgent().ToLower();
                     if (
-                        userAgent.Contains("robot") 
-                        || userAgent.Contains("crawler") 
-                        || userAgent.Contains("spider") 
-                        || userAgent.Contains("slurp") 
-                        || userAgent.Contains("googlebot") 
-                        || userAgent.Contains("kml-google") 
-                        || userAgent.Contains("apache-httpclient") 
-                        || userAgent.Equals("apache") 
-                        || userAgent.StartsWith("nameofagent") 
-                        || userAgent.StartsWith("php") 
+                        userAgent.Contains("robot")
+                        || userAgent.Contains("crawler")
+                        || userAgent.Contains("spider")
+                        || userAgent.Contains("slurp")
+                        || userAgent.Contains("googlebot")
+                        || userAgent.Contains("kml-google")
+                        || userAgent.Contains("apache-httpclient")
+                        || userAgent.Equals("apache")
+                        || userAgent.StartsWith("nameofagent")
+                        || userAgent.StartsWith("php")
                         || userAgent.Contains("okhttp/3.9.1")
                         || userAgent.Contains("dart:io")
-                        ) 
+                        )
 
                     {
                         return true;
@@ -106,12 +106,12 @@ namespace OCM.API
         /// Handle input to API
         /// </summary>
         /// <param name="context"></param>
-        private async Task PerformInput(HttpContext context)
+        private async Task<bool> PerformInput(HttpContext context)
         {
             if (!_settings.EnableDataWrites)
             {
                 await OutputBadRequestMessage(context, "API is read only. Submissions not currently being accepted.");
-                return;
+                return true;
             }
 
             OCM.API.InputProviders.IInputProvider inputProvider = null;
@@ -143,7 +143,7 @@ namespace OCM.API
             {
                 //API version is mandatory for api V2 onwards via api.openchargemap.* hostname
                 await OutputBadRequestMessage(context, "mandatory API Version not specified in request");
-                return;
+                return true;
             }
 
             bool performSubmissionCompletedRedirects = false;
@@ -186,13 +186,14 @@ namespace OCM.API
                     {
                         await context.Response.WriteAsync("Error");
                     }
+                    return true;
                 }
 
                 //if user not authenticated reject any other input
                 if (user == null)
                 {
                     context.Response.StatusCode = 401;
-                    return;
+                    return true;
                 }
 
                 //gather input variables
@@ -219,6 +220,7 @@ namespace OCM.API
                         {
                             context.Response.StatusCode = 202;
                         }
+                        return true;
                     }
                     else
                     {
@@ -232,6 +234,7 @@ namespace OCM.API
                             context.Response.StatusCode = 400;
                             await context.Response.WriteAsync(processingResult.IsValid ? submissionResult.Message : processingResult.Message);
                         }
+                        return true;
                     }
                 }
 
@@ -256,12 +259,9 @@ namespace OCM.API
                         {
                             System.Diagnostics.Debug.WriteLine("Invalid POI: " + cp.ID);
                         }
-
-
                     }
 
                     // refresh cache
-
                     var cacheTask = System.Threading.Tasks.Task.Run(async () =>
                     {
                         return await Core.Data.CacheManager.RefreshCachedData();
@@ -269,8 +269,7 @@ namespace OCM.API
                     cacheTask.Wait();
 
                     context.Response.StatusCode = 202;
-
-
+                    return true;
                 }
 
                 if (context.Request.Query["action"] == "comment_submission" || filter.Action == "comment")
@@ -308,14 +307,17 @@ namespace OCM.API
                     {
                         await context.Response.WriteAsync("Error: Validation Failed");
                     }
+
+                    return true;
                 }
 
                 if (context.Request.Query["action"] == "mediaitem_submission" || filter.Action == "mediaitem")
                 {
-                    var p = inputProvider;// as OCM.API.InputProviders.HTMLFormInputProvider;
+                    var p = inputProvider;
                     MediaItem m = new MediaItem();
                     bool accepted = false;
                     string msg = "";
+
                     try
                     {
                         var tempPath = System.IO.Path.GetTempPath() + "\\_ocm";
@@ -330,6 +332,7 @@ namespace OCM.API
                     {
                         msg += exp.ToString();
                     }
+
                     if (accepted)
                     {
                         submissionManager.PerformSubmission(m, user);
@@ -355,8 +358,12 @@ namespace OCM.API
                             await context.Response.WriteAsync("Error");
                         }
                     }
+                    return true;
                 }
             }
+
+            // submission was not handled
+            return false;
         }
 
         private async Task OutputBadRequestMessage(HttpContext context, string message, int statusCode = 400)
@@ -389,13 +396,8 @@ namespace OCM.API
         /// Handle output from API
         /// </summary>
         /// <param name="context"></param>
-        private async Task PerformOutput(HttpContext context)
+        private async Task<bool> PerformOutput(HttpContext context)
         {
-            //context.Sc.Server.ScriptTimeout = 120; //max script execution time is 2 minutes
-
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
             //decide correct reponse type
             IOutputProvider outputProvider = null;
             var filter = new APIRequestParams();
@@ -413,7 +415,7 @@ namespace OCM.API
                 paramList.Add(k.ToLower(), context.Request.Query[k]);
             }
             filter.ParseParameters(filter, paramList);
-            
+
             if (string.IsNullOrEmpty(filter.APIKey))
             {
                 if (context.Request.Headers.ContainsKey("X-API-Key"))
@@ -430,7 +432,7 @@ namespace OCM.API
             {
                 //API version is mandatory for api V2 onwards via api.openchargemap.* hostname
                 await OutputBadRequestMessage(context, "mandatory API Version not specified in request");
-                return;
+                return true;
             }
 
             if (!String.IsNullOrEmpty(context.Request.Query["output"]))
@@ -453,7 +455,7 @@ namespace OCM.API
                 if (outputType == "carwings" || outputType == "rss")
                 {
                     await OutputBadRequestMessage(context, "specified output type not supported in this API version");
-                    return;
+                    return true;
                 }
             }
 
@@ -466,7 +468,7 @@ namespace OCM.API
             if (IsRequestByRobot(context))
             {
                 await OutputBadRequestMessage(context, "API requests by robots are temporarily disabled.", statusCode: 503);
-                return;
+                return true;
             }
 
             //determine output provider
@@ -505,66 +507,37 @@ namespace OCM.API
 
             if (outputProvider != null)
             {
-                //FIXME: context.Response.ContentEncoding = Encoding.Default;
                 context.Response.ContentType = outputProvider.ContentType;
-
-                /*if (!(filter.Action == "getcorereferencedata" && String.IsNullOrEmpty(context.Request.Query["SessionToken"])))
-                {
-                    //by default output is cacheable for 24 hrs, unless requested by a specific user.
-                    context.Response.Cache.SetExpires(DateTime.Now.AddDays(1));
-                    context.Response.Cache.SetCacheability(HttpCacheability.Public);
-                    context.Response.Cache.SetValidUntilExpires(true);
-                }*/
-
-                /*if (ConfigurationManager.AppSettings["EnableOutputCompression"] == "true")
-                {
-                    //apply compression if accepted
-                    context.Request.Headers.TryGetValue("Accept-Encoding", out string encodings);
-
-                    if (encodings != null)
-                    {
-                        encodings = encodings.ToLower();
-
-                        if (encodings.ToLower().Contains("gzip"))
-                        {
-                            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionLevel.Optimal, false);
-                            context.Response.Headers.TryAdd("Content-Encoding", "gzip");
-                            //context.Trace.Warn("GZIP Compression on");
-                        }
-                        else if (encodings.ToLower().Contains("deflate"))
-                        {
-                            context.Response.Filter = new DeflateStream(context.Response.Filter, CompressionMode.Compress);
-                            context.Response.Headers.TryAdd("Content-Encoding", "deflate");
-                            //context.Trace.Warn("Deflate Compression on");
-                        }
-                    }
-                }*/
-
+                
                 if (filter.Action == "getchargepoints" || filter.Action == "poi")
                 {
-                    System.Diagnostics.Debug.WriteLine("At getpoilist output: " + stopwatch.ElapsedMilliseconds + "ms");
                     await OutputPOIList(outputProvider, context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "getcompactpoilist")
                 {
                     //experimental::
                     await OutputCompactPOIList(context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "getcorereferencedata")
                 {
                     await OutputCoreReferenceData(outputProvider, context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "geocode")
                 {
                     OutputGeocodingResult(outputProvider, context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "availability")
                 {
                     OutputAvailabilityResult(outputProvider, context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "profile.authenticate")
@@ -575,6 +548,7 @@ namespace OCM.API
                 if (filter.Action == "profile.register")
                 {
                     await OutputProfileRegisterResult(outputProvider, context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "refreshmirror")
@@ -583,16 +557,18 @@ namespace OCM.API
                     {
                         var itemsUpdated = await OCM.Core.Data.CacheManager.RefreshCachedData();
                         await new JSONOutputProvider().GetOutput(context, context.Response.Body, new { POICount = itemsUpdated, Status = "OK" }, filter);
+                        return true;
                     }
                     catch (Exception exp)
                     {
                         await new JSONOutputProvider().GetOutput(context, context.Response.Body, new { Status = "Error", Message = exp.ToString() }, filter);
+                        return true;
                     }
                 }
-
-                stopwatch.Stop();
-                System.Diagnostics.Debug.WriteLine("Total output time: " + stopwatch.ElapsedMilliseconds + "ms");
             }
+
+            // request did not match an existing handler
+            return false;
         }
 
         /// <summary>
@@ -611,13 +587,6 @@ namespace OCM.API
             //get list of charge points for output:
             var poiManager = new POIManager();
             dataList = poiManager.GetPOIList(filter);
-
-            /*if (dataList != null && filter.LevelOfDetail > 1 && dataList.Count() <= filter.MaxResults)
-            {
-                // level of detail filter was supplied but we have less than our default limit of results, repeat query with full level of detail
-                filter.LevelOfDetail = 1;
-                dataList = poiManager.GetPOIList(filter);
-            }*/
 
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("OutputPOIList: Time for Query/Conversion: " + stopwatch.ElapsedMilliseconds + "ms");
@@ -640,7 +609,7 @@ namespace OCM.API
         {
             //get list of charge points as compact POISearchResult List for output:
             IEnumerable<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetPOIList(filter);
-         
+
             List<POISearchResult> poiList = new List<POISearchResult>();
             foreach (var c in dataList)
             {
@@ -892,7 +861,7 @@ namespace OCM.API
         /// Main entry point for API calls
         /// </summary>
         /// <param name="context"></param>
-        public async Task ProcessRequest(HttpContext context)
+        public async Task<bool> ProcessRequest(HttpContext context)
         {
 
             SetAPIDefaults(context);
@@ -914,7 +883,7 @@ namespace OCM.API
             if (context.Request.Method == "OPTIONS")
             {
                 context.Response.StatusCode = 200;
-                return;
+                return true;
             }
             else
             {
@@ -925,18 +894,11 @@ namespace OCM.API
             if (context.Request.Method == "POST" && !IsQueryByPost)
             {
                 //process input request
-                await PerformInput(context);
-
-                //flush output caching (because a change has been applied)
-                /*var cacheEnum = context.Cache.GetEnumerator();
-                while (cacheEnum.MoveNext())
-                {
-                    context.Cache.Remove(cacheEnum.Key.ToString());
-                }*/
+                return await PerformInput(context);
             }
             else
             {
-                await PerformOutput(context);
+                return await PerformOutput(context);
             }
         }
 

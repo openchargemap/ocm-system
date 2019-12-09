@@ -43,6 +43,7 @@ namespace OCM.API.Tests
             Core.Data.CacheManager.InitCaching(_settings);
 
         }
+      
         [Fact]
         public async Task CacheStatusOK()
         {

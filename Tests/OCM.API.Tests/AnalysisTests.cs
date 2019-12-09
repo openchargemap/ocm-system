@@ -15,10 +15,10 @@ namespace OCM.API.Tests
             var analysis = new OCM.Import.Analysis.SpatialAnalysis(@"C:\Temp\ocm\data\import\Shapefiles\World\ne_10m_admin_0_map_units.shp");
 
             var r1 = analysis.ClassifyPoint(38.58431244, -121.4956055);
-            Assert.Equal(r1.CountryCode, "US");
+            Assert.Equal("US",r1.CountryCode);
 
             var r2 = analysis.ClassifyPoint(57.142, -2.096);
-            Assert.Equal(r2.CountryCode, "GB");
+            Assert.Equal("GB", r2.CountryCode);
 
             var poiManager = new OCM.API.Common.POIManager();
             var list = poiManager.GetPOIList(new Common.APIRequestParams { MaxResults = 100 });

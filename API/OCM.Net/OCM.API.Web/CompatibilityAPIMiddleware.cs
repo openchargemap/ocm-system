@@ -26,15 +26,20 @@ namespace OCM.API.Web.Standard
             if (context.Request.Path.ToString() == "/favicon.ico"){
                 return;
             }
-
+            
             if (!context.Request.Path.ToString().StartsWith("/v4/"))
             {
-                await new CompatibilityAPICoreHTTPHandler(_settings).ProcessRequest(context);
+                var handled = await new CompatibilityAPICoreHTTPHandler(_settings).ProcessRequest(context);
+
+                if (!handled)
+                {
+                    // call next middleware, API controllers etc
+                    await _next.Invoke(context);
+                }
             }
             else
             {
                 // call next middleware, API controllers etc
-                
                 await _next.Invoke(context);
             }
             

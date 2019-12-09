@@ -9,6 +9,7 @@ namespace OCM.Core.Settings
         public string CachePath { get; set; }
         public bool EnableDataWrites { get; set; }
         public bool IsCacheOnlyMode { get; set; }
+        public bool RefreshCacheOnLoad { get; set; }
         public ApiKeys ApiKeys { get; set; }
         public MongoDbSettings MongoDBSettings { get; set; }
     }

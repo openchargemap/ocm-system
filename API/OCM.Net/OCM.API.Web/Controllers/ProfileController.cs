@@ -15,7 +15,7 @@ namespace OCM.API.Web.Standard.Controllers
     [Route("/v4/[controller]")]
     public class ProfileController : ControllerBase
     {
-        private readonly ILogger<ProfileController> _logger;
+        private readonly ILogger _logger;
 
         public ProfileController(ILogger<ProfileController> logger)
         {

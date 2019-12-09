@@ -11,23 +11,22 @@ namespace OCM.API.Web.Standard.Controllers
 {
     [ApiController]
     [Route("/v4/[controller]")]
-    public class POIController : ControllerBase
+    public class ReferenceDataController : ControllerBase
     {
         private readonly ILogger _logger;
 
-        public POIController(ILogger<POIController> logger)
+        public ReferenceDataController(ILogger<ReferenceDataController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<ChargePoint> Get()
+        public CoreReferenceData Get(APIRequestParams filter)
         {
-            var api = new POIManager();
-
-            var list = api.GetPOIList(new APIRequestParams { });
-
-            return list;
+            using (var refData = new ReferenceDataManager())
+            {
+                return refData.GetCoreReferenceData(filter);
+            }
         }
     }
 }
