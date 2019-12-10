@@ -24,6 +24,10 @@ namespace OCM.API.Web.Standard
             configuration.GetSection("CoreSettings").Bind(settings);
 
             Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
+
+            
+            Core.Data.CacheManager.InitCaching(settings);
+            
         }
 
         public IConfiguration Configuration { get; }

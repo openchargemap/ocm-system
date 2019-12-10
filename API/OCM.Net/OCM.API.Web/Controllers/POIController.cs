@@ -21,11 +21,11 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ChargePoint> Get()
+        public IEnumerable<ChargePoint> Get([FromQuery] APIRequestParams filter)
         {
             var api = new POIManager();
 
-            var list = api.GetPOIList(new APIRequestParams { });
+            var list = api.GetPOIList(filter);
 
             return list;
         }

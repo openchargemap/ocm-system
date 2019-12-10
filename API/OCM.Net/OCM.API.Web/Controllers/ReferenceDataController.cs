@@ -21,12 +21,13 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpGet]
-        public CoreReferenceData Get(APIRequestParams filter)
+        public CoreReferenceData Get([FromQuery] APIRequestParams filter)
         {
             using (var refData = new ReferenceDataManager())
             {
                 return refData.GetCoreReferenceData(filter);
             }
         }
+
     }
 }
