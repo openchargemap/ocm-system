@@ -1,0 +1,10 @@
+[Unit]
+Description=Open Charge Map API Worker
+
+[Service]
+Type=notify
+ExecStart=/usr/sbin/ocm-api
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

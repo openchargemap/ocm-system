@@ -59,6 +59,14 @@ Please contribute in any way you can:
 	To run API server on port 5000 bound to default public network interface:
 	- Debug: `dotnet run --urls http://0.0.0.0:5000`
     - Release: `dotnet run -c Release --urls http://0.0.0.0:5000`
-
+    
+    To deploy service worker as systemd managed service:
+    
+    - Build release: 
+        - `cd :~/ocm-system/API/OCM.Net/OCM.API.Worker`
+        - `dotnet publish -c Release`
+    - Copy ocm-api.service file to /etc/systemd/system/ocm-api.service
+    - Create symlink in /usr/sbin for the build
+        `sudo ln -s ~/ocm-system/API/OCM.Net/OCM.API.Worker/bin/Release/netcoreapp3.1/publish/OCM.API.Worker /usr/sbin/ocm-api`
 
 
