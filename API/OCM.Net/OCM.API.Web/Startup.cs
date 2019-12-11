@@ -23,6 +23,11 @@ namespace OCM.API.Web.Standard
             var settings = new Core.Settings.CoreSettings();
             configuration.GetSection("CoreSettings").Bind(settings);
 
+            if (settings.MongoDBSettings == null)
+            {
+                throw new Exception("OCM.API: Service Cannot Start, appsettings.json not found from current path.");
+            }
+
             Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
 
             
