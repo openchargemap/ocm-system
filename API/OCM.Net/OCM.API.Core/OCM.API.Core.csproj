@@ -79,6 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OCM.API.Client\OCM.API.Client.csproj" />
     <ProjectReference Include="..\OCM.API.Model\OCM.API.Common.Model.csproj" />
   </ItemGroup>
 

@@ -173,7 +173,7 @@ namespace OCM.Import
             var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
 
             CoreReferenceData coreRefData = null;
-            coreRefData = await client.GetCoreReferenceData();
+            coreRefData = await client.GetCoreReferenceDataAsync();
 
             string outputPath = defaultDataPath;
             var providers = new List<IImportProvider>();
@@ -210,7 +210,7 @@ namespace OCM.Import
             if (fetchExistingFromAPI)
             {
                 // fetch from API
-                masterListCollection = await new OCMClient(false).GetLocations(new SearchFilters
+                masterListCollection = await new OCMClient(false).GetPOIListAsync(new SearchFilters
                 {
                     CountryIDs = countryIds,
                     MaxResults = 1000000,
@@ -887,7 +887,7 @@ namespace OCM.Import
                         Log("Publishing via API..");
                         foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.Country != null))
                         {
-                            ocmClient.UpdateItem(cp, credentials);
+                            ocmClient.UpdatePOI(cp, credentials);
                             if (cp.ID == 0)
                             {
                                 numAdded++;
@@ -1058,7 +1058,7 @@ namespace OCM.Import
             //get a few OCM listings
             SearchFilters filters = new SearchFilters { SubmissionStatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };
 
-            var poiList = client.GetLocations(filters);
+            var poiList = client.GetPOIListAsync(filters);
             /*
             GeocodingService g = new GeocodingService();
             List<GeolocationResult> list = new List<GeolocationResult>();
