@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,6 +34,8 @@ namespace OCM.API.Client
         public int[] SubmissionStatusTypeIDs { get; set; }
         public int[] CountryIDs { get; set; }
 
+        public DateTime? ModifiedSince { get; set; }
+
         public SearchFilters()
         {
             DistanceUnit = Common.Model.DistanceUnit.Miles;
@@ -45,8 +48,11 @@ namespace OCM.API.Client
     {
         public bool IsSandboxMode { get; set; }
         public string ServiceBaseURL { get; set; }
+        public string APIKey { get; set; }
 
-        public OCMClient(bool sandBoxMode = false)
+        private HttpClient _client = new HttpClient();
+
+        public OCMClient(bool sandBoxMode = false, string apiKey =null)
         {
             this.IsSandboxMode = sandBoxMode;
 
@@ -58,6 +64,14 @@ namespace OCM.API.Client
             {
                 ServiceBaseURL = "http://localhost:8080/v3/";
             }
+
+            APIKey = apiKey;
+        }
+
+        public OCMClient(string baseUrl, string apiKey)
+        {
+            ServiceBaseURL = baseUrl;
+            APIKey = apiKey;
         }
 
 #if DEBUG
@@ -81,8 +95,8 @@ namespace OCM.API.Client
                 filters.Latitude = r.Next(50, 55);
                 filters.Longitude = r.Next(-1, 1);
 
-                var list = await this.GetLocations(filters);
-                System.Diagnostics.Debug.WriteLine(i + ": POIs: " + list.Count);
+                var list = await this.GetPOIListAsync(filters);
+                System.Diagnostics.Debug.WriteLine(i + ": POIs: " + list.Count());
             }
 
             stopwatch.Stop();
@@ -107,17 +121,14 @@ namespace OCM.API.Client
         /// Get core reference data such as lookup lists
         /// </summary>
         /// <returns>  </returns>
-        public async Task<CoreReferenceData> GetCoreReferenceData()
+        public async Task<CoreReferenceData> GetCoreReferenceDataAsync()
         {
             //get core reference data
-            string url = ServiceBaseURL + "/referencedata/?output=json&enablecaching=false";
+            string url = ServiceBaseURL + "/referencedata/?client=ocm.api.client&output=json&enablecaching=false";
             try
             {
                 string data = await FetchDataStringFromURLAsync(url);
-                JObject o = JObject.Parse(data);
-                JsonSerializer serializer = new JsonSerializer();
-                CoreReferenceData c = (CoreReferenceData)serializer.Deserialize(new JTokenReader(o), typeof(CoreReferenceData));
-                return c;
+                return JsonConvert.DeserializeObject<CoreReferenceData>(data);
             }
             catch (Exception)
             {
@@ -131,7 +142,7 @@ namespace OCM.API.Client
         /// </summary>
         /// <param name="cp">  </param>
         /// <returns>  </returns>
-        public async Task<List<ChargePoint>> GetLocations(SearchFilters filters)
+        public async Task<IEnumerable<ChargePoint>> GetPOIListAsync(SearchFilters filters)
         {
             string url = ServiceBaseURL + "/poi/?output=json&verbose=false";
 
@@ -181,6 +192,11 @@ namespace OCM.API.Client
                     url += id + ",";
                 }
             }
+         
+            if (filters.ModifiedSince.HasValue)
+            {
+                url += "&modifiedsince=" + filters.ModifiedSince.Value.ToString("s", CultureInfo.InvariantCulture);
+            }
 
             url += "&maxresults=" + filters.MaxResults;
 
@@ -189,16 +205,22 @@ namespace OCM.API.Client
                 System.Diagnostics.Debug.WriteLine("Client: Fetching data from " + url);
                 string data = await FetchDataStringFromURLAsync(url);
                 System.Diagnostics.Debug.WriteLine("Client: completed fetch");
-                JObject o = JObject.Parse("{\"root\": " + data + "}");
-                JsonSerializer serializer = new JsonSerializer();
-                List<ChargePoint> c = (List<ChargePoint>)serializer.Deserialize(new JTokenReader(o["root"]), typeof(List<ChargePoint>));
-                return c;
+
+                return JsonConvert.DeserializeObject<List<ChargePoint>>(data);
             }
             catch (Exception)
             {
                 //failed!
                 return null;
             }
+        }
+
+        public async Task<SystemInfoResult> GetSystemStatusAsync()
+        {
+            string url = ServiceBaseURL + "/system/status";
+            var result = await FetchDataStringFromURLAsync(url);
+
+            return JsonConvert.DeserializeObject<SystemInfoResult>(result);
         }
 
 #if !PORTABLE
@@ -224,7 +246,7 @@ namespace OCM.API.Client
             }
         }
 
-        public bool UpdateItem(ChargePoint cp, APICredentials credentials)
+        public bool UpdatePOI(ChargePoint cp, APICredentials credentials)
         {
             //TODO: implement batch update based on item list?
             try
@@ -274,19 +296,21 @@ namespace OCM.API.Client
             return new APICredentials() { };
         }
 
-        public async Task<string> FetchDataStringFromURLAsync(string url)
+        private async Task<string> FetchDataStringFromURLAsync(string url)
         {
-            HttpClient client = new HttpClient();
-            //TODO: error handling
-            HttpResponseMessage response = await client.GetAsync(url);
+            if (!string.IsNullOrEmpty(APIKey))
+            {
+                _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("X-API-Key", APIKey);
+            }
 
-            string value = await response.Content.ReadAsStringAsync();
-            return value;
+            HttpResponseMessage response = await _client.GetAsync(url);
+
+            return await response.Content.ReadAsStringAsync();
         }
 
 #if !PORTABLE
 
-        public string PostDataToURL(string url, string data)
+        private string PostDataToURL(string url, string data)
         {
             //http://msdn.microsoft.com/en-us/library/debx8sh9.aspx
 
