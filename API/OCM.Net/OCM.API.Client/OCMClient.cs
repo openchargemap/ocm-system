@@ -36,7 +36,13 @@ namespace OCM.API.Client
         public int[] SubmissionStatusTypeIDs { get; set; }
         public int[] CountryIDs { get; set; }
 
+        /// <summary>
+        /// e.g. created_asc
+        /// </summary>
+        public string SortBy { get; set; }
+
         public DateTime? ModifiedSince { get; set; }
+        public DateTime? CreatedSince { get; set; }
 
         public SearchFilters()
         {
@@ -204,6 +210,16 @@ namespace OCM.API.Client
             if (filters.ModifiedSince.HasValue)
             {
                 url += "&modifiedsince=" + filters.ModifiedSince.Value.ToString("s", CultureInfo.InvariantCulture);
+            }
+
+            if (filters.CreatedSince.HasValue)
+            {
+                url += "&createdsince=" + filters.CreatedSince.Value.ToString("s", CultureInfo.InvariantCulture);
+            }
+
+            if (!string.IsNullOrEmpty(filters.SortBy))
+            {
+                url += "&sortby=" + filters.SortBy;
             }
 
             url += "&maxresults=" + filters.MaxResults;

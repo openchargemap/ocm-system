@@ -43,6 +43,7 @@ namespace OCM.Core.Data
         public string ContentHash { get; set; }
 
         public DateTime? LastPOIUpdate { get; set; }
+        public DateTime? LastPOICreated { get; set; }
     }
 
     public class BenchmarkResult
@@ -411,7 +412,7 @@ namespace OCM.Core.Data
         /// Perform full or partial repopulation of POI Mirror in MongoDB
         /// </summary>
         /// <returns></returns>
-        public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy, ILogger logger=null)
+        public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy, ILogger logger = null)
         {
             // cache will refresh either from the source database or via a master API
             if (!_settings.IsCacheOnlyMode)
@@ -497,12 +498,13 @@ namespace OCM.Core.Data
                 {
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
 
-                 
+
 
                     bool isRefDataSyncRequired = false;
                     DateTime? lastUpdated = null;
+                    DateTime? lastCreated = null;
 
-                    if (poiCollection.Count()==0)
+                    if (poiCollection.Count() == 0)
                     {
                         // no data, starting a new mirror
                         updateStrategy = CacheUpdateStrategy.All;
@@ -510,7 +512,9 @@ namespace OCM.Core.Data
                     }
                     else
                     {
-                       lastUpdated= poiCollection.AsQueryable().Max(i => i.DateLastStatusUpdate);
+                        lastUpdated = poiCollection.AsQueryable().Max(i => i.DateLastStatusUpdate);
+                        lastCreated = poiCollection.AsQueryable().Max(i => i.DateCreated);
+
                         // existing data, sync may be required
                         var hashItems = syncStatus.DataHash.Split(";");
                         var hashChecks = syncStatus.DataHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
@@ -530,9 +534,9 @@ namespace OCM.Core.Data
                     }
 
                     // updates are required to reference data or POI list
-                    if (isRefDataSyncRequired || lastUpdated != syncStatus.POIDataLastModified)
+                    if (isRefDataSyncRequired || lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated)
                     {
-                        var numPOIUpdated =0L;
+                        var numPOIUpdated = 0L;
 
                         var dateLastSync = syncStatus.POIDataLastModified;
 
@@ -555,10 +559,19 @@ namespace OCM.Core.Data
 
                         }
 
-                        if (lastUpdated != syncStatus.POIDataLastModified)
+                        if (lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated)
                         {
+
+                            var poiFilter = new API.Client.SearchFilters { MaxResults = 10000, ModifiedSince = lastUpdated, SortBy = "created_asc" };
+
+                            if (lastCreated < syncStatus.POIDataLastCreated)
+                            {
+                                poiFilter.ModifiedSince = null;
+                                poiFilter.CreatedSince = lastCreated;
+                            }
+
                             // sync POI list
-                            var poiList = await apiClient.GetPOIListAsync(new API.Client.SearchFilters { MaxResults = Int32.MaxValue, ModifiedSince = lastUpdated });
+                            var poiList = await apiClient.GetPOIListAsync(poiFilter);
 
                             if (poiList != null && poiList.Any())
                             {
@@ -599,7 +612,10 @@ namespace OCM.Core.Data
             return GetMirrorStatus(false, false, false);
         }
 
-        private MirrorStatus RefreshMirrorStatus(long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB, DateTime? poiLastUpdate =null)
+        private MirrorStatus RefreshMirrorStatus(
+            long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB,
+            DateTime? poiLastUpdate = null,
+            DateTime? poiLastCreated = null)
         {
             var statusCollection = database.GetCollection<MirrorStatus>("status");
             statusCollection.Drop();
@@ -615,7 +631,8 @@ namespace OCM.Core.Data
             status.StatusCode = HttpStatusCode.OK;
             status.NumPOILastUpdated = numPOIUpdated;
 
-            if (poiLastUpdate!=null) status.LastPOIUpdate = poiLastUpdate;
+            if (poiLastUpdate != null) status.LastPOIUpdate = poiLastUpdate;
+            if (poiLastCreated != null) status.LastPOICreated = poiLastCreated;
 
             statusCollection.Insert(status);
             return status;
@@ -663,6 +680,7 @@ namespace OCM.Core.Data
                     {
                         currentStatus.TotalPOIInDB = db.ChargePoints.LongCount();
                         currentStatus.LastPOIUpdate = db.ChargePoints.Max(i => i.DateLastStatusUpdate);
+                        currentStatus.LastPOICreated = db.ChargePoints.Max(i => i.DateCreated);
                     }
                 }
 
@@ -975,7 +993,16 @@ namespace OCM.Core.Data
                 {
                     //distance is not required or can't be provided
                     System.Diagnostics.Debug.Print($"MongoDB starting query to list @ {stopwatch.ElapsedMilliseconds}ms");
-                    results = poiList.OrderByDescending(p => p.ID).Take(settings.MaxResults).AsEnumerable();
+
+                    if (!string.IsNullOrEmpty(settings.SortBy) && settings.SortBy == "created_asc")
+                    {
+                        results = poiList.OrderBy(p => p.DateCreated).Take(settings.MaxResults).AsEnumerable();
+                    }
+                    else
+                    {
+                        results = poiList.OrderByDescending(p => p.ID).Take(settings.MaxResults).AsEnumerable();
+                    }
+
                     System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
                 }
                 else

@@ -33,6 +33,7 @@ namespace OCM.API.Web.Standard.Controllers
              {
                  SystemVersion = "3",
                  POIDataLastModified = cacheStatus.LastPOIUpdate.Value,
+                 POIDataLastCreated = cacheStatus.LastPOICreated.Value,
                  DataHash = cacheStatus.ContentHash
              };
         }

@@ -125,6 +125,8 @@ namespace OCM.API.Common
 
         public DateTime? CreatedFromDate { get; set; }
 
+        public string SortBy { get; set; }
+
         /// <summary>
         /// If supplied and greater than 1 the API will return a random sample of matching results, the higher the value the less results returned.
         /// </summary>
@@ -219,6 +221,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(requestParams["connectiontype"])) settings.ConnectionType = ParseString(requestParams["connectiontype"]);
             if (!String.IsNullOrEmpty(requestParams["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(requestParams["submissionstatustypeid"]);
             if (!String.IsNullOrEmpty(requestParams["modifiedsince"])) settings.ChangesFromDate = ParseDate(requestParams["modifiedsince"]);
+            if (!String.IsNullOrEmpty(requestParams["createdsince"])) settings.CreatedFromDate = ParseDate(requestParams["createdsince"]);
 
             if (!String.IsNullOrEmpty(requestParams["levelofdetail"])) settings.LevelOfDetail = ParseInt(requestParams["levelofdetail"]);
             if (!String.IsNullOrEmpty(requestParams["enablecaching"])) settings.EnableCaching = ParseBool(requestParams["enablecaching"], true);
@@ -239,6 +242,11 @@ namespace OCM.API.Common
                 {
                     settings.MaxResults = 100;
                 }
+            }
+
+            if (!String.IsNullOrEmpty(requestParams["sortby"]))
+            {
+                settings.SortBy = requestParams["sortby"].Trim().ToLower();
             }
 
             //default action

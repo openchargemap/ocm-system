@@ -471,7 +471,14 @@ namespace OCM.API.Common
                 }
                 else
                 {
-                    filteredList = filteredList.OrderByDescending(p => p.c.Id);
+                    if (!string.IsNullOrEmpty(filter.SortBy) && filter.SortBy == "created_asc")
+                    {
+                        filteredList = filteredList.OrderBy(p => p.c.DateCreated);
+                    }
+                    else
+                    {
+                        filteredList = filteredList.OrderByDescending(p => p.c.Id);
+                    }
                 }
 
                 var additionalFilteredList = filteredList
