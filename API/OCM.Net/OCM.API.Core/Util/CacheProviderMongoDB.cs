@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -410,7 +411,7 @@ namespace OCM.Core.Data
         /// Perform full or partial repopulation of POI Mirror in MongoDB
         /// </summary>
         /// <returns></returns>
-        public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy)
+        public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy, ILogger logger=null)
         {
             // cache will refresh either from the source database or via a master API
             if (!_settings.IsCacheOnlyMode)
@@ -487,7 +488,7 @@ namespace OCM.Core.Data
                 // cache must refresh from master API
 
                 var baseUrl = _settings.DataSourceAPIBaseUrl;
-                var apiClient = new OCM.API.Client.OCMClient(baseUrl, _settings.ApiKeys.OCMApiKey);
+                var apiClient = new OCM.API.Client.OCMClient(baseUrl, _settings.ApiKeys.OCMApiKey, logger);
 
                 // check sync status compared to master API
                 var syncStatus = await apiClient.GetSystemStatusAsync();

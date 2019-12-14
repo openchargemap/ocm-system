@@ -42,7 +42,7 @@ namespace OCM.API.Worker
 
                 try
                 {
-                    var refresh = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
+                    var refresh = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified, _logger);
 
                     if (refresh.StatusCode == System.Net.HttpStatusCode.ExpectationFailed)
                     {

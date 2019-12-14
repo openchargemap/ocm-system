@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OCM.API.Common;
 using OCM.API.Common.Model.Extended;
 using System;
@@ -57,11 +58,11 @@ namespace OCM.Core.Data
         {
             CacheProviderMongoDB.CreateDefaultInstance(settings);
         }
-        public async static Task<MirrorStatus> RefreshCachedData(CacheUpdateStrategy updateStrategy = CacheUpdateStrategy.Modified)
+        public async static Task<MirrorStatus> RefreshCachedData(CacheUpdateStrategy updateStrategy = CacheUpdateStrategy.Modified, ILogger logger = null)
         {
             try
             {
-                return await CacheProviderMongoDB.DefaultInstance.PopulatePOIMirror(updateStrategy);
+                return await CacheProviderMongoDB.DefaultInstance.PopulatePOIMirror(updateStrategy, logger);
             }
             catch (Exception exp)
             {
@@ -69,7 +70,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck = false, bool includeDBCheck = true,  bool includeContentHash = false)
+        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck = false, bool includeDBCheck = true, bool includeContentHash = false)
         {
             try
             {

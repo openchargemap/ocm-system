@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -51,8 +53,9 @@ namespace OCM.API.Client
         public string APIKey { get; set; }
 
         private HttpClient _client = new HttpClient();
+        private ILogger _logger = null;
 
-        public OCMClient(bool sandBoxMode = false, string apiKey =null)
+        public OCMClient(bool sandBoxMode = false, string apiKey = null, ILogger logger = null)
         {
             this.IsSandboxMode = sandBoxMode;
 
@@ -66,12 +69,17 @@ namespace OCM.API.Client
             }
 
             APIKey = apiKey;
+            _client.Timeout = TimeSpan.FromMinutes(10);
+            _logger = logger;
         }
 
-        public OCMClient(string baseUrl, string apiKey)
+        public OCMClient(string baseUrl, string apiKey, ILogger logger = null)
         {
             ServiceBaseURL = baseUrl;
+
             APIKey = apiKey;
+            _client.Timeout = TimeSpan.FromMinutes(10);
+            _logger = logger;
         }
 
 #if DEBUG
@@ -192,7 +200,7 @@ namespace OCM.API.Client
                     url += id + ",";
                 }
             }
-         
+
             if (filters.ModifiedSince.HasValue)
             {
                 url += "&modifiedsince=" + filters.ModifiedSince.Value.ToString("s", CultureInfo.InvariantCulture);
@@ -200,19 +208,23 @@ namespace OCM.API.Client
 
             url += "&maxresults=" + filters.MaxResults;
 
+            var stopwatch = Stopwatch.StartNew();
             try
             {
-                System.Diagnostics.Debug.WriteLine("Client: Fetching data from " + url);
+
+                _logger?.LogInformation($"Client: Fetching data from {url}");
                 string data = await FetchDataStringFromURLAsync(url);
-                System.Diagnostics.Debug.WriteLine("Client: completed fetch");
+                _logger?.LogInformation($"Client: fetch completed: { stopwatch.Elapsed.TotalSeconds}s");
 
                 return JsonConvert.DeserializeObject<List<ChargePoint>>(data);
             }
-            catch (Exception)
+            catch (Exception exp)
             {
                 //failed!
+                _logger?.LogInformation($"Client: fetch failed: { stopwatch.Elapsed.TotalSeconds}s {exp.ToString()}");
                 return null;
             }
+            stopwatch.Stop();
         }
 
         public async Task<SystemInfoResult> GetSystemStatusAsync()
@@ -283,7 +295,7 @@ namespace OCM.API.Client
             catch (Exception exp)
             {
                 //update failed
-                System.Diagnostics.Debug.WriteLine("Update Items Failed: {" + exp.Message+ "}");
+                System.Diagnostics.Debug.WriteLine("Update Items Failed: {" + exp.Message + "}");
                 return false;
             }
         }
