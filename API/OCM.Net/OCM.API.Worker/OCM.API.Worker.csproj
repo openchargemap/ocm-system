@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OCM.API.Client\OCM.API.Client.csproj" />
     <ProjectReference Include="..\OCM.API.Web\OCM.API.Web.csproj" />
   </ItemGroup>
 

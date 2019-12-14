@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -34,9 +35,13 @@ namespace OCM.Core.Data
 
         public long NumPOILastUpdated { get; set; }
 
-        public int NumDistinctPOIs { get; set; }
+        public long NumDistinctPOIs { get; set; }
 
         public string Server { get; set; }
+
+        public string ContentHash { get; set; }
+
+        public DateTime? LastPOIUpdate { get; set; }
     }
 
     public class BenchmarkResult
@@ -233,7 +238,7 @@ namespace OCM.Core.Data
             return database.GetCollection<POIMongoDB>("poi");
         }
 
-        public void RemoveAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
+        public void RemoveAllPOI(IEnumerable<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
         {
             foreach (var poi in poiList)
             {
@@ -242,7 +247,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public void InsertAllPOI(List<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
+        public void InsertAllPOI(IEnumerable<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
         {
             var mongoDBPoiList = new List<POIMongoDB>();
             foreach (var poi in poiList)
@@ -407,82 +412,186 @@ namespace OCM.Core.Data
         /// <returns></returns>
         public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy)
         {
-            var dataModel = new Data.OCMEntities();
-
-            if (!database.CollectionExists("poi"))
+            // cache will refresh either from the source database or via a master API
+            if (!_settings.IsCacheOnlyMode)
             {
-                database.CreateCollection("poi");
-            }
+                var dataModel = new Data.OCMEntities();
 
-            if (updateStrategy != CacheUpdateStrategy.All)
-            {
-                if (!database.CollectionExists("reference"))
-                {
-                    database.CreateCollection("reference");
-                }
-                if (!database.CollectionExists("status"))
-                {
-                    database.CreateCollection("status");
-                }
                 if (!database.CollectionExists("poi"))
                 {
                     database.CreateCollection("poi");
                 }
-            }
 
-            CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { });
-            if (coreRefData != null)
+                if (updateStrategy != CacheUpdateStrategy.All)
+                {
+                    if (!database.CollectionExists("reference"))
+                    {
+                        database.CreateCollection("reference");
+                    }
+                    if (!database.CollectionExists("status"))
+                    {
+                        database.CreateCollection("status");
+                    }
+                    if (!database.CollectionExists("poi"))
+                    {
+                        database.CreateCollection("poi");
+                    }
+                }
+
+                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { });
+                if (coreRefData != null)
+                {
+                    database.DropCollection("reference");
+                    //problems clearing data from collection...
+
+                    var reference = database.GetCollection<CoreReferenceData>("reference");
+                    var query = new QueryDocument();
+                    reference.Remove(query, RemoveFlags.None);
+
+                    Thread.Sleep(300);
+                    reference.Insert(coreRefData);
+                }
+
+                var poiList = GetPOIListToUpdate(dataModel, updateStrategy);
+                var poiCollection = database.GetCollection<POIMongoDB>("poi");
+                if (poiList != null && poiList.Any())
+                {
+                    if (updateStrategy == CacheUpdateStrategy.All)
+                    {
+                        poiCollection.RemoveAll();
+                    }
+                    else
+                    {
+                        RemoveAllPOI(poiList, poiCollection);
+                    }
+
+                    Thread.Sleep(300);
+                    InsertAllPOI(poiList, poiCollection);
+
+                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
+                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
+                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
+                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
+
+                    if (updateStrategy == CacheUpdateStrategy.All)
+                    {
+                        poiCollection.ReIndex();
+                    }
+                }
+
+                long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
+                return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
+            }
+            else
             {
-                database.DropCollection("reference");
-                //problems clearing data from collection...
+                // cache must refresh from master API
 
-                var reference = database.GetCollection<CoreReferenceData>("reference");
-                var query = new QueryDocument();
-                reference.Remove(query, RemoveFlags.None);
+                var baseUrl = _settings.DataSourceAPIBaseUrl;
+                var apiClient = new OCM.API.Client.OCMClient(baseUrl, _settings.ApiKeys.OCMApiKey);
 
-                Thread.Sleep(300);
-                reference.Insert(coreRefData);
+                // check sync status compared to master API
+                var syncStatus = await apiClient.GetSystemStatusAsync();
+
+                if (syncStatus != null)
+                {
+                    var poiCollection = database.GetCollection<POIMongoDB>("poi");
+                    var lastUpdated = poiCollection.AsQueryable().Max(i => i.DateLastStatusUpdate);
+
+
+                    bool isRefDataSyncRequired = false;
+
+                    var hashItems = syncStatus.DataHash.Split(";");
+                    var hashChecks = syncStatus.DataHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                       .Select(part => part.Split("::"))
+                                       .ToDictionary(split => split[0], split => split[1]);
+
+                    var localHash = GetCacheContentHash();
+
+                    var localHashChecks = localHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(part => part.Split("::"))
+                                  .ToDictionary(split => split[0], split => split[1]);
+
+                    if (hashChecks["reference"]!=localHashChecks["reference"])
+                    {
+                        isRefDataSyncRequired = true;
+                    }
+
+                    // update core reference data
+                    if (isRefDataSyncRequired || lastUpdated != syncStatus.POIDataLastModified)
+                    {
+                        var numPOIUpdated =0L;
+
+                        var dateLastSync = syncStatus.POIDataLastModified;
+
+                        if (isRefDataSyncRequired)
+                        {
+                            CoreReferenceData coreRefData = await apiClient.GetCoreReferenceDataAsync();
+                            if (coreRefData != null)
+                            {
+                                database.DropCollection("reference");
+                                //problems clearing data from collection...
+
+                                var reference = database.GetCollection<CoreReferenceData>("reference");
+                                var query = new QueryDocument();
+                                reference.Remove(query, RemoveFlags.None);
+
+                                Thread.Sleep(300);
+                                reference.Insert(coreRefData);
+                            }
+
+                        }
+
+                        if (lastUpdated != syncStatus.POIDataLastModified)
+                        {
+                            var poiList = await apiClient.GetPOIListAsync(new API.Client.SearchFilters { MaxResults = Int32.MaxValue, ModifiedSince = lastUpdated });
+
+                            if (poiList != null && poiList.Any())
+                            {
+                                if (updateStrategy == CacheUpdateStrategy.All)
+                                {
+                                    poiCollection.RemoveAll();
+                                }
+                                else
+                                {
+                                    RemoveAllPOI(poiList, poiCollection);
+                                }
+
+                                Thread.Sleep(300);
+                                InsertAllPOI(poiList, poiCollection);
+
+                                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
+                                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
+                                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
+                                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
+
+                                if (updateStrategy == CacheUpdateStrategy.All)
+                                {
+                                    poiCollection.ReIndex();
+                                }
+
+                                numPOIUpdated = poiList.LongCount();
+                            }
+
+                        }
+
+                        return RefreshMirrorStatus(poiCollection.Count(), numPOIUpdated, poiCollection.Count(), dateLastSync);
+
+                    }
+                }
             }
 
-            var poiList = GetPOIListToUpdate(dataModel, updateStrategy);
-            var poiCollection = database.GetCollection<POIMongoDB>("poi");
-            if (poiList != null && poiList.Any())
-            {
-                if (updateStrategy == CacheUpdateStrategy.All)
-                {
-                    poiCollection.RemoveAll();
-                }
-                else
-                {
-                    RemoveAllPOI(poiList, poiCollection);
-                }
-
-                Thread.Sleep(300);
-                InsertAllPOI(poiList, poiCollection);
-
-                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
-                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
-                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
-                poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
-
-                if (updateStrategy == CacheUpdateStrategy.All)
-                {
-                    poiCollection.ReIndex();
-                }
-            }
-
-            long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
-            return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
+            // nothing to update
+            return GetMirrorStatus(false, false, false);
         }
 
-        private MirrorStatus RefreshMirrorStatus(long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB)
+        private MirrorStatus RefreshMirrorStatus(long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB, DateTime? poiLastUpdate =null)
         {
             var statusCollection = database.GetCollection<MirrorStatus>("status");
             statusCollection.Drop();
 
             //new status
             MirrorStatus status = new MirrorStatus();
-            //status.ID = Guid.NewGuid().ToString();
+
             status.Description = "MongoDB Cache of Open Charge Map POI Database";
             status.LastUpdated = DateTime.UtcNow;
 
@@ -490,22 +599,56 @@ namespace OCM.Core.Data
             status.TotalPOIInDB = numPOIInMasterDB;
             status.StatusCode = HttpStatusCode.OK;
             status.NumPOILastUpdated = numPOIUpdated;
-            status.NumPOILastUpdated = 0;
+
+            if (poiLastUpdate!=null) status.LastPOIUpdate = poiLastUpdate;
 
             statusCollection.Insert(status);
             return status;
         }
 
-        public MirrorStatus GetMirrorStatus(bool includeDupeCheck, bool includeDBPOICount = true)
+        private string GetCacheContentHash()
+        {
+            var cols = new string[] { "poi", "reference", "countryinfo" };
+
+            var hashCommand = new CommandDocument {
+                    { "dbHash", 1 },
+                    { "collections", BsonArray.Create(cols) }
+                };
+
+            var dbHashResults = database.RunCommand(hashCommand);
+            if (dbHashResults.Ok)
+            {
+                var collectionHashes = dbHashResults.Response.GetElement("collections").Value.AsBsonDocument.Elements
+                    .OrderBy(i => i.Name)
+                    .Select(i => i.Name + "::" + i.Value.AsString)
+                    .ToArray();
+                return String.Join(";", collectionHashes);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public MirrorStatus GetMirrorStatus(bool includeDupeCheck, bool includeDBCheck = true, bool includeContentHash = false)
         {
             try
             {
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
                 var currentStatus = statusCollection.FindOne();
 
-                if (includeDBPOICount)
+                if (includeContentHash)
                 {
-                    currentStatus.TotalPOIInDB = new OCMEntities().ChargePoints.LongCount();
+                    currentStatus.ContentHash = GetCacheContentHash();
+                }
+
+                if (includeDBCheck)
+                {
+                    using (var db = new OCMEntities())
+                    {
+                        currentStatus.TotalPOIInDB = db.ChargePoints.LongCount();
+                        currentStatus.LastPOIUpdate = db.ChargePoints.Max(i => i.DateLastStatusUpdate);
+                    }
                 }
 
                 if (includeDupeCheck)

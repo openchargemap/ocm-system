@@ -21,8 +21,29 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ChargePoint> Get([FromQuery] APIRequestParams filter)
+        public IEnumerable<ChargePoint> Get()
         {
+
+            // use custom query string parsing for compatibility
+            var filter = new APIRequestParams();
+
+            //set defaults
+            var paramList = new NullSafeDictionary<string, string>();
+            foreach (var k in Request.Query.Keys)
+            {
+                paramList.Add(k.ToLower(), Request.Query[k]);
+            }
+
+            filter.ParseParameters(filter, paramList);
+
+            if (string.IsNullOrEmpty(filter.APIKey))
+            {
+                if (Request.Headers.ContainsKey("X-API-Key"))
+                {
+                    filter.APIKey = Request.Headers["X-API-Key"];
+                }
+            }
+
             var api = new POIManager();
 
             var list = api.GetPOIList(filter);

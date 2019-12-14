@@ -69,13 +69,13 @@ namespace OCM.Core.Data
             }
         }
 
-        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck = false)
+        public async static Task<MirrorStatus> GetCacheStatus(bool includeDupeCheck = false, bool includeDBCheck = true,  bool includeContentHash = false)
         {
             try
             {
                 return await Task.Run<MirrorStatus>(() =>
                 {
-                    return CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, true);
+                    return CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash);
                 });
             }
             catch (Exception)

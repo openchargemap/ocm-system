@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OCM.API.Web.Models
+namespace OCM.API.Common.Model
 {
     public class SystemInfoResult
     {
         public string SystemVersion { get; set; }
-        public string DataVersionTimestamp { get; set; }
-        public string DataVersionHash { get; set; }
+        public DateTime POIDataLastModified { get; set; }
+        public string DataHash { get; set; }
     }
 }

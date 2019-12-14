@@ -56,7 +56,7 @@ namespace OCM.API.Tests
         [Theory]
         [InlineData("/v4/referencedata")]
         [InlineData("/v4/poi")]
-        [InlineData("/v4/system")]
+        [InlineData("/v4/system/status")]
         public async Task Get_V4EndpointsReturnSuccessAndJsonContentType(string url)
         {
             // Arrange

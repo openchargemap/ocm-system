@@ -10,6 +10,7 @@ namespace OCM.Core.Settings
         public bool EnableDataWrites { get; set; }
         public bool IsCacheOnlyMode { get; set; }
         public bool RefreshCacheOnLoad { get; set; }
+        public string DataSourceAPIBaseUrl { get; set; }
         public ApiKeys ApiKeys { get; set; }
         public MongoDbSettings MongoDBSettings { get; set; }
     }
@@ -17,8 +18,8 @@ namespace OCM.Core.Settings
     public class ApiKeys
     {
         public string MapQuestOpenAPIKey { get; set; }
-
         public string OSMApiKey { get; set; }
+        public string OCMApiKey { get; set; }
     }
     public class MongoDbSettings
     {

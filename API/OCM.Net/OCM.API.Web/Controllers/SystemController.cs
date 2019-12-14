@@ -22,15 +22,43 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpGet]
-        public Task<SystemInfoResult> Get()
+        [Route("status")]
+        [Route("/v3/system/status")]
+        public async Task<SystemInfoResult> GetStatus()
         {
-            return Task.FromResult(
+            var cacheStatus = await Core.Data.CacheManager.GetCacheStatus(false, true, true);
+
+            return
              new SystemInfoResult
              {
                  SystemVersion = "3",
-                 DataVersionHash = Guid.NewGuid().ToString(),
-                 DataVersionTimestamp = DateTime.UtcNow.Ticks.ToString()
-             });
+                 POIDataLastModified = cacheStatus.LastPOIUpdate.Value,
+                 DataHash = cacheStatus.ContentHash
+             };
+        }
+
+        [HttpGet]
+        [Route("sync")]
+        [Route("/v3/system/sync")]
+        public async Task<SyncResult> GetSyncData(DateTime? dateModified)
+        {
+            var result = new SyncResult
+            {
+                SystemInfo = await this.GetStatus(),
+                UpdatedPOIs = await new POIManager().GetPOIListAsync(new APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, ChangesFromDate = dateModified ?? DateTime.UtcNow.AddMonths(-1) }),
+                ReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, ChangesFromDate = DateTime.UtcNow.AddMonths(-6) })
+            };
+
+            return result;
+        }
+
+#if DEBUG
+        [HttpGet]
+        [Route("cacherefresh")]
+        public async Task<Core.Data.MirrorStatus> PerformCacheRefresh (DateTime? dateModified)
+        {
+            return await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
         }
     }
+#endif
 }
