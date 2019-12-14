@@ -12,6 +12,7 @@ namespace OCM.API.Worker
     {
         private readonly ILogger<Worker> _logger;
         private Timer _timer;
+        private bool _isSyncInProgress = false;
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -22,7 +23,7 @@ namespace OCM.API.Worker
             _logger.LogInformation("API Worker Starting.");
 
             // check for work to do every 5 minutes
-            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(10), TimeSpan.FromMinutes(5));
+            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(10), TimeSpan.FromMinutes(1));
 
 
             while (!stoppingToken.IsCancellationRequested)
@@ -34,24 +35,34 @@ namespace OCM.API.Worker
 
         private async void PerformTasks(object state)
         {
-            _logger.LogInformation("Checking sync status..");
-
-            try
+            if (!_isSyncInProgress)
             {
-                var refresh = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
+                _isSyncInProgress = true;
+                _logger.LogInformation("Checking sync status..");
 
-                if (refresh.StatusCode== System.Net.HttpStatusCode.ExpectationFailed)
+                try
                 {
-                    _logger.LogInformation("POI Update failed::" + refresh.Description);
-                } else
-                {
-                    _logger.LogInformation("Latest POI update::" + refresh.LastPOIUpdate);
+                    var refresh = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
+
+                    if (refresh.StatusCode == System.Net.HttpStatusCode.ExpectationFailed)
+                    {
+                        _logger.LogInformation("POI Update failed::" + refresh.Description);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Latest POI update::" + refresh.LastPOIUpdate);
+                    }
+
                 }
-                
+                catch (Exception exp)
+                {
+                    _logger.LogWarning("POI update failed::" + exp.ToString());
+                }
+                _isSyncInProgress = false;
             }
-            catch (Exception exp)
+            else
             {
-                _logger.LogWarning("POI update failed::" + exp.ToString());
+                _logger.LogWarning("POI update :: Previous sync still in progress");
             }
         }
 

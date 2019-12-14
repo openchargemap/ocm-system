@@ -495,28 +495,40 @@ namespace OCM.Core.Data
                 if (syncStatus != null)
                 {
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                    var lastUpdated = poiCollection.AsQueryable().Max(i => i.DateLastStatusUpdate);
 
+                 
 
                     bool isRefDataSyncRequired = false;
+                    DateTime? lastUpdated = null;
 
-                    var hashItems = syncStatus.DataHash.Split(";");
-                    var hashChecks = syncStatus.DataHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                       .Select(part => part.Split("::"))
-                                       .ToDictionary(split => split[0], split => split[1]);
-
-                    var localHash = GetCacheContentHash();
-
-                    var localHashChecks = localHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                  .Select(part => part.Split("::"))
-                                  .ToDictionary(split => split[0], split => split[1]);
-
-                    if (hashChecks["reference"]!=localHashChecks["reference"])
+                    if (poiCollection.Count()==0)
                     {
+                        // no data, starting a new mirror
+                        updateStrategy = CacheUpdateStrategy.All;
                         isRefDataSyncRequired = true;
                     }
+                    else
+                    {
+                       lastUpdated= poiCollection.AsQueryable().Max(i => i.DateLastStatusUpdate);
+                        // existing data, sync may be required
+                        var hashItems = syncStatus.DataHash.Split(";");
+                        var hashChecks = syncStatus.DataHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                           .Select(part => part.Split("::"))
+                                           .ToDictionary(split => split[0], split => split[1]);
 
-                    // update core reference data
+                        var localHash = GetCacheContentHash();
+
+                        var localHashChecks = localHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                      .Select(part => part.Split("::"))
+                                      .ToDictionary(split => split[0], split => split[1]);
+
+                        if (hashChecks["reference"] != localHashChecks["reference"])
+                        {
+                            isRefDataSyncRequired = true;
+                        }
+                    }
+
+                    // updates are required to reference data or POI list
                     if (isRefDataSyncRequired || lastUpdated != syncStatus.POIDataLastModified)
                     {
                         var numPOIUpdated =0L;
@@ -525,6 +537,7 @@ namespace OCM.Core.Data
 
                         if (isRefDataSyncRequired)
                         {
+                            // sync reference data
                             CoreReferenceData coreRefData = await apiClient.GetCoreReferenceDataAsync();
                             if (coreRefData != null)
                             {
@@ -543,6 +556,7 @@ namespace OCM.Core.Data
 
                         if (lastUpdated != syncStatus.POIDataLastModified)
                         {
+                            // sync POI list
                             var poiList = await apiClient.GetPOIListAsync(new API.Client.SearchFilters { MaxResults = Int32.MaxValue, ModifiedSince = lastUpdated });
 
                             if (poiList != null && poiList.Any())
