@@ -55,10 +55,11 @@ namespace OCM.API.Web.Standard.Controllers
 #if DEBUG
         [HttpGet]
         [Route("cacherefresh")]
-        public async Task<Core.Data.MirrorStatus> PerformCacheRefresh (DateTime? dateModified)
+        public async Task<Core.Data.MirrorStatus> PerformCacheRefresh(DateTime? dateModified)
         {
             return await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
         }
-    }
+
 #endif
+    }
 }
