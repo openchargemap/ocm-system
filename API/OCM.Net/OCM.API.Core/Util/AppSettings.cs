@@ -27,5 +27,6 @@ namespace OCM.Core.Settings
         public string DatabaseName { get; set; }
 
         public int MaxCacheAgeMinutes { get; set; }
+        public int CacheSyncBatchSize { get; set; } = 10000;
     }
 }

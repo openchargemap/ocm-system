@@ -562,7 +562,7 @@ namespace OCM.Core.Data
                         if (lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated)
                         {
 
-                            var poiFilter = new API.Client.SearchFilters { MaxResults = 10000, ModifiedSince = lastUpdated, SortBy = "created_asc" };
+                            var poiFilter = new API.Client.SearchFilters { MaxResults = _settings.MongoDBSettings.CacheSyncBatchSize, ModifiedSince = lastUpdated, SortBy = "created_asc" };
 
                             if (lastCreated < syncStatus.POIDataLastCreated)
                             {
