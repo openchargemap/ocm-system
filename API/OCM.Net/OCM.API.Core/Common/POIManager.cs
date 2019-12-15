@@ -333,12 +333,12 @@ namespace OCM.API.Common
 
                 if (settings.ChangesFromDate != null)
                 {
-                    chargePointList = chargePointList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
+                    chargePointList = chargePointList.Where(c => c.DateLastStatusUpdate > settings.ChangesFromDate.Value);
                 }
 
                 if (settings.CreatedFromDate != null)
                 {
-                    chargePointList = chargePointList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
+                    chargePointList = chargePointList.Where(c => c.DateCreated > settings.CreatedFromDate.Value);
                 }
 
                 //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview

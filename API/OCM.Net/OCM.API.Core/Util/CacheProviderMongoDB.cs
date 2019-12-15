@@ -528,7 +528,11 @@ namespace OCM.Core.Data
                                       .Select(part => part.Split("::"))
                                       .ToDictionary(split => split[0], split => split[1]);
 
-                        if (hashChecks["reference"] != localHashChecks["reference"])
+                        if (!hashChecks.ContainsKey("reference") || !localHashChecks.ContainsKey("reference"))
+                        {
+                            isRefDataSyncRequired = true;
+                        }
+                        else if (hashChecks["reference"] != localHashChecks["reference"])
                         {
                             isRefDataSyncRequired = true;
                         }
@@ -603,7 +607,7 @@ namespace OCM.Core.Data
 
                         }
 
-                        var status= RefreshMirrorStatus(poiCollection.Count(), numPOIUpdated, poiCollection.Count(), dateLastSync);
+                        var status = RefreshMirrorStatus(poiCollection.Count(), numPOIUpdated, poiCollection.Count(), dateLastSync);
                         status.MaxBatchSize = _settings.MongoDBSettings.CacheSyncBatchSize;
                         return status;
 
@@ -951,12 +955,12 @@ namespace OCM.Core.Data
 
                 if (settings.ChangesFromDate != null)
                 {
-                    poiList = poiList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
+                    poiList = poiList.Where(c => c.DateLastStatusUpdate > settings.ChangesFromDate.Value);
                 }
 
                 if (settings.CreatedFromDate != null)
                 {
-                    poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
+                    poiList = poiList.Where(c => c.DateCreated > settings.CreatedFromDate.Value);
                 }
 
                 //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
