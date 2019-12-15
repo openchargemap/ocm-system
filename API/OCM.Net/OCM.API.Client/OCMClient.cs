@@ -333,7 +333,7 @@ namespace OCM.API.Client
         {
             if (!string.IsNullOrEmpty(APIKey))
             {
-                _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("X-API-Key", APIKey);
+                _client.DefaultRequestHeaders.TryAddWithoutValidation("X-API-Key", APIKey);
             }
 
             HttpResponseMessage response = await _client.GetAsync(url);

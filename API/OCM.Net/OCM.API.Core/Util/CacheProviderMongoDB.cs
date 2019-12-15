@@ -37,6 +37,7 @@ namespace OCM.Core.Data
         public long NumPOILastUpdated { get; set; }
 
         public long NumDistinctPOIs { get; set; }
+        public long MaxBatchSize { get; set; }
 
         public string Server { get; set; }
 
@@ -602,7 +603,9 @@ namespace OCM.Core.Data
 
                         }
 
-                        return RefreshMirrorStatus(poiCollection.Count(), numPOIUpdated, poiCollection.Count(), dateLastSync);
+                        var status= RefreshMirrorStatus(poiCollection.Count(), numPOIUpdated, poiCollection.Count(), dateLastSync);
+                        status.MaxBatchSize = _settings.MongoDBSettings.CacheSyncBatchSize;
+                        return status;
 
                     }
                 }

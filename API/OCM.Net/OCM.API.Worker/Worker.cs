@@ -42,15 +42,20 @@ namespace OCM.API.Worker
 
                 try
                 {
-                    var refresh = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified, _logger);
+                    var sync = new Core.Data.MirrorStatus { NumPOILastUpdated = 0, MaxBatchSize = 0 };
 
-                    if (refresh.StatusCode == System.Net.HttpStatusCode.ExpectationFailed)
+                    while (sync.NumPOILastUpdated == sync.MaxBatchSize)
                     {
-                        _logger.LogInformation("POI Update failed::" + refresh.Description);
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Latest POI update::" + refresh.LastPOIUpdate);
+                        sync = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified, _logger);
+                        if (sync.StatusCode == System.Net.HttpStatusCode.ExpectationFailed)
+                        {
+                            _logger.LogInformation("POI Update failed::" + sync.Description);
+                            break;
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"Latest POI update :: {sync.NumPOILastUpdated} POIs {sync.TotalPOIInCache} in total {sync.LastPOIUpdate}");
+                        }
                     }
 
                 }

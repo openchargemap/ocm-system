@@ -81,16 +81,18 @@ sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
  - Set service to run whenever host restarts: 
     - `sudo systemctl enable ocm-api.service`
  - Watch log as service starts up and sync rebuilds cache:
-    - `journalctl -f`
+    - `journalctl -f` or `journalctl -f -u ocm-api`
 
 ### Refresh build (apply latest software changes):
  
 ```sh
+
 cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
 git pull
 dotnet publish -c Release
 sudo systemctl stop ocm-api
 sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
 sudo systemctl start ocm-api
+
 ```
 
