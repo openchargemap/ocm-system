@@ -23,7 +23,7 @@ namespace OCM.API.Worker
             _logger.LogInformation("API Worker Starting.");
 
             // check for work to do every 5 minutes
-            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(10), TimeSpan.FromMinutes(1));
+            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(10), TimeSpan.FromMinutes(5));
 
 
             while (!stoppingToken.IsCancellationRequested)
