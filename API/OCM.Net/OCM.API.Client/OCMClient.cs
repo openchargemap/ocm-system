@@ -44,11 +44,14 @@ namespace OCM.API.Client
         public DateTime? ModifiedSince { get; set; }
         public DateTime? CreatedSince { get; set; }
 
+        public bool Verbose { get; set; }
+
         public SearchFilters()
         {
             DistanceUnit = Common.Model.DistanceUnit.Miles;
             MaxResults = 100;
             EnableCaching = true;
+            Verbose = false;
         }
     }
 
@@ -158,7 +161,7 @@ namespace OCM.API.Client
         /// <returns>  </returns>
         public async Task<IEnumerable<ChargePoint>> GetPOIListAsync(SearchFilters filters)
         {
-            string url = ServiceBaseURL + "/poi/?output=json&verbose=false";
+            string url = ServiceBaseURL + "/poi/?output=json";
 
             if (filters.Latitude != null && filters.Longitude != null)
             {
@@ -221,6 +224,8 @@ namespace OCM.API.Client
             {
                 url += "&sortby=" + filters.SortBy;
             }
+
+            url += "&verbose=" + filters.Verbose;
 
             url += "&maxresults=" + filters.MaxResults;
 
