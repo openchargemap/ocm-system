@@ -13,18 +13,11 @@ Developers can use our [API](https://openchargemap.org/site/develop/) to access 
 
 ### Basic build prerequisites
 
-- Windows 7 or higher (or Windows Server 2008 or higher)
-- Visual Studio 2019
-- MS SQL Express 2008 R2 onwards
-- NodeJS
-- MongoDB
+- dotnet core 3.1 sdk (windows/linux)
 
 ### Deployment 
 
  - Configure MongoDB as services and initialise ocm_mirror database
- - Set ASP.net State Services to Automatic Startup and Start services
- - Install SQL Server 2012 CLR Data Types (Version 11.x) - required by entity framework
- - Install URL Rewrite 2.0 - required for handler mapping
  - Enable read/write for app pool user for \Temp folders
  - Configure web.config
 
@@ -48,6 +41,10 @@ Please contribute in any way you can:
 
 
 ### Linux build
+The OCM Api and website we're original built using the .net framework on Windows, with SQL server as the backend database. A mongodb based caching layer was later added to the API which allowed read operations to avoid querying the SQL database. The system has since been ported to linux as a systemd based worker service.
+
+The API can be run as a standalone read-only mirror of the main API, with an automated sync of data pulled from the master API.
+
 - Install dotnet core 3.x sdk for your system (~350MB), check with `dotnet --version`
 	- `sudo snap install dotnet-sdk --channel=3.1/stable --classic`
 - Install latest monogdb for your system, set service to run on startup
@@ -62,11 +59,15 @@ To run the API server on port 5000 bound to default public network interface:
 
 To build and deploy the API service worker as systemd managed service:
 
-- Build release: 
-    - `cd ~/ocm-system/API/OCM.Net/OCM.API.Worker`
-    - `dotnet publish -c Release`
-    - `sudo mkdir /opt/ocm-api`
-    - `sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api`
+- Build as release: 
+```sh
+cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
+dotnet publish -c Release
+sudo mkdir /opt/ocm-api
+sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
+```
+
+### Deploying as a service (systemd)
 - Copy ocm-api.service file to systemd service config location:
     - `sudo cp ocm-api.service /etc/systemd/system/ocm-api.service`
 - Create/update symlink in /usr/sbin for the build:
@@ -79,11 +80,17 @@ To build and deploy the API service worker as systemd managed service:
     - `sudo systemctl start ocm-api`
  - Set service to run whenever host restarts: 
     - `sudo systemctl enable ocm-api.service`
+ - Watch log as service starts up and sync rebuilds cache:
+    - `journalctl -f`
 
+### Refresh build (apply latest software changes):
+ 
+```sh
+cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
+git pull
+dotnet publish -c Release
+sudo systemctl stop ocm-api
+sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
+sudo systemctl start ocm-api
+```
 
-    Refresh build:
-    cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
-    dotnet publish -c Release
-    sudo systemctl stop ocm-api
-    sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
-    sudo systemctl start ocm-api
