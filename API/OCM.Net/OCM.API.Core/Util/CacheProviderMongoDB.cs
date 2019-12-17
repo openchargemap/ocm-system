@@ -499,8 +499,6 @@ namespace OCM.Core.Data
                 {
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
 
-
-
                     bool isRefDataSyncRequired = false;
                     DateTime? lastUpdated = null;
                     DateTime? lastCreated = null;
@@ -622,7 +620,8 @@ namespace OCM.Core.Data
         private MirrorStatus RefreshMirrorStatus(
             long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB,
             DateTime? poiLastUpdate = null,
-            DateTime? poiLastCreated = null)
+            DateTime? poiLastCreated = null
+            )
         {
             var statusCollection = database.GetCollection<MirrorStatus>("status");
             statusCollection.Drop();
@@ -733,18 +732,57 @@ namespace OCM.Core.Data
                 return false;
             }
         }
-        public CoreReferenceData GetCoreReferenceData()
+        public CoreReferenceData GetCoreReferenceData(APIRequestParams filter)
         {
             try
             {
                 if (IsCacheReady())
                 {
-                    var refData = database.GetCollection<CoreReferenceData>("reference");
-                    return refData.FindOne();
+                    var refDataCollection = database.GetCollection<CoreReferenceData>("reference");
+                    var refData = refDataCollection.FindOne();
+
+
+                    if (filter.CountryIDs != null && filter.CountryIDs.Any())
+                    {
+                        // need to filter results based on usage by country
+                        var poiCollection = database.GetCollection<POIMongoDB>("poi");
+
+                        var connectionsInCountry = poiCollection.AsQueryable().Where(poi => 
+                            poi.AddressInfo.CountryID != null 
+                            && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
+                            && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                            && poi.Connections.Any()
+                        )
+                            .Select(p => new { CountryID = p.AddressInfo.CountryID, ConnectionTypes = p.Connections.Select(t => t.ConnectionTypeID).AsEnumerable() })
+                            .ToArray()
+                            .SelectMany(p => p.ConnectionTypes, (i, c) => new { CountryId = i.CountryID, ConnectionTypeId = c })
+                            .Distinct();
+
+                        refData.ConnectionTypes.RemoveAll(a => !connectionsInCountry.Any(r=>r.ConnectionTypeId == a.ID));
+
+
+                        // filter on operators present within given countries
+
+                        var operatorsInCountry = poiCollection.AsQueryable()
+                            .Where(poi =>
+                               poi.AddressInfo.CountryID != null
+                               && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
+                               && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                               && poi.OperatorID != null)
+                             .Select(p => new { CountryId = p.AddressInfo.CountryID, OperatorId = p.OperatorID })
+                             .ToArray()
+                             .Distinct();
+
+                        refData.Operators.RemoveAll(a => !operatorsInCountry.Any(r => r.OperatorId == a.ID));
+
+                    }
+
+                    return refData;
                 }
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                System.Diagnostics.Debug.WriteLine(exp.ToString());
                 ; ;
             }
 
@@ -955,12 +993,12 @@ namespace OCM.Core.Data
 
                 if (settings.ChangesFromDate != null)
                 {
-                    poiList = poiList.Where(c => c.DateLastStatusUpdate > settings.ChangesFromDate.Value);
+                    poiList = poiList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
                 }
 
                 if (settings.CreatedFromDate != null)
                 {
-                    poiList = poiList.Where(c => c.DateCreated > settings.CreatedFromDate.Value);
+                    poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
                 }
 
                 //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview

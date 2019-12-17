@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using OCM.Core.Settings;
 using System.Threading.Tasks;
 namespace OCM.API.Web.Standard
@@ -11,13 +12,16 @@ namespace OCM.API.Web.Standard
         private readonly RequestDelegate _next;
 
         private CoreSettings _settings;
+        private ILogger _logger;
 
-        public CompatibilityAPIMiddleware(RequestDelegate next, IConfiguration config)
+        public CompatibilityAPIMiddleware(RequestDelegate next, IConfiguration config, ILogger<CompatibilityAPIMiddleware> logger)
         {
             _settings = new CoreSettings();
             config.GetSection("CoreSettings").Bind(_settings);
 
             _next = next;
+
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -29,7 +33,7 @@ namespace OCM.API.Web.Standard
             
             if (!context.Request.Path.ToString().StartsWith("/v4/"))
             {
-                var handled = await new CompatibilityAPICoreHTTPHandler(_settings).ProcessRequest(context);
+                var handled = await new CompatibilityAPICoreHTTPHandler(_settings, _logger).ProcessRequest(context);
 
                 if (!handled)
                 {
@@ -39,6 +43,8 @@ namespace OCM.API.Web.Standard
             }
             else
             {
+                _logger.LogDebug("Passing v4 request to controller..");
+
                 // call next middleware, API controllers etc
                 await _next.Invoke(context);
             }

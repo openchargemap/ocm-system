@@ -30,11 +30,11 @@ namespace OCM.Core.Data
             }
         }
 
-        public static OCM.API.Common.Model.CoreReferenceData GetCoreReferenceData()
+        public static OCM.API.Common.Model.CoreReferenceData GetCoreReferenceData(APIRequestParams filter)
         {
             try
             {
-                return CacheProviderMongoDB.DefaultInstance.GetCoreReferenceData();
+                return CacheProviderMongoDB.DefaultInstance.GetCoreReferenceData(filter);
             }
             catch (Exception)
             {

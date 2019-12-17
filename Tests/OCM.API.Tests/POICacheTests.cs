@@ -43,7 +43,7 @@ namespace OCM.API.Tests
             Core.Data.CacheManager.InitCaching(_settings);
 
         }
-      
+
         [Fact]
         public async Task CacheStatusOK()
         {
@@ -75,12 +75,38 @@ namespace OCM.API.Tests
             Assert.True(result.StatusCode != System.Net.HttpStatusCode.ExpectationFailed);
         }
 
-        [Fact(Skip="Manual")]
+        [Fact(Skip = "Manual")]
         public async Task UpdateCacheAll()
         {
             var result = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.All).ConfigureAwait(true);
 
             Assert.True(result.StatusCode != System.Net.HttpStatusCode.ExpectationFailed);
+        }
+
+
+
+        [Fact]
+        public void ReturnReferenceData()
+        {
+            var api = new OCM.API.Common.ReferenceDataManager();
+            var filter = new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false };
+            var results = api.GetCoreReferenceData(filter);
+
+            Assert.True(results.Countries.Count > 0, "Country results should be greater than 0");
+            Assert.True(results.ConnectionTypes.Count > 0, "Connection type results should be greater than 0");
+            Assert.True(results.ChargePoint != null, "POI template object should not be null");
+        }
+
+        [Fact]
+        public void ReturnFilteredReferenceData()
+        {
+            var api = new OCM.API.Common.ReferenceDataManager();
+            var filter = new Common.APIRequestParams { CountryIDs = new int[] { 18 }, AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false};
+            var results = api.GetCoreReferenceData(filter);
+
+            Assert.True(results.Countries.Count > 0, "Country results should be greater than 0");
+            Assert.True(results.ConnectionTypes.Count > 0, "Connection type results should be greater than 0");
+            Assert.True(results.ChargePoint != null, "POI template object should not be null");
         }
     }
 }

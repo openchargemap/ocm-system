@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OCM.API.Common;
 using OCM.API.Common.Model;
@@ -51,14 +52,16 @@ namespace OCM.API
         protected bool IsQueryByPost { get; set; }
 
         private CoreSettings _settings;
+        private ILogger _logger;
 
-        public CompatibilityAPICoreHTTPHandler(CoreSettings settings)
+        public CompatibilityAPICoreHTTPHandler(CoreSettings settings, ILogger logger)
         {
             APIBehaviourVersion = 0;
             DefaultAction = null;
             IsQueryByPost = false;
 
             _settings = settings;
+            _logger = logger;
         }
 
         protected void ClearResponse(HttpContext context)
@@ -428,11 +431,18 @@ namespace OCM.API
             if (APIBehaviourVersion > 0) filter.APIVersion = APIBehaviourVersion;
             if (APIBehaviourVersion >= 2) filter.Action = DefaultAction;
 
-            if (context.Request.GetUri().Host.ToLower().StartsWith("api") && filter.APIVersion == null)
+            try
             {
-                //API version is mandatory for api V2 onwards via api.openchargemap.* hostname
-                await OutputBadRequestMessage(context, "mandatory API Version not specified in request");
-                return true;
+                if ((_settings.IsCacheOnlyMode || context.Request.GetUri().Host.ToLower().StartsWith("api")) && (filter.APIVersion == null || filter.APIVersion == 1))
+                {
+                    //API version is mandatory for api V2 onwards via api.openchargemap.* hostname or for API mirrors operating in cached mode
+                    await OutputBadRequestMessage(context, "mandatory API Version not specified in request");
+                    return true;
+                }
+            }
+            catch (System.UriFormatException)
+            {
+                _logger?.LogWarning("Failed to parse URI " + context.Request.Host.Value);
             }
 
             if (!String.IsNullOrEmpty(context.Request.Query["output"]))
@@ -508,7 +518,7 @@ namespace OCM.API
             if (outputProvider != null)
             {
                 context.Response.ContentType = outputProvider.ContentType;
-                
+
                 if (filter.Action == "getchargepoints" || filter.Action == "poi")
                 {
                     await OutputPOIList(outputProvider, context, filter);
@@ -641,29 +651,23 @@ namespace OCM.API
         private async Task OutputCoreReferenceData(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
         {
             //get core reference data
-            var refDataManager = new ReferenceDataManager();
-            CoreReferenceData data = null;
-
-            data = refDataManager.GetCoreReferenceData(filter);
-
-            /*
-            //cache result
-            if (context.Cache["CoreRefData"] != null && filter.EnableCaching)
+            using (var refDataManager = new ReferenceDataManager())
             {
-                data = (CoreReferenceData)context.Cache["CoreRefData"];
+                if (_settings.IsCacheOnlyMode) filter.AllowDataStoreDB = false;
+
+                var data = refDataManager.GetCoreReferenceData(filter);
+
+                if (data != null)
+                {
+                    //send response
+                    await outputProvider.GetOutput(context, context.Response.Body, data, filter);
+                }
+                else
+                {
+                    // failed
+                    await new JSONOutputProvider().GetOutput(context, context.Response.Body, new { Status = "Error", Message = "Cache not ready, canoot return results" }, filter);
+                }
             }
-            else
-            {
-               
-
-                context.Cache.Add("CoreRefData", data, null, Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0), CacheItemPriority.Normal, null);
-            }*/
-
-            //populate non-cached fragments (user profile)
-            data.UserProfile = new InputProviderBase().GetUserFromAPICall(context);
-
-            //send response
-            await outputProvider.GetOutput(context, context.Response.Body, data, filter);
         }
 
         private void OutputAvailabilityResult(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)

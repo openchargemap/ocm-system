@@ -60,7 +60,13 @@ namespace OCM.Core.Data
                 optionsBuilder.UseLoggerFactory(ConsoleLogger);
                 optionsBuilder.UseLazyLoadingProxies();
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(local)\\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True", x => x.UseNetTopologySuite());
+                optionsBuilder.UseSqlServer("Server=(local)\\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True", x =>
+                {
+                    x.UseNetTopologySuite();
+                    x.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
+
+                });
+
 
 #if DEBUG
                 optionsBuilder.EnableDetailedErrors(true);

@@ -11,7 +11,7 @@ namespace OCM.API.Worker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private Timer _timer;
+        private Timer? _timer;
         private bool _isSyncInProgress = false;
         public Worker(ILogger<Worker> logger)
         {
@@ -33,7 +33,7 @@ namespace OCM.API.Worker
             }
         }
 
-        private async void PerformTasks(object state)
+        private async void PerformTasks(object? state)
         {
             if (!_isSyncInProgress)
             {
