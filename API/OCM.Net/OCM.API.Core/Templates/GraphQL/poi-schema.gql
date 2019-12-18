@@ -1,0 +1,159 @@
+﻿type Poi {
+  Id: Int
+  UUId: String
+  ParentChargePointId: String
+  DataProviderId: Int
+  DataProvidersReference: String
+  OperatorId: Int
+  OperatorsReference: String
+  UsageTypeId: Int
+  UsageCost: String
+  NumberOfPoints: Int
+  GeneralComments: String
+  DatePlanned: String
+  DateLastConfirmed: String
+  StatusTypeId: Int
+  DateLastStatusUpdate: String
+  MetadataValues: String
+  DataQualityLevel: Int
+  DateCreated: String
+  SubmissionStatusTypeId: Int
+  Connections: [ConnectionInfo]
+  AddressInfo: AddressInfo
+  SubmissionStatus: SubmissionStatusType
+  StatusType: StatusType
+  UsageType: UsageType
+  OperatorInfo: OperatorInfo
+  DataProvider: DataProvider
+  UserComments: String
+  PercentageSimilarity: String
+  MediaItems: String
+  IsRecentlyVerified: Boolean
+  DateLastVerified: String
+}
+
+type CurrentType {
+  Description: String
+  Id: Int
+  Title: String
+}
+
+type Level {
+  Comments: String
+  IsFastChargeCapable: Boolean
+  Id: Int
+  Title: String
+}
+
+type StatusType {
+  IsOperational: Boolean
+  IsUserSelectable: Boolean
+  Id: Int
+  Title: String
+}
+
+type ConnectionType {
+  FormalName: String
+  IsDiscontinued: Boolean
+  IsObsolete: Boolean
+  Id: Int
+  Title: String
+}
+
+type ConnectionInfo {
+  Id: Int
+  ConnectionTypeId: Int
+  Reference: String
+  StatusTypeId: Int
+  LevelId: Int
+  Amps: Int
+  Voltage: Int
+  PowerKW: Int
+  CurrentTypeId: Int
+  Quantity: Int
+  Comments: String
+  CurrentType: CurrentType
+  Level: Level
+  StatusType: StatusType
+  ConnectionType: ConnectionType
+}
+
+type Country {
+  ISOCode: String
+  ContinentCode: String
+  Id: Int
+  Title: String
+}
+
+type AddressInfo {
+  Id: Int
+  Title: String
+  AddressLine1: String
+  AddressLine2: String
+  Town: String
+  StateOrProvince: String
+  Postcode: String
+  CountryId: Int
+  Latitude: Float
+  Longitude: Float
+  ContactTelephone1: String
+  ContactTelephone2: String
+  ContactEmail: String
+  AccessComments: String
+  RelatedURL: String
+  Distance: String
+  DistanceUnit: Int
+  Country: Country
+}
+
+type SubmissionStatusType {
+  IsLive: Boolean
+  Id: Int
+  Title: String
+}
+
+type UsageType {
+  IsPayAtLocation: Boolean
+  IsMembershipRequired: Boolean
+  IsAccessKeyRequired: Boolean
+  Id: Int
+  Title: String
+}
+
+type OperatorInfo {
+  WebsiteURL: String
+  Comments: String
+  PhonePrimaryContact: String
+  PhoneSecondaryContact: String
+  IsPrivateIndividual: String
+  AddressInfo: String
+  BookingURL: String
+  ContactEmail: String
+  FaultReportEmail: String
+  IsRestrictedEdit: String
+  Id: Int
+  Title: String
+}
+
+type DataProviderStatusType {
+  IsProviderEnabled: Boolean
+  Id: Int
+  Title: String
+}
+
+type DataProvider {
+  WebsiteURL: String
+  Comments: String
+  IsRestrictedEdit: Boolean
+  IsOpenDataLicensed: Boolean
+  IsApprovedImport: Boolean
+  License: String
+  DateLastImported: String
+  Id: Int
+  Title: String
+  DataProviderStatusType: DataProviderStatusType
+}
+
+type Query {
+    poi: Poi
+  }

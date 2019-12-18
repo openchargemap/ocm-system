@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\GraphQL\poi-schema.gql" />
     <None Remove="Templates\Notifications\BaseTemplate.htm" />
     <None Remove="Templates\Notifications\ContactUsMessage.htm" />
     <None Remove="Templates\Notifications\FaultReport.htm" />
@@ -19,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Templates\GraphQL\poi-schema.gql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Templates\Notifications\BaseTemplate.htm">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

@@ -5,8 +5,12 @@
     <UserSecretsId>407b1e1a-5108-48b6-bb48-4990a0804269</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="graphiql" Version="1.2.0" />
+    <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="5.6.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
   </ItemGroup>
   <ItemGroup>
