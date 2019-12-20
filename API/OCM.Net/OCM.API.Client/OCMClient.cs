@@ -350,8 +350,14 @@ namespace OCM.API.Client
             // Create a request using a URL that can receive a post.
             WebRequest request = WebRequest.Create(url);
 
+            if (!string.IsNullOrEmpty(APIKey))
+            {
+                request.Headers.Add("X-API-Key", APIKey);
+            }
+
             // Set the Method property of the request to POST.
             request.Method = "POST";
+
 
             // convert data to a byte array.
             byte[] byteArray = Encoding.UTF8.GetBytes(data);

@@ -204,6 +204,21 @@ namespace OCM.API.Common
             }
         }
 
+        public User GetUserFromAPIKey(string apiKey)
+        {
+           
+            var reg = dataModel.RegisteredApplicationUsers.Include(r=>r.User).Single(u => u.Apikey.ToLower() == apiKey.ToLower());
+
+            if (reg != null && reg.IsEnabled && reg.IsWriteEnabled)
+            {
+                return Model.Extensions.User.FromDataModel(reg.User);
+            }
+            else
+            {
+                // api key invalid
+                return null;
+            }
+        }
         public void AddReputationPoints(int userId, int amount)
         {
             var user = Model.Extensions.User.FromDataModel(dataModel.Users.FirstOrDefault(u => u.Id == userId));

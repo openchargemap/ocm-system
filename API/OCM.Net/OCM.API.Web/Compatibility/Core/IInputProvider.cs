@@ -19,6 +19,6 @@ namespace OCM.API.InputProviders
 
         Task<bool> ProcessMediaItemSubmission(string uploadPath, HttpContext context, MediaItem mediaItem, int userId);
 
-        User GetUserFromAPICall(HttpContext context);
+        User GetUserFromAPICall(HttpContext context, string apiKey);
     }
 }

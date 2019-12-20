@@ -165,7 +165,7 @@ namespace OCM.API
             SubmissionManager submissionManager = new SubmissionManager();
 
             //attempt to determine user from api call
-            User user = inputProvider.GetUserFromAPICall(context);
+            User user = inputProvider.GetUserFromAPICall(context, filter.APIKey);
 
             if (user != null && user.IsCurrentSessionTokenValid == false)
             {
@@ -553,6 +553,7 @@ namespace OCM.API
                 if (filter.Action == "profile.authenticate")
                 {
                     await OutputProfileSignInResult(outputProvider, context, filter);
+                    return true;
                 }
 
                 if (filter.Action == "profile.register")

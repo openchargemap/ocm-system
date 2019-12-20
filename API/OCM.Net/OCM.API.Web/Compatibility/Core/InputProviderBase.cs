@@ -59,8 +59,16 @@ namespace OCM.API.InputProviders
                 return null;
         }
 
-        public User GetUserFromAPICall(HttpContext context)
+        public User GetUserFromAPICall(HttpContext context, string apiKey)
         {
+
+
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                var user =  new UserManager().GetUserFromAPIKey(apiKey);
+                return user;
+            }
+
             //TODO: move to security
 
             string JWTAuthToken = null;
