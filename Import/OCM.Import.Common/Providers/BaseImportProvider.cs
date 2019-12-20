@@ -425,7 +425,7 @@ namespace OCM.Import.Providers
 
         public bool ExportJSONFile(List<ChargePoint> dataList, string outputPath)
         {
-            var json = JsonConvert.SerializeObject(dataList, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(dataList, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             System.IO.File.WriteAllText(outputPath, json, new UnicodeEncoding());
             return true;
         }

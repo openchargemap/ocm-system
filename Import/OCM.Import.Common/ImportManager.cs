@@ -180,12 +180,13 @@ namespace OCM.Import
             providers = GetImportProviders(coreRefData.DataProviders);
 
             string inputDataPathPrefix = defaultDataPath;
+            bool cacheInputData = true;
 
             foreach (var provider in providers)
             {
                 if (providerName == null || providerName == provider.GetProviderName())
                 {
-                    await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, !fetchLiveData, fetchExistingFromAPI);
+                    await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, cacheInputData, fetchExistingFromAPI);
                 }
             }
 
@@ -258,6 +259,7 @@ namespace OCM.Import
 
             foreach (var item in cpListSortedByPos)
             {
+                
                 var itemGeoPos = new GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
 
                 //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
@@ -438,9 +440,10 @@ namespace OCM.Import
             {
                 var origPOI = masterListCopy.FirstOrDefault(p => p.ID == poi.ID);
 
-                var updatedPOI = UseDataModelComparison ? poiManager.PreviewPopulatedPOIFromModel(poi) : poi;
+                // hydrate POI with all of its associated extended properties
+                var hydratedPoi = UseDataModelComparison ? poiManager.PreviewPopulatedPOIFromModel(poi) : DehydratePOI(poi, coreRefData);
 
-                var differences = poiManager.CheckDifferences(origPOI, updatedPOI);
+                var differences = poiManager.CheckDifferences(origPOI, hydratedPoi);
                 differences.RemoveAll(d => d.Context == ".MetadataValues");
                 differences.RemoveAll(d => d.Context == ".DateLastStatusUpdate");
                 differences.RemoveAll(d => d.Context == ".UUID");
@@ -452,10 +455,6 @@ namespace OCM.Import
                 differences.RemoveAll(d => d.Context == ".UserComments");
                 differences.RemoveAll(d => d.Context == ".MediaItems");
 
-                differences.RemoveAll(d => d.Context == ".OperatorInfo");
-                differences.RemoveAll(d => d.Context == ".UsageType");
-                differences.RemoveAll(d => d.Context == ".ChargerType");
-                differences.RemoveAll(d => d.Context == ".CurrentType");
 
                 if (!differences.Any())
                 {
@@ -469,7 +468,7 @@ namespace OCM.Import
                     compareLogic.Config.IgnoreObjectTypes = false;
                     compareLogic.Config.IgnoreUnknownObjectTypes = true;
                     compareLogic.Config.CompareChildren = true;
-                    ComparisonResult result = compareLogic.Compare(origPOI, updatedPOI);
+                    ComparisonResult result = compareLogic.Compare(origPOI, hydratedPoi);
 
                     var diffReport = new KellermanSoftware.CompareNetObjects.Reports.UserFriendlyReport();
                     result.Differences.RemoveAll(d => d.PropertyName == ".MetadataValues");
@@ -503,6 +502,29 @@ namespace OCM.Import
 
             //return final processed list ready for applying as insert/updates
             return cpListSortedByPos.ToList();
+        }
+
+        /// <summary>
+        /// For the given POI, populate extended navigation properties (DataProvider etc) based on current IDs
+        /// </summary>
+        /// <param name="poi"></param>
+        /// <param name="refData"></param>
+        /// <returns></returns>
+        public ChargePoint DehydratePOI(ChargePoint poi, CoreReferenceData refData)
+        {
+            poi.DataProvider = refData.DataProviders.FirstOrDefault(i => i.ID == poi.DataProviderID);
+            poi.OperatorInfo = refData.Operators.FirstOrDefault(i => i.ID == poi.OperatorID);
+            poi.UsageType = refData.UsageTypes.FirstOrDefault(i => i.ID == poi.UsageTypeID);
+            
+            foreach(var c in poi.Connections)
+            {
+                c.ConnectionType = refData.ConnectionTypes.FirstOrDefault(i => i.ID == c.ConnectionTypeID);
+                c.CurrentType = refData.CurrentTypes.FirstOrDefault(i => i.ID == c.CurrentTypeID);
+                c.Level = refData.ChargerTypes.FirstOrDefault(i => i.ID == c.LevelID);
+                c.StatusType = refData.StatusTypes.FirstOrDefault(i => i.ID == c.StatusTypeID);
+            }
+
+            return poi;
         }
 
         public List<ChargePoint> MergeDuplicatePOIEquipment(List<ChargePoint> importedPOIList)
@@ -798,10 +820,6 @@ namespace OCM.Import
 
                 var list = provider.Process(coreRefData);
 
-#if DEBUG
-               // list = list.Take(100).ToList();
-#endif
-
 
                 int numAdded = 0;
                 int numUpdated = 0;
@@ -840,9 +858,7 @@ namespace OCM.Import
                         Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
 
                         //de-duplicate and clean list based on existing data
-                        //TODO: take original and replace in final update list, setting relevant updated properties (merge) and status
                         finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, fetchExistingFromAPI);
-                        //var finalList = list;
                     }
                     else
                     {
@@ -854,7 +870,6 @@ namespace OCM.Import
                     {
                         finalList = finalList.Where(l => l.ID > 0).ToList();
                     }
-                    //finalList = client.GetLocations(new SearchFilters { MaxResults = 10000 });
 
                     GC.Collect();
 
@@ -880,6 +895,7 @@ namespace OCM.Import
                         //output json
                         p.ExportJSONFile(finalList, outputPath + p.OutputNamePrefix + ".json");
                     }
+
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
                     {
                         //publish list of locations to OCM via API
@@ -918,15 +934,15 @@ namespace OCM.Import
             return resultReport;
         }
 
-        public string UploadPOIList(string json, string apiIdentifier, string apiToken)
+        public string UploadPOIList(string json, string apiIdentifier, string apiToken, string apiBaseUrl)
         {
             var credentials = GetAPISessionCredentials(apiIdentifier, apiToken);
 
             int numAdded = 0;
             int numUpdated = 0;
 
-            List<ChargePoint> poiList = JsonConvert.DeserializeObject<List<ChargePoint>>(json);
-            OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
+            var poiList = JsonConvert.DeserializeObject<List<ChargePoint>>(json);
+            var ocmClient = new OCMClient(apiBaseUrl, apiToken);
             Log("Publishing via API..");
 
             ocmClient.UpdateItems(poiList, credentials);
