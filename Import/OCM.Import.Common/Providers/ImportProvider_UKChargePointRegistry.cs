@@ -80,10 +80,10 @@ namespace OCM.Import.Providers
 
                 cp.AddressInfo.RelatedURL = "";
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
-                cp.AddressInfo.AddressLine1 = String.IsNullOrEmpty(addressDetails["Street"].ToString()) ? addressDetails["BuildingNumber"].ToString() + " " + addressDetails["Thoroughfare"].ToString() : addressDetails["Street"].ToString().Replace("<br>", ", ");
+                cp.AddressInfo.AddressLine1 = (String.IsNullOrEmpty(addressDetails["Street"].ToString()) ? addressDetails["BuildingNumber"].ToString() + " " + addressDetails["Thoroughfare"].ToString() : addressDetails["Street"].ToString().Replace("<br>", ", ")).Trim();
                 cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? cp.AddressInfo.AddressLine1 : locationDetails["LocationShortDescription"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
-                cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ");
+                cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ").Trim();
                 if (cp.AddressInfo.Title.Length > 100) cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 64) + "..";
                 cp.AddressInfo.Town = addressDetails["PostTown"].ToString();
                 string dependantLocality = addressDetails["DependantLocality"].ToString();
@@ -97,21 +97,12 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
                 cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n", ", ");
 
-                //if(!String.IsNullOrEmpty(cp.AddressInfo.Postcode))
-                //{
-                //cp.AddressInfo.Postcode = this.NormalizePostcode(cp.AddressInfo.Postcode);
-                //}
-                //TODO: if address wasn't provide in address details try to parse from "LocationLongDescription":
-                /*if (String.IsNullOrEmpty(cp.AddressInfo.AddressLine1) && string.IsNullOrEmpty(cp.AddressInfo.AddressLine2) && string.IsNullOrEmpty(cp.AddressInfo.Town) && string.IsNullOrEmpty(cp.AddressInfo.Postcode))
-                {
-                }*/
-
                 //if title is empty, attempt to add a suitable replacement
                 if (String.IsNullOrEmpty(cp.AddressInfo.Title))
                 {
                     if (!String.IsNullOrEmpty(cp.AddressInfo.AddressLine1))
                     {
-                        cp.AddressInfo.Title = cp.AddressInfo.AddressLine1;
+                        cp.AddressInfo.Title = cp.AddressInfo.AddressLine1.Trim();
                     }
                     else
                     {
@@ -130,7 +121,7 @@ namespace OCM.Import.Providers
                     {
                         country = country.ToUpper();
                         //match country
-                        if (country == "gb" || country == "US" || country == "USA" || country == "U.S." || country == "U.S.A.") countryID = 2;
+                        if (country == "GB" || country == "US" || country == "USA" || country == "U.S." || country == "U.S.A.") countryID = 2;
                         if (country == "UK" || country == "GB" || country == "GREAT BRITAIN" || country == "UNITED KINGDOM") countryID = 1;
                     }
                     else
