@@ -31,7 +31,7 @@ namespace OCM.Import.Providers
 
             var dataList = o["ChargeDevice"].ToArray();
 
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_UnderReview);//imported and under review
+            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_Published);
             var submissionStatusDelistedPrivate = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation);//delisted not public
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
@@ -109,6 +109,22 @@ namespace OCM.Import.Providers
                         cp.AddressInfo.Title = cp.AddressInfo.Postcode;
                     }
                 }
+
+                if (cp.AddressInfo.Title=="NA" && cp.AddressInfo.AddressLine1=="NA")
+                {
+                    // item needs an address resolved
+                    cp.AddressInfo.Title = "[Address Cleaning Required]";
+                    cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
+
+                }
+
+                if (cp.AddressInfo.Title.ToLower().StartsWith("asset no.") && cp.AddressInfo.AddressLine1.ToLower().StartsWith("asset no."))
+                {
+                    // item needs an address resolved
+                    cp.AddressInfo.Title = "[Address Cleaning Required]";
+                    cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
+                }
+
                 //cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
 
                 if (!String.IsNullOrEmpty(addressDetails["Country"].ToString()))
