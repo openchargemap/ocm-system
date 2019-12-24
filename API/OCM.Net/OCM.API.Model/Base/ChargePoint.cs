@@ -75,7 +75,12 @@ namespace OCM.API.Common.Model
         public DateTime? DateCreated { get; set; }
 
         public int? SubmissionStatusTypeID { get; set; }
+
+        [JsonIgnoreAttribute]
+        public bool AddressCleaningRequired { get; set; }
+
     }
+
     public class ChargePoint : POIDetails
     {
         public ChargePoint() { }
@@ -102,6 +107,7 @@ namespace OCM.API.Common.Model
             DataQualityLevel = poi.DataQualityLevel;
             DateCreated = poi.DateCreated;
             SubmissionStatusTypeID = poi.SubmissionStatusTypeID;
+            AddressCleaningRequired = poi.AddressCleaningRequired;
         }
 
         [DisplayName("Data Provider")]

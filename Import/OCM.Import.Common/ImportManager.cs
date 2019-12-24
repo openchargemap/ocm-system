@@ -838,6 +838,23 @@ namespace OCM.Import
 
                 if (list.Count > 0)
                 {
+
+
+                    if (list.Any(f => f.AddressCleaningRequired == true))
+                    {
+                        await addressLookupCacheManager.LoadCache();
+                        // need to perform address lookups
+                        foreach (var i in list)
+                        {
+                            if (i.AddressCleaningRequired == true)
+                            {
+                                await CleanPOIAddressInfo(i);
+                            }
+                        }
+
+                        await addressLookupCacheManager.SaveCache();
+                    }
+
                     if (p.MergeDuplicatePOIEquipment)
                     {
                         Log("Merging Equipment from Duplicate POIs");
@@ -885,21 +902,7 @@ namespace OCM.Import
 
                     GC.Collect();
 
-                    if (finalList.Any(f => f.AddressInfo.Title == "[Address Cleaning Required]"))
-                    {
-                        await addressLookupCacheManager.LoadCache();
-                        // need to perform address lookups
-                        foreach (var i in finalList)
-                        {
-                            if (i.AddressInfo.Title == "[Address Cleaning Required]")
-                            {
-                                await CleanPOIAddressInfo(i);
-                            }
-                        }
-
-                        await addressLookupCacheManager.SaveCache();
-                    }
-
+                  
                     //export/apply updates
                     if (p.ExportType == ExportType.XML)
                     {

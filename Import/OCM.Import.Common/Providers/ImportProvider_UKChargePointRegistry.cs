@@ -113,7 +113,8 @@ namespace OCM.Import.Providers
                 if (cp.AddressInfo.Title=="NA" && cp.AddressInfo.AddressLine1=="NA")
                 {
                     // item needs an address resolved
-                    cp.AddressInfo.Title = "[Address Cleaning Required]";
+                    cp.AddressInfo.Title = "";
+                    cp.AddressCleaningRequired = true;
                     cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
 
                 }
@@ -121,7 +122,8 @@ namespace OCM.Import.Providers
                 if (cp.AddressInfo.Title.ToLower().StartsWith("asset no.") && cp.AddressInfo.AddressLine1.ToLower().StartsWith("asset no."))
                 {
                     // item needs an address resolved
-                    cp.AddressInfo.Title = "[Address Cleaning Required]";
+                    cp.AddressInfo.Title = "";
+                    cp.AddressCleaningRequired = true;
                     cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
                 }
 

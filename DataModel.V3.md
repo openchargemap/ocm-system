@@ -13,3 +13,7 @@ Network Operator is now identified at ChargingDevice level
 Metadata Values
 
 
+Data Model Update Notes:
+
+When adding fields the following points require updating:
+- contructor of ChargePoint which takes POIDetails as an argument need mappings updated
