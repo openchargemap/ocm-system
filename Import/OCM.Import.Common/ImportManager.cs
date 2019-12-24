@@ -97,18 +97,28 @@ namespace OCM.Import
         public string TempFolder { get; set; }
 
         private GeolocationCacheManager geolocationCacheManager = null;
+        private AddressLookupCacheManager addressLookupCacheManager = null;
 
         public string ImportLog { get; set; }
 
         public bool UseDataModelComparison { get; set; } = false;
 
-        public ImportManager(string tempFolderPath)
+        private OCMClient _client = null;
+
+        public ImportManager(string tempFolderPath, string apiBaseUrl, string apikey)
         {
             GeonamesAPIUserName = "openchargemap";
             TempFolder = tempFolderPath;
+
+            _client = new OCMClient(apiBaseUrl, apikey);
+
             geolocationCacheManager = new GeolocationCacheManager(TempFolder);
             geolocationCacheManager.GeonamesAPIUserName = GeonamesAPIUserName;
             geolocationCacheManager.LoadCache();
+
+            addressLookupCacheManager = new AddressLookupCacheManager(TempFolder, _client);
+
+
         }
 
         /**
@@ -169,11 +179,11 @@ namespace OCM.Import
 
         public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData, bool fetchExistingFromAPI = false, string providerName = null)
         {
-            OCMClient client = new OCMClient(IsSandboxedAPIMode);
+
             var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
 
             CoreReferenceData coreRefData = null;
-            coreRefData = await client.GetCoreReferenceDataAsync();
+            coreRefData = await _client.GetCoreReferenceDataAsync();
 
             string outputPath = defaultDataPath;
             var providers = new List<IImportProvider>();
@@ -259,7 +269,7 @@ namespace OCM.Import
 
             foreach (var item in cpListSortedByPos)
             {
-                
+
                 var itemGeoPos = new GeoCoordinate(item.AddressInfo.Latitude, item.AddressInfo.Longitude);
 
                 //item is duplicate if we already seem to have it based on Data Providers reference or approx position match
@@ -446,6 +456,8 @@ namespace OCM.Import
                 var differences = poiManager.CheckDifferences(origPOI, hydratedPoi);
                 differences.RemoveAll(d => d.Context == ".MetadataValues");
                 differences.RemoveAll(d => d.Context == ".DateLastStatusUpdate");
+                differences.RemoveAll(d => d.Context == ".DateLastConfirmed");
+                differences.RemoveAll(d => d.Context == ".DateLastVerified");
                 differences.RemoveAll(d => d.Context == ".UUID");
                 differences.RemoveAll(d => d.Context == ".LevelOfDetail");
 
@@ -515,8 +527,8 @@ namespace OCM.Import
             poi.DataProvider = refData.DataProviders.FirstOrDefault(i => i.ID == poi.DataProviderID);
             poi.OperatorInfo = refData.Operators.FirstOrDefault(i => i.ID == poi.OperatorID);
             poi.UsageType = refData.UsageTypes.FirstOrDefault(i => i.ID == poi.UsageTypeID);
-            
-            foreach(var c in poi.Connections)
+
+            foreach (var c in poi.Connections)
             {
                 c.ConnectionType = refData.ConnectionTypes.FirstOrDefault(i => i.ID == c.ConnectionTypeID);
                 c.CurrentType = refData.CurrentTypes.FirstOrDefault(i => i.ID == c.CurrentTypeID);
@@ -852,7 +864,7 @@ namespace OCM.Import
                     GC.Collect();
 
                     List<ChargePoint> finalList = new List<ChargePoint>();
-                    // p.SkipDeduplication = true;
+
                     if (!p.SkipDeduplication)
                     {
                         Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
@@ -872,6 +884,21 @@ namespace OCM.Import
                     }
 
                     GC.Collect();
+
+                    if (finalList.Any(f => f.AddressInfo.Title == "[Address Cleaning Required]"))
+                    {
+                        await addressLookupCacheManager.LoadCache();
+                        // need to perform address lookups
+                        foreach (var i in finalList)
+                        {
+                            if (i.AddressInfo.Title == "[Address Cleaning Required]")
+                            {
+                                await CleanPOIAddressInfo(i);
+                            }
+                        }
+
+                        await addressLookupCacheManager.SaveCache();
+                    }
 
                     //export/apply updates
                     if (p.ExportType == ExportType.XML)
@@ -893,7 +920,7 @@ namespace OCM.Import
                     {
                         Log("Exporting JSON..");
                         //output json
-                        p.ExportJSONFile(finalList, outputPath + p.OutputNamePrefix + ".json");
+                        p.ExportJSONFile(finalList, outputPath + "processed_" + p.OutputNamePrefix + ".json");
                     }
 
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
@@ -914,6 +941,12 @@ namespace OCM.Import
                             }
                         }
                     }
+                    else
+                    {
+                        numAdded = finalList.Count(p => p.ID == 0);
+                        numUpdated = finalList.Count(p => p.ID > 0);
+                    }
+
                     if (p.ExportType == ExportType.POIModelList)
                     {
                         //result report contains POI lists
@@ -934,20 +967,42 @@ namespace OCM.Import
             return resultReport;
         }
 
-        public string UploadPOIList(string json, string apiIdentifier, string apiToken, string apiBaseUrl)
+        private async Task<ChargePoint> CleanPOIAddressInfo(ChargePoint p)
+        {
+            var result = await addressLookupCacheManager.PerformLocationLookup(p.AddressInfo.Latitude, p.AddressInfo.Longitude);
+
+            if (result != null && !string.IsNullOrEmpty(result.AddressResult.AddressLine1))
+            {
+                p.AddressInfo.Title = result.AddressResult.Title;
+                p.AddressInfo.AddressLine1 = result.AddressResult.AddressLine1;
+
+                p.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
+                return p;
+            }
+            else
+            {
+                // address cannot be improved and is low quality
+                if (!string.IsNullOrEmpty(p.AddressInfo.Postcode))
+                {
+                    p.AddressInfo.Title = p.AddressInfo.Postcode;
+                    p.AddressInfo.AddressLine1 = p.AddressInfo.Town;
+                }
+                return p;
+            }
+
+        }
+
+        public string UploadPOIList(string json, string apiIdentifier = null, string apiToken = null, string apiBaseUrl = null)
         {
             var credentials = GetAPISessionCredentials(apiIdentifier, apiToken);
 
-            int numAdded = 0;
-            int numUpdated = 0;
-
             var poiList = JsonConvert.DeserializeObject<List<ChargePoint>>(json);
-            var ocmClient = new OCMClient(apiBaseUrl, apiToken);
+
             Log("Publishing via API..");
 
-            ocmClient.UpdateItems(poiList, credentials);
+            _client.UpdateItems(poiList, credentials);
 
-            return $"Added: {numAdded} Updated: {numUpdated}";
+            return $"Added: {poiList.Count(i => i.ID == 0)} Updated: {poiList.Count(i => i.ID > 0)}";
         }
         /// <summary>
         /// For a list of ChargePoint objects, attempt to populate the AddressInfo (at least country)

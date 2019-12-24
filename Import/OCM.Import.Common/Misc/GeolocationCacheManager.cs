@@ -45,8 +45,8 @@ namespace OCM.Import.Misc
         {
             if (System.IO.File.Exists(tempFolder + "\\" + GeolocationCacheDataFile))
             {
-                string cacheJSON = System.IO.File.ReadAllText(tempFolder + "\\GeolocationCache.json");
-                GeolocationCache = (List<GelocationCacheItem>)JsonConvert.DeserializeObject(cacheJSON, GeolocationCache.GetType());
+                string cacheJSON = System.IO.File.ReadAllText(tempFolder + "\\"+ GeolocationCacheDataFile);
+                GeolocationCache = JsonConvert.DeserializeObject<List<GelocationCacheItem>>(cacheJSON);
                 return true;
             }
 

@@ -321,6 +321,12 @@ namespace OCM.API.Client
             }
         }
 
+        public async Task<Common.Model.Extended.GeocodingResult> Geocode(double latitude, double longitude)
+        {
+            string url = $"{ServiceBaseURL }/ geocode?output=json&latitude={latitude}&longitude={longitude}";
+            var result = await FetchDataStringFromURLAsync(url);
+            return JsonConvert.DeserializeObject<Common.Model.Extended.GeocodingResult>(result);
+        }
 #endif
 
         public APICredentials GetCredentials(string APIKey)
