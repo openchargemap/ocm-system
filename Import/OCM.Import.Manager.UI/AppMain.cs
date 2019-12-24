@@ -4,6 +4,7 @@ using OCM.Import.Manager.UI.Properties;
 using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -13,6 +14,9 @@ namespace Import
     {
 
         List<IImportProvider> _providers;
+
+        ImportManager _importManager;
+
         public AppMain()
         {
             InitializeComponent();
@@ -27,20 +31,20 @@ namespace Import
             this.txtAPIKey_Coulomb.Text = Settings.Default.APIKey_Coulomb;
             this.txtAPIPwd_Coulomb.Text = Settings.Default.APIPwd_Coulomb;
 
+            this.txtImportJSONPath.Text = ConfigurationManager.AppSettings["ImportBasePath"];
+
+            _importManager = new ImportManager(txtDataFolderPath.Text, ConfigurationManager.AppSettings["APIBaseUrl"], ConfigurationManager.AppSettings["APIKey"]);
 
             //populate provider list
             _providers = new List<IImportProvider>();
-            _providers = new ImportManager(this.txtDataFolderPath.Text).GetImportProviders(new List<DataProvider>());
+            _providers = _importManager.GetImportProviders(new List<DataProvider>());
 
-            lstProvider.DataSource = _providers.ToArray().Select(s=>s.GetProviderName()).ToList();
+            lstProvider.DataSource = _providers.ToArray().Select(s => s.GetProviderName()).ToList();
 
         }
 
         private async void btnProcessImports_Click(object sender, EventArgs e)
         {
-            ImportManager importManager = new ImportManager(txtDataFolderPath.Text);
-            importManager.IsSandboxedAPIMode = false;
-
             ExportType exportType = ExportType.JSON;
 
             if (lstOutputType.SelectedItem.ToString().StartsWith("XML")) exportType = ExportType.XML;
@@ -48,13 +52,13 @@ namespace Import
             if (lstOutputType.SelectedItem.ToString().StartsWith("CSV")) exportType = ExportType.CSV;
             if (lstOutputType.SelectedItem.ToString().StartsWith("JSON")) exportType = ExportType.JSON;
 
-            importManager.GeonamesAPIUserName = txtGeonamesAPIUserID.Text;
-            importManager.ImportUpdatesOnly = chkUpdatesOnly.Checked;
+            _importManager.GeonamesAPIUserName = txtGeonamesAPIUserID.Text;
+            _importManager.ImportUpdatesOnly = chkUpdatesOnly.Checked;
 
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
-            await importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked, fetchExistingFromAPI: true, lstProvider.SelectedValue.ToString());
+            await _importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked, fetchExistingFromAPI: true, lstProvider.SelectedValue.ToString());
             this.Cursor = Cursors.Default;
             this.btnProcessImports.Enabled = true;
             MessageBox.Show("Processing Completed");
@@ -79,16 +83,15 @@ namespace Import
             //ServiceManager networkSVCManager = new ServiceManager();
             //string jsonResult = networkSVCManager.GetAllResultsAsJSON(ServiceProvider.CoulombChargePoint, txtAPIKey_Coulomb.Text, txtAPIPwd_Coulomb.Text);
 
-            new ImportManager("").GeocodingTest();
+            _importManager.GeocodingTest();
         }
 
         private void BtnUpload_Click(object sender, EventArgs e)
         {
-            ImportManager importManager = new ImportManager(txtDataFolderPath.Text);
-            importManager.IsSandboxedAPIMode = true;
+
             string json = System.IO.File.ReadAllText(txtImportJSONPath.Text);
 
-            string result = importManager.UploadPOIList(json, txtAPIIdentifier.Text, txtAPISessionToken.Text);
+            string result = _importManager.UploadPOIList(json);
 
             MessageBox.Show(result);
         }

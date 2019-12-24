@@ -42,13 +42,13 @@ namespace OCM.API.Tests
 
             Core.Data.CacheManager.InitCaching(_settings);
 
+            _ = Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified).Result;
         }
 
         [Fact]
         public async Task CacheStatusOK()
         {
-            await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified).ConfigureAwait(true);
-
+          
             var status = await Core.Data.CacheManager.GetCacheStatus();
             Assert.True(status != null, "Status should not be null");
 

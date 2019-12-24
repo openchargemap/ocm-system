@@ -73,7 +73,7 @@ namespace OCM.Import.Manager.UI
                 {
                     ExportType exportType = ExportType.API;
 
-                    ImportManager importManager = new ImportManager(Settings.Default.Import_DataFolder);
+                    ImportManager importManager = new ImportManager(Settings.Default.Import_DataFolder,"","");
                     LogEvent("Performing Import, Publishing via API: "+DateTime.UtcNow.ToShortTimeString());
                     importManager.PerformImportProcessing(exportType, Settings.Default.Import_DataFolder, Settings.Default.OCM_API_Identitifer, Settings.Default.OCM_API_SessionToken, true);
                     LogEvent("Import Processed. Exiting. " + DateTime.UtcNow.ToShortTimeString());

@@ -355,7 +355,7 @@ namespace OCM.MVC.Controllers
         {
             var tempPath = Path.GetTempPath();
 
-            var importManager = new Import.ImportManager(tempPath);
+            var importManager = new Import.ImportManager(tempPath,"","");
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var model = new Models.ImportManager() { ImportProviders = providers };
 
@@ -371,7 +371,7 @@ namespace OCM.MVC.Controllers
 
             var tempPath = Path.GetTempPath();
 
-            var importManager = new Import.ImportManager(tempPath);
+            var importManager = new Import.ImportManager(tempPath,"","");
 
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
@@ -412,7 +412,7 @@ namespace OCM.MVC.Controllers
 
             var tempPath = Path.GetTempPath();
 
-            var importManager = new Import.ImportManager(tempPath);
+            var importManager = new Import.ImportManager(tempPath,"","");
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == Request.Form["providerName"]);
 
