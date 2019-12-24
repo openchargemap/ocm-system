@@ -101,7 +101,7 @@ namespace OCM.Import.Providers
                     if (!String.IsNullOrEmpty(deviceController))
                     {
                         deviceController = deviceController.ToLower().Replace(" network", "");
-                        if (deviceController == "circuit ã©lectrique")
+                        if (deviceController == "circuit ã©lectrique" || deviceController== "circuit électrique")
                         {
                             deviceController = "circuit electrique";
                         }
@@ -117,7 +117,10 @@ namespace OCM.Import.Providers
                         }
                         else
                         {
-                            this.Log("Unknown network operator:" + deviceController);
+                            if (deviceController != "non-networked")
+                            {
+                                this.Log("Unknown network operator:" + deviceController);
+                            }
                         }
                     }
 
