@@ -80,7 +80,7 @@ namespace OCM.Import.Misc
                 else
                 {
                     var result = await _client.Geocode(latitude, longitude);
-                    if (result.ResultsAvailable)
+                    if (result?.ResultsAvailable == true)
                     {
                         var cacheItem = new AddressLookupCacheItem { AddressResult = result.AddressInfo, CacheDate = DateTime.Now, Latitude = latitude, Longitude = longitude };
                         AddressCache.Add(cacheItem);

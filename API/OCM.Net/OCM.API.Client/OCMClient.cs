@@ -323,7 +323,7 @@ namespace OCM.API.Client
 
         public async Task<Common.Model.Extended.GeocodingResult> Geocode(double latitude, double longitude)
         {
-            string url = $"{ServiceBaseURL }/ geocode?output=json&latitude={latitude}&longitude={longitude}";
+            string url = $"{ServiceBaseURL }/geocode?output=json&latitude={latitude}&longitude={longitude}";
             var result = await FetchDataStringFromURLAsync(url);
             return JsonConvert.DeserializeObject<Common.Model.Extended.GeocodingResult>(result);
         }
@@ -339,7 +339,10 @@ namespace OCM.API.Client
         {
             if (!string.IsNullOrEmpty(APIKey))
             {
-                _client.DefaultRequestHeaders.TryAddWithoutValidation("X-API-Key", APIKey);
+                if (!_client.DefaultRequestHeaders.Contains("X-API-Key"))
+                {
+                    _client.DefaultRequestHeaders.TryAddWithoutValidation("X-API-Key", APIKey);
+                }
             }
 
             HttpResponseMessage response = await _client.GetAsync(url);
