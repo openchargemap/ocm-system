@@ -461,7 +461,7 @@ namespace OCM.Import
                 differences.RemoveAll(d => d.Context == ".UUID");
                 differences.RemoveAll(d => d.Context == ".LevelOfDetail");
 
-                differences.RemoveAll(d => d.Context == ".DataProvider.DateLastImported");
+                differences.RemoveAll(d => d.Context == "DataProvider.DateLastImported");
                 differences.RemoveAll(d => d.Context == ".IsRecentlyVerified");
                 differences.RemoveAll(d => d.Context == ".DateLastVerified");
                 differences.RemoveAll(d => d.Context == ".UserComments");
@@ -486,7 +486,7 @@ namespace OCM.Import
                     result.Differences.RemoveAll(d => d.PropertyName == ".MetadataValues");
                     result.Differences.RemoveAll(d => d.PropertyName == ".DateLastStatusUpdate");
                     result.Differences.RemoveAll(d => d.PropertyName == ".UUID");
-                    result.Differences.RemoveAll(d => d.PropertyName == ".DataProvider.DateLastImported");
+                    result.Differences.RemoveAll(d => d.PropertyName == "DataProvider.DateLastImported");
                     result.Differences.RemoveAll(d => d.PropertyName == ".IsRecentlyVerified");
                     result.Differences.RemoveAll(d => d.PropertyName == ".DateLastVerified");
                     result.Differences.RemoveAll(d => d.PropertyName == ".UserComments");
@@ -895,6 +895,17 @@ namespace OCM.Import
                         finalList = list.ToList();
                     }
 
+
+                    // remove items with no changes
+
+                    if (resultReport.Unchanged.Any())
+                    {
+                        foreach (var r in resultReport.Unchanged)
+                        {
+                            finalList.Remove(r);
+                        }
+                    }
+
                     if (ImportUpdatesOnly)
                     {
                         finalList = finalList.Where(l => l.ID > 0).ToList();
@@ -902,7 +913,7 @@ namespace OCM.Import
 
                     GC.Collect();
 
-                  
+
                     //export/apply updates
                     if (p.ExportType == ExportType.XML)
                     {
