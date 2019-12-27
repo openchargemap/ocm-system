@@ -86,12 +86,12 @@ namespace Import
             _importManager.GeocodingTest();
         }
 
-        private void BtnUpload_Click(object sender, EventArgs e)
+        private async void BtnUpload_Click(object sender, EventArgs e)
         {
 
             string json = System.IO.File.ReadAllText(txtImportJSONPath.Text);
 
-            string result = _importManager.UploadPOIList(json);
+            string result = await _importManager.UploadPOIList(json);
 
             MessageBox.Show(result);
         }

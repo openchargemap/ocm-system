@@ -1006,7 +1006,7 @@ namespace OCM.Import
 
         }
 
-        public string UploadPOIList(string json, string apiIdentifier = null, string apiToken = null, string apiBaseUrl = null)
+        public async Task<string> UploadPOIList(string json, string apiIdentifier = null, string apiToken = null, string apiBaseUrl = null)
         {
             var credentials = GetAPISessionCredentials(apiIdentifier, apiToken);
 
@@ -1014,7 +1014,39 @@ namespace OCM.Import
 
             Log("Publishing via API..");
 
-            _client.UpdateItems(poiList, credentials);
+            var itemCount = poiList.Count();
+            var itemsProcessed = 0;
+            var pageSize = 500;
+            var pageIndex = 0;
+
+            Log($"Publishing a total of {itemCount} items ..");
+
+            while (itemsProcessed < itemCount)
+            {
+                IEnumerable<ChargePoint> subList = new List<ChargePoint>();
+                var currentIndex = pageIndex * pageSize;
+                var itemsRemaining = itemCount - currentIndex;
+
+                if (itemsRemaining > pageSize)
+                {
+                    subList = poiList.Skip(currentIndex).Take(pageSize);
+                    itemsProcessed += pageSize;
+                    Log($"Publishing items { currentIndex } to {currentIndex + pageSize - 1}..");
+                }
+                else
+                {
+                    subList = poiList.Skip(currentIndex).Take(itemsRemaining);
+                    itemsProcessed += itemsRemaining;
+                    Log($"Publishing items { currentIndex } to {currentIndex + itemsRemaining}..");
+                }
+
+                _client.UpdateItems(subList.ToList(), credentials);
+
+                await Task.Delay(2500);
+                pageIndex++;
+            }
+
+
 
             return $"Added: {poiList.Count(i => i.ID == 0)} Updated: {poiList.Count(i => i.ID > 0)}";
         }

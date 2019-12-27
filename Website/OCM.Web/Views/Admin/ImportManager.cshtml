@@ -4,7 +4,7 @@
 <h2>Import Manager</h2>
 <p class="alert alert-danger">This feature is still under development and is not ready for general use.</p>
 <table class="table table-bordered table-striped">
-    <tr><th>Data Provider</th><th>License</th><th>Import Provider</th><th>Date Last Imported</th><th></th></tr>
+    <tr><th>Data Provider</th><th>License</th><th>Import Provider</th><th>Date Last Imported</th></tr>
     @foreach (var item in Model.ImportProviders)
     {
         var itemDetails = (OCM.Import.Providers.BaseImportProvider)item;
@@ -19,7 +19,7 @@
             </td>
             <td>@itemDetails.ProviderName</td>
             <td>@(itemDetails.DefaultDataProvider != null ? (itemDetails.DefaultDataProvider.DateLastImported.HasValue ? itemDetails.DefaultDataProvider.DateLastImported.ToString() : "Unknown") : "")</td>
-            <td>
+            <!--<td>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-cloud-download"></i> Import <span class="caret"></span>
@@ -34,7 +34,7 @@
                         <li><a href="javascript:showFileUpload('@itemDetails.ProviderName', false)">Upload File (Preview)..</a></li>
                     </ul>
                 </div>
-            </td>
+            </td>-->
         </tr>
 
     }
