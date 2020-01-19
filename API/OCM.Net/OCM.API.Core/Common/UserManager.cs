@@ -207,7 +207,7 @@ namespace OCM.API.Common
         public User GetUserFromAPIKey(string apiKey)
         {
            
-            var reg = dataModel.RegisteredApplicationUsers.Include(r=>r.User).Single(u => u.Apikey.ToLower() == apiKey.ToLower());
+            var reg = dataModel.RegisteredApplicationUsers.Include(r=>r.User).FirstOrDefault(u => u.Apikey.ToLower() == apiKey.ToLower());
 
             if (reg != null && reg.IsEnabled && reg.IsWriteEnabled)
             {

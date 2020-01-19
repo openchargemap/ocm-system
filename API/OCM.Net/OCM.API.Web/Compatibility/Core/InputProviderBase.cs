@@ -65,8 +65,9 @@ namespace OCM.API.InputProviders
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                var user =  new UserManager().GetUserFromAPIKey(apiKey);
-                return user;
+                var user = new UserManager().GetUserFromAPIKey(apiKey);
+
+                if (user != null) return user;
             }
 
             //TODO: move to security
