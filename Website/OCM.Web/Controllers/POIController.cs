@@ -376,7 +376,7 @@ namespace OCM.MVC.Controllers
             var refData = new POIBrowseModel();
             refData.AllowOptionalCountrySelection = false;
             ViewBag.ReferenceData = refData;
-
+           
             ViewBag.ConnectionIndex = 0; //connection counter shared by equipment details
             ViewBag.EnableEditView = true;
 
@@ -408,7 +408,7 @@ namespace OCM.MVC.Controllers
                 PrepareDefaultsForBlankSelections(poi);
 
                 //update preview of poi with fully populated reference data
-                poi = new POIManager().PreviewPopulatedPOIFromModel(poi);
+                poi = new POIManager().PreviewPopulatedPOIFromModel(poi, refData.ReferenceData);
 
                 InitEditReferenceData(poi);
 

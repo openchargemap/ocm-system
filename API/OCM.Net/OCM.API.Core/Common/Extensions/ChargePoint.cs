@@ -5,12 +5,12 @@ namespace OCM.API.Common.Model.Extensions
 {
     public class ChargePoint
     {
-        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source)
+        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, Model.CoreReferenceData refData)
         {
-            return FromDataModel(source, false, false, false, true);
+            return FromDataModel(source, false, false, false, true, refData);
         }
 
-        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments, bool loadMediaItems, bool loadMetadataValues, bool isVerboseMode)
+        public static Model.ChargePoint FromDataModel(Core.Data.ChargePoint source, bool loadUserComments, bool loadMediaItems, bool loadMetadataValues, bool isVerboseMode, Model.CoreReferenceData refData)
         {
             if (source == null) return null;
 
@@ -99,7 +99,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.Connections = new List<Model.ConnectionInfo>();
             foreach (var conn in source.ConnectionInfoes)
             {
-                poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode));
+                poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode, refData));
             }
 
             //loadUserComments = true;

@@ -6,7 +6,7 @@ namespace OCM.API.Common.Model.Extensions
 {
     public class ConnectionInfo
     {
-        public static Model.ConnectionInfo FromDataModel(Core.Data.ConnectionInfo s, bool isVerboseMode)
+        public static Model.ConnectionInfo FromDataModel(Core.Data.ConnectionInfo s, bool isVerboseMode, Model.CoreReferenceData refData)
         {
             if (s == null) return null;
 
@@ -22,49 +22,67 @@ namespace OCM.API.Common.Model.Extensions
             };
 
             //connection type (full object or id only)
+            connectionInfo.ConnectionTypeID = s.ConnectionTypeId;
+
             if (isVerboseMode)
             {
-                connectionInfo.ConnectionType = ConnectionType.FromDataModel(s.ConnectionType);
-                connectionInfo.ConnectionTypeID = (s.ConnectionType != null ? s.ConnectionType.Id : s.ConnectionTypeId);
+                connectionInfo.ConnectionType = refData.ConnectionTypes.FirstOrDefault(c => c.ID == s.ConnectionTypeId);
             }
-            else
-            {
-                connectionInfo.ConnectionTypeID = s.ConnectionTypeId;
-            }
+
 
             //status type (full object or id only)
-            if (isVerboseMode && (s.StatusTypeId != null || s.StatusType != null))
+            connectionInfo.StatusTypeID = s.StatusTypeId;
+            if (isVerboseMode)
             {
-                connectionInfo.StatusType = StatusType.FromDataModel(s.StatusType);
-                connectionInfo.StatusTypeID = s.StatusTypeId;
-            }
-            else
-            {
-                if (s.StatusTypeId != null) connectionInfo.StatusTypeID = s.StatusTypeId;
+                connectionInfo.StatusType = refData.StatusTypes.FirstOrDefault(i => i.ID == s.StatusTypeId);
             }
 
-            //charging level type (full object or id only)
-            if (isVerboseMode && (s.LevelTypeId != null || s.LevelType != null))
+            // determine legacy charging 'level' (SAE definition) based on kw/voltage if available
+            // if can't be computed use existing user supplied value (if any)
+
+            connectionInfo.LevelID = ComputeChargingLevel(connectionInfo);
+
+            if (connectionInfo.LevelID == null) connectionInfo.LevelID = s.LevelTypeId;
+
+            if (isVerboseMode)
             {
-                connectionInfo.Level = ChargerType.FromDataModel(s.LevelType);
-                connectionInfo.LevelID = s.LevelTypeId;
-            }
-            else
-            {
-                if (s.LevelTypeId != null) connectionInfo.LevelID = s.LevelTypeId;
+                connectionInfo.Level = refData.ChargerTypes.FirstOrDefault(i => i.ID == connectionInfo.LevelID);
             }
 
-            if (isVerboseMode && (s.CurrentTypeId != null || s.CurrentType != null))
+            connectionInfo.CurrentTypeID = s.CurrentTypeId;
+            if (isVerboseMode)
             {
-                connectionInfo.CurrentType = CurrentType.FromDataModel(s.CurrentType);
-                connectionInfo.CurrentTypeID = s.CurrentTypeId;
-            }
-            else
-            {
-                if (s.CurrentTypeId != null) connectionInfo.CurrentTypeID = s.CurrentTypeId;
+                connectionInfo.CurrentType = refData.CurrentTypes.FirstOrDefault(i => i.ID == connectionInfo.CurrentTypeID);
             }
 
             return connectionInfo;
         }
+
+        public static int? ComputeChargingLevel(Model.ConnectionInfo c)
+        {
+            if (c.PowerKW > 0)
+            {
+
+                if (c.PowerKW < 2.4 || c.Voltage <= 120)
+                {
+                    // SAE Level 1, unit is probably AC output
+                    return 1;
+                }
+                else if (c.PowerKW >= 2 || c.Voltage > 200 && c.Voltage <= 400)
+                {
+                    // SAE Level 2, unit is probably AC output
+                    return 2;
+                }
+                else if (c.PowerKW > 19.4 || c.Voltage > 400)
+                {
+                    // SAE Level 3, unit is probably DC output
+                    return 3;
+                }
+            }
+
+            return null;
+        }
     }
+
+
 }

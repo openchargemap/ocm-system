@@ -154,13 +154,14 @@ namespace OCM.API.Common
 
         public SubscriptionMatchGroup GetSubscriptionMatches(int subscriptionId, int userId, DateTime? dateFrom)
         {
+            var refData = new ReferenceDataManager().GetCoreReferenceData();
             var dataModel = new OCM.Core.Data.OCMEntities();
             var poiManager = new POIManager();
 
             var subscription = dataModel.UserSubscriptions.FirstOrDefault(s => s.Id == subscriptionId && s.UserId == userId);
             if (subscription != null)
             {
-                return GetSubscriptionMatches(dataModel, poiManager, subscription, dateFrom);
+                return GetSubscriptionMatches(dataModel, poiManager, subscription, refData, dateFrom);
             }
             else
             {
@@ -220,7 +221,7 @@ namespace OCM.API.Common
             return isMatch;
         }
 
-        public SubscriptionMatchGroup GetSubscriptionMatches(OCM.Core.Data.OCMEntities dataModel, POIManager poiManager, OCM.Core.Data.UserSubscription subscription, DateTime? dateFrom = null)
+        public SubscriptionMatchGroup GetSubscriptionMatches(OCM.Core.Data.OCMEntities dataModel, POIManager poiManager, OCM.Core.Data.UserSubscription subscription, Model.CoreReferenceData refData, DateTime? dateFrom = null)
         {
             SubscriptionMatchGroup subscriptionMatchGroup = new SubscriptionMatchGroup();
 
@@ -422,7 +423,7 @@ namespace OCM.API.Common
                     var subscriptionMatch = new SubscriptionMatch { Category = SubscriptionMatchCategory.NewComment, Description = "New Comments Added" };
                     foreach (var c in newComments)
                     {
-                        var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint);
+                        var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint, refData);
                         if (IsPOISubscriptionFilterMatch(poi, filter, subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = OCM.API.Common.Model.Extensions.UserComment.FromDataModel(c, true), POI = poi });
@@ -446,7 +447,7 @@ namespace OCM.API.Common
                     var subscriptionMatch = new SubscriptionMatch { Category = SubscriptionMatchCategory.NewMediaUpload, Description = "New Photos Added" };
                     foreach (var c in newMedia)
                     {
-                        var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint);
+                        var poi = OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(c.ChargePoint, refData);
                         if (IsPOISubscriptionFilterMatch(poi, filter, subscription))
                         {
                             subscriptionMatch.ItemList.Add(new SubscriptionMatchItem { Item = OCM.API.Common.Model.Extensions.MediaItem.FromDataModel(c), POI = poi });
@@ -469,6 +470,9 @@ namespace OCM.API.Common
 
             //TODO: performance/optimisation (use cache for POI queries is done)
             //for each subscription, check if any changes match the criteria
+
+            var refData = new ReferenceDataManager().GetCoreReferenceData();
+
             var dataModel = new OCM.Core.Data.OCMEntities();
             //var cacheManager = new OCM.Core.Data.CacheProviderMongoDB();
             var poiManager = new POIManager();
@@ -481,7 +485,7 @@ namespace OCM.API.Common
             {
                 if (!excludeRecentlyNotified || (subscription.DateLastNotified == null || subscription.DateLastNotified.Value < currentTime.AddMinutes(-subscription.NotificationFrequencyMins)))
                 {
-                    var subscriptionMatchGroup = GetSubscriptionMatches(dataModel, poiManager, subscription);
+                    var subscriptionMatchGroup = GetSubscriptionMatches(dataModel, poiManager, subscription, refData);
                     if (subscriptionMatchGroup.SubscriptionMatches.Any())
                     {
                         subscriptionMatchGroup.Subscription = OCM.API.Common.Model.Extensions.UserSubscription.FromDataModel(subscription, true);

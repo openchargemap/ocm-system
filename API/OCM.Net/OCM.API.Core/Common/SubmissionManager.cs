@@ -18,13 +18,21 @@ namespace OCM.API.Common
         public bool AllowUpdates = false;
         public bool RequireSubmissionReview = true;
 
+        public static CoreReferenceData refData = null;
+
         public SubmissionManager()
         {
             AllowUpdates = false;
+
+            using(var refDataManager = new ReferenceDataManager())
+            {
+                refData = refDataManager.GetCoreReferenceData();
+            }
+         
         }
 
         //convert a simple POI to data and back again to fully populate all related properties, as submission may only have simple IDs for ref data etc
-        private Model.ChargePoint PopulateFullPOI(Model.ChargePoint poi)
+        private Model.ChargePoint PopulateFullPOI(Model.ChargePoint poi, Model.CoreReferenceData refData)
         {
             OCMEntities tempDataModel = new OCMEntities();
 
@@ -32,7 +40,7 @@ namespace OCM.API.Common
             var poiData = new POIManager().PopulateChargePoint_SimpleToData(poi, tempDataModel);
 
             //convert back to simple POI
-            var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData, false, false, true, true);
+            var modelPOI = Model.Extensions.ChargePoint.FromDataModel(poiData, false, false, true, true, refData);
 
             //clear temp changes from the poi
             //dataModel.Entry(poiData).Reload();
@@ -112,7 +120,7 @@ namespace OCM.API.Common
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
-                updatedPOI = PopulateFullPOI(updatedPOI);
+                updatedPOI = PopulateFullPOI(updatedPOI, refData);
                 Model.ChargePoint oldPOI = null;
 
                 if (updatedPOI.ID > 0)

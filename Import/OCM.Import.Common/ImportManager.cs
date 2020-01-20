@@ -451,7 +451,7 @@ namespace OCM.Import
                 var origPOI = masterListCopy.FirstOrDefault(p => p.ID == poi.ID);
 
                 // hydrate POI with all of its associated extended properties
-                var hydratedPoi = UseDataModelComparison ? poiManager.PreviewPopulatedPOIFromModel(poi) : DehydratePOI(poi, coreRefData);
+                var hydratedPoi = UseDataModelComparison ? poiManager.PreviewPopulatedPOIFromModel(poi, coreRefData) : DehydratePOI(poi, coreRefData);
 
                 var differences = poiManager.CheckDifferences(origPOI, hydratedPoi);
                 differences.RemoveAll(d => d.Context == ".MetadataValues");

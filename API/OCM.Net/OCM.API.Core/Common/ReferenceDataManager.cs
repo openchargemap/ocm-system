@@ -82,8 +82,10 @@ namespace OCM.API.Common
             return dataProviders;
         }
 
-        public CoreReferenceData GetCoreReferenceData(APIRequestParams filter)
+        public CoreReferenceData GetCoreReferenceData(APIRequestParams filter = null)
         {
+            if (filter == null) filter = new APIRequestParams { };
+
             CoreReferenceData data = null;
 
             if (filter.AllowMirrorDB)
@@ -117,8 +119,8 @@ namespace OCM.API.Common
                 // fetch connection types used in the list of given countries, with count of usage in the set
                 var usedConnectionTypes = dataModel.ConnectionTypes
                     .Distinct()
-                    .Where(c => c.ConnectionInfoes.Any(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) && 
-                            (ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published 
+                    .Where(c => c.ConnectionInfoes.Any(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) &&
+                            (ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published
                                 || ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)))
                     .Select(s => new
                     {
@@ -177,7 +179,7 @@ namespace OCM.API.Common
                     .Select(o => new
                     {
                         operatorInfo = o,
-                        count = o.ChargePoints.Where(poi => 
+                        count = o.ChargePoints.Where(poi =>
                                                         filter.CountryIDs.Contains(poi.AddressInfo.CountryId)
                                                         && (poi.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)
                                                         )

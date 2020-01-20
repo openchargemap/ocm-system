@@ -271,19 +271,15 @@ namespace OCM.Core.Data
             {
                 database.CreateCollection("poi");
             }
+
+            var refData = new ReferenceDataManager().GetCoreReferenceData();
+
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
 
             var dataList = new Data.OCMEntities().ChargePoints
                  .Include(a1 => a1.AddressInfo)
                       .ThenInclude(a => a.Country)
                  .Include(a1 => a1.ConnectionInfoes)
-                      .ThenInclude(c => c.ConnectionType)
-                 .Include(a1 => a1.ConnectionInfoes)
-                      .ThenInclude(c => c.StatusType)
-                 .Include(a1 => a1.ConnectionInfoes)
-                      .ThenInclude(c => c.LevelType)
-                 .Include(a1 => a1.ConnectionInfoes)
-                      .ThenInclude(c => c.CurrentType)
                  .Include(a1 => a1.Operator)
                  .Include(a1 => a1.DataProvider)
                  .Include(a1 => a1.UsageType)
@@ -310,7 +306,7 @@ namespace OCM.Core.Data
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in dataList)
                 {
-                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
+                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
                 }
                 return poiList;
             }
@@ -337,7 +333,7 @@ namespace OCM.Core.Data
 
                 foreach (var cp in list)
                 {
-                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
+                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
                 }
 
                 System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds } seconds");
@@ -358,7 +354,7 @@ namespace OCM.Core.Data
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 foreach (var cp in list)
                 {
-                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true));
+                    poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
 
                     if (poiList.Count % 100 == 0)
                     {
@@ -379,6 +375,8 @@ namespace OCM.Core.Data
         {
             var mirrorStatus = await Task.Run<MirrorStatus>(() =>
             {
+
+                var refData = new ReferenceDataManager().GetCoreReferenceData();
                 var dataModel = new OCMEntities();
                 var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.Id == poiId);
 
@@ -389,7 +387,7 @@ namespace OCM.Core.Data
 
                 if (poiModel != null)
                 {
-                    var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel));
+                    var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel, refData));
                     if (cachePOI.AddressInfo != null)
                     {
                         cachePOI.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(cachePOI.AddressInfo.Longitude, cachePOI.AddressInfo.Latitude));
@@ -441,7 +439,7 @@ namespace OCM.Core.Data
                     }
                 }
 
-                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { });
+                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData();
                 if (coreRefData != null)
                 {
                     database.DropCollection("reference");

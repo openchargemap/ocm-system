@@ -122,6 +122,9 @@ namespace OCM.API.Common
 
         public Model.ChargePoint Get(int id, bool includeExtendedInfo, bool allowDiskCache = false, bool allowMirrorDB = false)
         {
+
+            var refData = new ReferenceDataManager().GetCoreReferenceData();
+
             if (allowMirrorDB)
             {
                 var p = CacheProviderMongoDB.DefaultInstance.GetPOI(id);
@@ -136,7 +139,7 @@ namespace OCM.API.Common
                 var dataModel = new OCMEntities();
                 var item = dataModel.ChargePoints.Find(id);
 
-                var poi = Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true);
+                var poi = Model.Extensions.ChargePoint.FromDataModel(item, includeExtendedInfo, includeExtendedInfo, includeExtendedInfo, true, refData);
 
                 return poi;
             }
@@ -152,13 +155,13 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="poi"></param>
         /// <returns></returns>
-        public Model.ChargePoint PreviewPopulatedPOIFromModel(Model.ChargePoint poi)
+        public Model.ChargePoint PreviewPopulatedPOIFromModel(Model.ChargePoint poi, Model.CoreReferenceData refData)
         {
             var dataModel = new OCMEntities();
 
             var dataPreviewPOI = PopulateChargePoint_SimpleToData(poi, dataModel);
 
-            return Model.Extensions.ChargePoint.FromDataModel(dataPreviewPOI);
+            return Model.Extensions.ChargePoint.FromDataModel(dataPreviewPOI, refData);
         }
 
         /// <summary>
@@ -203,6 +206,7 @@ namespace OCM.API.Common
         public async Task<IEnumerable<Model.ChargePoint>> GetPOIListAsync(APIRequestParams filter)
         {
 
+
             // clone filter settings to remove mutation side effects in callers
             var settings = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filter));
 
@@ -237,6 +241,14 @@ namespace OCM.API.Common
             //if dataList is null we didn't get any cache DB results, use SQL DB
             if (dataList == null && settings.AllowDataStoreDB)
             {
+
+                Model.CoreReferenceData refData = null;
+
+                using (var refDataManager = new ReferenceDataManager())
+                {
+                    refData = refDataManager.GetCoreReferenceData();
+                }
+
                 int maxResults = settings.MaxResults;
                 this.LoadUserComments = settings.IncludeComments;
                 bool requiresDistance = false;
@@ -496,7 +508,7 @@ namespace OCM.API.Common
                 foreach (var item in additionalFilteredList)
                 {
                     //note: if include comments is enabled, media items and metadata values are also included
-                    Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput);
+                    Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item.c, settings.IncludeComments, settings.IncludeComments, settings.IncludeComments, !settings.IsCompactOutput, refData);
 
                     if (requiresDistance && c.AddressInfo != null)
                     {
@@ -558,7 +570,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="poi"></param>
         /// <returns></returns>
-        public List<Model.ChargePoint> FindSimilar(Model.ChargePoint poi)
+        public List<Model.ChargePoint> FindSimilar(Model.ChargePoint poi, Model.CoreReferenceData refData)
         {
             List<Model.ChargePoint> list = new List<Model.ChargePoint>();
 
@@ -582,7 +594,7 @@ namespace OCM.API.Common
 
             foreach (var item in similarData)
             {
-                Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item);
+                Model.ChargePoint c = Model.Extensions.ChargePoint.FromDataModel(item, refData);
 
                 if (c != null)
                 {
