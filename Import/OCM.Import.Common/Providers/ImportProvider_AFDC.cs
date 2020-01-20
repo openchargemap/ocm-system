@@ -101,7 +101,7 @@ namespace OCM.Import.Providers
                     if (!String.IsNullOrEmpty(deviceController))
                     {
                         deviceController = deviceController.ToLower().Replace(" network", "");
-                        if (deviceController == "circuit ã©lectrique" || deviceController== "circuit électrique")
+                        if (deviceController == "circuit ã©lectrique" || deviceController == "circuit électrique")
                         {
                             deviceController = "circuit electrique";
                         }
@@ -287,7 +287,7 @@ namespace OCM.Import.Providers
                             CurrentTypeID = 10 //AC
                         };
 
-                        cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
+                        cinfo.PowerKW = (double?)ComputePowerkWForConnectionInfo(cinfo);
 
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_20;
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA515")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_15;
@@ -318,7 +318,7 @@ namespace OCM.Import.Providers
                             CurrentTypeID = 10 //AC
                         };
 
-                        cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
+                        cinfo.PowerKW = (double?)ComputePowerkWForConnectionInfo(cinfo);
 
                         if (evconnectors.Any(c => c.Value<string>() == "J1772")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772; //J1772
 
@@ -368,7 +368,7 @@ namespace OCM.Import.Providers
                                 CurrentTypeID = (int)StandardCurrentTypes.DC //DC
                             };
 
-                            cinfo.PowerKW = (cinfo.Voltage * cinfo.Amps) / 1000;
+                            cinfo.PowerKW = (double?)ComputePowerkWForConnectionInfo(cinfo);
 
                             if (lvl3Connector == "CHADEMO")
                             {

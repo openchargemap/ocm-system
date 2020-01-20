@@ -140,6 +140,8 @@ namespace OCM.Import.Providers
                             cinfoType2.Amps = 16;
                             cinfoType2.Voltage = 230;
                             cinfoType2.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
+                            cinfoType2.PowerKW = ((double)cinfoType2.Voltage * (double)cinfoType2.Amps) / 1000;
+
                             cinfoType2.Level = new ChargerType() { ID = 2 };
                             cinfoType2.ConnectionType = cTypeType2;
                             if (cp.Connections == null)
@@ -302,10 +304,12 @@ namespace OCM.Import.Providers
                             System.Diagnostics.Debug.WriteLine("unknown chargingCapacity: " + chargingCapacityAttribs.InnerText);
                         }
                     }
-                    //Only calculate power if power is not explicitly set.
-                    if (cinfo.Amps > 0 && cinfo.Voltage > 0 && cinfo.PowerKW != null)
+
+                    // Only calculate power if power is not explicitly set.
+                    // TODO : standardise across data import providers
+                    if (cinfo.PowerKW == null)
                     {
-                        cinfo.PowerKW = (cinfo.Amps * cinfo.Voltage / 1000);
+                        cinfo.PowerKW = (double?)ComputePowerkWForConnectionInfo(cinfo);
                     }
 
                     cinfo.ConnectionType = cType;
