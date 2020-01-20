@@ -287,7 +287,7 @@ namespace OCM.Import.Providers
                             CurrentTypeID = 10 //AC
                         };
 
-                        cinfo.PowerKW = (double?)ComputePowerkWForConnectionInfo(cinfo);
+                        cinfo.PowerKW = ComputePowerkWForConnectionInfo(cinfo);
 
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA520")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_20;
                         if (evconnectors.Any(c => c.Value<string>() == "NEMA515")) cinfo.ConnectionTypeID = (int)StandardConnectionTypes.Nema5_15;
