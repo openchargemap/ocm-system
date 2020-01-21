@@ -48,6 +48,37 @@ namespace OCM.API.Tests
             level = Common.Model.Extensions.ConnectionInfo.ComputeChargingLevel(conn);
             Assert.True(level == 2, "Should be level 2");
 
+
+            conn = new ConnectionInfo
+            {
+                PowerKW = 14,
+                CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC,
+                Voltage = 400
+            };
+
+            level = Common.Model.Extensions.ConnectionInfo.ComputeChargingLevel(conn);
+            Assert.True(level == 2, "Should be level 2");
+
+            conn = new ConnectionInfo
+            {
+                Amps = 32, 
+                PowerKW = 22,
+                CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC,
+                Voltage = 400
+            };
+
+            level = Common.Model.Extensions.ConnectionInfo.ComputeChargingLevel(conn);
+            Assert.True(level == 2, "Should be level 2");
+
+            conn = new ConnectionInfo
+            {
+                PowerKW = 50,
+                CurrentTypeID = (int)StandardCurrentTypes.DC,
+                Voltage = 400
+            };
+
+            level = Common.Model.Extensions.ConnectionInfo.ComputeChargingLevel(conn);
+            Assert.True(level == 3, "Should be level 3");
         }
 
     }

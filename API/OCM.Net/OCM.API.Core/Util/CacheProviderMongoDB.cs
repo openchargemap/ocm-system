@@ -439,7 +439,7 @@ namespace OCM.Core.Data
                     }
                 }
 
-                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData();
+                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { AllowDataStoreDB=true, AllowMirrorDB=false });
                 if (coreRefData != null)
                 {
                     database.DropCollection("reference");

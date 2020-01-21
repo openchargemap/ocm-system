@@ -152,7 +152,7 @@ namespace OCM.API.Common
 
             //list of countries
             data.Countries = new List<Model.Country>();
-            foreach (var country in dataModel.Countries)
+            foreach (var country in dataModel.Countries.OrderBy(d => d.Title))
             {
                 data.Countries.Add(Model.Extensions.Country.FromDataModel(country));
             }
@@ -186,14 +186,14 @@ namespace OCM.API.Common
                         .Count()
                     });
 
-                foreach (var ct in usedNetworks.Where(d => d.count > MINFILTER_OPERATOR_INSTANCES).OrderBy(d => d.operatorInfo.Title))
+                foreach (var ct in usedNetworks.Where(d => d.count > MINFILTER_OPERATOR_INSTANCES).OrderBy(d => d.operatorInfo.Title.Trim()))
                 {
                     data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(ct.operatorInfo));
                 }
             }
             else
             {
-                foreach (var source in dataModel.Operators.OrderBy(o => o.Title))
+                foreach (var source in dataModel.Operators.OrderBy(o => o.Title.Trim()))
                 {
                     data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
                 }

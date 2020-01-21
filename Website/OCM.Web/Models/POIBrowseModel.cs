@@ -12,7 +12,7 @@ namespace OCM.MVC.Models
     {
         public POIBrowseModel()
         {
-            this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
+            this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData();
             this.AllowOptionalCountrySelection = true;
             //this.CountryIDs = new int[] { 1 }; //default to uk
         }

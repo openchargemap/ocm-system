@@ -13,7 +13,7 @@ namespace OCM.API.Common.Model.Extensions
             return new Model.OperatorInfo
             {
                 ID = source.Id,
-                Title = source.Title,
+                Title = source.Title.Trim(),
                 Comments = source.Comments,
                 WebsiteURL = source.WebsiteUrl,
                 BookingURL = source.BookingUrl,

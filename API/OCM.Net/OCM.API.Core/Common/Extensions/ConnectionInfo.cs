@@ -71,18 +71,22 @@ namespace OCM.API.Common.Model.Extensions
             if (c.PowerKW > 0)
             {
 
+
                 if (c.PowerKW < 2.4 || c.Voltage <= 120)
                 {
+                    // low power/voltage
                     // SAE Level 1, unit is probably AC output
                     return 1;
                 }
-                else if (c.PowerKW >= 2 || c.Voltage > 200 && c.Voltage <= 400)
+                else if (c.CurrentTypeID != (int)StandardCurrentTypes.DC)
                 {
+                    // medium power/voltage AC
                     // SAE Level 2, unit is probably AC output
                     return 2;
                 }
-                else if (c.PowerKW > 19.4 || c.Voltage > 400)
+                else if (c.CurrentTypeID == (int)StandardCurrentTypes.DC && (c.PowerKW > 19.2 || c.Amps > 80 || c.Voltage > 400))
                 {
+                    // DC charging/high power
                     // SAE Level 3, unit is probably DC output
                     return 3;
                 }

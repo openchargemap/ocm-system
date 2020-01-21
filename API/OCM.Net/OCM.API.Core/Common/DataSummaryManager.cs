@@ -290,12 +290,17 @@ namespace OCM.API.Common.DataSummary
 
         public List<UserEditStats> GetUserEditSummary(DateTime dateFrom, DateTime dateTo)
         {
+            // TODO switch to datecreated based count from cache
             var stats = from p in DataModel.EditQueueItems
                         where p.DateSubmitted >= dateFrom && p.DateSubmitted <= dateTo && p.PreviousData == null
                         group p by new { month = p.DateSubmitted.Month, year = p.DateSubmitted.Year } into d
                         select new UserEditStats { Month = d.Key.month, Year = d.Key.year, NumberOfAdditions = d.Count() };
 
-            return stats.OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
+            var list = stats.Where(s => s.NumberOfAdditions > 1).OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
+
+            if (list.Any()) list.RemoveAt(0); //remove first result as will only be partial month
+
+            return list;
         }
 
         public List<GeneralStats> GetUserCommentStats(DateTime dateFrom, DateTime dateTo)
