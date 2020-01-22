@@ -78,11 +78,21 @@ namespace OCM.API.Common.Model.Extensions
                     // SAE Level 1, unit is probably AC output
                     return 1;
                 }
-                else if (c.CurrentTypeID != (int)StandardCurrentTypes.DC)
+                else if (c.CurrentTypeID cinfo.CurrentTypeID == (int)StandardCurrentTypes.SinglePhaseAC)
                 {
                     // medium power/voltage AC
                     // SAE Level 2, unit is probably AC output
                     return 2;
+                }
+                else if (c.CurrentTypeID == (int)StandardCurrentTypes.ThreePhaseAC)
+                {
+                    if (c.PowerKW < 40 || c.Amps < 60)
+                    {
+                        return 2;
+                    } else {
+                        // Typically these are 43kW Type 2 charge connectors, used for rapid AC charging of some Renault vehicles
+                        return 3;
+                    }
                 }
                 else if (c.CurrentTypeID == (int)StandardCurrentTypes.DC && (c.PowerKW > 19.2 || c.Amps > 80 || c.Voltage > 400))
                 {
