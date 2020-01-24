@@ -156,7 +156,7 @@ namespace OCM.API.Common
                     catch (Exception exp)
                     {
                         //failed to store blobs
-                        AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to upload images to azure (attempt " + attemptCount + "): OCM-" + poi.ID, exp.ToString());
+                        AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, "Failed to upload images to cloud (attempt " + attemptCount + "): OCM-" + poi.ID, exp.ToString());
 
                         Thread.Sleep(1000); //wait a bit then try again
                     }
