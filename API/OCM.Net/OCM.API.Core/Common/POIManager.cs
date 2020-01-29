@@ -84,6 +84,11 @@ namespace OCM.API.Common
             return this.Get(id, false);
         }
 
+        public Model.ChargePoint GetFullDetails(int id)
+        {
+            return this.Get(id, true, false, true);
+        }
+
         public Model.ChargePoint GetCopy(int id, bool resetAddress = true)
         {
             var poi = this.Get(id, false);
