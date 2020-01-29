@@ -1023,6 +1023,7 @@ namespace OCM.Core.Data
                               c.Connections.Any(conn =>
                                     (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
                                     && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
+                                    && (settings.MaxPowerKW == null || (settings.MaxPowerKW != null && conn.PowerKW <= settings.MaxPowerKW))
                                     && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
                                     && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
                                      )

@@ -89,6 +89,7 @@ namespace OCM.API.Common
         public string Callback { get; set; }
 
         public double? MinPowerKW { get; set; }
+        public double? MaxPowerKW { get; set; }
 
         /// <summary>
         /// list of (lat,lng) points to search along (route etc)
@@ -188,6 +189,12 @@ namespace OCM.API.Common
             {
                 settings.MinPowerKW = ParseDouble(requestParams["minpowerkw"]);
                 if (settings.MinPowerKW < 1) settings.MinPowerKW = null;
+            }
+
+            if (!String.IsNullOrEmpty(requestParams["maxpowerkw"]))
+            {
+                settings.MaxPowerKW = ParseDouble(requestParams["maxpowerkw"]);
+                if (settings.MaxPowerKW < 1) settings.MaxPowerKW = null;
             }
 
             if (!String.IsNullOrEmpty(requestParams["dataprovidername"])) settings.DataProviderName = ParseString(requestParams["dataprovidername"]);

@@ -81,10 +81,67 @@ namespace OCM.API.Tests
 
             var dbResults = api.GetPOIList(new Common.APIRequestParams { AllowMirrorDB = false, AllowDataStoreDB = true, IsVerboseOutput = false, MaxResults = 10 }); ;
             Assert.True(dbResults.Count() > 0);
-            Assert.True(results.Count() == 10);
+            Assert.True(dbResults.Count() == 10);
 
             poi = dbResults.FirstOrDefault();
             Assert.NotNull(poi);
+        }
+
+        [Fact]
+        public void ReturnPOIResultFilterByPowerKW()
+        {
+
+            var minKw = 7;
+            var maxKw = 49;
+
+            var api = new OCM.API.Common.POIManager();
+            var results = api.GetPOIList(new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                MaxResults = 1000,
+                MaxPowerKW = maxKw,
+                MinPowerKW = minKw
+            });
+
+            Assert.True(results.Count() > 0);
+            Assert.True(results.Count() == 1000);
+
+            var poi = results.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            var allResultsHaveGreaterThanMinimum = results.All(r => r.Connections.Any(co => co.PowerKW >= minKw));
+            Assert.True(allResultsHaveGreaterThanMinimum);
+
+            var allResultsHaveLessThanMaximum = results.All(r => r.Connections.Any(co => co.PowerKW <= maxKw));
+            Assert.True(allResultsHaveLessThanMaximum);
+
+            //
+
+            var dbResults = api.GetPOIList(new Common.APIRequestParams
+            {
+                AllowMirrorDB = false,
+                AllowDataStoreDB = true,
+                IsVerboseOutput = false,
+                MaxResults = 1000,
+                MaxPowerKW = maxKw,
+                MinPowerKW = minKw
+            });
+
+            Assert.True(dbResults.Count() > 0);
+            Assert.True(dbResults.Count() == 1000);
+
+
+            poi = dbResults.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            allResultsHaveGreaterThanMinimum = dbResults.All(r => r.Connections.Any(co => co.PowerKW >= minKw));
+            Assert.True(allResultsHaveGreaterThanMinimum);
+
+            allResultsHaveLessThanMaximum = dbResults.All(r => r.Connections.Any(co => co.PowerKW <= maxKw));
+            Assert.True(allResultsHaveLessThanMaximum);
+
         }
 
         [Fact]
