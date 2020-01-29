@@ -23,7 +23,10 @@ namespace OCM.API.Common.Model
     public enum StandardOperators
     {
         UnknownOperator = 1,
-        Tesla = 23
+        ChargePoint =5,
+        Blink = 9,
+        Tesla = 23,
+        ChargeFox = 3339
     }
 
     public enum StandardUsageTypes
@@ -79,11 +82,18 @@ namespace OCM.API.Common.Model
         MennekesType2 = 25,
         MennekesType2Tethered = 1036,
         Schuko = 28,
+        CCSComboType1 = 32,
         CCSComboType2 = 33,
         Nema5_15 = 22,
         Nema5_20 = 9,
         Nema14_50 = 11,
-        TeslaProprietary =30
+        TeslaRoadster =8,
+        TeslaProprietary =30,
+        TeslaSupercharger = 27,
+        Type3 = 26,
+        Europlug= 13,
+        AS3112 = 29,
+        ThreePhaseAU=1041
     }
 
     public enum StandardCurrentTypes
