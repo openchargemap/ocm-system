@@ -439,7 +439,7 @@ namespace OCM.Core.Data
                     }
                 }
 
-                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { AllowDataStoreDB=true, AllowMirrorDB=false });
+                CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { AllowDataStoreDB = true, AllowMirrorDB = false });
                 if (coreRefData != null)
                 {
                     database.DropCollection("reference");
@@ -535,7 +535,7 @@ namespace OCM.Core.Data
                     }
 
                     // updates are required to reference data or POI list
-                    if (isRefDataSyncRequired || lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated)
+                    if (isRefDataSyncRequired || lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated || updateStrategy == CacheUpdateStrategy.All)
                     {
                         var numPOIUpdated = 0L;
 
@@ -560,15 +560,29 @@ namespace OCM.Core.Data
 
                         }
 
-                        if (lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated)
+                        if (lastUpdated != syncStatus.POIDataLastModified || lastCreated != syncStatus.POIDataLastCreated || updateStrategy == CacheUpdateStrategy.All)
                         {
 
-                            var poiFilter = new API.Client.SearchFilters { MaxResults = _settings.MongoDBSettings.CacheSyncBatchSize, ModifiedSince = lastUpdated, SortBy = "created_asc" };
-
-                            if (lastCreated < syncStatus.POIDataLastCreated)
+                            var poiFilter = new API.Client.SearchFilters
                             {
+                                MaxResults = _settings.MongoDBSettings.CacheSyncBatchSize,
+                                ModifiedSince = lastUpdated,
+                                SortBy = "created_asc",
+                                IncludeUserComments = true,
+                                Verbose = true
+                            };
+
+                            if (updateStrategy != CacheUpdateStrategy.All)
+                            {
+                                if (lastCreated < lastUpdated)
+                                {
+                                    poiFilter.ModifiedSince = lastCreated;
+                                }
+                            }
+                            else
+                            {
+                                poiFilter.MaxResults = 1000000;
                                 poiFilter.ModifiedSince = null;
-                                poiFilter.CreatedSince = lastCreated;
                             }
 
                             // sync POI list
@@ -745,8 +759,8 @@ namespace OCM.Core.Data
                         // need to filter results based on usage by country
                         var poiCollection = database.GetCollection<POIMongoDB>("poi");
 
-                        var connectionsInCountry = poiCollection.AsQueryable().Where(poi => 
-                            poi.AddressInfo.CountryID != null 
+                        var connectionsInCountry = poiCollection.AsQueryable().Where(poi =>
+                            poi.AddressInfo.CountryID != null
                             && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
                             && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
                             && poi.Connections.Any()
@@ -756,7 +770,7 @@ namespace OCM.Core.Data
                             .SelectMany(p => p.ConnectionTypes, (i, c) => new { CountryId = i.CountryID, ConnectionTypeId = c })
                             .Distinct();
 
-                        refData.ConnectionTypes.RemoveAll(a => !connectionsInCountry.Any(r=>r.ConnectionTypeId == a.ID));
+                        refData.ConnectionTypes.RemoveAll(a => !connectionsInCountry.Any(r => r.ConnectionTypeId == a.ID));
 
 
                         // filter on operators present within given countries
