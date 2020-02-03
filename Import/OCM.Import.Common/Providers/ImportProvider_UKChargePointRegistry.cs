@@ -81,7 +81,7 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.RelatedURL = "";
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo.AddressLine1 = (String.IsNullOrEmpty(addressDetails["Street"].ToString()) ? addressDetails["BuildingNumber"].ToString() + " " + addressDetails["Thoroughfare"].ToString() : addressDetails["Street"].ToString().Replace("<br>", ", ")).Trim();
-                cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? cp.AddressInfo.AddressLine1 : locationDetails["LocationShortDescription"].ToString();
+                cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? deviceName : locationDetails["LocationShortDescription"].ToString();
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
                 cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ").Trim();
                 if (cp.AddressInfo.Title.Length > 100) cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 64) + "..";
