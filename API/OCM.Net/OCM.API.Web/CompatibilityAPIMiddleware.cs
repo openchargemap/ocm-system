@@ -31,7 +31,7 @@ namespace OCM.API.Web.Standard
                 return;
             }
             
-            if (!context.Request.Path.ToString().StartsWith("/v4/"))
+            if (!context.Request.Path.ToString().StartsWith("/v4/") && !context.Request.Path.ToString().StartsWith("/map"))
             {
                 var handled = await new CompatibilityAPICoreHTTPHandler(_settings, _logger).ProcessRequest(context);
 
