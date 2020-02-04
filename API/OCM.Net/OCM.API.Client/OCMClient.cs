@@ -37,12 +37,17 @@ namespace OCM.API.Client
         public int[] CountryIDs { get; set; }
 
         /// <summary>
-        /// e.g. created_asc
+        /// e.g. created_asc, modified_asc, id_asc
         /// </summary>
         public string SortBy { get; set; }
 
         public DateTime? ModifiedSince { get; set; }
         public DateTime? CreatedSince { get; set; }
+
+        /// <summary>
+        /// Results with ID greater than value provided, used for batch imports
+        /// </summary>
+        public int? GreaterThanId { get; set; }
 
         public bool Verbose { get; set; }
 
@@ -218,6 +223,11 @@ namespace OCM.API.Client
             if (filters.CreatedSince.HasValue)
             {
                 url += "&createdsince=" + filters.CreatedSince.Value.ToString("s", CultureInfo.InvariantCulture);
+            }
+
+            if (filters.GreaterThanId.HasValue)
+            {
+                url += "&greaterthanid=" + filters.GreaterThanId;
             }
 
             if (!string.IsNullOrEmpty(filters.SortBy))

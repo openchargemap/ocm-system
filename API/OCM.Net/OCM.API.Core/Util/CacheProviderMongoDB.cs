@@ -500,6 +500,7 @@ namespace OCM.Core.Data
                     bool isRefDataSyncRequired = false;
                     DateTime? lastUpdated = null;
                     DateTime? lastCreated = null;
+                    int maxIdCached = 0;
 
                     if (poiCollection.Count() == 0)
                     {
@@ -509,8 +510,10 @@ namespace OCM.Core.Data
                     }
                     else
                     {
-                        lastUpdated = poiCollection.AsQueryable().Max(i => i.DateLastStatusUpdate);
-                        lastCreated = poiCollection.AsQueryable().Max(i => i.DateCreated);
+                        var queryablePOICollection = poiCollection.AsQueryable();
+                        lastUpdated = queryablePOICollection.Max(i => i.DateLastStatusUpdate);
+                        lastCreated = queryablePOICollection.Max(i => i.DateCreated);
+                        maxIdCached = queryablePOICollection.Max(i => i.ID);
 
                         // existing data, sync may be required
                         var hashItems = syncStatus.DataHash.Split(";");
@@ -567,7 +570,7 @@ namespace OCM.Core.Data
                             {
                                 MaxResults = _settings.MongoDBSettings.CacheSyncBatchSize,
                                 ModifiedSince = lastUpdated,
-                                SortBy = "created_asc",
+                                SortBy = "modified_asc",
                                 IncludeUserComments = true,
                                 Verbose = true
                             };
@@ -581,12 +584,14 @@ namespace OCM.Core.Data
                             }
                             else
                             {
-                                poiFilter.MaxResults = 1000000;
                                 poiFilter.ModifiedSince = null;
+                                poiFilter.SortBy = "id_asc";
+                                poiFilter.GreaterThanId = maxIdCached;
                             }
 
                             // sync POI list
                             var poiList = await apiClient.GetPOIListAsync(poiFilter);
+
 
                             if (poiList != null && poiList.Any())
                             {
@@ -983,6 +988,10 @@ namespace OCM.Core.Data
                     }
                 }
 
+                int greaterThanId = 0;
+                // workaround mongodb linq conversion bug
+                if (settings.GreaterThanId.HasValue) greaterThanId = settings.GreaterThanId.Value;
+
                 poiList = (from c in poiList
                            where
 
@@ -994,6 +1003,7 @@ namespace OCM.Core.Data
                                        && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
                                        && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
                                        && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
+                                       && (!settings.GreaterThanId.HasValue || (settings.GreaterThanId.HasValue && c.ID> greaterThanId))
                                        && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
                                        && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
                                        && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
@@ -1052,9 +1062,17 @@ namespace OCM.Core.Data
                     //distance is not required or can't be provided
                     System.Diagnostics.Debug.Print($"MongoDB starting query to list @ {stopwatch.ElapsedMilliseconds}ms");
 
-                    if (!string.IsNullOrEmpty(settings.SortBy) && settings.SortBy == "created_asc")
+                    if (settings.SortBy == "created_asc")
                     {
                         results = poiList.OrderBy(p => p.DateCreated).Take(settings.MaxResults).AsEnumerable();
+                    }
+                    else if (settings.SortBy == "modified_asc")
+                    {
+                        results = poiList.OrderBy(p => p.DateLastStatusUpdate).Take(settings.MaxResults).AsEnumerable();
+                    }
+                    else if (settings.SortBy == "id_asc")
+                    {
+                        results = poiList.OrderBy(p => p.ID).Take(settings.MaxResults).AsEnumerable();
                     }
                     else
                     {

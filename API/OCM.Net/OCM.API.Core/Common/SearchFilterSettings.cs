@@ -129,6 +129,11 @@ namespace OCM.API.Common
         public string SortBy { get; set; }
 
         /// <summary>
+        /// If supplied, results will be ID's greater than the given value, used for batch imports
+        /// </summary>
+        public int? GreaterThanId { get; set; }
+
+        /// <summary>
         /// If supplied and greater than 1 the API will return a random sample of matching results, the higher the value the less results returned.
         /// </summary>
         public int? LevelOfDetail { get; set; }
@@ -174,7 +179,13 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(requestParams["action"])) settings.Action = ParseString(requestParams["action"]);
 
             if (!String.IsNullOrEmpty(requestParams["apikey"])) settings.APIKey = ParseString(requestParams["apikey"]);
+
+            // accept either id or chargepointid params
+            if (!String.IsNullOrEmpty(requestParams["id"])) settings.ChargePointIDs = ParseIntList(requestParams["id"]);
             if (!String.IsNullOrEmpty(requestParams["chargepointid"])) settings.ChargePointIDs = ParseIntList(requestParams["chargepointid"]);
+
+            if (!String.IsNullOrEmpty(requestParams["greaterthanid"])) settings.GreaterThanId = ParseInt(requestParams["greaterthanid"]);
+
             if (!String.IsNullOrEmpty(requestParams["operatorname"])) settings.OperatorName = ParseString(requestParams["operatorname"]);
             if (!String.IsNullOrEmpty(requestParams["operatorid"])) settings.OperatorIDs = ParseIntList(requestParams["operatorid"]);
             if (!String.IsNullOrEmpty(requestParams["connectiontypeid"])) settings.ConnectionTypeIDs = ParseIntList(requestParams["connectiontypeid"]);
