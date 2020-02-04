@@ -21,6 +21,8 @@ Developers can use our [API](https://openchargemap.org/site/develop/) to access 
  - Enable read/write for app pool user for \Temp folders
  - Configure web.config
 
+ To run an API mirror, see the OCM.API.Worker readme.
+
 ### Contributing
 
 Please contribute in any way you can:
@@ -39,60 +41,4 @@ Please contribute in any way you can:
     - Graphic Design
     - Testing
 
-
-### Linux build
-The OCM Api and website we're original built using the .net framework on Windows, with SQL server as the backend database. A mongodb based caching layer was later added to the API which allowed read operations to avoid querying the SQL database. The system has since been ported to linux as a systemd based worker service.
-
-The API can be run as a standalone read-only mirror of the main API, with an automated sync of data pulled from the master API.
-
-- Install dotnet core 3.x sdk for your system (~350MB), check with `dotnet --version`
-	- `sudo snap install dotnet-sdk --channel=3.1/stable --classic`
-- Install latest monogdb for your system, set service to run on startup
-- Clone and build the ocm api:
-    - `git clone https://github.com/openchargemap/ocm-system`
-    - `cd ocm-system/API/OCM.Net/OCM.API.Web`
-    - `dotnet build`
-
-To run the API server on port 5000 bound to default public network interface:
-- Debug: `dotnet run --urls http://0.0.0.0:5000`
-- Release: `dotnet run -c Release --urls http://0.0.0.0:5000`
-
-To build and deploy the API service worker as systemd managed service:
-
-- Build as release: 
-```sh
-cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
-dotnet publish -c Release
-sudo mkdir /opt/ocm-api
-sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
-```
-
-### Deploying as a service (systemd)
-- Copy ocm-api.service file to systemd service config location:
-    - `sudo cp ocm-api.service /etc/systemd/system/ocm-api.service`
-- Create/update symlink in /usr/sbin for the build:
-    - `sudo ln -s -f /opt/ocm-api/OCM.API.Worker /usr/sbin/ocm-api`
- - Reload systemd config: 
-    - `sudo systemctl daemon-reload`
- - Check systemd config for service: 
-    - `sudo systemctl status ocm-api`
- - Start service: 
-    - `sudo systemctl start ocm-api`
- - Set service to run whenever host restarts: 
-    - `sudo systemctl enable ocm-api.service`
- - Watch log as service starts up and sync rebuilds cache:
-    - `journalctl -f` or `journalctl -f -u ocm-api`
-
-### Refresh build (apply latest software changes):
- 
-```sh
-
-cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
-git pull
-dotnet publish -c Release
-sudo systemctl stop ocm-api
-sudo cp -R bin/Release/netcoreapp3.1/publish/* /opt/ocm-api
-sudo systemctl start ocm-api
-
-```
 
