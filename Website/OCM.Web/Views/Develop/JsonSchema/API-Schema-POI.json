@@ -1,56 +1,18 @@
 {
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://openchargemap.org/poi.json",
+  "$id": "https://openchargemap.org/json-schema/poi",
   "type": "object",
   "title": "POI",
-  "required": [
-    "DataProvider",
-    "OperatorInfo",
-    "UsageType",
-    "StatusType",
-    "SubmissionStatus",
-    "UserComments",
-    "PercentageSimilarity",
-    "MediaItems",
-    "IsRecentlyVerified",
-    "DateLastVerified",
-    "ID",
-    "UUID",
-    "ParentChargePointID",
-    "DataProviderID",
-    "DataProvidersReference",
-    "OperatorID",
-    "OperatorsReference",
-    "UsageTypeID",
-    "UsageCost",
-    "AddressInfo",
-    "Connections",
-    "NumberOfPoints",
-    "GeneralComments",
-    "DatePlanned",
-    "DateLastConfirmed",
-    "StatusTypeID",
-    "DateLastStatusUpdate",
-    "MetadataValues",
-    "DataQualityLevel",
-    "DateCreated",
-    "SubmissionStatusTypeID"
-  ],
+  "description": "A POI (Point of Interest) is the top -level set of information regarding a site with electric vehicle charging. ",
   "properties": {
     "DataProvider": {
       "$id": "#/properties/DataProvider",
       "type": "object",
-      "title": "Data Provider",
+      "description": "A Data Provider is the controller of the source data set used to construct the details for this POI. Data has been transformed and interpreted from it's original form. Each Data Provider provides data either by an explicit license or agreement.",
+      "default": null,
       "required": [
-        "WebsiteURL",
-        "Comments",
-        "DataProviderStatusType",
         "IsRestrictedEdit",
-        "IsOpenDataLicensed",
-        "IsApprovedImport",
-        "License",
-        "DateLastImported",
         "ID",
         "Title"
       ],
@@ -58,8 +20,8 @@
         "WebsiteURL": {
           "$id": "#/properties/DataProvider/properties/WebsiteURL",
           "type": "string",
-          "title": "Website URL",
-          "default": "",
+          "description": "Website URL for this data provider",
+          "default": null,
           "examples": [
             "http://openchargemap.org"
           ],
@@ -67,18 +29,15 @@
         },
         "Comments": {
           "$id": "#/properties/DataProvider/properties/Comments",
-          "type": "null",
-          "title": "Comments",
-          "default": null,
-          "examples": [
-            null
-          ]
+          "type": "string",
+          "description": "General public comments with information about this Data Provider.",
+          "default": null
         },
         "DataProviderStatusType": {
           "$id": "#/properties/DataProvider/properties/DataProviderStatusType",
           "type": "object",
-          "title": "Status of this Data Provider",
-          "description": "Status such as whether this data provider is currently enabled",
+          "description": "Status object describing whether this data provider is currently enabled and the type of source (manual entry, imported etc)",
+          "default": null,
           "required": [
             "IsProviderEnabled",
             "ID",
@@ -88,7 +47,7 @@
             "IsProviderEnabled": {
               "$id": "#/properties/DataProvider/properties/DataProviderStatusType/properties/IsProviderEnabled",
               "type": "boolean",
-              "title": "The Isproviderenabled Schema",
+              "description": "If false, results from this data provider are not currently enabled",
               "default": false,
               "examples": [
                 true
@@ -97,7 +56,7 @@
             "ID": {
               "$id": "#/properties/DataProvider/properties/DataProviderStatusType/properties/ID",
               "type": "integer",
-              "title": "The Id Schema",
+              "description": "The reference ID for this provider status type",
               "default": 0,
               "examples": [
                 1
@@ -106,8 +65,7 @@
             "Title": {
               "$id": "#/properties/DataProvider/properties/DataProviderStatusType/properties/Title",
               "type": "string",
-              "title": "The Title Schema",
-              "default": "",
+              "description": "The Title of this status type",
               "examples": [
                 "Manual Data Entry"
               ],
@@ -118,7 +76,7 @@
         "IsRestrictedEdit": {
           "$id": "#/properties/DataProvider/properties/IsRestrictedEdit",
           "type": "boolean",
-          "title": "The Isrestrictededit Schema",
+          "description": "Currently not implemented. Indicates a potential editing restriction.",
           "default": false,
           "examples": [
             false
@@ -127,26 +85,26 @@
         "IsOpenDataLicensed": {
           "$id": "#/properties/DataProvider/properties/IsOpenDataLicensed",
           "type": "boolean",
-          "title": "The Isopendatalicensed Schema",
-          "default": false,
+          "description": "If true, data provider uses an Open Data license",
+          "default": null,
           "examples": [
-            true
+            null, true
           ]
         },
         "IsApprovedImport": {
           "$id": "#/properties/DataProvider/properties/IsApprovedImport",
           "type": "boolean",
-          "title": "The Isapprovedimport Schema",
-          "default": false,
+          "description": "If false, data may not be imported for this provider.",
+          "default": null,
           "examples": [
-            true
+            null, true
           ]
         },
         "License": {
           "$id": "#/properties/DataProvider/properties/License",
           "type": "string",
-          "title": "The License Schema",
-          "default": "",
+          "description": "Summary of the licensing which applies for this Data Provider. Each Data Provider has one specific license or agreement. Usage of the data requires acceptance of the given license.",
+          "default": null,
           "examples": [
             "Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)"
           ],
@@ -154,17 +112,19 @@
         },
         "DateLastImported": {
           "$id": "#/properties/DataProvider/properties/DateLastImported",
-          "type": "null",
-          "title": "The Datelastimported Schema",
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time (UTC) the last import was performed for this data provider (if an import).",
           "default": null,
           "examples": [
-            null
+            null,
+            "2020-02-04T23:09:00Z"
           ]
         },
         "ID": {
           "$id": "#/properties/DataProvider/properties/ID",
           "type": "integer",
-          "title": "The Id Schema",
+          "description": "The reference ID for this Data Provider",
           "default": 0,
           "examples": [
             1
@@ -173,8 +133,7 @@
         "Title": {
           "$id": "#/properties/DataProvider/properties/Title",
           "type": "string",
-          "title": "The Title Schema",
-          "default": "",
+          "description": "The Title for this Data Provider",
           "examples": [
             "Open Charge Map Contributors"
           ],
@@ -505,18 +464,16 @@
     "DateLastVerified": {
       "$id": "#/properties/DateLastVerified",
       "type": "string",
-      "title": "The Datelastverified Schema",
-      "default": "",
+      "format": "date-time",
+      "description": "A dynamically computed value, the date and time (UTC, ISO 8601) this POI was last confirmed by a user edit or related user comment",
       "examples": [
         "2020-02-04T06:33:00Z"
-      ],
-      "pattern": "^(.*)$"
+      ]
     },
     "ID": {
       "$id": "#/properties/ID",
       "type": "integer",
-      "title": "The Id Schema",
-      "default": 0,
+      "description": "The OCM reference ID for this POI (Point of Interest). A POI refers to a general site location and collection of equipment.",
       "examples": [
         148527
       ]
@@ -524,7 +481,7 @@
     "UUID": {
       "$id": "#/properties/UUID",
       "type": "string",
-      "title": "The Uuid Schema",
+      "description": "A universally unique identifier used as surrogate key. ID and UUID must be preserved when submitting POI update information. ",
       "default": "",
       "examples": [
         "4C524AA1-3413-4D56-804C-480304FEB0FB"
@@ -533,17 +490,14 @@
     },
     "ParentChargePointID": {
       "$id": "#/properties/ParentChargePointID",
-      "type": "null",
-      "title": "The Parentchargepointid Schema",
-      "default": null,
-      "examples": [
-        null
-      ]
+      "type": "integer",
+      "description": "If present, this data in this POI supercedes information in another POI. Generally not relevant to consumers.",
+      "default": null
     },
     "DataProviderID": {
       "$id": "#/properties/DataProviderID",
       "type": "integer",
-      "title": "The Dataproviderid Schema",
+      "description": "The reference ID for the Data Provider of this POI",
       "default": 0,
       "examples": [
         1
@@ -551,12 +505,9 @@
     },
     "DataProvidersReference": {
       "$id": "#/properties/DataProvidersReference",
-      "type": "null",
-      "title": "The Dataprovidersreference Schema",
-      "default": null,
-      "examples": [
-        null
-      ]
+      "type": "string",
+      "description": "If present, this is the Data Providers own key for this POI within their source data set",
+      "default": null
     },
     "OperatorID": {
       "$id": "#/properties/OperatorID",
@@ -753,7 +704,7 @@
           "$id": "#/properties/AddressInfo/properties/Latitude",
           "type": "number",
           "title": "The Latitude Schema",
-          "default": 0.0,
+          "default": 0,
           "examples": [
             52.343197
           ]
@@ -762,7 +713,7 @@
           "$id": "#/properties/AddressInfo/properties/Longitude",
           "type": "number",
           "title": "The Longitude Schema",
-          "default": 0.0,
+          "default": 0,
           "examples": [
             -0.170632
           ]
@@ -1166,7 +1117,7 @@
     "NumberOfPoints": {
       "$id": "#/properties/NumberOfPoints",
       "type": "integer",
-      "title": "The Numberofpoints Schema",
+      "description": "The number of bays or discreet stations available overall at this site. This indicates the limiting for number of simultaneous site users.",
       "default": 0,
       "examples": [
         2
@@ -1175,7 +1126,7 @@
     "GeneralComments": {
       "$id": "#/properties/GeneralComments",
       "type": "string",
-      "title": "The Generalcomments Schema",
+      "description": "General additional factual information for the POI. Users are discouraged from using this field for opinions on site quality etc.",
       "default": "",
       "examples": [
         "This is an open charge unit installed at the Coneygear Centre at Buttsgrove Way, Huntingdon"
@@ -1184,26 +1135,29 @@
     },
     "DatePlanned": {
       "$id": "#/properties/DatePlanned",
-      "type": "null",
-      "title": "The Dateplanned Schema",
-      "default": null,
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time (UTC, ISO 8601) this POI is or was planned for commissioning. In general planned POIs should not be presented to end users until confirmed operational.",
       "examples": [
-        null
-      ]
+        "2020-02-04T06:33:00Z"
+      ],
+      "default": null
+  
     },
     "DateLastConfirmed": {
       "$id": "#/properties/DateLastConfirmed",
-      "type": "null",
-      "title": "The Datelastconfirmed Schema",
-      "default": null,
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time (UTC, ISO 8601) this POI was last confirmed according to the data provider or a user. See DateLastVerified for a dynamically computed date based on multiple signals.",
       "examples": [
-        null
-      ]
+        "2020-02-04T06:33:00Z"
+      ],
+      "default": null
     },
     "StatusTypeID": {
       "$id": "#/properties/StatusTypeID",
       "type": "integer",
-      "title": "The Statustypeid Schema",
+      "title": "The overall operational status type reference ID for this POI (i.e. Operational etc). 0 == Unknown",
       "default": 0,
       "examples": [
         50
@@ -1212,8 +1166,8 @@
     "DateLastStatusUpdate": {
       "$id": "#/properties/DateLastStatusUpdate",
       "type": "string",
-      "title": "The Datelaststatusupdate Schema",
-      "default": "",
+      "format": "date-time",
+      "description": "The date and time (UTC, ISO 8601) this POI or directly related child properties were updated.",
       "examples": [
         "2020-02-04T06:33:00Z"
       ],
@@ -1221,8 +1175,8 @@
     },
     "MetadataValues": {
       "$id": "#/properties/MetadataValues",
-      "type": "null",
-      "title": "The Metadatavalues Schema",
+      "type": "array",
+      "title": "Optional array of metadata values. Generally used to indicate data attribution but is also intended for future use to indicate surrounding amenties, links or foreign key values into other data sets.",
       "default": null,
       "examples": [
         null
@@ -1231,30 +1185,36 @@
     "DataQualityLevel": {
       "$id": "#/properties/DataQualityLevel",
       "type": "integer",
-      "title": "The Dataqualitylevel Schema",
-      "default": 0,
+      "description": "A metric applied during imports to indicate a quality level based on available information detail (5 == best). Largely unused currently.",
+      "default": null,
       "examples": [
-        1
+        5
       ]
     },
     "DateCreated": {
       "$id": "#/properties/DateCreated",
       "type": "string",
-      "title": "The Datecreated Schema",
-      "default": "",
+      "format": "date-time",
+      "description": "The date and time (UTC, ISO 8601) this POI was added to the Open Charge Map database",
       "examples": [
         "2020-02-04T06:33:00Z"
-      ],
-      "pattern": "^(.*)$"
+      ]
     },
     "SubmissionStatusTypeID": {
       "$id": "#/properties/SubmissionStatusTypeID",
       "type": "integer",
-      "title": "The Submissionstatustypeid Schema",
+      "description": "The reference ID for the submission status type which applied to this POI.",
       "default": 0,
       "examples": [
         200
       ]
     }
-  }
+  },
+  "required": [
+    "ID",
+    "UUID",
+    "DataProviderID",    
+    "DateCreated",
+    "SubmissionStatusTypeID"
+  ]
 }
