@@ -42,9 +42,9 @@ namespace OCM.API.Worker
 
                 try
                 {
-                    var sync = new Core.Data.MirrorStatus { NumPOILastUpdated = 0, MaxBatchSize = 0 };
+                    var sync = new Core.Data.MirrorStatus { NumPOILastUpdated = -1, MaxBatchSize = -1 };
 
-                    while (sync.NumPOILastUpdated == sync.MaxBatchSize)
+                    while (sync.NumPOILastUpdated == sync.MaxBatchSize && sync.NumPOILastUpdated != 0)
                     {
                         sync = await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified, _logger);
                         if (sync.StatusCode == System.Net.HttpStatusCode.ExpectationFailed)

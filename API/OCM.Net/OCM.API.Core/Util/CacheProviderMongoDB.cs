@@ -45,6 +45,7 @@ namespace OCM.Core.Data
 
         public DateTime? LastPOIUpdate { get; set; }
         public DateTime? LastPOICreated { get; set; }
+        public int MaxPOIId { get; set; }
     }
 
     public class BenchmarkResult
@@ -413,6 +414,8 @@ namespace OCM.Core.Data
         /// <returns></returns>
         public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy, ILogger logger = null)
         {
+            bool preserveExistingPOIs = true;
+
             // cache will refresh either from the source database or via a master API
             if (!_settings.IsCacheOnlyMode)
             {
@@ -437,6 +440,10 @@ namespace OCM.Core.Data
                     {
                         database.CreateCollection("poi");
                     }
+                } else
+                {
+                    // by default we remove all POIs before refreshing from master
+                    preserveExistingPOIs = false;
                 }
 
                 CoreReferenceData coreRefData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams { AllowDataStoreDB = true, AllowMirrorDB = false });
@@ -514,6 +521,13 @@ namespace OCM.Core.Data
                         lastUpdated = queryablePOICollection.Max(i => i.DateLastStatusUpdate);
                         lastCreated = queryablePOICollection.Max(i => i.DateCreated);
                         maxIdCached = queryablePOICollection.Max(i => i.ID);
+
+                        if (maxIdCached< syncStatus.MaxPOIId)
+                        {
+                            // if our max id is less than the master, we still have some catching up to do so sync on ID first
+                            updateStrategy = CacheUpdateStrategy.All;
+                            preserveExistingPOIs = true;
+                        }
 
                         // existing data, sync may be required
                         var hashItems = syncStatus.DataHash.Split(";");
@@ -595,13 +609,16 @@ namespace OCM.Core.Data
 
                             if (poiList != null && poiList.Any())
                             {
-                                if (updateStrategy == CacheUpdateStrategy.All)
+                                if (!preserveExistingPOIs)
                                 {
-                                    poiCollection.RemoveAll();
-                                }
-                                else
-                                {
-                                    RemoveAllPOI(poiList, poiCollection);
+                                    if (updateStrategy == CacheUpdateStrategy.All)
+                                    {
+                                        poiCollection.RemoveAll();
+                                    }
+                                    else
+                                    {
+                                        RemoveAllPOI(poiList, poiCollection);
+                                    }
                                 }
 
                                 Thread.Sleep(300);
@@ -704,6 +721,7 @@ namespace OCM.Core.Data
                         currentStatus.TotalPOIInDB = db.ChargePoints.LongCount();
                         currentStatus.LastPOIUpdate = db.ChargePoints.Max(i => i.DateLastStatusUpdate);
                         currentStatus.LastPOICreated = db.ChargePoints.Max(i => i.DateCreated);
+                        currentStatus.MaxPOIId = db.ChargePoints.Max(i => i.Id);
                     }
                 }
 
