@@ -440,7 +440,8 @@ namespace OCM.Core.Data
                     {
                         database.CreateCollection("poi");
                     }
-                } else
+                }
+                else
                 {
                     // by default we remove all POIs before refreshing from master
                     preserveExistingPOIs = false;
@@ -522,7 +523,7 @@ namespace OCM.Core.Data
                         lastCreated = queryablePOICollection.Max(i => i.DateCreated);
                         maxIdCached = queryablePOICollection.Max(i => i.ID);
 
-                        if (maxIdCached< syncStatus.MaxPOIId)
+                        if (maxIdCached < syncStatus.MaxPOIId)
                         {
                             // if our max id is less than the master, we still have some catching up to do so sync on ID first
                             updateStrategy = CacheUpdateStrategy.All;
@@ -586,7 +587,8 @@ namespace OCM.Core.Data
                                 ModifiedSince = lastUpdated,
                                 SortBy = "modified_asc",
                                 IncludeUserComments = true,
-                                Verbose = true
+                                Verbose = true,
+                                SubmissionStatusTypeIDs = new int[] { 0 }
                             };
 
                             if (updateStrategy != CacheUpdateStrategy.All)
@@ -1012,8 +1014,8 @@ namespace OCM.Core.Data
 
                 if (filter.Postcodes == null) filter.Postcodes = new string[] { };
                 bool filterOnPostcodes = filter.Postcodes.Any();
-                
-              
+
+
                 poiList = (from c in poiList
                            where
 
@@ -1025,7 +1027,7 @@ namespace OCM.Core.Data
                                        && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
                                        && (filter.OperatorName == null || c.OperatorInfo.Title == filter.OperatorName)
                                        && (filter.IsOpenData == null || (filter.IsOpenData != null && ((filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
-                                       && (!filter.GreaterThanId.HasValue || (filter.GreaterThanId.HasValue && c.ID> greaterThanId))
+                                       && (!filter.GreaterThanId.HasValue || (filter.GreaterThanId.HasValue && c.ID > greaterThanId))
                                        && (filter.DataProviderName == null || c.DataProvider.Title == filter.DataProviderName)
                                        && (filterByCountries == false || (filterByCountries == true && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
                                        && (filterByOperators == false || (filterByOperators == true && filter.OperatorIDs.Contains((int)c.OperatorID)))
@@ -1033,7 +1035,7 @@ namespace OCM.Core.Data
                                        && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                        && (filterByStatus == false || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                        && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderID)))
-                                       && (filterOnPostcodes == false || (filterOnPostcodes == true && c.AddressInfo.Postcode!=null && filter.Postcodes.Contains(c.AddressInfo.Postcode)))
+                                       && (filterOnPostcodes == false || (filterOnPostcodes == true && c.AddressInfo.Postcode != null && filter.Postcodes.Contains(c.AddressInfo.Postcode)))
                            select c);
 
                 if (filter.ChangesFromDate != null)
