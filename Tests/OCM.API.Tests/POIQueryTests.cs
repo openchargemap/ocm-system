@@ -145,6 +145,56 @@ namespace OCM.API.Tests
         }
 
         [Fact]
+        public void ReturnPOIResultFilteredByPostcode()
+        {
+
+            var postcodes = new string[] { "29306","29379" };
+            
+
+            var api = new OCM.API.Common.POIManager();
+            var results = api.GetPOIList(new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                MaxResults = 1000,
+                Postcodes= postcodes
+            });
+
+            Assert.True(results.Count() > 0);
+            Assert.True(results.Count()< 100);
+
+            var poi = results.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            var allResultsArePostcodesInSet = results.All(r => postcodes.Contains(r.AddressInfo.Postcode));
+            Assert.True(allResultsArePostcodesInSet);
+
+          
+            // db results
+          
+            var dbResults = api.GetPOIList(new Common.APIRequestParams
+            {
+                AllowMirrorDB = false,
+                AllowDataStoreDB = true,
+                IsVerboseOutput = false,
+                MaxResults = 1000,
+                Postcodes = postcodes
+            });
+
+            Assert.True(dbResults.Count() > 0);
+            Assert.True(dbResults.Count() < 100);
+
+            poi = results.FirstOrDefault();
+            Assert.NotNull(poi);
+
+            allResultsArePostcodesInSet = dbResults.All(r => postcodes.Contains(r.AddressInfo.Postcode));
+            Assert.True(allResultsArePostcodesInSet);
+
+            Assert.True(results.Count() == dbResults.Count());
+
+        }
+        [Fact]
         public void ReturnCompactPOIResults()
         {
             var api = new OCM.API.Common.POIManager();

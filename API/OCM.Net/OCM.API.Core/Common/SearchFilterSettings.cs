@@ -122,6 +122,8 @@ namespace OCM.API.Common
 
         public int[] StatusTypeIDs { get; set; }
 
+        public string[] Postcodes { get; set; }
+
         public DateTime? ChangesFromDate { get; set; }
 
         public DateTime? CreatedFromDate { get; set; }
@@ -170,7 +172,7 @@ namespace OCM.API.Common
             }
         }
 
-        public void ParseParameters(APIRequestParams settings, NullSafeDictionary<string,string> requestParams)
+        public void ParseParameters(APIRequestParams settings, NullSafeDictionary<string, string> requestParams)
         {
             //get parameter values if any
             if (!String.IsNullOrEmpty(requestParams["v"])) settings.APIVersion = ParseInt(requestParams["v"]);
@@ -211,6 +213,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(requestParams["dataprovidername"])) settings.DataProviderName = ParseString(requestParams["dataprovidername"]);
             if (!String.IsNullOrEmpty(requestParams["locationtitle"])) settings.LocationTitle = ParseString(requestParams["locationtitle"]);
             if (!String.IsNullOrEmpty(requestParams["address"])) settings.Address = ParseString(requestParams["address"]);
+            if (!String.IsNullOrEmpty(requestParams["postcodes"])) settings.Postcodes = ParseStringList(requestParams["postcodes"]);
             if (!String.IsNullOrEmpty(requestParams["countrycode"])) settings.CountryCode = ParseString(requestParams["countrycode"]);
 
             if (!String.IsNullOrEmpty(requestParams["latitude"]))

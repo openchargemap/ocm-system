@@ -847,7 +847,7 @@ namespace OCM.Core.Data
             return GetPOIListAsync(settings).Result;
         }
 
-        public async Task<IEnumerable<OCM.API.Common.Model.ChargePoint>> GetPOIListAsync(APIRequestParams settings)
+        public async Task<IEnumerable<OCM.API.Common.Model.ChargePoint>> GetPOIListAsync(APIRequestParams filter)
         {
 
             if (!IsCacheReady())
@@ -858,15 +858,15 @@ namespace OCM.Core.Data
 
             var stopwatch = Stopwatch.StartNew();
 
-            int maxResults = settings.MaxResults;
+            int maxResults = filter.MaxResults;
 
             bool requiresDistance = false;
             GeoJsonPoint<GeoJson2DGeographicCoordinates> searchPoint = null;
 
-            if (settings.Latitude != null && settings.Longitude != null)
+            if (filter.Latitude != null && filter.Longitude != null)
             {
                 requiresDistance = true;
-                searchPoint = GeoJson.Point(GeoJson.Geographic((double)settings.Longitude, (double)settings.Latitude));
+                searchPoint = GeoJson.Point(GeoJson.Geographic((double)filter.Longitude, (double)filter.Latitude));
             }
             else
             {
@@ -875,9 +875,9 @@ namespace OCM.Core.Data
 
             //if distance filter provided in miles, convert to KM before use
 
-            if (settings.DistanceUnit == OCM.API.Common.Model.DistanceUnit.Miles && settings.Distance != null)
+            if (filter.DistanceUnit == OCM.API.Common.Model.DistanceUnit.Miles && filter.Distance != null)
             {
-                settings.Distance = GeoManager.ConvertMilesToKM((double)settings.Distance);
+                filter.Distance = GeoManager.ConvertMilesToKM((double)filter.Distance);
             }
 
             bool filterByConnectionTypes = false;
@@ -889,51 +889,51 @@ namespace OCM.Core.Data
             bool filterByDataProvider = false;
             bool filterByChargePoints = false;
 
-            if (settings.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
-            else { settings.ConnectionTypeIDs = new int[] { -1 }; }
+            if (filter.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
+            else { filter.ConnectionTypeIDs = new int[] { -1 }; }
 
-            if (settings.LevelIDs != null) { filterByLevels = true; }
-            else { settings.LevelIDs = new int[] { -1 }; }
+            if (filter.LevelIDs != null) { filterByLevels = true; }
+            else { filter.LevelIDs = new int[] { -1 }; }
 
-            if (settings.OperatorIDs != null) { filterByOperators = true; }
-            else { settings.OperatorIDs = new int[] { -1 }; }
+            if (filter.OperatorIDs != null) { filterByOperators = true; }
+            else { filter.OperatorIDs = new int[] { -1 }; }
 
-            if (settings.ChargePointIDs != null) { filterByChargePoints = true; }
-            else { settings.ChargePointIDs = new int[] { -1 }; }
+            if (filter.ChargePointIDs != null) { filterByChargePoints = true; }
+            else { filter.ChargePointIDs = new int[] { -1 }; }
 
             //either filter by named country code or by country id list
-            if (settings.CountryCode != null)
+            if (filter.CountryCode != null)
             {
                 var referenceData = database.GetCollection<OCM.API.Common.Model.CoreReferenceData>("reference").FindOne();
 
-                var filterCountry = referenceData.Countries.FirstOrDefault(c => c.ISOCode.ToUpper() == settings.CountryCode.ToUpper());
+                var filterCountry = referenceData.Countries.FirstOrDefault(c => c.ISOCode.ToUpper() == filter.CountryCode.ToUpper());
                 if (filterCountry != null)
                 {
                     filterByCountries = true;
-                    settings.CountryIDs = new int[] { filterCountry.ID };
+                    filter.CountryIDs = new int[] { filterCountry.ID };
                 }
                 else
                 {
                     filterByCountries = false;
-                    settings.CountryIDs = new int[] { -1 };
+                    filter.CountryIDs = new int[] { -1 };
                 }
             }
             else
             {
-                if (settings.CountryIDs != null && settings.CountryIDs.Any()) { filterByCountries = true; }
-                else { settings.CountryIDs = new int[] { -1 }; }
+                if (filter.CountryIDs != null && filter.CountryIDs.Any()) { filterByCountries = true; }
+                else { filter.CountryIDs = new int[] { -1 }; }
             }
 
-            if (settings.UsageTypeIDs != null) { filterByUsage = true; }
-            else { settings.UsageTypeIDs = new int[] { -1 }; }
+            if (filter.UsageTypeIDs != null) { filterByUsage = true; }
+            else { filter.UsageTypeIDs = new int[] { -1 }; }
 
-            if (settings.StatusTypeIDs != null) { filterByStatus = true; }
-            else { settings.StatusTypeIDs = new int[] { -1 }; }
+            if (filter.StatusTypeIDs != null) { filterByStatus = true; }
+            else { filter.StatusTypeIDs = new int[] { -1 }; }
 
-            if (settings.DataProviderIDs != null) { filterByDataProvider = true; }
-            else { settings.DataProviderIDs = new int[] { -1 }; }
+            if (filter.DataProviderIDs != null) { filterByDataProvider = true; }
+            else { filter.DataProviderIDs = new int[] { -1 }; }
 
-            if (settings.SubmissionStatusTypeID == -1) settings.SubmissionStatusTypeID = null;
+            if (filter.SubmissionStatusTypeID == -1) filter.SubmissionStatusTypeID = null;
             /////////////////////////////////////
             if (database != null)
             {
@@ -947,14 +947,14 @@ namespace OCM.Core.Data
 
                 //filter by points along polyline or bounding box (TODO: polygon)
                 if (
-                    (settings.Polyline != null && settings.Polyline.Any())
-                    || (settings.BoundingBox != null && settings.BoundingBox.Any())
-                    || (settings.Polygon != null && settings.Polygon.Any())
+                    (filter.Polyline != null && filter.Polyline.Any())
+                    || (filter.BoundingBox != null && filter.BoundingBox.Any())
+                    || (filter.Polygon != null && filter.Polygon.Any())
                     )
                 {
                     //override lat.long specified in search, use polyline or bounding box instead
-                    settings.Latitude = null;
-                    settings.Longitude = null;
+                    filter.Latitude = null;
+                    filter.Longitude = null;
 
                     double[,] pointList;
 
@@ -962,25 +962,25 @@ namespace OCM.Core.Data
 
                     IEnumerable<LatLon> searchPolygon = null;
 
-                    if (settings.Polyline != null && settings.Polyline.Any())
+                    if (filter.Polyline != null && filter.Polyline.Any())
                     {
-                        if (settings.Distance == null) settings.Distance = DefaultPolylineSearchDistanceKM;
-                        searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(settings.Polyline, (double)settings.Distance);
+                        if (filter.Distance == null) filter.Distance = DefaultPolylineSearchDistanceKM;
+                        searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(filter.Polyline, (double)filter.Distance);
                     }
 
-                    if (settings.BoundingBox != null && settings.BoundingBox.Any())
+                    if (filter.BoundingBox != null && filter.BoundingBox.Any())
                     {
                         // bounding box points could be in any order, so normalise here:
-                        var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(settings.BoundingBox)
+                        var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(filter.BoundingBox)
                                             .Coordinates
                                             .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
 
                         searchPolygon = polyPoints;
                     }
 
-                    if (settings.Polygon != null && settings.Polygon.Any())
+                    if (filter.Polygon != null && filter.Polygon.Any())
                     {
-                        searchPolygon = settings.Polygon;
+                        searchPolygon = filter.Polygon;
                     }
 
                     pointList = new double[searchPolygon.Count(), 2];
@@ -1001,73 +1001,78 @@ namespace OCM.Core.Data
                     if (requiresDistance)
                     {
                         //filter by distance from lat/lon first
-                        if (settings.Distance == null) settings.Distance = DefaultLatLngSearchDistanceKM;
-                        poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)settings.Distance * 1000).Inject());//.Take(settings.MaxResults);
+                        if (filter.Distance == null) filter.Distance = DefaultLatLngSearchDistanceKM;
+                        poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)filter.Distance * 1000).Inject());//.Take(settings.MaxResults);
                     }
                 }
 
                 int greaterThanId = 0;
                 // workaround mongodb linq conversion bug
-                if (settings.GreaterThanId.HasValue) greaterThanId = settings.GreaterThanId.Value;
+                if (filter.GreaterThanId.HasValue) greaterThanId = filter.GreaterThanId.Value;
 
+                if (filter.Postcodes == null) filter.Postcodes = new string[] { };
+                bool filterOnPostcodes = filter.Postcodes.Any();
+                
+              
                 poiList = (from c in poiList
                            where
 
                                        (c.AddressInfo != null) &&
-                                       ((settings.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
-                                             || (settings.SubmissionStatusTypeID == 0) //return all regardless of status
-                                             || (settings.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == settings.SubmissionStatusTypeID)
+                                       ((filter.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
+                                             || (filter.SubmissionStatusTypeID == 0) //return all regardless of status
+                                             || (filter.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == filter.SubmissionStatusTypeID)
                                              ) //by default return live cps only, otherwise use specific submission statusid
                                        && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
-                                       && (settings.OperatorName == null || c.OperatorInfo.Title == settings.OperatorName)
-                                       && (settings.IsOpenData == null || (settings.IsOpenData != null && ((settings.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (settings.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
-                                       && (!settings.GreaterThanId.HasValue || (settings.GreaterThanId.HasValue && c.ID> greaterThanId))
-                                       && (settings.DataProviderName == null || c.DataProvider.Title == settings.DataProviderName)
-                                       && (filterByCountries == false || (filterByCountries == true && settings.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
-                                       && (filterByOperators == false || (filterByOperators == true && settings.OperatorIDs.Contains((int)c.OperatorID)))
-                                       && (filterByChargePoints == false || (filterByChargePoints == true && settings.ChargePointIDs.Contains((int)c.ID)))
-                                       && (filterByUsage == false || (filterByUsage == true && settings.UsageTypeIDs.Contains((int)c.UsageTypeID)))
-                                       && (filterByStatus == false || (filterByStatus == true && settings.StatusTypeIDs.Contains((int)c.StatusTypeID)))
-                                       && (filterByDataProvider == false || (filterByDataProvider == true && settings.DataProviderIDs.Contains((int)c.DataProviderID)))
+                                       && (filter.OperatorName == null || c.OperatorInfo.Title == filter.OperatorName)
+                                       && (filter.IsOpenData == null || (filter.IsOpenData != null && ((filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
+                                       && (!filter.GreaterThanId.HasValue || (filter.GreaterThanId.HasValue && c.ID> greaterThanId))
+                                       && (filter.DataProviderName == null || c.DataProvider.Title == filter.DataProviderName)
+                                       && (filterByCountries == false || (filterByCountries == true && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
+                                       && (filterByOperators == false || (filterByOperators == true && filter.OperatorIDs.Contains((int)c.OperatorID)))
+                                       && (filterByChargePoints == false || (filterByChargePoints == true && filter.ChargePointIDs.Contains(c.ID)))
+                                       && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeID)))
+                                       && (filterByStatus == false || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)))
+                                       && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderID)))
+                                       && (filterOnPostcodes == false || (filterOnPostcodes == true && c.AddressInfo.Postcode!=null && filter.Postcodes.Contains(c.AddressInfo.Postcode)))
                            select c);
 
-                if (settings.ChangesFromDate != null)
+                if (filter.ChangesFromDate != null)
                 {
-                    poiList = poiList.Where(c => c.DateLastStatusUpdate >= settings.ChangesFromDate.Value);
+                    poiList = poiList.Where(c => c.DateLastStatusUpdate >= filter.ChangesFromDate.Value);
                 }
 
-                if (settings.CreatedFromDate != null)
+                if (filter.CreatedFromDate != null)
                 {
-                    poiList = poiList.Where(c => c.DateCreated >= settings.CreatedFromDate.Value);
+                    poiList = poiList.Where(c => c.DateCreated >= filter.CreatedFromDate.Value);
                 }
 
                 //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
-                if (settings.LevelOfDetail > 1)
+                if (filter.LevelOfDetail > 1)
                 {
                     //return progressively less matching results (across whole data set) as requested Level Of Detail gets higher
 
-                    if (settings.LevelOfDetail > 3)
+                    if (filter.LevelOfDetail > 3)
                     {
-                        settings.LevelOfDetail = 1; //highest priority LOD
+                        filter.LevelOfDetail = 1; //highest priority LOD
                     }
                     else
                     {
-                        settings.LevelOfDetail = 2; //include next level priority items
+                        filter.LevelOfDetail = 2; //include next level priority items
                     }
-                    poiList = poiList.Where(c => c.LevelOfDetail <= settings.LevelOfDetail);
+                    poiList = poiList.Where(c => c.LevelOfDetail <= filter.LevelOfDetail);
                 }
 
                 //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
-                if (settings.ConnectionType != null || settings.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
+                if (filter.ConnectionType != null || filter.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
                 {
                     poiList = from c in poiList
                               where
                               c.Connections.Any(conn =>
-                                    (settings.ConnectionType == null || (settings.ConnectionType != null && conn.ConnectionType.Title == settings.ConnectionType))
-                                    && (settings.MinPowerKW == null || (settings.MinPowerKW != null && conn.PowerKW >= settings.MinPowerKW))
-                                    && (settings.MaxPowerKW == null || (settings.MaxPowerKW != null && conn.PowerKW <= settings.MaxPowerKW))
-                                    && (filterByConnectionTypes == false || (filterByConnectionTypes == true && settings.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
-                                    && (filterByLevels == false || (filterByLevels == true && settings.LevelIDs.Contains((int)conn.Level.ID)))
+                                    (filter.ConnectionType == null || (filter.ConnectionType != null && conn.ConnectionType.Title == filter.ConnectionType))
+                                    && (filter.MinPowerKW == null || (filter.MinPowerKW != null && conn.PowerKW >= filter.MinPowerKW))
+                                    && (filter.MaxPowerKW == null || (filter.MaxPowerKW != null && conn.PowerKW <= filter.MaxPowerKW))
+                                    && (filterByConnectionTypes == false || (filterByConnectionTypes == true && filter.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
+                                    && (filterByLevels == false || (filterByLevels == true && filter.LevelIDs.Contains((int)conn.Level.ID)))
                                      )
                               select c;
                 }
@@ -1075,26 +1080,26 @@ namespace OCM.Core.Data
                 System.Diagnostics.Debug.Print($"MongoDB executing query @ {stopwatch.ElapsedMilliseconds}ms");
 
                 IEnumerable<API.Common.Model.ChargePoint> results = null;
-                if (!requiresDistance || (settings.Latitude == null || settings.Longitude == null))
+                if (!requiresDistance || (filter.Latitude == null || filter.Longitude == null))
                 {
                     //distance is not required or can't be provided
                     System.Diagnostics.Debug.Print($"MongoDB starting query to list @ {stopwatch.ElapsedMilliseconds}ms");
 
-                    if (settings.SortBy == "created_asc")
+                    if (filter.SortBy == "created_asc")
                     {
-                        results = poiList.OrderBy(p => p.DateCreated).Take(settings.MaxResults).AsEnumerable();
+                        results = poiList.OrderBy(p => p.DateCreated).Take(filter.MaxResults).AsEnumerable();
                     }
-                    else if (settings.SortBy == "modified_asc")
+                    else if (filter.SortBy == "modified_asc")
                     {
-                        results = poiList.OrderBy(p => p.DateLastStatusUpdate).Take(settings.MaxResults).AsEnumerable();
+                        results = poiList.OrderBy(p => p.DateLastStatusUpdate).Take(filter.MaxResults).AsEnumerable();
                     }
-                    else if (settings.SortBy == "id_asc")
+                    else if (filter.SortBy == "id_asc")
                     {
-                        results = poiList.OrderBy(p => p.ID).Take(settings.MaxResults).AsEnumerable();
+                        results = poiList.OrderBy(p => p.ID).Take(filter.MaxResults).AsEnumerable();
                     }
                     else
                     {
-                        results = poiList.OrderByDescending(p => p.ID).Take(settings.MaxResults).AsEnumerable();
+                        results = poiList.OrderByDescending(p => p.ID).Take(filter.MaxResults).AsEnumerable();
                     }
 
                     System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
@@ -1106,13 +1111,13 @@ namespace OCM.Core.Data
                     //populate distance
                     foreach (var p in results)
                     {
-                        p.AddressInfo.Distance = GeoManager.CalcDistance((double)settings.Latitude, (double)settings.Longitude, p.AddressInfo.Latitude, p.AddressInfo.Longitude, settings.DistanceUnit);
-                        p.AddressInfo.DistanceUnit = settings.DistanceUnit;
+                        p.AddressInfo.Distance = GeoManager.CalcDistance((double)filter.Latitude, (double)filter.Longitude, p.AddressInfo.Latitude, p.AddressInfo.Longitude, filter.DistanceUnit);
+                        p.AddressInfo.DistanceUnit = filter.DistanceUnit;
                     }
-                    results = results.OrderBy(r => r.AddressInfo.Distance).Take(settings.MaxResults);
+                    results = results.OrderBy(r => r.AddressInfo.Distance).Take(filter.MaxResults);
                 }
 
-                if (settings.IsCompactOutput)
+                if (filter.IsCompactOutput)
                 {
                     System.Diagnostics.Debug.Print($"MongoDB begin conversion to compact output @ {stopwatch.ElapsedMilliseconds}ms");
 
@@ -1146,7 +1151,7 @@ namespace OCM.Core.Data
                             }
                         }
 
-                        if (!settings.IncludeComments)
+                        if (!filter.IncludeComments)
                         {
                             p.UserComments = null;
                             p.MediaItems = null;

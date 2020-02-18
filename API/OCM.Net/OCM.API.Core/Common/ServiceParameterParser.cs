@@ -82,6 +82,27 @@ namespace OCM.API.Common
             return val;
         }
 
+        protected string[] ParseStringList(string val)
+        {
+            if (val != null)
+            {
+                var strings = val.Split(",")
+                            .Select(s => s.Trim().ToLower()).Where(s => !string.IsNullOrEmpty(s))
+                            .ToArray();
+
+                if (!strings.Any())
+                {
+                    return null;
+                }
+                else
+                {
+                    return strings;
+                }
+            }
+            
+            return null;
+        }
+
         protected bool ParseBool(string val, bool defaultVal)
         {
             if (val == null) return defaultVal;

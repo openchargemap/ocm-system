@@ -346,6 +346,7 @@ namespace OCM.API.Common
                                           && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeId)))
                                           && (filterByStatus == false || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeId)))
                                           && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderId)))
+                                          && (filter.Postcodes == null || (filter.Postcodes != null && c.AddressInfo.Postcode != null && filter.Postcodes.Contains((string)c.AddressInfo.Postcode)))
                                       select c;
 
                 if (filter.ChangesFromDate != null)
