@@ -28,5 +28,7 @@ namespace OCM.Core.Settings
 
         public int MaxCacheAgeMinutes { get; set; }
         public int CacheSyncBatchSize { get; set; } = 10000;
+
+        public int CacheSyncFrequencySeconds { get; set; } = 5 * 60;
     }
 }

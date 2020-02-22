@@ -190,29 +190,17 @@ namespace OCM.API.Client
 
             if (filters.SubmissionStatusTypeIDs != null && filters.SubmissionStatusTypeIDs.Any())
             {
-                url += "&submissionstatustypeid=";
-                foreach (var id in filters.SubmissionStatusTypeIDs)
-                {
-                    url += id + ",";
-                }
+                url += "&submissionstatustypeid="+ string.Join(",",filters.SubmissionStatusTypeIDs.Select(i=>i.ToString()));
             }
 
             if (filters.DataProviderIDs != null && filters.DataProviderIDs.Any())
             {
-                url += "&dataproviderid=";
-                foreach (var id in filters.DataProviderIDs)
-                {
-                    url += id + ",";
-                }
+                url += "&dataproviderid=" + string.Join(",", filters.DataProviderIDs.Select(i => i.ToString()));
             }
 
             if (filters.CountryIDs != null && filters.CountryIDs.Any())
             {
-                url += "&countryid=";
-                foreach (var id in filters.CountryIDs)
-                {
-                    url += id + ",";
-                }
+                url += "&countryid="+ string.Join(",", filters.CountryIDs.Select(i => i.ToString()));
             }
 
             if (filters.ModifiedSince.HasValue)

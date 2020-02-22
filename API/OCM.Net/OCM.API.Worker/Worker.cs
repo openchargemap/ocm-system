@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OCM.Core.Settings;
 
 namespace OCM.API.Worker
 {
@@ -13,24 +15,23 @@ namespace OCM.API.Worker
         private readonly ILogger<Worker> _logger;
         private Timer? _timer;
         private bool _isSyncInProgress = false;
-        public Worker(ILogger<Worker> logger)
+        private CoreSettings _settings;
+
+        public Worker(ILogger<Worker> logger, IConfiguration configuration)
         {
             _logger = logger;
+
+            _settings = new CoreSettings();
+            configuration.GetSection("CoreSettings").Bind(_settings);
+
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("API Worker Starting.");
+            _logger.LogInformation($"API Worker Starting. Cache syncing every {_settings.MongoDBSettings.CacheSyncFrequencySeconds}s");
 
-            // check for work to do every 5 minutes
-            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(10), TimeSpan.FromMinutes(5));
-
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000 * 60 * 5, stoppingToken);
-            }
+            // check for work to do every N seconds
+            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(_settings.MongoDBSettings.CacheSyncFrequencySeconds));
         }
 
         private async void PerformTasks(object? state)

@@ -8,6 +8,7 @@ This service requires:
 ### TODO:
 - 'Official' clones could register/deregister themselves with master API (or cloudflare worker) on service startup/shutdown to participate in API reads.
 - Implement full resync and full cache invalidation. If cache is syncing from empty, API calls need to error otherwise cache could be used for live queries.
+- Implement block hashing compare, currently using dates and IDs as sync keys leaves potential room for some items to be out of sync
 - Docker configuration for minimal setup of new clones.
 
 ### Linux build
