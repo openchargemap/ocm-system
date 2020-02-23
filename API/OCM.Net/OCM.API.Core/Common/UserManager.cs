@@ -25,7 +25,7 @@ namespace OCM.API.Common
 
         public Model.User GetUser(OCM.API.Common.Model.LoginModel loginModel)
         {
-            if (!String.IsNullOrEmpty(loginModel.EmailAddress))
+            if (loginModel!=null && !String.IsNullOrEmpty(loginModel.EmailAddress))
             {
                 var user = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == loginModel.EmailAddress.ToLower());
 
