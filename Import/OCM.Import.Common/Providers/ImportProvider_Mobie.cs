@@ -36,7 +36,7 @@ namespace OCM.Import.Providers
             var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == 1);
             var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == 2);
 
-        
+
             JObject o = JObject.Parse(InputData);
             var dataList = o.Values()["ChargingStationList"].Values().ToArray();
 
@@ -52,14 +52,14 @@ namespace OCM.Import.Providers
                     cp.AddressInfo = new AddressInfo();
                     var addressData = item["ChargingStationAddress"];
                     cp.AddressInfo.Title = addressData["Street"] != null ? addressData["Street"].ToString() : item["ChargingStationId"].ToString();
-                    cp.AddressInfo.RelatedURL = "http://www.mobie.pt";
+                    cp.AddressInfo.RelatedURL = "https://www.mobie.pt";
 
-                    cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //mobie.pt
+                    cp.DataProviderID = this.DataProviderID; //mobie.pt
                     cp.DataProvidersReference = item["ChargingStationId"].ToString();
                     cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                     cp.AddressInfo.AddressLine1 = addressData["Street"].ToString();
-                    if (addressData["Number"]!=null && addressData["Number"].ToString() != "-")
+                    if (addressData["Number"] != null && addressData["Number"].ToString() != "-")
                     {
                         cp.AddressInfo.AddressLine1 += " " + addressData["Number"].ToString();
                     }
@@ -70,22 +70,25 @@ namespace OCM.Import.Providers
                     cp.AddressInfo.Latitude = double.Parse(item["Latitude"].ToString());
                     cp.AddressInfo.Longitude = double.Parse(item["Longitude"].ToString());
                     var countryCode = addressData["Country"].ToString();
-                    var country = coreRefData.Countries.FirstOrDefault(ct => ct.ISOCode==countryCode);
-                    cp.AddressInfo.Country = country;
+                    var country = coreRefData.Countries.FirstOrDefault(ct => ct.ISOCode == countryCode);
+                    cp.AddressInfo.CountryID = country.ID;
 
                     cp.NumberOfPoints = int.Parse(item["TotalSattelites"].ToString());
 
-                    cp.StatusType = status_operational;
+                    cp.StatusTypeID = (int)StandardStatusTypes.Operational;
                     string status = item["Status"].ToString().ToLower();
 
-                    if (status == "unavailable" || status == "reserved" || status == "in use")
+                    if (status == "available" || status == "unavailable" || status == "reserved" || status == "in use")
                     {
-                        cp.StatusType = status_operational;
+                        cp.StatusTypeID = (int)StandardStatusTypes.Operational;
                     }
-
-                    if (status == "disconnected" || status == "inactive" || status == "suspended")
+                    else if (status == "disconnected" || status == "inactive" || status == "suspended")
                     {
-                        cp.StatusType = status_notoperational;
+                        cp.StatusTypeID = (int)StandardStatusTypes.NotOperational;
+                    }
+                    else
+                    {
+                        this.Log("Unknown Status Type:" + status);
                     }
 
                     string type = item["Type"].ToString();//fast or normal
@@ -97,23 +100,23 @@ namespace OCM.Import.Providers
                         ConnectionInfo con = new ConnectionInfo();
                         if (String.Equals(type, "fast", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            con.Level = new ChargerType { ID = 3 };
+                            con.LevelID = 3;
                             con.Voltage = 400;
                             con.Amps = 75;
                             con.PowerKW = con.Voltage * con.Amps / 1000;
-                            con.StatusType = cp.StatusType;
-                            con.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
+                            con.StatusTypeID = cp.StatusTypeID;
+                            con.CurrentTypeID = (int)StandardCurrentTypes.DC;
                         }
 
                         if (String.Equals(type, "normal", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            con.Level = new ChargerType { ID = 2 };
+                            con.LevelID = 2;
                             //based on http://www.mobie.pt/en/o-carregamento
                             con.Voltage = 220;
                             con.Amps = 16;
                             con.PowerKW = con.Voltage * con.Amps / 1000;
-                            con.StatusType = cp.StatusType;
-                            con.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
+                            con.StatusTypeID = cp.StatusTypeID;
+                            con.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
                         }
                         cp.Connections.Add(con);
                     }
@@ -123,8 +126,9 @@ namespace OCM.Import.Providers
                     var operatorInfo = coreRefData.Operators.FirstOrDefault(op => op.Title.ToLower().StartsWith(operatorName.ToLower()));
                     if (operatorInfo != null)
                     {
-                        cp.OperatorInfo = operatorInfo;
-                    } else
+                        cp.OperatorID = operatorInfo.ID;
+                    }
+                    else
                     {
                         this.Log("Unknown Operator:" + operatorName);
                     }
@@ -136,7 +140,7 @@ namespace OCM.Import.Providers
                 }
                 catch (Exception exp)
                 {
-                    Log("Error parsing item " + itemCount+ " "+ exp.ToString());
+                    Log("Error parsing item " + itemCount + " " + exp.ToString());
                 }
 
                 itemCount++;
