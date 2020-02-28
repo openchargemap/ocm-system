@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OCM.Core.Settings;
+using System;
 using System.Threading.Tasks;
 namespace OCM.API.Web.Standard
 {
@@ -26,32 +27,41 @@ namespace OCM.API.Web.Standard
 
         public async Task Invoke(HttpContext context)
         {
-            // Do something with context near the beginning of request processing.
-            if (context.Request.Path.ToString() == "/favicon.ico"){
-                return;
-            }
-            
-            if (!context.Request.Path.ToString().StartsWith("/v4/") && !context.Request.Path.ToString().StartsWith("/map"))
+            try
             {
-                var handled = await new CompatibilityAPICoreHTTPHandler(_settings, _logger).ProcessRequest(context);
-
-                if (!handled)
+                // Do something with context near the beginning of request processing.
+                if (context.Request.Path.ToString() == "/favicon.ico")
                 {
+                    return;
+                }
+
+                if (!context.Request.Path.ToString().StartsWith("/v4/") && !context.Request.Path.ToString().StartsWith("/map"))
+                {
+                    var handled = await new CompatibilityAPICoreHTTPHandler(_settings, _logger).ProcessRequest(context);
+
+                    if (!handled)
+                    {
+                        // call next middleware, API controllers etc
+                        await _next.Invoke(context);
+                    }
+                }
+                else
+                {
+                    _logger.LogDebug("Passing v4 request to controller..");
+
                     // call next middleware, API controllers etc
                     await _next.Invoke(context);
                 }
+
+
+                // Clean up.
+                await context.Response.CompleteAsync();
             }
-            else
+            catch (Exception exp)
             {
-                _logger.LogDebug("Passing v4 request to controller..");
-
-                // call next middleware, API controllers etc
-                await _next.Invoke(context);
+                // request failed
+                _logger.LogError("Request Failed: " + exp.ToString());
             }
-            
-
-            // Clean up.
-            await context.Response.CompleteAsync();
         }
     }
 

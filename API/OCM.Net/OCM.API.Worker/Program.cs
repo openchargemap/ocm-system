@@ -19,7 +19,8 @@ namespace OCM.API.Worker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSystemd().ConfigureServices((hostContext, services) =>
+                .UseSystemd()
+                .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
                 })

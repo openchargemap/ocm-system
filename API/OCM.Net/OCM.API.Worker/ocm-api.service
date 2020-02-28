@@ -5,7 +5,11 @@ Description=Open Charge Map API Worker
 Type=notify
 ExecStart=/usr/sbin/ocm-api
 WorkingDirectory=/opt/ocm-api
-Restart=on-failure
+Restart=always
+
+# Restart every day
+RuntimeMaxSec=604800
+
 
 [Install]
 WantedBy=multi-user.target
