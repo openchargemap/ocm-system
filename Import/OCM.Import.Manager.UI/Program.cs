@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -73,7 +74,15 @@ namespace OCM.Import.Manager.UI
                 {
                     ExportType exportType = ExportType.API;
 
-                    ImportManager importManager = new ImportManager(Settings.Default.Import_DataFolder,"","");
+                    var settings = new ImportSettings
+                    {
+                        GeolocationShapefilePath = ConfigurationManager.AppSettings["GeolocationShapefilePath"],
+                        ImportUserAPIKey = ConfigurationManager.AppSettings["APIKey"],
+                        MasterAPIBaseUrl = ConfigurationManager.AppSettings["APIBaseUrl"],
+                        TempFolderPath = Settings.Default.Import_DataFolder
+                    };
+
+                    ImportManager importManager = new ImportManager(settings);
                     LogEvent("Performing Import, Publishing via API: "+DateTime.UtcNow.ToShortTimeString());
                     importManager.PerformImportProcessing(exportType, Settings.Default.Import_DataFolder, Settings.Default.OCM_API_Identitifer, Settings.Default.OCM_API_SessionToken, true);
                     LogEvent("Import Processed. Exiting. " + DateTime.UtcNow.ToShortTimeString());

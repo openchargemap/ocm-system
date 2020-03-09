@@ -23,6 +23,7 @@ namespace OCM.Import.Providers
         CSV,
         API,
         JSON,
+        JSONAPI,
         POIModelList
     }
 

@@ -33,7 +33,15 @@ namespace Import
 
             this.txtImportJSONPath.Text = ConfigurationManager.AppSettings["ImportBasePath"];
 
-            _importManager = new ImportManager(txtDataFolderPath.Text, ConfigurationManager.AppSettings["APIBaseUrl"], ConfigurationManager.AppSettings["APIKey"]);
+            var settings = new ImportSettings
+            {
+                GeolocationShapefilePath = ConfigurationManager.AppSettings["GeolocationShapefilePath"],
+                ImportUserAPIKey = ConfigurationManager.AppSettings["APIKey"],
+                MasterAPIBaseUrl = ConfigurationManager.AppSettings["APIBaseUrl"],
+                TempFolderPath = ConfigurationManager.AppSettings["ImportBasePath"]
+            };
+            
+            _importManager = new ImportManager(settings);
 
             //populate provider list
             _providers = new List<IImportProvider>();

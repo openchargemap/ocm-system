@@ -39,7 +39,7 @@ namespace OCM.MVC.Controllers
 
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Users(string sortOrder, string keyword, int pageIndex=1, int pageSize=50)
+        public async Task<IActionResult> Users(string sortOrder, string keyword, int pageIndex = 1, int pageSize = 50)
         {
 
             ViewData["keyword"] = keyword;
@@ -355,11 +355,14 @@ namespace OCM.MVC.Controllers
         {
             var tempPath = Path.GetTempPath();
 
-            var importManager = new Import.ImportManager(tempPath,"","");
-            var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
-            var model = new Models.ImportManager() { ImportProviders = providers };
+            var importManager = new Import.ImportManager(new OCM.Import.ImportSettings { TempFolderPath = tempPath });
+            using (var refDataManager = new ReferenceDataManager())
+            {
+                var providers = importManager.GetImportProviders(refDataManager.GetDataProviders());
+                var model = new Models.ImportManager() { ImportProviders = providers };
 
-            return View(model);
+                return View(model);
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -371,38 +374,43 @@ namespace OCM.MVC.Controllers
 
             var tempPath = Path.GetTempPath();
 
-            var importManager = new Import.ImportManager(tempPath,"","");
+            var importManager = new Import.ImportManager(new Import.ImportSettings { TempFolderPath = tempPath });
 
-            var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
-            var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
-            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
-            ((BaseImportProvider)provider).InputPath = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
-            var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, fetchLiveData, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider, true);
-
-            var systemUser = new UserManager().GetUser((int)StandardUsers.System);
-            if (performImport)
+            using (var refDataManager = new ReferenceDataManager())
             {
-                //add/update/delist POIs
-                await Task.Run(() =>
+                var providers = importManager.GetImportProviders(refDataManager.GetDataProviders());
+                var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
+                var coreReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+
+                ((BaseImportProvider)provider).InputPath = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
+                var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, fetchLiveData, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider, true);
+
+                var systemUser = new UserManager().GetUser((int)StandardUsers.System);
+                if (performImport)
                 {
-                    importManager.UpdateImportedPOIList(result, systemUser);
-                });
-            }
+                    //add/update/delist POIs
+                    await Task.Run(() =>
+                    {
+                        importManager.UpdateImportedPOIList(result, systemUser);
+                    });
+                }
 
-            if (!includeResults)
-            {
-                result.Added = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                result.Delisted = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                result.Duplicates = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                result.ImportItems = new System.Collections.Generic.List<Import.ImportItem>();
-                result.LowDataQuality = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                result.Unchanged = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                result.Updated = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-            }
-            stopwatch.Stop();
-            result.Log += "\r\nImport processing time (seconds): " + stopwatch.Elapsed.TotalSeconds;
+                if (!includeResults)
+                {
+                    result.Added = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                    result.Delisted = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                    result.Duplicates = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                    result.ImportItems = new System.Collections.Generic.List<Import.ImportItem>();
+                    result.LowDataQuality = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                    result.Unchanged = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                    result.Updated = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
+                }
+                stopwatch.Stop();
+                result.Log += "\r\nImport processing time (seconds): " + stopwatch.Elapsed.TotalSeconds;
 
-            return View(result);
+                return View(result);
+            }
+           
         }
 
         [Authorize(Roles = "Admin"), HttpPost, ValidateAntiForgeryToken]
@@ -412,7 +420,7 @@ namespace OCM.MVC.Controllers
 
             var tempPath = Path.GetTempPath();
 
-            var importManager = new Import.ImportManager(tempPath,"","");
+            var importManager = new Import.ImportManager(new OCM.Import.ImportSettings { TempFolderPath = tempPath });
             var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == Request.Form["providerName"]);
 
@@ -427,7 +435,7 @@ namespace OCM.MVC.Controllers
                 {
                     await postedFile.CopyToAsync(stream);
                 }
-               
+
                 //redirect to import processing (cached file version)
                 return RedirectToAction("Import", new { providerName = providerName, fetchLiveData = false, performImport = false });
             }

@@ -9,7 +9,7 @@ This service requires:
 - 'Official' clones could register/deregister themselves with master API (or cloudflare worker) on service startup/shutdown to participate in API reads.
 - Implement full resync and full cache invalidation. If cache is syncing from empty, API calls need to error otherwise cache could be used for live queries.
 - Implement block hashing compare, currently using dates and IDs as sync keys leaves potential room for some items to be out of sync
-- Docker configuration for minimal setup of new clones.
+- Docker configuration for minimal setup of new clones. Auto update of clones when new update released: https://docs.docker.com/docker-hub/builds/, https://containrrr.github.io/watchtower/
 
 ### Linux build
 The OCM Api and website we're original built using the .net framework on Windows, with SQL server as the backend database. A mongodb based caching layer was later added to the API which allowed read operations to avoid querying the SQL database. The system has since been ported to linux as a systemd based worker service.

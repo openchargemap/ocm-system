@@ -1,3 +1,4 @@
+using DotNetProjects.IndexedLinq;
 using GeoCoordinatePortable;
 using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
@@ -105,20 +106,21 @@ namespace OCM.Import
 
         private OCMClient _client = null;
 
-        public ImportManager(string tempFolderPath, string apiBaseUrl, string apikey)
-        {
-            GeonamesAPIUserName = "openchargemap";
-            TempFolder = tempFolderPath;
+        private ImportSettings _settings;
 
-            _client = new OCMClient(apiBaseUrl, apikey);
+        public ImportManager(ImportSettings settings)
+        {
+            _settings = settings;
+            GeonamesAPIUserName = "openchargemap";
+            TempFolder = _settings.TempFolderPath;
+
+            _client = new OCMClient(_settings.MasterAPIBaseUrl, _settings.ImportUserAPIKey, null, settings.ImportUserAgent);
 
             geolocationCacheManager = new GeolocationCacheManager(TempFolder);
             geolocationCacheManager.GeonamesAPIUserName = GeonamesAPIUserName;
             geolocationCacheManager.LoadCache();
 
             addressLookupCacheManager = new AddressLookupCacheManager(TempFolder, _client);
-
-
         }
 
         /**
@@ -179,24 +181,19 @@ namespace OCM.Import
 
         public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData, bool fetchExistingFromAPI = false, string providerName = null)
         {
-
             var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
 
-            CoreReferenceData coreRefData = null;
-            coreRefData = await _client.GetCoreReferenceDataAsync();
+            var coreRefData = await _client.GetCoreReferenceDataAsync();
 
-            string outputPath = defaultDataPath;
-            var providers = new List<IImportProvider>();
-            providers = GetImportProviders(coreRefData.DataProviders);
+            var providers = GetImportProviders(coreRefData.DataProviders);
 
-            string inputDataPathPrefix = defaultDataPath;
             bool cacheInputData = true;
 
             foreach (var provider in providers)
             {
                 if (providerName == null || providerName == provider.GetProviderName())
                 {
-                    await PerformImport(exportType, fetchLiveData, credentials, coreRefData, outputPath, provider, cacheInputData, fetchExistingFromAPI);
+                    await PerformImport(exportType, fetchLiveData, credentials, coreRefData, defaultDataPath, provider, cacheInputData, fetchExistingFromAPI);
                 }
             }
 
@@ -236,12 +233,12 @@ namespace OCM.Import
                 masterListCollection = poiManager.GetPOIList(filters);
             }
 
-            var spec = new i4o.IndexSpecification<ChargePoint>()
+            var spec = new IndexSpecification<ChargePoint>()
                     .Add(i => i.DataProviderID)
                     .Add(i => i.DataProvidersReference)
                     ;
 
-            var masterList = new i4o.IndexSet<ChargePoint>(masterListCollection, spec);
+            var masterList = new IndexSet<ChargePoint>(masterListCollection, spec);
 
             List<ChargePoint> masterListCopy = new List<ChargePoint>();
             foreach (var tmp in masterList)
@@ -278,7 +275,7 @@ namespace OCM.Import
                         // c.DataProvider != null &&
                         c.DataProviderID == item.DataProviderID && c.DataProvidersReference == item.DataProvidersReference)
                         || (c.AddressInfo.Title == item.AddressInfo.Title && c.AddressInfo.AddressLine1 == item.AddressInfo.AddressLine1 && c.AddressInfo.Postcode == item.AddressInfo.Postcode)
-                        || (GeoManager.IsClose(c.AddressInfo.Latitude, c.AddressInfo.Longitude, item.AddressInfo.Latitude, item.AddressInfo.Longitude) && new GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS) //meters distance apart
+                        || (GeoManager.IsClose(c.AddressInfo.Latitude, c.AddressInfo.Longitude, item.AddressInfo.Latitude, item.AddressInfo.Longitude, 2) && new GeoCoordinate(c.AddressInfo.Latitude, c.AddressInfo.Longitude).GetDistanceTo(itemGeoPos) < DUPLICATE_DISTANCE_METERS) //meters distance apart
                 );
 
                 if (dupeList.Any())
@@ -937,12 +934,26 @@ namespace OCM.Import
                         p.ExportJSONFile(finalList, outputPath + "processed_" + p.OutputNamePrefix + ".json");
                     }
 
+                    if (p.ExportType == ExportType.JSONAPI)
+                    {
+                        Log("Exporting JSON..");
+                        //output json
+                        var fileName = outputPath + "processed_" + p.OutputNamePrefix + ".json";
+                        p.ExportJSONFile(finalList, fileName);
+
+                        Log("Uploading JSON to API..");
+                        if (System.IO.File.Exists(fileName))
+                        {
+                            await UploadPOIList(fileName);
+                        }
+                    }
+
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
                     {
                         //publish list of locations to OCM via API
                         OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
                         Log("Publishing via API..");
-                        foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.Country != null))
+                        foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.CountryID != null))
                         {
                             ocmClient.UpdatePOI(cp, credentials);
                             if (cp.ID == 0)
@@ -1111,8 +1122,7 @@ namespace OCM.Import
 
         public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
-            var shapefilesPath = System.Configuration.ConfigurationManager.AppSettings["GeolocationShapefilePath"];
-            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(shapefilesPath + "\\ne_10m_admin_0_map_units.shp");
+            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
 
             //process list of locations, populating country refreshing cache where required
             foreach (var item in itemList)
