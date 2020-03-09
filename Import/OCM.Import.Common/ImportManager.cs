@@ -214,11 +214,11 @@ namespace OCM.Import
 
             APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = true, SubmissionStatusTypeID = 0 };
 
-            IEnumerable<ChargePoint> masterListCollection = new List<ChargePoint>();
+            IEnumerable<ChargePoint> masterList = new List<ChargePoint>();
             if (fetchExistingFromAPI)
             {
                 // fetch from API
-                masterListCollection = await new OCMClient(false).GetPOIListAsync(new SearchFilters
+                masterList = await _client.GetPOIListAsync(new SearchFilters
                 {
                     CountryIDs = countryIds,
                     MaxResults = 1000000,
@@ -230,16 +230,17 @@ namespace OCM.Import
             {
                 // use local database
 
-                masterListCollection = poiManager.GetPOIList(filters);
+                masterList = poiManager.GetPOIList(filters);
             }
 
-            var spec = new IndexSpecification<ChargePoint>()
+          /*  var spec = new IndexSpecification<ChargePoint>()
+                
                     .Add(i => i.DataProviderID)
                     .Add(i => i.DataProvidersReference)
                     ;
 
             var masterList = new IndexSet<ChargePoint>(masterListCollection, spec);
-
+            */
             List<ChargePoint> masterListCopy = new List<ChargePoint>();
             foreach (var tmp in masterList)
             {
@@ -248,7 +249,7 @@ namespace OCM.Import
             }
 
             //if we failed to get a master list, quit with no result
-            if (masterListCollection.Count() == 0) return new List<ChargePoint>();
+            if (masterList.Count() == 0) return new List<ChargePoint>();
 
             List<ChargePoint> duplicateList = new List<ChargePoint>();
             List<ChargePoint> updateList = new List<ChargePoint>();
@@ -951,11 +952,11 @@ namespace OCM.Import
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
                     {
                         //publish list of locations to OCM via API
-                        OCMClient ocmClient = new OCMClient(IsSandboxedAPIMode);
+                      
                         Log("Publishing via API..");
                         foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.CountryID != null))
                         {
-                            ocmClient.UpdatePOI(cp, credentials);
+                            _client.UpdatePOI(cp, credentials);
                             if (cp.ID == 0)
                             {
                                 numAdded++;
@@ -1180,12 +1181,11 @@ namespace OCM.Import
 
         public void GeocodingTest()
         {
-            OCMClient client = new OCMClient(IsSandboxedAPIMode);
 
             //get a few OCM listings
             SearchFilters filters = new SearchFilters { SubmissionStatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };
 
-            var poiList = client.GetPOIListAsync(filters);
+            var poiList = _client.GetPOIListAsync(filters);
             /*
             GeocodingService g = new GeocodingService();
             List<GeolocationResult> list = new List<GeolocationResult>();

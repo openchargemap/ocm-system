@@ -120,7 +120,7 @@ namespace OCM.Import.Providers
                                 }
                                 */
 
-                                import.DataProviderID = 27; //Place To Plug
+                                import.DataProviderID = (int)StandardDataProviders.OpenChargeMapContrib;
                                 import.AddressInfo = new AddressInfo();
                                 import.AddressInfo.Title = col[lookup["LocationTitle"]];
                                 import.AddressInfo.AddressLine1 = col[lookup["AddressLine1"]];
@@ -128,6 +128,9 @@ namespace OCM.Import.Providers
                                 import.AddressInfo.Town = col[lookup["Town"]];
                                 import.AddressInfo.StateOrProvince = col[lookup["StateOrProvince"]];
                                 import.AddressInfo.Postcode = col[lookup["Postcode"]];
+
+                                var country = col[lookup["Country"]];
+                                import.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.Title.Equals(country, StringComparison.InvariantCultureIgnoreCase))?.ID;
 
                                 import.AddressInfo.ContactTelephone1 = col[lookup["Addr_ContactTelephone1"]];
                                 import.AddressInfo.ContactTelephone2 = col[lookup["Addr_ContactTelephone2"]];
@@ -206,7 +209,7 @@ namespace OCM.Import.Providers
                                 var operatorCol = col[lookup["Operator"]];
                                 if (!String.IsNullOrWhiteSpace(operatorCol))
                                 {
-                                    var operatorInfo = coreRefData.Operators.FirstOrDefault(u => u.Title.StartsWith(operatorCol));
+                                    var operatorInfo = coreRefData.Operators.FirstOrDefault(u => u.Title.StartsWith(operatorCol, StringComparison.InvariantCultureIgnoreCase));
                                     if (operatorInfo != null)
                                     {
                                         import.OperatorID = operatorInfo.ID;
@@ -252,13 +255,20 @@ namespace OCM.Import.Providers
                                         if (connectionTypeCol == "Mennekes")
                                         {
                                             conn.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
+                                            conn.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
                                         }
-                                        else
-                                        if (connectionTypeCol == "CEE 7/4 - Schuko - Type F")
+                                        else if (connectionTypeCol == "CCS2")
+                                        {
+                                            conn.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                                            conn.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                                        }
+                                        else if (connectionTypeCol == "CEE 7/4 - Schuko - Type F")
                                         {
                                             conn.ConnectionTypeID = (int)StandardConnectionTypes.Schuko;
+                                            conn.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
                                         }
-                                        else {
+                                        else
+                                        {
                                             var connectiontype = coreRefData.ConnectionTypes.FirstOrDefault(c => c.Title == col[lookup["Connection1_Type"]]);
                                             if (connectiontype != null)
                                             {
@@ -270,22 +280,27 @@ namespace OCM.Import.Providers
                                             }
                                         }
                                     }
+
                                     if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_kW"]]))
                                     {
                                         conn.PowerKW = double.Parse(col[lookup["Connection" + i + "_kW"]]);
                                     }
+
                                     if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Amps"]]))
                                     {
                                         conn.Amps = int.Parse(col[lookup["Connection" + i + "_Amps"]]);
                                     }
+
                                     if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Volts"]]))
                                     {
                                         conn.Voltage = int.Parse(col[lookup["Connection" + i + "_Volts"]]);
                                     }
+
                                     if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Level"]]))
                                     {
                                         conn.LevelID = int.Parse(col[lookup["Connection" + i + "_Level"]]);
                                     }
+
                                     if (!IsConnectionInfoBlank(conn))
                                     {
                                         import.Connections.Add(conn);

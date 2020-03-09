@@ -115,15 +115,6 @@ namespace OCM.Import.Manager.Console
                     //serviceManager.Test(OCM.API.NetworkServices.ServiceProvider.CoulombChargePoint);
                 }
 
-#if DEBUG
-                if (mode ==ActionType.ClientTest)
-                {
-                    OCMClient client = new OCMClient();
-                    client.APITestTiming();
-                    actionPerformed = true;
-                }
-#endif
-
                 if (!actionPerformed)
                 {
                     LogEvent("Nothing to do. Exiting. " + DateTime.UtcNow.ToShortTimeString());

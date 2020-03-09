@@ -69,24 +69,7 @@ namespace OCM.API.Client
         private HttpClient _client = new HttpClient();
         private ILogger _logger = null;
 
-        public OCMClient(bool sandBoxMode = false, string apiKey = null, ILogger logger = null, string userAgent="OCM-API-Client")
-        {
-            this.IsSandboxMode = sandBoxMode;
-
-            if (!IsSandboxMode)
-            {
-                ServiceBaseURL = "https://api.openchargemap.io/v3/";
-            }
-            else
-            {
-                ServiceBaseURL = "http://localhost:8080/v3/";
-            }
-
-            APIKey = apiKey;
-            _client.Timeout = TimeSpan.FromMinutes(10);
-            _client.DefaultRequestHeaders.Add("User-Agent", userAgent);
-            _logger = logger;
-        }
+        private string _userAgent = null;
 
         public OCMClient(string baseUrl, string apiKey, ILogger logger = null, string userAgent = "OCM-API-Client")
         {
@@ -94,9 +77,13 @@ namespace OCM.API.Client
 
             APIKey = apiKey;
             _client.Timeout = TimeSpan.FromMinutes(10);
-            _client.DefaultRequestHeaders.Add("User-Agent",userAgent);
+            _userAgent = userAgent;
+            _client.DefaultRequestHeaders.Add("User-Agent", userAgent);
             _logger = logger;
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
+
+
 
 #if DEBUG
 
@@ -131,7 +118,7 @@ namespace OCM.API.Client
 
         public void APITestTiming()
         {
-            OCMClient client = new OCMClient();
+            OCMClient client = new OCMClient("http://localhost:3000/v2", null);
 
             Task<bool> test1 = client.RunAPITest("http://localhost:3000/v2", 10000);
             test1.Wait();
@@ -192,7 +179,7 @@ namespace OCM.API.Client
 
             if (filters.SubmissionStatusTypeIDs != null && filters.SubmissionStatusTypeIDs.Any())
             {
-                url += "&submissionstatustypeid="+ string.Join(",",filters.SubmissionStatusTypeIDs.Select(i=>i.ToString()));
+                url += "&submissionstatustypeid=" + string.Join(",", filters.SubmissionStatusTypeIDs.Select(i => i.ToString()));
             }
 
             if (filters.DataProviderIDs != null && filters.DataProviderIDs.Any())
@@ -202,7 +189,7 @@ namespace OCM.API.Client
 
             if (filters.CountryIDs != null && filters.CountryIDs.Any())
             {
-                url += "&countryid="+ string.Join(",", filters.CountryIDs.Select(i => i.ToString()));
+                url += "&countryid=" + string.Join(",", filters.CountryIDs.Select(i => i.ToString()));
             }
 
             if (filters.ModifiedSince.HasValue)
@@ -306,8 +293,6 @@ namespace OCM.API.Client
             try
             {
                 string url = ServiceBaseURL + "?action=cp_batch_submission&format=json";
-                url += "&Identifier=" + credentials.Identifier;
-                url += "&SessionToken=" + credentials.SessionToken;
 
                 string json = JsonConvert.SerializeObject(list);
                 string result = PostDataToURL(url, json);
@@ -362,6 +347,11 @@ namespace OCM.API.Client
             if (!string.IsNullOrEmpty(APIKey))
             {
                 request.Headers.Add("X-API-Key", APIKey);
+            }
+
+            if (!string.IsNullOrEmpty(_userAgent))
+            {
+                request.Headers.Add("User-Agent", _userAgent);
             }
 
             // Set the Method property of the request to POST.
