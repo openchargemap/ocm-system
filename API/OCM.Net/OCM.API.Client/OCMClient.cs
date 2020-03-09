@@ -69,7 +69,7 @@ namespace OCM.API.Client
         private HttpClient _client = new HttpClient();
         private ILogger _logger = null;
 
-        public OCMClient(bool sandBoxMode = false, string apiKey = null, ILogger logger = null)
+        public OCMClient(bool sandBoxMode = false, string apiKey = null, ILogger logger = null, string userAgent="OCM-API-Client")
         {
             this.IsSandboxMode = sandBoxMode;
 
@@ -84,15 +84,17 @@ namespace OCM.API.Client
 
             APIKey = apiKey;
             _client.Timeout = TimeSpan.FromMinutes(10);
+            _client.DefaultRequestHeaders.Add("User-Agent", userAgent);
             _logger = logger;
         }
 
-        public OCMClient(string baseUrl, string apiKey, ILogger logger = null)
+        public OCMClient(string baseUrl, string apiKey, ILogger logger = null, string userAgent = "OCM-API-Client")
         {
             ServiceBaseURL = baseUrl;
 
             APIKey = apiKey;
             _client.Timeout = TimeSpan.FromMinutes(10);
+            _client.DefaultRequestHeaders.Add("User-Agent",userAgent);
             _logger = logger;
         }
 
