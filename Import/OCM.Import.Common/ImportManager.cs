@@ -164,6 +164,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_NobilDotNo());
             //providers.Add(new ImportProvider_OplaadpalenNL());
             providers.Add(new ImportProvider_ICAEN());
+            providers.Add(new ImportProvider_DataGouvFr());
             providers.Add(new ImportProvider_GenericExcel());
 
             //populate full data provider details for each import provider
