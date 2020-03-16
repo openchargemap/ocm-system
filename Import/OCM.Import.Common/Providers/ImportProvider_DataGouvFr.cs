@@ -18,6 +18,7 @@ namespace OCM.Import.Providers
             AutoRefreshURL = "https://www.data.gouv.fr/api/1/datasets/?q=5448d3e0c751df01f85d0572&page=0&page_size=20";
             IsAutoRefreshed = true;
             IsProductionReady = true;
+            MergeDuplicatePOIEquipment = true;
             DataProviderID = 28;
         }
 
@@ -29,7 +30,7 @@ namespace OCM.Import.Providers
 
 #if DEBUG
             // InputData = "{\"resources\": [ {\"latest\": \"https://www.data.gouv.fr/fr/datasets/r/50625621-18bd-43cb-8fde-6b8c24bdabb3\"  } ]}";
-            
+
             var poiDataCsv = System.IO.File.ReadAllText(@"C:\\Temp\\ocm\\data\\import\\cache_data.gouv.fr.txt");
 #else
             JObject o = JObject.Parse(InputData);
@@ -90,8 +91,8 @@ namespace OCM.Import.Providers
                                 .Replace("kva", "", StringComparison.InvariantCultureIgnoreCase);
 
                             var connectionType = cols[keyLookup.FindIndex(a => a == "type_prise")];
-                            var latitude = cols[keyLookup.FindIndex(a => a == "Ylatitude")].Replace("Ê", "");
-                            var longitude = cols[keyLookup.FindIndex(a => a == "Xlongitude")].Replace("Ê", "");
+                            var latitude = cols[keyLookup.FindIndex(a => a == "Ylatitude")].Replace("Ê", "").Replace("\"", "");
+                            var longitude = cols[keyLookup.FindIndex(a => a == "Xlongitude")].Replace("Ê", "").Replace("\"", "");
                             var reference = cols[keyLookup.FindIndex(a => a == "id_station")];
                             var address = cols[keyLookup.FindIndex(a => a == "ad_station")];
                             var numStations = cols[keyLookup.FindIndex(a => a == "nbre_pdc")];
@@ -99,19 +100,19 @@ namespace OCM.Import.Providers
                             var additionalInfo = cols[keyLookup.FindIndex(a => a == "observations")];
 
                             poi.DataProviderID = DataProviderID;
-                            poi.DataProvidersReference = reference;
+                            poi.DataProvidersReference = reference?.Trim();
                             poi.AddressInfo = new AddressInfo();
 
-                            poi.AddressInfo.Title = title;
+                            poi.AddressInfo.Title = title?.Trim();
                             poi.AddressInfo.AddressLine1 = address.Trim();
 
                             poi.AddressInfo.Latitude = double.Parse(latitude);
                             poi.AddressInfo.Longitude = double.Parse(longitude);
 
-                            poi.AddressInfo.AccessComments = hours;
+                            poi.AddressInfo.AccessComments = hours?.Trim();
                             poi.AddressInfo.CountryID = 80; // assume France
 
-                            poi.GeneralComments = additionalInfo;
+                            poi.GeneralComments = additionalInfo?.Trim();
 
                             //TODO: Operator and Operators Reference
                             // Actually, Operators Reference is the reference field, it's in the standard OCPP/OCHP format provider's reference should perhaps be the 'source' field
@@ -170,9 +171,19 @@ namespace OCM.Import.Providers
                                         break;
 
                                     case "ccs combo2":
+                                    case "combo 2":
+                                    case "combo2":
                                     case "combo":
                                         connection.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
                                         connection.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                                        break;
+                                    case "ccs350":
+                                        connection.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                                        connection.PowerKW = 350;
+                                        break;
+                                    case "ccs50":
+                                        connection.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                                        connection.PowerKW = 50;
                                         break;
                                     case "t3":
                                     case "type 3":
@@ -197,8 +208,9 @@ namespace OCM.Import.Providers
                                     connection.PowerKW = parsedKw;
                                     if ((connection.PowerKW > 7.5) && (connection.CurrentTypeID == (int)StandardCurrentTypes.SinglePhaseAC) && (connection.ConnectionTypeID == (int)StandardConnectionTypes.MennekesType2))
                                     {
-                                        connection.CurrentTypeID == (int)StandardCurrentTypes.ThreePhaseAC;
+                                        connection.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
                                     }
+
                                     if ((connection.PowerKW >= 22) && (connection.ConnectionTypeID == (int)StandardConnectionTypes.MennekesType2))
                                     {
                                         // Type 2 connectors aren't allowed to be socketed for >32A
@@ -213,6 +225,7 @@ namespace OCM.Import.Providers
                                     }
                                 }
 
+                                connection.StatusTypeID = (int)StandardStatusTypes.Operational;
                                 poi.StatusTypeID = (int)StandardStatusTypes.Operational;
 
 
