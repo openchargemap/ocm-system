@@ -77,3 +77,12 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 
 ```
+
+Production Hosting
+---------------------
+
+Note the following when hosting in production:
+- a periodic clear and rebuild of poi cache is currently necessary to ensure sync is accurate (primary cache may be rebuilt if reference data changes etc).
+    - mongo: use ocm_mirror, db.poi.drop(), then wait for cache to rebuild on next update check or restart api service
+- On linux, ensure there is adequate swap space available. Allow at least 2GB of main ram and size swap space as required. Some cloud provider images have no swap space by default. Failure to do so will result in hangs.
+- MongoDB requires periodic restarts, the suggestion is hourly if load balanced/fault tolerant or nightly as required.
