@@ -114,6 +114,7 @@ namespace OCM.Import.Providers
                             poi.GeneralComments = additionalInfo;
 
                             //TODO: Operator and Operators Reference
+                            // Actually, Operators Reference is the reference field, it's in the standard OCPP/OCHP format provider's reference should perhaps be the 'source' field
 
                             if (usageType.Contains("payant", StringComparison.InvariantCultureIgnoreCase)) usageType = "payant";
 
@@ -194,6 +195,15 @@ namespace OCM.Import.Providers
                                 if (parsedKw > 0)
                                 {
                                     connection.PowerKW = parsedKw;
+                                    if ((connection.PowerKW > 7.5) && (connection.CurrentTypeID == (int)StandardCurrentTypes.SinglePhaseAC) && (connection.ConnectionTypeID == (int)StandardConnectionTypes.MennekesType2))
+                                    {
+                                        connection.CurrentTypeID == (int)StandardCurrentTypes.ThreePhaseAC;
+                                    }
+                                    if ((connection.PowerKW >= 22) && (connection.ConnectionTypeID == (int)StandardConnectionTypes.MennekesType2))
+                                    {
+                                        // Type 2 connectors aren't allowed to be socketed for >32A
+                                        connection.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2Tethered;
+                                    }
                                 }
                                 else
                                 {
