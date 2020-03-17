@@ -31,18 +31,6 @@ namespace OCM.Import.Providers
 
             var dataList = o["ChargeDevice"].ToArray();
 
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Imported_Published);
-            var submissionStatusDelistedPrivate = coreRefData.SubmissionStatusTypes.First(s => s.ID == (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation);//delisted not public
-            var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
-            var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
-            var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == (int)StandardStatusTypes.Unknown);
-            var usageTypeUnknown = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Unknown);
-            var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Public);
-            var usageTypePublicPayAtLocation = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Public_PayAtLocation);
-            var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.PrivateRestricted);
-            var usageTypePublicMembershipRequired = coreRefData.UsageTypes.First(u => u.ID == (int)StandardUsageTypes.Public_MembershipRequired);
-            var operatorUnknown = coreRefData.Operators.First(opUnknown => opUnknown.ID == (int)StandardOperators.UnknownOperator);
-
             int itemCount = 0;
 
             foreach (var dataItem in dataList)
@@ -56,7 +44,6 @@ namespace OCM.Import.Providers
                 //private addresses are skipped from import
                 if (!String.IsNullOrEmpty(deviceName) && deviceName.ToLower().Contains("parkatmyhouse"))
                 {
-                    //skipPOI = true;
                     skipPOI = true;
                 }
 
@@ -182,27 +169,61 @@ namespace OCM.Import.Providers
                     }
                 }
 
+                if (cp.OperatorID == null)
+                {
+                    string operatorName = deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString();
+
+                    // match specific operators
+                    
+                    switch(operatorName)
+                    {
+                        case "Chargemaster (POLAR)":
+                            cp.OperatorID = 8;
+                            break;
+                        case "Ecotricity (Electric Highway)":
+                            cp.OperatorID = 24;
+                            break;
+                        case "ecar NI":
+                            cp.OperatorID = 91;
+                            break;
+                        case "eo Charging":
+                            cp.OperatorID = 3298;
+                            break;
+                        case "Alfa Power":
+                            cp.OperatorID = 3326;
+                            break;
+                        case "InCharge - an initiative by Vattenfall":
+                            cp.OperatorID = 3343;
+                            break;
+                        case "APT":
+                            cp.OperatorID = 3341;
+                            break;
+                    }
+
+                    if (cp.OperatorID == null)  Log("Unknown Operator: " + deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString());
+                }
+
                 //determine most likely usage type
-                cp.UsageTypeID = usageTypeUnknown.ID;
+                cp.UsageTypeID = (int)StandardUsageTypes.Public;
 
                 if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE")
                 {
                     //membership required
-                    cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
+                    cp.UsageTypeID = (int)StandardUsageTypes.Public_MembershipRequired;
                 }
                 else
                 {
                     if (item["PaymentRequiredFlag"].ToString().ToUpper() == "TRUE")
                     {
                         //payment required
-                        cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
+                        cp.UsageTypeID = (int)StandardUsageTypes.Public_PayAtLocation;
                     }
                     else
                     {
                         //accessible 24 hours, payment not required and membership not required, assume public
                         if (item["Accessible24Hours"].ToString().ToUpper() == "TRUE")
                         {
-                            cp.UsageTypeID = usageTypePublic.ID;
+                            cp.UsageTypeID = (int)StandardUsageTypes.Public;
                         }
                     }
                 }
@@ -210,7 +231,7 @@ namespace OCM.Import.Providers
                 //special usage cases detected from text
                 if (cp.AddressInfo.ToString().ToLower().Contains("no public access"))
                 {
-                    cp.UsageTypeID = usageTypePrivate.ID;
+                    cp.UsageTypeID = (int)StandardUsageTypes.PrivateRestricted;
                 }
 
                 //add connections
@@ -349,7 +370,7 @@ namespace OCM.Import.Providers
 
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
-                if (cp.SubmissionStatusTypeID == null) cp.SubmissionStatusTypeID = submissionStatus.ID;
+                if (cp.SubmissionStatusTypeID == null) cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
 
                 if (!skipPOI)
                 {
