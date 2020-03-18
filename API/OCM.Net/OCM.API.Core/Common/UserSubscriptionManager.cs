@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
@@ -152,7 +153,7 @@ namespace OCM.API.Common
             return OCM.API.Common.Model.Extensions.UserSubscription.FromDataModel(update, true);
         }
 
-        public SubscriptionMatchGroup GetSubscriptionMatches(int subscriptionId, int userId, DateTime? dateFrom)
+        public async Task<SubscriptionMatchGroup> GetSubscriptionMatches(int subscriptionId, int userId, DateTime? dateFrom)
         {
             var refData = new ReferenceDataManager().GetCoreReferenceData();
             var dataModel = new OCM.Core.Data.OCMEntities();
@@ -161,7 +162,7 @@ namespace OCM.API.Common
             var subscription = dataModel.UserSubscriptions.FirstOrDefault(s => s.Id == subscriptionId && s.UserId == userId);
             if (subscription != null)
             {
-                return GetSubscriptionMatches(dataModel, poiManager, subscription, refData, dateFrom);
+                return await GetSubscriptionMatches(dataModel, poiManager, subscription, refData, dateFrom);
             }
             else
             {
@@ -221,7 +222,7 @@ namespace OCM.API.Common
             return isMatch;
         }
 
-        public SubscriptionMatchGroup GetSubscriptionMatches(OCM.Core.Data.OCMEntities dataModel, POIManager poiManager, OCM.Core.Data.UserSubscription subscription, Model.CoreReferenceData refData, DateTime? dateFrom = null)
+        public async Task<SubscriptionMatchGroup> GetSubscriptionMatches(OCM.Core.Data.OCMEntities dataModel, POIManager poiManager, OCM.Core.Data.UserSubscription subscription, Model.CoreReferenceData refData, DateTime? dateFrom = null)
         {
             SubscriptionMatchGroup subscriptionMatchGroup = new SubscriptionMatchGroup();
 
@@ -464,7 +465,7 @@ namespace OCM.API.Common
         /// Get all subscription matches for all active subscriptions where applicable
         /// </summary>
         /// <returns></returns>
-        public List<SubscriptionMatchGroup> GetAllSubscriptionMatches(bool excludeRecentlyNotified = true)
+        public async Task<List<SubscriptionMatchGroup>> GetAllSubscriptionMatches(bool excludeRecentlyNotified = true)
         {
             List<SubscriptionMatchGroup> allMatches = new List<SubscriptionMatchGroup>();
 
@@ -485,7 +486,7 @@ namespace OCM.API.Common
             {
                 if (!excludeRecentlyNotified || (subscription.DateLastNotified == null || subscription.DateLastNotified.Value < currentTime.AddMinutes(-subscription.NotificationFrequencyMins)))
                 {
-                    var subscriptionMatchGroup = GetSubscriptionMatches(dataModel, poiManager, subscription, refData);
+                    var subscriptionMatchGroup = await GetSubscriptionMatches(dataModel, poiManager, subscription, refData);
                     if (subscriptionMatchGroup.SubscriptionMatches.Any())
                     {
                         subscriptionMatchGroup.Subscription = OCM.API.Common.Model.Extensions.UserSubscription.FromDataModel(subscription, true);
@@ -645,13 +646,13 @@ namespace OCM.API.Common
             return html;
         }
 
-        public int SendAllPendingSubscriptionNotifications(string templateFolderPath)
+        public async Task<int> SendAllPendingSubscriptionNotifications(string templateFolderPath)
         {
             int notificationsSent = 0;
             List<int> subscriptionsNotified = new List<int>();
             List<int> subscriptionsSkipped = new List<int>();
 
-            var allSubscriptionMatches = GetAllSubscriptionMatches(true);
+            var allSubscriptionMatches = await GetAllSubscriptionMatches(true);
             var userManager = new UserManager();
             NotificationManager notificationManager = new NotificationManager();
 

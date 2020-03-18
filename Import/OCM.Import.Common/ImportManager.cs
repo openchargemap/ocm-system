@@ -231,7 +231,7 @@ namespace OCM.Import
             {
                 // use local database
 
-                masterList = poiManager.GetPOIList(filters);
+                masterList = await poiManager.GetPOIListAsync(filters);
             }
 
           /*  var spec = new IndexSpecification<ChargePoint>()

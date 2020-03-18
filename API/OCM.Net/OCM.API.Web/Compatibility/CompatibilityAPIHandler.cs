@@ -597,7 +597,7 @@ namespace OCM.API
 
             //get list of charge points for output:
             var poiManager = new POIManager();
-            dataList = poiManager.GetPOIList(filter);
+            dataList = await poiManager.GetPOIListAsync(filter);
 
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("OutputPOIList: Time for Query/Conversion: " + stopwatch.ElapsedMilliseconds + "ms");
@@ -619,7 +619,7 @@ namespace OCM.API
         private async Task OutputCompactPOIList(HttpContext context, APIRequestParams filter)
         {
             //get list of charge points as compact POISearchResult List for output:
-            IEnumerable<OCM.API.Common.Model.ChargePoint> dataList = new POIManager().GetPOIList(filter);
+            IEnumerable<OCM.API.Common.Model.ChargePoint> dataList = await new POIManager().GetPOIListAsync(filter);
 
             List<POISearchResult> poiList = new List<POISearchResult>();
             foreach (var c in dataList)

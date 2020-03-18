@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace OCM.API.Common.DataSummary
@@ -202,7 +203,7 @@ namespace OCM.API.Common.DataSummary
             return output;
         }
 
-        public POIRecentActivity GetActivitySummary(APIRequestParams filterSettings)
+        public async Task<POIRecentActivity> GetActivitySummary(APIRequestParams filterSettings)
         {
             //default to last month
             DateTime dateFrom = DateTime.UtcNow.AddMonths(-1);
@@ -234,7 +235,7 @@ namespace OCM.API.Common.DataSummary
             //populate recently modified charge points TODO: differentiate between updated since and created since?
             var poiManager = new POIManager();
 
-            var allRecentPOIChanges = poiManager.GetPOIList(filterSettings);
+            var allRecentPOIChanges = await poiManager.GetPOIListAsync(filterSettings);
             summary.POIRecentlyAdded = allRecentPOIChanges.Where(p => p.DateCreated >= dateFrom).OrderByDescending(p => p.DateCreated).Take(10).ToList();
             summary.POIRecentlyUpdated = allRecentPOIChanges.Where(p => p.DateLastStatusUpdate >= dateFrom && p.DateCreated != p.DateLastStatusUpdate).OrderByDescending(p => p.DateLastStatusUpdate).Take(10).ToList();
 

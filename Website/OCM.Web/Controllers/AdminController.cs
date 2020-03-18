@@ -243,10 +243,8 @@ namespace OCM.MVC.Controllers
                         //TODO: can't run in seperate async thread becuase HttpContext is not available
                         string templateFolderPath = _host.ContentRootPath + "/templates/Notifications";
 
-                        await Task.Run(() =>
-                        {
-                            notificationsSent = new UserSubscriptionManager().SendAllPendingSubscriptionNotifications(templateFolderPath);
-                        });
+                        notificationsSent = await new UserSubscriptionManager().SendAllPendingSubscriptionNotifications(templateFolderPath);
+
                     }
                     catch (Exception)
                     {
@@ -410,7 +408,7 @@ namespace OCM.MVC.Controllers
 
                 return View(result);
             }
-           
+
         }
 
         [Authorize(Roles = "Admin"), HttpPost, ValidateAntiForgeryToken]

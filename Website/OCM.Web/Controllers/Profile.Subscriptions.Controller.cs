@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -151,7 +152,7 @@ namespace OCM.MVC.Controllers
             return View(userSubscription);
         }
 
-        private SubscriptionBrowseModel PrepareSubscriptionBrowseModel(SubscriptionBrowseModel model)
+        private async Task<SubscriptionBrowseModel> PrepareSubscriptionBrowseModel(SubscriptionBrowseModel model)
         {
             if (model.DateFrom == null) model.DateFrom = DateTime.UtcNow.AddDays(-30);
             else
@@ -164,18 +165,18 @@ namespace OCM.MVC.Controllers
             }
             var subscriptionManager = new UserSubscriptionManager();
 
-            model.SubscriptionResults = subscriptionManager.GetSubscriptionMatches((int)model.SubscriptionID, (int)UserID, dateFrom: model.DateFrom);
+            model.SubscriptionResults = await subscriptionManager.GetSubscriptionMatches((int)model.SubscriptionID, (int)UserID, dateFrom: model.DateFrom);
             model.SummaryHTML = subscriptionManager.GetSubscriptionMatchHTMLSummary(model.SubscriptionResults);
             model.Subscription = subscriptionManager.GetUserSubscription((int)UserID, (int)model.SubscriptionID);
             return model;
         }
 
         [Authorize(Roles = "StandardUser")]
-        public ActionResult SubscriptionMatches(SubscriptionBrowseModel model)
+        public async Task<ActionResult> SubscriptionMatches(SubscriptionBrowseModel model)
         {
             if (model.SubscriptionID != null)
             {
-                model = PrepareSubscriptionBrowseModel(model);
+                model = await PrepareSubscriptionBrowseModel(model);
             }
             return View(model);
         }

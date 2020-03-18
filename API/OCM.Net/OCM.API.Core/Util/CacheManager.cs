@@ -74,10 +74,7 @@ namespace OCM.Core.Data
         {
             try
             {
-                return await Task.Run<MirrorStatus>(() =>
-                {
-                    return CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash);
-                });
+                return CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash);
             }
             catch (Exception)
             {
