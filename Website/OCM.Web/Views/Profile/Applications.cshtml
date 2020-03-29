@@ -38,21 +38,37 @@ else
     <tr><th>App</th><th>Website</th><th>Created</th><th>Enabled</th><th>Public</th><th> API Key</th><th></th></tr>
     @foreach (var item in Model.RegisteredApplications)
     {
-<tr>
-    <td>@item.Title</td>
-    <td>@item.WebsiteURL</td>
-    <td>@item.DateCreated</td>
-    <td>@item.IsEnabled</td>
-    <td>@item.IsPublicListing</td>
-    <td>@item.PrimaryAPIKey</td>
-    <td>
-        @Html.ActionLink("Edit", "AppEdit", new { id = item.ID })
-    </td>
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.WebsiteURL</td>
+            <td>@item.DateCreated</td>
+            <td>@item.IsEnabled</td>
+            <td>@item.IsPublicListing</td>
+            <td>
+                @item.PrimaryAPIKey
+            <br /> <a href="#" onclick="updateAPIKey(@item.ID)">Generate New API Key</a>
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "AppEdit", new { id = item.ID })
+        </td>
 
-</tr>
-    }
+    </tr>
+}
 
 </table>
+
+<script>
+
+  function updateAPIKey(appId){
+      if (confirm("Are you sure you wish to generate a new API Key? Your existing API key will no longer be valid"))
+      {
+          var url = "@Url.Action("AppGenerateNewKey")";
+           window.location.href = url + "?id=" + appId;
+      }
+  }
+
+</script>
+
 
 @if (ViewBag.UserProfile != null)
 {

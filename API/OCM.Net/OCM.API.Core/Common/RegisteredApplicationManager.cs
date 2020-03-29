@@ -75,9 +75,10 @@ namespace OCM.API.Common
 
             if (update.ID > 0)
             {
-                item = dataModel.RegisteredApplications.FirstOrDefault(a => a.Id == update.ID &&( userId == null || (userId!=null && update.UserID==userId)));
- 
-            } else
+                item = dataModel.RegisteredApplications.FirstOrDefault(a => a.Id == update.ID && (userId == null || (userId != null && update.UserID == userId)));
+
+            }
+            else
             {
                 item.DateCreated = DateTime.UtcNow;
                 item.IsEnabled = true;
@@ -106,6 +107,27 @@ namespace OCM.API.Common
             dataModel.SaveChanges();
 
             return OCM.API.Common.Model.Extensions.RegisteredApplication.FromDataModel(item);
+        }
+
+        public RegisteredApplication GenerateNewAPIKey(int appId, int? userId)
+        {
+            var app = dataModel.RegisteredApplications.FirstOrDefault(app => app.Id == appId && (userId == null || (userId != null && app.UserId == userId)));
+
+            if (app != null)
+            {
+                app.DeprecatedApikey = app.PrimaryApikey;
+                app.PrimaryApikey = Guid.NewGuid().ToString().ToLower();
+
+                app.DateApikeyUpdated = DateTime.UtcNow;
+
+                dataModel.SaveChanges();
+
+                return OCM.API.Common.Model.Extensions.RegisteredApplication.FromDataModel(app);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

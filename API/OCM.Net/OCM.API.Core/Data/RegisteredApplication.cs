@@ -22,6 +22,7 @@ namespace OCM.Core.Data
         public string DeprecatedApikey { get; set; }
         public string SharedSecret { get; set; }
         public DateTime? DateApikeyLastUsed { get; set; }
+        public DateTime? DateApikeyUpdated { get; set; }
         public DateTime DateCreated { get; set; }
         public int UserId { get; set; }
 

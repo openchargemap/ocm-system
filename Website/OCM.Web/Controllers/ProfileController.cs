@@ -261,6 +261,29 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "StandardUser")]
+        public ActionResult AppGenerateNewKey(int? id)
+        {
+            var userId = (int)UserID;
+
+            if (id != null)
+            {
+                using (var appManager = new RegisteredApplicationManager())
+                {
+                    var app = appManager.GetRegisteredApplication((int)id, userId);
+
+                    if (app != null)
+                    {
+                        app = appManager.GenerateNewAPIKey((int)id, userId);
+                    }
+                }
+
+            }
+
+            return RedirectToAction("Applications");
+        }
+
+
+        [Authorize(Roles = "StandardUser")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AppEdit(RegisteredApplication app)
