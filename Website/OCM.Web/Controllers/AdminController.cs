@@ -270,9 +270,12 @@ namespace OCM.MVC.Controllers
                 //update stats
                 if (_cache.Get("_StatsRefreshed") == null)
                 {
-                    var dataSummaryManager = new API.Common.DataSummary.DataSummaryManager();
-                    dataSummaryManager.RefreshStats();
-                    _cache.Set("_StatsRefreshed", true);
+                    using (var dataSummaryManager = new API.Common.DataSummary.DataSummaryManager())
+                    {
+                        await dataSummaryManager.RefreshStats();
+                        _cache.Set("_StatsRefreshed", true);
+                    }
+                       
                 }
             }
             return Json(new { NotificationsSent = notificationsSent, MirrorStatus = mirrorStatus });

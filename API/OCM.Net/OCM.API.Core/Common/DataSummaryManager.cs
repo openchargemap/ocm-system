@@ -62,13 +62,13 @@ namespace OCM.API.Common.DataSummary
     /// </summary>
     public class DataSummaryManager : ManagerBase
     {
-        public void RefreshStats()
+        public async Task RefreshStats()
         {
             try
             {
                 var paramList = new object[] { };
 
-                this.dataModel.Database.ExecuteSqlCommand("procUpdateOCMStats", paramList);
+                await this.dataModel.Database.ExecuteSqlRawAsync("procUpdateOCMStats", paramList);
                 AuditLogManager.Log(null, AuditEventType.StatisticsUpdated, "Statistics Updated", "");
             }
             catch (Exception)

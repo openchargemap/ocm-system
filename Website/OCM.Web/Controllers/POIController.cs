@@ -654,12 +654,14 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Activity()
+        public async Task<ActionResult> Activity()
         {
-            var summaryManager = new DataSummaryManager();
-            var summary = summaryManager.GetActivitySummary(new APIRequestParams());
-            ViewBag.ShowPOILink = true;
-            return View(summary);
+            using (var summaryManager = new DataSummaryManager())
+            {
+                var summary = await summaryManager.GetActivitySummary(new APIRequestParams());
+                ViewBag.ShowPOILink = true;
+                return View(summary);
+            }
         }
 
         public ActionResult ReviewDuplicates(int? countryId, bool enableCache = true, double maxDupeRange = 500, int minConfidence = 70)
