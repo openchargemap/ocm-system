@@ -223,7 +223,7 @@ namespace OCM.API.Common
                         smtp.Credentials = basicCredential;
 
                         //smtp.DeliveryMethod = SmtpDeliveryMethod.PickupDirectoryFromIis;
-                        //smtp.Port = 587;
+                        smtp.Port = 587;
                     }
                     //smtp.DeliveryMethod = SmtpDeliveryMethod.PickupDirectoryFromIis;
                     try
@@ -233,6 +233,12 @@ namespace OCM.API.Common
                     catch (Exception exp)
                     {
                         // failed to send
+                        try
+                        {
+                            System.IO.File.AppendAllText("C:\\Temp\\OCM_notifications_error.log", "Failed to send: " + exp.ToString()); ;
+                        }
+                        catch { }
+
                         System.Diagnostics.Debug.WriteLine("Failed to send email notification: "+ exp.ToString());
                         return false;
                     }
