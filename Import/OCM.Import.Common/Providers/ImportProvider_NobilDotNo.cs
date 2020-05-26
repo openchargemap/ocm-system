@@ -286,12 +286,37 @@ namespace OCM.Import.Providers
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
+                        else if (connectorTypeVal == "24")
+                        {
+                            //150 kW - 400VDC max 375A
+                            cinfo.Amps = 375;
+                            cinfo.Voltage = 400;
+                            cinfo.PowerKW = 150;
+                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
+                            cinfo.Level = new ChargerType() { ID = 3 };
+                        }
+                        else if (connectorTypeVal == "25")
+                        {
+                            //350 kW 
+                            cinfo.PowerKW = 350;
+                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
+                            cinfo.Level = new ChargerType() { ID = 3 };
+                        }
                         else if (connectorTypeVal == "27")
                         {
                             //Tesla Supercharger - Up to 120kW. Will be upgraded to 130kW.
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 120;
+                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
+                            cinfo.Level = new ChargerType() { ID = 3 };
+                        }
+                        else if (connectorTypeVal == "28")
+                        {
+                            
+                            cinfo.Amps = 125;
+                            cinfo.Voltage = 400;
+                            cinfo.PowerKW = 50;
                             cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
                             cinfo.Level = new ChargerType() { ID = 3 };
                         }
