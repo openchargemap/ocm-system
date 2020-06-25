@@ -243,6 +243,11 @@ namespace OCM.API.Client
             return JsonConvert.DeserializeObject<SystemInfoResult>(result);
         }
 
+        public async Task<object> Get(string endpoint)
+        {
+            string url = ServiceBaseURL + endpoint;
+            return await FetchDataStringFromURLAsync(url);
+        }
 #if !PORTABLE
 
         public List<ChargePoint> FindSimilar(ChargePoint cp, int MinimumPercentageSimilarity)

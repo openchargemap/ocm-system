@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OCM.Import.Providers;
 
 namespace OCM.Import.Worker
 {
@@ -94,6 +95,15 @@ namespace OCM.Import.Worker
                         status.LastImportStatus = importedOK ? "Imported" : "Failed";
                         status.DateLastImport = DateTime.UtcNow;
                         status.ProcessingTimeSeconds = stopwatch.Elapsed.TotalSeconds;
+
+                        // update import date on provider
+                        var providers = importManager.GetImportProviders(new List<API.Common.Model.DataProvider>());
+                        var providerId = (providers.FirstOrDefault(p => p.GetProviderName() == status.LastImportedProvider) as BaseImportProvider)?.DataProviderID;
+                        if (providerId != null)
+                        {
+                            await importManager.UpdateLastImportDate((int)providerId);
+                        }
+
                     }
                     catch (Exception exp)
                     {

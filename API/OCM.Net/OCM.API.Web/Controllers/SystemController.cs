@@ -54,10 +54,45 @@ namespace OCM.API.Web.Standard.Controllers
             return result;
         }
 
+
+        private User GetUserFromAPIKey()
+        {
+            if (HttpContext.Request.Headers.ContainsKey("X-API-Key"))
+            {
+                var apiKey = HttpContext.Request.Headers["X-API-Key"];
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    var user = new UserManager().GetUserFromAPIKey(apiKey);
+                    return user;
+                }
+            }
+            return null;
+        }
+
+        [HttpGet]
+        [Route("importcompleted/{id}")]
+        [Route("/v3/system/importcompleted/{id}")]
+        public async Task<IActionResult> UpdateProviderImport(int id)
+        {
+            var user = GetUserFromAPIKey();
+
+            if (user != null)
+
+            {
+                if (user.Identifier.ToLower() == "system")
+                {
+                    new DataProviderManager().UpdateDateLastImport(id);
+                    await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
+                }
+            }
+
+            return new OkResult();
+        }
+
 #if DEBUG
         [HttpGet]
         [Route("cacherefresh")]
-        public async Task<Core.Data.MirrorStatus> PerformCacheRefresh(DateTime? dateModified)
+        public async Task<Core.Data.MirrorStatus> PerformCacheRefresh(DateTime? dateModified = null)
         {
             return await Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified);
         }

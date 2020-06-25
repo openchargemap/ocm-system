@@ -40,7 +40,7 @@ namespace Import
                 MasterAPIBaseUrl = ConfigurationManager.AppSettings["APIBaseUrl"],
                 TempFolderPath = ConfigurationManager.AppSettings["ImportBasePath"]
             };
-            
+
             _importManager = new ImportManager(settings);
 
             //populate provider list
@@ -66,7 +66,7 @@ namespace Import
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
-            await _importManager.PerformImportProcessing(new ImportProcessSettings
+            var importProcessSettings = new ImportProcessSettings
             {
                 ExportType = exportType,
                 DefaultDataPath = txtDataFolderPath.Text,
@@ -77,7 +77,16 @@ namespace Import
                 PerformDeduplication = chkDeduplication.Checked,
                 FetchExistingFromAPI = true,
                 ProviderName = lstProvider.SelectedValue.ToString()
-            });
+            };
+
+            await _importManager.PerformImportProcessing(importProcessSettings);
+
+
+            var providerId = (_providers.FirstOrDefault(p => p.GetProviderName() == importProcessSettings.ProviderName) as BaseImportProvider)?.DataProviderID;
+            if (providerId != null)
+            {
+                await _importManager.UpdateLastImportDate((int)providerId);
+            }
 
             this.Cursor = Cursors.Default;
             this.btnProcessImports.Enabled = true;

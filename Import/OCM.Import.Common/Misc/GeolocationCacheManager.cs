@@ -43,9 +43,10 @@ namespace OCM.Import.Misc
 
         public bool LoadCache()
         {
-            if (System.IO.File.Exists(tempFolder + "\\" + GeolocationCacheDataFile))
+            var path = Path.Combine(tempFolder, GeolocationCacheDataFile);
+            if (System.IO.File.Exists(path))
             {
-                string cacheJSON = System.IO.File.ReadAllText(tempFolder + "\\"+ GeolocationCacheDataFile);
+                string cacheJSON = System.IO.File.ReadAllText(path);
                 GeolocationCache = JsonConvert.DeserializeObject<List<GelocationCacheItem>>(cacheJSON);
                 return true;
             }
@@ -59,7 +60,9 @@ namespace OCM.Import.Misc
             {
                 var output = GeolocationCache.OrderBy(c => c.CountryName).ThenBy(c => c.Latitude).ThenBy(c => c.Longitude);
                 string json = JsonConvert.SerializeObject(output);
-                System.IO.File.WriteAllText(tempFolder + "\\" + GeolocationCacheDataFile, json);
+
+                var path = Path.Combine(tempFolder, GeolocationCacheDataFile);
+                System.IO.File.WriteAllText(path, json);
 
                 //refresh in memory cache
                 LoadCache();

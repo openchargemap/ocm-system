@@ -2,6 +2,7 @@
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,9 +34,10 @@ namespace OCM.Import.Misc
 
         public async Task<bool> LoadCache()
         {
-            if (System.IO.File.Exists(tempFolder + "\\" + AddressCacheDataFile))
+            var path = Path.Combine(tempFolder, AddressCacheDataFile);
+            if (System.IO.File.Exists(path))
             {
-                string cacheJSON = await System.IO.File.ReadAllTextAsync(tempFolder + "\\" + AddressCacheDataFile);
+                string cacheJSON = await System.IO.File.ReadAllTextAsync(path);
                 AddressCache = JsonConvert.DeserializeObject<List<AddressLookupCacheItem>>(cacheJSON);
                 return true;
             }
@@ -49,7 +51,7 @@ namespace OCM.Import.Misc
             {
                 var output = AddressCache.OrderBy(c => c.Latitude).ThenBy(c => c.Longitude);
                 string json = JsonConvert.SerializeObject(output);
-                await System.IO.File.WriteAllTextAsync(tempFolder + "\\" + AddressCacheDataFile, json);
+                await System.IO.File.WriteAllTextAsync(Path.Combine(tempFolder, AddressCacheDataFile), json);
 
                 //refresh in memory cache
                 LoadCache();

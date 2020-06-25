@@ -207,8 +207,6 @@ namespace OCM.Import
 
             var providers = GetImportProviders(coreRefData.DataProviders);
 
-            bool cacheInputData = true;
-
             foreach (var provider in providers)
             {
                 if (settings.ProviderName == null || settings.ProviderName == provider.GetProviderName())
@@ -1084,10 +1082,19 @@ namespace OCM.Import
                 pageIndex++;
             }
 
-
-
             return $"Added: {poiList.Count(i => i.ID == 0)} Updated: {poiList.Count(i => i.ID > 0)}";
         }
+
+        /// <summary>
+        /// Tell API we have completed our import for this provider
+        /// </summary>
+        /// <param name="providerId"></param>
+        /// <returns></returns>
+        public async Task UpdateLastImportDate(int providerId)
+        {
+            await _client.Get("/system/importcompleted/" + providerId);
+        }
+
         /// <summary>
         /// For a list of ChargePoint objects, attempt to populate the AddressInfo (at least country)
         /// based on lat/lon if not already populated
