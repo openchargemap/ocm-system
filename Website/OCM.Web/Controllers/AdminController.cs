@@ -275,7 +275,7 @@ namespace OCM.MVC.Controllers
                         await dataSummaryManager.RefreshStats();
                         _cache.Set("_StatsRefreshed", true);
                     }
-                       
+
                 }
             }
             return Json(new { NotificationsSent = notificationsSent, MirrorStatus = mirrorStatus });
@@ -384,7 +384,13 @@ namespace OCM.MVC.Controllers
                 var coreReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
 
                 ((BaseImportProvider)provider).InputPath = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
-                var result = await importManager.PerformImport(OCM.Import.Providers.ExportType.POIModelList, fetchLiveData, new OCM.API.Client.APICredentials(), coreReferenceData, "", provider, true);
+                var result = await importManager.PerformImport(
+                    new Import.ImportProcessSettings
+                    {
+                        ExportType = OCM.Import.Providers.ExportType.POIModelList,
+                        FetchLiveData = fetchLiveData
+                    },
+                    new OCM.API.Client.APICredentials(), coreReferenceData, provider);
 
                 var systemUser = new UserManager().GetUser((int)StandardUsers.System);
                 if (performImport)

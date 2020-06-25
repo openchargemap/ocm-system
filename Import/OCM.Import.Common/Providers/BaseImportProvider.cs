@@ -132,11 +132,6 @@ namespace OCM.Import.Providers
         /// </summary>
         public bool AllowDuplicatePOIWithDifferentOperator { get; set; }
 
-        /// <summary>
-        /// Intended to allow duplicates in a data source, does not currently work as intended (dedupe does too much other work)
-        /// </summary>
-        public bool SkipDeduplication { get; set; }
-
         public string DataAttribution { get; set; }
 
         private Encoding _sourceEncoding = null;

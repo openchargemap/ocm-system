@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -42,11 +43,67 @@ namespace OCM.Import.Worker
                 _logger.LogInformation("Checking import status..");
 
                 var tempPath = Path.GetTempPath();
-                var importManager = new ImportManager(_settings);
+                var importManager = new ImportManager(_settings, _logger);
 
                 try
                 {
-                    _ = await importManager.PerformImportProcessing(Providers.ExportType.JSONAPI, tempPath, null, null, true, true, "mobie.pt");
+                    var status = new ImportStatus { DateLastImport = DateTime.UtcNow, LastImportedProvider = "", LastImportStatus = "Started" };
+
+                    var statusPath = Path.Combine(tempPath, "import_status.json");
+                    if (File.Exists(statusPath))
+                    {
+                        status = System.Text.Json.JsonSerializer.Deserialize<ImportStatus>(File.ReadAllText(statusPath));
+                    }
+
+
+                    var allProviders = _settings.EnabledImports;
+                    var indexOfLastProvider = allProviders.IndexOf(status.LastImportedProvider ?? "");
+                    var indexOfNextProvider = 0;
+
+                    // if there is a next provider use that, otherwise use first provider
+                    if (indexOfLastProvider > -1)
+                    {
+                        if (indexOfLastProvider < allProviders.Count - 1)
+                        {
+                            // next provider
+                            indexOfNextProvider = indexOfLastProvider + 1;
+                        }
+                    }
+
+                    status.LastImportedProvider = allProviders[indexOfNextProvider];
+                    status.DateLastImport = DateTime.UtcNow;
+
+                    _logger.LogInformation($"Performing Import [{status.LastImportedProvider}], Publishing via API: {status.DateLastImport.Value.ToShortTimeString()}");
+
+                    try
+                    {
+                        var stopwatch = Stopwatch.StartNew();
+                        var importedOK = await importManager.PerformImportProcessing(
+                            new ImportProcessSettings
+                            {
+                                ExportType = Providers.ExportType.JSONAPI,
+                                DefaultDataPath = tempPath,
+                                FetchLiveData = true,
+                                FetchExistingFromAPI = true,
+                                PerformDeduplication = true,
+                                ProviderName = status.LastImportedProvider // leave blank to do all
+                            });
+
+                        //TODO: notify API of last date of import for each provider
+
+                        status.LastImportStatus = importedOK ? "Imported" : "Failed";
+                        status.DateLastImport = DateTime.UtcNow;
+                        status.ProcessingTimeSeconds = stopwatch.Elapsed.TotalSeconds;
+                    }
+                    catch (Exception exp)
+                    {
+                        _logger.LogError("Import failed: " + exp);
+
+                        status.LastImportStatus = "Failed with unknown exception";
+                    }
+
+                    File.WriteAllText(statusPath, System.Text.Json.JsonSerializer.Serialize<ImportStatus>(status));
+
                 }
                 catch (Exception exp)
                 {

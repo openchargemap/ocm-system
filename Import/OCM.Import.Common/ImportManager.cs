@@ -10,6 +10,7 @@ using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,6 +86,19 @@ namespace OCM.Import
         }
     }
 
+    public class ImportProcessSettings
+    {
+        public ExportType ExportType { get; set; }
+        public string DefaultDataPath { get; set; }
+        public string ApiIdentifier { get; set; }
+        public string ApiSessionToken { get; set; }
+        public bool FetchLiveData { get; set; } = true;
+        public bool CacheInputData { get; set; } = true;
+        public bool FetchExistingFromAPI { get; set; } = false;
+        public bool PerformDeduplication { get; set; } = true;
+        public string ProviderName { get; set; }
+    }
+
     public class ImportManager
     {
         public const int DUPLICATE_DISTANCE_METERS = 200;
@@ -107,10 +121,13 @@ namespace OCM.Import
         private OCMClient _client = null;
 
         private ImportSettings _settings;
+        private Microsoft.Extensions.Logging.ILogger _log;
 
-        public ImportManager(ImportSettings settings)
+        public ImportManager(ImportSettings settings, Microsoft.Extensions.Logging.ILogger log = null)
         {
             _settings = settings;
+            _log = log;
+
             GeonamesAPIUserName = "openchargemap";
             TempFolder = _settings.TempFolderPath;
 
@@ -122,6 +139,8 @@ namespace OCM.Import
 
             addressLookupCacheManager = new AddressLookupCacheManager(TempFolder, _client);
         }
+
+        public OCMClient OCMClient => _client;
 
         /**
          * Generic Import Process
@@ -180,9 +199,9 @@ namespace OCM.Import
             return providers;
         }
 
-        public async Task<bool> PerformImportProcessing(ExportType exportType, string defaultDataPath, string apiIdentifier, string apiSessionToken, bool fetchLiveData, bool fetchExistingFromAPI = false, string providerName = null)
+        public async Task<bool> PerformImportProcessing(ImportProcessSettings settings)
         {
-            var credentials = GetAPISessionCredentials(apiIdentifier, apiSessionToken);
+            var credentials = GetAPISessionCredentials(settings.ApiIdentifier, settings.ApiSessionToken);
 
             var coreRefData = await _client.GetCoreReferenceDataAsync();
 
@@ -192,9 +211,10 @@ namespace OCM.Import
 
             foreach (var provider in providers)
             {
-                if (providerName == null || providerName == provider.GetProviderName())
+                if (settings.ProviderName == null || settings.ProviderName == provider.GetProviderName())
                 {
-                    await PerformImport(exportType, fetchLiveData, credentials, coreRefData, defaultDataPath, provider, cacheInputData, fetchExistingFromAPI);
+
+                    await PerformImport(settings, credentials, coreRefData, provider);
                 }
             }
 
@@ -234,14 +254,14 @@ namespace OCM.Import
                 masterList = await poiManager.GetPOIListAsync(filters);
             }
 
-          /*  var spec = new IndexSpecification<ChargePoint>()
-                
-                    .Add(i => i.DataProviderID)
-                    .Add(i => i.DataProvidersReference)
-                    ;
+            /*  var spec = new IndexSpecification<ChargePoint>()
 
-            var masterList = new IndexSet<ChargePoint>(masterListCollection, spec);
-            */
+                      .Add(i => i.DataProviderID)
+                      .Add(i => i.DataProvidersReference)
+                      ;
+
+              var masterList = new IndexSet<ChargePoint>(masterListCollection, spec);
+              */
             List<ChargePoint> masterListCopy = new List<ChargePoint>();
             foreach (var tmp in masterList)
             {
@@ -601,6 +621,8 @@ namespace OCM.Import
             this.ImportLog += message + "\r\n";
 
             System.Diagnostics.Debug.WriteLine(message);
+
+
         }
 
         /// <summary>
@@ -769,10 +791,12 @@ namespace OCM.Import
             return hasDifferences;
         }
 
-        public async Task<ImportReport> PerformImport(ExportType exportType, bool fetchLiveData, APICredentials credentials, CoreReferenceData coreRefData, string outputPath, IImportProvider provider, bool cacheInputData, bool fetchExistingFromAPI = false)
+        public async Task<ImportReport> PerformImport(ImportProcessSettings settings, APICredentials credentials, CoreReferenceData coreRefData, IImportProvider provider)
         {
             var p = ((BaseImportProvider)provider);
-            p.ExportType = exportType;
+            p.ExportType = settings.ExportType;
+
+            var outputPath = settings.DefaultDataPath;
 
             ImportReport resultReport = new ImportReport();
             resultReport.ProviderDetails = p;
@@ -787,10 +811,10 @@ namespace OCM.Import
 
                 if (string.IsNullOrEmpty(p.InputPath))
                 {
-                    p.InputPath = outputPath + "\\cache_" + p.ProviderName + ".dat";
+                    p.InputPath = Path.Combine(settings.DefaultDataPath, "cache_" + p.ProviderName + ".dat");
                 }
 
-                if (fetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
+                if (settings.FetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
                 {
                     Log("Loading input data from URL..");
                     loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
@@ -818,7 +842,7 @@ namespace OCM.Import
                 }
                 else
                 {
-                    if (fetchLiveData && cacheInputData)
+                    if (settings.FetchLiveData && settings.CacheInputData)
                     {
                         //save input data
                         p.SaveInputFile(p.InputPath);
@@ -881,12 +905,12 @@ namespace OCM.Import
 
                     List<ChargePoint> finalList = new List<ChargePoint>();
 
-                    if (!p.SkipDeduplication)
+                    if (settings.PerformDeduplication)
                     {
                         Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
 
                         //de-duplicate and clean list based on existing data
-                        finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, fetchExistingFromAPI);
+                        finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, settings.FetchExistingFromAPI);
                     }
                     else
                     {
@@ -946,14 +970,15 @@ namespace OCM.Import
                         Log("Uploading JSON to API..");
                         if (System.IO.File.Exists(fileName))
                         {
-                            await UploadPOIList(fileName);
+                            var json = System.IO.File.ReadAllText(fileName);
+                            await UploadPOIList(json);
                         }
                     }
 
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
                     {
                         //publish list of locations to OCM via API
-                      
+
                         Log("Publishing via API..");
                         foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.CountryID != null))
                         {

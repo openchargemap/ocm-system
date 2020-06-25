@@ -101,7 +101,13 @@ namespace OCM.Import.Manager.Console
 
                     ImportManager importManager = new ImportManager(new ImportSettings { TempFolderPath = importFolder, MasterAPIBaseUrl = "https://api.openchargemap.io/v3" });
                     LogEvent("Performing Import, Publishing via API (" + OCM_API_Identifier + ":" + OCM_API_SessionToken + "): " + DateTime.UtcNow.ToShortTimeString());
-                    Task<bool> processing = importManager.PerformImportProcessing(exportType, importFolder, OCM_API_Identifier, OCM_API_SessionToken, true);
+                    Task<bool> processing = importManager.PerformImportProcessing(new ImportProcessSettings
+                    {
+                        ExportType = exportType,
+                        DefaultDataPath = importFolder,
+                        ApiIdentifier = OCM_API_Identifier,
+                        ApiSessionToken = OCM_API_SessionToken
+                    });
                     processing.Wait();
                     LogEvent("Import Processed. Exiting. " + DateTime.UtcNow.ToShortTimeString());
 

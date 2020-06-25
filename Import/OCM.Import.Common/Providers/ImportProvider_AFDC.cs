@@ -105,6 +105,10 @@ namespace OCM.Import.Providers
                         {
                             deviceController = "circuit electrique";
                         }
+                        else if (deviceController == "petrocan")
+                        {
+                            deviceController = "petro canada";
+                        }
 
                         var deviceOperatorInfo = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Contains(deviceController) == true);
                         if (deviceOperatorInfo != null)

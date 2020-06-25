@@ -13,7 +13,7 @@ namespace OCM.Import.Manager.UI
 {
     class Program
     {
-        static string LogFile="import.log";
+        static string LogFile = "import.log";
         static bool EnableLogging = true;
 
         enum ActionType
@@ -36,10 +36,11 @@ namespace OCM.Import.Manager.UI
             {
                 System.IO.File.WriteAllText(LogFile, message);
             }
-            else {
+            else
+            {
                 System.IO.File.AppendAllText(LogFile, message);
             }
-           
+
         }
 
         static void Main(string[] args)
@@ -63,7 +64,7 @@ namespace OCM.Import.Manager.UI
             {
                 LogEvent("No Arguments supplied.");
             }
-  
+
             if (isAutomaticMode)
             {
                 bool actionPerformed = false;
@@ -83,8 +84,15 @@ namespace OCM.Import.Manager.UI
                     };
 
                     ImportManager importManager = new ImportManager(settings);
-                    LogEvent("Performing Import, Publishing via API: "+DateTime.UtcNow.ToShortTimeString());
-                    importManager.PerformImportProcessing(exportType, Settings.Default.Import_DataFolder, Settings.Default.OCM_API_Identitifer, Settings.Default.OCM_API_SessionToken, true);
+                    LogEvent("Performing Import, Publishing via API: " + DateTime.UtcNow.ToShortTimeString());
+                    importManager.PerformImportProcessing(new ImportProcessSettings
+                    {
+                        ExportType = exportType,
+                        DefaultDataPath = Settings.Default.Import_DataFolder,
+                        ApiIdentifier = Settings.Default.OCM_API_Identitifer,
+                        ApiSessionToken = Settings.Default.OCM_API_SessionToken
+                    });
+
                     LogEvent("Import Processed. Exiting. " + DateTime.UtcNow.ToShortTimeString());
 
                     actionPerformed = true;

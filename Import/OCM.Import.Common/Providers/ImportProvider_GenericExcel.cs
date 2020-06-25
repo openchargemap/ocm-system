@@ -31,7 +31,6 @@ namespace OCM.Import.Providers
             IsAutoRefreshed = false;
             IsProductionReady = true;
             IsStringData = false;
-            SkipDeduplication = false; //allows duplicates
 
             SourceEncoding = Encoding.GetEncoding("UTF-8");
             ImportFormat = ExcelTemplateFormat.FormatV2;
@@ -128,6 +127,11 @@ namespace OCM.Import.Providers
                                 import.AddressInfo.Town = col[lookup["Town"]];
                                 import.AddressInfo.StateOrProvince = col[lookup["StateOrProvince"]];
                                 import.AddressInfo.Postcode = col[lookup["Postcode"]];
+
+                                if (string.IsNullOrEmpty(import.AddressInfo.AddressLine1) && string.IsNullOrEmpty(import.AddressInfo.Postcode))
+                                {
+                                    import.AddressCleaningRequired = true;
+                                }
 
                                 var country = col[lookup["Country"]];
                                 import.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.Title.Equals(country, StringComparison.InvariantCultureIgnoreCase))?.ID;

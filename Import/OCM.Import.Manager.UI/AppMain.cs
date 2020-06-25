@@ -66,7 +66,19 @@ namespace Import
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
-            await _importManager.PerformImportProcessing(exportType, txtDataFolderPath.Text, txtAPIIdentifier.Text, txtAPISessionToken.Text, chkFetchLiveData.Checked, fetchExistingFromAPI: true, lstProvider.SelectedValue.ToString());
+            await _importManager.PerformImportProcessing(new ImportProcessSettings
+            {
+                ExportType = exportType,
+                DefaultDataPath = txtDataFolderPath.Text,
+                ApiIdentifier = txtAPIIdentifier.Text,
+                ApiSessionToken = txtAPISessionToken.Text,
+                FetchLiveData = chkFetchLiveData.Checked,
+                CacheInputData = chkCacheInputData.Checked,
+                PerformDeduplication = chkDeduplication.Checked,
+                FetchExistingFromAPI = true,
+                ProviderName = lstProvider.SelectedValue.ToString()
+            });
+
             this.Cursor = Cursors.Default;
             this.btnProcessImports.Enabled = true;
             MessageBox.Show("Processing Completed");
