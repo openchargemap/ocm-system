@@ -22,9 +22,10 @@ namespace OCM.Import.Providers
             LeCircuitElectrique
         }
 
-        public ImportProvider_AddEnergie(NetworkType network)
+        public ImportProvider_AddEnergie(NetworkType network, string apiKey)
         {
             this.SelectedNetworkType = network;
+            this.ApiKey = apiKey;
 
             ServiceUserName = "OpenChargeMap";
             ProviderName = "AddEnergie";
@@ -32,7 +33,7 @@ namespace OCM.Import.Providers
             if (network == NetworkType.ReseauVER)
             {
                 ServiceBaseURL = "https://admin.reseauver.com";
-                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_AddEnergieReseauVER"];
+                ServicePassword = apiKey;
                 ProviderName += " [ReseauVER]";
                 DataProviderID = 24;
             }
@@ -40,7 +41,7 @@ namespace OCM.Import.Providers
             if (network == NetworkType.LeCircuitElectrique)
             {
                 ServiceBaseURL = "https://lecircuitelectrique.co";
-                ServicePassword = System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_AddEnergieLeCircuitElectrique"];
+                ServicePassword = apiKey;
                 ProviderName += " [LeCircuitElectrique]";
                 DataProviderID = 24;
             }

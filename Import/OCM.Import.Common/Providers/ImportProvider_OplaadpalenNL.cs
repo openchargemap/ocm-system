@@ -10,9 +10,9 @@ namespace OCM.Import.Providers
 {
     public class ImportProvider_OplaadpalenNL : BaseImportProvider, IImportProvider
     {
-        public ImportProvider_OplaadpalenNL()
+        public ImportProvider_OplaadpalenNL(string apiKey)
         {
-            AutoRefreshURL = "http://oplaadpalen.nl/api/chargingpoints/" + ConfigurationManager.AppSettings["ImportProviderAPIKey_OplaadpalenNL"].ToString() + "/json?vehicletype=car";
+            AutoRefreshURL = $"http://oplaadpalen.nl/api/chargingpoints/{apiKey}/json?vehicletype=car";
 
             ProviderName = "Oplaadpalen";
             OutputNamePrefix = "OplaadpalenNL_";

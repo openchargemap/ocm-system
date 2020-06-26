@@ -14,6 +14,8 @@ namespace OCM.Import
         public string GeolocationShapefilePath { get; set; }
         public string ImportUserAgent { get; set; } = "OCM.Import";
         public List<string> EnabledImports { get; set; } = new List<string>();
+
+        public Dictionary<string, string> ApiKeys { get; set; } = new Dictionary<string, string>();
     }
 
     public class ImportStatus

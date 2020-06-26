@@ -8,15 +8,17 @@ namespace OCM.Import.Providers
 {
     public class ImportProvider_AFDC : BaseImportProvider, IImportProvider
     {
-        public ImportProvider_AFDC()
+        public ImportProvider_AFDC(string apiKey)
         {
             ProviderName = "afdc.energy.gov";
             OutputNamePrefix = "afdc";
-            AutoRefreshURL = "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key=df771c4ffab663f91428bc63224c9e266357179d&download=true&fuel_type=ELEC&status=all&country=US,CA";
+            ApiKey = apiKey;
+            AutoRefreshURL = $"https://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key={apiKey}&download=true&fuel_type=ELEC&status=all&country=US,CA";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             DataProviderID = 2; //ADFC
         }
+
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
         {

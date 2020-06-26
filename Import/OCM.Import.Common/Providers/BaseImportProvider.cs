@@ -109,6 +109,7 @@ namespace OCM.Import.Providers
         public bool UseCustomReader { get; set; }
 
         public string AutoRefreshURL { get; set; }
+        public string ApiKey { get; set; }
 
         public string InputData { get; set; }
 

@@ -9,11 +9,12 @@ namespace OCM.Import.Providers
 {
     public class ImportProvider_NobilDotNo : BaseImportProvider, IImportProvider
     {
-        public ImportProvider_NobilDotNo()
+        public ImportProvider_NobilDotNo(string apiKey)
         {
             ProviderName = "nobil.no";
             OutputNamePrefix = "nobildotno";
-            AutoRefreshURL = "http://www.nobil.no/api/server/datadump.php?apikey=" + System.Configuration.ConfigurationManager.AppSettings["ImportProviderAPIKey_Nobil"] + "&format=xml";
+            ApiKey = apiKey;
+            AutoRefreshURL = $"https://www.nobil.no/api/server/datadump.php?apikey={apiKey}&format=xml";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             SourceEncoding = Encoding.GetEncoding("UTF-8");
