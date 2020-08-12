@@ -99,7 +99,7 @@ namespace OCM.API.Common
                     return strings;
                 }
             }
-            
+
             return null;
         }
 
@@ -135,38 +135,56 @@ namespace OCM.API.Common
         /// <returns></returns>
         protected List<LatLon> ParseBoundingBox(string val)
         {
-            var pointsList = ParsePointsList(val);// NorthEast and SouthWest lat/Lon pairs
-            List<LatLon> rect = new List<LatLon>();
-            rect.Add(pointsList[0]); //top left
-            rect.Add(new LatLon { Latitude = pointsList[0].Latitude, Longitude = pointsList[1].Longitude }); //top right
-            rect.Add(pointsList[1]); //bottom right
-            rect.Add(new LatLon { Latitude = pointsList[1].Latitude, Longitude = pointsList[0].Longitude }); //bottom left
+            try
+            {
+                var pointsList = ParsePointsList(val);// NorthEast and SouthWest lat/Lon pairs
+                List<LatLon> rect = new List<LatLon>();
+                rect.Add(pointsList[0]); //top left
+                rect.Add(new LatLon { Latitude = pointsList[0].Latitude, Longitude = pointsList[1].Longitude }); //top right
+                rect.Add(pointsList[1]); //bottom right
+                rect.Add(new LatLon { Latitude = pointsList[1].Latitude, Longitude = pointsList[0].Longitude }); //bottom left
 
-            return rect;
+                return rect;
+            }
+            catch (Exception exp)
+            {
+                return null;
+            }
         }
 
         protected List<LatLon> ParsePolyline(string val)
         {
-            return ParsePointsList(val);
+            try
+            {
+                return ParsePointsList(val);
+            }
+            catch (Exception exp)
+            {
+                return null;
+            }
         }
 
         protected List<LatLon> ParsePolygon(string val, bool closePolygon)
         {
-            var pointsList = ParsePointsList(val);
-            if (closePolygon)
+            try
             {
-                //close polygon by ending on the starting point
-                if (pointsList != null && pointsList.Any())
+                var pointsList = ParsePointsList(val);
+                if (closePolygon)
                 {
-                    var firstPoint = pointsList[0];
-                    var lastPoint = pointsList.Last();
-                    if (firstPoint.Latitude != lastPoint.Latitude || firstPoint.Longitude != lastPoint.Longitude)
+                    //close polygon by ending on the starting point
+                    if (pointsList != null && pointsList.Any())
                     {
-                        pointsList.Add(firstPoint);
+                        var firstPoint = pointsList[0];
+                        var lastPoint = pointsList.Last();
+                        if (firstPoint.Latitude != lastPoint.Latitude || firstPoint.Longitude != lastPoint.Longitude)
+                        {
+                            pointsList.Add(firstPoint);
+                        }
                     }
                 }
+                return pointsList;
             }
-            return pointsList;
+            catch (Exception exp) { return null; }
         }
 
         protected List<LatLon> ParsePointsList(string val)
