@@ -26,9 +26,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCM.API.Client", "API\OCM.Net\OCM.API.Client\OCM.API.Client.csproj", "{FB8CC59F-B6E7-49DA-8D89-F6BB1BD4254C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84D5F399-F5BA-4E91-A896-12E738D23061}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCM.Import.Analysis", "Import\OCM.Import.Analysis\OCM.Import.Analysis.csproj", "{FBD1BB19-0912-4A8C-BE95-197CCDC27CF3}"
 EndProject
@@ -42,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCM.Web", "Website\OCM.Web\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCM.API.Worker", "API\OCM.Net\OCM.API.Worker\OCM.API.Worker.csproj", "{04A5BCF4-F2E4-4828-A25F-9383E2EE083A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCM.Import.Worker", "Import\OCM.Import.Worker\OCM.Import.Worker.csproj", "{31F83AF2-6C57-4FA3-9026-BF9D6D7420EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCM.Import.Worker", "Import\OCM.Import.Worker\OCM.Import.Worker.csproj", "{31F83AF2-6C57-4FA3-9026-BF9D6D7420EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
