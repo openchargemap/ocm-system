@@ -252,6 +252,43 @@ namespace OCM.MVC.Controllers
                     }
                 }
 
+
+                var autoApproveDays = 3;
+
+                var poiManager = new POIManager();
+                var newPois = await poiManager.GetPOIListAsync(new APIRequestParams { SubmissionStatusTypeID = 1 });
+                var user = new UserManager().GetUser((int)StandardUsers.System);
+
+                foreach (var poi in newPois)
+                {
+                    if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
+                    {
+                        if (poi.DateCreated < DateTime.UtcNow.AddDays(-autoApproveDays))
+                        {
+                            poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
+                            new SubmissionManager().PerformPOISubmission(poi, user);
+                        }
+
+                    }
+                }
+
+                // check for edit queue items to auto approve 
+                using (var editQueueManager = new EditQueueManager())
+                {
+                    var queueItems = editQueueManager.GetEditQueueItems(new EditQueueFilter { ShowProcessed = false })
+                        .Where(q => q.DateProcessed == null).ToList()
+                        .OrderBy(q => q.DateSubmitted);
+
+                    foreach (var i in queueItems)
+                    {
+                        if (i.DateSubmitted < DateTime.UtcNow.AddDays(-autoApproveDays))
+                        {
+                            editQueueManager.ProcessEditQueueItem(i.ID, true, (int)StandardUsers.System, true, "Auto Approved");
+                        }
+                    }
+                }
+
+
                 //update cache mirror
                 try
                 {

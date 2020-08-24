@@ -133,7 +133,7 @@ namespace OCM.API.Common
             return outputList.Where(i => i.Differences.Count >= filter.MinimumDifferences).Take(filter.MaxResults).ToList();
         }
 
-        public void ProcessEditQueueItem(int id, bool publishEdit, int userId)
+        public void ProcessEditQueueItem(int id, bool publishEdit, int userId, bool enableCacheRefresh = true, string comment = null)
         {
             //prepare poi details
             int updatePOIId = 0;
@@ -215,13 +215,17 @@ namespace OCM.API.Common
                         //update edit queue item as processed
                         queueItem.IsProcessed = true;
                         queueItem.ProcessedByUser = DataModel.Users.FirstOrDefault(u => u.Id == userId);
+                        queueItem.Comment = comment;
                         queueItem.DateProcessed = DateTime.UtcNow;
                         DataModel.SaveChanges();
 
                         //TODO: also award processing editor with reputation points if they are approving someone elses edit and they are not Admin
 
                         //Refresh POI cache
-                        Task cacheRefresh = CacheManager.RefreshCachedPOI(updatePOIId);
+                        if (enableCacheRefresh)
+                        {
+                            _ = CacheManager.RefreshCachedPOI(updatePOIId);
+                        }
                     }
                 }
             }
