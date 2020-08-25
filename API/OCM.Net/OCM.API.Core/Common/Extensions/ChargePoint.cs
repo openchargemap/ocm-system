@@ -20,10 +20,10 @@ namespace OCM.API.Common.Model.Extensions
             poi.UUID = source.Uuid;
 
             //populate data provider info (full object or id only)
-            if (isVerboseMode && source.DataProvider != null)
+            if (isVerboseMode && source.DataProviderId != null)
             {
-                poi.DataProvider = DataProvider.FromDataModel(source.DataProvider);
-                poi.DataProviderID = source.DataProvider.Id;
+                poi.DataProvider = refData.DataProviders.FirstOrDefault(i => i.ID == source.DataProviderId) ?? DataProvider.FromDataModel(source.DataProvider);
+                poi.DataProviderID = source.DataProviderId;
             }
             else
             {
@@ -33,10 +33,10 @@ namespace OCM.API.Common.Model.Extensions
             poi.DataProvidersReference = source.DataProvidersReference;
 
             //populate Operator (full object or id only)
-            if (isVerboseMode && (source.OperatorId != null || source.Operator != null))
+            if (isVerboseMode && source.OperatorId != null)
             {
-                poi.OperatorInfo = OperatorInfo.FromDataModel(source.Operator);
-                poi.OperatorID = source.Operator.Id;
+                poi.OperatorInfo = refData.Operators.FirstOrDefault(i => i.ID == source.OperatorId) ?? OperatorInfo.FromDataModel(source.Operator);
+                poi.OperatorID = source.OperatorId;
             }
             else
             {
@@ -46,10 +46,10 @@ namespace OCM.API.Common.Model.Extensions
             poi.OperatorsReference = source.OperatorsReference;
 
             //populate usage type (full object or id only)
-            if (isVerboseMode && (source.UsageTypeId != null || source.UsageType != null))
+            if (isVerboseMode && source.UsageTypeId != null)
             {
-                poi.UsageType = UsageType.FromDataModel(source.UsageType);
-                poi.UsageTypeID = source.UsageType.Id;
+                poi.UsageType = refData.UsageTypes.FirstOrDefault(i => i.ID == source.UsageTypeId) ?? UsageType.FromDataModel(source.UsageType);
+                poi.UsageTypeID = source.UsageTypeId;
             }
             else
             {
@@ -71,10 +71,10 @@ namespace OCM.API.Common.Model.Extensions
             poi.DateLastConfirmed = source.DateLastConfirmed;
 
             //populate status type (full object or id only)
-            if (isVerboseMode && (source.StatusTypeId != null || source.StatusType != null))
+            if (isVerboseMode && source.StatusTypeId != null)
             {
-                poi.StatusType = StatusType.FromDataModel(source.StatusType);
-                poi.StatusTypeID = source.StatusType.Id;
+                poi.StatusType = refData.StatusTypes.FirstOrDefault(i => i.ID == source.StatusTypeId) ?? StatusType.FromDataModel(source.StatusType);
+                poi.StatusTypeID = source.StatusTypeId;
             }
             else
             {
@@ -86,10 +86,10 @@ namespace OCM.API.Common.Model.Extensions
             poi.DateCreated = source.DateCreated;
 
             //populate submission status type (full object or id only)
-            if (isVerboseMode && (source.SubmissionStatusTypeId != null || source.SubmissionStatusType != null))
+            if (isVerboseMode && source.SubmissionStatusTypeId != null)
             {
-                poi.SubmissionStatus = SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
-                poi.SubmissionStatusTypeID = source.SubmissionStatusType.Id;
+                poi.SubmissionStatus = refData.SubmissionStatusTypes.FirstOrDefault(i => i.ID == source.SubmissionStatusTypeId) ?? SubmissionStatusType.FromDataModel(source.SubmissionStatusType);
+                poi.SubmissionStatusTypeID = source.SubmissionStatusTypeId;
             }
             else
             {
@@ -112,7 +112,7 @@ namespace OCM.API.Common.Model.Extensions
                 foreach (var comment in source.UserComments.OrderByDescending(cm => cm.DateCreated))
                 {
                     if (poi.UserComments == null) poi.UserComments = new List<Model.UserComment>();
-                    Model.UserComment com = UserComment.FromDataModel(comment, isVerboseMode);
+                    Model.UserComment com = UserComment.FromDataModel(comment, isVerboseMode, refData);
                     poi.UserComments.Add(com);
                 }
             }

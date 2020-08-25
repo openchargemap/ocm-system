@@ -1,8 +1,10 @@
-﻿namespace OCM.API.Common.Model.Extensions
+﻿using System.Linq;
+
+namespace OCM.API.Common.Model.Extensions
 {
     public class UserComment
     {
-        public static Model.UserComment FromDataModel(Core.Data.UserComment source, bool isVerboseMode)
+        public static Model.UserComment FromDataModel(Core.Data.UserComment source, bool isVerboseMode, Model.CoreReferenceData refData = null)
         {
             var userComment = new Model.UserComment
             {
@@ -16,9 +18,9 @@
                 IsActionedByEditor = source.IsActionedByEditor
             };
 
-            if (isVerboseMode && source.UserCommentType != null)
+            if (isVerboseMode && (refData != null || source.UserCommentType != null) && source.UserCommentTypeId!=null)
             {
-                userComment.CommentType = UserCommentType.FromDataModel(source.UserCommentType);
+                userComment.CommentType = refData.UserCommentTypes.FirstOrDefault(i => i.ID == source.UserCommentTypeId) ?? UserCommentType.FromDataModel(source.UserCommentType);
                 userComment.CommentTypeID = source.UserCommentTypeId;
             }
             else
@@ -26,9 +28,9 @@
                 userComment.CommentTypeID = source.UserCommentTypeId;
             }
 
-            if (isVerboseMode && source.CheckinStatusType != null)
+            if (isVerboseMode && (refData != null || source.CheckinStatusType != null) && source.CheckinStatusTypeId!=null)
             {
-                userComment.CheckinStatusType = CheckinStatusType.FromDataModel(source.CheckinStatusType);
+                userComment.CheckinStatusType = refData.CheckinStatusTypes.FirstOrDefault(i => i.ID == source.CheckinStatusTypeId) ?? CheckinStatusType.FromDataModel(source.CheckinStatusType);
                 userComment.CheckinStatusTypeID = source.CheckinStatusTypeId;
             }
             else

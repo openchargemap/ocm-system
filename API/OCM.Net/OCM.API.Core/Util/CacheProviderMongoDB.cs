@@ -266,45 +266,47 @@ namespace OCM.Core.Data
             poiCollection.InsertBatch(mongoDBPoiList);
         }
 
-        public List<OCM.API.Common.Model.ChargePoint> GetPOIListToUpdate(OCMEntities dataModel, CacheUpdateStrategy updateStrategy)
+        public async Task<List<OCM.API.Common.Model.ChargePoint>> GetPOIListToUpdate(OCMEntities dataModel, CacheUpdateStrategy updateStrategy, CoreReferenceData refData, int pageIndex = 0, int pageSize = 0)
         {
             if (!database.CollectionExists("poi"))
             {
                 database.CreateCollection("poi");
             }
 
-            var refData = new ReferenceDataManager().GetCoreReferenceData();
 
-            var poiCollection = database.GetCollection<POIMongoDB>("poi");
-
-            var dataList = new Data.OCMEntities().ChargePoints
+            IQueryable<Data.ChargePoint> dataList = new Data.OCMEntities().ChargePoints
                  .Include(a1 => a1.AddressInfo)
                       .ThenInclude(a => a.Country)
                  .Include(a1 => a1.ConnectionInfoes)
-                 .Include(a1 => a1.Operator)
-                 .Include(a1 => a1.DataProvider)
-                 .Include(a1 => a1.UsageType)
-                 .Include(a1 => a1.StatusType)
                  .Include(a1 => a1.MetadataValues)
                       .ThenInclude(m => m.MetadataFieldOption)
                  .Include(a1 => a1.UserComments)
                       .ThenInclude(c => c.User)
                   .Include(a1 => a1.UserComments)
-                      .ThenInclude(c => c.CheckinStatusType)
                  .Include(a1 => a1.MediaItems)
+                    .ThenInclude(c => c.User)
                  .OrderBy(o => o.Id);
 
+            if (pageSize > 0)
+            {
+                dataList = dataList.Skip(pageIndex * pageSize).Take(pageSize);
+            }
+
+            dataList = dataList.AsNoTracking();
 
             //incremental update based on POI Id - up to 100 results at a time
             if (updateStrategy == CacheUpdateStrategy.Incremental)
             {
+                var poiCollection = database.GetCollection<POIMongoDB>("poi");
                 var maxPOI = poiCollection.FindAll().SetSortOrder(SortBy.Descending("ID")).SetLimit(1).FirstOrDefault();
                 int maxId = 0;
                 if (maxPOI != null) { maxId = maxPOI.ID; }
 
                 //from max poi we have in mirror to next 100 results in order of ID
-                var list = dataList.Where(o => o.Id > maxId).Take(100);
+                dataList = dataList.Where(o => o.Id > maxId).Take(100);
+
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
+
                 foreach (var cp in dataList)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
@@ -317,22 +319,25 @@ namespace OCM.Core.Data
             //update based on POI last modified since last status update
             if (updateStrategy == CacheUpdateStrategy.Modified)
             {
+                var poiCollection = database.GetCollection<POIMongoDB>("poi");
                 var maxPOI = poiCollection.FindAll().SetSortOrder(SortBy.Descending("DateLastStatusUpdate")).SetLimit(1).FirstOrDefault();
+
                 DateTime? dateLastModified = null;
                 if (maxPOI != null) { dateLastModified = maxPOI.DateLastStatusUpdate.Value.AddMinutes(-10); }
 
                 //determine POI updated since last status update we have in cache
                 var stopwatch = Stopwatch.StartNew();
 
-                var list = dataList.Where(o => o.DateLastStatusUpdate > dateLastModified).ToList();
+                dataList = dataList.Where(o => o.DateLastStatusUpdate > dateLastModified);
 
                 stopwatch.Stop();
 
                 System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
+
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 stopwatch.Restart();
 
-                foreach (var cp in list)
+                foreach (var cp in dataList)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
                 }
@@ -341,18 +346,21 @@ namespace OCM.Core.Data
 
                 return poiList;
             }
+
             if (updateStrategy == CacheUpdateStrategy.All)
             {
                 var stopwatch = Stopwatch.StartNew();
 
                 // get data list, include navigation properties to improve query performance
-                var list = dataList.ToList();
+                var list = await dataList.ToListAsync();
 
                 stopwatch.Stop();
 
                 System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
                 stopwatch.Restart();
+
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
+
                 foreach (var cp in list)
                 {
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
@@ -364,7 +372,6 @@ namespace OCM.Core.Data
                 }
 
                 System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds } seconds");
-
 
                 return poiList;
             }
@@ -457,35 +464,74 @@ namespace OCM.Core.Data
                     var query = new QueryDocument();
                     reference.Remove(query, RemoveFlags.None);
 
-                    Thread.Sleep(300);
+                    await Task.Delay(300);
                     reference.Insert(coreRefData);
                 }
 
-                var poiList = GetPOIListToUpdate(dataModel, updateStrategy);
+                var batchSize = 1000;
+
+                List<API.Common.Model.ChargePoint> poiList;
+
                 var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                if (poiList != null && poiList.Any())
+                if (updateStrategy != CacheUpdateStrategy.All)
                 {
-                    if (updateStrategy == CacheUpdateStrategy.All)
+                    poiList = await GetPOIListToUpdate(dataModel, updateStrategy, coreRefData);
+
+
+                    if (poiList != null && poiList.Any())
                     {
-                        poiCollection.RemoveAll();
-                    }
-                    else
-                    {
+
                         RemoveAllPOI(poiList, poiCollection);
+
+                        await Task.Delay(300);
+                        InsertAllPOI(poiList, poiCollection);
+
+                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
+                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
+                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
+                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
+
                     }
+                }
+                else
+                {
+                    // full refresh
 
-                    Thread.Sleep(300);
-                    InsertAllPOI(poiList, poiCollection);
+                    poiCollection.RemoveAll();
 
+                    await Task.Delay(300);
+
+                    var pageIndex = 0;
+                    var pageSize = 1000;
+                    var total = 0;
+
+                    //get batch of poi to insert
+                    var sw = Stopwatch.StartNew();
+                    poiList = await GetPOIListToUpdate(dataModel, updateStrategy, coreRefData, pageIndex, pageSize);
+                    while (poiList.Count > 0)
+                    {
+                        logger?.LogInformation($"Inserting batch {pageIndex}");
+
+                        System.Diagnostics.Debug.WriteLine($"Inserting batch {pageIndex} :: {pageIndex * pageSize}");
+
+                        InsertAllPOI(poiList, poiCollection);
+
+                        pageIndex++;
+                        total += poiList.Count;
+
+                        poiList = await GetPOIListToUpdate(dataModel, updateStrategy, coreRefData, pageIndex, pageSize);
+                    }
                     poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
                     poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
                     poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
                     poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
 
-                    if (updateStrategy == CacheUpdateStrategy.All)
-                    {
-                        poiCollection.ReIndex();
-                    }
+                    poiCollection.ReIndex();
+
+                    sw.Stop();
+                    GC.Collect();
+                    System.Diagnostics.Debug.WriteLine($"Rebuild of complete cache took {sw.Elapsed.TotalSeconds}s");
+
                 }
 
                 long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
@@ -784,7 +830,7 @@ namespace OCM.Core.Data
                         // need to filter results based on usage by country
                         var poiCollection = database.GetCollection<POIMongoDB>("poi");
 
-                        var connectionsInCountry = poiCollection.AsQueryable().Where(poi =>
+                        var connectionsInCountry = poiCollection.AsQueryable().AsNoTracking().Where(poi =>
                             poi.AddressInfo.CountryID != null
                             && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
                             && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
@@ -800,7 +846,7 @@ namespace OCM.Core.Data
 
                         // filter on operators present within given countries
 
-                        var operatorsInCountry = poiCollection.AsQueryable()
+                        var operatorsInCountry = poiCollection.AsQueryable().AsNoTracking()
                             .Where(poi =>
                                poi.AddressInfo.CountryID != null
                                && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
