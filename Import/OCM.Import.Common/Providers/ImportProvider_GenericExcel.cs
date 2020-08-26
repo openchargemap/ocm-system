@@ -226,88 +226,104 @@ namespace OCM.Import.Providers
 
                                 //TODO: parse POI_Types (Parking Lot)
                                 //poi type metadata:
-                                var poiTypeCol = col[lookup["POI_Types"]];
-                                if (!String.IsNullOrWhiteSpace(poiTypeCol))
-                                {
-                                    import.MetadataValues = new List<MetadataValue>();
+                                var poiCol = lookup["POI_Types"];
 
-                                    var vals = poiTypeCol.Split(',');
-                                    foreach (var p in vals)
+                                if (col.Length >= poiCol)
+                                {
+                                    var poiTypeCol = col[poiCol];
+                                    if (!String.IsNullOrWhiteSpace(poiTypeCol))
                                     {
-                                        if (p == "Parking Lot")
+                                        import.MetadataValues = new List<MetadataValue>();
+
+                                        var vals = poiTypeCol.Split(',');
+                                        foreach (var p in vals)
                                         {
-                                            import.MetadataValues.Add(new MetadataValue { MetadataFieldID = (int)StandardMetadataFields.POIType, MetadataFieldOptionID = (int)StandardMetadataFieldOptions.Parking });
-                                        }
-                                        else
-                                        {
-                                            Log("Unknown POI type:" + p);
+                                            if (p == "Parking Lot")
+                                            {
+                                                import.MetadataValues.Add(new MetadataValue { MetadataFieldID = (int)StandardMetadataFields.POIType, MetadataFieldOptionID = (int)StandardMetadataFieldOptions.Parking });
+                                            }
+                                            else
+                                            {
+                                                Log("Unknown POI type:" + p);
+                                            }
                                         }
                                     }
-                                }
 
+                                }
                                 if (import.Connections == null) import.Connections = new List<ConnectionInfo>();
 
                                 //connection info 1
                                 int maxConnections = 6;
                                 for (int i = 1; i <= maxConnections; i++)
                                 {
-                                    var conn = new ConnectionInfo();
-                                    var connectionTypeCol = col[lookup["Connection" + i + "_Type"]];
-                                    if (!String.IsNullOrWhiteSpace(connectionTypeCol))
+                                    try
                                     {
-                                        connectionTypeCol = connectionTypeCol.Trim();
-                                        if (connectionTypeCol == "Mennekes")
+                                        var conn = new ConnectionInfo();
+                                        var connectionTypeCol = col[lookup["Connection" + i + "_Type"]];
+                                        if (!String.IsNullOrWhiteSpace(connectionTypeCol))
                                         {
-                                            conn.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
-                                            conn.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
-                                        }
-                                        else if (connectionTypeCol == "CCS2")
-                                        {
-                                            conn.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
-                                            conn.CurrentTypeID = (int)StandardCurrentTypes.DC;
-                                        }
-                                        else if (connectionTypeCol == "CEE 7/4 - Schuko - Type F")
-                                        {
-                                            conn.ConnectionTypeID = (int)StandardConnectionTypes.Schuko;
-                                            conn.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
-                                        }
-                                        else
-                                        {
-                                            var connectiontype = coreRefData.ConnectionTypes.FirstOrDefault(c => c.Title == col[lookup["Connection1_Type"]]);
-                                            if (connectiontype != null)
+                                            connectionTypeCol = connectionTypeCol.Trim();
+                                            if (connectionTypeCol == "Mennekes")
                                             {
-                                                conn.ConnectionTypeID = connectiontype.ID;
+                                                conn.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
+                                                conn.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                                            }
+                                            else if (connectionTypeCol == "CCS2")
+                                            {
+                                                conn.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                                                conn.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                                            }
+                                            else if (connectionTypeCol == "CEE 7/4 - Schuko - Type F")
+                                            {
+                                                conn.ConnectionTypeID = (int)StandardConnectionTypes.Schuko;
+                                                conn.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
                                             }
                                             else
                                             {
-                                                Log("Failed to match connection type:" + col[lookup["Connection" + i + "_Type"]]);
+                                                var connectiontype = coreRefData.ConnectionTypes.FirstOrDefault(c => c.Title == col[lookup["Connection1_Type"]]);
+                                                if (connectiontype != null)
+                                                {
+                                                    conn.ConnectionTypeID = connectiontype.ID;
+                                                }
+                                                else
+                                                {
+                                                    Log("Failed to match connection type:" + col[lookup["Connection" + i + "_Type"]]);
+                                                }
                                             }
                                         }
-                                    }
 
-                                    if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_kW"]]))
-                                    {
-                                        conn.PowerKW = double.Parse(col[lookup["Connection" + i + "_kW"]]);
-                                    }
+                                        if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_kW"]]))
+                                        {
+                                            conn.PowerKW = double.Parse(col[lookup["Connection" + i + "_kW"]]);
+                                        }
 
-                                    if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Amps"]]))
-                                    {
-                                        conn.Amps = int.Parse(col[lookup["Connection" + i + "_Amps"]]);
-                                    }
+                                        if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Amps"]]))
+                                        {
+                                            conn.Amps = int.Parse(col[lookup["Connection" + i + "_Amps"]]);
+                                        }
 
-                                    if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Volts"]]))
-                                    {
-                                        conn.Voltage = int.Parse(col[lookup["Connection" + i + "_Volts"]]);
-                                    }
+                                        if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Volts"]]))
+                                        {
+                                            conn.Voltage = int.Parse(col[lookup["Connection" + i + "_Volts"]]);
+                                        }
 
-                                    if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Level"]]))
-                                    {
-                                        conn.LevelID = int.Parse(col[lookup["Connection" + i + "_Level"]]);
-                                    }
+                                        if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Level"]]))
+                                        {
+                                            conn.LevelID = int.Parse(col[lookup["Connection" + i + "_Level"]]);
+                                        }
 
-                                    if (!IsConnectionInfoBlank(conn))
-                                    {
-                                        import.Connections.Add(conn);
+                                        if (!String.IsNullOrWhiteSpace(col[lookup["Connection" + i + "_Quantity"]]))
+                                        {
+                                            conn.Quantity = int.Parse(col[lookup["Connection" + i + "_Quantity"]]);
+                                        }
+
+                                        if (!IsConnectionInfoBlank(conn))
+                                        {
+                                            import.Connections.Add(conn);
+                                        }
+                                    }
+                                    catch { 
+                                    
                                     }
                                 }
                             }

@@ -1,11 +1,14 @@
-﻿using OCM.API.Common.Model;
+﻿using Microsoft.Extensions.Configuration;
+using OCM.API.Common.Model;
 using OCM.Import;
 using OCM.Import.Manager.UI.Properties;
 using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Import
@@ -41,6 +44,19 @@ namespace Import
                 TempFolderPath = ConfigurationManager.AppSettings["ImportBasePath"]
             };
 
+
+
+            var configPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var config = new ConfigurationBuilder()
+                   .SetBasePath(configPath)
+                   .AddJsonFile("appsettings.json", optional: true)
+                   .Build();
+
+            var appsettings = new OCM.Core.Settings.CoreSettings();
+            config.GetSection("CoreSettings").Bind(appsettings);
+
+        
             _importManager = new ImportManager(settings);
 
             //populate provider list

@@ -176,11 +176,29 @@ namespace OCM.Import
             providers.Add(new ImportProvider_UKChargePointRegistry());
             //providers.Add(new ImportProvider_CarStations());
             providers.Add(new ImportProvider_Mobie());
-            providers.Add(new ImportProvider_AFDC(_settings.ApiKeys["afdc_energy_gov"]));
+
+            if (_settings.ApiKeys.TryGetValue("afdc_energy_gov", out var afdcKey))
+            {
+                providers.Add(new ImportProvider_AFDC(afdcKey));
+            }
+           
             providers.Add(new ImportProvider_ESB_eCars());
-            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique, _settings.ApiKeys["addenergie_le"]));
-            providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER, _settings.ApiKeys["addenergie_re"]));
-            providers.Add(new ImportProvider_NobilDotNo(_settings.ApiKeys["nobil_no"]));
+
+            if (_settings.ApiKeys.TryGetValue("addenergie_le", out var ae_le))
+            {
+                providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique, ae_le));
+            }
+
+            if (_settings.ApiKeys.TryGetValue("addenergie_re", out var ae_re))
+            {
+                providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique, ae_re));
+            }
+
+            if (_settings.ApiKeys.TryGetValue("nobil_no", out var nobil))
+            {
+                providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique, nobil));
+            }
+
             //providers.Add(new ImportProvider_OplaadpalenNL());
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_DataGouvFr());
