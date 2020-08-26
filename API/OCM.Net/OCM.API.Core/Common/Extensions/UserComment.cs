@@ -18,7 +18,7 @@ namespace OCM.API.Common.Model.Extensions
                 IsActionedByEditor = source.IsActionedByEditor
             };
 
-            if (isVerboseMode && (refData != null || source.UserCommentType != null) && source.UserCommentTypeId!=null)
+            if (isVerboseMode && refData != null)
             {
                 userComment.CommentType = refData.UserCommentTypes.FirstOrDefault(i => i.ID == source.UserCommentTypeId) ?? UserCommentType.FromDataModel(source.UserCommentType);
                 userComment.CommentTypeID = source.UserCommentTypeId;

@@ -223,13 +223,13 @@ namespace OCM.API.Common
                 //if item has no submission status and user permitted to edit, set to published
                 if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeId == null)
                 {
-                    cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                    
                     cpData.SubmissionStatusTypeId = (int)StandardSubmissionStatusTypes.Submitted_Published; //hack due to conflicting state change for SubmissionStatusType
                 }
                 else
                 {
                     //no submission status, set to 'under review'
-                    if (cpData.SubmissionStatusType == null) cpData.SubmissionStatusType = dataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_UnderReview);
+                    if (cpData.SubmissionStatusTypeId == null) cpData.SubmissionStatusTypeId = (int)StandardSubmissionStatusTypes.Submitted_UnderReview;
                 }
 
                 cpData.DateLastStatusUpdate = DateTime.UtcNow;

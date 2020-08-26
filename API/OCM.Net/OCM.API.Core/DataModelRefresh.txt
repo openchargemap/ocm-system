@@ -22,3 +22,14 @@ OnConfiguring
                 optionsBuilder.EnableSensitiveDataLogging(true);
 #endif
             }
+
+
+
+        -----------
+
+        For ConnectinInfo the delete should be set to cascade, this is to allow removal of connections/equipment:
+         entity.HasOne(d => d.ChargePoint)
+                    .WithMany(p => p.ConnectionInfoes)
+                    .HasForeignKey(d => d.ChargePointId)
+                    .OnDelete(DeleteBehavior.ClientCascade)
+                    .HasConstraintName("FK_ConnectionInfo_ChargePoint");

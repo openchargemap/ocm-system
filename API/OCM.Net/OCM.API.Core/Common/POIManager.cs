@@ -840,7 +840,28 @@ namespace OCM.API.Common
         {
             var dataPOI = new OCM.Core.Data.ChargePoint();
 
-            if (simplePOI.ID > 0 && simplePOI.UUID != null) dataPOI = dataModel.ChargePoints.FirstOrDefault(cp => cp.Id == simplePOI.ID && cp.Uuid.ToUpper() == simplePOI.UUID.ToUpper());// dataChargePoint.ID = simpleChargePoint.ID; // dataModel.ChargePoints.FirstOrDefault(c => c.ID == simpleChargePoint.ID);
+            if (simplePOI.ID > 0 && simplePOI.UUID != null)
+            {
+                IQueryable<Core.Data.ChargePoint> dataPOISet = dataModel.ChargePoints
+                    .Include(a1 => a1.DataProvider)
+                    .Include(a1 => a1.Operator)
+                    .Include(a1 => a1.UsageType)
+                    .Include(a1 => a1.StatusType)
+                    .Include(a1 => a1.AddressInfo)
+                        .ThenInclude(a => a.Country)
+                    .Include(a1 => a1.ConnectionInfoes)
+                    .Include(a1 => a1.MetadataValues)
+                        .ThenInclude(m => m.MetadataFieldOption)
+                    .Include(a1 => a1.UserComments)
+                        .ThenInclude(c => c.User)
+                    .Include(a1 => a1.UserComments)
+                    .Include(a1 => a1.MediaItems)
+                        .ThenInclude(c => c.User);
+
+
+                dataPOI = dataPOISet.FirstOrDefault(cp => cp.Id == simplePOI.ID && cp.Uuid.ToUpper() == simplePOI.UUID.ToUpper());
+
+            }
 
             if (String.IsNullOrEmpty(dataPOI.Uuid)) dataPOI.Uuid = Guid.NewGuid().ToString().ToUpper();
 
@@ -1110,7 +1131,7 @@ namespace OCM.API.Common
             {
                 foreach (var con in dataPOI.ConnectionInfoes)
                 {
-                    if (!updateConnectionList.Contains(con))
+                    if (!updateConnectionList.Any(i => i.Id == con.Id))
                     {
                         if (!deleteList.Contains(con))
                         {
@@ -1125,7 +1146,8 @@ namespace OCM.API.Common
             {
                 if (item.Id > 0)
                 {
-                    dataModel.ConnectionInfoes.Remove(item);
+                    //dataModel.ConnectionInfoes.Remove(item);
+                    dataPOI.ConnectionInfoes.Remove(item);
                 }
             }
 

@@ -15,6 +15,7 @@ namespace OCM.Core.Data
         public OCMEntities(DbContextOptions<OCMEntities> options)
             : base(options)
         {
+
         }
 
         public virtual DbSet<AddressInfo> AddressInfoes { get; set; }
@@ -301,7 +302,7 @@ namespace OCM.Core.Data
                 entity.HasOne(d => d.ChargePoint)
                     .WithMany(p => p.ConnectionInfoes)
                     .HasForeignKey(d => d.ChargePointId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("FK_ConnectionInfo_ChargePoint");
 
                 entity.HasOne(d => d.ConnectionType)
