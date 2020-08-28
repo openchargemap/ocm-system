@@ -237,7 +237,7 @@ namespace OCM.Import
             return true;
         }
 
-        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false)
+        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false, int dupeDistance = DUPLICATE_DISTANCE_METERS )
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -926,7 +926,7 @@ namespace OCM.Import
                         Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
 
                         //de-duplicate and clean list based on existing data
-                        finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, settings.FetchExistingFromAPI);
+                        finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, settings.FetchExistingFromAPI, DUPLICATE_DISTANCE_METERS);
                     }
                     else
                     {

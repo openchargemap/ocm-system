@@ -16,22 +16,39 @@ namespace OCM.Import.Providers
             ProviderName = "data.gouv.fr";
             OutputNamePrefix = "data.gouv.fr";
             AutoRefreshURL = "https://www.data.gouv.fr/api/1/datasets/?q=5448d3e0c751df01f85d0572&page=0&page_size=20";
-            IsAutoRefreshed = true;
             IsProductionReady = true;
             MergeDuplicatePOIEquipment = true;
             DataProviderID = 28;
         }
 
+        private void TrackOccurrence(Dictionary<string, int> occurrences, string item)
+        {
+            if (occurrences.TryGetValue(item, out var count))
+            {
+                occurrences.Remove(item);
+                occurrences.Add(item, count + 1);
+            }
+            else
+            {
+                occurrences.Add(item, 1);
+            }
+        }
+
+        private void LogOccurences(Dictionary<string, int> occurrences, string title)
+        {
+            Log(title);
+            foreach (var item in occurrences.OrderByDescending(o => o.Value))
+            {
+                Log($"{item.Key} : {item.Value}");
+            }
+        }
+
         public List<ChargePoint> Process(CoreReferenceData refData)
         {
-            // InputData is the header for current version of data
-
-
 
 #if DEBUG
-            // InputData = "{\"resources\": [ {\"latest\": \"https://www.data.gouv.fr/fr/datasets/r/50625621-18bd-43cb-8fde-6b8c24bdabb3\"  } ]}";
 
-            var poiDataCsv = System.IO.File.ReadAllText(@"C:\\Temp\\ocm\\data\\import\\cache_data.gouv.fr.txt");
+            var poiDataCsv = System.IO.File.ReadAllText(@"C:\\Temp\\ocm\\data\\import\\cache_data.gouv.fr.dat");
 #else
             JObject o = JObject.Parse(InputData);
             var resourceUrl = o["resources"][0]["latest"].ToString();
@@ -55,9 +72,9 @@ namespace OCM.Import.Providers
                 {
                     var nextRow = results[n + 1];
 
-                    if (!string.IsNullOrEmpty(nextRow) && Char.IsDigit(nextRow[0]))
+                    if (!string.IsNullOrEmpty(nextRow) && (Char.IsDigit(nextRow[0]) || row.Length < 200))
                     {
-                        // probably a postcode, merge row with next row
+                        // probably a postcode or broken line in title, merge row with next row
                         row = row.Trim() + " " + nextRow;
 
                         Log("Repaired row " + n + "::" + row);
@@ -69,6 +86,11 @@ namespace OCM.Import.Providers
             }
 
             var keyLookup = results[0].Replace("\r", "").Split(';').ToList();
+
+            Dictionary<string, int> unmatchedNetworks = new Dictionary<string, int>();
+            Dictionary<string, int> unmatchedUsage = new Dictionary<string, int>();
+            Dictionary<string, int> unmatchedConnections = new Dictionary<string, int>();
+
             List<ChargePoint> outputList = new List<ChargePoint>();
             int rowIndex = 0;
             foreach (var row in preprocessedRows)
@@ -83,21 +105,22 @@ namespace OCM.Import.Providers
                             var cols = row.Replace("\r", "").Replace(";", " ;").Split(';');
                             var poi = new ChargePoint();
 
-                            var title = cols[keyLookup.FindIndex(a => a == "n_station")];
+                            var title = cols[keyLookup.FindIndex(a => a == "n_station")]?.Trim();
                             var usageType = cols[keyLookup.FindIndex(a => a == "acces_recharge")];
-                            var operatorName = cols[keyLookup.FindIndex(a => a == "n_operateur")];
+                            var operatorName = cols[keyLookup.FindIndex(a => a == "n_operateur")]?.ToLower().Trim();
                             var powerKw = cols[keyLookup.FindIndex(a => a == "puiss_max")].Trim()
                                 .Replace("kw", "", StringComparison.InvariantCultureIgnoreCase)
                                 .Replace("kva", "", StringComparison.InvariantCultureIgnoreCase);
 
                             var connectionType = cols[keyLookup.FindIndex(a => a == "type_prise")];
-                            var latitude = cols[keyLookup.FindIndex(a => a == "Ylatitude")].Replace("Ê", "").Replace("\"", "");
-                            var longitude = cols[keyLookup.FindIndex(a => a == "Xlongitude")].Replace("Ê", "").Replace("\"", "");
-                            var reference = cols[keyLookup.FindIndex(a => a == "id_station")];
-                            var address = cols[keyLookup.FindIndex(a => a == "ad_station")];
+                            var latitude = cols[keyLookup.FindIndex(a => a == "Ylatitude")].Replace("Ê", "").Replace("\"", "").Replace("*", ".");
+                            var longitude = cols[keyLookup.FindIndex(a => a == "Xlongitude")].Replace("Ê", "").Replace("\"", "").Replace("*", ".");
+                            var reference = cols[keyLookup.FindIndex(a => a == "id_station")]?.Trim();
+                            var address = cols[keyLookup.FindIndex(a => a == "ad_station")]?.Trim();
                             var numStations = cols[keyLookup.FindIndex(a => a == "nbre_pdc")];
                             var hours = cols[keyLookup.FindIndex(a => a == "accessibilité")];
                             var additionalInfo = cols[keyLookup.FindIndex(a => a == "observations")];
+                            var networkName = cols[keyLookup.FindIndex(a => a == "n_enseigne")]?.ToLower().Trim();
 
                             poi.DataProviderID = DataProviderID;
                             poi.DataProvidersReference = reference?.Trim();
@@ -131,6 +154,8 @@ namespace OCM.Import.Providers
                                     break;
                                 default:
                                     Log("Unknown Usage Type: " + usageType);
+
+                                    TrackOccurrence(unmatchedUsage, usageType);
                                     break;
                             }
 
@@ -148,7 +173,8 @@ namespace OCM.Import.Providers
                                 var cType = c.ToLower().Trim();
                                 if (cType.Contains("cahdemo") || cType.Contains("chademo")) cType = "chademo";
 
-                                switch (c.ToLower().Trim())
+
+                                switch (cType)
                                 {
                                     case "ef":
                                     case "e/f":
@@ -198,7 +224,21 @@ namespace OCM.Import.Providers
                                         connection.CurrentTypeID = (int)StandardCurrentTypes.DC;
                                         break;
                                     default:
-                                        Log("Unknown Connection Type: " + c);
+                                        if (cType.Contains("t2"))
+                                        {
+                                            connection.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
+                                            connection.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                                        }
+                                        else if (cType.Contains("t3"))
+                                        {
+                                            connection.ConnectionTypeID = (int)StandardConnectionTypes.Type3;
+
+                                        }
+                                        else
+                                        {
+                                            Log("Unknown Connection Type: " + cType);
+                                            TrackOccurrence(unmatchedConnections, cType);
+                                        }
                                         break;
                                 }
 
@@ -237,6 +277,27 @@ namespace OCM.Import.Providers
 
                             poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
 
+                            if (!string.IsNullOrWhiteSpace(networkName))
+                            {
+                                // specific network mappings
+                                if (networkName == "e born") networkName = "eborn";
+                                if (networkName == "morbihan énergies") networkName = "freshmile";
+
+                                // shared network mappings
+                                if (operatorName == "freshmile") networkName = "freshmile";
+
+                                var network = refData.Operators.FirstOrDefault(o => o.Title.Contains(networkName, StringComparison.InvariantCultureIgnoreCase));
+
+                                if (network == null)
+                                {
+                                    TrackOccurrence(unmatchedNetworks, networkName);
+                                }
+                                else
+                                {
+                                    poi.OperatorID = network.ID;
+                                }
+                            }
+
                             outputList.Add(poi);
                         }
                         catch (Exception exp)
@@ -247,6 +308,12 @@ namespace OCM.Import.Providers
                 }
                 rowIndex++;
             }
+
+            LogOccurences(unmatchedUsage, "Unmatched Usage Types");
+
+            LogOccurences(unmatchedNetworks, "Unmatched Networks");
+
+            LogOccurences(unmatchedConnections, "Unmatched Connections");
             return outputList;
         }
     }
