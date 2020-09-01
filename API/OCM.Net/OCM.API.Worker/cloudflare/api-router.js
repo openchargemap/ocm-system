@@ -1,8 +1,59 @@
+/**
+ * This cloudflare worker performs the following functions:
+ * - rejects banned clients
+ * - enforce presence of API Key 
+ * - responds to read queries using mirror api hosts (if available, tracking unavailable hosts)
+ * - sends writes to master API
+ * - logs request summary to logs.openchargemap.org for debug purposes (rejections, API abuse etc)
+ * */
 
+const enableAPIKeyRules = true;
 
 addEventListener('fetch', event => {
-    event.respondWith(fetchAndApply(event))
+
+    // check API key
+    const apiKey = getAPIKey(event.request);
+    let status = "OK";
+
+    const clientIP = event.request.headers.get('cf-connecting-ip');
+
+    if (clientIP === "<banned>") {
+        event.waitUntil(rejectRequest(event, "IP Blocked for Abuse"));
+        return;
+    } else {
+
+        if (enableAPIKeyRules) {
+            let maxresults = getParameterByName(event.request.url, "maxresults");
+
+            if (apiKey == null && maxresults != null && parseInt(maxresults) > 250) {
+                status = "REJECTED_APIKEY_MISSING";
+                event.respondWith(rejectRequest(event));
+
+            } else {
+                console.log("Passing request with API Key or key not required:" + apiKey);
+
+                //respond
+                event.respondWith(fetchAndApply(event));
+            }
+        } else {
+            //respond
+            event.respondWith(fetchAndApply(event));
+        }
+        //log
+        event.waitUntil(logRequest(event.request, apiKey, status));
+    }
 });
+
+async function rejectRequest(event, reason) {
+    if (!reason || reason == null) {
+        reason = "You must specify an API Key, either in an X-API-Key header or key= query string parameter.";
+    }
+    console.log(reason);
+
+    return new Response(reason, {
+        status: 403,
+    });
+}
 
 async function fetchAndApply(event) {
 
@@ -53,6 +104,11 @@ async function fetchAndApply(event) {
 
         let mirrorIndex = getRandomInt(0, mirrorHosts.length);
 
+        // force query to first mirror if there is one available;
+        if (mirrorIndex == 0 && mirrorHosts.length > 1) {
+            mirrorIndex = 1;
+        }
+
         if (mirrorIndex > 0) {
             console.log("Using mirror API " + mirrorIndex + " for request.");
         }
@@ -102,7 +158,7 @@ async function fetchAndApply(event) {
 
                 // add failed mirror to skipped mirrors
                 if (mirrorIndex != 0) {
-                    await OCM_CONFIG_KV.put("API_SKIPPED_MIRRORS", JSON.stringify([mirrorHosts[mirrorIndex]]), { expirationTtl: 60 * 60 });
+                    await OCM_CONFIG_KV.put("API_SKIPPED_MIRRORS", JSON.stringify([mirrorHosts[mirrorIndex]]), { expirationTtl: 60 * 15 });
                 }
 
                 response = await fetch(event.request);
@@ -139,4 +195,66 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+function getParameterByName(url, name) {
+    name = name.replace(/[\[\]]/g, '\\$&')
+    name = name.replace(/\//g, '')
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url)
+
+    if (!results) return null
+    else if (!results[2]) return ''
+    else if (results[2]) {
+        results[2] = results[2].replace(/\//g, '')
+    }
+
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function getAPIKey(request) {
+
+    let apiKey = getParameterByName(request.url, "key");
+
+    apiKey = request.headers.get('X-API-Key')
+        || request.headers.get('x-api-key')
+        || apiKey;
+
+    if (apiKey == '') apiKey = null;
+    return apiKey;
+}
+
+async function logRequest(request, apiKey, status) {
+    // log the url of the request and the API key used
+
+    var ray = request.headers.get('cf-ray') || '';
+    var id = ray.slice(0, -4);
+    var data = {
+        'timestamp': Date.now(),
+        'url': request.url,
+        'referer': request.referrer,
+        'method': request.method,
+        'ray': ray,
+        'ip': request.headers.get('cf-connecting-ip') || '',
+        'host': request.headers.get('host') || '',
+        'ua': request.headers.get('user-agent') || '',
+        'cc': request.headers.get('Cf-Ipcountry') || '',
+        'ocm_key': apiKey,
+        'status': status
+    };
+
+    var url = `http://log.openchargemap.org/?status=${data.status}&key=${data.ocm_key}&ua=${data.ua}&ip=${data.ip}&url=${encodeURI(request.url)}`;
+
+    try {
+        await fetch(url, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            })
+        });
+
+    } catch (exp) {
+        console.log("Failed to log request");
+    }
 }
