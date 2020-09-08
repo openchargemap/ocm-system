@@ -191,7 +191,7 @@ namespace OCM.Import
 
             if (_settings.ApiKeys.TryGetValue("addenergie_re", out var ae_re))
             {
-                providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique, ae_re));
+                providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.ReseauVER, ae_re));
             }
 
             if (_settings.ApiKeys.TryGetValue("nobil_no", out var nobil))
@@ -227,14 +227,15 @@ namespace OCM.Import
 
             foreach (var provider in providers)
             {
-                if (settings.ProviderName == null || settings.ProviderName == provider.GetProviderName())
+                if (settings.ProviderName == null || settings.ProviderName.ToLower() == provider.GetProviderName().ToLower())
                 {
 
                     await PerformImport(settings, credentials, coreRefData, provider);
+                    return true;
                 }
             }
 
-            return true;
+            return false; ;
         }
 
         public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false, int dupeDistance = DUPLICATE_DISTANCE_METERS )

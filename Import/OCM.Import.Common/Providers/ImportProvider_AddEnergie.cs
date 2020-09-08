@@ -7,6 +7,7 @@ using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
+
     public class ImportProvider_AddEnergie : BaseImportProvider, IImportProviderWithInit
     {
         protected string ServiceBaseURL = null;
@@ -28,7 +29,7 @@ namespace OCM.Import.Providers
             this.ApiKey = apiKey;
 
             ServiceUserName = "OpenChargeMap";
-            ProviderName = "AddEnergie";
+            ProviderName = "AddEnergie"; 
 
             if (network == NetworkType.ReseauVER)
             {
@@ -158,6 +159,10 @@ namespace OCM.Import.Providers
                     else if (port["ConnectorType"].ToString().ToUpper() == "CHADEMO")
                     {
                         cType = coreRefData.ConnectionTypes.FirstOrDefault(c => c.ID == 2);//CHADEMO
+                    }
+                    else if (port["ConnectorType"].ToString().ToUpper() == "SAE-COMBO")
+                    {
+                        cType = coreRefData.ConnectionTypes.FirstOrDefault(c => c.ID == 32);// CCS Type 1
                     }
                     else
                     {
