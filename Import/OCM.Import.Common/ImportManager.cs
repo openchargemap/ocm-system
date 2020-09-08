@@ -196,7 +196,7 @@ namespace OCM.Import
 
             if (_settings.ApiKeys.TryGetValue("nobil_no", out var nobil))
             {
-                providers.Add(new ImportProvider_AddEnergie(ImportProvider_AddEnergie.NetworkType.LeCircuitElectrique, nobil));
+                providers.Add(new ImportProvider_NobilDotNo(nobil));
             }
 
             //providers.Add(new ImportProvider_OplaadpalenNL());

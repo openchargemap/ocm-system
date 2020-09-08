@@ -43,7 +43,7 @@ namespace OCM.Import.Providers
             {
                 var item = chargerstation.SelectNodes("metadata").Item(0);
                 ChargePoint cp = new ChargePoint();
-                cp.DataProvider = new DataProvider() { ID = this.DataProviderID }; //nobil.no
+                cp.DataProviderID  = this.DataProviderID; //nobil.no
                 cp.DataProvidersReference = item["id"].InnerText; //is id unique across countries?
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -71,19 +71,19 @@ namespace OCM.Import.Providers
                 var countryCode = item["Land_code"].InnerText;
                 if (countryCode.ToUpper() == "NOR")
                 {
-                    cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "no");
+                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "no")?.ID;
                 }
                 else if (countryCode.ToUpper() == "FIN")
                 {
-                    cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "fi");
+                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "fi")?.ID;
                 }
                 else if (countryCode.ToUpper() == "SWE")
                 {
-                    cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "se");
+                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "se")?.ID;
                 }
                 else if (countryCode.ToUpper() == "DAN")
                 {
-                    cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "dk");
+                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "dk")?.ID;
                 }
                 else
                 {
@@ -103,48 +103,48 @@ namespace OCM.Import.Providers
                     var chargingCapacityAttribs = connector.SelectSingleNode("attribute[attrtypeid=5]");
                     var chargingModeAttribs = connector.SelectSingleNode("attribute[attrtypeid=20]");
                     ConnectionInfo cinfo = new ConnectionInfo() { };
+
                     cinfo.Reference = connector.Attributes["id"].InnerText;
 
-                    ConnectionType cType = new ConnectionType { ID = 0 };
                     if (connectorAttribs != null)
                     {
                         var connectorTypeVal = connectorAttribs.SelectSingleNode("attrvalid").InnerText;
                         if (connectorTypeVal == "14")
                         {
-                            cType.ID = 28;// Schuko CEE 7/4
+                            cinfo.ConnectionTypeID = 28;// Schuko CEE 7/4
                         }
                         else if (connectorTypeVal == "40")
                         {
-                            cType.ID = 27;// tesla supercharger connnector
+                            cinfo.ConnectionTypeID = 27;// tesla supercharger connnector
                         }
                         else if (connectorTypeVal == "31")
                         {
                             //type 1 == J1772?
-                            cType.ID = (int)StandardConnectionTypes.J1772;
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772;
                         }
                         else if (connectorTypeVal == "29")
                         {
-                            cType.ID = 8;// tesla roadster
+                            cinfo.ConnectionTypeID = 8;// tesla roadster
                         }
                         else if (connectorTypeVal == "32")
                         {
-                            cType.ID = 25;// type 2 (mennekes)
+                            cinfo.ConnectionTypeID = 25;// type 2 (mennekes)
                         }
                         else if (connectorTypeVal == "50")
                         {
                             // Combination Connector - Type 2 + Schuko.
                             // Treat it as a Schuko and add a Type 2 connector.
-                            cType.ID = 28;
+                            cinfo.ConnectionTypeID = 28;
                             // Add a separate Type 2 connector.
                             ConnectionInfo cinfoType2 = new ConnectionInfo() { };
-                            ConnectionType cTypeType2 = new ConnectionType { ID = 25 };
+
                             cinfoType2.Amps = 16;
                             cinfoType2.Voltage = 230;
                             cinfoType2.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
                             cinfoType2.PowerKW = ((double)cinfoType2.Voltage * (double)cinfoType2.Amps) / 1000;
 
                             cinfoType2.Level = new ChargerType() { ID = 2 };
-                            cinfoType2.ConnectionType = cTypeType2;
+                            cinfoType2.ConnectionTypeID = 25;
                             if (cp.Connections == null)
                             {
                                 cp.Connections = new List<ConnectionInfo>();
@@ -153,31 +153,31 @@ namespace OCM.Import.Providers
                         }
                         else if (connectorTypeVal == "30")
                         {
-                            cType.ID = (int)StandardConnectionTypes.CHAdeMO;
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;
                         }
                         else if (connectorTypeVal == "34")
                         {
-                            cType.ID = 34;//IEC 60309 3 pin
+                            cinfo.ConnectionTypeID = 34;//IEC 60309 3 pin
                         }
                         else if (connectorTypeVal == "36")
                         {
-                            cType.ID = 35;//IEC 60309 5 pin
+                            cinfo.ConnectionTypeID = 35;//IEC 60309 5 pin
                         }
                         else if (connectorTypeVal == "39")
                         {
-                            cType.ID = 33;//Type 2 of CCS coupler
+                            cinfo.ConnectionTypeID = 33;//Type 2 of CCS coupler
                         }
                         else if (connectorTypeVal == "41")
                         {
-                            cType.ID = (int)StandardConnectionTypes.CHAdeMO;//CCS combo + Chademo both present
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;//CCS combo + Chademo both present
                         }
                         else if (connectorTypeVal == "43")
                         {
-                            cType.ID = (int)StandardConnectionTypes.CHAdeMO;//CHAdeMO + Combo + AC-Type2 all present
+                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;//CHAdeMO + Combo + AC-Type2 all present
                         }
                         else if (connectorTypeVal == "0")
                         {
-                            cType.ID = 0;//unknown
+                            cinfo.ConnectionTypeID = 0;//unknown
                         }
                         else
                         {
@@ -193,23 +193,23 @@ namespace OCM.Import.Providers
                         {
                             cinfo.Amps = 16;
                             cinfo.Voltage = 230;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
-                            cinfo.Level = new ChargerType() { ID = 2 }; //default to lvl2
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                            cinfo.LevelID = 2; //default to lvl2
                         }
                         else if (connectorTypeVal == "8")
                         {
                             cinfo.Amps = 32;
                             cinfo.Voltage = 230;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.SinglePhaseAC };
-                            cinfo.Level = new ChargerType() { ID = 2 }; //default to lvl2
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                            cinfo.LevelID = 2; //default to lvl2
                         }
                         else if (connectorTypeVal == "10")
                         {
                             cinfo.Amps = 16;
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 11;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
-                            cinfo.Level = new ChargerType() { ID = 2 }; //default to lvl2
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
+                            cinfo.LevelID = 2; //default to lvl2
                         }
                         else if (connectorTypeVal == "11")
                         {
@@ -217,8 +217,8 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 32;
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 22;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "12")
                         {
@@ -226,8 +226,8 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 63;
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 43;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "13")
                         {
@@ -235,22 +235,22 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 100;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 50;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "16")
                         {
                             cinfo.Amps = 16;
                             cinfo.Voltage = 230;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
-                            cinfo.Level = new ChargerType() { ID = 2 }; //default to lvl2
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
+                            cinfo.LevelID = 2; //default to lvl2
                         }
                         else if (connectorTypeVal == "17")
                         {
                             cinfo.Amps = 32;
                             cinfo.Voltage = 230;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.ThreePhaseAC };
-                            cinfo.Level = new ChargerType() { ID = 2 }; //default to lvl2
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
+                            cinfo.LevelID = 2; //default to lvl2
                         }
                         else if (connectorTypeVal == "19")
                         {
@@ -258,16 +258,16 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 50;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 20;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID =  (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "20")
                         {
                             //TODO: 500VDC max 200A + 400V 3-phase max 63A
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID =(int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "22")
                         {
@@ -275,8 +275,8 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 270;
                             cinfo.Voltage = 480;
                             cinfo.PowerKW = 135;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "23")
                         {
@@ -284,8 +284,8 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 100;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID =  (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "24")
                         {
@@ -293,15 +293,15 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 375;
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 150;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID =3;
                         }
                         else if (connectorTypeVal == "25")
                         {
                             //350 kW 
                             cinfo.PowerKW = 350;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "27")
                         {
@@ -309,17 +309,17 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 120;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "28")
                         {
-                            
+
                             cinfo.Amps = 125;
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 50;
-                            cinfo.CurrentType = new CurrentType { ID = (int)StandardCurrentTypes.DC };
-                            cinfo.Level = new ChargerType() { ID = 3 };
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "0")
                         {
@@ -337,8 +337,6 @@ namespace OCM.Import.Providers
                     {
                         cinfo.PowerKW = (double?)ComputePowerkWForConnectionInfo(cinfo);
                     }
-
-                    cinfo.ConnectionType = cType;
 
                     if (chargingModeAttribs != null)
                     {
