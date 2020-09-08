@@ -20,7 +20,7 @@ namespace OCM.API.Common.Model.Extensions
 
             if (isVerboseMode && refData != null)
             {
-                userComment.CommentType = refData.UserCommentTypes.FirstOrDefault(i => i.ID == source.UserCommentTypeId) ?? UserCommentType.FromDataModel(source.UserCommentType);
+                userComment.CommentType = refData?.UserCommentTypes.FirstOrDefault(i => i.ID == source.UserCommentTypeId) ?? UserCommentType.FromDataModel(source.UserCommentType);
                 userComment.CommentTypeID = source.UserCommentTypeId;
             }
             else
@@ -30,7 +30,7 @@ namespace OCM.API.Common.Model.Extensions
 
             if (isVerboseMode && (refData != null || source.CheckinStatusType != null) && source.CheckinStatusTypeId!=null)
             {
-                userComment.CheckinStatusType = refData.CheckinStatusTypes.FirstOrDefault(i => i.ID == source.CheckinStatusTypeId) ?? CheckinStatusType.FromDataModel(source.CheckinStatusType);
+                userComment.CheckinStatusType = refData?.CheckinStatusTypes.FirstOrDefault(i => i.ID == source.CheckinStatusTypeId) ?? CheckinStatusType.FromDataModel(source.CheckinStatusType);
                 userComment.CheckinStatusTypeID = source.CheckinStatusTypeId;
             }
             else
