@@ -16,9 +16,10 @@ namespace OCM.Import.Worker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<Worker>();
-                });
+                    .UseSystemd()
+                    .ConfigureServices((hostContext, services) =>
+                    {
+                        services.AddHostedService<Worker>();
+                    });
     }
 }

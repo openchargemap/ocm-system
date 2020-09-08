@@ -90,8 +90,6 @@ namespace OCM.Import.Worker
                                 ProviderName = status.LastImportedProvider // leave blank to do all
                             });
 
-                        //TODO: notify API of last date of import for each provider
-
                         status.LastImportStatus = importedOK ? "Imported" : "Failed";
                         status.DateLastImport = DateTime.UtcNow;
                         status.ProcessingTimeSeconds = stopwatch.Elapsed.TotalSeconds;
@@ -101,6 +99,7 @@ namespace OCM.Import.Worker
                         var providerId = (providers.FirstOrDefault(p => p.GetProviderName() == status.LastImportedProvider) as BaseImportProvider)?.DataProviderID;
                         if (providerId != null)
                         {
+                            //  notify API of last date of import for each provider
                             await importManager.UpdateLastImportDate((int)providerId);
                         }
 
