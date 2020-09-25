@@ -344,7 +344,7 @@ namespace OCM.API.Common
                                           && (filterByOperators == false || (filterByOperators == true && filter.OperatorIDs.Contains((int)c.OperatorId)))
                                           && (filterByChargePoints == false || (filterByChargePoints == true && filter.ChargePointIDs.Contains((int)c.Id)))
                                           && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeId)))
-                                          && (filterByStatus == false || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeId)))
+                                          && ((filterByStatus == false && c.StatusTypeId != (int)StandardStatusTypes.RemovedDecomissioned) || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeId)))
                                           && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderId)))
                                           && (filter.Postcodes == null || (filter.Postcodes != null && c.AddressInfo.Postcode != null && filter.Postcodes.Contains((string)c.AddressInfo.Postcode)))
                                       select c;

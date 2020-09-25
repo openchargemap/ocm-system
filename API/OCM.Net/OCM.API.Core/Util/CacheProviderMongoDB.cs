@@ -1071,6 +1071,7 @@ namespace OCM.Core.Data
                                              || (filter.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == filter.SubmissionStatusTypeID)
                                              ) //by default return live cps only, otherwise use specific submission statusid
                                        && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
+                                     
                                        && (filter.OperatorName == null || c.OperatorInfo.Title == filter.OperatorName)
                                        && (filter.IsOpenData == null || (filter.IsOpenData != null && ((filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
                                        && (!filter.GreaterThanId.HasValue || (filter.GreaterThanId.HasValue && c.ID > greaterThanId))
@@ -1079,7 +1080,7 @@ namespace OCM.Core.Data
                                        && (filterByOperators == false || (filterByOperators == true && filter.OperatorIDs.Contains((int)c.OperatorID)))
                                        && (filterByChargePoints == false || (filterByChargePoints == true && filter.ChargePointIDs.Contains(c.ID)))
                                        && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeID)))
-                                       && (filterByStatus == false || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)))
+                                       && ((filterByStatus == false && c.StatusTypeID!= (int)StandardStatusTypes.RemovedDecomissioned) || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                        && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderID)))
                                        && (filterOnPostcodes == false || (filterOnPostcodes == true && c.AddressInfo.Postcode != null && filter.Postcodes.Contains(c.AddressInfo.Postcode)))
                            select c);
