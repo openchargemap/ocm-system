@@ -22,7 +22,7 @@ namespace OCM.API.Common
         public async Task<PaginatedCollection<RegisteredApplication>> Search(string sortOrder, string keyword, int pageIndex = 1, int pageSize = 50, int? ownerId = null)
         {
             var list = new List<RegisteredApplication>();
-            var appList = dataModel.RegisteredApplications.AsQueryable();
+            var appList = dataModel.RegisteredApplications.Include(a => a.User).AsQueryable();
 
             if (ownerId != null)
             {
@@ -31,7 +31,13 @@ namespace OCM.API.Common
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                appList = appList.Where(u => u.Title.Contains(keyword) || u.Description.Contains(keyword));
+                appList = appList.Where(u => 
+                u.Title.Contains(keyword) 
+                || u.Description.Contains(keyword) 
+                || u.PrimaryApikey == keyword 
+                || u.DeprecatedApikey == keyword 
+                || u.User.EmailAddress == keyword 
+                || u.User.Username == keyword);
             }
 
             if (!string.IsNullOrEmpty(sortOrder))
