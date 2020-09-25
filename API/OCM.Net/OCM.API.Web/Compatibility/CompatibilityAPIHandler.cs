@@ -785,6 +785,11 @@ namespace OCM.API
             else if (filter.Latitude != null && filter.Longitude != null)
             {
                 result = geocoder.ReverseGecode_MapquestOSM((double)filter.Latitude, (double)filter.Longitude, new ReferenceDataManager());
+
+                if (!result.ResultsAvailable)
+                {
+                    result = geocoder.ReverseGecode_OSM((double)filter.Latitude, (double)filter.Longitude, new ReferenceDataManager());
+                }
             }
 
             //send API response

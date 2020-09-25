@@ -252,6 +252,107 @@ namespace OCM.API.Common
             return result;
         }
 
+
+        public GeocodingResult ReverseGecode_OSM(double latitude, double longitude, ReferenceDataManager refDataManager)
+        {
+            GeocodingResult result = new GeocodingResult();
+            result.Service = "Nominatim OSM";
+
+
+            string url = $"https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}&zoom=18&addressdetails=1";
+
+            if (IncludeQueryURL) result.QueryURL = url;
+
+            string data = "";
+
+            try
+            {
+                WebClient client = new WebClient();
+                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+                client.Encoding = Encoding.GetEncoding("UTF-8");
+                data = client.DownloadString(url);
+
+
+                /* e.g.: 
+                {
+                    "place_id": 101131804,
+                    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+                    "osm_type": "way",
+                    "osm_id": 61267076,
+                    "lat": "-32.1685328505288",
+                    "lon": "115.9882328723638",
+                    "display_name": "Eleventh Road, Haynes, Armadale, Western Australia, 6112, Australia",
+                    "address": {
+                        "road": "Eleventh Road",
+                        "suburb": "Haynes",
+                        "town": "Armadale",
+                        "state": "Western Australia",
+                        "postcode": "6112",
+                        "country": "Australia",
+                        "country_code": "au"
+                    },
+                    "boundingbox": [
+                        "-32.1689883",
+                        "-32.1619497",
+                        "115.9805577",
+                        "115.9887699"
+                    ]
+                }
+                 * */
+                if (IncludeExtendedData)
+                {
+                    result.ExtendedData = data;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine(data);
+                }
+
+                if (data == "{}")
+                {
+                    System.Diagnostics.Debug.WriteLine("No geocoding results:" + url);
+                    result.ResultsAvailable = false;
+                }
+                else
+                {
+                    JObject o = JObject.Parse(data);
+
+                    var item = o["address"];
+
+
+                    result.AddressInfo = new AddressInfo();
+                    result.AddressInfo.Title = item["road"]?.ToString();
+                    result.AddressInfo.Postcode = item["postcode"]?.ToString();
+                    result.AddressInfo.AddressLine1 = item["road"]?.ToString();
+                    result.AddressInfo.AddressLine2 = item["suburb"]?.ToString();
+                    result.AddressInfo.Town = item["town"]?.ToString();
+                    result.AddressInfo.StateOrProvince = item["state"]?.ToString();
+
+                    var countryCode = item["country_code"]?.ToString();
+                    var country = refDataManager.GetCountryByISO(countryCode);
+                    if (country != null)
+                    {
+                        result.AddressInfo.CountryID = country.ID;
+                    }
+
+
+                    result.Latitude = latitude;
+                    result.Longitude = longitude;
+                    result.Attribution = "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright";
+                    result.AddressInfo.Latitude = latitude;
+                    result.AddressInfo.Longitude = longitude;
+
+                    result.ResultsAvailable = true;
+
+
+                }
+            }
+            catch (Exception)
+            {
+                //
+            }
+            return result;
+        }
         public GeocodingResult GeolocateAddressInfo_OSM(AddressInfo address)
         {
             var result = GeolocateAddressInfo_OSM(address.ToString());
@@ -259,6 +360,8 @@ namespace OCM.API.Common
 
             return result;
         }
+
+
 
         public GeocodingResult GeolocateAddressInfo_OSM(string address)
         {
