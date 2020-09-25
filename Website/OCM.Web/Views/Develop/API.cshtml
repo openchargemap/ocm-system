@@ -17,8 +17,25 @@
                 <h2 id="intro"><i class="fa fa-cogs"></i> The Open Charge Map API</h2>
                 <div class="alert alert-danger">Use of the OCM API is subject to <a href="@Url.Action("Terms","About")" class="alert-link">terms and conditions</a>. By using the API you indicate acceptance of these terms.</div>
 
-                <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats.</p>
+                <p>If you wish to export charging location data into your own systems or applications the most flexible way is to use our API, which provides an export in a variety of formats. If you wish to regularly refresh the entire dataset, please clone our data from <a href="https://github.com/openchargemap/ocm-data">GitHub</a>. You can also opt to run your own private <a href="https://github.com/openchargemap/ocm-system/tree/master/API/OCM.Net/OCM.API.Worker">API mirror</a>.</p>
 
+                <h4>Fair Usage Policy</h4>
+                <p>
+                    <strong class="text text-danger">The basic API is provided as a free service with no warranty or service level agreement. Providing this API to you costs us actual money for server resources and data transfer fees. See funding: <a href="https://opencollective.com/openchargemap">https://opencollective.com/openchargemap</a></strong>
+                </p>
+                <p>
+                    If you will be calling the API regularly (from an app or server) you <strong>must provide your API key</strong> as an <code>X-API-Key</code> header (case sensitive) or set the <code>key=YourAPIKey</code> url parameter. You should also set your http user-agent to a custom value to help identify your app.
+                </p>
+                <p>
+                    <strong>To obtain a free API key Sign In and choose 'my apps' from the profile menu.</strong>
+                </p>
+                <p>Do not repeatedly call the API with duplicate queries. Debounce/throttle your API requests to minimise the work our API has to do. The API administrator (Open Charge Map) reserves the right to ban API callers (including automated banning) if callers make excessive/indescriminate use of the API, at the discretion of the OCM administrator.</p>
+                
+                <p>If you require a commercially managed private instance of the OCM API (same data/API hosted on dedicated infrastructure, with SLAs for average response time and availability) please send your enquiry to <em>apps {at} webprofusion.com</em></p>
+
+            </section>
+
+            <section>
                 <p><em>API V3 (documentation last updated Nov 2019)</em></p>
                 <h3>Service Base URL: </h3>
                 <p>
@@ -29,23 +46,6 @@
                     Uptime last 7 days: <a href="https://www.statuscake.com" target="_blank" title="Uptime For Last 7 Days : API Monitoring by StatusCake"><img src="https://app.statuscake.com/button/index.php?Track=41SG6hzhJW&Days=7&Design=5" /></a>
                     last 30 days: <a href="https://www.statuscake.com" target="_blank" title="Uptime For Last 30 Days : API Monitoring by StatusCake"><img src="https://app.statuscake.com/button/index.php?Track=41SG6hzhJW&Days=30&Design=5" /></a>
                 </p>
-
-                <h4>Fair Usage Policy</h4>
-                <p>
-                    <strong class="text text-danger">The basic API is provided as a free service with no warranty or service level agreement. Providing this API to you costs us actual money for server resources and data transfer fees. See funding: <a href="">https://opencollective.com/openchargemap</a></strong>
-                </p>
-                <p>
-                    If you will be calling the API regularly (from an app or server) you should set your http <code>User-Agent</code> header to a custom value identifying your app (or provide the <code>client=YourAppName</code> url parameter) and you will need to provide your API key as an <code>X-API-Key</code> header (case sensitive) or set the <code>key=YourAPIKey</code> url parameter.
-                </p>
-                <p>
-                    To obtain a free API key Sign In and choose 'my apps' from the profile menu.
-
-                    <strong>Do not 'crawl' the API, examples including systematically querying along a grid or along a route, downloading for each country or network operator individually. If you are unsure who to get teh results you need please post a question to our community forum: <a href="https://community.openchargemap.org/">https://community.openchargemap.org/</a></strong>
-                </p>
-                <p>If you require a commercially managed private instance of the OCM API (same data/API hosted on dedicated infrastructure, with SLAs for average response time and availability) please send your enquiry to <em>apps {at} webprofusion.com</em></p>
-            </section>
-
-            <section>
 
                 <h2 id="POI"><i class="fa fa-map-marker"></i> Retrieving POI Data</h2>
                 <p>
