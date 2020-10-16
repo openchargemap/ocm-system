@@ -95,7 +95,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a>
-                        <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>
+                        <!-- <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>-->
 
 
 
@@ -206,7 +206,7 @@
 
 
         </div>
-        <div class="banner-container" style="padding-top:2em;background-image:none;">
+        <div class="banner-container" style="padding-top:1em;background-image:none;">
 
             <div class="banner-backdrop">
                 <div>
@@ -223,9 +223,7 @@
                 <div>
 
                     <div id="datasummary"></div>
-                    <p>
-                        <a class="btn btn-warning btn-sm" href="@Url.Action("Add", "POI")"><span class="glyphicon glyphicon-plus-sign"></span> <span data-localize="ocm.general.addLocation">Add A Location</span></a>
-                    </p>
+                    
                 </div>
             </div>
         </div>
@@ -234,42 +232,42 @@
     <div id="map-loading" style="width:100%;height:500px;background-color:gainsboro;padding:24px;font-size:24px;position:absolute;">
         <i class="fa fa-map"></i> Map Loading..
     </div>
-    <div id="map-container">
-        <iframe id="map-app" src="https://map.openchargemap.io" onload="mapLoaded();" frameborder="0" allow="geolocation" style="width:100%;height:600px"></iframe>
+    <div id="map-container" style="position: fixed; width: 100%; height: 100%; max-height: fit-content;">
+        <iframe id="map-app" src="https://map.openchargemap.io" onload="mapLoaded();" frameborder="0" allow="geolocation" style="width:100%;height:100%"></iframe>
     </div>
 
     @RenderBody()
-
+   
     }
     else
     {
     <div class="container-fluid" style="margin-top: 120px;">
         <div class="content">
             @{
-                    if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
-                    {
+                if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
+                {
                 <div class="alert alert-warning">
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Note: Open Charge Map is undergoing extensive maintenance and new edits/submission are not currently being accepted.
                 </div>
-                    }
+                }
             }
             @RenderBody()
         </div>
     </div>
-    }
+
 
     <footer class="footer mt-auto py-3">
         <div class="container-fluid">
             <a href="https://www.facebook.com/openchargemap" title="Like us on Facebook"><i class="fa fa-facebook"></i></a>
             <a href="https://twitter.com/#!/open_charge_map" title="Follow us on Twitter"><i class="fa fa-twitter"></i></a>
             <a href="https://github.com/openchargemap/" title="Get involved on Github"><i class="fa fa-github"></i></a>
-            <a href="@Url.Action("Contact","About")" title="Contact Us"><i class="fa fa-comments"></i></a>
+            <a href="@Url.Action("Contact", "About")" title="Contact Us"><i class="fa fa-comments"></i></a>
             <br />
             <span data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</span>
         </div>
     </footer>
-    </div>
-
+    
+                }
     <script src="~/js/analytics.js"></script>
 
     @*

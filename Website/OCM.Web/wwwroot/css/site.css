@@ -58,3 +58,10 @@ footer {
 .results-list .result{
     margin-bottom:1em;
 }
+
+#map-container{
+    position:fixed;
+    width:100%;
+    height:100%;
+    max-height:fit-content;
+}
