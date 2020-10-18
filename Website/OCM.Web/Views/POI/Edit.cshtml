@@ -238,15 +238,8 @@
                     <div id="step-approver-adv" class="collapse">
                         <div class="card-body">
                             <p class="text-info">This section contains options which are not usually changed or are deprecated.</p>
-                            <div class="form-group">
-                                <div class="editor-label" data-localize="ocm.details.dataProvider.sectionTitle">
-                                    @Html.LabelFor(model => model.DataProvider)
-                                </div>
-                                <div class="editor-field">
-                                    @Html.DropDownListFor(model => model.DataProvider.ID, (SelectList)ViewBag.ReferenceData.DataProviderList)
-                                    @Html.ValidationMessageFor(model => model.DataProvider)
-                                </div>
-                            </div>
+                            @Html.HiddenFor(model => model.DataProviderID)
+                            
                             <div class="form-group">
                                 <div class="editor-label" data-localize="ocm.details.dataProvider.providersReference">
                                     @Html.LabelFor(model => model.DataProvidersReference)
