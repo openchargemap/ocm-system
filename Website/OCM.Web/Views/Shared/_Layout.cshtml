@@ -75,6 +75,16 @@
             document.getElementById("map-loading").style.display = "none";
         }
     </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z72QN2CCLC"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-Z72QN2CCLC');
+    </script>
 </head>
 <body>
 
@@ -272,7 +282,7 @@
         </footer>
 
     }
-    <script src="~/js/analytics.js"></script>
+
 
     @*
         @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"), this.ViewContext.RouteData.Values["languagecode"] as string))

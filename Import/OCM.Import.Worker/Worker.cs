@@ -72,6 +72,7 @@ namespace OCM.Import.Worker
                     }
 
                     status.LastImportedProvider = allProviders[indexOfNextProvider];
+
                     status.DateLastImport = DateTime.UtcNow;
 
                     _logger.LogInformation($"Performing Import [{status.LastImportedProvider}], Publishing via API: {status.DateLastImport.Value.ToShortTimeString()}");

@@ -5,53 +5,12 @@
 }
 
 <h1>Contact Us</h1>
-<p class="alert alert-info">
-    Need to submit details of a new charging location? <a class="btn btn-success btn-sm" href="@Url.Action("Add","POI")">Add New Location</a>
-    <br />
-    Do you want to suggest edits to an existing location? Browse to the location details and choose 'Edit'. Your edit will then be submitted for approval.
+<p>
+    To submit details for a new location use the Add Location menu option: <a href="https://map.openchargemap.io/">https://map.openchargemap.io</a>. To
+suggest edits to an existing location browse to the location details and choose 'Edit'. Your edit will then be submitted for approval.
 </p>
 
 <p>
-    Use our <a href="https://github.com/openchargemap/ocm-system/issues">Github Issues</a> if you wish to ask general questions. If you would like to contact us privately you can do so using the form below:
+    For all other enquiries and comments please use <a href="https://community.openchargemap.org/">https://community.openchargemap.org/</a>
 </p>
-@using (Html.BeginForm())
-{
-
-    <div class="form" style="max-width:600px;">
-        <div class="form-group">
-            <div>
-                @Html.LabelFor(model => model.Name, "Your Name")
-            </div>
-            <div>
-                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div>
-                @Html.LabelFor(model => model.Email, "Your Email (required for a response)")
-            </div>
-            <div>
-                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div>
-                @Html.LabelFor(model => model.Comment, "Your Comment")
-            </div>
-            <div>
-                @Html.TextAreaFor(model => model.Comment, 5, 60, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group" style="display:none;">
-            <div>
-                @Html.LabelFor(model => model.Phone, "Phone Number")
-            </div>
-            <div>
-                @Html.TextAreaFor(model => model.Phone, 5, 60, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-options">
-            <input type="submit" class="btn btn-info" value="Send Comment" />
-        </div>
-    </div>
-}
+<p>Please note that we do not enter into individual agreements with organisations. If you wish to use the Open Charge Map data please refer to the <a href="@Url.Action("API","Develop")">API</a> documentation and terms</p>.
