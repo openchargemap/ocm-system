@@ -283,13 +283,16 @@ namespace OCM.MVC.Controllers
             ViewBag.EnableEditView = false;
 
             //get a default new POI using std core reference data
-            var coreReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
-            coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
-            coreReferenceData.ChargePoint.StatusType.ID = 50; //Operational
-            coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors
-            coreReferenceData.ChargePoint.SubmissionStatus = null; //let system decide on submit
-            coreReferenceData.ChargePoint.SubmissionStatusTypeID = null;
-            return View("Edit", coreReferenceData.ChargePoint);
+            using (var refDataManager = new ReferenceDataManager())
+            {
+                var coreReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+                coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
+                coreReferenceData.ChargePoint.StatusType.ID = 50; //Operational
+                coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors
+                coreReferenceData.ChargePoint.SubmissionStatus = null; //let system decide on submit
+                coreReferenceData.ChargePoint.SubmissionStatusTypeID = null;
+                return View("Edit", coreReferenceData.ChargePoint);
+            }
         }
 
         // GET: /POI/Edit/5
@@ -376,7 +379,7 @@ namespace OCM.MVC.Controllers
             var refData = new POIBrowseModel();
             refData.AllowOptionalCountrySelection = false;
             ViewBag.ReferenceData = refData;
-           
+
             ViewBag.ConnectionIndex = 0; //connection counter shared by equipment details
             ViewBag.EnableEditView = true;
 
@@ -601,10 +604,17 @@ namespace OCM.MVC.Controllers
             var poi = poiManager.Get(poiId, true);
             var comment = poi.UserComments.Find(c => c.ID == commentId);
 
-            var user = new UserManager().GetUser((int)UserID);
-            if (POIManager.CanUserEditPOI(poi, user))
+            using (var userManager = new UserManager())
             {
-                await new UserCommentManager().ActionComment(user.ID, commentId);
+                var user = userManager.GetUser((int)UserID);
+
+                if (POIManager.CanUserEditPOI(poi, user))
+                {
+                    using (var commentManager = new UserCommentManager())
+                    {
+                        await commentManager.ActionComment(user.ID, commentId);
+                    }
+                }
             }
 
             // return to approval queue
@@ -621,17 +631,21 @@ namespace OCM.MVC.Controllers
             {
                 try
                 {
-                    var user = new UserManager().GetUser((int)UserID);
-                    if (comment.Rating == 0) comment.Rating = null;
-                    if (new SubmissionManager().PerformSubmission(comment, user) > 0)
+                    using (var userManager = new UserManager())
                     {
-                        if (comment.ChargePointID > 0)
+                        var user = userManager.GetUser((int)UserID);
+                        if (comment.Rating == 0) comment.Rating = null;
+
+                        if (new SubmissionManager().PerformSubmission(comment, user) > 0)
                         {
-                            return RedirectToAction("Details", "POI", new { id = comment.ChargePointID });
-                        }
-                        else
-                        {
-                            return RedirectToAction("Index");
+                            if (comment.ChargePointID > 0)
+                            {
+                                return RedirectToAction("Details", "POI", new { id = comment.ChargePointID });
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index");
+                            }
                         }
                     }
                 }

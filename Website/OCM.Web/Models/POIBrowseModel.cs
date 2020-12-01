@@ -12,9 +12,12 @@ namespace OCM.MVC.Models
     {
         public POIBrowseModel()
         {
-            this.ReferenceData = new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData();
-            this.AllowOptionalCountrySelection = true;
-            //this.CountryIDs = new int[] { 1 }; //default to uk
+            using (var refDataManager = new OCM.API.Common.ReferenceDataManager())
+            {
+                this.ReferenceData = refDataManager.GetCoreReferenceData();
+                this.AllowOptionalCountrySelection = true;
+                //this.CountryIDs = new int[] { 1 }; //default to uk
+            }
         }
 
         public string SearchLocation { get; set; }
@@ -53,7 +56,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.StatusTypes.Where(s=>s.IsUserSelectable==true)), this.StatusTypeIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData.StatusTypes.Where(s => s.IsUserSelectable == true)), this.StatusTypeIDs);
             }
         }
 
@@ -125,7 +128,7 @@ namespace OCM.MVC.Models
                 ratingtypes.Add(new SimpleReferenceDataType { ID = 2, Title = "2 - Not Good" });
                 ratingtypes.Add(new SimpleReferenceDataType { ID = 1, Title = "1 - Bad" });
 
-                return SimpleSelectList(ratingtypes, null, true, 0,"Not Rated");
+                return SimpleSelectList(ratingtypes, null, true, 0, "Not Rated");
             }
         }
 
@@ -163,7 +166,7 @@ namespace OCM.MVC.Models
             {
                 if (includeNoSelectionValue)
                 {
-                    list.Insert(0, new SimpleReferenceDataType { ID = (noSelectionValue!=null?(int)noSelectionValue: -1), Title = (noSelectionText!=null?noSelectionText: "(None Selected)") });
+                    list.Insert(0, new SimpleReferenceDataType { ID = (noSelectionValue != null ? (int)noSelectionValue : -1), Title = (noSelectionText != null ? noSelectionText : "(None Selected)") });
                 }
                 return new SelectList(list, "ID", "Title", (selectedItems != null && selectedItems.Length > 0) ? selectedItems[0].ToString() : null);
             }

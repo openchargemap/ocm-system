@@ -488,7 +488,7 @@ namespace OCM.API.Tests
 
             Assert.True(AreResultsNearPolyline(polyline, searchParams, dbresults), "One or more POIs in result set are not near the polyline");
 
-            Assert.True(cacheResults.Count() == dbresults.Count(), "Cached results and db results should be the same");
+            Assert.True(cacheResults.Count() == dbresults.Count(), $"Cached results {cacheResults.Count()} and db results {dbresults.Count()} should be the same");
         }
 
         private static bool AreResultsNearPolyline(List<Common.LatLon> polyline, Common.APIRequestParams searchParams, IEnumerable<Common.Model.ChargePoint> results)

@@ -18,15 +18,18 @@ namespace OCM.MVC.Controllers
         [Authorize(Roles = "StandardUser")]
         public ActionResult Subscriptions()
         {
-            UserManager userManager = new UserManager();
+            using (var userManager = new UserManager())
+            {
+                var user = userManager.GetUser((int)UserID);
+                ViewBag.UserProfile = user;
+                using (var refDataManager = new ReferenceDataManager())
+                {
+                    ViewBag.ReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+                }
 
-            var user = userManager.GetUser((int)UserID);
-            ViewBag.UserProfile = user;
-
-            ViewBag.ReferenceData = new ReferenceDataManager().GetCoreReferenceData(new APIRequestParams());
-
-            var list = new UserSubscriptionManager().GetUserSubscriptions(user.ID);
-            return View(list);
+                var list = new UserSubscriptionManager().GetUserSubscriptions(user.ID);
+                return View(list);
+            }
         }
 
         [Authorize(Roles = "StandardUser")]

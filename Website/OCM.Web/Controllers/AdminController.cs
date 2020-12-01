@@ -15,6 +15,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using OCM.API.Utils;
+using System.Collections.Generic;
 
 namespace OCM.MVC.Controllers
 {
@@ -465,7 +466,13 @@ namespace OCM.MVC.Controllers
             var tempPath = Path.GetTempPath();
 
             var importManager = new Import.ImportManager(new OCM.Import.ImportSettings { TempFolderPath = tempPath });
-            var providers = importManager.GetImportProviders(new ReferenceDataManager().GetDataProviders());
+
+            List<IImportProvider> providers;
+            using (var refDataManager = new ReferenceDataManager())
+            {
+                providers = importManager.GetImportProviders(refDataManager.GetDataProviders());
+            }
+
             var provider = providers.FirstOrDefault(p => p.GetProviderName() == Request.Form["providerName"]);
 
             var uploadFilename = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";

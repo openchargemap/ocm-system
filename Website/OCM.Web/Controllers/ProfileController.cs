@@ -171,21 +171,26 @@ namespace OCM.MVC.Controllers
             UserManager userManager = new UserManager();
 
             var user = userManager.GetUser((int)UserID);
-            var list = new UserCommentManager().GetUserComments(user.ID).OrderByDescending(c => c.DateCreated);
-            return View(list);
+            using (var commentManager = new UserCommentManager())
+            {
+                var list = commentManager.GetUserComments(user.ID).OrderByDescending(c => c.DateCreated);
+                return View(list);
+            }
         }
 
         [Authorize(Roles = "StandardUser")]
         public ActionResult CommentDelete(int id)
         {
             var user = new UserManager().GetUser((int)UserID);
-            var commentManager = new UserCommentManager();
-            var list = commentManager.GetUserComments(user.ID);
-
-            //delete comment if owned by this user
-            if (list.Where(c => c.User.ID == user.ID && c.ID == id).Any())
+            using (var commentManager = new UserCommentManager())
             {
-                commentManager.DeleteComment(user.ID, id);
+                var list = commentManager.GetUserComments(user.ID);
+
+                //delete comment if owned by this user
+                if (list.Where(c => c.User.ID == user.ID && c.ID == id).Any())
+                {
+                    commentManager.DeleteComment(user.ID, id);
+                }
             }
 
             return RedirectToAction("Comments");
@@ -247,14 +252,14 @@ namespace OCM.MVC.Controllers
                 {
                     app = appManager.GetRegisteredApplication((int)id, userId);
                 }
-             
+
             }
             else
             {
                 app.UserID = userId;
                 app.IsEnabled = true;
                 app.IsWriteEnabled = true;
-                
+
             }
 
             return View("AppEdit", app);
@@ -290,8 +295,11 @@ namespace OCM.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-               
-                app = new RegisteredApplicationManager().UpdateRegisteredApplication(app, UserID);
+
+                using (var appManager = new RegisteredApplicationManager())
+                {
+                    app = appManager.UpdateRegisteredApplication(app, UserID);
+                }
                 return RedirectToAction("Applications", "Profile");
             }
 

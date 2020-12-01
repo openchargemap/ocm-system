@@ -53,8 +53,11 @@ namespace OCM.MVC.Controllers
         private string ComputePayloadSig(string secret, string payload)
         {
             // from : https://github.com/laktak/discourse-sso/blob/master/src/Handler.cs
-            var hash = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(secret)).ComputeHash(Encoding.UTF8.GetBytes(payload));
-            return string.Join("", hash.Select(b => String.Format("{0:x2}", b)));
+            using (var hashAlg = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(secret)))
+            {
+                var hash = hashAlg.ComputeHash(Encoding.UTF8.GetBytes(payload));
+                return string.Join("", hash.Select(b => String.Format("{0:x2}", b)));
+            }
         }
 
         [Authorize(Roles = "StandardUser")]
@@ -93,7 +96,8 @@ namespace OCM.MVC.Controllers
                 string redirectTo = $"{ConfigurationManager.AppSettings["CommunityUrl"]}/session/sso_login?sso={urlEncodedPayload}&sig={returnSig}";
                 return Redirect(redirectTo);
 
-            } else
+            }
+            else
             {
                 return Unauthorized();
             }
@@ -301,62 +305,64 @@ namespace OCM.MVC.Controllers
             //TODO: move all of this logic to UserManager
             string newSessionToken = Guid.NewGuid().ToString();
 
-            var dataModel = new OCMEntities();
-            var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier.ToLower() == userIdentifier.ToLower() && u.IdentityProvider.ToLower() == loginProvider.ToLower());
-            if (userDetails == null)
+            using (var dataModel = new OCMEntities())
             {
-                //create new user details
-                userDetails = new Core.Data.User();
-                userDetails.IdentityProvider = loginProvider;
-                userDetails.Identifier = userIdentifier;
-                if (String.IsNullOrEmpty(name) && loginProvider.ToLower() == "twitter") name = userIdentifier;
-                if (String.IsNullOrEmpty(name) && email != null) name = email.Substring(0, email.IndexOf("@"));
+                var userDetails = dataModel.Users.FirstOrDefault(u => u.Identifier.ToLower() == userIdentifier.ToLower() && u.IdentityProvider.ToLower() == loginProvider.ToLower());
+                if (userDetails == null)
+                {
+                    //create new user details
+                    userDetails = new Core.Data.User();
+                    userDetails.IdentityProvider = loginProvider;
+                    userDetails.Identifier = userIdentifier;
+                    if (String.IsNullOrEmpty(name) && loginProvider.ToLower() == "twitter") name = userIdentifier;
+                    if (String.IsNullOrEmpty(name) && email != null) name = email.Substring(0, email.IndexOf("@"));
 
-                userDetails.Username = name;
-                userDetails.EmailAddress = email;
-                userDetails.DateCreated = DateTime.UtcNow;
-                userDetails.DateLastLogin = DateTime.UtcNow;
-                userDetails.IsProfilePublic = true;
+                    userDetails.Username = name;
+                    userDetails.EmailAddress = email;
+                    userDetails.DateCreated = DateTime.UtcNow;
+                    userDetails.DateLastLogin = DateTime.UtcNow;
+                    userDetails.IsProfilePublic = true;
 
-                //only update session token if new (also done on logout)
-                if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
+                    //only update session token if new (also done on logout)
+                    if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
 
-                dataModel.Users.Add(userDetails);
-            }
-            else
-            {
-                //update date last logged in and refresh users details if more information provided
-                userDetails.DateLastLogin = DateTime.UtcNow;
+                    dataModel.Users.Add(userDetails);
+                }
+                else
+                {
+                    //update date last logged in and refresh users details if more information provided
+                    userDetails.DateLastLogin = DateTime.UtcNow;
 
-                if (userDetails.Username == userDetails.Identifier && !String.IsNullOrEmpty(name)) userDetails.Username = name;
-                if (String.IsNullOrEmpty(userDetails.EmailAddress) && !String.IsNullOrEmpty(email)) userDetails.EmailAddress = email;
+                    if (userDetails.Username == userDetails.Identifier && !String.IsNullOrEmpty(name)) userDetails.Username = name;
+                    if (String.IsNullOrEmpty(userDetails.EmailAddress) && !String.IsNullOrEmpty(email)) userDetails.EmailAddress = email;
 
-                //only update session token if new (also done on logout)
-                if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
-            }
+                    //only update session token if new (also done on logout)
+                    if (String.IsNullOrEmpty(userDetails.CurrentSessionToken)) userDetails.CurrentSessionToken = newSessionToken;
+                }
 
-            //get whichever session token we used
-            //newSessionToken = userDetails.CurrentSessionToken;
+                //get whichever session token we used
+                //newSessionToken = userDetails.CurrentSessionToken;
 
-            //store updates to user
-            dataModel.SaveChanges();
+                //store updates to user
+                dataModel.SaveChanges();
 
-            PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
-            /*if (HttpContext.Items.ContainsKey("_postLoginRedirect"))
-            {
-                string returnURL = HttpContext.Items["_postLoginRedirect"].ToString();
-                return Redirect(returnURL);
-            }*/
+                PerformCoreLogin(OCM.API.Common.Model.Extensions.User.FromDataModel(userDetails));
+                /*if (HttpContext.Items.ContainsKey("_postLoginRedirect"))
+                {
+                    string returnURL = HttpContext.Items["_postLoginRedirect"].ToString();
+                    return Redirect(returnURL);
+                }*/
 
-            if (!String.IsNullOrEmpty(Session.GetString("_redirectURL")))
-            {
-                string returnURL = Session.GetString("_redirectURL");
-                return Redirect(returnURL);
-            }
-            else
-            {
-                //nowhere specified to redirect to, redirect to home page
-                return RedirectToAction("Index", "Home");
+                if (!String.IsNullOrEmpty(Session.GetString("_redirectURL")))
+                {
+                    string returnURL = Session.GetString("_redirectURL");
+                    return Redirect(returnURL);
+                }
+                else
+                {
+                    //nowhere specified to redirect to, redirect to home page
+                    return RedirectToAction("Index", "Home");
+                }
             }
         }
 

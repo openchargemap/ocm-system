@@ -60,7 +60,7 @@ namespace OCM.API.Client
         }
     }
 
-    public class OCMClient
+    public class OCMClient: IDisposable
     {
         public bool IsSandboxMode { get; set; }
         public string ServiceBaseURL { get; set; }
@@ -393,6 +393,11 @@ namespace OCM.API.Client
                     }
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _client.Dispose();
         }
 
 #endif

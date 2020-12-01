@@ -17,11 +17,9 @@ namespace OCM.API.Common
         CountryLevel_Approver = 200
     }
 
-    public class UserManager
+    public class UserManager : ManagerBase
     {
         public class PasswordNotSetException : Exception { }
-
-        private OCM.Core.Data.OCMEntities dataModel = new Core.Data.OCMEntities();
 
         public Model.User GetUser(OCM.API.Common.Model.LoginModel loginModel)
         {
