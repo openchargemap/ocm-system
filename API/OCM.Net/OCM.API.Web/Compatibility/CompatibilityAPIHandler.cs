@@ -447,7 +447,7 @@ namespace OCM.API
 
             if (!String.IsNullOrEmpty(context.Request.Query["output"]))
             {
-                outputType = ParseString(context.Request.Query["output"]);
+                outputType = ParseString(context.Request.Query["output"]).ToLower();
             }
             else
             {
