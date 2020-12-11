@@ -31,6 +31,7 @@ namespace OCM.API.OutputProviders
             this.Properties = new Dictionary<string, object>();
         }
 
+        public string Type { get; set; } = "Feature";
         public string ID { get; set; }
 
         public GeoJSONGeometry Geometry { get; set; }
@@ -45,6 +46,8 @@ namespace OCM.API.OutputProviders
             this.Features = new List<GeoJSONFeature>();
         }
 
+        public string Type { get; set; } = "FeatureCollection";
+
         public List<GeoJSONFeature> Features { get; set; }
     }
 
@@ -52,7 +55,7 @@ namespace OCM.API.OutputProviders
     {
         public GeoJSONOutputProvider()
         {
-            ContentType = "application/json";
+            ContentType = "application/geo+json";
         }
 
         public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
@@ -64,7 +67,7 @@ namespace OCM.API.OutputProviders
                 {
                     var feature = new GeoJSONFeature();
                     feature.ID = poi.ID.ToString();
-                    feature.Geometry.Coordinates = new double[] { poi.AddressInfo.Latitude, poi.AddressInfo.Longitude };
+                    feature.Geometry.Coordinates = new double[] { poi.AddressInfo.Longitude, poi.AddressInfo.Latitude };
 
                     Common.Model.ConnectionInfo maxConnection = null;
                     if (poi.Connections != null)
