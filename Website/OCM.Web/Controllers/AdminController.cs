@@ -502,10 +502,10 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult Benchmarks()
+        public async Task<ActionResult> Benchmarks()
         {
-            CacheProviderMongoDB cache = new CacheProviderMongoDB();
-            var results = cache.PerformPOIQueryBenchmark(10, "distance");
+            var cache = new CacheProviderMongoDB();
+            var results = await cache.PerformPOIQueryBenchmark(10, "bounding");
             return View(results);
         }
     }

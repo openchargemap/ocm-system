@@ -1237,7 +1237,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public List<BenchmarkResult> PerformPOIQueryBenchmark(int numQueries, string mode = "country")
+        public async Task<List<BenchmarkResult>> PerformPOIQueryBenchmark(int numQueries, string mode = "country")
         {
             List<BenchmarkResult> results = new List<BenchmarkResult>();
 
@@ -1247,7 +1247,7 @@ namespace OCM.Core.Data
 
                 try
                 {
-                    result.Description = "Cached POI Query " + i;
+                    result.Description = "Cached POI Query [" + mode + "] " + i;
 
                     APIRequestParams filter = new APIRequestParams();
                     filter.MaxResults = 100;
@@ -1256,7 +1256,7 @@ namespace OCM.Core.Data
                     {
                         filter.CountryCode = "NL";
                     }
-                    else
+                    else if (mode == "distance")
                     {
                         filter.Latitude = 57.10604;
                         filter.Longitude = -2.62214;
@@ -1264,10 +1264,16 @@ namespace OCM.Core.Data
 
                         filter.DistanceUnit = DistanceUnit.Miles;
                     }
+                    else
+                    {
+                        var r = new Random(100).NextDouble();
 
-                    var stopwatch = new Stopwatch();
-                    stopwatch.Start();
-                    var poiList = this.GetPOIList(filter);
+                        filter.BoundingBox = new List<LatLon> { new LatLon { Latitude = -32.27537992647112 + (r / 100), Longitude = 114.88498474200799 + (r / 100) }, new LatLon { Latitude = -31.664884896457338 + (r / 100), Longitude = 116.45335732240358 + (r / 100) } };
+                        filter.DistanceUnit = DistanceUnit.Miles;
+                    }
+
+                    var stopwatch = Stopwatch.StartNew();
+                    var poiList = await this.GetPOIListAsync(filter);
                     stopwatch.Stop();
                     result.Description += " results:" + poiList.ToArray().Count();
                     result.TimeMS = stopwatch.ElapsedMilliseconds;
