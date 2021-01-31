@@ -1156,7 +1156,12 @@ namespace OCM.Core.Data
                     }
                     else
                     {
-                        results = poiList.OrderByDescending(p => p.ID).Take(filter.MaxResults).AsEnumerable();
+                        if (filter.BoundingBox != null && filter.BoundingBox.Any()) {
+                            poiList = poiList.OrderByDescending(p => p.ID);
+                        }
+                        // In boundingbox more, if no sorting was requested by the user,
+                        // do not perform any sorting for performance reasons.
+                        results = poiList.Take(filter.MaxResults).AsEnumerable();
                     }
 
                     System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
