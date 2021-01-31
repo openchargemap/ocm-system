@@ -416,12 +416,26 @@ namespace OCM.Core.Data
         }
 
         /// <summary>
+        /// Ensure all MongoDB indexes are being set up.
+        /// </summary>
+        /// <returns></returns>
+        protected void ensureMongoDBIndexes() {
+            var poiCollection = database.GetCollection<POIMongoDB>("poi");
+            poiCollection.CreateIndex(IndexKeys.GeoSpatial("SpatialPosition.coordinates"));
+            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
+            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
+            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
+        }
+
+        /// <summary>
         /// Perform full or partial repopulation of POI Mirror in MongoDB
         /// </summary>
         /// <returns></returns>
         public async Task<MirrorStatus> PopulatePOIMirror(CacheUpdateStrategy updateStrategy, ILogger logger = null)
         {
             bool preserveExistingPOIs = true;
+
+            ensureMongoDBIndexes();
 
             // cache will refresh either from the source database or via a master API
             if (!_settings.IsCacheOnlyMode)
@@ -492,12 +506,6 @@ namespace OCM.Core.Data
 
                             await Task.Delay(300);
                             InsertAllPOI(poiList, poiCollection);
-
-                            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
-                            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
-                            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
-                            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
-
                         }
                     }
                     else
@@ -528,10 +536,6 @@ namespace OCM.Core.Data
 
                             poiList = await GetPOIListToUpdate(dataModel, updateStrategy, coreRefData, pageIndex, pageSize);
                         }
-                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
-                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
-                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
-                        poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
 
                         poiCollection.ReIndex();
 
@@ -679,11 +683,6 @@ namespace OCM.Core.Data
 
                                     Thread.Sleep(300);
                                     InsertAllPOI(poiList, poiCollection);
-
-                                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition));
-                                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
-                                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
-                                    poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
 
                                     if (updateStrategy == CacheUpdateStrategy.All)
                                     {
@@ -1051,7 +1050,7 @@ namespace OCM.Core.Data
                         System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
 #endif
                     }
-                    poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition", pointList).Inject());
+                    poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
                 }
                 else
                 {
@@ -1059,7 +1058,7 @@ namespace OCM.Core.Data
                     {
                         //filter by distance from lat/lon first
                         if (filter.Distance == null) filter.Distance = DefaultLatLngSearchDistanceKM;
-                        poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)filter.Distance * 1000).Inject());//.Take(settings.MaxResults);
+                        poiList = poiList.Where(q => Query.Near("SpatialPosition.coordinates", searchPoint, (double)filter.Distance * 1000).Inject());
                     }
                 }
 
