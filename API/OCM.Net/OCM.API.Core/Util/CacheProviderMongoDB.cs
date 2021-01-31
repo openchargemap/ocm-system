@@ -1156,7 +1156,7 @@ namespace OCM.Core.Data
                     }
                     else
                     {
-                        if (filter.BoundingBox != null && filter.BoundingBox.Any()) {
+                        if (filter.BoundingBox == null || !filter.BoundingBox.Any()) {
                             poiList = poiList.OrderByDescending(p => p.ID);
                         }
                         // In boundingbox more, if no sorting was requested by the user,
