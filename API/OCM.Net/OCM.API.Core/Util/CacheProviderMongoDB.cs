@@ -904,7 +904,7 @@ namespace OCM.Core.Data
             return GetPOIListAsync(settings).Result;
         }
 
-        protected IQueryable<OCM.API.Common.Model.ChargePoint> applyPOIFilterCriteria(
+        protected IQueryable<OCM.API.Common.Model.ChargePoint> ApplyPOIFilterCriteria(
             IQueryable<OCM.API.Common.Model.ChargePoint> poiList,
             APIRequestParams filter)
         {
@@ -1116,7 +1116,7 @@ namespace OCM.Core.Data
                     }
                 }
 
-                poiList = applyPOIFilterCriteria(poiList, filter);
+                poiList = ApplyPOIFilterCriteria(poiList, filter);
 
                 if (filter.ChangesFromDate != null)
                 {
@@ -1294,7 +1294,7 @@ namespace OCM.Core.Data
             IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
             poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
 
-            poiList = applyPOIFilterCriteria(poiList, filter);
+            poiList = ApplyPOIFilterCriteria(poiList, filter);
 
             return poiList.Count();
         }
