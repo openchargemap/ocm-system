@@ -1251,6 +1251,54 @@ namespace OCM.Core.Data
             }
         }
 
+        public async Task<int?> GetPOICountAsync(APIRequestParams filter)
+        {
+            // no async implementation so far
+            await Task.CompletedTask;
+
+            if (!IsCacheReady())
+            {
+                System.Diagnostics.Debug.Print("MongoDB cache is outdated, returning null result.");
+                return null;
+            }
+
+            double[,] pointList;
+
+            IEnumerable<LatLon> searchPolygon = null;
+
+            if (filter.BoundingBox != null && filter.BoundingBox.Any())
+            {
+                // bounding box points could be in any order, so normalise here:
+                var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(filter.BoundingBox)
+                                    .Coordinates
+                                    .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+
+                searchPolygon = polyPoints;
+            } else {
+                throw new Exception("not implemented, please use a boundingbox query instead");
+            }
+
+            pointList = new double[searchPolygon.Count(), 2];
+            int pointIndex = 0;
+            foreach (var p in searchPolygon)
+            {
+                pointList[pointIndex, 0] = (double)p.Longitude;
+                pointList[pointIndex, 1] = (double)p.Latitude;
+                pointIndex++;
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
+#endif
+            }
+
+            var collection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
+            IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
+            poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
+
+            poiList = applyPOIFilterCriteria(poiList, filter);
+
+            return poiList.Count();
+        }
+    
         public async Task<List<BenchmarkResult>> PerformPOIQueryBenchmark(int numQueries, string mode = "country")
         {
             List<BenchmarkResult> results = new List<BenchmarkResult>();

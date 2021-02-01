@@ -538,6 +538,12 @@ namespace OCM.API
                     return true;
                 }
 
+                if (filter.Action == "getpoicount")
+                {
+                    await OutputPOICount(outputProvider, context, filter);
+                    return true;
+                }
+
                 if (filter.Action == "geocode")
                 {
                     OutputGeocodingResult(outputProvider, context, filter);
@@ -609,6 +615,23 @@ namespace OCM.API
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("OutputPOIList: Time for Output to stream: " + stopwatch.ElapsedMilliseconds + "ms");
 #endif
+        }
+
+        /// <summary>
+        /// Output POI count for a given filter
+        /// </summary>
+        /// <param name="outputProvider"></param>
+        /// <param name="context"></param>
+        /// <param name="filter"></param>
+        private async Task OutputPOICount(IOutputProvider outputProvider, HttpContext context, APIRequestParams filter)
+        {
+            var poiManager = new POIManager();
+            try {
+                var count = await poiManager.GetPOICountAsync(filter);
+                await outputProvider.GetOutput(context, context.Response.Body, new { count = count } , filter);
+            } catch (Exception e) {
+                await OutputBadRequestMessage(context, e.Message, 400);
+            }
         }
 
         /// <summary>
@@ -832,7 +855,11 @@ namespace OCM.API
             if (context.Request.Path.ToString().Contains("/poi"))
             {
                 this.APIBehaviourVersion = 3;
-                this.DefaultAction = "poi";
+                if (context.Request.Path.ToString().Contains("/count")) {
+                    this.DefaultAction = "getpoicount";
+                } else {
+                    this.DefaultAction = "poi";
+                }
                 this.IsQueryByPost = false;
             }
 

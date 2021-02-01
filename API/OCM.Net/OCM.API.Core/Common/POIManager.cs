@@ -581,6 +581,22 @@ namespace OCM.API.Common
         }
 
         /// <summary>
+        /// For given query/output settings, return just the charge point count. May be a cached response.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public async Task<int?> GetPOICountAsync(APIRequestParams filterParams) {
+            // clone filter settings to remove mutation side effects in callers
+            var filter = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filterParams));
+            filter.EnableCaching = false;
+
+            if (!filter.AllowMirrorDB) {
+                throw new Exception("not implemented");
+            }
+            return await CacheProviderMongoDB.DefaultInstance.GetPOICountAsync(filter);
+        }
+
+        /// <summary>
         /// for given charge point, return list of similar charge points based on location/title etc with approx similarity
         /// </summary>
         /// <param name="poi"></param>
