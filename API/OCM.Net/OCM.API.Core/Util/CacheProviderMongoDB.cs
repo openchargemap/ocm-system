@@ -1012,6 +1012,49 @@ namespace OCM.Core.Data
             return newList;
         }
 
+        protected double[,] BuildGeoWithinPolygon(APIRequestParams filter) {
+
+            double[,] pointList;
+
+            //filter by location within polyline expanded to a polygon
+            IEnumerable<LatLon> searchPolygon = null;
+
+            if (filter.Polyline != null && filter.Polyline.Any())
+            {
+                if (filter.Distance == null) filter.Distance = DefaultPolylineSearchDistanceKM;
+                searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(filter.Polyline, (double)filter.Distance);
+            }
+
+            if (filter.BoundingBox != null && filter.BoundingBox.Any())
+            {
+                // bounding box points could be in any order, so normalise here:
+                var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(filter.BoundingBox)
+                                    .Coordinates
+                                    .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+
+                searchPolygon = polyPoints;
+            }
+
+            if (filter.Polygon != null && filter.Polygon.Any())
+            {
+                searchPolygon = filter.Polygon;
+            }
+
+            pointList = new double[searchPolygon.Count(), 2];
+            int pointIndex = 0;
+            foreach (var p in searchPolygon)
+            {
+                pointList[pointIndex, 0] = (double)p.Longitude;
+                pointList[pointIndex, 1] = (double)p.Latitude;
+                pointIndex++;
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
+#endif
+            }
+
+            return pointList;
+        }
+
         public async Task<IEnumerable<OCM.API.Common.Model.ChargePoint>> GetPOIListAsync(APIRequestParams filter)
         {
 
@@ -1066,44 +1109,7 @@ namespace OCM.Core.Data
                     filter.Latitude = null;
                     filter.Longitude = null;
 
-                    double[,] pointList;
-
-                    //filter by location within polyline expanded to a polygon
-
-                    IEnumerable<LatLon> searchPolygon = null;
-
-                    if (filter.Polyline != null && filter.Polyline.Any())
-                    {
-                        if (filter.Distance == null) filter.Distance = DefaultPolylineSearchDistanceKM;
-                        searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(filter.Polyline, (double)filter.Distance);
-                    }
-
-                    if (filter.BoundingBox != null && filter.BoundingBox.Any())
-                    {
-                        // bounding box points could be in any order, so normalise here:
-                        var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(filter.BoundingBox)
-                                            .Coordinates
-                                            .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
-
-                        searchPolygon = polyPoints;
-                    }
-
-                    if (filter.Polygon != null && filter.Polygon.Any())
-                    {
-                        searchPolygon = filter.Polygon;
-                    }
-
-                    pointList = new double[searchPolygon.Count(), 2];
-                    int pointIndex = 0;
-                    foreach (var p in searchPolygon)
-                    {
-                        pointList[pointIndex, 0] = (double)p.Longitude;
-                        pointList[pointIndex, 1] = (double)p.Latitude;
-                        pointIndex++;
-#if DEBUG
-                        System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
-#endif
-                    }
+                    var pointList = BuildGeoWithinPolygon(filter);
                     poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
                 }
                 else
@@ -1262,36 +1268,9 @@ namespace OCM.Core.Data
                 return null;
             }
 
-            double[,] pointList;
-
-            IEnumerable<LatLon> searchPolygon = null;
-
-            if (filter.BoundingBox != null && filter.BoundingBox.Any())
-            {
-                // bounding box points could be in any order, so normalise here:
-                var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(filter.BoundingBox)
-                                    .Coordinates
-                                    .Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
-
-                searchPolygon = polyPoints;
-            } else {
-                throw new Exception("not implemented, please use a boundingbox query instead");
-            }
-
-            pointList = new double[searchPolygon.Count(), 2];
-            int pointIndex = 0;
-            foreach (var p in searchPolygon)
-            {
-                pointList[pointIndex, 0] = (double)p.Longitude;
-                pointList[pointIndex, 1] = (double)p.Latitude;
-                pointIndex++;
-#if DEBUG
-                System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
-#endif
-            }
-
             var collection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
             IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
+            var pointList = BuildGeoWithinPolygon(filter);
             poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
 
             poiList = ApplyPOIFilterCriteria(poiList, filter);
