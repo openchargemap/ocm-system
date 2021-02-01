@@ -419,9 +419,10 @@ namespace OCM.Core.Data
         /// Ensure all MongoDB indexes are being set up.
         /// </summary>
         /// <returns></returns>
-        protected void ensureMongoDBIndexes() {
+        protected void EnsureMongoDBIndexes() {
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
-            poiCollection.CreateIndex(IndexKeys.GeoSpatial("SpatialPosition.coordinates"));
+            poiCollection.CreateIndex(IndexKeys.GeoSpatial("SpatialPosition.coordinates")); // bounding box queries
+            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition)); // distance queries
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
@@ -435,7 +436,7 @@ namespace OCM.Core.Data
         {
             bool preserveExistingPOIs = true;
 
-            ensureMongoDBIndexes();
+            EnsureMongoDBIndexes();
 
             // cache will refresh either from the source database or via a master API
             if (!_settings.IsCacheOnlyMode)
@@ -1058,7 +1059,7 @@ namespace OCM.Core.Data
                     {
                         //filter by distance from lat/lon first
                         if (filter.Distance == null) filter.Distance = DefaultLatLngSearchDistanceKM;
-                        poiList = poiList.Where(q => Query.Near("SpatialPosition.coordinates", searchPoint, (double)filter.Distance * 1000).Inject());
+                        poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)filter.Distance * 1000).Inject());
                     }
                 }
 
