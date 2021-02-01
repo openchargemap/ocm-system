@@ -1040,6 +1040,10 @@ namespace OCM.Core.Data
                 searchPolygon = filter.Polygon;
             }
 
+            if (searchPolygon == null) {
+                return null;
+            }
+
             pointList = new double[searchPolygon.Count(), 2];
             int pointIndex = 0;
             foreach (var p in searchPolygon)
@@ -1271,7 +1275,10 @@ namespace OCM.Core.Data
             var collection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
             IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
             var pointList = BuildGeoWithinPolygon(filter);
-            poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
+
+            if (pointList != null) {
+                poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
+            }
 
             poiList = ApplyPOIFilterCriteria(poiList, filter);
 
