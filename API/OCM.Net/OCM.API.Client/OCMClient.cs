@@ -83,6 +83,7 @@ namespace OCM.API.Client
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
+        ~OCMClient() { this.Dispose(); }
 
 
 #if DEBUG
@@ -397,7 +398,11 @@ namespace OCM.API.Client
 
         public void Dispose()
         {
-            _client.Dispose();
+            try
+            {
+                _client.Dispose();
+            }
+            catch { }
         }
 
 #endif
