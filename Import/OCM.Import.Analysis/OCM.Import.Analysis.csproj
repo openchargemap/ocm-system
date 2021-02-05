@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{FBD1BB19-0912-4A8C-BE95-197CCDC27CF3}</ProjectGuid>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyTitle>OCM.Import.Analysis</AssemblyTitle>
     <Product>OCM.Import.Analysis</Product>
     <Copyright>Copyright ©  2015</Copyright>
