@@ -8,6 +8,10 @@
  * */
 
 const enableAPIKeyRules = true;
+const enableLogging = true;
+const enablePrimaryForReads = true;
+const requireAPIKeyForAllRequests = false;
+const logTimeoutMS = 2000;
 
 addEventListener('fetch', event => {
 
@@ -16,33 +20,60 @@ addEventListener('fetch', event => {
     let status = "OK";
 
     const clientIP = event.request.headers.get('cf-connecting-ip');
+    const userAgent = event.request.headers.get('user-agent');
 
-    if (clientIP === "<banned>") {
-        event.waitUntil(rejectRequest(event, "IP Blocked for Abuse"));
+    if (userAgent && userAgent.indexOf("FME/2020") > -1) {
+        event.respondWith(rejectRequest(event, "Blocked for API Abuse. Callers spamming API with repeated duplicate calls may be auto banned."));
         return;
-    } else {
-
-        if (enableAPIKeyRules) {
-            let maxresults = getParameterByName(event.request.url, "maxresults");
-
-            if (apiKey == null && maxresults != null && parseInt(maxresults) > 250) {
-                status = "REJECTED_APIKEY_MISSING";
-                event.respondWith(rejectRequest(event));
-
-            } else {
-                console.log("Passing request with API Key or key not required:" + apiKey);
-
-                //respond
-                event.respondWith(fetchAndApply(event));
-            }
-        } else {
-            //respond
-            event.respondWith(fetchAndApply(event));
-        }
-        //log
-        event.waitUntil(logRequest(event.request, apiKey, status));
     }
+
+    if (apiKey == null && userAgent && userAgent.indexOf("python-requests") > -1) {
+        event.respondWith(rejectRequest(event, "Generic user agents must use an API Key. API Keys are mandatory and this rule will be enforced soon."));
+        return;
+    }
+
+    if (enableAPIKeyRules) {
+        let maxresults = getParameterByName(event.request.url, "maxresults");
+
+        if (apiKey == null && requireAPIKeyForAllRequests == true && event.request.method != "OPTIONS") {
+            status = "REJECTED_APIKEY_MISSING";
+            event.respondWith(rejectRequest(event));
+
+        }
+        else if (apiKey == null && maxresults != null && parseInt(maxresults) > 250) {
+            status = "REJECTED_APIKEY_MISSING";
+            event.respondWith(rejectRequest(event));
+
+        } else {
+            console.log("Passing request with API Key or key not required:" + apiKey);
+
+            //respond
+            event.respondWith(fetchAndApply(event, apiKey, status));
+        }
+    } else {
+        //respond
+        event.respondWith(fetchAndApply(event, apiKey, status));
+    }
+
+    //log
+    if (enableLogging) {
+        event.waitUntil(attemptLog(event, apiKey, status));
+    }
+
 });
+
+async function attemptLog(event, apiKey, status) {
+    // attempt to log but timeout after 1000 ms if no response from log
+    // Initiate the fetch but don't await it yet, just keep the promise.
+    let logPromise = logRequest(event.request, apiKey, status)
+
+    // Create a promise that resolves to `undefined` after 10 seconds.
+    let timeoutPromise = new Promise(resolve => setTimeout(resolve, logTimeoutMS))
+
+    // Wait for whichever promise completes first.
+    return Promise.race([logPromise, timeoutPromise])
+
+}
 
 async function rejectRequest(event, reason) {
     if (!reason || reason == null) {
@@ -55,14 +86,38 @@ async function rejectRequest(event, reason) {
     });
 }
 
-async function fetchAndApply(event) {
+async function fetchAndApply(event, apiKey, status) {
+
+    let banned_ua = await OCM_CONFIG_KV.get("API_BANNED_UA", "json");
+    let banned_ip = await OCM_CONFIG_KV.get("API_BANNED_IP", "json");
+    let banned_keys = await OCM_CONFIG_KV.get("API_BANNED_KEYS", "json");
+
+    const clientIP = event.request.headers.get('cf-connecting-ip');
+    const userAgent = event.request.headers.get('user-agent');
+
+    let abuseMsg = "Blocked for API Abuse. Callers spamming API with repeated duplicate calls may be auto banned.";
+
+    if (banned_ua.includes(userAgent)) {
+        status = "BANNED_UA";
+        return rejectRequest(event, abuseMsg)
+    }
+
+    if (banned_ip.includes(clientIP)) {
+        status = "BANNED_IP";
+        return rejectRequest(event, abuseMsg)
+    }
+
+    if (banned_keys.includes(apiKey)) {
+        status = "BANNED_KEY";
+        return rejectRequest(event, abuseMsg)
+    }
 
     let mirrorHosts = [
         "api-01.openchargemap.io"
     ];
 
     // check if we think this user is currently an editor (has posted)
-    let clientIP = event.request.headers.get('CF-Connecting-IP');
+
     let ip_key = clientIP != null ? "API_EDITOR_" + clientIP.replace(".", "_") : null;
     let isEditor = false;
     if (ip_key != null) {
@@ -99,18 +154,19 @@ async function fetchAndApply(event) {
     if (
         event.request.method != "POST" &&
         !url.href.includes("/geocode") &&
+        !url.href.includes("/map") &&
         !url.href.includes("/.well-known")
     ) {
 
         let mirrorIndex = getRandomInt(0, mirrorHosts.length);
 
         // force query to first mirror if there is one available;
-        if (mirrorIndex == 0 && mirrorHosts.length > 1) {
+        if (!enablePrimaryForReads && mirrorIndex == 0 && mirrorHosts.length > 1) {
             mirrorIndex = 1;
         }
 
         if (mirrorIndex > 0) {
-            console.log("Using mirror API " + mirrorIndex + " for request.");
+            console.log("Using mirror API " + mirrorIndex + " for request. " + mirrorHosts[mirrorIndex]);
         }
         // if not doing a POST request reads can be served randomly from mirrors or from cache
         url.hostname = mirrorHosts[mirrorIndex];
@@ -138,7 +194,7 @@ async function fetchAndApply(event) {
                 // Make the headers mutable by re-constructing the Response.
 
                 response = new Response(response.body, response);
-                if (!response.ok) {
+                if (!response.ok && response.status >= 500) {
                     console.log("Forwarded request failed. " + response.status);
                     throw "Mirror response status failed:" + response.status;
                 }
@@ -216,9 +272,21 @@ function getAPIKey(request) {
 
     let apiKey = getParameterByName(request.url, "key");
 
-    apiKey = request.headers.get('X-API-Key')
-        || request.headers.get('x-api-key')
-        || apiKey;
+    console.log("API Key From URL:" + apiKey);
+
+    if (apiKey == null || apiKey == '') {
+        apiKey = request.headers.get('X-API-Key');
+
+        console.log("API Key From Uppercase header:" + apiKey);
+
+    }
+
+    if (apiKey == null || apiKey == '') {
+        apiKey = request.headers.get('x-api-key');
+
+        console.log("API Key From Lowercase header:" + apiKey);
+    }
+
 
     if (apiKey == '') apiKey = null;
     return apiKey;
