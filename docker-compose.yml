@@ -1,0 +1,7 @@
+version: '2'
+services:
+  db:
+    image: mongo:4.2
+    command: mongod --profile=1 --slowms=1
+    ports:
+      - 27017:27017
