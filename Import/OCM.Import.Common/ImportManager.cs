@@ -1,6 +1,7 @@
 using DotNetProjects.IndexedLinq;
 using GeoCoordinatePortable;
 using KellermanSoftware.CompareNetObjects;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common;
@@ -181,7 +182,7 @@ namespace OCM.Import
             {
                 providers.Add(new ImportProvider_AFDC(afdcKey));
             }
-           
+
             providers.Add(new ImportProvider_ESB_eCars());
 
             if (_settings.ApiKeys.TryGetValue("addenergie_le", out var ae_le))
@@ -238,7 +239,7 @@ namespace OCM.Import
             return false; ;
         }
 
-        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false, int dupeDistance = DUPLICATE_DISTANCE_METERS )
+        public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false, int dupeDistance = DUPLICATE_DISTANCE_METERS)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -635,10 +636,15 @@ namespace OCM.Import
 
         private void Log(string message)
         {
-            this.ImportLog += message + "\r\n";
-
-            System.Diagnostics.Debug.WriteLine(message);
-
+            if (_log != null)
+            {
+                _log.LogInformation(message);
+            }
+            else
+            {
+                this.ImportLog += message + "\r\n";
+                System.Diagnostics.Debug.WriteLine(message);
+            }
 
         }
 
@@ -871,7 +877,6 @@ namespace OCM.Import
                 Log("Processing input..");
 
                 var list = provider.Process(coreRefData);
-
 
                 int numAdded = 0;
                 int numUpdated = 0;

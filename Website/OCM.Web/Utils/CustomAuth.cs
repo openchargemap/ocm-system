@@ -33,7 +33,7 @@ namespace OCM.MVC
 
             if (Request.HttpContext.Session.GetInt32("UserID") != null)
             {
-
+            
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, Request.HttpContext.Session.GetString("Username")));
 

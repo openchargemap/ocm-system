@@ -80,6 +80,7 @@ namespace OCM.Import.Worker
                     try
                     {
                         var stopwatch = Stopwatch.StartNew();
+                        
                         var importedOK = await importManager.PerformImportProcessing(
                             new ImportProcessSettings
                             {
@@ -110,6 +111,7 @@ namespace OCM.Import.Worker
                         _logger.LogError("Import failed: " + exp);
 
                         status.LastImportStatus = "Failed with unknown exception";
+                        _timer.Change(2, _settings.ImportRunFrequencyMinutes);
                     }
 
                     File.WriteAllText(statusPath, System.Text.Json.JsonSerializer.Serialize<ImportStatus>(status));
