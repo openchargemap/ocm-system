@@ -9,7 +9,7 @@ This service requires:
 - 'Official' clones could register/deregister themselves with master API (or cloudflare worker) on service startup/shutdown to participate in API reads.
 - Implement full resync and full cache invalidation. If cache is syncing from empty, API calls need to error otherwise cache could be used for live queries.
 - Implement block hashing compare, currently using dates and IDs as sync keys leaves potential room for some items to be out of sync
-- Docker configuration for minimal setup of new clones. Auto update of clones when new update released: https://docs.docker.com/docker-hub/builds/, https://containrrr.github.io/watchtower/
+- Docker configuration for minimal setup of new clones. Auto update of clones when new update released: https://docs.docker.com/docker-hub/builds/, https://containrrr.github.io/watchtower/ and example docker configuration as been proposed here: https://github.com/ev-freaks/ocm-mirror
 
 ### Linux build
 The OCM Api and website we're original built using the .net framework on Windows, with SQL server as the backend database. A mongodb based caching layer was later added to the API which allowed read operations to avoid querying the SQL database. The system has since been ported to linux as a systemd based worker service.
@@ -83,6 +83,6 @@ Production Hosting
 
 Note the following when hosting in production:
 - a periodic clear and rebuild of poi cache is currently necessary to ensure sync is accurate (primary cache may be rebuilt if reference data changes etc).
-    - mongo: use ocm_mirror, db.poi.drop(), then wait for cache to rebuild on next update check or restart api service
+    - `mongo`: `use ocm_mirror`, `db.poi.drop()`, then wait for cache to rebuild on next update check or restart the api service to force a rebuild.
 - On linux, ensure there is adequate swap space available. Allow at least 2GB of main ram and size swap space as required. Some cloud provider images have no swap space by default. Failure to do so will result in hangs.
-- MongoDB requires periodic restarts, the suggestion is hourly if load balanced/fault tolerant or nightly as required.
+- MongoDB may require periodic restarts for reliability, the suggestion is hourly if load balanced/fault tolerant or nightly as required.
