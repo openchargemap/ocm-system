@@ -1087,7 +1087,7 @@ namespace OCM.Core.Data
                                        && (filter.DataProviderName == null || c.DataProvider.Title == filter.DataProviderName)
                                        && (filterByCountries == false || (filterByCountries == true && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
                                        && (filterByOperators == false || (filterByOperators == true && filter.OperatorIDs.Contains((int)c.OperatorID)))
-                                       && (filterByChargePoints == false || (filterByChargePoints == true && filter.ChargePointIDs.Contains(c.ID)))
+                                       && (filterByChargePoints == false || (filterByChargePoints == true && filter.ChargePointIDs.Contains((int)c.ID)))
                                        && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeID)))
                                        && ((filterByStatus == false && c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned) || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)))
                                        && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderID)))
