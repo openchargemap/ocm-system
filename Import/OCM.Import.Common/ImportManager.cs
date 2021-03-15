@@ -74,6 +74,8 @@ namespace OCM.Import
 
         public string Log { get; set; }
 
+        public bool IsSuccess { get; set; } = false;
+
         public ImportReport()
         {
             ImportItems = new List<ImportItem>();
@@ -231,8 +233,12 @@ namespace OCM.Import
                 if (settings.ProviderName == null || settings.ProviderName.ToLower() == provider.GetProviderName().ToLower())
                 {
 
-                    await PerformImport(settings, credentials, coreRefData, provider);
-                    return true;
+                    var result= await PerformImport(settings, credentials, coreRefData, provider);
+
+                    Log(result.Log);
+
+                    return result.IsSuccess;
+                    
                 }
             }
 
