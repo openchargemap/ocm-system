@@ -36,6 +36,7 @@ var OCM;
     ;
     var API = /** @class */ (function () {
         function API() {
+            this.apiKey = "9bb03e5b-0fb2-4916-9b2b-26c6bd27a56a";
             this.serviceBaseURL = "https://api.openchargemap.io/v2";
             this.serviceBaseURL_Standard = "https://api.openchargemap.io/v2";
             this.serviceBaseURL_Sandbox = "https://sandbox.api.openchargemap.io/v2";
@@ -51,7 +52,7 @@ var OCM;
                 additionalparams = "";
             if (!errorcallback)
                 errorcallback = this.handleGeneralAjaxError;
-            var apiCallURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams;
+            var apiCallURL = this.serviceBaseURL + "/poi/?key=" + this.apiKey + "&client=" + this.clientName + "&verbose=false&output=json&countrycode=" + countrycode + "&longitude=" + lon + "&latitude=" + lat + "&distance=" + distance + "&distanceunit=" + distanceunit + "&includecomments=" + includecomments + "&maxresults=" + maxresults + "&" + additionalparams;
             if (console) {
                 console.log("API Call:" + apiCallURL);
             }
@@ -66,7 +67,7 @@ var OCM;
             });
         };
         API.prototype.fetchLocationDataListByParam = function (params, callbackname, errorcallback) {
-            var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
+            var serviceURL = this.serviceBaseURL + "/poi/?key=" + this.apiKey + "&client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
             var serviceParams = "";
             if (params.countryCode != null)
                 serviceParams += "&countrycode=" + params.countryCode;
@@ -131,7 +132,7 @@ var OCM;
             $.ajax(ajaxSettings);
         };
         API.prototype.fetchLocationById = function (id, callbackname, errorcallback, disableCaching) {
-            var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
+            var serviceURL = this.serviceBaseURL + "/poi/?key=" + this.apiKey + "&client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
             if (disableCaching)
                 serviceURL += "&enablecaching=false";
             if (!errorcallback)
@@ -177,7 +178,7 @@ var OCM;
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
             var ajaxSettings = {
                 type: "GET",
-                url: this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&callback=" + callbackname + "&" + authInfoParams,
+                url: this.serviceBaseURL + "/referencedata/?key=" + this.apiKey + "&client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&callback=" + callbackname + "&" + authInfoParams,
                 jsonp: "false",
                 contentType: "application/json;",
                 dataType: "jsonp",
@@ -190,7 +191,7 @@ var OCM;
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
             var ajaxSettings = {
                 type: "GET",
-                url: this.serviceBaseURL + "/geocode/?client=" + this.clientName + "&address=" + address + "&output=json&verbose=false&camelcase=true&" + authInfoParams,
+                url: this.serviceBaseURL + "/geocode/?key=" + this.apiKey + "&client=" + this.clientName + "&address=" + address + "&output=json&verbose=false&camelcase=true&" + authInfoParams,
                 contentType: "application/json;",
                 dataType: "jsonp",
                 crossDomain: true,
@@ -215,7 +216,7 @@ var OCM;
             var jsonString = JSON.stringify(data);
             var ajaxSettings = {
                 type: "POST",
-                url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=cp_submission&format=json" + authInfoParams,
+                url: this.serviceBaseURL + "/?key=" + this.apiKey + "&client=" + this.clientName + "&action=cp_submission&format=json" + authInfoParams,
                 data: jsonString,
                 complete: function (jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
                 crossDomain: true,
@@ -228,7 +229,7 @@ var OCM;
             var jsonString = JSON.stringify(data);
             $.ajax({
                 type: "POST",
-                url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=comment_submission&format=json" + authInfoParams,
+                url: this.serviceBaseURL + "/?key=" + this.apiKey + "&client=" + this.clientName + "&action=comment_submission&format=json" + authInfoParams,
                 data: jsonString,
                 success: function (result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
                 crossDomain: true,
@@ -238,7 +239,7 @@ var OCM;
         API.prototype.submitMediaItem = function (data, authSessionInfo, completedCallback, failureCallback, progressCallback) {
             var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
             $.ajax({
-                url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams,
+                url: this.serviceBaseURL + "/?key=" + this.apiKey + "&client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams,
                 type: 'POST',
                 xhr: function () {
                     var myXhr = $.ajaxSettings.xhr();
