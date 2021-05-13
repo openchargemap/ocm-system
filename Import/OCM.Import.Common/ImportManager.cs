@@ -233,12 +233,12 @@ namespace OCM.Import
                 if (settings.ProviderName == null || settings.ProviderName.ToLower() == provider.GetProviderName().ToLower())
                 {
 
-                    var result= await PerformImport(settings, credentials, coreRefData, provider);
+                    var result = await PerformImport(settings, credentials, coreRefData, provider);
 
                     Log(result.Log);
 
                     return result.IsSuccess;
-                    
+
                 }
             }
 
@@ -1184,9 +1184,12 @@ namespace OCM.Import
 
         #region helper methods
 
-        public void PopulateLocationFromGeolocationCache(List<ChargePoint> itemList, CoreReferenceData coreRefData)
+        public List<ChargePoint> PopulateLocationFromGeolocationCache(IEnumerable<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
-            OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
+            //OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
+            var spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "\\ne_10m_admin_0_countries.shp");
+
+            List<ChargePoint> failedLookups = new List<ChargePoint>();
 
             //process list of locations, populating country refreshing cache where required
             foreach (var item in itemList)
@@ -1200,14 +1203,16 @@ namespace OCM.Import
                     {
                         country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == test.CountryCode || c.Title == test.CountryName);
                     }
+
                     if (country == null)
                     {
                         var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
                         if (geoLookup != null)
                         {
                             country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
-                        }
+                        } 
                     }
+
                     if (country != null)
                     {
                         item.AddressInfo.Country = country;
@@ -1224,7 +1229,9 @@ namespace OCM.Import
 
                     if (item.AddressInfo.Country == null)
                     {
-                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title);
+                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title+" OCM-"+item.ID );
+
+                        failedLookups.Add(item);
                     }
                     else
                     {
@@ -1235,6 +1242,7 @@ namespace OCM.Import
 
             //cache may have updates, save for next time
             geolocationCacheManager.SaveCache();
+            return failedLookups;
         }
 
         public APICredentials GetAPISessionCredentials(string identifier, string sessionToken)
@@ -1242,44 +1250,129 @@ namespace OCM.Import
             return new APICredentials { Identifier = identifier, SessionToken = sessionToken };
         }
 
-        public void GeocodingTest()
+        public async Task GeocodingTestCountries()
         {
 
-            //get a few OCM listings
-            SearchFilters filters = new SearchFilters { SubmissionStatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Submitted_Published }, CountryIDs = new int[] { 1 }, DataProviderIDs = new int[] { 1 }, MaxResults = 2000, EnableCaching = false };
+            //get a few OCM listings and check that their country appears to be correct
+            // curl  "https://api.openchargemap.io/v3/poi?key=test&maxresults=20000000" --output  C:\Temp\ocm\data\import\poi.json
+            var cachePath = @"C:\temp\ocm\data\import\poi.json";
+            
+            List<ChargePoint> poiList;
+            var coreRefData = await _client.GetCoreReferenceDataAsync();
 
-            var poiList = _client.GetPOIListAsync(filters);
-            /*
-            GeocodingService g = new GeocodingService();
-            List<GeolocationResult> list = new List<GeolocationResult>();
-
-            //attempt OSM geocoding
-            foreach (var poi in poiList)
+            if (!File.Exists(cachePath))
             {
-                try
+                var filters = new SearchFilters { SubmissionStatusTypeIDs = new int[] { (int)StandardSubmissionStatusTypes.Imported_Published, (int)StandardSubmissionStatusTypes.Submitted_Published }, MaxResults = 200000, EnableCaching = true };
+
+                poiList = (await _client.GetPOIListAsync(filters)).ToList();
+
+                await System.IO.File.WriteAllTextAsync(cachePath, JsonConvert.SerializeObject(poiList));
+            } else
+            {
+
+                var list = new List<ChargePoint>();
+
+                JsonSerializer serializer = new JsonSerializer();
+               
+                using (FileStream st = File.Open(cachePath, FileMode.Open))
+                using (StreamReader sr = new StreamReader(st))
+                using (JsonReader reader = new JsonTextReader(sr))
                 {
-                    System.Diagnostics.Debug.WriteLine("OCM-" + poi.ID + " : [" + poi.AddressInfo.Title + "] " + poi.AddressInfo.ToString());
 
-                    System.Diagnostics.Debug.WriteLine("OCM : LL: " + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude);
-
-                    var osm = g.GeolocateAddressInfo_OSM(poi.AddressInfo);
-                    System.Diagnostics.Debug.WriteLine("OSM : LL: " + osm.Latitude + "," + osm.Longitude);
-                    list.Add(osm);
-
-                    var mpq = g.GeolocateAddressInfo_MapquestOSM(poi.AddressInfo);
-                    System.Diagnostics.Debug.WriteLine("MPQ : LL: " + mpq.Latitude + "," + mpq.Longitude);
-                    list.Add(mpq);
+                    while (reader.Read())
+                    {
+                        // deserialize only when there's "{" character in the stream
+                        if (reader.TokenType == JsonToken.StartObject)
+                        {
+                            var o = serializer.Deserialize<ChargePoint>(reader);
+                            list.Add(o);
+                        }
+                    }
                 }
-                catch (Exception exp)
-                {
-                    System.Diagnostics.Debug.WriteLine("Exception during geocoding:" + exp.ToString());
-                }
-                System.Threading.Thread.Sleep(1000);
+
+                poiList = list.Where(p=>p.AddressInfo.CountryID!=159 &&p.AddressInfo.CountryID!=1).ToList();
             }
 
-            string json = JsonConvert.SerializeObject(list, Formatting.Indented);
-            System.IO.File.WriteAllText("C:\\temp\\GeocodingResult.json", json);
-             * */
+            // if some locations are known to fail lookup, don't attempt them
+            var knownFailsFile = @"C:\temp\ocm\data\import\failed-country-lookups.json";
+            List<ChargePoint> knownFails = new List<ChargePoint>();
+            if (File.Exists(knownFailsFile))
+            {
+                knownFails = JsonConvert.DeserializeObject<List<ChargePoint>>(await File.ReadAllTextAsync(knownFailsFile));
+                var list = (List<ChargePoint>) poiList;
+                foreach (var p in knownFails)
+                {
+                    list.Remove(list.FirstOrDefault(l => l.ID == p.ID));
+                }
+            }
+
+            var poiListCopy = JsonConvert.DeserializeObject<List<ChargePoint>>(JsonConvert.SerializeObject(poiList));
+
+            // clear existing country info
+            foreach (var p in poiList)
+            {
+                p.AddressInfo.Country = null;
+                p.AddressInfo.CountryID = null;
+            }
+
+            // determine country
+            var s = Stopwatch.StartNew();
+            var failedLookups =  PopulateLocationFromGeolocationCache(poiList, coreRefData);
+            s.Stop();
+            System.Diagnostics.Debug.WriteLine("Lookup took " + s.Elapsed.TotalSeconds + "s");
+
+            // log failed lookups
+            foreach(var p in failedLookups)
+            {
+                if (!knownFails.Any(k=>k.ID==p.ID))
+                {
+                    knownFails.Add(p);
+                }
+            }
+            await System.IO.File.WriteAllTextAsync(knownFailsFile, JsonConvert.SerializeObject(knownFails, Formatting.Indented));
+           
+
+            var file = @"C:\temp\ocm\data\import\country-fixes.csv";
+
+            using (var stream = File.CreateText(file))
+            {
+                stream.WriteLine($"Id,AddressInfoId,OriginalCountryId,NewCountryId");
+                foreach (var p in poiList)
+                {
+                    var orig = poiListCopy.Find(f => f.ID == p.ID);
+
+                    if (p.AddressInfo.CountryID == null)
+                    {
+                        // could not check, use original
+                        p.AddressInfo.Country = orig.AddressInfo.Country;
+                        p.AddressInfo.CountryID = orig.AddressInfo.CountryID;
+                    }
+
+                    if (orig.AddressInfo.CountryID != p.AddressInfo.CountryID)
+                    {
+
+                        stream.WriteLine($"{p.ID},{p.AddressInfo.ID},{orig.AddressInfo.CountryID}, {p.AddressInfo.CountryID}");
+                    }
+                }
+                stream.Flush();
+                stream.Close();
+            }
+
+            var changedCountries = 0;
+            foreach (var p in poiList)
+            {
+                var orig = poiListCopy.Find(f => f.ID == p.ID);
+
+                if (orig.AddressInfo.CountryID != p.AddressInfo.CountryID)
+                {
+                    changedCountries++;
+                    System.Diagnostics.Debug.WriteLine("OCM-" + p.ID + " country changed to " + p.AddressInfo.CountryID + " from " + orig.AddressInfo.CountryID);
+                }
+
+            }
+            System.Diagnostics.Debug.WriteLine("Total: " + changedCountries + " changed of " + poiList.Count());
+
+
         }
 
         #endregion helper methods

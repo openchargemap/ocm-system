@@ -10,14 +10,27 @@
 const enableAPIKeyRules = true;
 const enableLogging = true;
 const enablePrimaryForReads = true;
-const requireAPIKeyForAllRequests = false;
+const requireAPIKeyForAllRequests = true;
 const logTimeoutMS = 2000;
 
 addEventListener('fetch', event => {
 
-    // check API key
-    const apiKey = getAPIKey(event.request);
-    let status = "OK";
+    // pass through .well-known for acme http validation on main server
+    console.log(event.request.url);
+    if (event.request.url.toString().indexOf("/.well-known/") > -1) {
+
+        let url = new URL(event.request.url);
+        url.hostname = "api-01.openchargemap.io";
+
+        console.log("Redirected to well known " + url);
+        let modifiedRequest = new Request(url, {
+            method: event.request.method,
+            headers: event.request.headers
+        });
+
+        event.respondWith(fetch(modifiedRequest));
+        return;
+    }
 
     const clientIP = event.request.headers.get('cf-connecting-ip');
     const userAgent = event.request.headers.get('user-agent');
@@ -27,8 +40,15 @@ addEventListener('fetch', event => {
         return;
     }
 
-    if (apiKey == null && userAgent && userAgent.indexOf("python-requests") > -1) {
-        event.respondWith(rejectRequest(event, "Generic user agents must use an API Key. API Keys are mandatory and this rule will be enforced soon."));
+    // check API key
+    const apiKey = getAPIKey(event.request);
+    let status = "OK";
+
+    if (apiKey == null
+        && userAgent
+        && (userAgent.indexOf("python-requests") > -1 ||
+            userAgent.indexOf("Java/1.8.0_271") > -1)) {
+        event.respondWith(rejectRequest(event, "Generic user agents must use an API Key. API Keys are mandatory and this rule will be enforced soon. https://openchargemap.org/site/develop/api"));
         return;
     }
 
@@ -88,9 +108,9 @@ async function rejectRequest(event, reason) {
 
 async function fetchAndApply(event, apiKey, status) {
 
-    let banned_ua = await OCM_CONFIG_KV.get("API_BANNED_UA", "json");
-    let banned_ip = await OCM_CONFIG_KV.get("API_BANNED_IP", "json");
-    let banned_keys = await OCM_CONFIG_KV.get("API_BANNED_KEYS", "json");
+    let banned_ua = []; //await OCM_CONFIG_KV.get("API_BANNED_UA", "json");
+    let banned_ip = []; //await OCM_CONFIG_KV.get("API_BANNED_IP", "json");
+    let banned_keys = []; //await OCM_CONFIG_KV.get("API_BANNED_KEYS", "json");
 
     const clientIP = event.request.headers.get('cf-connecting-ip');
     const userAgent = event.request.headers.get('user-agent');
@@ -312,6 +332,8 @@ async function logRequest(request, apiKey, status) {
     };
 
     var url = `http://log.openchargemap.org/?status=${data.status}&key=${data.ocm_key}&ua=${data.ua}&ip=${data.ip}&url=${encodeURI(request.url)}`;
+
+    //console.log("Logging Request "+url+" ::"+JSON.stringify(data));
 
     try {
         await fetch(url, {

@@ -272,14 +272,14 @@ namespace OCM.MVC.Controllers
             return View("AddMediaItem");
         }
 
-        //[Authorize(Roles = "StandardUser")]
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Add()
         {
             var refData = new POIBrowseModel();
             refData.AllowOptionalCountrySelection = false;
 
             ViewBag.ReferenceData = refData;
-            ViewBag.ConnectionIndex = 0; //connection counter shared by equipment detais
+            ViewBag.ConnectionIndex = 0; //connection counter shared by equipment details
             ViewBag.EnableEditView = false;
 
             //get a default new POI using std core reference data
@@ -296,6 +296,7 @@ namespace OCM.MVC.Controllers
         }
 
         // GET: /POI/Edit/5
+        [Authorize(Roles = "StandardUser")]
         public ActionResult Edit(int? id, bool createCopy = false)
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
@@ -371,7 +372,9 @@ namespace OCM.MVC.Controllers
             return RedirectToAction("Index", "POI", new { submissionStatusTypeId = 1 });
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+
+       
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "StandardUser")]
         public ActionResult Edit(ChargePoint poi)
         {
             CheckForReadOnly();

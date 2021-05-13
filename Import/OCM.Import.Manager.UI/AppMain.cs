@@ -128,7 +128,7 @@ namespace Import
             //ServiceManager networkSVCManager = new ServiceManager();
             //string jsonResult = networkSVCManager.GetAllResultsAsJSON(ServiceProvider.CoulombChargePoint, txtAPIKey_Coulomb.Text, txtAPIPwd_Coulomb.Text);
 
-            _importManager.GeocodingTest();
+            _importManager.GeocodingTestCountries();
         }
 
         private async void BtnUpload_Click(object sender, EventArgs e)
