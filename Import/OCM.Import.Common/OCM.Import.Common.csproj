@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CompareNETObjects" Version="4.73.0" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.12.3" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.13.0" />
     <PackageReference Include="DotNetProjects.IndexedLinq" Version="2.0.18" />
     <PackageReference Include="GeoCoordinate.NetStandard1" Version="1.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
