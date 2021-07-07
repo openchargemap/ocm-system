@@ -246,7 +246,6 @@ namespace OCM.Import.Providers
                 for (var i = 1; i <= plugCount; i++)
                 {
                     var plugs = new List<int>();
-                    var level = null as int?;
                     var currentType = null as int?;
                     var power = Double.Parse(item["Nennleistung_Ladepunkt_" + i + "_"].ToString().Split(" ")[0]);
 
@@ -256,7 +255,6 @@ namespace OCM.Import.Providers
                         if (plug == "Steckdose Typ 1")
                         {
                             plugs.Add((int)StandardConnectionTypes.J1772);
-                            level = 2;
                             currentType = (int)StandardCurrentTypes.SinglePhaseAC;
                         }
                         else
@@ -267,43 +265,36 @@ namespace OCM.Import.Providers
                     else if (item["AC_Schuko__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.Schuko);
-                        level = 2;
                         currentType = (int)StandardCurrentTypes.SinglePhaseAC;
                     }
                     else if (item["AC_CEE_5_polig__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add(17); // CEE 5 Pin
-                        level = 2;
                         currentType = (int)StandardCurrentTypes.ThreePhaseAC;
                     }
                     else if (item["AC_CEE_3_polig__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add(16); // CEE 3 Pin
-                        level = 2;
                         currentType = (int)StandardCurrentTypes.SinglePhaseAC;
                     }
                     else if (item["AC_Steckdose_Typ_2__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int) StandardConnectionTypes.MennekesType2);
                         currentType = power >= 11 ? (int) StandardCurrentTypes.ThreePhaseAC : (int) StandardCurrentTypes.SinglePhaseAC;
-                        level = 2;
                     } 
                     else if (item["AC_Kupplung_Typ_2__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.MennekesType2Tethered);
                         currentType = power >= 11 ? (int)StandardCurrentTypes.ThreePhaseAC : (int)StandardCurrentTypes.SinglePhaseAC;
-                        level = 2;
                     }
                     else if (item["DC_Kupplung_Combo__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.CCSComboType2);
-                        level = 3;
                         currentType = (int)StandardCurrentTypes.DC;
                     }
                     else if (item["DC_CHAdeMO__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.CHAdeMO);
-                        level = 3;
                         currentType = (int)StandardCurrentTypes.DC;
                     }
 
@@ -312,7 +303,6 @@ namespace OCM.Import.Providers
                         ConnectionInfo cinfo = new ConnectionInfo() { };
                         cinfo.PowerKW = power;
                         cinfo.ConnectionTypeID = plug;
-                        cinfo.LevelID = level;
                         cinfo.CurrentTypeID = currentType;
                         cp.Connections.Add(cinfo);
                     }
