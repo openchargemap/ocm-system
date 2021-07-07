@@ -36,6 +36,8 @@ namespace OCM.Import.Providers
             // address, operator, chargepoint
             var dataMap = new Dictionary<Tuple<String, int?>, ChargePoint>();
 
+            var unknownOperators = new Dictionary<String, int>();
+
             foreach (var dataItem in dataList)
             {
                 var item = dataItem["attributes"];
@@ -149,7 +151,18 @@ namespace OCM.Import.Providers
                     }
                 }
 
-                if (cp.OperatorID == null) Log("Unknown Operator: " + operatorName);
+                if (cp.OperatorID == null)
+                {
+                    //Log("Unknown Operator: " + operatorName);
+                    if (unknownOperators.ContainsKey(operatorName))
+                    {
+                        unknownOperators[operatorName]++;
+                    }
+                    else
+                    {
+                        unknownOperators.Add(operatorName, 1);
+                    }
+                }
 
 
                 var plugCount = (int) item["Anzahl_Ladepunkte_"];
@@ -248,6 +261,12 @@ namespace OCM.Import.Providers
                 {
                     dataMap.Add(key, new ChargePoint(cp));
                 }
+            }
+
+            Log("Unknown Operators from Bundesnetzagentur import:");
+            foreach (var item in unknownOperators.OrderByDescending(item => item.Value))
+            {
+                Log(item.Key + ": " + item.Value);
             }
 
             return dataMap.Values.ToList();
