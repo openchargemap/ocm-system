@@ -83,6 +83,7 @@ namespace OCM.Import.Providers
                             cp.OperatorID = 2244;  // ubitricity
                             break;
                         case "EWE Go GmbH":
+                        case "EWE VERTRIEB GmbH":
                             cp.OperatorID = 127;  // EWE
                             break;
                         case "EAM Netz GmbH":
@@ -94,11 +95,35 @@ namespace OCM.Import.Providers
                         case "innogy eMobility Solutions GmbH":
                             cp.OperatorID = 105;  // Innogy SE (RWE eMobility)
                             break;
-                        case "eins energie in Sachsen GmbH & Co. KG":
+                        case "eins energie in sachsen GmbH & Co. KG":
                             cp.OperatorID = 2243;  // eins
                             break;
                         case "Q1 Energie AG":
                             cp.OperatorID = 3429;  // Q1 Autostrom
+                            break;
+                        case "Energiedienst Holding AG":
+                            cp.OperatorID = 224;  // EnergieDienst
+                            break;
+                        case "Oberhessische Versorgungsbetriebe AG":
+                            cp.OperatorID = 188;  // OVAG Energie
+                            break;
+                        case "Energie- und Wasserversorgung Bruchsal GmbH":
+                            cp.OperatorID = 2241;  // EWB
+                            break;
+                        case "BIGGE ENERGIE GmbH & Co. KG":
+                            cp.OperatorID = 3443;  // BIGGIE Energie -> Typo!
+                            break;
+                        case "EVH GmbH":
+                            cp.OperatorID = 161;  // Stadtwerke Halle
+                            break;
+                        case "SWS Energie GmbH":
+                            cp.OperatorID = 153;  // Stadtwerke Strahlsund -> Typo! (should be Stadtwerke Stralsund)
+                            break;
+                        case "Entega Plus GmbH":
+                            cp.OperatorID = 3297;  // Entega
+                            break;
+                        case "Energieversorgung Limburg GmbH":
+                            cp.OperatorID = 3351;  // EVL (de)
                             break;
                         case "SWM Versorgungs GmbH":
                         case "Vereinigte Stadtwerke GmbH":
@@ -114,8 +139,56 @@ namespace OCM.Import.Providers
                         case "Stadtwerke Ilmenau GmbH":
                         case "Stadtwerke Duisburg AG":
                         case "Filderstadtwerke":
-                            // these and many other local municipal utilities are all part of Ladenetz, see list at https://ladenetz.de/community/
+                        case "Osanabrücker Parkstätten-Betriebsgesellschaft mbH":
+                        case "SWU Energie GmbH":  // also listed separately as "Schwabencard", ID 2245
+                        case "Stadtwerke Augsburg Energie GmbH":
+                        case "FairEnergie GmbH":
+                        case "Energie Waldeck-Frankenberg GmbH":
+                        case "ewerk Sachsenwald GmbH":
+                        case "Stadtwerke Tecklenburger Land GmbH & Co. KG":
+                        case "SWE Energie GmbH":
+                        case "WSW Energie & Wasser AG":
+                        case "Albwerk GmbH & Co. KG":
+                        case "EVI Energieversorgung Hildesheim GmbH & Co. KG":
+                        case "Stadtwerke Energie Jena-Pößneck GmbH":
+                        case "EMB Energie Mark Brandenburg GmbH":
+                        case "StWB Stadtwerke Brandenburg an der Havel GmbH & Co.KG":
+                        case "SWT Parken GmbH":
+                        case "Stadtwerke Neuruppin GmbH":
+                        case "badenova AG & Co. KG":  // also listed separately as "Badenova (DE)", ID 3292
+                        case "Thüga Energie GmbH":
+                        case "Gesellschaft des Kreises Coesfeld zur Förderung regenerativer Energien mbH":
+                        case "nvb Nordhorner Versorgungsbetriebe GmbH":
+                        case "WEMAG AG":
+                        case "Energieversorgung Mittelrhein AG":
+                        case "Stadtwerke Aalen GmbH":
+                        case "Überlandwerk Erding GmbH & Co. KG":
+                        case "Stadtwerke Heilbronn GmbH":
+                        case "Stadtwerke Nürtingen GmbH":
+                        case "Stadtwerke Borken/Westf. GmbH":
+                        case "Stadtwerke Neuss Energie und Wasser GmbH":
+                        case "Stadtwerke Emden GmbH":
+                        case "Energie Südbayern GmbH":
+                        case "Aschaffenburger Versorgungs GmbH":
+                        case "Stadtwerke Oberkirch GmbH":
+                        case "Wasserwerk Vechta - Eigenbetrieb Stadt Vechta":
+                        case "Stadtwerke Radolfzell GmbH":
+                        case "Stadtwerke Forst GmbH":
+                        case "Stadtwerke Springe GmbH":
+                        case "Stadtwerke Velbert GmbH":
+                        case "Eisenacher Versorgungs-Betriebe GmbH":
+                        case "Stadtwerke Coesfeld GmbH":
+                        case "SWK Stadtwerke Kaiserslautern Versorgungs-AG":
+                        case "Stadtwerke Suhl/Zella-Mehlis GmbH":
+                        case "Stadtwerke Lünen GmbH":
+                        case "Stadtwerke Mosbach GmbH":
+                        case "enwor - energie & wasser vor ort GmbH":
+                            // these and some other local municipal utilities are all part of Ladenetz, see list at https://ladenetz.de/community/
                             cp.OperatorID = 69;  // ladenetz.de
+                            break;
+                        case "Stadtwerke Norderstedt (Städtischer Eigenbetrieb)":
+                            // Stadtwerke Norderstedt are part of the charging network of Stromnetz Hamburg
+                            cp.OperatorID = 220;  // Stromnetz Hamburg
                             break;
                         case "Privatperson":
                             cp.OperatorID = 44;  // Private individual
@@ -127,7 +200,10 @@ namespace OCM.Import.Providers
                         case "Kaufland Dienstleistung GmbH & Co. KG":
                         case "IKEA Deutschland GmbH":
                         case "EDEKA Versorgungsgesellschaft mbH":
-                            cp.OperatorID = 45;  // Business Owner at location
+                        case "Flughafen Stuttgart GmbH":
+                        case "Schubert Motors GmbH":
+                            // Business Owner at location
+                            cp.OperatorID = 45;
                             break;
                     }
                 }
