@@ -160,6 +160,8 @@ namespace OCM.Core.Data
                             if (_settings == null) throw new Exception("Cache Provider Default Instance requires init using CreateDefaultInstance");
 
                             _instance = new CacheProviderMongoDB();
+
+                            _instance.EnsureMongoDBIndexes();
                         }
                     }
                 }
@@ -421,7 +423,7 @@ namespace OCM.Core.Data
         /// <returns></returns>
         protected void EnsureMongoDBIndexes() {
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
-            poiCollection.CreateIndex(IndexKeys.GeoSpatial("SpatialPosition.coordinates")); // bounding box queries
+            poiCollection.CreateIndex(IndexKeys.GeoSpatialSpherical("SpatialPosition.coordinates")); // bounding box queries
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition)); // distance queries
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
