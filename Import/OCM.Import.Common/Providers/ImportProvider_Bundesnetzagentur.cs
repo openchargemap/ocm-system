@@ -63,7 +63,7 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Longitude = (double) item["Längengrad_"];
 
                 // all chargers in this directory are in Germany (ID 87)
-                cp.AddressInfo.Country = cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(cy => cy.ID == 87);
+                cp.AddressInfo.CountryID = 87;
 
                 var operatorName = item["Betreiber_"].ToString();
                 cp.OperatorID = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Contains(operatorName.ToLower()))?.ID;
@@ -72,6 +72,9 @@ namespace OCM.Import.Providers
                 {
                     switch (operatorName)
                     {
+                        case "Charge-ON":
+                            cp.OperatorID = 3403;  // E.ON Drive (Europe)
+                            break;
                         case "EnBW Energie Baden-Württemberg":
                         case "EnBW Ostwürttemberg DonauRies AG":
                             cp.OperatorID = 86;  // EnBW (D)
@@ -315,6 +318,8 @@ namespace OCM.Import.Providers
                 if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
                 if (cp.SubmissionStatusTypeID == null) cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
+
+                cp.StatusTypeID = (int)StandardStatusTypes.Operational;
 
                 // add or merge with existing
                 var key = new Tuple<String, int?>(locationStr, cp.OperatorID);
