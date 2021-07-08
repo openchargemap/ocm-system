@@ -262,8 +262,8 @@ namespace OCM.API.Common.Model
                     return this.UserComments.Where(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true).Max(u => u.DateCreated);
                 }
 
-                //created within last month
-                if (this.DateCreated.HasValue && this.DateCreated.Value > DateTime.UtcNow.AddMonths(-1))
+                //created within last 3 months
+                if (this.DateCreated.HasValue && this.DateCreated.Value > DateTime.UtcNow.AddMonths(-3))
                 {
                     return this.DateCreated;
                 }
