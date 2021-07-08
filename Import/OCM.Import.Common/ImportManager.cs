@@ -206,6 +206,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_DataGouvFr());
             providers.Add(new ImportProvider_GenericExcel());
+            providers.Add(new ImportProvider_Bundesnetzagentur());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
