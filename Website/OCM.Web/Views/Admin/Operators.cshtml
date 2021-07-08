@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<OCM.API.Common.Model.OperatorInfo>
 
 @{
-    ViewBag.Title = "Operators";
+    ViewBag.Title = $"Operators ({Model.Count()})";
 }
 
-<h2>Operators</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "EditOperator", null, new  {@class="btn btn-primary" })
