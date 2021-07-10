@@ -250,7 +250,14 @@ namespace OCM.Import.Providers
                 {
                     var plugs = new List<int>();
                     var currentType = null as int?;
-                    var power = Double.Parse(item["Nennleistung_Ladepunkt_" + i + "_"].ToString().Split(" ")[0]);
+                    var power = null as Double?;
+                    try
+                    {
+                        power = Double.Parse(item["Nennleistung_Ladepunkt_" + i + "_"].ToString().Split(" ")[0]);
+                    } catch (FormatException e)
+                    {
+                        Log("Unparseable power: " + item["Nennleistung_Ladepunkt_" + i + "_"].ToString());
+                    }
 
                     if (item["Sonstige_Stecker__" + i + "_"].ToString().Length > 0)
                     {
