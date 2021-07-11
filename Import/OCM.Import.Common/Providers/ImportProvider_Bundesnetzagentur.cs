@@ -250,7 +250,14 @@ namespace OCM.Import.Providers
                 {
                     var plugs = new List<int>();
                     var currentType = null as int?;
-                    var power = Double.Parse(item["Nennleistung_Ladepunkt_" + i + "_"].ToString().Split(" ")[0]);
+                    var power = null as Double?;
+                    try
+                    {
+                        power = Double.Parse(item["Nennleistung_Ladepunkt_" + i + "_"].ToString().Split(" ")[0]);
+                    } catch (FormatException e)
+                    {
+                        Log("Unparseable power: " + item["Nennleistung_Ladepunkt_" + i + "_"].ToString());
+                    }
 
                     if (item["Sonstige_Stecker__" + i + "_"].ToString().Length > 0)
                     {
@@ -265,37 +272,37 @@ namespace OCM.Import.Providers
                             Log("Unknown Plug: " + item["Sonstige_Stecker__" + i + "_"].ToString());
                         }
                     }
-                    else if (item["AC_Schuko__" + i + "_"].ToString().Length > 0)
+                    if (item["AC_Schuko__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.Schuko);
                         currentType = (int)StandardCurrentTypes.SinglePhaseAC;
                     }
-                    else if (item["AC_CEE_5_polig__" + i + "_"].ToString().Length > 0)
+                    if (item["AC_CEE_5_polig__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add(17); // CEE 5 Pin
                         currentType = (int)StandardCurrentTypes.ThreePhaseAC;
                     }
-                    else if (item["AC_CEE_3_polig__" + i + "_"].ToString().Length > 0)
+                    if (item["AC_CEE_3_polig__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add(16); // CEE 3 Pin
                         currentType = (int)StandardCurrentTypes.SinglePhaseAC;
                     }
-                    else if (item["AC_Steckdose_Typ_2__" + i + "_"].ToString().Length > 0)
+                    if (item["AC_Steckdose_Typ_2__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int) StandardConnectionTypes.MennekesType2);
                         currentType = power >= 11 ? (int) StandardCurrentTypes.ThreePhaseAC : (int) StandardCurrentTypes.SinglePhaseAC;
                     } 
-                    else if (item["AC_Kupplung_Typ_2__" + i + "_"].ToString().Length > 0)
+                    if (item["AC_Kupplung_Typ_2__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.MennekesType2Tethered);
                         currentType = power >= 11 ? (int)StandardCurrentTypes.ThreePhaseAC : (int)StandardCurrentTypes.SinglePhaseAC;
                     }
-                    else if (item["DC_Kupplung_Combo__" + i + "_"].ToString().Length > 0)
+                    if (item["DC_Kupplung_Combo__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.CCSComboType2);
                         currentType = (int)StandardCurrentTypes.DC;
                     }
-                    else if (item["DC_CHAdeMO__" + i + "_"].ToString().Length > 0)
+                    if (item["DC_CHAdeMO__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.CHAdeMO);
                         currentType = (int)StandardCurrentTypes.DC;
