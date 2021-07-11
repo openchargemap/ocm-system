@@ -314,6 +314,7 @@ namespace OCM.Import.Providers
                         cinfo.PowerKW = power;
                         cinfo.ConnectionTypeID = plug;
                         cinfo.CurrentTypeID = currentType;
+                        cinfo.StatusTypeID = (int)StandardStatusTypes.Operational;
                         cp.Connections.Add(cinfo);
                     }
                 }
