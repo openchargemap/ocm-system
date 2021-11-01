@@ -19,6 +19,8 @@ namespace OCM.Import.Providers
             MergeDuplicatePOIEquipment = false;
             DataAttribution = "Data from the German chargepoint registry provided by Bundesnetzagentur.de under the CC-BY 4.0 license";
             DataProviderID = 29;//Bundesnetzagentur
+
+            throw new Exception("Do not use. This import provider has no unique id, so imports cannot be repeated.");
         }
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
@@ -45,7 +47,7 @@ namespace OCM.Import.Providers
                 var cp = new POIDetails();
 
                 cp.DataProviderID = this.DataProviderID; //Bundesnetzagentur
-                cp.DataProvidersReference = item["OBJECTID"].ToString();
+                ///cp.DataProvidersReference = item["OBJECTID"].ToString(); // - Note: There is no unique reference in this data source. The ObjectID seems to be a dynamic row id and using it results in unrelated data being overwritten between imports
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
 
                 cp.AddressInfo = new AddressInfo();
