@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OCM.API.Common;
 using OCM.API.Common.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OCM.API.InputProviders

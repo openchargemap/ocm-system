@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace OCM.API.Common.Model
 {
@@ -10,7 +8,7 @@ namespace OCM.API.Common.Model
     {
         public int ID { get; set; }
 
-        
+
         public int? ConnectionTypeID { get; set; }
         [DisplayName("Connection Type")]
         public ConnectionType ConnectionType { get; set; }
@@ -49,13 +47,13 @@ namespace OCM.API.Common.Model
         {
             string output = "";
 
-            if (this.ConnectionType!=null) output +="Connection Type: "+ConnectionType.Title+ ", ";
-            if (this.Amps!=null) output += Amps+"A Max. Current, ";
+            if (this.ConnectionType != null) output += "Connection Type: " + ConnectionType.Title + ", ";
+            if (this.Amps != null) output += Amps + "A Max. Current, ";
             if (this.Voltage != null) output += Voltage + "V, ";
-            if (this.PowerKW !=null) output += PowerKW + "kW, ";
+            if (this.PowerKW != null) output += PowerKW + "kW, ";
             if (this.CurrentType != null) output += this.CurrentType.Title + ", ";
-            if (this.Quantity !=null) output += this.Quantity+" Present, ";
-            if (this.StatusType != null) output += "Status: "+this.StatusType.Title + ", ";
+            if (this.Quantity != null) output += this.Quantity + " Present, ";
+            if (this.StatusType != null) output += "Status: " + this.StatusType.Title + ", ";
             if (this.Comments != null) output += "Comment: " + this.Comments + ", ";
 
             if (output.EndsWith(", ")) output = output.Substring(0, output.Length - 2);

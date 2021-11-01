@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
 namespace OCM.API.Security
 {
@@ -26,7 +23,7 @@ namespace OCM.API.Security
             claims.Add(new Claim("UserID", user.ID.ToString()));
             claims.Add(new Claim("nonce", user.CurrentSessionToken.ToString()));
 
-            
+
             var signingKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.ASCII.GetBytes(user.CurrentSessionToken));
 
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature, SecurityAlgorithms.Sha256Digest);
@@ -71,7 +68,7 @@ namespace OCM.API.Security
             {
                 SecurityToken validatedToken = null;
                 var claims = handler.ValidateToken(token, validationParameters, out validatedToken);
-              
+
                 return claims;
             }
             catch (Exception e)

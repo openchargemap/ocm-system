@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OCM.API.Common.Model.OCPI
 {
@@ -28,7 +25,7 @@ namespace OCM.API.Common.Model.OCPI
 
         private string GetCountryCodeFromISO3(string srcISO)
         {
-          
+
             return _countries.FirstOrDefault(c => c.ThreeLetterISORegionName == srcISO).TwoLetterISORegionName;
 
         }
@@ -36,7 +33,8 @@ namespace OCM.API.Common.Model.OCPI
         {
             var output = new List<ChargePoint>();
 
-            foreach(var i in source) {
+            foreach (var i in source)
+            {
 
                 var iso2Code = GetCountryCodeFromISO3(i.Country);
 
@@ -57,13 +55,13 @@ namespace OCM.API.Common.Model.OCPI
                     }
                 };
 
-              if (i.AdditionalProperties.ContainsKey("evses"))
+                if (i.AdditionalProperties.ContainsKey("evses"))
                 {
                     List<OCM.Model.OCPI.EVSE> evse = (List<OCM.Model.OCPI.EVSE>)(i.AdditionalProperties["evses"]);
 
-                    foreach(var e in evse)
+                    foreach (var e in evse)
                     {
-                       //TODO:
+                        //TODO:
                     }
                 }
                 output.Add(cp);

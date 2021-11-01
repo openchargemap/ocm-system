@@ -3,7 +3,6 @@ using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace OCM.Import.Providers
 {
@@ -61,8 +60,8 @@ namespace OCM.Import.Providers
                 cp.AddressInfo.Postcode = postcodeAndTown[0];
                 cp.AddressInfo.Town = String.Join(" ", postcodeAndTown[1..]);
 
-                cp.AddressInfo.Latitude = (double) item["Breitengrad_"];
-                cp.AddressInfo.Longitude = (double) item["Längengrad_"];
+                cp.AddressInfo.Latitude = (double)item["Breitengrad_"];
+                cp.AddressInfo.Longitude = (double)item["Längengrad_"];
 
                 // all chargers in this directory are in Germany (ID 87)
                 cp.AddressInfo.CountryID = 87;
@@ -246,7 +245,7 @@ namespace OCM.Import.Providers
                 }
 
 
-                var plugCount = (int) item["Anzahl_Ladepunkte_"];
+                var plugCount = (int)item["Anzahl_Ladepunkte_"];
                 cp.Connections = new List<ConnectionInfo>();
                 for (var i = 1; i <= plugCount; i++)
                 {
@@ -256,7 +255,8 @@ namespace OCM.Import.Providers
                     try
                     {
                         power = Double.Parse(item["Nennleistung_Ladepunkt_" + i + "_"].ToString().Split(" ")[0]);
-                    } catch (FormatException e)
+                    }
+                    catch (FormatException e)
                     {
                         Log("Unparseable power: " + item["Nennleistung_Ladepunkt_" + i + "_"].ToString());
                     }
@@ -291,9 +291,9 @@ namespace OCM.Import.Providers
                     }
                     if (item["AC_Steckdose_Typ_2__" + i + "_"].ToString().Length > 0)
                     {
-                        plugs.Add((int) StandardConnectionTypes.MennekesType2);
-                        currentType = power >= 11 ? (int) StandardCurrentTypes.ThreePhaseAC : (int) StandardCurrentTypes.SinglePhaseAC;
-                    } 
+                        plugs.Add((int)StandardConnectionTypes.MennekesType2);
+                        currentType = power >= 11 ? (int)StandardCurrentTypes.ThreePhaseAC : (int)StandardCurrentTypes.SinglePhaseAC;
+                    }
                     if (item["AC_Kupplung_Typ_2__" + i + "_"].ToString().Length > 0)
                     {
                         plugs.Add((int)StandardConnectionTypes.MennekesType2Tethered);
@@ -338,7 +338,8 @@ namespace OCM.Import.Providers
                     var matchingCP = dataMap[key];
                     matchingCP.Connections.AddRange(cp.Connections);
                     matchingCP.DataProvidersReference = matchingCP.DataProvidersReference + "," + cp.DataProvidersReference;
-                } else
+                }
+                else
                 {
                     dataMap.Add(key, new ChargePoint(cp));
                 }

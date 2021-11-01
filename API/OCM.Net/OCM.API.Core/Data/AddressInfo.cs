@@ -1,6 +1,5 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
 using System.Collections.Generic;
-using NetTopologySuite.Geometries;
 
 namespace OCM.Core.Data
 {

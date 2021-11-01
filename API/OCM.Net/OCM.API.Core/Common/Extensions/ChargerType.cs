@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OCM.API.Common.Model.Extensions
+﻿namespace OCM.API.Common.Model.Extensions
 {
     public class ChargerType
     {
@@ -10,11 +6,12 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (source == null) return null;
 
-            return new Model.ChargerType { 
-                ID = source.Id, 
-                Title = source.Title, 
-                Comments = source.Comments, 
-                IsFastChargeCapable = source.IsFastChargeCapable 
+            return new Model.ChargerType
+            {
+                ID = source.Id,
+                Title = source.Title,
+                Comments = source.Comments,
+                IsFastChargeCapable = source.IsFastChargeCapable
             };
         }
     }

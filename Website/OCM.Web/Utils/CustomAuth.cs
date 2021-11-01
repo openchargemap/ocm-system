@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace OCM.MVC
 {
@@ -33,7 +32,7 @@ namespace OCM.MVC
 
             if (Request.HttpContext.Session.GetInt32("UserID") != null)
             {
-            
+
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, Request.HttpContext.Session.GetString("Username")));
 
@@ -136,7 +135,7 @@ namespace OCM.MVC
         {
             if (context.HttpContext.User != null)
             {
-               
+
                 // check user is in one of required roles
                 if (context.HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Role && _roles.Split(",").Contains(c.Value)))
                 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model.Extensions
 {
@@ -18,12 +16,12 @@ namespace OCM.API.Common.Model.Extensions
                 DataTypeID = source.DataTypeId
             };
 
-            if (source.MetadataFieldOptions!=null)
+            if (source.MetadataFieldOptions != null)
             {
-                
+
                 foreach (var o in source.MetadataFieldOptions)
                 {
-                    if (f.MetadataFieldOptions==null) f.MetadataFieldOptions = new List<Model.MetadataFieldOption>();
+                    if (f.MetadataFieldOptions == null) f.MetadataFieldOptions = new List<Model.MetadataFieldOption>();
                     f.MetadataFieldOptions.Add(Extensions.MetadataFieldOption.FromDataModel(o));
                 }
             }

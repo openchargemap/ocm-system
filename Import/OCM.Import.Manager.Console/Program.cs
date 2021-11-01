@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OCM.Import;
-using OCM.Import.Providers;
-using OCM.API.Client;
+﻿using OCM.Import.Providers;
+using System;
 using System.Threading.Tasks;
 
 namespace OCM.Import.Manager.Console

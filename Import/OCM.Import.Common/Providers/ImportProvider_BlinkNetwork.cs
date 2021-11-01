@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -23,27 +22,27 @@ namespace OCM.Import.Providers
         {
 
             List<ChargePoint> outputList = new List<ChargePoint>();
-            
-            
+
+
             var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == 100);//imported and published
             var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
             var operationalMixedStatus = coreRefData.StatusTypes.First(os => os.ID == 75);
             var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == 0);
             var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == 1);
             var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == 2);
-          
-            var networkOperator = coreRefData.Operators.First(op=>op.ID==9); //blink/ecotality
+
+            var networkOperator = coreRefData.Operators.First(op => op.ID == 9); //blink/ecotality
 
             string jsString = InputData;
             jsString = "{ \"data\": " + jsString + "}"; //fix data by wrapping on container
-            
+
             JObject o = JObject.Parse(jsString);
-            
+
             var response = o.Values();
             var data = response.Values();
             var dataList = data.Values().ToArray();
             int itemCount = 0;
-            
+
             foreach (var item in data)
             {
                 bool skipItem = false;
@@ -76,13 +75,16 @@ namespace OCM.Import.Providers
 
                     string usageTypeCode = item["type"].ToString();
 
-                    switch (usageTypeCode) {
-                        case "COMMERCIAL":  cp.UsageType = coreRefData.UsageTypes.FirstOrDefault(u => u.ID == 5); //pay at location
+                    switch (usageTypeCode)
+                    {
+                        case "COMMERCIAL":
+                            cp.UsageType = coreRefData.UsageTypes.FirstOrDefault(u => u.ID == 5); //pay at location
                             break;
-                        case "RESIDENTIAL": skipItem=true;
+                        case "RESIDENTIAL":
+                            skipItem = true;
                             break;
-                        default: 
-                            Log("Unmatched usage type:"+usageTypeCode);
+                        default:
+                            Log("Unmatched usage type:" + usageTypeCode);
                             break;
                     }
 
@@ -136,7 +138,7 @@ namespace OCM.Import.Providers
             }
 
             return outputList;
-           
+
         }
 
 

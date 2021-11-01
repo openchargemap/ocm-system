@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OCM.API.Common.Model.Extensions
+﻿namespace OCM.API.Common.Model.Extensions
 {
     public class UsageType : OCM.API.Common.Model.UsageType
     {
@@ -10,14 +6,15 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (source == null) return null;
 
-            return new Model.UsageType { 
-                ID = source.Id, 
-                Title = source.Title, 
-                IsAccessKeyRequired = source.IsAccessKeyRequired, 
-                IsMembershipRequired = source.IsMembershipRequired, 
+            return new Model.UsageType
+            {
+                ID = source.Id,
+                Title = source.Title,
+                IsAccessKeyRequired = source.IsAccessKeyRequired,
+                IsMembershipRequired = source.IsMembershipRequired,
                 IsPayAtLocation = source.IsPayAtLocation
             };
-            
+
         }
     }
 }

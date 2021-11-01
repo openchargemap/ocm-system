@@ -1,12 +1,8 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OCM.API.Common.Model;
-using Newtonsoft.Json.Linq;
 using System.Xml;
-using System.Xml.Linq;
-using System.IO;
 
 namespace OCM.Import.Providers
 {
@@ -27,8 +23,8 @@ namespace OCM.Import.Providers
         {
             throw new Exception("SetDataProviderDetails not implemented");
         }
-        
-        public virtual void ParseBasicDetails (ChargePoint cp, XmlNode item)
+
+        public virtual void ParseBasicDetails(ChargePoint cp, XmlNode item)
         {
             throw new Exception("ParseBasicDetails not implemented");
         }
@@ -41,22 +37,22 @@ namespace OCM.Import.Providers
 
             XmlDocument xmlDoc = new XmlDocument();
             InputData = InputData.Replace(" xmlns=\"http://earth.google.com/kml/2.0\"", "");
-          
+
             xmlDoc.LoadXml(InputData);
 
             XmlNodeList dataList = xmlDoc.SelectNodes("//Placemark");
 
             int itemCount = 0;
-          
+
             foreach (XmlNode item in dataList)
             {
                 bool skipItem = false;
 
                 ChargePoint cp = new ChargePoint();
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
-                
+
                 SetDataProviderDetails(cp, item);
-                
+
                 cp.AddressInfo = new AddressInfo();
 
                 ParseBasicDetails(cp, item);
@@ -80,7 +76,7 @@ namespace OCM.Import.Providers
                 }
 
                 cp.Connections = ParseConnectionInfo(item);
-                
+
                 ParseAdditionalData(cp, item, coreRefData);
 
                 cp.DataQualityLevel = 2; //lower than average quality due to spare data

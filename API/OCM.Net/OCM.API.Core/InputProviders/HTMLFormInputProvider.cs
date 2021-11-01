@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Http;
 using OCM.API.Common;
 using OCM.API.Common.Model;
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace OCM.API.InputProviders
 {
@@ -31,7 +30,7 @@ namespace OCM.API.InputProviders
 
         public async Task<bool> ProcessMediaItemSubmission(string uploadPath, HttpContext context, MediaItem mediaItem, int userId)
         {
-            if (context.Request.Form.Files.Count==0) return false;
+            if (context.Request.Form.Files.Count == 0) return false;
 
             try
             {
@@ -43,10 +42,10 @@ namespace OCM.API.InputProviders
 
                 foreach (var postedFile in context.Request.Form.Files)
                 {
-                  
+
                     if (postedFile != null && postedFile.Length > 0)
                     {
-                        string tmpFile = uploadPath +"\\" + filePrefix + postedFile.FileName;
+                        string tmpFile = uploadPath + "\\" + filePrefix + postedFile.FileName;
                         using (var stream = new FileStream(tmpFile, FileMode.Create))
                         {
                             await postedFile.CopyToAsync(stream);
@@ -73,7 +72,7 @@ namespace OCM.API.InputProviders
             {
                 return false;
             }
-            
+
         }
     }
 }

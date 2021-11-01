@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -29,7 +29,7 @@ namespace OCM.Import.Providers
             this.ApiKey = apiKey;
 
             ServiceUserName = "OpenChargeMap";
-            ProviderName = "AddEnergie"; 
+            ProviderName = "AddEnergie";
 
             if (network == NetworkType.ReseauVER)
             {

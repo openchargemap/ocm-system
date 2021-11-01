@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace OCM.API.Common.Model
 {
@@ -24,7 +21,7 @@ namespace OCM.API.Common.Model
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
         public string ContactEmail { get; set; }
-        
+
         [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
         public string FaultReportEmail { get; set; }
         public bool? IsRestrictedEdit { get; set; }

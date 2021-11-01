@@ -6,9 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace OCM.API.Common
 {
@@ -239,7 +236,7 @@ namespace OCM.API.Common
                         }
                         catch { }
 
-                        System.Diagnostics.Debug.WriteLine("Failed to send email notification: "+ exp.ToString());
+                        System.Diagnostics.Debug.WriteLine("Failed to send email notification: " + exp.ToString());
                         return false;
                     }
 

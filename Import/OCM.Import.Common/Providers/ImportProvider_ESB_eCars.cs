@@ -1,9 +1,7 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -31,9 +29,9 @@ namespace OCM.Import.Providers
         public override void ParseBasicDetails(ChargePoint cp, XmlNode item)
         {
             //parse address info
-            string[] loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace(" - ","~").Replace(",","~").Split('~');
+            string[] loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace(" - ", "~").Replace(",", "~").Split('~');
 
-            if (loctitle.Length==1 && loctitle[0].Contains("-")) loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace("-", "~").Replace(",", "~").Split('~');
+            if (loctitle.Length == 1 && loctitle[0].Contains("-")) loctitle = RemoveFormattingCharacters(item["name"].InnerText).Replace("-", "~").Replace(",", "~").Split('~');
             cp.AddressInfo.Town = loctitle[0].Trim();
 
             if (loctitle[1].Contains(","))
@@ -59,7 +57,7 @@ namespace OCM.Import.Providers
                     cp.AddressInfo.StateOrProvince = loctitle[3].Trim();
                 }
             }
-          
+
 
             //parse description
             string descriptionText = item["description"].InnerText;
@@ -151,10 +149,10 @@ namespace OCM.Import.Providers
                 case "Galway":
                 case "Kerry":
                 case "Wexford":
-                    cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c=>c.ISOCode=="IE");
+                    cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == "IE");
                     break;
                 case "Antrim":
-                case "Derry": 
+                case "Derry":
                     cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == "GB");
                     break;
             }

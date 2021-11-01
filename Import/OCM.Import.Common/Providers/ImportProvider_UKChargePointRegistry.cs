@@ -3,7 +3,6 @@ using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace OCM.Import.Providers
 {
@@ -97,7 +96,7 @@ namespace OCM.Import.Providers
                     }
                 }
 
-                if (cp.AddressInfo.Title=="NA" && cp.AddressInfo.AddressLine1=="NA")
+                if (cp.AddressInfo.Title == "NA" && cp.AddressInfo.AddressLine1 == "NA")
                 {
                     // item needs an address resolved
                     cp.AddressInfo.Title = "";
@@ -174,8 +173,8 @@ namespace OCM.Import.Providers
                     string operatorName = deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString();
 
                     // match specific operators
-                    
-                    switch(operatorName)
+
+                    switch (operatorName)
                     {
                         case "Chargemaster (POLAR)":
                             cp.OperatorID = 8;
@@ -200,7 +199,7 @@ namespace OCM.Import.Providers
                             break;
                     }
 
-                    if (cp.OperatorID == null)  Log("Unknown Operator: " + deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString());
+                    if (cp.OperatorID == null) Log("Unknown Operator: " + deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString());
                 }
 
                 //determine most likely usage type
@@ -298,7 +297,7 @@ namespace OCM.Import.Providers
                             }
 
                             // handle Type 2 Tesla (IEC62196) DC which are Type 2 but tesla access only 
-                            if (connectorType.ToUpper()== "TYPE 2 TESLA (IEC62196) DC")
+                            if (connectorType.ToUpper() == "TYPE 2 TESLA (IEC62196) DC")
                             {
 
                                 cinfo.Comments = "Tesla Only";
@@ -355,7 +354,7 @@ namespace OCM.Import.Providers
                         if (cp.Connections == null)
                         {
                             cp.Connections = new List<ConnectionInfo>();
-                        } 
+                        }
                         if (!IsConnectionInfoBlank(cinfo))
                         {
                             //TODO: skip items with blank address info

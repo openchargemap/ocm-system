@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 
@@ -25,14 +19,14 @@ namespace OCM.API.Web.Standard.Controllers
         [HttpPost]
         public ActionResult Authenticate(LoginModel login)
         {
-           
+
             User user = new OCM.API.Common.UserManager().GetUser(login);
             string access_token = null;
             var responseEnvelope = new APIResponseEnvelope();
             if (user == null)
             {
                 return Unauthorized();
-                
+
             }
             else
             {
@@ -40,7 +34,7 @@ namespace OCM.API.Web.Standard.Controllers
             }
 
             responseEnvelope.Data = new { UserProfile = user, access_token = access_token };
-        
+
             return Ok(responseEnvelope);
         }
     }

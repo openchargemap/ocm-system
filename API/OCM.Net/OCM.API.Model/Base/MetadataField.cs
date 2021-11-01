@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model
 {
@@ -10,7 +6,7 @@ namespace OCM.API.Common.Model
     {
         public int MetadataGroupID { get; set; }
         public int DataTypeID { get; set; }
-        
+
         public DataType DataType { get; set; }
         public List<MetadataFieldOption> MetadataFieldOptions { get; set; }
     }

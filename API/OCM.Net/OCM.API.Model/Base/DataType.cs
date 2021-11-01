@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OCM.API.Common.Model
+﻿namespace OCM.API.Common.Model
 {
     public class DataType : SimpleReferenceDataType
     {

@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace OCM.API.Common.Model.Extensions
 {
@@ -17,7 +14,7 @@ namespace OCM.API.Common.Model.Extensions
                 Title = source.Title,
                 CountryID = source.CountryId,
                 DistanceKM = source.DistanceKm,
-                
+
                 IsEnabled = (bool)source.IsEnabled,
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
@@ -34,7 +31,8 @@ namespace OCM.API.Common.Model.Extensions
                 UserID = source.UserId
             };
 
-            if (source.FilterSettings!=null){
+            if (source.FilterSettings != null)
+            {
                 item.FilterSettings = JsonConvert.DeserializeObject<UserSubscriptionFilter>(source.FilterSettings);
             }
 

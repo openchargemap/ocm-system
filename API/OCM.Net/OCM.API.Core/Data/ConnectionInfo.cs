@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OCM.Core.Data
+﻿namespace OCM.Core.Data
 {
     public partial class ConnectionInfo
     {

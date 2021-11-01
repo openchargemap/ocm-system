@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace OCM.API.Common.Model
 {
@@ -14,7 +9,7 @@ namespace OCM.API.Common.Model
     [DataContract]
     public class POISearchResult
     {
-        [DataMember(Name="id")]
+        [DataMember(Name = "id")]
         public int ID { get; set; }
 
         [DataMember(Name = "t")]
@@ -31,7 +26,7 @@ namespace OCM.API.Common.Model
 
         [DataMember(Name = "p")]
         public string Postcode { get; set; }
-        
+
         [DataMember(Name = "lt")]
         public double Latitude { get; set; }
 

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using OCM.API.Common;
 using OCM.Core.Data;
+using System;
+using System.Configuration;
+using System.Linq;
+using System.Text;
 
 namespace OCM.MVC.Controllers
 {

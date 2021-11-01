@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OCM.API.Common.Model.Extensions
+﻿namespace OCM.API.Common.Model.Extensions
 {
     public class DataProviderStatusType
     {
@@ -12,9 +8,9 @@ namespace OCM.API.Common.Model.Extensions
 
             return new Model.DataProviderStatusType
             {
-                 ID = s.Id,
-                 Title = s.Title,
-                 IsProviderEnabled = (bool)s.IsProviderEnabled
+                ID = s.Id,
+                Title = s.Title,
+                IsProviderEnabled = (bool)s.IsProviderEnabled
             };
         }
     }

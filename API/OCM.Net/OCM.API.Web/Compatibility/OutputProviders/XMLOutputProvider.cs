@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace OCM.API.OutputProviders
 {
@@ -60,15 +60,15 @@ namespace OCM.API.OutputProviders
                     xml.WriteElementString("Latitude", item.AddressInfo.Latitude.ToString());
                     xml.WriteElementString("Longitude", item.AddressInfo.Longitude.ToString());
 
-                    if (item.AddressInfo.Distance!=null)
+                    if (item.AddressInfo.Distance != null)
                     {
                         xml.WriteStartElement("Distance");
                         xml.WriteAttributeString("Unit", item.AddressInfo.DistanceUnit.ToString());
                         xml.WriteAttributeString("Value", item.AddressInfo.Distance.ToString());
                         xml.WriteEndElement();
                     }
-                    
-                    if (item.AddressInfo.ContactTelephone1!=null) xml.WriteElementString("ContactTelephone1", item.AddressInfo.ContactTelephone1);
+
+                    if (item.AddressInfo.ContactTelephone1 != null) xml.WriteElementString("ContactTelephone1", item.AddressInfo.ContactTelephone1);
                     if (item.AddressInfo.ContactTelephone2 != null) xml.WriteElementString("ContactTelephone2", item.AddressInfo.ContactTelephone2);
                     if (item.AddressInfo.ContactEmail != null) xml.WriteElementString("ContactEmail", item.AddressInfo.ContactEmail);
                     if (item.AddressInfo.AccessComments != null) xml.WriteElementString("AccessComments", item.AddressInfo.AccessComments);
@@ -92,7 +92,7 @@ namespace OCM.API.OutputProviders
                             xml.WriteAttributeString("TypeID", ct.ConnectionType.ID.ToString());
                             xml.WriteAttributeString("TypeName", ct.ConnectionType.Title);
                         }
-                        
+
                         if (ct.Level != null)
                         {
                             xml.WriteAttributeString("LevelID", ct.Level.ID.ToString());
@@ -104,7 +104,7 @@ namespace OCM.API.OutputProviders
                             xml.WriteAttributeString("Status", ct.StatusType.Title);
                         }
 
-                        if (ct.Amps!=null)
+                        if (ct.Amps != null)
                         {
                             xml.WriteAttributeString("Amps", ct.Amps.ToString());
                         }
@@ -129,11 +129,12 @@ namespace OCM.API.OutputProviders
                 }
 #pragma warning disable 0612
                 var chargerList = item.Chargers;
-                if (chargerList==null || chargerList.Count==0){
+                if (chargerList == null || chargerList.Count == 0)
+                {
                     if (item.Connections != null)
                     {
                         chargerList = new List<Common.Model.ChargerInfo>();
-                        foreach(var con in item.Connections)
+                        foreach (var con in item.Connections)
                         {
                             if (con.Level != null)
                             {
@@ -144,7 +145,7 @@ namespace OCM.API.OutputProviders
                             }
                         }
                         chargerList = chargerList.Distinct().ToList();
-                        
+
                     }
                 }
 
@@ -156,7 +157,7 @@ namespace OCM.API.OutputProviders
                     foreach (var cg in chargerList)
                     {
                         if (cg.ChargerType != null)
-                        {   
+                        {
                             xml.WriteStartElement("ChargerType");
                             xml.WriteAttributeString("ID", cg.ChargerType.ID.ToString());
                             if (isVerboseMode && !settings.IsCompactOutput)
@@ -169,7 +170,7 @@ namespace OCM.API.OutputProviders
                     }
                     xml.WriteEndElement();
                 }
-                
+
                 if (item.UsageType != null)
                 {
                     xml.WriteStartElement("UsageType");

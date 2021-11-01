@@ -23,7 +23,7 @@ namespace OCM.API.Common
 
         public Model.User GetUser(OCM.API.Common.Model.LoginModel loginModel)
         {
-            if (loginModel!=null && !String.IsNullOrEmpty(loginModel.EmailAddress))
+            if (loginModel != null && !String.IsNullOrEmpty(loginModel.EmailAddress))
             {
                 var user = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == loginModel.EmailAddress.ToLower());
 
@@ -204,8 +204,8 @@ namespace OCM.API.Common
 
         public User GetUserFromAPIKey(string apiKey)
         {
-           
-            var reg = dataModel.RegisteredApplicationUsers.Include(r=>r.User).FirstOrDefault(u => u.Apikey.ToLower() == apiKey.ToLower());
+
+            var reg = dataModel.RegisteredApplicationUsers.Include(r => r.User).FirstOrDefault(u => u.Apikey.ToLower() == apiKey.ToLower());
 
             if (reg != null && reg.IsEnabled && reg.IsWriteEnabled)
             {

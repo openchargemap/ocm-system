@@ -1,20 +1,19 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using OCM.API.Common;
 using OCM.API.Common.DataSummary;
 using OCM.API.Common.Model;
 using OCM.Core.Common;
+using OCM.Core.Settings;
 using OCM.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
-using OCM.Core.Settings;
 
 namespace OCM.MVC.Controllers
 {
@@ -373,7 +372,7 @@ namespace OCM.MVC.Controllers
         }
 
 
-       
+
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "StandardUser")]
         public ActionResult Edit(ChargePoint poi)
         {

@@ -23,7 +23,7 @@ namespace OCM.API.Common.Model
     public enum StandardOperators
     {
         UnknownOperator = 1,
-        ChargePoint =5,
+        ChargePoint = 5,
         Blink = 9,
         Tesla = 23,
         ChargeFox = 3339
@@ -87,13 +87,13 @@ namespace OCM.API.Common.Model
         Nema5_15 = 22,
         Nema5_20 = 9,
         Nema14_50 = 11,
-        TeslaRoadster =8,
-        TeslaProprietary =30,
+        TeslaRoadster = 8,
+        TeslaProprietary = 30,
         TeslaSupercharger = 27,
         Type3 = 26,
-        Europlug= 13,
+        Europlug = 13,
         AS3112 = 29,
-        ThreePhaseAU=1041
+        ThreePhaseAU = 1041
     }
 
     public enum StandardCurrentTypes

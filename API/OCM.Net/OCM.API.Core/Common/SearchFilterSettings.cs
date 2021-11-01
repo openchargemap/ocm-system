@@ -1,6 +1,6 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
-using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {

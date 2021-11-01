@@ -84,9 +84,9 @@ namespace OCM.API.Client
             ServiceBaseURL = baseUrl;
 
             APIKey = apiKey;
-          
+
             _userAgent = userAgent;
-            
+
             _logger = logger;
         }
 

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Configuration;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Configuration;
 using OCM.API.Common;
 using OCM.Core.Settings;
+using System;
+using System.Configuration;
 
 namespace OCM.MVC.Controllers
 {
@@ -55,10 +54,10 @@ namespace OCM.MVC.Controllers
                 {
                     var userAgent = Request.UserAgent().ToLower();
                     if (
-                        userAgent.Contains("robot") 
-                        || userAgent.Contains("crawler") 
-                        || userAgent.Contains("spider") 
-                        || userAgent.Contains("slurp") 
+                        userAgent.Contains("robot")
+                        || userAgent.Contains("crawler")
+                        || userAgent.Contains("spider")
+                        || userAgent.Contains("slurp")
                         || userAgent.Contains("googlebot")
                         || userAgent.Contains("SEOkicks")
                         || userAgent.Contains("DotBot")
@@ -79,7 +78,7 @@ namespace OCM.MVC.Controllers
             }
         }
 
-        public int?  UserID
+        public int? UserID
         {
             get => HttpContext.Session.GetInt32("UserID");
 
@@ -88,7 +87,8 @@ namespace OCM.MVC.Controllers
                 if (value != null)
                 {
                     HttpContext.Session.SetInt32("UserID", (int)value);
-                } else
+                }
+                else
                 {
                     HttpContext.Session.Remove("UserID");
                 }

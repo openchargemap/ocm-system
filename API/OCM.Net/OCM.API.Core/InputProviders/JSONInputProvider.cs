@@ -6,7 +6,6 @@ using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OCM.API.InputProviders
@@ -36,7 +35,7 @@ namespace OCM.API.InputProviders
                 System.Diagnostics.Debug.WriteLine(exp);
 
                 //submission failed
-                return new ValidationResult { IsValid=false, Message="Exception processing submission:"+exp.Message};
+                return new ValidationResult { IsValid = false, Message = "Exception processing submission:" + exp.Message };
             }
         }
 
@@ -46,7 +45,7 @@ namespace OCM.API.InputProviders
             //TODO: handle encoding (UTF etc) correctly
             string responseContent = await sr.ReadToEndAsync();
 
-            string jsonString = responseContent.Trim(); 
+            string jsonString = responseContent.Trim();
 
             try
             {
@@ -57,11 +56,11 @@ namespace OCM.API.InputProviders
                 }
 
                 JObject o = JObject.Parse(jsonString);
-                
+
                 JsonSerializer serializer = new JsonSerializer();
                 var parsedComment = (Common.Model.UserComment)serializer.Deserialize(new JTokenReader(o), typeof(Common.Model.UserComment));
 
-                comment.ID = parsedComment.ID; 
+                comment.ID = parsedComment.ID;
                 comment.ChargePointID = parsedComment.ChargePointID;
                 comment.CheckinStatusTypeID = parsedComment.CheckinStatusTypeID;
                 comment.CommentTypeID = parsedComment.CommentTypeID;
@@ -128,7 +127,7 @@ namespace OCM.API.InputProviders
 
                 var tempFiles = new List<string>();
 
-                string tempFolder = uploadPath+"\\";
+                string tempFolder = uploadPath + "\\";
 
                 string tmpFileName = tempFolder + filePrefix + submission.ChargePointID;
                 if (submission.ImageDataBase64.StartsWith("data:image/jpeg")) tmpFileName += ".jpg";

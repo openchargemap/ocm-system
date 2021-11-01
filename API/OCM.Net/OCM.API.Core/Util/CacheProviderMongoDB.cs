@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -19,6 +11,13 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using OCM.Core.Settings;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OCM.Core.Data
 {
@@ -421,7 +420,8 @@ namespace OCM.Core.Data
         /// Ensure all MongoDB indexes are being set up.
         /// </summary>
         /// <returns></returns>
-        protected void EnsureMongoDBIndexes() {
+        protected void EnsureMongoDBIndexes()
+        {
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
             poiCollection.CreateIndex(IndexKeys.GeoSpatialSpherical("SpatialPosition.coordinates")); // bounding box queries
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition)); // distance queries
@@ -1159,7 +1159,8 @@ namespace OCM.Core.Data
                     }
                     else
                     {
-                        if (filter.BoundingBox == null || !filter.BoundingBox.Any()) {
+                        if (filter.BoundingBox == null || !filter.BoundingBox.Any())
+                        {
                             poiList = poiList.OrderByDescending(p => p.ID);
                         }
                         // In boundingbox more, if no sorting was requested by the user,

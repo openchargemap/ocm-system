@@ -1,17 +1,14 @@
-﻿using System;
+﻿using OCM.API.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using OCM.API.Common;
 using Xunit;
 
 namespace OCM.API.Tests
 {
     public class TestOCPIConversions
     {
-        [Fact(Skip ="Incomplete")]
+        [Fact(Skip = "Incomplete")]
         void CanConvertFromOCPI_Example()
         {
             var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using OCM.API.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,12 +29,12 @@ namespace OCM.API.Common
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                appList = appList.Where(u => 
-                u.Title.Contains(keyword) 
-                || u.Description.Contains(keyword) 
-                || u.PrimaryApikey == keyword 
-                || u.DeprecatedApikey == keyword 
-                || u.User.EmailAddress == keyword 
+                appList = appList.Where(u =>
+                u.Title.Contains(keyword)
+                || u.Description.Contains(keyword)
+                || u.PrimaryApikey == keyword
+                || u.DeprecatedApikey == keyword
+                || u.User.EmailAddress == keyword
                 || u.User.Username == keyword);
             }
 

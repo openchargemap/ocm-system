@@ -1,12 +1,9 @@
 ﻿using GeoCoordinatePortable;
 using OCM.API.Common;
-using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OCM.Core.Common
 {
@@ -24,7 +21,7 @@ namespace OCM.Core.Common
             //TODO: better method for large number of POIs
             //grab all live POIs (30-100,000 items)
             //var allPOIs = dataModel.ChargePoints.Where(s => s.AddressInfo.CountryID == countryId && (s.SubmissionStatusTypeID == 100 || s.SubmissionStatusTypeID == 200)).ToList();
-            var allPOIs = poiManager.GetPOIList(new APIRequestParams { CountryIDs = new int[] { countryId }, MaxResults=100000 });
+            var allPOIs = poiManager.GetPOIList(new APIRequestParams { CountryIDs = new int[] { countryId }, MaxResults = 100000 });
 
             foreach (var poi in allPOIs)
             {
@@ -207,7 +204,7 @@ namespace OCM.Core.Common
             if (
                 (poi.DateLastConfirmed.HasValue && !(poi.DateLastConfirmed.Value > recentUpdateThreshold))
                 ||
-                (poi.UserComments!=null && poi.UserComments.Any(u=>u.CheckinStatusType!=null && u.CheckinStatusType.IsPositive==true && u.DateCreated>recentUpdateThreshold))
+                (poi.UserComments != null && poi.UserComments.Any(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true && u.DateCreated > recentUpdateThreshold))
                 ||
                 (poi.MediaItems != null && poi.MediaItems.Any(u => u.DateCreated > recentUpdateThreshold))
                 )

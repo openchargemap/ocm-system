@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using OCM.API.Web.Standard;
-using OCM.Core.Settings;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace OCM.API.Tests
@@ -23,7 +14,7 @@ namespace OCM.API.Tests
         {
             _factory = factory;
             _factory.Server.AllowSynchronousIO = true;
-            
+
             // refresh POI cache status before beginning tests
             _ = Core.Data.CacheManager.RefreshCachedData(Core.Data.CacheUpdateStrategy.Modified).Result;
         }

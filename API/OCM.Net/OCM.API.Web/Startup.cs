@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Ben.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
 
 namespace OCM.API.Web.Standard
 {
@@ -31,9 +25,9 @@ namespace OCM.API.Web.Standard
 
             Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
 
-            
+
             Core.Data.CacheManager.InitCaching(settings);
-            
+
         }
 
         public IConfiguration Configuration { get; }
@@ -58,7 +52,7 @@ namespace OCM.API.Web.Standard
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();                
+                app.UseDeveloperExceptionPage();
             }
             app.UseResponseCompression();
 
@@ -74,7 +68,7 @@ namespace OCM.API.Web.Standard
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });  
+            });
 
         }
     }

@@ -6,7 +6,6 @@ using System.Collections;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace OCM.API.Common
 {
@@ -24,11 +23,11 @@ namespace OCM.API.Common
         {
             AllowUpdates = false;
 
-            using(var refDataManager = new ReferenceDataManager())
+            using (var refDataManager = new ReferenceDataManager())
             {
                 refData = refDataManager.GetCoreReferenceData();
             }
-         
+
         }
 
         //convert a simple POI to data and back again to fully populate all related properties, as submission may only have simple IDs for ref data etc
@@ -180,7 +179,7 @@ namespace OCM.API.Common
                     {
                         previousEdit.IsProcessed = true;
                         previousEdit.ProcessedByUser = processedByUser;
-                        
+
                         previousEdit.DateProcessed = DateTime.UtcNow;
                     }
                     //save updated edit queue items
@@ -194,7 +193,7 @@ namespace OCM.API.Common
                     //SendEditSubmissionNotification(updatedPOI, user);
 
                     //user is not an editor, item is now pending in edit queue for approval.
-                    return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message="Update submitted for review" };
+                    return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message = "Update submitted for review" };
                 }
 
                 if (isUpdate && updatedPOI.SubmissionStatusTypeID >= 1000)
@@ -223,7 +222,7 @@ namespace OCM.API.Common
                 //if item has no submission status and user permitted to edit, set to published
                 if (userCanEditWithoutApproval && cpData.SubmissionStatusTypeId == null)
                 {
-                    
+
                     cpData.SubmissionStatusTypeId = (int)StandardSubmissionStatusTypes.Submitted_Published; //hack due to conflicting state change for SubmissionStatusType
                 }
                 else
@@ -303,7 +302,7 @@ namespace OCM.API.Common
                     cacheTask.Wait();
                 }
 
-                return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message = "Update submitted." }; 
+                return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message = "Update submitted." };
             }
             catch (Exception exp)
             {

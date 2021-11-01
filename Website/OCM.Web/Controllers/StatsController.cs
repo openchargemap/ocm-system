@@ -1,10 +1,8 @@
-﻿using OCM.API.Common;
+﻿using Microsoft.AspNetCore.Mvc;
 using OCM.API.Common.DataSummary;
 using OCM.MVC.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 
 namespace OCM.MVC.Controllers
 {

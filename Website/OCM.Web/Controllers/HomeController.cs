@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace OCM.MVC.Controllers
 {
@@ -30,14 +27,14 @@ namespace OCM.MVC.Controllers
 
         public ActionResult Error(int code)
         {
-            if (code>=400 && code<= 500)
+            if (code >= 400 && code <= 500)
             {
                 if (!IsUserSignedIn)
                 {
-                    return RedirectToAction("SignIn","Profile");
+                    return RedirectToAction("SignIn", "Profile");
                 }
-                
-            } 
+
+            }
             return View();
         }
     }

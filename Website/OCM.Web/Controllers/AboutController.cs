@@ -3,15 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace OCM.MVC.Controllers
 {
     public class AboutController : BaseController
     {
         IWebHostEnvironment _host;
-        
+
         //
         // GET: /About/
 

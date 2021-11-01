@@ -1,11 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
+﻿using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace OCM.Import.Providers
 {

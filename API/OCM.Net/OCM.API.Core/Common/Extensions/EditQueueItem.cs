@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OCM.API.Common.Model.Extensions
+﻿namespace OCM.API.Common.Model.Extensions
 {
     public class EditQueueItem
     {
         public static Model.EditQueueItem FromDataModel(Core.Data.EditQueueItem source)
         {
-            return new Model.EditQueueItem { 
+            return new Model.EditQueueItem
+            {
                 ID = source.Id,
                 User = User.BasicFromDataModel(source.User),
-                Comment = source.Comment, 
+                Comment = source.Comment,
                 IsProcessed = source.IsProcessed,
                 ProcessedByUser = User.BasicFromDataModel(source.ProcessedByUser),
                 DateSubmitted = source.DateSubmitted,

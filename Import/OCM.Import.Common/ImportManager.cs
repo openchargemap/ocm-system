@@ -1211,7 +1211,7 @@ namespace OCM.Import
                         if (geoLookup != null)
                         {
                             country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
-                        } 
+                        }
                     }
 
                     if (country != null)
@@ -1230,7 +1230,7 @@ namespace OCM.Import
 
                     if (item.AddressInfo.Country == null)
                     {
-                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title+" OCM-"+item.ID );
+                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title + " OCM-" + item.ID);
 
                         failedLookups.Add(item);
                     }
@@ -1257,7 +1257,7 @@ namespace OCM.Import
             //get a few OCM listings and check that their country appears to be correct
             // curl  "https://api.openchargemap.io/v3/poi?key=test&maxresults=20000000" --output  C:\Temp\ocm\data\import\poi.json
             var cachePath = @"C:\temp\ocm\data\import\poi.json";
-            
+
             List<ChargePoint> poiList;
             var coreRefData = await _client.GetCoreReferenceDataAsync();
 
@@ -1268,13 +1268,14 @@ namespace OCM.Import
                 poiList = (await _client.GetPOIListAsync(filters)).ToList();
 
                 await System.IO.File.WriteAllTextAsync(cachePath, JsonConvert.SerializeObject(poiList));
-            } else
+            }
+            else
             {
 
                 var list = new List<ChargePoint>();
 
                 JsonSerializer serializer = new JsonSerializer();
-               
+
                 using (FileStream st = File.Open(cachePath, FileMode.Open))
                 using (StreamReader sr = new StreamReader(st))
                 using (JsonReader reader = new JsonTextReader(sr))
@@ -1291,7 +1292,7 @@ namespace OCM.Import
                     }
                 }
 
-                poiList = list.Where(p=>p.AddressInfo.CountryID!=159 &&p.AddressInfo.CountryID!=1).ToList();
+                poiList = list.Where(p => p.AddressInfo.CountryID != 159 && p.AddressInfo.CountryID != 1).ToList();
             }
 
             // if some locations are known to fail lookup, don't attempt them
@@ -1300,7 +1301,7 @@ namespace OCM.Import
             if (File.Exists(knownFailsFile))
             {
                 knownFails = JsonConvert.DeserializeObject<List<ChargePoint>>(await File.ReadAllTextAsync(knownFailsFile));
-                var list = (List<ChargePoint>) poiList;
+                var list = (List<ChargePoint>)poiList;
                 foreach (var p in knownFails)
                 {
                     list.Remove(list.FirstOrDefault(l => l.ID == p.ID));
@@ -1318,20 +1319,20 @@ namespace OCM.Import
 
             // determine country
             var s = Stopwatch.StartNew();
-            var failedLookups =  PopulateLocationFromGeolocationCache(poiList, coreRefData);
+            var failedLookups = PopulateLocationFromGeolocationCache(poiList, coreRefData);
             s.Stop();
             System.Diagnostics.Debug.WriteLine("Lookup took " + s.Elapsed.TotalSeconds + "s");
 
             // log failed lookups
-            foreach(var p in failedLookups)
+            foreach (var p in failedLookups)
             {
-                if (!knownFails.Any(k=>k.ID==p.ID))
+                if (!knownFails.Any(k => k.ID == p.ID))
                 {
                     knownFails.Add(p);
                 }
             }
             await System.IO.File.WriteAllTextAsync(knownFailsFile, JsonConvert.SerializeObject(knownFails, Formatting.Indented));
-           
+
 
             var file = @"C:\temp\ocm\data\import\country-fixes.csv";
 

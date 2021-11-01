@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model.Extensions
 {
@@ -10,7 +8,7 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (source == null) return null;
 
-            var group= new Model.MetadataGroup
+            var group = new Model.MetadataGroup
             {
                 ID = source.Id,
                 Title = source.Title,
@@ -20,7 +18,7 @@ namespace OCM.API.Common.Model.Extensions
                 MetadataFields = new List<Model.MetadataField>()
             };
 
-            if (source.MetadataFields!=null)
+            if (source.MetadataFields != null)
             {
                 foreach (var m in source.MetadataFields)
                 {

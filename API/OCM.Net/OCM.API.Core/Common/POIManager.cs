@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -11,7 +5,12 @@ using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
 using OCM.Core.Data;
-using OCM.Core.Util;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {

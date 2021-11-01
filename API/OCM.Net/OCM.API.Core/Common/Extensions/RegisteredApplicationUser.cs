@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model.Extensions
 {
@@ -15,12 +13,12 @@ namespace OCM.API.Common.Model.Extensions
                 ID = source.Id,
                 UserID = source.UserId,
                 RegisteredApplicationID = source.RegisteredApplicationId,
-                RegisteredApplication =RegisteredApplication.FromDataModel(source.RegisteredApplication, false),
+                RegisteredApplication = RegisteredApplication.FromDataModel(source.RegisteredApplication, false),
                 IsEnabled = source.IsEnabled,
                 IsWriteEnabled = source.IsWriteEnabled,
                 APIKey = source.Apikey,
                 DateCreated = source.DateCreated,
-                
+
             };
         }
 

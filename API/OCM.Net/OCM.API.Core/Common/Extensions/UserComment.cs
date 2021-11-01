@@ -28,7 +28,7 @@ namespace OCM.API.Common.Model.Extensions
                 userComment.CommentTypeID = source.UserCommentTypeId;
             }
 
-            if (isVerboseMode && (refData != null || source.CheckinStatusType != null) && source.CheckinStatusTypeId!=null)
+            if (isVerboseMode && (refData != null || source.CheckinStatusType != null) && source.CheckinStatusTypeId != null)
             {
                 userComment.CheckinStatusType = refData?.CheckinStatusTypes.FirstOrDefault(i => i.ID == source.CheckinStatusTypeId) ?? CheckinStatusType.FromDataModel(source.CheckinStatusType);
                 userComment.CheckinStatusTypeID = source.CheckinStatusTypeId;

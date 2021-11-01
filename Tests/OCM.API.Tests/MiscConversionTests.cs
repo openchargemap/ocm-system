@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
-using OCM.API.Common.Model;
-using OCM.Core.Settings;
+﻿using OCM.API.Common.Model;
 using Xunit;
 
 namespace OCM.API.Tests
@@ -61,7 +49,7 @@ namespace OCM.API.Tests
 
             conn = new ConnectionInfo
             {
-                Amps = 32, 
+                Amps = 32,
                 PowerKW = 22,
                 CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC,
                 Voltage = 400

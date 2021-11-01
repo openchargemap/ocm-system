@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using Import;
+﻿using Import;
 using OCM.Import.Manager.UI.Properties;
 using OCM.Import.Providers;
+using System;
+using System.Configuration;
+using System.Windows.Forms;
 
 
 namespace OCM.Import.Manager.UI

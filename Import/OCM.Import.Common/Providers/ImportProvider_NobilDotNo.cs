@@ -43,7 +43,7 @@ namespace OCM.Import.Providers
             {
                 var item = chargerstation.SelectNodes("metadata").Item(0);
                 ChargePoint cp = new ChargePoint();
-                cp.DataProviderID  = this.DataProviderID; //nobil.no
+                cp.DataProviderID = this.DataProviderID; //nobil.no
                 cp.DataProvidersReference = item["id"].InnerText; //is id unique across countries?
                 cp.DateLastStatusUpdate = DateTime.UtcNow;
                 cp.AddressInfo = new AddressInfo();
@@ -258,7 +258,7 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 50;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 20;
-                            cinfo.CurrentTypeID =  (int)StandardCurrentTypes.DC;
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
                             cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "20")
@@ -266,7 +266,7 @@ namespace OCM.Import.Providers
                             //TODO: 500VDC max 200A + 400V 3-phase max 63A
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
-                            cinfo.CurrentTypeID =(int)StandardCurrentTypes.DC;
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
                             cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "22")
@@ -284,7 +284,7 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 200;
                             cinfo.Voltage = 500;
                             cinfo.PowerKW = 100;
-                            cinfo.CurrentTypeID =  (int)StandardCurrentTypes.DC;
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
                             cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "24")
@@ -294,7 +294,7 @@ namespace OCM.Import.Providers
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 150;
                             cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
-                            cinfo.LevelID =3;
+                            cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "25")
                         {

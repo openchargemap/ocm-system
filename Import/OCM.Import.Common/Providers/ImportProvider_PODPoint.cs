@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -17,7 +16,7 @@ namespace OCM.Import.Providers
 
         public List<ChargePoint> Process(CoreReferenceData coreRefData)
         {
-            
+
             List<ChargePoint> outputList = new List<ChargePoint>();
 
             string source = InputData;
@@ -52,12 +51,12 @@ namespace OCM.Import.Providers
             JObject o = JObject.Parse(jsString);
             var dataList = o.Values();
 
-            int itemCount =0;
+            int itemCount = 0;
             foreach (var item in dataList.Values())
             {
                 try
                 {
-                    ChargePoint cp  = new ChargePoint();
+                    ChargePoint cp = new ChargePoint();
                     cp.DataProvider = dataProvider;
                     cp.OperatorInfo = operatorInfo;
 
@@ -91,7 +90,7 @@ namespace OCM.Import.Providers
                 }
                 catch (Exception)
                 {
-                    Log("Error parsing item "+itemCount);
+                    Log("Error parsing item " + itemCount);
                 }
 
                 itemCount++;

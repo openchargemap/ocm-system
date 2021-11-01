@@ -161,7 +161,7 @@ namespace OCM.API.Common
                         Thread.Sleep(1000); //wait a bit then try again
                     }
                     attemptCount++;
-                  
+
                 }
 
                 //attempt to delete temp files

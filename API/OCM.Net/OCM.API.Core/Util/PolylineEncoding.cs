@@ -1,10 +1,9 @@
-﻿using OCM.API.Common;
+﻿using NetTopologySuite.Geometries;
+using OCM.API.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
 using System.Linq;
+using System.Text;
 
 namespace OCM.Core.Util
 {
@@ -122,9 +121,9 @@ namespace OCM.Core.Util
         {
             var searchPolygon = CreatePolygonFromPolyLine(points, distanceKM);
 
-         //   if (!searchPolygon.Shell.IsCCW) searchPolygon = searchPolygon.Reverse();
+            //   if (!searchPolygon.Shell.IsCCW) searchPolygon = searchPolygon.Reverse();
 
-            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();   
+            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
 
             return polyPoints;
         }
@@ -145,7 +144,7 @@ namespace OCM.Core.Util
         {
             var factory = new OgcCompliantGeometryFactory(); //helps make polygon shell counter clockwise
             LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
-       
+
             var searchPolygon = polyLine.Buffer(distanceKM / 2 / 100, points.Count) as Polygon;
             searchPolygon = NetTopologySuite.Simplify.TopologyPreservingSimplifier.Simplify(searchPolygon, 0.001) as Polygon;
 

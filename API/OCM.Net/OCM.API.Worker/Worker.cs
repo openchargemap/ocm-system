@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OCM.Core.Settings;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OCM.API.Worker
 {

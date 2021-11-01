@@ -1,21 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using OCM.API.Common;
 using OCM.API.Common.Model;
+using OCM.API.Utils;
 using OCM.Core.Data;
 using OCM.Import.Providers;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Caching.Memory;
-using System.IO;
-using Microsoft.AspNetCore.Authorization;
-using OCM.API.Utils;
-using System.Collections.Generic;
 
 namespace OCM.MVC.Controllers
 {

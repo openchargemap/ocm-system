@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model.Extended
 {
@@ -23,14 +19,15 @@ namespace OCM.API.Common.Model.Extended
     public class DuplicatePOIGroup
     {
         public ChargePoint SuggestedBestPOI { get; set; }
-        public List<DuplicatePOIItem> DuplicatePOIList {get;set;}
+        public List<DuplicatePOIItem> DuplicatePOIList { get; set; }
         public List<ChargePoint> AllPOI { get; set; }
     }
 
     /// <summary>
     /// summary of all groups of duplicate POIs
     /// </summary>
-    public class POIDuplicates {
+    public class POIDuplicates
+    {
         public List<DuplicatePOIGroup> DuplicateSummaryList { get; set; }
     }
 

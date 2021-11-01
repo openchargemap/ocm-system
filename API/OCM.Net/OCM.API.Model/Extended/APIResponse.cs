@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OCM.API.Common.Model.Extended
 {
@@ -14,7 +10,7 @@ namespace OCM.API.Common.Model.Extended
     public class APIResponseEnvelope
     {
         public Object Data { get; set; }
-        public APIResponseMetadata Metadata { get; set; } 
+        public APIResponseMetadata Metadata { get; set; }
 
         public APIResponseEnvelope()
         {

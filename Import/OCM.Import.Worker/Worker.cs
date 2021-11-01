@@ -1,3 +1,7 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,10 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OCM.Import.Providers;
 
 namespace OCM.Import.Worker
 {
@@ -80,7 +80,7 @@ namespace OCM.Import.Worker
                     try
                     {
                         var stopwatch = Stopwatch.StartNew();
-                        
+
                         var importedOK = await importManager.PerformImportProcessing(
                             new ImportProcessSettings
                             {

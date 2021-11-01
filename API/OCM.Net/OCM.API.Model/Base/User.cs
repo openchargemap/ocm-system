@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace OCM.API.Common.Model
 {
@@ -26,7 +24,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Location")]
         public string Location { get; set; }
 
-        [DisplayName("Website"), ]
+        [DisplayName("Website"),]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Url)]
         public string WebsiteURL { get; set; }
 
@@ -50,7 +48,7 @@ namespace OCM.API.Common.Model
 
         [DisplayName("Provide Public Charging")]
         public bool? IsPublicChargingProvider { get; set; }
-        
+
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
@@ -62,7 +60,7 @@ namespace OCM.API.Common.Model
 
         public string ProfileImageURL { get; set; }
 
-        public bool? IsCurrentSessionTokenValid {get;set;}
+        public bool? IsCurrentSessionTokenValid { get; set; }
 
         public string APIKey { get; set; }
 

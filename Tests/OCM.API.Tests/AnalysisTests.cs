@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace OCM.API.Tests
 {
@@ -15,7 +10,7 @@ namespace OCM.API.Tests
             var analysis = new OCM.Import.Analysis.SpatialAnalysis(@"C:\Temp\ocm\data\import\Shapefiles\World\ne_10m_admin_0_map_units.shp");
 
             var r1 = analysis.ClassifyPoint(38.58431244, -121.4956055);
-            Assert.Equal("US",r1.CountryCode);
+            Assert.Equal("US", r1.CountryCode);
 
             var r2 = analysis.ClassifyPoint(57.142, -2.096);
             Assert.Equal("GB", r2.CountryCode);

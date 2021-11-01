@@ -1,9 +1,6 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -41,9 +38,9 @@ namespace OCM.Import.Providers
             string sourcetext = item["description"].InnerText;
             if (ImportType == ChademoImportType.Japan)
             {
-                int indexOfTelephone=  sourcetext.IndexOf("[");
+                int indexOfTelephone = sourcetext.IndexOf("[");
                 cp.AddressInfo.AddressLine1 = sourcetext.Substring(0, indexOfTelephone).Trim();
-                cp.AddressInfo.ContactTelephone1 = sourcetext.Substring(indexOfTelephone+5,sourcetext.IndexOf("]")-(indexOfTelephone+5));
+                cp.AddressInfo.ContactTelephone1 = sourcetext.Substring(indexOfTelephone + 5, sourcetext.IndexOf("]") - (indexOfTelephone + 5));
             }
             else
             {

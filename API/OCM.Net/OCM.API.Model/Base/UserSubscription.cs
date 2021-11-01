@@ -22,7 +22,7 @@ namespace OCM.API.Common.Model
         [Range(-90, 90)]
         public Nullable<double> Latitude { get; set; }
 
-        [Range(-180,180)]
+        [Range(-180, 180)]
         public Nullable<double> Longitude { get; set; }
 
         [Range(0, 100000)]

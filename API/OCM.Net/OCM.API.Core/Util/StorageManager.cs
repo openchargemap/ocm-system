@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
-using Amazon.S3.Model;
-using Amazon.S3;
 using System.Threading.Tasks;
 
 namespace OCM.Core.Util

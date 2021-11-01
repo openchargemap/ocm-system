@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model.Extensions
 {
@@ -10,7 +8,7 @@ namespace OCM.API.Common.Model.Extensions
         {
             if (source == null) return null;
 
-            var a= new Model.RegisteredApplication
+            var a = new Model.RegisteredApplication
             {
                 ID = source.Id,
                 Title = source.Title,

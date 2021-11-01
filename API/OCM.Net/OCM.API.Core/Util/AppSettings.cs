@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OCM.Core.Settings
+﻿namespace OCM.Core.Settings
 {
     public class CoreSettings
     {

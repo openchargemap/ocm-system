@@ -1,8 +1,5 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -12,7 +9,7 @@ namespace OCM.Import.Providers
         List<ChargePoint> Process(CoreReferenceData coreRefData);
     }
 
-    public interface IImportProviderWithInit: IImportProvider
+    public interface IImportProviderWithInit : IImportProvider
     {
         void InitImportProvider();
     }

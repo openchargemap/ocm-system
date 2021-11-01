@@ -1,21 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Ben.Diagnostics;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OCM.MVC;
+using System;
 
 namespace OCM.Web
 {
@@ -44,12 +37,12 @@ namespace OCM.Web
                 options.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString;
                 options.SchemaName = "dbo";
                 options.TableName = "SessionState";
-               
+
             });
 
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation();
-            
+
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddAuthentication(CustomAuthOptions.DefaultScheme)
@@ -58,7 +51,7 @@ namespace OCM.Web
 
             //services.AddMemoryCache();
 
-          
+
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -69,7 +62,7 @@ namespace OCM.Web
                 options.Cookie.HttpOnly = true;
                 // Make the session cookie essential
                 options.Cookie.IsEssential = true;
-     
+
             });
 
 
@@ -97,14 +90,14 @@ namespace OCM.Web
 #if DEBUG
             if (env.IsDevelopment())
             {
-                
+
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseExceptionHandler("~/home/error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-               // app.UseHsts();
+                // app.UseHsts();
             }
 #else
              app.UseExceptionHandler("/Home/Error");

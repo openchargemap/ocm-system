@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace OCM.API.Common.Model.Extensions
 {
@@ -22,7 +20,7 @@ namespace OCM.API.Common.Model.Extensions
                 PhoneSecondaryContact = source.PhoneSecondaryContact,
                 ContactEmail = source.ContactEmail,
                 FaultReportEmail = source.FaultReportEmail,
-                AddressInfo = (source!=null? AddressInfo.FromDataModel(source.AddressInfo, true): null),
+                AddressInfo = (source != null ? AddressInfo.FromDataModel(source.AddressInfo, true) : null),
                 IsRestrictedEdit = source.IsRestrictedEdit
             };
         }

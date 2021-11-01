@@ -1,8 +1,5 @@
-﻿using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using OCM.API.Common.Model;
 
 namespace OCM.API.Web.Models
 {

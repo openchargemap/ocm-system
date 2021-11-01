@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
+using OCM.Core.Settings;
+using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
-using OCM.Core.Settings;
 using Xunit;
 
 namespace OCM.API.Tests
@@ -48,7 +44,7 @@ namespace OCM.API.Tests
         [Fact]
         public async Task CacheStatusOK()
         {
-          
+
             var status = await Core.Data.CacheManager.GetCacheStatus();
             Assert.True(status != null, "Status should not be null");
 
@@ -101,7 +97,7 @@ namespace OCM.API.Tests
         public void ReturnFilteredReferenceData()
         {
             var api = new OCM.API.Common.ReferenceDataManager();
-            var filter = new Common.APIRequestParams { CountryIDs = new int[] { 18 }, AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false};
+            var filter = new Common.APIRequestParams { CountryIDs = new int[] { 18 }, AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false };
             var results = api.GetCoreReferenceData(filter);
 
             Assert.True(results.Countries.Count > 0, "Country results should be greater than 0");

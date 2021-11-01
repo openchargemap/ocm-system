@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OCM.API.Common.Model;
+﻿using OCM.API.Common.Model;
+using System;
 
 namespace OCM.API.Client
 {

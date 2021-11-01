@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace OCM.API.Common.Model
 {
     public class RegisteredApplication : SimpleReferenceDataType
     {
         [DataType(System.ComponentModel.DataAnnotations.DataType.Url)]
-        [DisplayName("Website")] 
+        [DisplayName("Website")]
         public string WebsiteURL { get; set; }
         public string Description { get; set; }
 

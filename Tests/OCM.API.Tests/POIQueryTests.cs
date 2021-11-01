@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using OCM.Core.Settings;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
-using OCM.Core.Settings;
 using Xunit;
 
 namespace OCM.API.Tests
@@ -148,8 +145,8 @@ namespace OCM.API.Tests
         public void ReturnPOIResultFilteredByPostcode()
         {
 
-            var postcodes = new string[] { "29306","29379" };
-            
+            var postcodes = new string[] { "29306", "29379" };
+
 
             var api = new OCM.API.Common.POIManager();
             var results = api.GetPOIList(new Common.APIRequestParams
@@ -158,11 +155,11 @@ namespace OCM.API.Tests
                 AllowDataStoreDB = false,
                 IsVerboseOutput = false,
                 MaxResults = 1000,
-                Postcodes= postcodes
+                Postcodes = postcodes
             });
 
             Assert.True(results.Count() > 0);
-            Assert.True(results.Count()< 100);
+            Assert.True(results.Count() < 100);
 
             var poi = results.FirstOrDefault();
             Assert.NotNull(poi);
@@ -170,9 +167,9 @@ namespace OCM.API.Tests
             var allResultsArePostcodesInSet = results.All(r => postcodes.Contains(r.AddressInfo.Postcode));
             Assert.True(allResultsArePostcodesInSet);
 
-          
+
             // db results
-          
+
             var dbResults = api.GetPOIList(new Common.APIRequestParams
             {
                 AllowMirrorDB = false,
