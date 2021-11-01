@@ -60,16 +60,17 @@ namespace OCM.API.Client
         }
     }
 
-    public class OCMClient: IDisposable
+    public class OCMClient : IDisposable
     {
         public bool IsSandboxMode { get; set; }
         public string ServiceBaseURL { get; set; }
         public string APIKey { get; set; }
 
-        private HttpClient _client = new HttpClient();
+        private static HttpClient _client = new HttpClient();
         private ILogger _logger = null;
 
         private string _userAgent = null;
+        private bool disposedValue;
 
         public OCMClient(string baseUrl, string apiKey, ILogger logger = null, string userAgent = "OCM-API-Client")
         {
@@ -82,8 +83,6 @@ namespace OCM.API.Client
             _logger = logger;
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
-
-        ~OCMClient() { this.Dispose(); }
 
 
 #if DEBUG
@@ -396,13 +395,33 @@ namespace OCM.API.Client
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~OCMClient()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
         public void Dispose()
         {
-            try
-            {
-                _client.Dispose();
-            }
-            catch { }
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
 
 #endif

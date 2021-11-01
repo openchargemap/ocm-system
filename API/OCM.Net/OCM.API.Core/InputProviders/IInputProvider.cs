@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OCM.API.InputProviders
 {
-    internal interface IInputProvider
+    public interface IInputProvider
     {
         Task<ValidationResult> ProcessEquipmentSubmission(HttpContext context);
 

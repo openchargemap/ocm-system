@@ -4,8 +4,8 @@ using System.Linq;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace OCM.API.InputProviders
 {
