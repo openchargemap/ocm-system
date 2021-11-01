@@ -72,16 +72,22 @@ namespace OCM.API.Client
         private string _userAgent = null;
         private bool disposedValue;
 
+        static OCMClient()
+        {
+            // init static properties
+            _client.Timeout = TimeSpan.FromMinutes(10);
+            _client.DefaultRequestHeaders.Add("User-Agent", "OCM-API-Client");
+        }
+
         public OCMClient(string baseUrl, string apiKey, ILogger logger = null, string userAgent = "OCM-API-Client")
         {
             ServiceBaseURL = baseUrl;
 
             APIKey = apiKey;
-            _client.Timeout = TimeSpan.FromMinutes(10);
+          
             _userAgent = userAgent;
-            _client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+            
             _logger = logger;
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
 
