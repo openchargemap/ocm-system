@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Configuration;
 
 namespace OCM.Core.Data
 {
@@ -14,7 +16,7 @@ namespace OCM.Core.Data
         public OCMEntities(DbContextOptions<OCMEntities> options)
             : base(options)
         {
-
+            
         }
 
         public virtual DbSet<AddressInfo> AddressInfoes { get; set; }
@@ -59,14 +61,13 @@ namespace OCM.Core.Data
             {
                 optionsBuilder.UseLoggerFactory(ConsoleLogger);
                 optionsBuilder.UseLazyLoadingProxies();
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(local)\\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True", x =>
+
+                optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString, x =>
                 {
                     x.UseNetTopologySuite();
                     x.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
 
                 });
-
 
 #if DEBUG
                 optionsBuilder.EnableDetailedErrors(true);

@@ -1,7 +1,9 @@
-﻿using OCM.API.Common.Model;
+﻿using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace OCM.Import.Providers
 {
@@ -42,16 +44,12 @@ namespace OCM.Import.Providers
         public List<ChargePoint> Process(CoreReferenceData refData)
         {
 
-#if DEBUG
 
-            var poiDataCsv = System.IO.File.ReadAllText(@"C:\\Temp\\ocm\\data\\import\\cache_data.gouv.fr.dat");
-#else
             JObject o = JObject.Parse(InputData);
             var resourceUrl = o["resources"][0]["latest"].ToString();
 
             HttpClient client = new HttpClient();
             var poiDataCsv= client.GetStringAsync(resourceUrl).Result;
-#endif
 
             //whole file cleanup (broken newline in text)
             InputData = poiDataCsv.Replace("\n\";", "\";");

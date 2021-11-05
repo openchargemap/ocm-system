@@ -16,7 +16,8 @@
 <div class="row">
     <div class="col-md-6">
         <div class="well well-sm">
-            @Html.Partial("_POISearch", (OCM.MVC.Models.POIBrowseModel)Model)
+            <partial name="_POISearch" model="(OCM.MVC.Models.POIBrowseModel)Model" />
+
         </div>
 
     </div>
@@ -26,8 +27,7 @@
             <div><strong>Searching location: @ViewBag.FormattedAddress</strong></div>
         }
 
-        @Html.Partial("_POIList", Model.POIList)
-
+        <partial name="_POIList" model="Model.POIList" />
 
     </div>
 

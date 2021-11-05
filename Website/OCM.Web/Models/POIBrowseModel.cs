@@ -13,9 +13,14 @@ namespace OCM.MVC.Models
             using (var refDataManager = new OCM.API.Common.ReferenceDataManager())
             {
                 this.ReferenceData = refDataManager.GetCoreReferenceData();
-                this.AllowOptionalCountrySelection = true;
-                //this.CountryIDs = new int[] { 1 }; //default to uk
             }
+            this.AllowOptionalCountrySelection = true;
+        }
+        public POIBrowseModel(CoreReferenceData refData)
+        {
+
+            this.ReferenceData = refData;
+            this.AllowOptionalCountrySelection = true;
         }
 
         public string SearchLocation { get; set; }

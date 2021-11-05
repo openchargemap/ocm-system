@@ -54,6 +54,9 @@ namespace OCM.API.Web.Standard
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();
+
             app.UseResponseCompression();
 
             app.UseHttpsRedirection();

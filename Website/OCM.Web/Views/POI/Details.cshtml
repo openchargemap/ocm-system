@@ -66,7 +66,8 @@ else
         }
     }
 
-    @Html.Partial("_POIListingStatus", Model.POI)
+
+    <partial name="_POIListingStatus" model="Model.POI" />
 
     <div id="details-container" class="@detailsCss">
 
@@ -103,9 +104,13 @@ else
                     <li class="nav-item">
                         <a class="nav-link" href="#tab-media" data-toggle="tab">
                             <span data-localize="ocm.details.mediaItems.sectionTitle">Photos</span> (@if (Model.POI.MediaItems != null)
-                            {@Model.POI.MediaItems.Count }
-                        else
-                        { @Html.Raw(0)})
+                            {
+                                @Model.POI.MediaItems.Count
+                            }
+                            else
+                            {
+                                @Html.Raw(0)
+                            })
                         </a>
                     </li>
                 }
@@ -299,7 +304,8 @@ else
 
                             @if (Model.DataQualityReport != null)
                             {
-                                @Html.DisplayFor(m => m.DataQualityReport);
+                                @Html.DisplayFor(m => m.DataQualityReport)
+                                ;
                             }
                         </div>
                     </div>
@@ -312,7 +318,7 @@ else
                 <div id="tab-equipment" class="tab-pane">
                     @if (Model.POI.Connections != null && Model.POI.Connections.Count() > 0)
                     {
-                        Html.RenderPartial("_ConnectionList", Model.POI.Connections);
+                        <partial name="_ConnectionList" model="Model.POI.Connections" />
                     }
                     else
                     {
@@ -346,7 +352,7 @@ else
                     <div id="tab-nearby" class="tab-pane">
 
                         <h2 data-localize="ocm.details.placesNearby.chargingLocations">Other Charging Locations</h2>
-                        @Html.Partial("_POIList", Model.POIListNearby)
+                        <partial name="_POIList" model="Model.POIListNearby" />
 
                     </div>
                     <div id="tab-media" class="tab-pane">
@@ -363,7 +369,7 @@ else
                         </p>
                         @if (Model.POI.MediaItems != null)
                         {
-                            Html.RenderPartial("_MediaItemList", Model.POI.MediaItems);
+                             <partial name="_MediaItemList" model="Model.POI.MediaItems" />
                         }
                     </div>
                 }
@@ -374,96 +380,97 @@ else
 
     <script>
         @{
-                var scriptContent = "var lat = " + Model.POI.AddressInfo.Latitude + "; var lng = " + Model.POI.AddressInfo.Longitude + ";";
-      }
+            var scriptContent = "var lat = " + Model.POI.AddressInfo.Latitude + "; var lng = " + Model.POI.AddressInfo.Longitude + ";";
+        }
 
-    @Html.Raw(scriptContent)
+        @Html.Raw(scriptContent)
 
 
-        $(document).ready(function () {
+            $(document).ready(function () {
 
-            //setup tabs
+                //setup tabs
 
-            $('#poiTabs a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
+                $('#poiTabs a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
 
-                if (e.target.hash == "#tab-map") {
-                    // trigger map load
+                    if (e.target.hash == "#tab-map") {
+                        // trigger map load
 
-                    var src = "https://map.openchargemap.io/?mode=embedded&latitude=@(Model.POI.AddressInfo.Latitude)&longitude=@Model.POI.AddressInfo.Longitude";
-                    if (document.getElementById("map-app").src != src) {
-                        document.getElementById("map-app").src = src;
+                        var src = "https://map.openchargemap.io/?mode=embedded&latitude=@(Model.POI.AddressInfo.Latitude)&longitude=@Model.POI.AddressInfo.Longitude";
+                        if (document.getElementById("map-app").src != src) {
+                            document.getElementById("map-app").src = src;
+                        }
                     }
-                }
 
-            });
+                });
 
-            @if (ViewBag.EnablePreviewMode != true){
+        @if (ViewBag.EnablePreviewMode != true)
+        {
             <text>
-            //fetch nearby places
-            getNearbyPlaces(lat, lng, 2);
+                        //fetch nearby places
+                        getNearbyPlaces(lat, lng, 2);
             </text>
-            }
-        });
-
-        function getLocationImage(pos) {
-            @if (ViewBag.ImageList != null && ViewBag.ImageList.Count > 0)
-                {
-                    var locationImage = ViewBag.ImageList[0];
-                    <text>
-            $('#details-imageblock').html("<img src='@locationImage.ImageURL' /><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
-            </text>
-                }
         }
-
-        /*
-         * Construct the URL to call for the API request
-         */
-        function constructYelpURL(lat, lng, radius) {
-
-            var URL = "https://api.yelp.com/v2/search?" +
-                "business_review_search?" +
-                "callback=?&limit=10" +
-                "&lat=" + lat +
-                "&long=" + lng +
-                "&radius=" + radius +
-                "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
-            return encodeURI(URL);
-
-            //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
-        }
-
-        function getNearbyPlaces(lat, lng, radius) {
-
-            return;
-
-            var yelpRequestURL = constructYelpURL(lat, lng, radius);
-
-            $.getJSON(yelpRequestURL, function (data) {
-
-                if (data != null) {
-                    var output = "";
-                    var poiList = data.businesses;
-
-                    for (var i = 0; i < poiList.length; i++) {
-                        var poi = poiList[i];
-                        output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "' /> <h3>" + poi.name +
-                                        "&nbsp;<img src='" + poi.rating_img_url_small + "' />" +
-                                        (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
-                                        "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
-                                        "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
-                                        "</div>";
-                    }
-
-                    $("#nearby-poi").html(output);
-                }
             });
-        }
 
-        function sharePopup(url) {
-            window.open(url, "_blank");
+            function getLocationImage(pos) {
+        @if (ViewBag.ImageList != null && ViewBag.ImageList.Count > 0)
+        {
+            var locationImage = ViewBag.ImageList[0];
+            <text>
+                        $('#details-imageblock').html("<img src='@locationImage.ImageURL' /><div><img src='http://www.panoramio.com/img/logo-tos.png'> <a href='@locationImage.DetailsURL'>view original</a> author: <a href='@locationImage.SubmitterURL'>@locationImage.Submitter</a> Photos provided by Panoramio are under the copyright of their owners</div>");
+            </text>
         }
+            }
+
+            /*
+             * Construct the URL to call for the API request
+             */
+            function constructYelpURL(lat, lng, radius) {
+
+                var URL = "https://api.yelp.com/v2/search?" +
+                    "business_review_search?" +
+                    "callback=?&limit=10" +
+                    "&lat=" + lat +
+                    "&long=" + lng +
+                    "&radius=" + radius +
+                    "&ywsid=" + "ePh1dFy4Z-Gc56W2sFuSfw";
+                return encodeURI(URL);
+
+                //http://api.yelp.com/business_review_search?term=yelp&lat=37.788022&long=-122.399797&radius=10&limit=5&ywsid=XXXXXXXXXXXXXXXXXX
+            }
+
+            function getNearbyPlaces(lat, lng, radius) {
+
+                return;
+
+                var yelpRequestURL = constructYelpURL(lat, lng, radius);
+
+                $.getJSON(yelpRequestURL, function (data) {
+
+                    if (data != null) {
+                        var output = "";
+                        var poiList = data.businesses;
+
+                        for (var i = 0; i < poiList.length; i++) {
+                            var poi = poiList[i];
+                            output += "<div class='nearby-place'><img class='place-img' src='" + poi.photo_url_small + "' /> <h3>" + poi.name +
+                                            "&nbsp;<img src='" + poi.rating_img_url_small + "' />" +
+                                            (poi.categories.length > 0 ? " <small>" + poi.categories[0].name + "</small> " : "") +
+                                            "<small><a target='_blank' href='" + poi.url + "'>View More Details</a></small></h3>" +
+                                            "<div>Distance: " + (Math.round(poi.distance * 10) / 10) + "</div>" +
+                                            "</div>";
+                        }
+
+                        $("#nearby-poi").html(output);
+                    }
+                });
+            }
+
+            function sharePopup(url) {
+                window.open(url, "_blank");
+            }
     </script>
 }
 

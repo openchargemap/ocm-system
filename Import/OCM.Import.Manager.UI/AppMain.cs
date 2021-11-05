@@ -54,9 +54,9 @@ namespace Import
                    .Build();
 
             var appsettings = new OCM.Core.Settings.CoreSettings();
-            config.GetSection("CoreSettings").Bind(appsettings);
+            config.GetSection("ImportSettings").Bind(appsettings);
 
-        
+
             _importManager = new ImportManager(settings);
 
             //populate provider list

@@ -1,9 +1,11 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
@@ -83,6 +85,11 @@ namespace OCM.API.Common
 
         public CoreReferenceData GetCoreReferenceData(APIRequestParams filter = null)
         {
+            return GetCoreReferenceDataAsync(filter).Result;
+        }
+
+        public async Task<CoreReferenceData> GetCoreReferenceDataAsync(APIRequestParams filter = null)
+        {
             if (filter == null) filter = new APIRequestParams { };
 
             CoreReferenceData data = null;
@@ -158,7 +165,7 @@ namespace OCM.API.Common
 
             //list of Data Providers
             data.DataProviders = new List<Model.DataProvider>();
-            foreach (var provider in dataModel.DataProviders.ToList())
+            foreach (var provider in dataModel.DataProviders.Include(d => d.DataProviderStatusType).ToList())
             {
                 data.DataProviders.Add(Model.Extensions.DataProvider.FromDataModel(provider));
             }
@@ -169,7 +176,7 @@ namespace OCM.API.Common
             if (filter.CountryIDs?.Any() == true)
             {
                 // fetch connection types used in the list of given countries, with count of usage in the set
-                var usedNetworks = dataModel.Operators
+                var usedNetworks = dataModel.Operators.Include(o => o.AddressInfo)
                     .Distinct()
                     .Where(c => c.ChargePoints
                                         .Where(cp => cp.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published || cp.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)
@@ -192,7 +199,7 @@ namespace OCM.API.Common
             }
             else
             {
-                foreach (var source in dataModel.Operators.OrderBy(o => o.Title.Trim()))
+                foreach (var source in dataModel.Operators.Include(o => o.AddressInfo).OrderBy(o => o.Title.Trim()))
                 {
                     data.Operators.Add(Model.Extensions.OperatorInfo.FromDataModel(source));
                 }
@@ -233,7 +240,12 @@ namespace OCM.API.Common
             }
 
             data.MetadataGroups = new List<Model.MetadataGroup>();
-            foreach (var g in dataModel.MetadataGroups.ToList())
+            var groups = dataModel.MetadataGroups
+                            .Include(m => m.MetadataFields)
+                                .ThenInclude(f => f.DataType)
+                            .Include(m => m.MetadataFields)
+                                .ThenInclude(f => f.MetadataFieldOptions);
+            foreach (var g in groups)
             {
                 data.MetadataGroups.Add(Model.Extensions.MetadataGroup.FromDataModel(g));
             }
@@ -266,7 +278,7 @@ namespace OCM.API.Common
             };
 
             data.UserComment = new Model.UserComment { ChargePointID = 0, Comment = "", CommentType = data.UserCommentTypes[0], DateCreated = DateTime.UtcNow, ID = 0, CheckinStatusType = data.CheckinStatusTypes[0] };
-            return data;
+            return await Task.FromResult(data);
         }
     }
 }

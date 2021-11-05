@@ -200,6 +200,7 @@ namespace OCM.API.Common
         public IEnumerable<Model.ChargePoint> GetPOIList(APIRequestParams filter)
         {
             return GetPOIListAsync(filter).Result;
+            
         }
 
         /// <summary>
@@ -207,7 +208,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Model.ChargePoint>> GetPOIListAsync(APIRequestParams filterParams)
+        public async Task<IEnumerable<Model.ChargePoint>> GetPOIListAsync(APIRequestParams filterParams, Model.CoreReferenceData refData = null)
         {
 
 
@@ -245,11 +246,13 @@ namespace OCM.API.Common
             if (dataList == null && filter.AllowDataStoreDB)
             {
 
-                Model.CoreReferenceData refData = null;
-
-                using (var refDataManager = new ReferenceDataManager())
+                if (refData == null)
                 {
-                    refData = refDataManager.GetCoreReferenceData();
+                    using (var refDataManager = new ReferenceDataManager())
+                    {
+
+                        refData = refDataManager.GetCoreReferenceData();
+                    }
                 }
 
                 int maxResults = filter.MaxResults;
@@ -442,6 +445,11 @@ namespace OCM.API.Common
                 if (filter.ConnectionType != null || filter.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
                 {
                     chargePointList = from c in chargePointList
+                                      .Include(i => i.MetadataValues)
+                                      .Include(i => i.MediaItems)
+                                      .Include(i => i.ConnectionInfoes)
+                                      .Include(i => i.AddressInfo)
+
                                       where
                                       c.ConnectionInfoes.Any(conn =>
                                             (filter.ConnectionType == null || (filter.ConnectionType != null && conn.ConnectionType.Title == filter.ConnectionType))
@@ -507,9 +515,9 @@ namespace OCM.API.Common
                     }
                 }
 
-                var additionalFilteredList = filteredList
+                var additionalFilteredList = await filteredList
                     .Take(maxResults)
-                    .ToList();
+                    .ToListAsync();
 
                 stopwatch.Stop();
 

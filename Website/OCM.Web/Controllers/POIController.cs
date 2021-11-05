@@ -32,11 +32,33 @@ namespace OCM.MVC.Controllers
             _settings = GetSettingsFromConfig(config);
         }
 
+        private CoreReferenceData GetCoreReferenceData()
+        {
+            return GetCoreReferenceDataAsync().Result;
+        }
+
+        private async Task<CoreReferenceData> GetCoreReferenceDataAsync()
+        {
+            if (_cache.TryGetValue("_coreRefData", out var refData))
+            {
+                return refData as CoreReferenceData;
+            }
+            else
+            {
+                using (var refDataManager = new OCM.API.Common.ReferenceDataManager())
+                {
+                    var result = await refDataManager.GetCoreReferenceDataAsync();
+                    _cache.Set("_coreRefData", result);
+                    return result;
+                }
+            }
+        }
+
         public async Task<ActionResult> Index(POIBrowseModel filter)
         {
-            if (filter == null)
+            if (filter?.ReferenceData == null)
             {
-                filter = new POIBrowseModel();
+                filter = new POIBrowseModel(await GetCoreReferenceDataAsync());
                 filter.ShowAdvancedOptions = true;
             }
             var cpManager = new API.Common.POIManager();
@@ -134,7 +156,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-            filter.POIList = (await cpManager.GetPOIListAsync((OCM.API.Common.APIRequestParams)filter)).ToList();
+            filter.POIList = (await cpManager.GetPOIListAsync((OCM.API.Common.APIRequestParams)filter, filter.ReferenceData)).ToList();
             return View(filter);
         }
 
@@ -196,7 +218,7 @@ namespace OCM.MVC.Controllers
                     sw.Stop();
                     System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
 
-                    ViewBag.ReferenceData = new POIBrowseModel();
+                    ViewBag.ReferenceData = new POIBrowseModel(await GetCoreReferenceDataAsync());
 
                     //get data quality report
 
@@ -274,7 +296,7 @@ namespace OCM.MVC.Controllers
         [Authorize(Roles = "StandardUser")]
         public ActionResult Add()
         {
-            var refData = new POIBrowseModel();
+            var refData = new POIBrowseModel(GetCoreReferenceData());
             refData.AllowOptionalCountrySelection = false;
 
             ViewBag.ReferenceData = refData;
@@ -318,7 +340,7 @@ namespace OCM.MVC.Controllers
                 {
                     InitEditReferenceData(poi);
 
-                    var refData = new POIBrowseModel();
+                    var refData = new POIBrowseModel(GetCoreReferenceData());
                     ViewBag.ReferenceData = refData;
                     ViewBag.HideAdvancedInfo = true;
 
@@ -378,7 +400,7 @@ namespace OCM.MVC.Controllers
         {
             CheckForReadOnly();
 
-            var refData = new POIBrowseModel();
+            var refData = new POIBrowseModel(GetCoreReferenceData());
             refData.AllowOptionalCountrySelection = false;
             ViewBag.ReferenceData = refData;
 
@@ -469,7 +491,7 @@ namespace OCM.MVC.Controllers
                 }
             }
 
-            ViewBag.ReferenceData = new POIBrowseModel();
+            ViewBag.ReferenceData = new POIBrowseModel(GetCoreReferenceData());
 
             return View(poi);
         }
@@ -589,7 +611,7 @@ namespace OCM.MVC.Controllers
             viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
             viewModel.POI = poi;
 
-            ViewBag.ReferenceData = new POIBrowseModel();
+            ViewBag.ReferenceData = new POIBrowseModel(GetCoreReferenceData());
 
             return View(viewModel);
         }
