@@ -22,7 +22,7 @@ namespace OCM.MVC.Controllers
         {
             get
             {
-                if (!bool.Parse(ConfigurationManager.AppSettings["EnableDataWrites"]))
+                if (!bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"]))
                 {
                     return true;
                 }

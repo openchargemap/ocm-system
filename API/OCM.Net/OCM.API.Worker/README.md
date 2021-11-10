@@ -35,7 +35,7 @@ To build and deploy the API service worker as systemd managed service:
 cd ~/ocm-system/API/OCM.Net/OCM.API.Worker
 dotnet publish -c Release
 sudo mkdir /opt/ocm-api
-sudo cp -R bin/Release/net5.0/publish/* /opt/ocm-api
+sudo cp -R bin/Release/net6.0/publish/* /opt/ocm-api
 ```
 
 ### Deploying as a service (systemd)

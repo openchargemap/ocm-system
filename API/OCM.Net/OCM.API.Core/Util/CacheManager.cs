@@ -72,7 +72,7 @@ namespace OCM.Core.Data
         {
             try
             {
-                return CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash);
+                return await Task.FromResult(CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash));
             }
             catch (Exception)
             {

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UserSecretsId>22dd266a-d0c7-4802-a609-26bd7bda47e9</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>

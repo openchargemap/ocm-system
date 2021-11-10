@@ -34,14 +34,14 @@ namespace Import
             this.txtAPIKey_Coulomb.Text = Settings.Default.APIKey_Coulomb;
             this.txtAPIPwd_Coulomb.Text = Settings.Default.APIPwd_Coulomb;
 
-            this.txtImportJSONPath.Text = ConfigurationManager.AppSettings["ImportBasePath"];
+            this.txtImportJSONPath.Text = System.Configuration.ConfigurationManager.AppSettings["ImportBasePath"];
 
             var settings = new ImportSettings
             {
-                GeolocationShapefilePath = ConfigurationManager.AppSettings["GeolocationShapefilePath"],
-                ImportUserAPIKey = ConfigurationManager.AppSettings["APIKey"],
-                MasterAPIBaseUrl = ConfigurationManager.AppSettings["APIBaseUrl"],
-                TempFolderPath = ConfigurationManager.AppSettings["ImportBasePath"]
+                GeolocationShapefilePath = System.Configuration.ConfigurationManager.AppSettings["GeolocationShapefilePath"],
+                ImportUserAPIKey = System.Configuration.ConfigurationManager.AppSettings["APIKey"],
+                MasterAPIBaseUrl = System.Configuration.ConfigurationManager.AppSettings["APIBaseUrl"],
+                TempFolderPath = System.Configuration.ConfigurationManager.AppSettings["ImportBasePath"]
             };
 
 

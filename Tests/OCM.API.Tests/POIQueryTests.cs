@@ -35,7 +35,7 @@ namespace OCM.API.Tests
             config.GetSection("CoreSettings").Bind(settings);
             _settings = settings;
 
-            var c = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var c = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             Core.Data.CacheManager.InitCaching(_settings);
 

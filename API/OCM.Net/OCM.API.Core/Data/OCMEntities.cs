@@ -62,10 +62,11 @@ namespace OCM.Core.Data
                 optionsBuilder.UseLoggerFactory(ConsoleLogger);
                 optionsBuilder.UseLazyLoadingProxies();
 
-                optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString, x =>
+                optionsBuilder.UseSqlServer(System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString, x =>
                 {
                     x.UseNetTopologySuite();
                     x.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
+                    x.EnableRetryOnFailure(3);
 
                 });
 
@@ -83,13 +84,13 @@ namespace OCM.Core.Data
                 entity.ToTable("AddressInfo");
 
                 entity.HasIndex(e => e.SpatialPosition)
-                    .HasName("IX_AddresLocationSpatial");
+                    .HasDatabaseName("IX_AddresLocationSpatial");
 
                 entity.HasIndex(e => new { e.Id, e.CountryId })
-                    .HasName("IX_AddressInfo_CountryID>");
+                    .HasDatabaseName("IX_AddressInfo_CountryID>");
 
                 entity.HasIndex(e => new { e.Latitude, e.Longitude })
-                    .HasName("IX_AddressLocation");
+                    .HasDatabaseName("IX_AddressLocation");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -133,7 +134,7 @@ namespace OCM.Core.Data
                 entity.ToTable("AuditLog");
 
                 entity.HasIndex(e => e.UserId)
-                    .HasName("NonClusteredIndex-20191009-155512");
+                    .HasDatabaseName("NonClusteredIndex-20191009-155512");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -155,14 +156,14 @@ namespace OCM.Core.Data
                 entity.HasIndex(e => e.DateLastStatusUpdate);
 
                 entity.HasIndex(e => e.ParentChargePointId)
-                    .HasName("IX_ChargePoint_ParentID");
+                    .HasDatabaseName("IX_ChargePoint_ParentID");
 
                 entity.HasIndex(e => e.Uuid)
-                    .HasName("IX_ChargePoint")
+                    .HasDatabaseName("IX_ChargePoint")
                     .IsUnique();
 
                 entity.HasIndex(e => new { e.Id, e.AddressInfoId })
-                    .HasName("IX_ChargePointAddressID");
+                    .HasDatabaseName("IX_ChargePointAddressID");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -280,7 +281,7 @@ namespace OCM.Core.Data
                 entity.HasComment("List of equipment types and specifications for a given POI");
 
                 entity.HasIndex(e => e.ChargePointId)
-                    .HasName("IX_ConnectionInfoChargePoint")
+                    .HasDatabaseName("IX_ConnectionInfoChargePoint")
                     .IsClustered();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -332,7 +333,7 @@ namespace OCM.Core.Data
                 entity.ToTable("ConnectionType");
 
                 entity.HasIndex(e => e.Id)
-                    .HasName("IX_ConnectionType_Title")
+                    .HasDatabaseName("IX_ConnectionType_Title")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -444,10 +445,10 @@ namespace OCM.Core.Data
                 entity.ToTable("EditQueueItem");
 
                 entity.HasIndex(e => new { e.IsProcessed, e.DateSubmitted })
-                    .HasName("IX_EditQueueFilters");
+                    .HasDatabaseName("IX_EditQueueFilters");
 
                 entity.HasIndex(e => new { e.IsProcessed, e.EntityTypeId, e.UserId, e.EntityId })
-                    .HasName("IX_UserID_EntityID");
+                    .HasDatabaseName("IX_UserID_EntityID");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -527,7 +528,7 @@ namespace OCM.Core.Data
                 entity.ToTable("MediaItem");
 
                 entity.HasIndex(e => e.ChargePointId)
-                    .HasName("IX_MediaItem")
+                    .HasDatabaseName("IX_MediaItem")
                     .IsClustered();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -963,7 +964,7 @@ namespace OCM.Core.Data
                 entity.ToTable("UserComment");
 
                 entity.HasIndex(e => e.ChargePointId)
-                    .HasName("IX_UserComment_ChargePoint")
+                    .HasDatabaseName("IX_UserComment_ChargePoint")
                     .IsClustered();
 
                 entity.Property(e => e.Id).HasColumnName("ID");

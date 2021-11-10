@@ -768,6 +768,11 @@ namespace OCM.Core.Data
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
                 var currentStatus = statusCollection.FindOne();
 
+                if (currentStatus == null)
+                {
+                    return new MirrorStatus { StatusCode = HttpStatusCode.NotFound, Description = "Cache is offline (not yet generated)" };
+                }
+
                 if (includeContentHash)
                 {
                     currentStatus.ContentHash = GetCacheContentHash();
@@ -782,6 +787,14 @@ namespace OCM.Core.Data
                         currentStatus.LastPOICreated = db.ChargePoints.Max(i => i.DateCreated);
                         currentStatus.MaxPOIId = db.ChargePoints.Max(i => i.Id);
                     }
+                }
+                else
+                {
+                    var poiCollection = database.GetCollection<POIMongoDB>("poi");
+                    currentStatus.TotalPOIInDB = poiCollection.Count();
+                    currentStatus.LastPOIUpdate = poiCollection.AsQueryable().Max(p => p.DateLastStatusUpdate);
+                    currentStatus.LastPOICreated = poiCollection.AsQueryable().Max(p => p.DateCreated);
+                    currentStatus.MaxPOIId = poiCollection.AsQueryable().Max(p => p.ID);
                 }
 
                 if (includeDupeCheck)

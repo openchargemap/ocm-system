@@ -24,14 +24,14 @@ namespace OCM.API.Web.Standard.Controllers
         [Route("/v3/system/status")]
         public async Task<SystemInfoResult> GetStatus()
         {
-            var cacheStatus = await Core.Data.CacheManager.GetCacheStatus(false, true, true);
+            var cacheStatus = await Core.Data.CacheManager.GetCacheStatus(false, false, true);
 
             return
              new SystemInfoResult
              {
                  SystemVersion = "3",
-                 POIDataLastModified = cacheStatus.LastPOIUpdate.Value,
-                 POIDataLastCreated = cacheStatus.LastPOICreated.Value,
+                 POIDataLastModified = cacheStatus.LastPOIUpdate.GetValueOrDefault(),
+                 POIDataLastCreated = cacheStatus.LastPOICreated.GetValueOrDefault(),
                  MaxPOIId = cacheStatus.MaxPOIId,
                  DataHash = cacheStatus.ContentHash
              };
