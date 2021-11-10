@@ -423,7 +423,7 @@ namespace OCM.Core.Data
         protected void EnsureMongoDBIndexes()
         {
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
-            poiCollection.CreateIndex(IndexKeys.GeoSpatialSpherical("SpatialPosition.coordinates")); // bounding box queries
+            poiCollection.CreateIndex(IndexKeys.GeoSpatial("SpatialPosition.coordinates")); // bounding box queries
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition)); // distance queries
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
             poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
