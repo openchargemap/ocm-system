@@ -20,5 +20,12 @@ namespace OCM.API.Web.Standard.Controllers
         {
             return Redirect("https://map.openchargemap.io");
         }
+
+        [HttpGet]
+        [Route("/v3/openapi")]
+        public IActionResult GetOpenAPIDefinition()
+        {
+            return Redirect("https://raw.githubusercontent.com/openchargemap/ocm-docs/master/Model/schema/ocm-api-schema.yaml");
+        }
     }
 }
