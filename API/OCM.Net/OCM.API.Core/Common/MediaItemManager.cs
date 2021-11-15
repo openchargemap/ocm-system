@@ -19,7 +19,7 @@ namespace OCM.API.Common
 
             var mediaItem = new MediaItem();
 
-            var poi = new POIManager().Get(chargePointId);
+            var poi = await new POIManager().Get(chargePointId);
             if (poi == null)
             {
                 //POI not recognised

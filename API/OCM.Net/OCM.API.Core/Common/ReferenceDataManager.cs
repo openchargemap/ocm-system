@@ -97,7 +97,7 @@ namespace OCM.API.Common
             if (filter.AllowMirrorDB)
             {
                 // TODO: implement country filters for cached ref data
-                data = OCM.Core.Data.CacheManager.GetCoreReferenceData(filter);
+                data = await OCM.Core.Data.CacheManager.GetCoreReferenceData(filter);
 
                 if (data != null) return data;
             }

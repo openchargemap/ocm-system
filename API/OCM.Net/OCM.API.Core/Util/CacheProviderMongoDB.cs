@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using MongoDB.Driver.Builders;
 using MongoDB.Driver.GeoJsonObjectModel;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
@@ -116,9 +115,9 @@ namespace OCM.Core.Data
     {
         private const int DefaultPolylineSearchDistanceKM = 5;
         private const int DefaultLatLngSearchDistanceKM = 1000;
-        private MongoDatabase database = null;
+
         private MongoClient client = null;
-        private MongoServer server = null;
+        private IMongoDatabase database = null;
         private MirrorStatus status = null;
 
         private static readonly object _mutex = new object();
@@ -228,9 +227,8 @@ namespace OCM.Core.Data
             }
 
             client = new MongoClient(_settings.MongoDBSettings.ConnectionString);
-            server = client.GetServer();
-            database = server.GetDatabase(_settings.MongoDBSettings.DatabaseName);
-            status = GetMirrorStatus(false, false);
+            database = client.GetDatabase(_settings.MongoDBSettings.DatabaseName);
+            status = GetMirrorStatus(false, false).Result;
 
             if (status.StatusCode == HttpStatusCode.ExpectationFailed && _settings.IsCacheOnlyMode)
             {
@@ -238,21 +236,20 @@ namespace OCM.Core.Data
             }
         }
 
-        public MongoCollection<POIMongoDB> GetPOICollection()
+        public IMongoCollection<POIMongoDB> GetPOICollection()
         {
             return database.GetCollection<POIMongoDB>("poi");
         }
 
-        public void RemoveAllPOI(IEnumerable<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
+        public async Task RemoveAllPOI(IEnumerable<OCM.API.Common.Model.ChargePoint> poiList, IMongoCollection<POIMongoDB> poiCollection)
         {
             foreach (var poi in poiList)
             {
-                var query = Query.EQ("ID", poi.ID);
-                poiCollection.Remove(query);
+                await poiCollection.DeleteManyAsync(p => p.ID == poi.ID);
             }
         }
 
-        public void InsertAllPOI(IEnumerable<OCM.API.Common.Model.ChargePoint> poiList, MongoCollection<POIMongoDB> poiCollection)
+        public async Task InsertAllPOI(IEnumerable<OCM.API.Common.Model.ChargePoint> poiList, IMongoCollection<POIMongoDB> poiCollection)
         {
             var mongoDBPoiList = new List<POIMongoDB>();
             foreach (var poi in poiList)
@@ -264,12 +261,13 @@ namespace OCM.Core.Data
                 }
                 mongoDBPoiList.Add(newPoi);
             }
-            poiCollection.InsertBatch(mongoDBPoiList);
+            await poiCollection.InsertManyAsync(mongoDBPoiList);
         }
 
         public async Task<List<OCM.API.Common.Model.ChargePoint>> GetPOIListToUpdate(OCMEntities dataModel, CacheUpdateStrategy updateStrategy, CoreReferenceData refData, int pageIndex = 0, int pageSize = 0)
         {
-            if (!database.CollectionExists("poi"))
+            // create if not exists
+            if (database.GetCollection<BsonDocument>("poi") == null)
             {
                 database.CreateCollection("poi");
             }
@@ -298,7 +296,8 @@ namespace OCM.Core.Data
             if (updateStrategy == CacheUpdateStrategy.Incremental)
             {
                 var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                var maxPOI = poiCollection.FindAll().SetSortOrder(SortBy.Descending("ID")).SetLimit(1).FirstOrDefault();
+                var maxPOI = await poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate).FirstAsync();
+
                 int maxId = 0;
                 if (maxPOI != null) { maxId = maxPOI.ID; }
 
@@ -320,7 +319,7 @@ namespace OCM.Core.Data
             if (updateStrategy == CacheUpdateStrategy.Modified)
             {
                 var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                var maxPOI = poiCollection.FindAll().SetSortOrder(SortBy.Descending("DateLastStatusUpdate")).SetLimit(1).FirstOrDefault();
+                var maxPOI = await poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate).FirstAsync();
 
                 DateTime? dateLastModified = null;
                 if (maxPOI != null) { dateLastModified = maxPOI.DateLastStatusUpdate.Value.AddMinutes(-10); }
@@ -382,38 +381,34 @@ namespace OCM.Core.Data
 
         public async Task<MirrorStatus> RefreshCachedPOI(int poiId)
         {
-            var mirrorStatus = await Task.Run<MirrorStatus>(() =>
+
+            var refData = new ReferenceDataManager().GetCoreReferenceData();
+            var dataModel = new OCMEntities();
+            var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.Id == poiId);
+
+            var poiCollection = database.GetCollection<POIMongoDB>("poi");
+
+            if (poiModel != null)
             {
-
-                var refData = new ReferenceDataManager().GetCoreReferenceData();
-                var dataModel = new OCMEntities();
-                var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.Id == poiId);
-
-                var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                var query = Query.EQ("ID", poiId);
-                var removeResult = poiCollection.Remove(query);
-                System.Diagnostics.Debug.WriteLine("POIs removed from cache [" + poiId + "]:" + removeResult.DocumentsAffected);
-
-                if (poiModel != null)
+                var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel, refData));
+                if (cachePOI.AddressInfo != null)
                 {
-                    var cachePOI = POIMongoDB.FromChargePoint(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(poiModel, refData));
-                    if (cachePOI.AddressInfo != null)
-                    {
-                        cachePOI.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(cachePOI.AddressInfo.Longitude, cachePOI.AddressInfo.Latitude));
-                    }
-
-                    poiCollection.Insert<POIMongoDB>(cachePOI);
-                }
-                else
-                {
-                    //poi not present in master DB, we've removed it from cache
+                    cachePOI.SpatialPosition = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(cachePOI.AddressInfo.Longitude, cachePOI.AddressInfo.Latitude));
                 }
 
-                long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
-                return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
-            });
+                // replace/insert POI
+                await poiCollection.ReplaceOneAsync(q => q.ID == poiId, cachePOI, new ReplaceOptions { IsUpsert = true });
+            }
+            else
+            {
+                //poi not present in master DB, we've removed it from cache
+                var removeResult = poiCollection.DeleteMany(q => q.ID == poiId);
+                System.Diagnostics.Debug.WriteLine("POIs removed from cache [" + poiId + "]:" + removeResult.DeletedCount);
+            }
 
-            return mirrorStatus;
+            long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
+            return await RefreshMirrorStatus(await poiCollection.EstimatedDocumentCountAsync(), 1, numPOIInMasterDB);
+
         }
 
         /// <summary>
@@ -423,11 +418,12 @@ namespace OCM.Core.Data
         protected void EnsureMongoDBIndexes()
         {
             var poiCollection = database.GetCollection<POIMongoDB>("poi");
-            poiCollection.CreateIndex(IndexKeys.GeoSpatialSpherical("SpatialPosition.coordinates")); // bounding box queries
-            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition)); // distance queries
-            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateLastStatusUpdate));
-            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.DateCreated));
-            poiCollection.CreateIndex(IndexKeys<POIMongoDB>.Descending(x => x.ID));
+            poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Geo2DSphere("SpatialPosition")); // bounding box queries (geoWithin > geometry > polygon)
+            //poiCollection.CreateIndex(IndexKeys.GeoSpatial("SpatialPosition.coordinates")); // bounding box queries
+            //poiCollection.CreateIndex(IndexKeys<POIMongoDB>.GeoSpatialSpherical(x => x.SpatialPosition)); // distance queries
+            poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Descending(x => x.DateLastStatusUpdate));
+            poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Descending(x => x.DateCreated));
+            poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Descending(x => x.ID));
         }
 
         /// <summary>
@@ -446,22 +442,22 @@ namespace OCM.Core.Data
                 using (var dataModel = new Data.OCMEntities())
                 {
 
-                    if (!database.CollectionExists("poi"))
+                    if (database.GetCollection<BsonDocument>("poi") == null)
                     {
                         database.CreateCollection("poi");
                     }
 
                     if (updateStrategy != CacheUpdateStrategy.All)
                     {
-                        if (!database.CollectionExists("reference"))
+                        if (database.GetCollection<BsonDocument>("reference") == null)
                         {
                             database.CreateCollection("reference");
                         }
-                        if (!database.CollectionExists("status"))
+                        if (database.GetCollection<BsonDocument>("status") == null)
                         {
                             database.CreateCollection("status");
                         }
-                        if (!database.CollectionExists("poi"))
+                        if (database.GetCollection<BsonDocument>("poi") == null)
                         {
                             database.CreateCollection("poi");
                         }
@@ -481,15 +477,8 @@ namespace OCM.Core.Data
 
                     if (coreRefData != null)
                     {
-                        database.DropCollection("reference");
-                        //problems clearing data from collection...
-
                         var reference = database.GetCollection<CoreReferenceData>("reference");
-                        var query = new QueryDocument();
-                        reference.Remove(query, RemoveFlags.None);
-
-                        await Task.Delay(300);
-                        reference.Insert(coreRefData);
+                        await reference.ReplaceOneAsync(f => f.ConnectionTypes != null, coreRefData, new ReplaceOptions { IsUpsert = true });
                     }
 
                     var batchSize = 1000;
@@ -505,17 +494,17 @@ namespace OCM.Core.Data
                         if (poiList != null && poiList.Any())
                         {
 
-                            RemoveAllPOI(poiList, poiCollection);
+                            await RemoveAllPOI(poiList, poiCollection);
 
                             await Task.Delay(300);
-                            InsertAllPOI(poiList, poiCollection);
+                            await InsertAllPOI(poiList, poiCollection);
                         }
                     }
                     else
                     {
                         // full refresh
 
-                        poiCollection.RemoveAll();
+                        await poiCollection.DeleteManyAsync(p => p.ID > 0);
 
                         await Task.Delay(300);
 
@@ -532,7 +521,7 @@ namespace OCM.Core.Data
 
                             System.Diagnostics.Debug.WriteLine($"Inserting batch {pageIndex} :: {pageIndex * pageSize}");
 
-                            InsertAllPOI(poiList, poiCollection);
+                            await InsertAllPOI(poiList, poiCollection);
 
                             pageIndex++;
                             total += poiList.Count;
@@ -540,7 +529,7 @@ namespace OCM.Core.Data
                             poiList = await GetPOIListToUpdate(dataModel, updateStrategy, coreRefData, pageIndex, pageSize);
                         }
 
-                        poiCollection.ReIndex();
+                        //poiCollection.Indexes.ReIndex();
 
                         sw.Stop();
                         GC.Collect();
@@ -549,7 +538,7 @@ namespace OCM.Core.Data
                     }
 
                     long numPOIInMasterDB = dataModel.ChargePoints.LongCount();
-                    return RefreshMirrorStatus(poiCollection.Count(), 1, numPOIInMasterDB);
+                    return await RefreshMirrorStatus(await poiCollection.EstimatedDocumentCountAsync(), 1, numPOIInMasterDB);
                 }
             }
             else
@@ -571,7 +560,7 @@ namespace OCM.Core.Data
                         DateTime? lastCreated = null;
                         int maxIdCached = 0;
 
-                        if (poiCollection.Count() == 0)
+                        if (await poiCollection.EstimatedDocumentCountAsync() == 0)
                         {
                             // no data, starting a new mirror
                             updateStrategy = CacheUpdateStrategy.All;
@@ -626,15 +615,8 @@ namespace OCM.Core.Data
                                 CoreReferenceData coreRefData = await apiClient.GetCoreReferenceDataAsync();
                                 if (coreRefData != null)
                                 {
-                                    database.DropCollection("reference");
-                                    //problems clearing data from collection...
-
                                     var reference = database.GetCollection<CoreReferenceData>("reference");
-                                    var query = new QueryDocument();
-                                    reference.Remove(query, RemoveFlags.None);
-
-                                    Thread.Sleep(300);
-                                    reference.Insert(coreRefData);
+                                    await reference.ReplaceOneAsync(f => f.ConnectionTypes != null, coreRefData, new ReplaceOptions { IsUpsert = true });
                                 }
 
                             }
@@ -676,20 +658,20 @@ namespace OCM.Core.Data
                                     {
                                         if (updateStrategy == CacheUpdateStrategy.All)
                                         {
-                                            poiCollection.RemoveAll();
+                                            await poiCollection.DeleteManyAsync(p => p.ID > 0);
                                         }
                                         else
                                         {
-                                            RemoveAllPOI(poiList, poiCollection);
+                                            await RemoveAllPOI(poiList, poiCollection);
                                         }
                                     }
 
                                     Thread.Sleep(300);
-                                    InsertAllPOI(poiList, poiCollection);
+                                    await InsertAllPOI(poiList, poiCollection);
 
                                     if (updateStrategy == CacheUpdateStrategy.All)
                                     {
-                                        poiCollection.ReIndex();
+                                        // poiCollection.ReIndex();
                                     }
 
                                     numPOIUpdated = poiList.LongCount();
@@ -697,7 +679,8 @@ namespace OCM.Core.Data
 
                             }
 
-                            var status = RefreshMirrorStatus(poiCollection.Count(), numPOIUpdated, poiCollection.Count(), dateLastSync);
+                            var poiCount = await poiCollection.EstimatedDocumentCountAsync();
+                            var status = await RefreshMirrorStatus(poiCount, numPOIUpdated, poiCount, dateLastSync);
                             status.MaxBatchSize = _settings.MongoDBSettings.CacheSyncBatchSize;
                             return status;
 
@@ -707,17 +690,16 @@ namespace OCM.Core.Data
             }
 
             // nothing to update
-            return GetMirrorStatus(false, false, false);
+            return await GetMirrorStatus(false, false, false);
         }
 
-        private MirrorStatus RefreshMirrorStatus(
+        private async Task<MirrorStatus> RefreshMirrorStatus(
             long cachePOICollectionCount, long numPOIUpdated, long numPOIInMasterDB,
             DateTime? poiLastUpdate = null,
             DateTime? poiLastCreated = null
             )
         {
             var statusCollection = database.GetCollection<MirrorStatus>("status");
-            statusCollection.Drop();
 
             //new status
             MirrorStatus status = new MirrorStatus();
@@ -733,7 +715,7 @@ namespace OCM.Core.Data
             if (poiLastUpdate != null) status.LastPOIUpdate = poiLastUpdate;
             if (poiLastCreated != null) status.LastPOICreated = poiLastCreated;
 
-            statusCollection.Insert(status);
+            await statusCollection.ReplaceOneAsync(s => s.LastUpdated > DateTime.MinValue, status, new ReplaceOptions { IsUpsert = true });
             return status;
         }
 
@@ -741,32 +723,34 @@ namespace OCM.Core.Data
         {
             var cols = new string[] { "poi", "reference", "countryinfo" };
 
-            var hashCommand = new CommandDocument {
-                    { "dbHash", 1 },
-                    { "collections", BsonArray.Create(cols) }
-                };
+            /* var hashCommand = new Command<BsonDocumentCommand> {
+                     { "dbHash", 1 },
+                     { "collections", BsonArray.Create(cols) }
+                 };
 
-            var dbHashResults = database.RunCommand(hashCommand);
-            if (dbHashResults.Ok)
-            {
-                var collectionHashes = dbHashResults.Response.GetElement("collections").Value.AsBsonDocument.Elements
-                    .OrderBy(i => i.Name)
-                    .Select(i => i.Name + "::" + i.Value.AsString)
-                    .ToArray();
-                return String.Join(";", collectionHashes);
-            }
-            else
-            {
-                return null;
-            }
+             var dbHashResults = database.RunCommand(hashCommand);
+             if (dbHashResults.Ok)
+             {
+                 var collectionHashes = dbHashResults.Response.GetElement("collections").Value.AsBsonDocument.Elements
+                     .OrderBy(i => i.Name)
+                     .Select(i => i.Name + "::" + i.Value.AsString)
+                     .ToArray();
+                 return String.Join(";", collectionHashes);
+             }
+             else
+             {
+                 return null;
+             }*/
+
+            return null;
         }
 
-        public MirrorStatus GetMirrorStatus(bool includeDupeCheck, bool includeDBCheck = true, bool includeContentHash = false)
+        public async Task<MirrorStatus> GetMirrorStatus(bool includeDupeCheck, bool includeDBCheck = true, bool includeContentHash = false)
         {
             try
             {
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
-                var currentStatus = statusCollection.FindOne();
+                var currentStatus = await statusCollection.AsQueryable().FirstOrDefaultAsync();
 
                 if (currentStatus == null)
                 {
@@ -782,16 +766,16 @@ namespace OCM.Core.Data
                 {
                     using (var db = new OCMEntities())
                     {
-                        currentStatus.TotalPOIInDB = db.ChargePoints.LongCount();
-                        currentStatus.LastPOIUpdate = db.ChargePoints.Max(i => i.DateLastStatusUpdate);
-                        currentStatus.LastPOICreated = db.ChargePoints.Max(i => i.DateCreated);
-                        currentStatus.MaxPOIId = db.ChargePoints.Max(i => i.Id);
+                        currentStatus.TotalPOIInDB = await db.ChargePoints.LongCountAsync();
+                        currentStatus.LastPOIUpdate = await db.ChargePoints.MaxAsync(i => i.DateLastStatusUpdate);
+                        currentStatus.LastPOICreated = await db.ChargePoints.MaxAsync(i => i.DateCreated);
+                        currentStatus.MaxPOIId = await db.ChargePoints.MaxAsync(i => i.Id);
                     }
                 }
                 else
                 {
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                    currentStatus.TotalPOIInDB = poiCollection.Count();
+                    currentStatus.TotalPOIInDB = await poiCollection.EstimatedDocumentCountAsync();
                     currentStatus.LastPOIUpdate = poiCollection.AsQueryable().Max(p => p.DateLastStatusUpdate);
                     currentStatus.LastPOICreated = poiCollection.AsQueryable().Max(p => p.DateCreated);
                     currentStatus.MaxPOIId = poiCollection.AsQueryable().Max(p => p.ID);
@@ -801,11 +785,12 @@ namespace OCM.Core.Data
                 {
                     //perform check to see if number of distinct ids!= number of pois
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                    var distinctPOI = poiCollection.Distinct("ID");
-                    currentStatus.NumDistinctPOIs = distinctPOI.Count();
+                    currentStatus.NumDistinctPOIs = await poiCollection.AsQueryable().DistinctBy(d => d.ID).CountAsync();
+
                 }
 
-                currentStatus.Server = server.Settings.Server.Host + ":" + server.Settings.Server.Port;
+                var serverInfo = client.Settings.Servers.FirstOrDefault();
+                currentStatus.Server = $"{serverInfo.Host}:{serverInfo.Port}";
                 return currentStatus;
             }
             catch (Exception exp)
@@ -819,7 +804,7 @@ namespace OCM.Core.Data
             try
             {
                 var results = database.GetCollection<CountryExtendedInfo>("countryinfo");
-                return results.FindAll().ToList();
+                return results.AsQueryable().ToList();
             }
             catch (Exception)
             {
@@ -827,7 +812,7 @@ namespace OCM.Core.Data
             }
         }
 
-        public bool IsCacheReady()
+        public async Task<bool> IsCacheReady()
         {
             if (status != null && (_settings.MongoDBSettings.MaxCacheAgeMinutes == 0 || status.LastUpdated.AddMinutes(_settings.MongoDBSettings.MaxCacheAgeMinutes) > DateTime.UtcNow))
             {
@@ -835,50 +820,52 @@ namespace OCM.Core.Data
             }
             else
             {
-                status = GetMirrorStatus(false, false);
-                return false;
+                status = await GetMirrorStatus(false, false);
+                return status.NumDistinctPOIs > 0;
             }
         }
-        public CoreReferenceData GetCoreReferenceData(APIRequestParams filter)
+        public async Task<CoreReferenceData> GetCoreReferenceData(APIRequestParams filter)
         {
             try
             {
-                if (IsCacheReady())
+                if (await IsCacheReady())
                 {
                     var refDataCollection = database.GetCollection<CoreReferenceData>("reference");
-                    var refData = refDataCollection.FindOne();
-
+                    var refData = refDataCollection.AsQueryable().FirstOrDefault();
 
                     if (filter.CountryIDs != null && filter.CountryIDs.Any())
                     {
                         // need to filter results based on usage by country
-                        var poiCollection = database.GetCollection<POIMongoDB>("poi");
+                        var poiCollection = database.GetCollection<POIMongoDB>("poi").AsQueryable();
 
-                        var connectionsInCountry = poiCollection.AsQueryable().AsNoTracking().Where(poi =>
-                            poi.AddressInfo.CountryID != null
-                            && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
-                            && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
-                            && poi.Connections.Any()
-                        )
-                            .Select(p => new { CountryID = p.AddressInfo.CountryID, ConnectionTypes = p.Connections.Select(t => t.ConnectionTypeID).AsEnumerable() })
-                            .ToArray()
-                            .SelectMany(p => p.ConnectionTypes, (i, c) => new { CountryId = i.CountryID, ConnectionTypeId = c })
-                            .Distinct();
+                        var connectionsInCountry = poiCollection.Where(poi =>
+                                                        poi.AddressInfo.CountryID != null
+                                                        && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
+                                                        && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                                                        && poi.Connections.Any()
+                                                   )
+                                                    .Select(p => new
+                                                    {
+                                                        CountryID = p.AddressInfo.CountryID,
+                                                        ConnectionTypes = p.Connections.Select(t => t.ConnectionTypeID)
+                                                    })
+                                                    .SelectMany(p => p.ConnectionTypes, (i, c) => new { CountryId = i.CountryID, ConnectionTypeId = c })
+                                                    .ToArray()
+                                                    .Distinct();
 
                         refData.ConnectionTypes.RemoveAll(a => !connectionsInCountry.Any(r => r.ConnectionTypeId == a.ID));
 
 
                         // filter on operators present within given countries
 
-                        var operatorsInCountry = poiCollection.AsQueryable().AsNoTracking()
-                            .Where(poi =>
-                               poi.AddressInfo.CountryID != null
-                               && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
-                               && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
-                               && poi.OperatorID != null)
-                             .Select(p => new { CountryId = p.AddressInfo.CountryID, OperatorId = p.OperatorID })
-                             .ToArray()
-                             .Distinct();
+                        var operatorsInCountry = poiCollection.Where(poi =>
+                                                    poi.AddressInfo.CountryID != null
+                                                    && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
+                                                    && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                                                    && poi.OperatorID != null)
+                                                    .Select(p => new { CountryId = p.AddressInfo.CountryID, OperatorId = p.OperatorID })
+                                                    .ToArray()
+                                                    .Distinct();
 
                         refData.Operators.RemoveAll(a => !operatorsInCountry.Any(r => r.OperatorId == a.ID));
 
@@ -901,9 +888,9 @@ namespace OCM.Core.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public OCM.API.Common.Model.ChargePoint GetPOI(int id)
+        public async Task<OCM.API.Common.Model.ChargePoint> GetPOI(int id)
         {
-            if (IsCacheReady())
+            if (await IsCacheReady())
             {
                 var poiCollection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi").AsQueryable();
                 return poiCollection.FirstOrDefault(p => p.ID == id);
@@ -922,7 +909,7 @@ namespace OCM.Core.Data
         public async Task<IEnumerable<OCM.API.Common.Model.ChargePoint>> GetPOIListAsync(APIRequestParams filter)
         {
 
-            if (!IsCacheReady())
+            if (!await IsCacheReady())
             {
                 System.Diagnostics.Debug.Print("MongoDB cache is outdated, returning null result.");
                 return null;
@@ -952,72 +939,32 @@ namespace OCM.Core.Data
                 filter.Distance = GeoManager.ConvertMilesToKM((double)filter.Distance);
             }
 
-            bool filterByConnectionTypes = false;
-            bool filterByLevels = false;
-            bool filterByOperators = false;
-            bool filterByCountries = false;
-            bool filterByUsage = false;
-            bool filterByStatus = false;
-            bool filterByDataProvider = false;
-            bool filterByChargePoints = false;
-
-            if (filter.ConnectionTypeIDs != null) { filterByConnectionTypes = true; }
-            else { filter.ConnectionTypeIDs = new int[] { -1 }; }
-
-            if (filter.LevelIDs != null) { filterByLevels = true; }
-            else { filter.LevelIDs = new int[] { -1 }; }
-
-            if (filter.OperatorIDs != null) { filterByOperators = true; }
-            else { filter.OperatorIDs = new int[] { -1 }; }
-
-            if (filter.ChargePointIDs != null) { filterByChargePoints = true; }
-            else { filter.ChargePointIDs = new int[] { -1 }; }
-
             //either filter by named country code or by country id list
             if (filter.CountryCode != null)
             {
-                var referenceData = database.GetCollection<OCM.API.Common.Model.CoreReferenceData>("reference").FindOne();
+                var referenceData = await GetCoreReferenceData(new APIRequestParams { });
 
                 var filterCountry = referenceData.Countries.FirstOrDefault(c => c.ISOCode.ToUpper() == filter.CountryCode.ToUpper());
                 if (filterCountry != null)
                 {
-                    filterByCountries = true;
                     filter.CountryIDs = new int[] { filterCountry.ID };
                 }
-                else
-                {
-                    filterByCountries = false;
-                    filter.CountryIDs = new int[] { -1 };
-                }
-            }
-            else
-            {
-                if (filter.CountryIDs != null && filter.CountryIDs.Any()) { filterByCountries = true; }
-                else { filter.CountryIDs = new int[] { -1 }; }
+
             }
 
-            if (filter.UsageTypeIDs != null) { filterByUsage = true; }
-            else { filter.UsageTypeIDs = new int[] { -1 }; }
-
-            if (filter.StatusTypeIDs != null) { filterByStatus = true; }
-            else { filter.StatusTypeIDs = new int[] { -1 }; }
-
-            if (filter.DataProviderIDs != null) { filterByDataProvider = true; }
-            else { filter.DataProviderIDs = new int[] { -1 }; }
-
-            if (filter.SubmissionStatusTypeID == -1) filter.SubmissionStatusTypeID = null;
             /////////////////////////////////////
             if (database != null)
             {
 
                 System.Diagnostics.Debug.Print($"MongoDB cache building query @ {stopwatch.ElapsedMilliseconds}ms");
 
-                var collection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
-                IQueryable<OCM.API.Common.Model.ChargePoint> poiList = from c in collection.AsQueryable<OCM.API.Common.Model.ChargePoint>() select c;
+                var collection = database.GetCollection<POIMongoDB>("poi");
+
+                IQueryable<POIMongoDB> poiList = collection.AsQueryable();
 
                 System.Diagnostics.Debug.Print($"MongoDB got poiList as Queryable @ {stopwatch.ElapsedMilliseconds}ms");
 
-                //filter by points along polyline or bounding box (TODO: polygon)
+                //filter by points along polyline, bounding box or polygon
                 if (
                     (filter.Polyline != null && filter.Polyline.Any())
                     || (filter.BoundingBox != null && filter.BoundingBox.Any())
@@ -1039,8 +986,7 @@ namespace OCM.Core.Data
                         if (filter.Distance == null) filter.Distance = DefaultPolylineSearchDistanceKM;
                         searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPolyLine(filter.Polyline, (double)filter.Distance);
                     }
-
-                    if (filter.BoundingBox != null && filter.BoundingBox.Any())
+                    else if (filter.BoundingBox != null && filter.BoundingBox.Any())
                     {
                         // bounding box points could be in any order, so normalise here:
                         var polyPoints = Core.Util.PolylineEncoder.ConvertPointsToBoundingBox(filter.BoundingBox)
@@ -1049,110 +995,43 @@ namespace OCM.Core.Data
 
                         searchPolygon = polyPoints;
                     }
-
-                    if (filter.Polygon != null && filter.Polygon.Any())
+                    else if (filter.Polygon != null && filter.Polygon.Any())
                     {
                         searchPolygon = filter.Polygon;
                     }
 
-                    pointList = new double[searchPolygon.Count(), 2];
-                    int pointIndex = 0;
-                    foreach (var p in searchPolygon)
-                    {
-                        pointList[pointIndex, 0] = (double)p.Longitude;
-                        pointList[pointIndex, 1] = (double)p.Latitude;
-                        pointIndex++;
-#if DEBUG
-                        System.Diagnostics.Debug.WriteLine(" {lat: " + p.Latitude + ", lng: " + p.Longitude + "},");
-#endif
-                    }
-                    poiList = poiList.Where(q => Query.WithinPolygon("SpatialPosition.coordinates", pointList).Inject());
+                    var geoCoords = searchPolygon.Select(t => new GeoJson2DGeographicCoordinates((double)t.Longitude, (double)t.Latitude));
+                    var linearRing = new GeoJsonLinearRingCoordinates<GeoJson2DGeographicCoordinates>(geoCoords.ToArray());
+
+                    var geometry = new GeoJsonPolygon<GeoJson2DGeographicCoordinates>(new GeoJsonPolygonCoordinates<GeoJson2DGeographicCoordinates>(linearRing));
+
+                    var polygonQueryBson = geometry.ToBsonDocument();
+                    var crsDoc = BsonDocument.Parse("{ type: \"name\",  properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:4326\" } }");
+                    polygonQueryBson.Add("crs", crsDoc);
+
+                    var geoJson = polygonQueryBson.ToJson();
+
+                    // var geoFilter = Builders<POIMongoDB>.Filter.GeoWithin(x => x.SpatialPosition, polygonQueryBson);
+                    var geoQuery = "{\"SpatialPosition\": {\"$geoWithin\": {\"$geometry\": " + geoJson + " } } }";
+                    var geoBson = BsonDocument.Parse(geoQuery);
+                    poiList = (await collection.Find(geoBson).ToListAsync()).AsQueryable();
+
                 }
-                else
+                else if (requiresDistance)
                 {
-                    if (requiresDistance)
-                    {
-                        //filter by distance from lat/lon first
-                        if (filter.Distance == null) filter.Distance = DefaultLatLngSearchDistanceKM;
-                        poiList = poiList.Where(q => Query.Near("SpatialPosition", searchPoint, (double)filter.Distance * 1000).Inject());
-                    }
+                    //filter by distance from lat/lon first
+                    if (filter.Distance == null) filter.Distance = DefaultLatLngSearchDistanceKM;
+
+                    var geoFilter = Builders<POIMongoDB>.Filter.NearSphere(p => p.SpatialPosition, searchPoint, (double)filter.Distance * 1000);
+
+                    poiList = (await collection.Find(geoFilter).ToListAsync()).AsQueryable();
                 }
 
-                int greaterThanId = 0;
-                // workaround mongodb linq conversion bug
-                if (filter.GreaterThanId.HasValue) greaterThanId = filter.GreaterThanId.Value;
-
-                if (filter.Postcodes == null) filter.Postcodes = new string[] { };
-                bool filterOnPostcodes = filter.Postcodes.Any();
-
-
-                poiList = (from c in poiList
-                           where
-
-                                       (c.AddressInfo != null) &&
-                                       ((filter.SubmissionStatusTypeID == null && (c.SubmissionStatusTypeID == null || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published))
-                                             || (filter.SubmissionStatusTypeID == 0) //return all regardless of status
-                                             || (filter.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID == filter.SubmissionStatusTypeID)
-                                             ) //by default return live cps only, otherwise use specific submission statusid
-                                       && (c.SubmissionStatusTypeID != null && c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation)
-
-                                       && (filter.OperatorName == null || c.OperatorInfo.Title == filter.OperatorName)
-                                       && (filter.IsOpenData == null || (filter.IsOpenData != null && ((filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true))))
-                                       && (!filter.GreaterThanId.HasValue || (filter.GreaterThanId.HasValue && c.ID > greaterThanId))
-                                       && (filter.DataProviderName == null || c.DataProvider.Title == filter.DataProviderName)
-                                       && (filterByCountries == false || (filterByCountries == true && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID)))
-                                       && (filterByOperators == false || (filterByOperators == true && filter.OperatorIDs.Contains((int)c.OperatorID)))
-                                       && (filterByChargePoints == false || (filterByChargePoints == true && filter.ChargePointIDs.Contains((int)c.ID)))
-                                       && (filterByUsage == false || (filterByUsage == true && filter.UsageTypeIDs.Contains((int)c.UsageTypeID)))
-                                       && ((filterByStatus == false && c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned) || (filterByStatus == true && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)))
-                                       && (filterByDataProvider == false || (filterByDataProvider == true && filter.DataProviderIDs.Contains((int)c.DataProviderID)))
-                                       && (filterOnPostcodes == false || (filterOnPostcodes == true && c.AddressInfo.Postcode != null && filter.Postcodes.Contains(c.AddressInfo.Postcode)))
-                           select c);
-
-                if (filter.ChangesFromDate != null)
-                {
-                    poiList = poiList.Where(c => c.DateLastStatusUpdate >= filter.ChangesFromDate.Value);
-                }
-
-                if (filter.CreatedFromDate != null)
-                {
-                    poiList = poiList.Where(c => c.DateCreated >= filter.CreatedFromDate.Value);
-                }
-
-                //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
-                if (filter.LevelOfDetail > 1)
-                {
-                    //return progressively less matching results (across whole data set) as requested Level Of Detail gets higher
-
-                    if (filter.LevelOfDetail > 3)
-                    {
-                        filter.LevelOfDetail = 1; //highest priority LOD
-                    }
-                    else
-                    {
-                        filter.LevelOfDetail = 2; //include next level priority items
-                    }
-                    poiList = poiList.Where(c => c.LevelOfDetail <= filter.LevelOfDetail);
-                }
-
-                //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
-                if (filter.ConnectionType != null || filter.MinPowerKW != null || filterByConnectionTypes || filterByLevels)
-                {
-                    poiList = from c in poiList
-                              where
-                              c.Connections.Any(conn =>
-                                    (filter.ConnectionType == null || (filter.ConnectionType != null && conn.ConnectionType.Title == filter.ConnectionType))
-                                    && (filter.MinPowerKW == null || (filter.MinPowerKW != null && conn.PowerKW >= filter.MinPowerKW))
-                                    && (filter.MaxPowerKW == null || (filter.MaxPowerKW != null && conn.PowerKW <= filter.MaxPowerKW))
-                                    && (filterByConnectionTypes == false || (filterByConnectionTypes == true && filter.ConnectionTypeIDs.Contains(conn.ConnectionType.ID)))
-                                    && (filterByLevels == false || (filterByLevels == true && filter.LevelIDs.Contains((int)conn.Level.ID)))
-                                     )
-                              select c;
-                }
+                poiList = ApplyQueryFilters(filter, poiList);
 
                 System.Diagnostics.Debug.Print($"MongoDB executing query @ {stopwatch.ElapsedMilliseconds}ms");
 
-                IEnumerable<API.Common.Model.ChargePoint> results = null;
+                IQueryable<API.Common.Model.ChargePoint> results = null;
                 if (!requiresDistance || (filter.Latitude == null || filter.Longitude == null))
                 {
                     //distance is not required or can't be provided
@@ -1160,15 +1039,15 @@ namespace OCM.Core.Data
 
                     if (filter.SortBy == "created_asc")
                     {
-                        results = poiList.OrderBy(p => p.DateCreated).Take(filter.MaxResults).AsEnumerable();
+                        results = poiList.OrderBy(p => p.DateCreated).Take(filter.MaxResults).AsQueryable();
                     }
                     else if (filter.SortBy == "modified_asc")
                     {
-                        results = poiList.OrderBy(p => p.DateLastStatusUpdate).Take(filter.MaxResults).AsEnumerable();
+                        results = poiList.OrderBy(p => p.DateLastStatusUpdate).Take(filter.MaxResults).AsQueryable();
                     }
                     else if (filter.SortBy == "id_asc")
                     {
-                        results = poiList.OrderBy(p => p.ID).Take(filter.MaxResults).AsEnumerable();
+                        results = poiList.OrderBy(p => p.ID).Take(filter.MaxResults).AsQueryable();
                     }
                     else
                     {
@@ -1178,7 +1057,7 @@ namespace OCM.Core.Data
                         }
                         // In boundingbox more, if no sorting was requested by the user,
                         // do not perform any sorting for performance reasons.
-                        results = poiList.Take(filter.MaxResults).AsEnumerable();
+                        results = poiList.Take(filter.MaxResults).AsQueryable();
                     }
 
                     System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
@@ -1186,7 +1065,7 @@ namespace OCM.Core.Data
                 else
                 {
                     //distance is required, calculate and populate in results
-                    results = poiList.ToArray();
+                    results = poiList.ToArray().AsQueryable();
                     //populate distance
                     foreach (var p in results)
                     {
@@ -1203,7 +1082,7 @@ namespace OCM.Core.Data
                     // we will be mutating the results so need to convert to object we can update
                     if (!(results is Array))
                     {
-                        results = results.ToArray();
+                        results = results.ToArray().AsQueryable();
                     }
 
                     System.Diagnostics.Debug.Print($"MongoDB converted to array @ {stopwatch.ElapsedMilliseconds}ms");
@@ -1250,13 +1129,161 @@ namespace OCM.Core.Data
                 stopwatch.Stop();
                 System.Diagnostics.Debug.WriteLine("Cache Provider POI Total Query Time:" + stopwatch.ElapsedMilliseconds + "ms");
 
-                return results;
+                var output = results.ToList();
+                return output;
             }
             else
             {
                 return null;
             }
         }
+
+        public static IQueryable<POIMongoDB> ApplyQueryFilters(APIRequestParams filter, IQueryable<POIMongoDB> poiList)
+        {
+            int greaterThanId = 0;
+            // workaround mongodb linq conversion bug
+            if (filter.GreaterThanId.HasValue) greaterThanId = filter.GreaterThanId.Value;
+
+            if (filter.OperatorIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.OperatorIDs.Contains((int)c.OperatorID));
+            }
+
+            if (filter.SubmissionStatusTypeID == null)
+            {
+                // default to published submissions
+                poiList = poiList.Where(c => c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+            }
+            else if (filter.SubmissionStatusTypeID > 0)
+            {
+                //specific submission status
+                poiList = poiList.Where(c => c.SubmissionStatusTypeID == filter.SubmissionStatusTypeID);
+            }
+            else if (filter.SubmissionStatusTypeID == 0)
+            {
+                //use all pois regardless of submission status
+            }
+
+            // exclude any delisted POIs
+            poiList = poiList.Where(c => c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation);
+
+
+            // deprecated filter by operator name
+            if (filter.OperatorName != null)
+            {
+                poiList = poiList.Where(c => c.OperatorInfo.Title == filter.OperatorName);
+            }
+
+
+            if (filter.IsOpenData != null)
+            {
+                poiList = poiList.Where(c => (filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true));
+            }
+
+
+            if (filter.GreaterThanId.HasValue == true)
+            {
+                poiList = poiList.Where(c => filter.GreaterThanId.HasValue && c.ID > greaterThanId);
+            }
+
+            // depreceated filter by dataprovider name
+            if (filter.DataProviderName != null)
+            {
+                poiList = poiList.Where(c => c.DataProvider.Title == filter.DataProviderName);
+            }
+
+            if (filter.CountryIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.CountryIDs.Contains((int)c.AddressInfo.CountryID));
+            }
+
+
+            if (filter.ChargePointIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.ChargePointIDs.Contains((int)c.ID));
+            }
+
+            if (filter.UsageTypeIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.UsageTypeIDs.Contains((int)c.UsageTypeID));
+            }
+
+
+            if (filter.StatusTypeIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.StatusTypeIDs.Contains((int)c.StatusTypeID));
+            }
+
+            // exclude any decomissioned items
+            poiList = poiList.Where(c => c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned);
+
+            if (filter.DataProviderIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.DataProviderIDs.Contains((int)c.DataProviderID));
+            }
+
+            if (filter.Postcodes?.Any() == true)
+            {
+                poiList = poiList.Where(c => filter.Postcodes.Contains(c.AddressInfo.Postcode));
+            }
+
+
+            if (filter.ChangesFromDate != null)
+            {
+                poiList = poiList.Where(c => c.DateLastStatusUpdate >= filter.ChangesFromDate.Value);
+            }
+
+            if (filter.CreatedFromDate != null)
+            {
+                poiList = poiList.Where(c => c.DateCreated >= filter.CreatedFromDate.Value);
+            }
+
+            //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
+            if (filter.LevelOfDetail > 1)
+            {
+                //return progressively less matching results (across whole data set) as requested Level Of Detail gets higher
+
+                if (filter.LevelOfDetail > 3)
+                {
+                    filter.LevelOfDetail = 1; //highest priority LOD
+                }
+                else
+                {
+                    filter.LevelOfDetail = 2; //include next level priority items
+                }
+                poiList = poiList.Where(c => c.LevelOfDetail <= filter.LevelOfDetail);
+            }
+
+            //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
+            if (filter.ConnectionType != null)
+            {
+                poiList = poiList.Where(c => c.Connections.Any(conn => conn.ConnectionType.Title == filter.ConnectionType));
+            }
+
+            if (filter.MinPowerKW != null)
+            {
+                poiList = poiList.Where(c => c.Connections.Any(conn => conn.PowerKW >= filter.MinPowerKW));
+            }
+
+            if (filter.MaxPowerKW != null)
+            {
+                poiList = poiList.Where(c => c.Connections.Any(conn => conn.PowerKW <= filter.MaxPowerKW));
+            }
+
+            if (filter.ConnectionTypeIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => c.Connections.Any(conn => conn.ConnectionTypeID != null && filter.ConnectionTypeIDs.Contains((int)conn.ConnectionTypeID)));
+            }
+
+            if (filter.LevelIDs?.Any() == true)
+            {
+                poiList = poiList.Where(c => c.Connections.Any(conn => conn.LevelID != null && filter.LevelIDs.Contains((int)conn.LevelID)));
+            }
+
+            poiList = poiList.Where(c => c.AddressInfo != null);
+            return poiList;
+        }
+
 
         public async Task<List<BenchmarkResult>> PerformPOIQueryBenchmark(int numQueries, string mode = "country")
         {
@@ -1307,6 +1334,21 @@ namespace OCM.Core.Data
                 results.Add(result);
             }
             return results;
+        }
+    }
+
+    public static class EfExtensions
+    {
+        // https://expertcodeblog.wordpress.com/2018/02/19/net-core-2-0-resolve-error-the-source-iqueryable-doesnt-implement-iasyncenumerable/
+
+        public static Task<List<TSource>> ToListAsyncSafe<TSource>(
+          this IQueryable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (!(source is IAsyncEnumerable<TSource>))
+                return Task.FromResult(source.ToList());
+            return source.ToListAsync();
         }
     }
 }

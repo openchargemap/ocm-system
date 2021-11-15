@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OCM.API.Common;
 using OCM.API.Common.Model;
+using System.Threading.Tasks;
 
 namespace OCM.MVC.Controllers
 {
@@ -10,11 +11,11 @@ namespace OCM.MVC.Controllers
         //
         // GET: /EditQueue/
 
-        public ActionResult Index(EditQueueFilter filter)
+        public async Task<ActionResult> Index(EditQueueFilter filter)
         {
             using (var editQueueManager = new EditQueueManager())
             {
-                var list = editQueueManager.GetEditQueueItems(filter);
+                var list = await editQueueManager.GetEditQueueItems(filter);
                 ViewBag.EditFilter = filter;
                 ViewBag.IsUserAdmin = IsUserAdmin;
                 if (IsUserSignedIn)
@@ -26,11 +27,11 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult Cleanup()
+        public async Task<ActionResult> Cleanup()
         {
             using (var editQueueManager = new EditQueueManager())
             {
-                editQueueManager.CleanupRedundantEditQueueitems();
+                await editQueueManager.CleanupRedundantEditQueueitems();
 
                 return RedirectToAction("Index", "EditQueue");
             }

@@ -167,13 +167,19 @@ namespace OCM.API.Common.DataSummary
                         }
                     };
 
-                var pipeline = new[] { match, group, project };
+
+                PipelineDefinition<Core.Data.POIMongoDB, BsonDocument> pipeline = new BsonDocument[]
+                    {
+                        new BsonDocument { { "$match", match } },
+                        new BsonDocument { { "$group", group} },
+                         new BsonDocument { { "$project", project} }
+                    };
 
                 OCM.Core.Data.CacheProviderMongoDB cacheDB = new OCM.Core.Data.CacheProviderMongoDB();
                 var poiCollection = cacheDB.GetPOICollection();
-                var result = poiCollection.Aggregate(new MongoDB.Driver.AggregateArgs { Pipeline = pipeline });
+                var result = poiCollection.Aggregate(pipeline);
 
-                var results = result
+                var results = result.ToEnumerable()
                     .Select(x => x.ToDynamic())
                 .ToList();
 

@@ -4,6 +4,7 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Web.Standard.Controllers
 {
@@ -52,7 +53,7 @@ namespace OCM.API.Web.Standard.Controllers
 
         [HttpGet]
         [Route("/v4/share/{id}")]
-        public ContentResult Share(int id)
+        public async Task<ContentResult> Share(int id)
         {
 
             // use custom query string parsing for compatibility
@@ -60,7 +61,7 @@ namespace OCM.API.Web.Standard.Controllers
             var api = new POIManager();
 
 
-            var poi = api.GetFullDetails(id);
+            var poi = await api.GetFullDetails(id);
 
             if (poi != null)
             {

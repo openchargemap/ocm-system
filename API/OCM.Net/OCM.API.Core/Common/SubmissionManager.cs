@@ -64,7 +64,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="submission">ChargePoint info for submission, if ID and UUID set will be treated as an update</param>
         /// <returns>false on error or not enough data supplied</returns>
-        public ValidationResult PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding = false)
+        public async Task<ValidationResult> PerformPOISubmission(Model.ChargePoint updatedPOI, Model.User user, bool performCacheRefresh = true, bool disablePOISuperseding = false)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace OCM.API.Common
                 if (updatedPOI.ID > 0)
                 {
                     //get json snapshot of current cp data to store as 'previous'
-                    oldPOI = poiManager.Get(updatedPOI.ID);
+                    oldPOI = await poiManager.Get(updatedPOI.ID);
                 }
 
                 //if user cannot edit directly, add to edit queue for approval
@@ -291,15 +291,11 @@ namespace OCM.API.Common
 
                 if (performCacheRefresh)
                 {
-                    var cacheTask = Task.Run(async () =>
+                    if (supersedesID != null)
                     {
-                        if (supersedesID != null)
-                        {
-                            await CacheManager.RefreshCachedPOI((int)supersedesID);
-                        }
-                        return await CacheManager.RefreshCachedPOI(updatedPOI.ID);
-                    });
-                    cacheTask.Wait();
+                        await CacheManager.RefreshCachedPOI((int)supersedesID);
+                    }
+                    await CacheManager.RefreshCachedPOI(updatedPOI.ID);
                 }
 
                 return new ValidationResult { IsValid = true, ItemId = updatedPOI.ID, Message = "Update submitted." };
@@ -379,7 +375,7 @@ namespace OCM.API.Common
         /// </summary>
         /// <param name="comment"></param>
         /// <returns>ID of new comment, -1 for invalid cp, -2 for general error saving comment</returns>
-        public int PerformSubmission(Common.Model.UserComment comment, Model.User user)
+        public async Task<int> PerformSubmission(Common.Model.UserComment comment, Model.User user)
         {
             //TODO: move all to UserCommentManager
             //populate data model comment from simple comment object
@@ -446,7 +442,7 @@ namespace OCM.API.Common
                 //SendPOICommentSubmissionNotifications(comment, user, dataComment);
 
                 //TODO: only refresh cache for specific POI
-                CacheManager.RefreshCachedPOI(dataComment.ChargePoint.Id);
+                await CacheManager.RefreshCachedPOI(dataComment.ChargePoint.Id);
 
                 return dataComment.Id;
             }
