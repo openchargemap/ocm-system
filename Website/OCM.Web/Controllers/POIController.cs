@@ -58,9 +58,15 @@ namespace OCM.MVC.Controllers
         {
             if (filter?.ReferenceData == null)
             {
-                filter = new POIBrowseModel(await GetCoreReferenceDataAsync());
-                filter.ShowAdvancedOptions = true;
+                if (filter == null)
+                {
+                    filter = new POIBrowseModel();
+                    filter.ShowAdvancedOptions = true;
+                }
+                filter.ReferenceData = await GetCoreReferenceDataAsync();
+
             }
+
             var cpManager = new API.Common.POIManager();
 
             //dropdown selections of -1 represent an intended null selection, fix this by nulling relevant items
@@ -294,7 +300,7 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "StandardUser")]
-        public ActionResult Add()
+        public async Task<ActionResult> Add()
         {
             var refData = new POIBrowseModel(GetCoreReferenceData());
             refData.AllowOptionalCountrySelection = false;
@@ -306,7 +312,7 @@ namespace OCM.MVC.Controllers
             //get a default new POI using std core reference data
             using (var refDataManager = new ReferenceDataManager())
             {
-                var coreReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+                var coreReferenceData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
                 coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
                 coreReferenceData.ChargePoint.StatusType.ID = 50; //Operational
                 coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors

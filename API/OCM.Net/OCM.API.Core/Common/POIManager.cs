@@ -127,7 +127,7 @@ namespace OCM.API.Common
         public async Task<Model.ChargePoint> Get(int id, bool includeExtendedInfo, bool allowDiskCache = false, bool allowMirrorDB = false)
         {
 
-            var refData = new ReferenceDataManager().GetCoreReferenceData();
+            var refData = await new ReferenceDataManager().GetCoreReferenceDataAsync();
 
             if (allowMirrorDB)
             {
@@ -397,7 +397,7 @@ namespace OCM.API.Common
                     using (var refDataManager = new ReferenceDataManager())
                     {
 
-                        refData = refDataManager.GetCoreReferenceData();
+                        refData = await refDataManager.GetCoreReferenceDataAsync();
                     }
                 }
 
@@ -485,7 +485,7 @@ namespace OCM.API.Common
 #endif
                     var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory.GeometryServices).Read(polygonWKT);
                     polygon.SRID = 4362;
-                  
+                 
                     poiList = poiList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
                 }
 

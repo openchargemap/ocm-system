@@ -382,7 +382,7 @@ namespace OCM.Core.Data
         public async Task<MirrorStatus> RefreshCachedPOI(int poiId)
         {
 
-            var refData = new ReferenceDataManager().GetCoreReferenceData();
+            var refData = await new ReferenceDataManager().GetCoreReferenceDataAsync();
             var dataModel = new OCMEntities();
             var poiModel = dataModel.ChargePoints.FirstOrDefault(p => p.Id == poiId);
 
@@ -472,7 +472,7 @@ namespace OCM.Core.Data
 
                     using (var refDataManager = new ReferenceDataManager())
                     {
-                        coreRefData = refDataManager.GetCoreReferenceData(new APIRequestParams { AllowDataStoreDB = true, AllowMirrorDB = false });
+                        coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams { AllowDataStoreDB = true, AllowMirrorDB = false });
                     }
 
                     if (coreRefData != null)
@@ -1146,7 +1146,7 @@ namespace OCM.Core.Data
 
             if (filter.OperatorIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.OperatorIDs.Contains((int)c.OperatorID));
+                poiList = poiList.Where(c => c.OperatorID != null && filter.OperatorIDs.Contains((int)c.OperatorID));
             }
 
             if (filter.SubmissionStatusTypeID == null)
@@ -1194,7 +1194,7 @@ namespace OCM.Core.Data
 
             if (filter.CountryIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.CountryIDs.Contains((int)c.AddressInfo.CountryID));
+                poiList = poiList.Where(c => c.AddressInfo.CountryID!=null && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID));
             }
 
 
@@ -1205,13 +1205,13 @@ namespace OCM.Core.Data
 
             if (filter.UsageTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.UsageTypeIDs.Contains((int)c.UsageTypeID));
+                poiList = poiList.Where(c => c.UsageTypeID!=null && filter.UsageTypeIDs.Contains((int)c.UsageTypeID));
             }
 
 
             if (filter.StatusTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.StatusTypeIDs.Contains((int)c.StatusTypeID));
+                poiList = poiList.Where(c => c.StatusTypeID!=null && filter.StatusTypeIDs.Contains((int)c.StatusTypeID));
             }
 
             // exclude any decomissioned items
@@ -1219,7 +1219,7 @@ namespace OCM.Core.Data
 
             if (filter.DataProviderIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.DataProviderIDs.Contains((int)c.DataProviderID));
+                poiList = poiList.Where(c => c.DataProviderID!=null && filter.DataProviderIDs.Contains((int)c.DataProviderID));
             }
 
             if (filter.Postcodes?.Any() == true)

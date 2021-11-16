@@ -17,16 +17,11 @@ namespace OCM.API.Common
         public bool AllowUpdates = false;
         public bool RequireSubmissionReview = true;
 
-        public static CoreReferenceData refData = null;
-
         public SubmissionManager()
         {
             AllowUpdates = false;
 
-            using (var refDataManager = new ReferenceDataManager())
-            {
-                refData = refDataManager.GetCoreReferenceData();
-            }
+
 
         }
 
@@ -119,7 +114,14 @@ namespace OCM.API.Common
                 }
 
                 //convert to DB version of POI and back so that properties are fully populated
-                updatedPOI = PopulateFullPOI(updatedPOI, refData);
+                using (var refDataManager = new ReferenceDataManager())
+                {
+                    var refData = await refDataManager.GetCoreReferenceDataAsync();
+
+                    updatedPOI = PopulateFullPOI(updatedPOI, refData);
+
+                }
+
                 Model.ChargePoint oldPOI = null;
 
                 if (updatedPOI.ID > 0)

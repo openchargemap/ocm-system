@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace OCM.API.Tests
@@ -26,13 +27,13 @@ namespace OCM.API.Tests
         }
 
         [Fact(Skip = "Incomplete")]
-        void CanConvertFromOCPI_Fastned()
+        async Task CanConvertFromOCPI_Fastned()
         {
             var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_1_1_locations-fastned.json");
 
             var refDataManager = new ReferenceDataManager();
-            var coreRefData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
 
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 

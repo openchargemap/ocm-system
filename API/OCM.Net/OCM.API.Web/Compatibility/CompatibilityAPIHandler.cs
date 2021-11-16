@@ -654,7 +654,7 @@ namespace OCM.API
             {
                 if (_settings.IsCacheOnlyMode) filter.AllowDataStoreDB = false;
 
-                var data = refDataManager.GetCoreReferenceData(filter);
+                var data = await refDataManager.GetCoreReferenceDataAsync(filter);
 
                 if (data != null)
                 {
