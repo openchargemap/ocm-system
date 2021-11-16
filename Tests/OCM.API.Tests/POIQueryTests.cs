@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OCM.API.Common.Model;
 using OCM.Core.Settings;
 using System;
 using System.Collections.Generic;
@@ -580,7 +581,10 @@ namespace OCM.API.Tests
 
             // ensure only results from given operators
             Assert.All<Common.Model.ChargePoint>(cacheResults, a => searchParams.OperatorIDs.Contains((int)a.OperatorID));
-
+            foreach (var p in cacheResults)
+            {
+                Assert.Contains((int)p.OperatorID, searchParams.OperatorIDs);
+            }
         }
 
         [Fact]
@@ -610,8 +614,11 @@ namespace OCM.API.Tests
             Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
 
             // ensure only results from given countries
-            Assert.All<Common.Model.ChargePoint>(cacheResults, a => searchParams.CountryIDs.Contains((int)a.AddressInfo.CountryID));
 
+            foreach (var p in cacheResults)
+            {
+                Assert.Contains((int)p.AddressInfo.CountryID, searchParams.CountryIDs);
+            }
         }
 
         [Fact]
@@ -641,11 +648,142 @@ namespace OCM.API.Tests
             Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
 
             // ensure only results from given countries
-            foreach(var p in cacheResults)
+            foreach (var p in cacheResults)
             {
-                Assert.True(p.SubmissionStatusTypeID==searchParams.SubmissionStatusTypeID);
+                Assert.True(p.SubmissionStatusTypeID == searchParams.SubmissionStatusTypeID);
             }
 
+        }
+
+        [Fact]
+        public void ReturnPOIResultsForGreaterThanId()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = null,
+                MaxResults = 20,
+                Latitude = 51.5077,
+                Longitude = -0.134,
+                GreaterThanId = 25000
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            // ensure only expected results
+            Assert.True(cacheResults.All(a => a.ID > searchParams.GreaterThanId));
+
+        }
+
+        [Fact]
+        public void ReturnPOIResultsForModifiedGreaterThanDate()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = null,
+                MaxResults = 20,
+                Latitude = 51.5077,
+                Longitude = -0.134,
+                ChangesFromDate = new DateTime(2021, 1, 1)
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            // ensure only expected results
+            Assert.True(cacheResults.All(a => a.DateLastStatusUpdate >= searchParams.ChangesFromDate));
+
+        }
+
+
+        [Fact]
+        public void ReturnPOIResultsWithStatus()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = null,
+                MaxResults = 20,
+                Latitude = 51.5077,
+                Longitude = -0.134,
+                StatusTypeIDs = new int[] { (int)StandardStatusTypes.NotOperational }
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            // ensure only expected results
+            foreach (var p in cacheResults)
+            {
+                Assert.Contains((int)p.StatusTypeID, searchParams.StatusTypeIDs);
+            }
+
+        }
+
+        [Fact]
+        public void ReturnPOIResultAreOpenData()
+        {
+            var api = new OCM.API.Common.POIManager();
+
+            var searchParams = new Common.APIRequestParams
+            {
+                AllowMirrorDB = true,
+                AllowDataStoreDB = false,
+                IsVerboseOutput = false,
+                DistanceUnit = Common.Model.DistanceUnit.Miles,
+                Distance = null,
+                MaxResults = 20,
+                Latitude = 51.5077,
+                Longitude = -0.134,
+                IsOpenData = true
+            };
+
+            var cacheResults = api.GetPOIList(searchParams);
+            Assert.True(cacheResults.Count() > 0);
+            Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
+
+            var poi = cacheResults.FirstOrDefault();
+            Assert.NotNull(poi);
+            Assert.True(poi.AddressInfo.Distance > 0, "Distance should be more than zero");
+
+            // ensure only expected results
+            Assert.All<Common.Model.ChargePoint>(cacheResults, a => Assert.True(a.DataProvider?.IsOpenDataLicensed == true));
+            foreach (var p in cacheResults)
+            {
+                Assert.True(p.DataProvider?.IsOpenDataLicensed == true);
+            }
         }
 
     }

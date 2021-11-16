@@ -1194,7 +1194,7 @@ namespace OCM.Core.Data
 
             if (filter.CountryIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.AddressInfo.CountryID!=null && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID));
+                poiList = poiList.Where(c => c.AddressInfo.CountryID != null && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID));
             }
 
 
@@ -1205,13 +1205,13 @@ namespace OCM.Core.Data
 
             if (filter.UsageTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.UsageTypeID!=null && filter.UsageTypeIDs.Contains((int)c.UsageTypeID));
+                poiList = poiList.Where(c => c.UsageTypeID != null && filter.UsageTypeIDs.Contains((int)c.UsageTypeID));
             }
 
 
             if (filter.StatusTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.StatusTypeID!=null && filter.StatusTypeIDs.Contains((int)c.StatusTypeID));
+                poiList = poiList.Where(c => c.StatusTypeID != null && filter.StatusTypeIDs.Contains((int)c.StatusTypeID));
             }
 
             // exclude any decomissioned items
@@ -1219,7 +1219,7 @@ namespace OCM.Core.Data
 
             if (filter.DataProviderIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.DataProviderID!=null && filter.DataProviderIDs.Contains((int)c.DataProviderID));
+                poiList = poiList.Where(c => c.DataProviderID != null && filter.DataProviderIDs.Contains((int)c.DataProviderID));
             }
 
             if (filter.Postcodes?.Any() == true)
