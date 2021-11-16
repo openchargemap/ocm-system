@@ -101,86 +101,27 @@ namespace OCM.API.Common.DataSummary
             else
             {
                 //mongodb cache version of query
-
-                var match = new BsonDocument
-                {
-                    {
-                        "$match",
-                        new BsonDocument
-                            {
-                                {"SubmissionStatus.IsLive", true}
-                            }
-                    }
-                };
-
-                var group = new BsonDocument
-                {
-                    { "$group",
-                        new BsonDocument
-                            {
-                                { "_id", new BsonDocument {
-                                                 {
-                                                     "Country","$AddressInfo.Country"
-                                                 }
-                                             }
-                                },
-                                {
-                                    "POICount", new BsonDocument
-                                                 {
-                                                     {
-                                                         "$sum", 1
-                                                     }
-                                                 }
-                                },
-                               {
-                                    "StationCount", new BsonDocument
-                                                 {
-                                                     {
-                                                        "$sum",   new BsonDocument{
-                                                        {"$ifNull",
-                                                            new BsonArray{
-                                                            "$NumberOfPoints",
-                                                            1
-                                                            }
-                                                        }
-                                                         }
-                                                     }
-                                                 }
-                                }
-                            }
-                  }
-                };
-
-                var project = new BsonDocument
-                    {
-                        {
-                            "$project",
-                            new BsonDocument
-                            {
-                                {"_id", 0},
-                                {"Country","$_id.Country"},
-                                {"POICount", 1},
-                                {"StationCount",
-                                  1
-                                }
-                            }
-                        }
-                    };
-
-                var pipeline = new[] { match, group, project };
-
-                OCM.Core.Data.CacheProviderMongoDB cacheDB = new OCM.Core.Data.CacheProviderMongoDB();
+                var cacheDB = new OCM.Core.Data.CacheProviderMongoDB();
                 var poiCollection = cacheDB.GetPOICollection();
-                var result = poiCollection.Aggregate(new MongoDB.Driver.AggregateArgs { Pipeline = pipeline });
+            
 
-                var results = result
-                    .Select(x => x.ToDynamic())
-                .ToList();
+                var results = poiCollection.AsQueryable()
+                    .Where(c => c.SubmissionStatus.IsLive == true)
+                    .GroupBy(c => c.AddressInfo.Country)
+                    .Select(c => new { c.Key, NumItems = c.Count(), NumStations = c.Sum(s => s.NumberOfPoints > 0 ? s.NumberOfPoints : 1) });
+                                          
+
+                CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+                TextInfo textInfo = cultureInfo.TextInfo;
 
                 foreach (var item in results)
                 {
-                    list.Add(new CountrySummary { CountryName = item.Country.Title, ISOCode = item.Country.ISOCode, ItemCount = item.POICount, LocationCount = item.POICount, StationCount = (int)item.StationCount, ItemType = "LocationsPerCountry" });
+                    var c = item.Key;
+                    string countryName = textInfo.ToTitleCase(c.Title.ToLower());
+                    string isoCode = c.ISOCode;
+                    list.Add(new CountrySummary { CountryName = countryName, ISOCode = isoCode, ItemCount = item.NumItems, LocationCount = item.NumItems, StationCount = (int)item.NumStations, ItemType = "LocationsPerCountry" });
                 }
+
             }
 
             return list;

@@ -265,7 +265,7 @@ namespace OCM.MVC.Controllers
                         if (poi.DateCreated < DateTime.UtcNow.AddDays(-autoApproveDays))
                         {
                             poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
-                            new SubmissionManager().PerformPOISubmission(poi, user);
+                            await new SubmissionManager().PerformPOISubmission(poi, user);
                         }
 
                     }
@@ -274,7 +274,7 @@ namespace OCM.MVC.Controllers
                 // check for edit queue items to auto approve 
                 using (var editQueueManager = new EditQueueManager())
                 {
-                    var queueItems = editQueueManager.GetEditQueueItems(new EditQueueFilter { ShowProcessed = false })
+                    var queueItems = (await editQueueManager.GetEditQueueItems(new EditQueueFilter { ShowProcessed = false }))
                         .Where(q => q.DateProcessed == null).ToList()
                         .OrderBy(q => q.DateSubmitted);
 
@@ -282,7 +282,7 @@ namespace OCM.MVC.Controllers
                     {
                         if (i.DateSubmitted < DateTime.UtcNow.AddDays(-autoApproveDays))
                         {
-                            editQueueManager.ProcessEditQueueItem(i.ID, true, (int)StandardUsers.System, true, "Auto Approved");
+                            await editQueueManager.ProcessEditQueueItem(i.ID, true, (int)StandardUsers.System, true, "Auto Approved");
                         }
                     }
                 }

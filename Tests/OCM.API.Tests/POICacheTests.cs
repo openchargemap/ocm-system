@@ -81,11 +81,11 @@ namespace OCM.API.Tests
 
 
         [Fact]
-        public void ReturnReferenceData()
+        public async Task ReturnReferenceData()
         {
             var api = new OCM.API.Common.ReferenceDataManager();
             var filter = new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false };
-            var results = api.GetCoreReferenceData(filter);
+            var results = await api.GetCoreReferenceDataAsync(filter);
 
             Assert.True(results.Countries.Count > 0, "Country results should be greater than 0");
             Assert.True(results.ConnectionTypes.Count > 0, "Connection type results should be greater than 0");
@@ -93,15 +93,25 @@ namespace OCM.API.Tests
         }
 
         [Fact]
-        public void ReturnFilteredReferenceData()
+        public async Task ReturnFilteredReferenceData()
         {
             var api = new OCM.API.Common.ReferenceDataManager();
             var filter = new Common.APIRequestParams { CountryIDs = new int[] { 18 }, AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false };
-            var results = api.GetCoreReferenceData(filter);
+            var results = await api.GetCoreReferenceDataAsync(filter);
 
             Assert.True(results.Countries.Count > 0, "Country results should be greater than 0");
             Assert.True(results.ConnectionTypes.Count > 0, "Connection type results should be greater than 0");
             Assert.True(results.ChargePoint != null, "POI template object should not be null");
         }
+
+        [Fact]
+        
+          public async Task GetDataSummary()
+        {
+            var api = new OCM.API.Common.DataSummary.DataSummaryManager();
+            var list = api.GetAllCountryStats();
+            Assert.NotNull(list);
+            Assert.True(list.Count > 0);
     }
+}
 }

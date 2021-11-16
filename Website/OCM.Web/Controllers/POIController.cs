@@ -58,9 +58,15 @@ namespace OCM.MVC.Controllers
         {
             if (filter?.ReferenceData == null)
             {
-                filter = new POIBrowseModel(await GetCoreReferenceDataAsync());
-                filter.ShowAdvancedOptions = true;
+                if (filter == null)
+                {
+                    filter = new POIBrowseModel();
+                    filter.ShowAdvancedOptions = true;
+                }
+                filter.ReferenceData = await GetCoreReferenceDataAsync();
+
             }
+
             var cpManager = new API.Common.POIManager();
 
             //dropdown selections of -1 represent an intended null selection, fix this by nulling relevant items
@@ -192,7 +198,7 @@ namespace OCM.MVC.Controllers
             OCM.API.Common.POIManager cpManager = new API.Common.POIManager();
             POIViewModel viewModel = new POIViewModel();
 
-            var poi = cpManager.Get(id, true, allowDiskCache: false, allowMirrorDB: true);
+            var poi = await cpManager.Get(id, true, allowDiskCache: false, allowMirrorDB: true);
             if (poi != null)
             {
                 ViewBag.FullTitle = "Location Details: OCM-" + poi.ID + " " + poi.AddressInfo.Title;
@@ -294,7 +300,7 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "StandardUser")]
-        public ActionResult Add()
+        public async Task<ActionResult> Add()
         {
             var refData = new POIBrowseModel(GetCoreReferenceData());
             refData.AllowOptionalCountrySelection = false;
@@ -306,7 +312,7 @@ namespace OCM.MVC.Controllers
             //get a default new POI using std core reference data
             using (var refDataManager = new ReferenceDataManager())
             {
-                var coreReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+                var coreReferenceData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
                 coreReferenceData.ChargePoint.OperatorInfo.ID = 1;// Unknown Operator
                 coreReferenceData.ChargePoint.StatusType.ID = 50; //Operational
                 coreReferenceData.ChargePoint.UsageType.ID = 6; //private for staff and visitors
@@ -318,7 +324,7 @@ namespace OCM.MVC.Controllers
 
         // GET: /POI/Edit/5
         [Authorize(Roles = "StandardUser")]
-        public ActionResult Edit(int? id, bool createCopy = false)
+        public async Task<ActionResult> Edit(int? id, bool createCopy = false)
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
 
@@ -329,11 +335,11 @@ namespace OCM.MVC.Controllers
                 if (createCopy)
                 {
                     //get version of POI with location details removed, copying equipment etc
-                    poi = new POIManager().GetCopy((int)id, true);
+                    poi = await new POIManager().GetCopy((int)id, true);
                 }
                 else
                 {
-                    poi = new POIManager().Get((int)id);
+                    poi = await new POIManager().Get((int)id);
                 }
 
                 if (poi != null)
@@ -371,21 +377,21 @@ namespace OCM.MVC.Controllers
 
         [HttpGet]
         [Authorize(Roles = "StandardUser")]
-        public ActionResult Approve(int id)
+        public async Task<ActionResult> Approve(int id)
         {
             CheckForReadOnly();
 
             // if poi is awaiting review, publish now
             var poiManager = new POIManager();
 
-            var poi = poiManager.Get(id, true);
+            var poi = await poiManager.Get(id, true);
             if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
             {
                 var user = new UserManager().GetUser((int)UserID);
                 if (POIManager.CanUserEditPOI(poi, user))
                 {
                     poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
-                    new SubmissionManager().PerformPOISubmission(poi, user);
+                    await new SubmissionManager().PerformPOISubmission(poi, user);
                 }
             }
 
@@ -396,7 +402,7 @@ namespace OCM.MVC.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "StandardUser")]
-        public ActionResult Edit(ChargePoint poi)
+        public async Task<ActionResult> Edit(ChargePoint poi)
         {
             CheckForReadOnly();
 
@@ -456,7 +462,7 @@ namespace OCM.MVC.Controllers
                     if (poi.AddressInfo.Country == null || poi.AddressInfo.Country.ID == -1) ModelState.AddModelError("Country", "Required");
 
                     //perform actual POI submission, then redirect to POI details if we can
-                    var poiSubmissionResult = new SubmissionManager().PerformPOISubmission(poi, user);
+                    var poiSubmissionResult = await new SubmissionManager().PerformPOISubmission(poi, user);
                     if (poiSubmissionResult.IsValid)
                     {
                         if (poiSubmissionResult.ItemId > 0)
@@ -600,12 +606,12 @@ namespace OCM.MVC.Controllers
             }
         }
 
-        public ActionResult AddComment(int id)
+        public async Task<ActionResult> AddComment(int id)
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
 
             var cpManager = new API.Common.POIManager();
-            var poi = cpManager.Get(id, true);
+            var poi = await cpManager.Get(id, true);
 
             POIViewModel viewModel = new POIViewModel();
             viewModel.NewComment = new UserComment() { ChargePointID = poi.ID, CommentType = new UserCommentType { ID = 10 }, CheckinStatusType = new CheckinStatusType { ID = 0 } };
@@ -625,7 +631,7 @@ namespace OCM.MVC.Controllers
             // if poi is awaiting review, publish now
             var poiManager = new POIManager();
 
-            var poi = poiManager.Get(poiId, true);
+            var poi = await poiManager.Get(poiId, true);
             var comment = poi.UserComments.Find(c => c.ID == commentId);
 
             using (var userManager = new UserManager())
@@ -646,7 +652,7 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpPost, Authorize(Roles = "StandardUser"), ValidateAntiForgeryToken]
-        public ActionResult Comment(POIViewModel model)
+        public async Task<ActionResult> Comment(POIViewModel model)
         {
             CheckForReadOnly();
 
@@ -660,7 +666,7 @@ namespace OCM.MVC.Controllers
                         var user = userManager.GetUser((int)UserID);
                         if (comment.Rating == 0) comment.Rating = null;
 
-                        if (new SubmissionManager().PerformSubmission(comment, user) > 0)
+                        if (await new SubmissionManager().PerformSubmission(comment, user) > 0)
                         {
                             if (comment.ChargePointID > 0)
                             {

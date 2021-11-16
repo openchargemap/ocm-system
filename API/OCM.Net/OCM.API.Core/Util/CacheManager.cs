@@ -16,11 +16,11 @@ namespace OCM.Core.Data
 
     public class CacheManager
     {
-        public static OCM.API.Common.Model.ChargePoint GetPOI(int id)
+        public static async Task<OCM.API.Common.Model.ChargePoint> GetPOI(int id)
         {
             try
             {
-                return CacheProviderMongoDB.DefaultInstance.GetPOI(id);
+                return await CacheProviderMongoDB.DefaultInstance.GetPOI(id);
             }
             catch (Exception)
             {
@@ -28,11 +28,11 @@ namespace OCM.Core.Data
             }
         }
 
-        public static OCM.API.Common.Model.CoreReferenceData GetCoreReferenceData(APIRequestParams filter)
+        public static async Task<OCM.API.Common.Model.CoreReferenceData> GetCoreReferenceData(APIRequestParams filter)
         {
             try
             {
-                return CacheProviderMongoDB.DefaultInstance.GetCoreReferenceData(filter);
+                return await CacheProviderMongoDB.DefaultInstance.GetCoreReferenceData(filter);
             }
             catch (Exception)
             {
@@ -72,7 +72,7 @@ namespace OCM.Core.Data
         {
             try
             {
-                return await Task.FromResult(CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash));
+                return await CacheProviderMongoDB.DefaultInstance.GetMirrorStatus(includeDupeCheck, includeDBCheck, includeContentHash);
             }
             catch (Exception)
             {

@@ -208,7 +208,7 @@ namespace OCM.API
                     if (processingResult.IsValid)
                     {
                         //perform submission
-                        submissionResult = submissionManager.PerformPOISubmission((ChargePoint)processingResult.Item, user);
+                        submissionResult = await submissionManager.PerformPOISubmission((ChargePoint)processingResult.Item, user);
                     }
 
                     if (processingResult.IsValid && submissionResult.IsValid)
@@ -254,7 +254,7 @@ namespace OCM.API
                         if (validationResult.IsValid)
                         {
                             //perform submission
-                            submissionResult = submissionManager.PerformPOISubmission(cp, user, performCacheRefresh: false);
+                            submissionResult = await submissionManager.PerformPOISubmission(cp, user, performCacheRefresh: false);
                         }
                         else
                         {
@@ -280,7 +280,7 @@ namespace OCM.API
                     if (processedOK == true)
                     {
                         //perform submission
-                        int result = submissionManager.PerformSubmission(comment, user);
+                        int result = await submissionManager.PerformSubmission(comment, user);
                         if (filter.APIVersion >= 3)
                         {
                             if (result > 0)
@@ -654,7 +654,7 @@ namespace OCM.API
             {
                 if (_settings.IsCacheOnlyMode) filter.AllowDataStoreDB = false;
 
-                var data = refDataManager.GetCoreReferenceData(filter);
+                var data = await refDataManager.GetCoreReferenceDataAsync(filter);
 
                 if (data != null)
                 {

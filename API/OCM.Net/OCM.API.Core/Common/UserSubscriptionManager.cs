@@ -155,7 +155,7 @@ namespace OCM.API.Common
 
         public async Task<SubscriptionMatchGroup> GetSubscriptionMatches(int subscriptionId, int userId, DateTime? dateFrom)
         {
-            var refData = new ReferenceDataManager().GetCoreReferenceData();
+            var refData = await new ReferenceDataManager().GetCoreReferenceDataAsync();
             var dataModel = new OCM.Core.Data.OCMEntities();
             var poiManager = new POIManager();
 
@@ -472,7 +472,7 @@ namespace OCM.API.Common
             //TODO: performance/optimisation (use cache for POI queries is done)
             //for each subscription, check if any changes match the criteria
 
-            var refData = new ReferenceDataManager().GetCoreReferenceData();
+            var refData = await new ReferenceDataManager().GetCoreReferenceDataAsync();
 
             var dataModel = new OCM.Core.Data.OCMEntities();
             //var cacheManager = new OCM.Core.Data.CacheProviderMongoDB();

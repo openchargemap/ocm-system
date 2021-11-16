@@ -13,7 +13,7 @@ namespace OCM.MVC.Controllers
     {
 
         [Authorize(Roles = "StandardUser")]
-        public ActionResult Subscriptions()
+        public async Task<ActionResult> Subscriptions()
         {
             using (var userManager = new UserManager())
             {
@@ -21,7 +21,7 @@ namespace OCM.MVC.Controllers
                 ViewBag.UserProfile = user;
                 using (var refDataManager = new ReferenceDataManager())
                 {
-                    ViewBag.ReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
+                    ViewBag.ReferenceData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
                 }
 
                 var list = new UserSubscriptionManager().GetUserSubscriptions(user.ID);

@@ -10,10 +10,7 @@ namespace OCM.MVC.Models
     {
         public POIBrowseModel()
         {
-            using (var refDataManager = new OCM.API.Common.ReferenceDataManager())
-            {
-                this.ReferenceData = refDataManager.GetCoreReferenceData();
-            }
+           
             this.AllowOptionalCountrySelection = true;
         }
         public POIBrowseModel(CoreReferenceData refData)
@@ -35,7 +32,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.Countries), this.CountryIDs, AllowOptionalCountrySelection);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.Countries), this.CountryIDs, AllowOptionalCountrySelection);
             }
         }
 
@@ -43,7 +40,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.ChargerTypes), this.LevelIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.ChargerTypes), this.LevelIDs);
             }
         }
 
@@ -51,7 +48,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.UsageTypes), this.UsageTypeIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.UsageTypes), this.UsageTypeIDs);
             }
         }
 
@@ -59,7 +56,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.StatusTypes.Where(s => s.IsUserSelectable == true)), this.StatusTypeIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.StatusTypes.Where(s => s.IsUserSelectable == true)), this.StatusTypeIDs);
             }
         }
 
@@ -67,7 +64,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.Operators), this.OperatorIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.Operators), this.OperatorIDs);
             }
         }
 
@@ -76,7 +73,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.ConnectionTypes), this.ConnectionTypeIDs);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.ConnectionTypes), this.ConnectionTypeIDs);
             }
         }
 
@@ -84,7 +81,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.DataProviders.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true)), null);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.DataProviders.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true)), null);
             }
         }
 
@@ -92,7 +89,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.SubmissionStatusTypes), null);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.SubmissionStatusTypes), null);
             }
         }
 
@@ -100,7 +97,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.CurrentTypes), null);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.CurrentTypes), null);
             }
         }
 
@@ -108,7 +105,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.UserCommentTypes), null, false);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.UserCommentTypes), null, false);
             }
         }
 
@@ -116,7 +113,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData.CheckinStatusTypes), null, false);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.CheckinStatusTypes), null, false);
             }
         }
 
@@ -137,6 +134,10 @@ namespace OCM.MVC.Models
 
         private List<SimpleReferenceDataType> ToListOfSimpleData(IEnumerable list)
         {
+            if (list == null)
+            {
+                return new List<SimpleReferenceDataType>();
+            }
             List<SimpleReferenceDataType> simpleList = new List<SimpleReferenceDataType>();
             if (list == null) return simpleList;
 

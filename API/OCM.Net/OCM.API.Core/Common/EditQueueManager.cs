@@ -5,6 +5,7 @@ using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
@@ -28,7 +29,7 @@ namespace OCM.API.Common
             return poi;
         }
 
-        public void CleanupRedundantEditQueueitems()
+        public async Task CleanupRedundantEditQueueitems()
         {
             var cpManager = new POIManager();
 
@@ -46,7 +47,7 @@ namespace OCM.API.Common
 
             foreach (var item in sourceList)
             {
-                var p = cpManager.Get((int)item.EntityId);
+                var p = await cpManager.Get((int)item.EntityId);
                 if (p != null)
                 {
                     if (p.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Submitted_UnderReview && p.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Submitted_UnderReview)
@@ -72,7 +73,7 @@ namespace OCM.API.Common
 
             foreach (var item in sourceList)
             {
-                var editItem = GetItemWithDifferences(item, cpManager, true);
+                var editItem = await GetItemWithDifferences(item, cpManager, true);
                 if (editItem.Differences.Count == 0)
                 {
                     redundantEdits.Add(editItem);
@@ -89,7 +90,7 @@ namespace OCM.API.Common
 
         }
 
-        public Model.EditQueueItem GetItemWithDifferences(Core.Data.EditQueueItem item, POIManager cpManager, bool loadCurrentItem)
+        public async Task<Model.EditQueueItem> GetItemWithDifferences(Core.Data.EditQueueItem item, POIManager cpManager, bool loadCurrentItem)
         {
             var queueItem = Model.Extensions.EditQueueItem.FromDataModel(item);
 
@@ -99,7 +100,7 @@ namespace OCM.API.Common
 
             if (loadCurrentItem && poiA != null)
             {
-                poiA = new POIManager().Get(poiA.ID);
+                poiA = await new POIManager().Get(poiA.ID);
             }
             Model.ChargePoint poiB = DeserializePOIFromJSON(queueItem.EditData);
 
@@ -108,7 +109,7 @@ namespace OCM.API.Common
             return queueItem;
         }
 
-        public List<Model.EditQueueItem> GetEditQueueItems(EditQueueFilter filter)
+        public async Task<List<Model.EditQueueItem>> GetEditQueueItems(EditQueueFilter filter)
         {
             var sourceList =
                 DataModel.EditQueueItems.Where(
@@ -126,13 +127,13 @@ namespace OCM.API.Common
             //perform object level differencing on json contents of edit queue items (very expensive), used to get summary and count of differences per item
             foreach (var editQueueItem in sourceList)
             {
-                outputList.Add(GetItemWithDifferences(editQueueItem, cpManager, false));
+                outputList.Add(await GetItemWithDifferences(editQueueItem, cpManager, false));
             }
 
             return outputList.Where(i => i.Differences.Count >= filter.MinimumDifferences).Take(filter.MaxResults).ToList();
         }
 
-        public void ProcessEditQueueItem(int id, bool publishEdit, int userId, bool enableCacheRefresh = true, string comment = null)
+        public async Task ProcessEditQueueItem(int id, bool publishEdit, int userId, bool enableCacheRefresh = true, string comment = null)
         {
             //prepare poi details
             int updatePOIId = 0;
@@ -170,7 +171,7 @@ namespace OCM.API.Common
                             if (poiA != null)
                             {
                                 //this is an edit, load the latest version of the POI as version 'A'
-                                poiA = poiManager.Get(poiA.ID);
+                                poiA = await poiManager.Get(poiA.ID);
                                 if (poiManager.HasDifferences(poiA, poiB))
                                 {
                                     poiUpdateRequired = true;
