@@ -4,7 +4,7 @@
     ViewBag.Title = "Statistics";
 }
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
 <h2><i class="fa fa-bar-chart-o"></i> Statistics</h2>
 
 <div class="row well">
@@ -38,22 +38,19 @@
 
 
         <h2><i class="fa fa-users"></i> Community Activity</h2>
+        <partial name="_UserRegistrations" model="Model.UserRegistrations" />
 
-        @Html.Partial("_UserRegistrations", Model.UserRegistrations)
+        <partial name="_EditStatistics" model="Model.UserEdits" />
 
-        
-        @Html.Partial("_EditStatistics", Model.UserEdits)
-
-
-        @Html.Partial("_UserComments", Model.UserComments)
+        <partial name="_UserComments" model="Model.UserComments" />
     </div>
     <div class="col-md-4">
         <h3><i class="fa fa-commenting"></i> Most Comments Last 90 Days</h3>
         <p>Users who have contributed the most location comments or check-ins:</p>
-        @Html.Partial("_TopContributors", Model.TopCommentators)
+        <partial name="_TopContributors" model="Model.TopCommentators" />
 
         <h3><i class="fa fa-commenting"></i> Most Photos Last 90 Days</h3>
         <p>Users who have contributed the most location photos:</p>
-        @Html.Partial("_TopContributors", Model.TopMediaItems)
+        <partial name="_TopContributors" model="Model.TopMediaItems" />
     </div>
 </div>
