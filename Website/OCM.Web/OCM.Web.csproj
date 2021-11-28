@@ -22,11 +22,11 @@
     <PackageReference Include="Ben.BlockingDetector" Version="0.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.4">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.2.26">
+    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
