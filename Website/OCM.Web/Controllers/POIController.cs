@@ -254,12 +254,12 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpGet, Authorize(Roles = "StandardUser")]
-        public ActionResult AddMediaItem(int id)
+        public async Task<ActionResult> AddMediaItem(int id)
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
 
             var cpManager = new API.Common.POIManager();
-            var poi = cpManager.Get(id, true);
+            var poi = await cpManager.Get(id, true);
 
             return View(poi);
         }
