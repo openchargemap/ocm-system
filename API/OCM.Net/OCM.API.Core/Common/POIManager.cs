@@ -361,7 +361,7 @@ namespace OCM.API.Common
             // clone filter settings to remove mutation side effects in callers
             var filter = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filterParams));
 
-            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: GeoManager.StandardSRID);
           
             var stopwatch = Stopwatch.StartNew();
 
@@ -484,7 +484,7 @@ namespace OCM.API.Common
                     System.Diagnostics.Debug.WriteLine(polygonWKT);
 #endif
                     var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory.GeometryServices).Read(polygonWKT);
-                    polygon.SRID = 4362;
+                    polygon.SRID = GeoManager.StandardSRID;
                  
                     poiList = poiList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
                 }

@@ -167,5 +167,7 @@ namespace OCM.API.Common
 
             return miles / KMToMilesConversion;
         }
+
+        public static int StandardSRID = 4326;
     }
 }

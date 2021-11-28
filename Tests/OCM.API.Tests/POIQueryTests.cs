@@ -390,7 +390,7 @@ namespace OCM.API.Tests
             foreach (var p in cacheResults)
             {
                 var testPoint = new NetTopologySuite.Geometries.Point(p.AddressInfo.Longitude, p.AddressInfo.Latitude);
-                testPoint.SRID = 4326;
+                testPoint.SRID = Common.GeoManager.StandardSRID;
                 if (!bbox.Intersects(testPoint))
                 {
                     if (bbox.IsWithinDistance(testPoint, 100))

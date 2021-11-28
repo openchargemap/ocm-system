@@ -975,8 +975,6 @@ namespace OCM.Core.Data
                     filter.Latitude = null;
                     filter.Longitude = null;
 
-                    double[,] pointList;
-
                     //filter by location within polyline expanded to a polygon
 
                     IEnumerable<LatLon> searchPolygon = null;
@@ -1006,7 +1004,7 @@ namespace OCM.Core.Data
                     var geometry = new GeoJsonPolygon<GeoJson2DGeographicCoordinates>(new GeoJsonPolygonCoordinates<GeoJson2DGeographicCoordinates>(linearRing));
 
                     var polygonQueryBson = geometry.ToBsonDocument();
-                    var crsDoc = BsonDocument.Parse("{ type: \"name\",  properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:4326\" } }");
+                    var crsDoc = BsonDocument.Parse("{ type: \"name\",  properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:"+ GeoManager.StandardSRID+ "\" } }");
                     polygonQueryBson.Add("crs", crsDoc);
 
                     var geoJson = polygonQueryBson.ToJson();

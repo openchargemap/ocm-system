@@ -142,7 +142,8 @@ namespace OCM.Core.Util
         /// <returns></returns>
         private static Polygon CreatePolygonFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
         {
-            var factory = new OgcCompliantGeometryFactory(); //helps make polygon shell counter clockwise
+            var factory = GetGeometryFactoryEx();
+           //helps make polygon shell counter clockwise
             LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
 
             var searchPolygon = polyLine.Buffer(distanceKM / 2 / 100, points.Count) as Polygon;
@@ -151,9 +152,16 @@ namespace OCM.Core.Util
             return searchPolygon;
         }
 
+        private static GeometryFactoryEx GetGeometryFactoryEx()
+        {
+            var geo= new GeometryFactoryEx(new PrecisionModel(PrecisionModels.FloatingSingle), GeoManager.StandardSRID);
+            geo.OrientationOfExteriorRing = LinearRingOrientation.CCW;
+            return geo;
+        }
+
         public static Geometry ConvertPointsToBoundingBox(List<LatLon> boundingBoxPoints)
         {
-            var factory = new NetTopologySuite.Geometries.OgcCompliantGeometryFactory(); //helps make polygon shell counter clockwise
+            var factory = GetGeometryFactoryEx(); //helps make polygon shell counter clockwise
             var polyLine = factory.CreateLineString(boundingBoxPoints.Select(p => new NetTopologySuite.Geometries.Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
             return polyLine.Envelope;
         }
