@@ -38,7 +38,7 @@
         <p data-localize="ocm.infoText.about.projectStats.general">General statistics for Open Charge Map <a href="@Url.Action("Index","Stats")" data-localize-id="link">data and usage</a> are available.</p>
     </div>
 </div>
-<h2 data-localize="ocm.infoText.about.dataSources.title">Data Sources</h2>
+<h2 data-localize="ocm.infoText.about.dataSources.title">Data Providers</h2>
 <p data-localize="ocm.infoText.about.dataSources.p1">
     The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly ("crowd sourced") by our users and those of apps using our services.
 </p>
@@ -49,8 +49,15 @@
 
 @foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))
 {
-    <blockquote>
-        <p>@provider.Title @(provider.WebsiteURL != null ? " (" + provider.WebsiteURL + ") " : "")</p>
-        <small>@(provider.License != null ? " - License: " + @provider.License : "")</small>
-    </blockquote>
+    <h4>@provider.Title</h4>
+    <p>
+        DataProviderID: @provider.ID <br>
+        @(provider.WebsiteURL != null ? provider.WebsiteURL  : "")
+    </p>
+    <p>
+        <em> 
+        @(provider.License != null ? " License: " + @provider.License : "(not licensed)")
+        </em>
+    </p>
 }
+ 
