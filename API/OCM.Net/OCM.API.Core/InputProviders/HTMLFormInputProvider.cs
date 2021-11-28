@@ -12,14 +12,14 @@ namespace OCM.API.InputProviders
     {
         public async Task<ValidationResult> ProcessEquipmentSubmission(HttpContext context)
         {
-            return new ValidationResult { IsValid = false, Message = "HTML Input not supported" }; //html input provider no longer supported
+            return await Task.FromResult(new ValidationResult { IsValid = false, Message = "HTML Input not supported" }); //html input provider no longer supported
         }
 
 
         public async Task<bool> ProcessUserCommentSubmission(HttpContext context, Common.Model.UserComment comment)
         {
             //not implemented
-            return false;
+            return await Task.FromResult(false);
         }
 
         public bool ProcessContactUsSubmission(HttpContext context, ref ContactSubmission contactSubmission)

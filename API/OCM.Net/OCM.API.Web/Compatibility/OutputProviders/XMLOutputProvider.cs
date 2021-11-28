@@ -15,7 +15,7 @@ namespace OCM.API.OutputProviders
             ContentType = "text/xml";
         }
 
-        public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
+        public Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
         {
             bool isVerboseMode = settings.IsVerboseOutput;
 
@@ -232,6 +232,7 @@ namespace OCM.API.OutputProviders
             xml.WriteEndDocument(); //end xml
             xml.Flush();
             //xml.Close();
+            return Task.CompletedTask;
         }
 
         public Task GetOutput(HttpContext context, System.IO.Stream outputStream, Common.Model.CoreReferenceData data, Common.APIRequestParams settings)

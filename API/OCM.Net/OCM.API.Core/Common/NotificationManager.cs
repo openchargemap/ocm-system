@@ -109,8 +109,7 @@ namespace OCM.API.Common
         private string GetAppPath()
         {
             // http://codebuckets.com/2017/10/19/getting-the-root-directory-path-for-net-core-applications/
-            var exePath = Path.GetDirectoryName(System.Reflection
-                              .Assembly.GetExecutingAssembly().CodeBase);
+            var exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
             return exePath.Replace("file:\\", "");
         }
