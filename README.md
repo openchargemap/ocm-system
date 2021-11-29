@@ -11,9 +11,16 @@ The code in this repository represents the backend systems ([API](https://opench
 Developers can use our [API](https://openchargemap.org/site/develop/) to access the data set and build their own [apps](https://openchargemap.org/site/develop/apps/). The map [app](https://map.openchargemap.io) source (using latest Ionic/Angular/TypeScript) can be found in its own repo at https://github.com/openchargemap/ocm-app
 
 
-### Basic build prerequisites
+### Basic build/dev prerequisites
 
 - dotnet 6.x sdk (windows/linux)
+- SQL Server Express
+- MongoDB 5.x
+
+### Local Dev Setup
+- Restore SQL database clone https://github.com/openchargemap/ocm-docs/tree/master/Database/Clone
+- Run OCM.Web (main website) project and create a user acccount, in User table set Permissions field for your account to administrator: `{"Permissions":[{"Level":100},{"Level":1000}],"LegacyPermissions":"[CountryLevel_Editor=All];[Administrator=true];"}`
+- Once you have the Admin menu in the web ui, `Admin > Dashboard > Check POI Cache Status > Refresh Cache (All)` to rebuild local MongoDB cache. Peridocially run Refresh Cache (Modified) to ensure cache does not become stale (otherwise the SQL database will be used for queries).
 
 ### Deployment 
 
