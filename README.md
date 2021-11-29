@@ -13,7 +13,7 @@ Developers can use our [API](https://openchargemap.org/site/develop/) to access 
 
 ### Basic build prerequisites
 
-- dotnet core 3.1 sdk (windows/linux)
+- dotnet 6.x sdk (windows/linux)
 
 ### Deployment 
 
