@@ -115,6 +115,7 @@ namespace OCM.API.Common
                 DataModel.EditQueueItems.Where(
                     i => (
                         (filter.ID == null || (filter.ID != null && i.EntityId == filter.ID))
+                        && (filter.UserId == null || (filter.UserId != null && i.UserId == filter.UserId))
                         && (filter.ShowProcessed || (filter.ShowProcessed == false && i.IsProcessed == false))
                         && (filter.DateFrom == null || (filter.DateFrom != null && i.DateSubmitted >= filter.DateFrom))
                         && (filter.DateTo == null || (filter.DateTo != null && i.DateSubmitted <= filter.DateTo))

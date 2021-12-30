@@ -27,6 +27,10 @@ namespace OCM.API.Common.Model
         [Display(Name = "OCM ID")]
         public int? ID { get; set; }
 
+
+        [Display(Name = "User ID")]
+        public int? UserId { get; set; }
+
         public EditQueueFilter()
         {
             MinimumDifferences = 1;
