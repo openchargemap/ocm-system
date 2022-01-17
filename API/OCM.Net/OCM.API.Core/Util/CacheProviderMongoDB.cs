@@ -550,6 +550,7 @@ namespace OCM.Core.Data
                 {
                     // check sync status compared to master API
                     var syncStatus = await apiClient.GetSystemStatusAsync();
+                    syncStatus.DataHash ??= "";
 
                     if (syncStatus != null)
                     {
@@ -587,6 +588,7 @@ namespace OCM.Core.Data
                                                .ToDictionary(split => split[0], split => split[1]);
 
                             var localHash = GetCacheContentHash();
+                            localHash ??= "";
 
                             var localHashChecks = localHash.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                                           .Select(part => part.Split("::"))
