@@ -200,7 +200,7 @@ namespace OCM.API.Common
         public IEnumerable<Model.ChargePoint> GetPOIList(APIRequestParams filter)
         {
             return GetPOIListAsync(filter).Result;
-            
+
         }
 
         public static IQueryable<OCM.Core.Data.ChargePoint> ApplyQueryFilters(APIRequestParams filter, IQueryable<OCM.Core.Data.ChargePoint> poiList)
@@ -362,7 +362,7 @@ namespace OCM.API.Common
             var filter = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filterParams));
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: GeoManager.StandardSRID);
-          
+
             var stopwatch = Stopwatch.StartNew();
 
             filter.EnableCaching = false;
@@ -421,7 +421,7 @@ namespace OCM.API.Common
                 }
 
                 var poiList = ApplyQueryFilters(filter, dataModel.ChargePoints.AsQueryable());
-               
+
 
                 ///////////
                 //filter by points along polyline or bounding box
@@ -485,7 +485,7 @@ namespace OCM.API.Common
 #endif
                     var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory.GeometryServices).Read(polygonWKT);
                     polygon.SRID = GeoManager.StandardSRID;
-                 
+
                     poiList = poiList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
                 }
 
@@ -669,6 +669,7 @@ namespace OCM.API.Common
             if (cp.AddressInfo == null) return new ValidationResult { IsValid = false, Message = "AddressInfo is required", Item = cp };
 
             if (String.IsNullOrEmpty(cp.AddressInfo.Title)) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Title", Item = cp }; ;
+            if (String.IsNullOrEmpty(cp.AddressInfo.AddressLine1) && String.IsNullOrEmpty(cp.AddressInfo.AddressLine2)) return new ValidationResult { IsValid = false, Message = "AddressInfo requires basic (nearest) address information", Item = cp }; ;
 
             if (cp.AddressInfo.Country == null && cp.AddressInfo.CountryID == null) return new ValidationResult { IsValid = false, Message = "AddressInfo requires a Country", Item = cp };
 
@@ -678,6 +679,12 @@ namespace OCM.API.Common
             double lon = (double)cp.AddressInfo.Longitude;
             if (lat < -90 || lat > 90) return new ValidationResult { IsValid = false, Message = "AddressInfo latitude is out of range", Item = cp };
             if (lon < -180 || lon > 180) return new ValidationResult { IsValid = false, Message = "AddressInfo longitude is out of range", Item = cp }; ;
+
+            // workaround (really requires very accurate country lookups) if country is indicated as australia but lat/long is out of bound then user has left country as default in UI dropdown list
+            if (cp.AddressInfo.CountryID == 18 && !(lon > 110 && lon < 161 && lat > -45.46 && lat < -9))
+            {
+                return new ValidationResult { IsValid = false, Message = "AddressInfo position is not in the selected country (Australia)", Item = cp };
+            }
 
             if (cp.Connections == null || cp.Connections?.Count == 0) return new ValidationResult { IsValid = false, Message = "One or more Connections required", Item = cp };
 

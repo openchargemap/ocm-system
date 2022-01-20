@@ -21,7 +21,7 @@ namespace OCM.API.Common.Model.Extensions
             if (isVerboseMode)
             {
                 a.Country = Model.Extensions.Country.FromDataModel(source.Country);
-                a.CountryID = source.Country.Id;
+                a.CountryID = source.CountryId;
             }
             else
             {
