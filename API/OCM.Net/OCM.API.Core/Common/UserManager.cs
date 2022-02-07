@@ -207,7 +207,7 @@ namespace OCM.API.Common
 
             var reg = dataModel.RegisteredApplicationUsers.Include(r => r.User).FirstOrDefault(u => u.Apikey.ToLower() == apiKey.ToLower());
 
-            if (reg != null && reg.IsEnabled && reg.IsWriteEnabled)
+            if (reg != null && reg.IsEnabled == true && reg.IsWriteEnabled == true)
             {
                 return Model.Extensions.User.FromDataModel(reg.User);
             }

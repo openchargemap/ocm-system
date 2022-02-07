@@ -1,4 +1,4 @@
-﻿Set OCM.Import..Core.Standard as startup project
+﻿Set OCM.Import.Manager.Console as startup project in VS, select OCM.API.Core as the default project in the package manager console
 
 if not installed, Install-Package Microsoft.EntityFrameworkCore.Tools
 
@@ -8,22 +8,41 @@ Run:
 Scaffold-DbContext "Server=(local)\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data -Force -Context OCMEntities
 
 
+Add:
+ public static readonly ILoggerFactory ConsoleLogger = LoggerFactory.Create(builder => { builder.AddConsole(); }); 
+      
+
 OnConfiguring
 
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseLoggerFactory(ConsoleLogger);
-                optionsBuilder.UseLazyLoadingProxies();
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(local)\\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True", x => x.UseNetTopologySuite());
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+        { 
+            if (!optionsBuilder.IsConfigured) 
+            { 
+                optionsBuilder.UseLoggerFactory(ConsoleLogger); 
+                optionsBuilder.UseLazyLoadingProxies(); 
+ 
+                optionsBuilder.UseSqlServer(System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString, x => 
+                { 
+                    x.UseNetTopologySuite(); 
+                    x.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds); 
+                    x.EnableRetryOnFailure(3); 
+ 
+                }); 
+ 
+#if DEBUG 
+                optionsBuilder.EnableDetailedErrors(true); 
+                optionsBuilder.EnableSensitiveDataLogging(true); 
+#endif 
+            } 
+        } 
 
-#if DEBUG
-                optionsBuilder.EnableDetailedErrors(true);
-                optionsBuilder.EnableSensitiveDataLogging(true);
-#endif
-            }
+        --------------
 
-
+        Add:
+        using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Configuration; 
+using System; 
+using System.Configuration; 
 
         -----------
 

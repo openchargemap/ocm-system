@@ -1,4 +1,7 @@
-﻿namespace OCM.Core.Data
+﻿using System;
+using System.Collections.Generic;
+
+namespace OCM.Core.Data
 {
     public partial class SystemConfig
     {

@@ -14,8 +14,8 @@ namespace OCM.API.Common.Model.Extensions
                 UserID = source.UserId,
                 RegisteredApplicationID = source.RegisteredApplicationId,
                 RegisteredApplication = RegisteredApplication.FromDataModel(source.RegisteredApplication, false),
-                IsEnabled = source.IsEnabled,
-                IsWriteEnabled = source.IsWriteEnabled,
+                IsEnabled = source.IsEnabled == true,
+                IsWriteEnabled = source.IsWriteEnabled == true,
                 APIKey = source.Apikey,
                 DateCreated = source.DateCreated,
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OCM.Core.Data
 {
@@ -11,6 +12,9 @@ namespace OCM.Core.Data
 
         public byte Id { get; set; }
         public string Title { get; set; }
+        /// <summary>
+        /// If true, implies positive, if false, implies negative, if null implies neutral
+        /// </summary>
         public bool? IsPositive { get; set; }
         public bool IsAutomatedCheckin { get; set; }
 

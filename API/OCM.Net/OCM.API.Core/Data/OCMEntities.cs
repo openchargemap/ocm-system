@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace OCM.Core.Data
 {
@@ -16,7 +14,6 @@ namespace OCM.Core.Data
         public OCMEntities(DbContextOptions<OCMEntities> options)
             : base(options)
         {
-            
         }
 
         public virtual DbSet<AddressInfo> AddressInfoes { get; set; }
@@ -30,6 +27,7 @@ namespace OCM.Core.Data
         public virtual DbSet<CurrentType> CurrentTypes { get; set; }
         public virtual DbSet<DataProvider> DataProviders { get; set; }
         public virtual DbSet<DataProviderStatusType> DataProviderStatusTypes { get; set; }
+        public virtual DbSet<DataSharingAgreement> DataSharingAgreements { get; set; }
         public virtual DbSet<DataType> DataTypes { get; set; }
         public virtual DbSet<EditQueueItem> EditQueueItems { get; set; }
         public virtual DbSet<EditQueueItemArchive> EditQueueItemArchives { get; set; }
@@ -83,14 +81,13 @@ namespace OCM.Core.Data
             {
                 entity.ToTable("AddressInfo");
 
-                entity.HasIndex(e => e.SpatialPosition)
-                    .HasDatabaseName("IX_AddresLocationSpatial");
+                entity.HasIndex(e => e.SpatialPosition, "IX_AddresLocationSpatial");
 
-                entity.HasIndex(e => new { e.Id, e.CountryId })
-                    .HasDatabaseName("IX_AddressInfo_CountryID>");
+                entity.HasIndex(e => e.CountryId, "IX_AddressInfo_CountryID>")
+                    .HasFillFactor(100);
 
-                entity.HasIndex(e => new { e.Latitude, e.Longitude })
-                    .HasDatabaseName("IX_AddressLocation");
+                entity.HasIndex(e => new { e.Latitude, e.Longitude }, "IX_AddressLocation")
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -109,10 +106,10 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Postcode).HasMaxLength(100);
 
                 entity.Property(e => e.RelatedUrl)
-                    .HasColumnName("RelatedURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("RelatedURL");
 
-                entity.Property(e => e.SpatialPosition).HasComputedColumnSql("([geography]::Point([Latitude],[Longitude],(4326)))");
+                entity.Property(e => e.SpatialPosition).HasComputedColumnSql("([geography]::Point([Latitude],[Longitude],(4326)))", true);
 
                 entity.Property(e => e.StateOrProvince).HasMaxLength(100);
 
@@ -133,9 +130,6 @@ namespace OCM.Core.Data
             {
                 entity.ToTable("AuditLog");
 
-                entity.HasIndex(e => e.UserId)
-                    .HasDatabaseName("NonClusteredIndex-20191009-155512");
-
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.EventDate).HasColumnType("datetime");
@@ -153,17 +147,17 @@ namespace OCM.Core.Data
             {
                 entity.ToTable("ChargePoint");
 
-                entity.HasIndex(e => e.DateLastStatusUpdate);
-
-                entity.HasIndex(e => e.ParentChargePointId)
-                    .HasDatabaseName("IX_ChargePoint_ParentID");
-
-                entity.HasIndex(e => e.Uuid)
-                    .HasDatabaseName("IX_ChargePoint")
+                entity.HasIndex(e => e.Uuid, "IX_ChargePoint")
                     .IsUnique();
 
-                entity.HasIndex(e => new { e.Id, e.AddressInfoId })
-                    .HasDatabaseName("IX_ChargePointAddressID");
+                entity.HasIndex(e => e.AddressInfoId, "IX_ChargePointAddressID")
+                    .HasFillFactor(100);
+
+                entity.HasIndex(e => e.DateLastStatusUpdate, "IX_ChargePoint_DateLastStatusUpdate")
+                    .HasFillFactor(100);
+
+                entity.HasIndex(e => e.ParentChargePointId, "IX_ChargePoint_ParentID")
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -201,8 +195,8 @@ namespace OCM.Core.Data
 
                 entity.Property(e => e.Uuid)
                     .IsRequired()
-                    .HasColumnName("UUID")
                     .HasMaxLength(100)
+                    .HasColumnName("UUID")
                     .HasDefaultValueSql("(newid())");
 
                 entity.HasOne(d => d.AddressInfo)
@@ -247,8 +241,8 @@ namespace OCM.Core.Data
                 entity.ToTable("ChargerType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -280,9 +274,9 @@ namespace OCM.Core.Data
 
                 entity.HasComment("List of equipment types and specifications for a given POI");
 
-                entity.HasIndex(e => e.ChargePointId)
-                    .HasDatabaseName("IX_ConnectionInfoChargePoint")
-                    .IsClustered();
+                entity.HasIndex(e => e.ChargePointId, "IX_ConnectionInfoChargePoint")
+                    .IsClustered()
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -332,9 +326,9 @@ namespace OCM.Core.Data
             {
                 entity.ToTable("ConnectionType");
 
-                entity.HasIndex(e => e.Id)
-                    .HasDatabaseName("IX_ConnectionType_Title")
-                    .IsUnique();
+                entity.HasIndex(e => e.Id, "IX_ConnectionType_Title")
+                    .IsUnique()
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -360,22 +354,23 @@ namespace OCM.Core.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Isocode)
-                    .HasColumnName("ISOCode")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("ISOCode");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(100);
             });
 
+
             modelBuilder.Entity<CurrentType>(entity =>
             {
                 entity.ToTable("CurrentType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Description).HasMaxLength(500);
 
@@ -405,8 +400,8 @@ namespace OCM.Core.Data
                     .HasMaxLength(250);
 
                 entity.Property(e => e.WebsiteUrl)
-                    .HasColumnName("WebsiteURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("WebsiteURL");
 
                 entity.HasOne(d => d.DataProviderStatusType)
                     .WithMany(p => p.DataProviders)
@@ -419,8 +414,8 @@ namespace OCM.Core.Data
                 entity.ToTable("DataProviderStatusType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.IsProviderEnabled)
                     .IsRequired()
@@ -429,6 +424,43 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<DataSharingAgreement>(entity =>
+            {
+                entity.ToTable("DataSharingAgreement");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CompanyName)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.ContactEmail)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.DataFeedType)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.DataFeedUrl)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnName("DataFeedURL");
+
+                entity.Property(e => e.DateAgreed).HasColumnType("datetime");
+
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
+
+                entity.Property(e => e.RepresentativeName)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.WebsiteUrl)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("WebsiteURL");
             });
 
             modelBuilder.Entity<DataType>(entity =>
@@ -444,11 +476,11 @@ namespace OCM.Core.Data
             {
                 entity.ToTable("EditQueueItem");
 
-                entity.HasIndex(e => new { e.IsProcessed, e.DateSubmitted })
-                    .HasDatabaseName("IX_EditQueueFilters");
+                entity.HasIndex(e => e.DateSubmitted, "IX_EditQueueFilters")
+                    .HasFillFactor(100);
 
-                entity.HasIndex(e => new { e.IsProcessed, e.EntityTypeId, e.UserId, e.EntityId })
-                    .HasDatabaseName("IX_UserID_EntityID");
+                entity.HasIndex(e => new { e.UserId, e.EntityId }, "IX_UserID_EntityID")
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -491,8 +523,8 @@ namespace OCM.Core.Data
                 entity.ToTable("EditQueueItemArchive");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.DateProcessed).HasColumnType("smalldatetime");
 
@@ -512,8 +544,8 @@ namespace OCM.Core.Data
                 entity.ToTable("EntityType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -527,9 +559,9 @@ namespace OCM.Core.Data
 
                 entity.ToTable("MediaItem");
 
-                entity.HasIndex(e => e.ChargePointId)
-                    .HasDatabaseName("IX_MediaItem")
-                    .IsClustered();
+                entity.HasIndex(e => e.ChargePointId, "IX_MediaItem")
+                    .IsClustered()
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -546,13 +578,13 @@ namespace OCM.Core.Data
                     .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.ItemThumbnailUrl)
-                    .HasColumnName("ItemThumbnailURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("ItemThumbnailURL");
 
                 entity.Property(e => e.ItemUrl)
                     .IsRequired()
-                    .HasColumnName("ItemURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("ItemURL");
 
                 entity.Property(e => e.MetadataValue).HasMaxLength(1000);
 
@@ -646,8 +678,9 @@ namespace OCM.Core.Data
 
                 entity.HasComment("Holds custom defined meta data values for a given POI");
 
-                entity.HasIndex(e => e.ChargePointId)
-                    .IsClustered();
+                entity.HasIndex(e => e.ChargePointId, "IX_MetadataValue_ChargePointID")
+                    .IsClustered()
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -688,8 +721,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.AddressInfoId).HasColumnName("AddressInfoID");
 
                 entity.Property(e => e.BookingUrl)
-                    .HasColumnName("BookingURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("BookingURL");
 
                 entity.Property(e => e.ContactEmail).HasMaxLength(500);
 
@@ -704,8 +737,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Title).HasMaxLength(250);
 
                 entity.Property(e => e.WebsiteUrl)
-                    .HasColumnName("WebsiteURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("WebsiteURL");
 
                 entity.HasOne(d => d.AddressInfo)
                     .WithMany(p => p.Operators)
@@ -717,30 +750,34 @@ namespace OCM.Core.Data
             {
                 entity.ToTable("RegisteredApplication");
 
-                entity.HasIndex(e => e.AppId)
+                entity.HasIndex(e => e.AppId, "IX_RegisteredApplication_AppID")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.AppId)
                     .IsRequired()
-                    .HasColumnName("AppID")
-                    .HasMaxLength(250);
+                    .HasMaxLength(250)
+                    .HasColumnName("AppID");
 
                 entity.Property(e => e.DateApikeyLastUsed)
-                    .HasColumnName("DateAPIKeyLastUsed")
-                    .HasColumnType("datetime");
+                    .HasColumnType("datetime")
+                    .HasColumnName("DateAPIKeyLastUsed");
+
+                entity.Property(e => e.DateApikeyUpdated)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DateAPIKeyUpdated");
 
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
                 entity.Property(e => e.DeprecatedApikey)
-                    .HasColumnName("DeprecatedAPIKey")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .HasColumnName("DeprecatedAPIKey");
 
                 entity.Property(e => e.PrimaryApikey)
                     .IsRequired()
-                    .HasColumnName("PrimaryAPIKey")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .HasColumnName("PrimaryAPIKey");
 
                 entity.Property(e => e.SharedSecret)
                     .IsRequired()
@@ -754,8 +791,8 @@ namespace OCM.Core.Data
 
                 entity.Property(e => e.WebsiteUrl)
                     .IsRequired()
-                    .HasColumnName("WebsiteURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("WebsiteURL");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.RegisteredApplications)
@@ -772,17 +809,19 @@ namespace OCM.Core.Data
 
                 entity.Property(e => e.Apikey)
                     .IsRequired()
-                    .HasColumnName("APIKey")
-                    .HasMaxLength(100)
+                    .HasMaxLength(255)
                     .IsUnicode(false)
+                    .HasColumnName("APIKey")
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
+                entity.Property(e => e.IsEnabled)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.IsWriteEnabled)
                     .IsRequired()
-                    .HasMaxLength(10)
-                    .IsFixedLength()
                     .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.RegisteredApplicationId).HasColumnName("RegisteredApplicationID");
@@ -800,6 +839,15 @@ namespace OCM.Core.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RegisteredApplicationUser_User");
+            });
+
+            modelBuilder.Entity<SessionState>(entity =>
+            {
+                entity.ToTable("SessionState");
+
+                entity.Property(e => e.Id).HasMaxLength(449);
+
+                entity.Property(e => e.Value).IsRequired();
             });
 
             modelBuilder.Entity<Statistic>(entity =>
@@ -835,8 +883,8 @@ namespace OCM.Core.Data
                 entity.ToTable("StatusType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.IsUserSelectable)
                     .IsRequired()
@@ -852,8 +900,8 @@ namespace OCM.Core.Data
                 entity.ToTable("SubmissionStatusType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -898,8 +946,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Apikey)
-                    .HasColumnName("APIKey")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .HasColumnName("APIKey");
 
                 entity.Property(e => e.CurrentSessionToken).HasMaxLength(100);
 
@@ -932,8 +980,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Username).HasMaxLength(100);
 
                 entity.Property(e => e.WebsiteUrl)
-                    .HasColumnName("WebsiteURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("WebsiteURL");
             });
 
             modelBuilder.Entity<UserChargingRequest>(entity =>
@@ -963,9 +1011,9 @@ namespace OCM.Core.Data
 
                 entity.ToTable("UserComment");
 
-                entity.HasIndex(e => e.ChargePointId)
-                    .HasDatabaseName("IX_UserComment_ChargePoint")
-                    .IsClustered();
+                entity.HasIndex(e => e.ChargePointId, "IX_UserComment_ChargePoint")
+                    .IsClustered()
+                    .HasFillFactor(100);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -980,8 +1028,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.IsActionedByEditor).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.RelatedUrl)
-                    .HasColumnName("RelatedURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("RelatedURL");
 
                 entity.Property(e => e.UserCommentTypeId).HasColumnName("UserCommentTypeID");
 
@@ -1017,8 +1065,8 @@ namespace OCM.Core.Data
                 entity.ToTable("UserCommentType");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -1082,12 +1130,12 @@ namespace OCM.Core.Data
                 entity.Property(e => e.AddressLine2).HasMaxLength(1000);
 
                 entity.Property(e => e.BookingUrl)
-                    .HasColumnName("BookingURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("BookingURL");
 
                 entity.Property(e => e.Connection1Type)
-                    .HasColumnName("Connection1_Type")
-                    .HasMaxLength(200);
+                    .HasMaxLength(200)
+                    .HasColumnName("Connection1_Type");
 
                 entity.Property(e => e.ContactEmail).HasMaxLength(500);
 
@@ -1104,8 +1152,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.DataProviderId).HasColumnName("DataProviderID");
 
                 entity.Property(e => e.DataProviderUrl)
-                    .HasColumnName("DataProviderURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("DataProviderURL");
 
                 entity.Property(e => e.DataProvidersReference).HasMaxLength(100);
 
@@ -1122,9 +1170,9 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Isocode)
-                    .HasColumnName("ISOCode")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("ISOCode");
 
                 entity.Property(e => e.LocationTitle).HasMaxLength(100);
 
@@ -1141,8 +1189,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Postcode).HasMaxLength(100);
 
                 entity.Property(e => e.RelatedUrl)
-                    .HasColumnName("RelatedURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("RelatedURL");
 
                 entity.Property(e => e.StateOrProvince).HasMaxLength(100);
 
@@ -1153,8 +1201,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Usage).HasMaxLength(200);
 
                 entity.Property(e => e.WebsiteUrl)
-                    .HasColumnName("WebsiteURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("WebsiteURL");
             });
 
             modelBuilder.Entity<ViewAllLocation>(entity =>
@@ -1168,8 +1216,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.AddressLine2).HasMaxLength(1000);
 
                 entity.Property(e => e.BookingUrl)
-                    .HasColumnName("BookingURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("BookingURL");
 
                 entity.Property(e => e.ContactEmail).HasMaxLength(500);
 
@@ -1184,8 +1232,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.DataProviderId).HasColumnName("DataProviderID");
 
                 entity.Property(e => e.DataProviderUrl)
-                    .HasColumnName("DataProviderURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("DataProviderURL");
 
                 entity.Property(e => e.DataProvidersReference).HasMaxLength(100);
 
@@ -1202,9 +1250,9 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Isocode)
-                    .HasColumnName("ISOCode")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("ISOCode");
 
                 entity.Property(e => e.LocationTitle)
                     .IsRequired()
@@ -1221,8 +1269,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Postcode).HasMaxLength(100);
 
                 entity.Property(e => e.RelatedUrl)
-                    .HasColumnName("RelatedURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("RelatedURL");
 
                 entity.Property(e => e.StateOrProvince).HasMaxLength(100);
 
@@ -1233,8 +1281,8 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Usage).HasMaxLength(200);
 
                 entity.Property(e => e.WebsiteUrl)
-                    .HasColumnName("WebsiteURL")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("WebsiteURL");
             });
 
             OnModelCreatingPartial(modelBuilder);

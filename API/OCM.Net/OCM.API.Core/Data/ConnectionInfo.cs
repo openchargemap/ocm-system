@@ -1,5 +1,11 @@
-﻿namespace OCM.Core.Data
+﻿using System;
+using System.Collections.Generic;
+
+namespace OCM.Core.Data
 {
+    /// <summary>
+    /// List of equipment types and specifications for a given POI
+    /// </summary>
     public partial class ConnectionInfo
     {
         public int Id { get; set; }
