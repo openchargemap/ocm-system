@@ -256,10 +256,21 @@ namespace OCM.API.Common.Model
                     return this.DateLastConfirmed;
                 }
 
+                // status update
+                if (this.DateLastStatusUpdate != null && this.DateLastStatusUpdate.Value > DateTime.UtcNow.AddMonths(-3))
+                {
+                    return this.DateLastStatusUpdate;
+                }
+
                 //positive comments within last 6 months
                 if (this.UserComments != null && this.UserComments.Any(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true && u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
                 {
                     return this.UserComments.Where(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true).Max(u => u.DateCreated);
+                }
+
+                if (this.MediaItems != null && this.MediaItems.Any(u => u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
+                {
+                    return this.MediaItems.Max(u => u.DateCreated);
                 }
 
                 //created within last 3 months
