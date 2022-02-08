@@ -54,6 +54,33 @@ namespace OCM.API.Common
             }
         }
 
+        public bool SubmitDataAgreement(Model.DataSharingAgreement agreement, int userId)
+        {
+            var dataModel = new Core.Data.OCMEntities();
+
+            var item = new Core.Data.DataSharingAgreement
+            {
+
+                CompanyName = agreement.CompanyName,
+                ContactEmail = agreement.ContactEmail,
+                CountryId = agreement.CountryID,
+                DataFeedType = agreement.DataFeedType,
+                DataFeedUrl = agreement.DataFeedURL,
+                DataLicense = agreement.DataLicense,
+                DistributionLimitations = agreement.DistributionLimitations,
+                RepresentativeName = agreement.RepresentativeName,
+                UserId = userId,
+                WebsiteUrl = agreement.WebsiteURL,
+                DateAgreed = DateTime.UtcNow,
+                DateCreated = DateTime.UtcNow,
+                Comments = agreement.Comments
+            };
+
+            dataModel.DataSharingAgreements.Add(item);
+            dataModel.SaveChanges();
+            return true;
+        }
+
         /// <summary>
         /// Consumers should prepare a new/updated ChargePoint with as much info populated as possible
         /// </summary>
@@ -238,7 +265,7 @@ namespace OCM.API.Common
                 if (!isUpdate)
                 {
                     //new data objects need added to data model before save
-                    if (cpData.AddressInfo != null) dataModel.AddressInfoes.Add(cpData.AddressInfo);
+                    if (cpData.AddressInfo != null) dataModel.AddressInfos.Add(cpData.AddressInfo);
 
                     dataModel.ChargePoints.Add(cpData);
                 }

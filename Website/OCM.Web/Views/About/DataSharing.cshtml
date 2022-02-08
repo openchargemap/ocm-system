@@ -1,0 +1,219 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Html;
+
+@model OCM.API.Common.Model.DataSharingAgreement
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    //   ViewBag.Title = "Share Data with Open Charge Map";
+
+    string username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+
+    string errorMsg = ViewBag.ErrorMessage ?? null;
+    bool submitted = ViewBag.Submitted ?? false;
+
+}
+
+<div class="container">
+    <h1>Sharing Your Data with Open Charge Map</h1>
+    <div class="alert alert-info">
+        We invite all charging networks to promote their charging locations via <em>Open Charge Map</em> by directly supplying EVSE charging station location information to us for distribution. The benefits to your network of sharing your data with us include:
+        <ul>
+            <li>Promoting your network via our API and shared dataset to thousands of apps and services, delivering information to millions of EV drivers.</li>
+            <li>Ensuring we can distribute the latest correct information.</li>
+            <li>Our project goal is to distributing accurate information as widely as possible. We are not commercially related to any charging networks. </li>
+        </ul>
+    </div>
+
+    @if (string.IsNullOrEmpty(username))
+    {
+        <div class="alert alert-warning">
+            To submit a data agreement you must first  @Html.ActionLink("Sign In", "SignIn", "Profile", new { redirectUrl = Url.Action("DataSharing", "About") }, new { @class = "btn btn-primary" })
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(errorMsg))
+    {
+        <div class="alert alert-danger">
+            @errorMsg
+        </div>
+    }
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @if(submitted){
+        <div class="alert alert-success">
+            Thank you. We have received your data sharing agreement. We will contact you soon to confim when we can begin importing your data.
+        </div>
+
+    }
+
+    <div class="border shadow p-3">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>Data Sharing Agreement</legend>
+
+                <p>
+                    Your company,
+                    <strong> @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new {  placeholder = "Your Company Name" } })</strong> agree to provide EVSE charging station related data to the Open Charge Map project under an Open Data license.
+                </p>
+                <p>
+                    The
+                    <em>Open Charge Map</em> project is a community led project with data services and associated technical infrastructure currently operated by Webprofusion Pty Ltd (Australia). This agreement is between your named company and Webprofusion Pty Ltd (acting on behalf of the Open Charge Map project).
+
+                </p>
+
+                <div class="form-group">
+                    <div class="editor-label">
+                    </div>
+                    <div class="editor-field">
+                        <strong>Your company hereby licenses your data (limited to the data present in the provided data feed) under the following Open Data license, which you have <a href="https://creativecommons.org/about/cclicenses/" target="_blank">reviewed and understood</a>:</strong>
+                        <select data-val="true" id="DataLicense" name="DataLicense" class="form-control" style="max-width:300px;">
+                            <option value="CC-0" selected="selected">Creative Commons CC-0</option>
+                            <option value="CC-BY">Creative Commons CC-BY</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.DataLicense)
+                    </div>
+                </div>
+
+                You understand and agree that:
+                <ul>
+
+                    <li>This data will be widely distributed via Open Charge Map to apps and services not controlled by Open Charge Map (some of which may be commercial) and the data may be used for any purpose by consumers of the Open Charge Map dataset.</li>
+
+                    <li>Your company is the owner of this data set and you are authorised to provide this entire data set to Open Charge Map for use and distribution.</li>
+
+                    <li>All data is provided to Open Charge Map without any warranty or liability. You agree that Open Charge Map has no liability for the content of data distributed through this agreement.</li>
+
+                    <li>You understand that once data has been distributed to data consumers by Open Charge Map, Open Charge Map (and its contributors) have no further control over the distributed data and that version of the data may be potentially be perpetually available on the public internet or within other data archives. </li>
+
+                    <li>You may revoke further access to your data feed at any time. You may also terminate this agreement on request, preventing future access to your data.</li>
+
+                    <li>Bulk removal of data from the Open Charge Map data set is at the discretion of the Open Charge Map project administrators.</li>
+
+                    <li>Open Charge Map will decide which parts of your data are used (if any). Your agreement to provide data to Open Charge Map <em>is not an agreement by Open Charge Map</em> to include any of your data (either in part or in full) in the data it distributes.</li>
+                    
+                    <li>Open Charge Map will charge a small monthly maintenance fee via a subscription. This is to fund the continued hosting and expansion of our service. A subscription link will be provided to you.</li>
+
+                </ul>
+
+                <div class="form-group">
+
+                    <div class="editor-field">
+                        <input type="radio" name="limitations" value="" checked="checked" /> You do not require any of the data fields or information to be excluded from distribution.
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="editor-field">
+                        <input type="radio" name="limitations" value="yes" />
+                        You require the following information to be omitted from distribution:  <br>
+                        @Html.TextAreaFor(model => model.DistributionLimitations, new {@class="form-control", htmlAttributes = new { placeholder = "Specify data to be excluded" } })
+                    </div>
+                </div>
+
+                <p>
+                    I, @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new { placeholder = "Your Name" } }), am authorised by the named company to make this agreement and hereby agree to these terms and conditions.
+                </p>
+                <p>
+                    <em>This agreement text last revised : 2022/02/07</em>
+                </p>
+
+                <h3>Required Information</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group" data-editormode="core">
+                            <div data-localize="ocm.details.location.country">
+                                @Html.LabelFor(model => model.CountryID, "Country")
+                            </div>
+                            <div>
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList)
+                                @Html.ValidationMessageFor(model => model.CountryID)
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="editor-label">
+                                Company Website URL
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.WebsiteURL)
+                                @Html.ValidationMessageFor(model => model.WebsiteURL)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="editor-label">
+                                Contact Email
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.ContactEmail)
+                                @Html.ValidationMessageFor(model => model.ContactEmail)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h3>Data Feed Details</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="editor-label">
+                                Data Feed Type
+                            </div>
+                            <div class="editor-field">
+                                <select data-val="true" id="DataFeedType" name="DataFeedType" class="form-control">
+                                    <option value="OCPI 2.2.x" selected="selected">OCPI 2.2.x</option>
+                                    <option value="OCPI 2.1.x" selected="selected">OCPI 2.1.x</option>
+                                    <option value="Other">Other (to be agreed)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="editor-label">
+                                Data Feed URL
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.DataFeedURL)
+                                @Html.ValidationMessageFor(model => model.DataFeedURL)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="editor-label">
+                                Data Feed Credentials
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.Credentials)
+                                @Html.ValidationMessageFor(model => model.Credentials)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!--@Html.HiddenFor(model => model.ID)-->
+                @if (!string.IsNullOrEmpty(username) && !submitted)
+                {
+                    <p>
+                        <input type="submit" value="Submit Agreement" class="btn btn-primary" />
+                    </p>
+                }
+            </fieldset>
+
+        }
+    </div>
+
+</div>
