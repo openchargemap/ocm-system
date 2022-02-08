@@ -7,7 +7,7 @@ namespace OCM.Core.Data
     {
         public ChargePoint()
         {
-            ConnectionInfoes = new HashSet<ConnectionInfo>();
+            ConnectionInfos = new HashSet<ConnectionInfo>();
             InverseParentChargePoint = new HashSet<ChargePoint>();
             MediaItems = new HashSet<MediaItem>();
             MetadataValues = new HashSet<MetadataValue>();
@@ -42,7 +42,7 @@ namespace OCM.Core.Data
         public virtual StatusType StatusType { get; set; }
         public virtual SubmissionStatusType SubmissionStatusType { get; set; }
         public virtual UsageType UsageType { get; set; }
-        public virtual ICollection<ConnectionInfo> ConnectionInfoes { get; set; }
+        public virtual ICollection<ConnectionInfo> ConnectionInfos { get; set; }
         public virtual ICollection<ChargePoint> InverseParentChargePoint { get; set; }
         public virtual ICollection<MediaItem> MediaItems { get; set; }
         public virtual ICollection<MetadataValue> MetadataValues { get; set; }

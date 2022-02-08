@@ -7,7 +7,7 @@ namespace OCM.Core.Data
     {
         public ConnectionType()
         {
-            ConnectionInfoes = new HashSet<ConnectionInfo>();
+            ConnectionInfos = new HashSet<ConnectionInfo>();
         }
 
         public int Id { get; set; }
@@ -16,6 +16,6 @@ namespace OCM.Core.Data
         public bool? IsDiscontinued { get; set; }
         public bool? IsObsolete { get; set; }
 
-        public virtual ICollection<ConnectionInfo> ConnectionInfoes { get; set; }
+        public virtual ICollection<ConnectionInfo> ConnectionInfos { get; set; }
     }
 }

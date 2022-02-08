@@ -8,6 +8,7 @@ namespace OCM.Core.Data
         public User()
         {
             AuditLogs = new HashSet<AuditLog>();
+            DataSharingAgreements = new HashSet<DataSharingAgreement>();
             EditQueueItemProcessedByUsers = new HashSet<EditQueueItem>();
             EditQueueItemUsers = new HashSet<EditQueueItem>();
             MediaItems = new HashSet<MediaItem>();
@@ -44,6 +45,7 @@ namespace OCM.Core.Data
         public bool IsReadOnly { get; set; }
 
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
+        public virtual ICollection<DataSharingAgreement> DataSharingAgreements { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItemProcessedByUsers { get; set; }
         public virtual ICollection<EditQueueItem> EditQueueItemUsers { get; set; }
         public virtual ICollection<MediaItem> MediaItems { get; set; }

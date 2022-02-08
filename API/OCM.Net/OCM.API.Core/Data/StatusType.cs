@@ -8,7 +8,7 @@ namespace OCM.Core.Data
         public StatusType()
         {
             ChargePoints = new HashSet<ChargePoint>();
-            ConnectionInfoes = new HashSet<ConnectionInfo>();
+            ConnectionInfos = new HashSet<ConnectionInfo>();
         }
 
         public int Id { get; set; }
@@ -17,6 +17,6 @@ namespace OCM.Core.Data
         public bool? IsUserSelectable { get; set; }
 
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
-        public virtual ICollection<ConnectionInfo> ConnectionInfoes { get; set; }
+        public virtual ICollection<ConnectionInfo> ConnectionInfos { get; set; }
     }
 }

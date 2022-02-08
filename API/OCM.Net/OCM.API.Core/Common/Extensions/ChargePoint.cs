@@ -97,7 +97,7 @@ namespace OCM.API.Common.Model.Extensions
             }
 
             poi.Connections = new List<Model.ConnectionInfo>();
-            foreach (var conn in source.ConnectionInfoes)
+            foreach (var conn in source.ConnectionInfos)
             {
                 poi.Connections.Add(ConnectionInfo.FromDataModel(conn, isVerboseMode, refData));
             }

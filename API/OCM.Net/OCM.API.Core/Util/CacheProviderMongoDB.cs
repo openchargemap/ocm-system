@@ -275,7 +275,7 @@ namespace OCM.Core.Data
             IQueryable<Data.ChargePoint> dataList = dataModel.ChargePoints
                  .Include(a1 => a1.AddressInfo)
                       .ThenInclude(a => a.Country)
-                 .Include(a1 => a1.ConnectionInfoes)
+                 .Include(a1 => a1.ConnectionInfos)
                  .Include(a1 => a1.MetadataValues)
                       .ThenInclude(m => m.MetadataFieldOption)
                  .Include(a1 => a1.UserComments)

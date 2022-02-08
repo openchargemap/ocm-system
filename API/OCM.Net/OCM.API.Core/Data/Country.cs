@@ -7,7 +7,8 @@ namespace OCM.Core.Data
     {
         public Country()
         {
-            AddressInfoes = new HashSet<AddressInfo>();
+            AddressInfos = new HashSet<AddressInfo>();
+            DataSharingAgreements = new HashSet<DataSharingAgreement>();
             Statistics = new HashSet<Statistic>();
             UserSubscriptions = new HashSet<UserSubscription>();
         }
@@ -17,7 +18,8 @@ namespace OCM.Core.Data
         public string Isocode { get; set; }
         public string ContinentCode { get; set; }
 
-        public virtual ICollection<AddressInfo> AddressInfoes { get; set; }
+        public virtual ICollection<AddressInfo> AddressInfos { get; set; }
+        public virtual ICollection<DataSharingAgreement> DataSharingAgreements { get; set; }
         public virtual ICollection<Statistic> Statistics { get; set; }
         public virtual ICollection<UserSubscription> UserSubscriptions { get; set; }
     }

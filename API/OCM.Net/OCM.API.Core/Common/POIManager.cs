@@ -322,27 +322,27 @@ namespace OCM.API.Common
             //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
             if (filter.ConnectionType != null)
             {
-                poiList = poiList.Where(c => c.ConnectionInfoes.Any(conn => conn.ConnectionType.Title == filter.ConnectionType));
+                poiList = poiList.Where(c => c.ConnectionInfos.Any(conn => conn.ConnectionType.Title == filter.ConnectionType));
             }
 
             if (filter.MinPowerKW != null)
             {
-                poiList = poiList.Where(c => c.ConnectionInfoes.Any(conn => conn.PowerKw >= filter.MinPowerKW));
+                poiList = poiList.Where(c => c.ConnectionInfos.Any(conn => conn.PowerKw >= filter.MinPowerKW));
             }
 
             if (filter.MaxPowerKW != null)
             {
-                poiList = poiList.Where(c => c.ConnectionInfoes.Any(conn => conn.PowerKw <= filter.MaxPowerKW));
+                poiList = poiList.Where(c => c.ConnectionInfos.Any(conn => conn.PowerKw <= filter.MaxPowerKW));
             }
 
             if (filter.ConnectionTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.ConnectionInfoes.Any(conn => conn.ConnectionTypeId != null && filter.ConnectionTypeIDs.Contains((int)conn.ConnectionTypeId)));
+                poiList = poiList.Where(c => c.ConnectionInfos.Any(conn => conn.ConnectionTypeId != null && filter.ConnectionTypeIDs.Contains((int)conn.ConnectionTypeId)));
             }
 
             if (filter.LevelIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.ConnectionInfoes.Any(conn => conn.LevelTypeId != null && filter.LevelIDs.Contains((int)conn.LevelTypeId)));
+                poiList = poiList.Where(c => c.ConnectionInfos.Any(conn => conn.LevelTypeId != null && filter.LevelIDs.Contains((int)conn.LevelTypeId)));
             }
 
             poiList = poiList.Where(c => c.AddressInfo != null);
@@ -892,7 +892,7 @@ namespace OCM.API.Common
                     .Include(a1 => a1.StatusType)
                     .Include(a1 => a1.AddressInfo)
                         .ThenInclude(a => a.Country)
-                    .Include(a1 => a1.ConnectionInfoes)
+                    .Include(a1 => a1.ConnectionInfos)
                     .Include(a1 => a1.MetadataValues)
                         .ThenInclude(m => m.MetadataFieldOption)
                     .Include(a1 => a1.UserComments)
@@ -1035,7 +1035,7 @@ namespace OCM.API.Common
                     var connectionInfo = new Core.Data.ConnectionInfo();
 
                     //edit existing, if required
-                    if (c.ID > 0) connectionInfo = dataModel.ConnectionInfoes.FirstOrDefault(con => con.Id == c.ID && con.ChargePointId == dataPOI.Id);
+                    if (c.ID > 0) connectionInfo = dataModel.ConnectionInfos.FirstOrDefault(con => con.Id == c.ID && con.ChargePointId == dataPOI.Id);
                     if (connectionInfo == null)
                     {
                         //connection is stale info, start new
@@ -1149,9 +1149,9 @@ namespace OCM.API.Common
                     if (addConnection)
                     {
                         //if adding a new connection (not an update) add to model
-                        if (c.ID <= 0 || dataPOI.ConnectionInfoes.Count == 0)
+                        if (c.ID <= 0 || dataPOI.ConnectionInfos.Count == 0)
                         {
-                            dataPOI.ConnectionInfoes.Add(connectionInfo);
+                            dataPOI.ConnectionInfos.Add(connectionInfo);
                         }
                         //track final list of connections being added/updated  -- will then be used to delete by difference
                         updateConnectionList.Add(connectionInfo);
@@ -1170,9 +1170,9 @@ namespace OCM.API.Common
             }
 
             //find existing connections not in updated/added list, add to delete
-            if (dataPOI.ConnectionInfoes != null)
+            if (dataPOI.ConnectionInfos != null)
             {
-                foreach (var con in dataPOI.ConnectionInfoes)
+                foreach (var con in dataPOI.ConnectionInfos)
                 {
                     if (!updateConnectionList.Any(i => i.Id == con.Id))
                     {
@@ -1189,8 +1189,8 @@ namespace OCM.API.Common
             {
                 if (item.Id > 0)
                 {
-                    //dataModel.ConnectionInfoes.Remove(item);
-                    dataPOI.ConnectionInfoes.Remove(item);
+                    //dataModel.ConnectionInfos.Remove(item);
+                    dataPOI.ConnectionInfos.Remove(item);
                 }
             }
 

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace OCM.Core.Data
@@ -16,12 +18,12 @@ namespace OCM.Core.Data
         {
         }
 
-        public virtual DbSet<AddressInfo> AddressInfoes { get; set; }
+        public virtual DbSet<AddressInfo> AddressInfos { get; set; }
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
         public virtual DbSet<ChargePoint> ChargePoints { get; set; }
         public virtual DbSet<ChargerType> ChargerTypes { get; set; }
         public virtual DbSet<CheckinStatusType> CheckinStatusTypes { get; set; }
-        public virtual DbSet<ConnectionInfo> ConnectionInfoes { get; set; }
+        public virtual DbSet<ConnectionInfo> ConnectionInfos { get; set; }
         public virtual DbSet<ConnectionType> ConnectionTypes { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<CurrentType> CurrentTypes { get; set; }
@@ -40,6 +42,7 @@ namespace OCM.Core.Data
         public virtual DbSet<Operator> Operators { get; set; }
         public virtual DbSet<RegisteredApplication> RegisteredApplications { get; set; }
         public virtual DbSet<RegisteredApplicationUser> RegisteredApplicationUsers { get; set; }
+        public virtual DbSet<SessionState> SessionStates { get; set; }
         public virtual DbSet<Statistic> Statistics { get; set; }
         public virtual DbSet<StatusType> StatusTypes { get; set; }
         public virtual DbSet<SubmissionStatusType> SubmissionStatusTypes { get; set; }
@@ -120,7 +123,7 @@ namespace OCM.Core.Data
                 entity.Property(e => e.Town).HasMaxLength(100);
 
                 entity.HasOne(d => d.Country)
-                    .WithMany(p => p.AddressInfoes)
+                    .WithMany(p => p.AddressInfos)
                     .HasForeignKey(d => d.CountryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AddressInfo_Country");
@@ -295,29 +298,29 @@ namespace OCM.Core.Data
                 entity.Property(e => e.StatusTypeId).HasColumnName("StatusTypeID");
 
                 entity.HasOne(d => d.ChargePoint)
-                    .WithMany(p => p.ConnectionInfoes)
+                    .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.ChargePointId)
-                    .OnDelete(DeleteBehavior.ClientCascade)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConnectionInfo_ChargePoint");
 
                 entity.HasOne(d => d.ConnectionType)
-                    .WithMany(p => p.ConnectionInfoes)
+                    .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.ConnectionTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConnectionInfo_ConnectorType");
 
                 entity.HasOne(d => d.CurrentType)
-                    .WithMany(p => p.ConnectionInfoes)
+                    .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.CurrentTypeId)
                     .HasConstraintName("FK_ConnectionInfo_CurrentType");
 
                 entity.HasOne(d => d.LevelType)
-                    .WithMany(p => p.ConnectionInfoes)
+                    .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.LevelTypeId)
                     .HasConstraintName("FK_ConnectionInfo_ChargerType");
 
                 entity.HasOne(d => d.StatusType)
-                    .WithMany(p => p.ConnectionInfoes)
+                    .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.StatusTypeId)
                     .HasConstraintName("FK_ConnectionInfo_StatusType");
             });
@@ -362,7 +365,6 @@ namespace OCM.Core.Data
                     .IsRequired()
                     .HasMaxLength(100);
             });
-
 
             modelBuilder.Entity<CurrentType>(entity =>
             {
@@ -434,11 +436,14 @@ namespace OCM.Core.Data
 
                 entity.Property(e => e.CompanyName)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(255)
+                    .HasComment("Organisation making agreement");
 
                 entity.Property(e => e.ContactEmail)
                     .IsRequired()
                     .HasMaxLength(255);
+
+                entity.Property(e => e.CountryId).HasColumnName("CountryID");
 
                 entity.Property(e => e.DataFeedType)
                     .IsRequired()
@@ -449,18 +454,42 @@ namespace OCM.Core.Data
                     .HasMaxLength(500)
                     .HasColumnName("DataFeedURL");
 
+                entity.Property(e => e.DataLicense).HasMaxLength(255);
+
                 entity.Property(e => e.DateAgreed).HasColumnType("datetime");
+
+                entity.Property(e => e.DateAgreementTerminated).HasColumnType("datetime");
 
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
+                entity.Property(e => e.DistributionLimitations).HasMaxLength(500);
+
                 entity.Property(e => e.RepresentativeName)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(255)
+                    .HasComment("Name of person authorised by organisation to make agreement");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasComment("OCM User ID of user who completed agreement");
 
                 entity.Property(e => e.WebsiteUrl)
                     .IsRequired()
                     .HasMaxLength(255)
-                    .HasColumnName("WebsiteURL");
+                    .HasColumnName("WebsiteURL")
+                    .HasComment("Website of data provider");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.DataSharingAgreements)
+                    .HasForeignKey(d => d.CountryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DataSharingAgreement_Country");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.DataSharingAgreements)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DataSharingAgreement_User");
             });
 
             modelBuilder.Entity<DataType>(entity =>

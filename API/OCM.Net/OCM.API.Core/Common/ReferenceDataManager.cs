@@ -124,13 +124,13 @@ namespace OCM.API.Common
                 // fetch connection types used in the list of given countries, with count of usage in the set
                 var usedConnectionTypes = dataModel.ConnectionTypes
                     .Distinct()
-                    .Where(c => c.ConnectionInfoes.Any(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) &&
+                    .Where(c => c.ConnectionInfos.Any(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) &&
                             (ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published
                                 || ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)))
                     .Select(s => new
                     {
                         connectionType = s,
-                        count = s.ConnectionInfoes.Where(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) &&
+                        count = s.ConnectionInfos.Where(ci => filter.CountryIDs.Contains(ci.ChargePoint.AddressInfo.CountryId) &&
                         (ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published
                                 || ci.ChargePoint.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published)).Count()
                     });

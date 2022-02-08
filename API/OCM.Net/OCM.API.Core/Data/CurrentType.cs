@@ -7,13 +7,13 @@ namespace OCM.Core.Data
     {
         public CurrentType()
         {
-            ConnectionInfoes = new HashSet<ConnectionInfo>();
+            ConnectionInfos = new HashSet<ConnectionInfo>();
         }
 
         public short Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<ConnectionInfo> ConnectionInfoes { get; set; }
+        public virtual ICollection<ConnectionInfo> ConnectionInfos { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace OCM.Core.Data
     {
         public ChargerType()
         {
-            ConnectionInfoes = new HashSet<ConnectionInfo>();
+            ConnectionInfos = new HashSet<ConnectionInfo>();
         }
 
         public int Id { get; set; }
@@ -16,6 +16,6 @@ namespace OCM.Core.Data
         public bool IsFastChargeCapable { get; set; }
         public int? DisplayOrder { get; set; }
 
-        public virtual ICollection<ConnectionInfo> ConnectionInfoes { get; set; }
+        public virtual ICollection<ConnectionInfo> ConnectionInfos { get; set; }
     }
 }
