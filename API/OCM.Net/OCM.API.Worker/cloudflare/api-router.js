@@ -8,15 +8,77 @@
  * */
 
 const enableAPIKeyRules = true;
-const enableLogging = true;
-const enablePrimaryForReads = true;
+const enableMirrorChecks = false;
+const enableDebug = false;
+const enableLogging = true; // if true, API requests are logged to central log API
+const enablePrimaryForReads = true; // if true, primary API server is skipped for reads
 const requireAPIKeyForAllRequests = true;
 const logTimeoutMS = 2000;
 
-addEventListener('fetch', event => {
+const corsHeaders = {
+
+    "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+    "Access-Control-Max-Age": "86400",
+}
+
+function handleOptions(request) {
+    // Make sure the necessary headers are present
+    // for this to be a valid pre-flight request
+    let headers = request.headers
+    if (
+        headers.get("Origin") !== null &&
+        headers.get("Access-Control-Request-Method") !== null &&
+        headers.get("Access-Control-Request-Headers") !== null
+    ) {
+        // Handle CORS pre-flight request.
+        // If you want to check or reject the requested method + headers
+        // you can do that here.
+        let respHeaders = {
+            ...corsHeaders,
+            "Access-Control-Allow-Origin": headers.get("Origin") ?? "*",
+            "Access-Control-Allow-Credentials": "true",
+            // Allow all future content Request headers to go back to browser
+            // such as Authorization (Bearer) or X-Client-Name-Version
+            "Access-Control-Allow-Headers": request.headers.get("Access-Control-Request-Headers"),
+        }
+        return new Response(null, {
+            headers: respHeaders,
+        })
+    }
+    else {
+        // Handle standard OPTIONS request.
+        // If you want to allow other HTTP Methods, you can do that here.
+        return new Response(null, {
+            headers: {
+                Allow: "GET, HEAD, POST, OPTIONS",
+            },
+        })
+    }
+}
+
+addEventListener('fetch', async event => {
+
+    // handle basic OPTION queries     
+    if (event.request.method == "OPTIONS") {
+
+        // Handle CORS preflight requests
+        return event.respondWith(handleOptions(event.request))
+    }
+
+
+    // disallow robots
+    if (event.request.url.toString().indexOf("/robots.txt") > -1) {
+        return event.respondWith(
+            new Response("user-agent: * \r\ndisallow: /", {
+                headers: {
+                    "content-type": "text/plain"
+                }
+            })
+        )
+    }
 
     // pass through .well-known for acme http validation on main server
-    console.log(event.request.url);
+
     if (event.request.url.toString().indexOf("/.well-known/") > -1) {
 
         let url = new URL(event.request.url);
@@ -28,10 +90,10 @@ addEventListener('fetch', event => {
             headers: event.request.headers
         });
 
-        event.respondWith(fetch(modifiedRequest));
-        return;
+        return event.respondWith(fetch(modifiedRequest));
     }
 
+    // check for banned IPs or banned User Agents
     const clientIP = event.request.headers.get('cf-connecting-ip');
     const userAgent = event.request.headers.get('user-agent');
 
@@ -48,8 +110,7 @@ addEventListener('fetch', event => {
         && userAgent
         && (userAgent.indexOf("python-requests") > -1 ||
             userAgent.indexOf("Java/1.8.0_271") > -1)) {
-        event.respondWith(rejectRequest(event, "Generic user agents must use an API Key. API Keys are mandatory and this rule will be enforced soon. https://openchargemap.org/site/develop/api"));
-        return;
+        return event.respondWith(rejectRequest(event, "Generic user agents must use an API Key. API Keys are mandatory and this rule will be enforced soon. https://openchargemap.org/site/develop/api"));
     }
 
     if (enableAPIKeyRules) {
@@ -65,7 +126,7 @@ addEventListener('fetch', event => {
             event.respondWith(rejectRequest(event));
 
         } else {
-            console.log("Passing request with API Key or key not required:" + apiKey);
+            if (enableDebug) console.log("Passing request with API Key or key not required:" + apiKey);
 
             //respond
             event.respondWith(fetchAndApply(event, apiKey, status));
@@ -147,20 +208,22 @@ async function fetchAndApply(event, apiKey, status) {
     }
 
     // get list of mirrors from KV store and append to our working list
-    let kv_mirrors = await OCM_CONFIG_KV.get("API_MIRRORS", "json");
-    mirrorHosts.push(...kv_mirrors);
+    if (enableMirrorChecks) {
+        let kv_mirrors = await OCM_CONFIG_KV.get("API_MIRRORS", "json");
+        mirrorHosts.push(...kv_mirrors);
 
-    let kv_skipped_mirrors = await OCM_CONFIG_KV.get("API_SKIPPED_MIRRORS", "json");
+        let kv_skipped_mirrors = await OCM_CONFIG_KV.get("API_SKIPPED_MIRRORS", "json");
 
-    // remove any mirrors temporarily not in use.
-    if (kv_skipped_mirrors != null) {
-        console.log("Skipped Mirrors:");
-        console.log(kv_skipped_mirrors);
-        mirrorHosts = mirrorHosts.filter(k => !kv_skipped_mirrors.includes(k))
+        // remove any mirrors temporarily not in use.
+        if (kv_skipped_mirrors != null && kv_mirrors.length > 1) {
+            if (enableDebug) console.log("Skipped Mirrors:");
+            if (enableDebug) console.log(kv_skipped_mirrors);
+            mirrorHosts = mirrorHosts.filter(k => !kv_skipped_mirrors.includes(k))
+        }
     }
 
-    console.log("Viable mirrors:");
-    console.log(mirrorHosts);
+    if (enableDebug) console.log("Viable mirrors:");
+    if (enableDebug) console.log(mirrorHosts);
 
     ////////////////
 
@@ -168,13 +231,11 @@ async function fetchAndApply(event, apiKey, status) {
     // redirect request to backend api
     let url = new URL(event.request.url);
 
-    console.log(url.href);
-    console.log(event.request.method);
-
     if (
         event.request.method != "POST" &&
         !url.href.includes("/geocode") &&
         !url.href.includes("/map") &&
+        !url.href.includes("/openapi") &&
         !url.href.includes("/.well-known")
     ) {
 
@@ -223,7 +284,9 @@ async function fetchAndApply(event, apiKey, status) {
                 if (response.headers.get('Access-Control-Allow-Origin') === null) {
                     response.headers.append("Access-Control-Allow-Origin", "*");
                 }
-
+                if (response.headers.get('Access-Control-Allow-Credentials') === null) {
+                    response.headers.append("Access-Control-Allow-Credentials", "true");
+                }
                 if (enableCache) event.waitUntil(cache.put(event.request, response.clone()));
 
                 return response;
@@ -253,12 +316,12 @@ async function fetchAndApply(event, apiKey, status) {
 
         // POSTs (and certain GETs) only go to primary API
 
-        console.log("Using primary API for request. " + url.origin);
+        if (enableDebug) console.log("Using primary API for request. " + url.origin);
 
         if (event.request.method == "POST") {
             if (ip_key != null) {
                 await OCM_CONFIG_KV.put(ip_key, "true", { expirationTtl: 60 * 60 * 12 });
-                console.log("Logged user as an editor:" + ip_key);
+                if (enableDebug) console.log("Logged user as an editor:" + ip_key);
             }
         }
 
@@ -292,23 +355,23 @@ function getAPIKey(request) {
 
     let apiKey = getParameterByName(request.url, "key");
 
-    console.log("API Key From URL:" + apiKey);
+    //console.log("API Key From URL:" + apiKey);
 
     if (apiKey == null || apiKey == '') {
         apiKey = request.headers.get('X-API-Key');
 
-        console.log("API Key From Uppercase header:" + apiKey);
+        if (enableDebug) console.log("API Key From Uppercase header:" + apiKey);
 
     }
 
     if (apiKey == null || apiKey == '') {
         apiKey = request.headers.get('x-api-key');
 
-        console.log("API Key From Lowercase header:" + apiKey);
+        if (enableDebug) console.log("API Key From Lowercase header:" + apiKey);
     }
 
 
-    if (apiKey == '') apiKey = null;
+    if (apiKey == '' || apiKey == 'test' || apiKey == 'null') apiKey = null;
     return apiKey;
 }
 

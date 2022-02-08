@@ -888,6 +888,11 @@ namespace OCM.API
                 context.Response.Headers.TryAdd("Access-Control-Allow-Headers", context.Request.Headers["Access-Control-Request-Headers"]);
             }
 
+
+
+            context.Response.Headers.TryAdd("Access-Control-Allow-Credentials", "true");
+
+
             if (context.Request.Method == "OPTIONS")
             {
                 context.Response.StatusCode = 200;
