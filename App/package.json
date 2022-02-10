@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "moment": "*",
-    "node-sass": "^4.12.0"
+    "node-sass": "^7.0.0"
   },
   "devDependencies": {
     "http-server": "^0.8.0",
