@@ -483,10 +483,17 @@ namespace OCM.API.Common
 #if DEBUG
                     System.Diagnostics.Debug.WriteLine(polygonWKT);
 #endif
-                    var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory.GeometryServices).Read(polygonWKT);
-                    polygon.SRID = GeoManager.StandardSRID;
+                    try
+                    {
+                        var polygon = new NetTopologySuite.IO.WKTReader(geometryFactory.GeometryServices).Read(polygonWKT);
+                        polygon.SRID = GeoManager.StandardSRID;
 
-                    poiList = poiList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
+                        poiList = poiList.Where(q => q.AddressInfo.SpatialPosition.Intersects(polygon));
+                    }
+                    catch (ArgumentException)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Search Polygon is invalid");
+                    }
                 }
 
 
