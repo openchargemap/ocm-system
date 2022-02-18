@@ -62,7 +62,7 @@ namespace OCM.API.Common
         public List<Model.UserSubscription> GetUserSubscriptions(int userId)
         {
             var dataModel = new OCM.Core.Data.OCMEntities();
-            var list = dataModel.UserSubscriptions.Where(u => u.UserId == userId).AsNoTracking();
+            var list = dataModel.UserSubscriptions.Include(c=>c.Country).Where(u => u.UserId == userId).AsNoTracking();
 
             var results = new List<Model.UserSubscription>();
 
