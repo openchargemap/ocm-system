@@ -6,7 +6,8 @@ if not installed, Install-Package Microsoft.EntityFrameworkCore.Tools
 Run:
 Scaffold-DbContext "Server=(local)\SQLEXPRESS;Database=OCM_Live;Trusted_Connection=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data -Force -Context OCMEntities
 
-
+Edit OCMEntities.cs
+----------------
 Add:
  public static readonly ILoggerFactory ConsoleLogger = LoggerFactory.Create(builder => { builder.AddConsole(); }); 
       
@@ -45,8 +46,8 @@ using Microsoft.Extensions.Logging;
         -----------
 
         For ConnectinInfo the delete should be set to cascade, this is to allow removal of connections/equipment:
-         entity.HasOne(d => d.ChargePoint)
+                 entity.HasOne(d => d.ChargePoint)
                     .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.ChargePointId)
-                    .OnDelete(DeleteBehavior.ClientCascade)
+                  **  .OnDelete(DeleteBehavior.ClientCascade) **
                     .HasConstraintName("FK_ConnectionInfo_ChargePoint");

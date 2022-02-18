@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace OCM.Core.Data
@@ -192,7 +190,7 @@ namespace OCM.Core.Data
 
                 entity.Property(e => e.SubmissionStatusTypeId).HasColumnName("SubmissionStatusTypeID");
 
-                entity.Property(e => e.UsageCost).HasMaxLength(200);
+                entity.Property(e => e.UsageCost).HasMaxLength(500);
 
                 entity.Property(e => e.UsageTypeId).HasColumnName("UsageTypeID");
 
@@ -300,7 +298,7 @@ namespace OCM.Core.Data
                 entity.HasOne(d => d.ChargePoint)
                     .WithMany(p => p.ConnectionInfos)
                     .HasForeignKey(d => d.ChargePointId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("FK_ConnectionInfo_ChargePoint");
 
                 entity.HasOne(d => d.ConnectionType)
@@ -819,7 +817,6 @@ namespace OCM.Core.Data
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.WebsiteUrl)
-                    .IsRequired()
                     .HasMaxLength(500)
                     .HasColumnName("WebsiteURL");
 
