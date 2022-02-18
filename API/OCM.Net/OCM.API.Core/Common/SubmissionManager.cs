@@ -78,6 +78,13 @@ namespace OCM.API.Common
 
             dataModel.DataSharingAgreements.Add(item);
             dataModel.SaveChanges();
+
+            try
+            {
+                SendContactUsMessage(item.RepresentativeName, item.ContactEmail, $"A new data sharing agreement has been submitted for {item.CompanyName}");
+            }
+            catch { }
+
             return true;
         }
 
