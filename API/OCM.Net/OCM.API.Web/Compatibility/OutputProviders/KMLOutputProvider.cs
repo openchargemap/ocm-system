@@ -75,7 +75,7 @@ namespace OCM.API.OutputProviders
             xml.WriteEndElement();
             if (this.SelectedKMLVersion == KMLVersion.V2) xml.WriteEndElement(); //</kml>
             xml.WriteEndDocument();
-            await xml.FlushAsync();
+            xml.Flush();
             //xml.Close();
         }
 
