@@ -127,9 +127,9 @@ namespace OCM.API.InputProviders
 
                 var tempFiles = new List<string>();
 
-                string tempFolder = uploadPath + "\\";
+                string tempFolder = uploadPath;
 
-                string tmpFileName = tempFolder + filePrefix + submission.ChargePointID;
+                string tmpFileName = Path.Join(tempFolder,  filePrefix + submission.ChargePointID);
                 if (submission.ImageDataBase64.StartsWith("data:image/jpeg")) tmpFileName += ".jpg";
                 if (submission.ImageDataBase64.StartsWith("data:image/png")) tmpFileName += ".png";
                 if (submission.ImageDataBase64.StartsWith("data:image/tiff")) tmpFileName += ".tiff";

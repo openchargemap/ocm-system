@@ -10,6 +10,7 @@ using OCM.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace OCM.API
@@ -321,7 +322,7 @@ namespace OCM.API
 
                     try
                     {
-                        var tempPath = System.IO.Path.GetTempPath() + "\\_ocm";
+                        var tempPath = Path.Join(System.IO.Path.GetTempPath(), "_ocm");
                         if (!System.IO.Directory.Exists(tempPath))
                         {
                             System.IO.Directory.CreateDirectory(tempPath);

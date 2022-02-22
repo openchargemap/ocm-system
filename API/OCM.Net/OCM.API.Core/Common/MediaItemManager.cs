@@ -1,10 +1,11 @@
-﻿using OCM.Core.Data;
+using OCM.Core.Data;
 using OCM.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,8 @@ namespace OCM.API.Common
             if (urls == null)
             {
                 //failed to upload, preserve submission data
-                System.IO.File.WriteAllText(tempFolder + "\\OCM_" + chargePointId + "_" + (DateTime.Now.ToFileTimeUtc().ToString()) + ".json", "{userId:" + userId + ",comment:\"" + comment + "\"}");
+                var outputPath = Path.Join(tempFolder, "OCM_" + chargePointId + "_" + (DateTime.Now.ToFileTimeUtc().ToString()) + ".json");
+                System.IO.File.WriteAllText(outputPath, "{userId:" + userId + ",comment:\"" + comment + "\"}");
                 return null;
             }
             else
@@ -114,11 +116,11 @@ namespace OCM.API.Common
                 try
                 {
                     //generate thumbnail max 100 wide
-                    GenerateImageThumbnails(sourceImageFile, tempFolder + "\\" + thumbFileName, 100);
+                    GenerateImageThumbnails(sourceImageFile, Path.Join(tempFolder, thumbFileName), 100);
                     //generate medium max 400 wide
-                    GenerateImageThumbnails(sourceImageFile, tempFolder + "\\" + mediumFileName, 400);
+                    GenerateImageThumbnails(sourceImageFile, Path.Join(tempFolder, mediumFileName), 400);
                     //resize original max 2048
-                    GenerateImageThumbnails(sourceImageFile, tempFolder + "\\" + largeFileName, 2048);
+                    GenerateImageThumbnails(sourceImageFile, Path.Join(tempFolder, largeFileName), 2048);
                 }
                 catch (Exception)
                 {
