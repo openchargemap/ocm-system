@@ -1,4 +1,4 @@
-using OCM.Core.Data;
+﻿using OCM.Core.Data;
 using OCM.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -68,7 +68,7 @@ namespace OCM.API.Common
         private void GenerateImageThumbnails(string sourceFile, string destFile, int maxWidth)
         {
 
-            using (Image<Rgba32> image = Image.Load(sourceFile) as Image<Rgba32>)
+            using (Image image = Image.Load(sourceFile))
             {
                 int width = image.Width;
                 int height = image.Height;
