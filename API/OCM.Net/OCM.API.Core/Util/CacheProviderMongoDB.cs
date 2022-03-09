@@ -997,7 +997,8 @@ namespace OCM.Core.Data
                     }
                     else if (filter.Polygon != null && filter.Polygon.Any())
                     {
-                        searchPolygon = filter.Polygon;
+                        //searchPolygon = filter.Polygon;
+                        searchPolygon = OCM.Core.Util.PolylineEncoder.SearchPolygonFromPoints(filter.Polygon);
                     }
 
                     var geoCoords = searchPolygon.Select(t => new GeoJson2DGeographicCoordinates((double)t.Longitude, (double)t.Latitude));

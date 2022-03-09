@@ -122,10 +122,20 @@ namespace OCM.Core.Util
             var searchPolygon = CreatePolygonFromPolyLine(points, distanceKM);
 
             //   if (!searchPolygon.Shell.IsCCW) searchPolygon = searchPolygon.Reverse();
-
-            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+            
+            List<OCM.API.Common.LatLon> polyPoints = searchPolygon.ExteriorRing.Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
 
             return polyPoints;
+        }
+
+        public static IEnumerable<OCM.API.Common.LatLon> SearchPolygonFromPoints(List<OCM.API.Common.LatLon> points)
+        {
+            var factory = GetGeometryFactoryEx();
+            //helps make polygon shell counter clockwise
+            LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
+
+            return polyLine.ConvexHull().Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
+            
         }
 
         public static string SearchPolygonWKTFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
