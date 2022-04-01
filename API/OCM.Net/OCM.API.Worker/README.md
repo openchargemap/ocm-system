@@ -16,8 +16,8 @@ The OCM Api and website we're original built using the .net framework on Windows
 
 The API can be run as a standalone read-only mirror of the main API, with an automated sync of data pulled from the master API.
 
-- Install dotnet core 5.x sdk for your system (~350MB), check with `dotnet --version`
-	- `sudo snap install dotnet-sdk --channel=5.0/stable --classic`
+- Install dotnet core 6.x sdk for your system (~350MB), check with `dotnet --version`
+	- `sudo snap install dotnet-sdk --classic --channel=6.0`
 - Install latest monogdb for your system, set service to run on startup
 - Clone and build the ocm api:
     - `git clone https://github.com/openchargemap/ocm-system`
