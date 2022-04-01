@@ -318,11 +318,11 @@ namespace OCM.Import.Analysis
 
         public PointClassification ClassifyPoint(double latitude, double longitude)
         {
-            FeatureSet pFeatureSet = new FeatureSet();
+            IFeatureSet pFeatureSet = new FeatureSet();
             pFeatureSet.Projection = KnownCoordinateSystems.Geographic.World.WGS1984;
 
-            DotSpatial.Topology.Point pPoint = new DotSpatial.Topology.Point(longitude, latitude);
-            FeatureSet pPointFeatureSet = new FeatureSet(DotSpatial.Topology.FeatureType.Point);
+            NetTopologySuite.Geometries.Point pPoint = new NetTopologySuite.Geometries.Point(longitude, latitude);
+            IFeatureSet pPointFeatureSet = new FeatureSet(FeatureType.Point);
             pPointFeatureSet.Projection = KnownCoordinateSystems.Geographic.World.WGS1984;
             pPointFeatureSet.AddFeature(pPoint);
 

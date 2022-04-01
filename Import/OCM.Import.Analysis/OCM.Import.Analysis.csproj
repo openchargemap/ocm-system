@@ -25,19 +25,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotSpatial.Analysis" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Controls" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Data" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Data.Forms" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Extensions" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Modeling.Forms" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Mono" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Projections" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Projections.Forms" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Serialization" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Symbology" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Symbology.Forms" Version="1.9.0" />
-    <PackageReference Include="DotSpatial.Topology" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Data" Version="3.0.0" />
+    <PackageReference Include="DotSpatial.Projections" Version="3.0.0" />
+    <PackageReference Include="NetTopologySuite" Version="2.4.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
