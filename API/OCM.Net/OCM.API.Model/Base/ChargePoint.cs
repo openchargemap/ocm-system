@@ -241,7 +241,7 @@ namespace OCM.API.Common.Model
         {
             get
             {
-                if (DateLastVerified.HasValue) return true;
+                if (DateLastVerified > DateTime.UtcNow.AddMonths(-6)) return true;
                 else return false;
             }
         }
@@ -250,36 +250,14 @@ namespace OCM.API.Common.Model
         {
             get
             {
-                //confirmed within last 6 months
-                if (this.DateLastConfirmed != null && this.DateLastConfirmed.Value > DateTime.UtcNow.AddMonths(-6))
-                {
-                    return this.DateLastConfirmed;
-                }
-
-                // status update
-                if (this.DateLastStatusUpdate != null && this.DateLastStatusUpdate.Value > DateTime.UtcNow.AddMonths(-3))
-                {
-                    return this.DateLastStatusUpdate;
-                }
+                var keyDates = new DateTime?[] { this.DateCreated, this.DateLastStatusUpdate, this.DateLastConfirmed };
+                return keyDates.Max();
 
                 //positive comments within last 6 months
-                if (this.UserComments != null && this.UserComments.Any(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true && u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
+                /*if (this.UserComments != null && this.UserComments.Any(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true && u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
                 {
                     return this.UserComments.Where(u => u.CheckinStatusType != null && u.CheckinStatusType.IsPositive == true).Max(u => u.DateCreated);
-                }
-
-                if (this.MediaItems != null && this.MediaItems.Any(u => u.DateCreated > DateTime.UtcNow.AddMonths(-6)))
-                {
-                    return this.MediaItems.Max(u => u.DateCreated);
-                }
-
-                //created within last 3 months
-                if (this.DateCreated.HasValue && this.DateCreated.Value > DateTime.UtcNow.AddMonths(-3))
-                {
-                    return this.DateCreated;
-                }
-
-                return null;
+                }*/
             }
         }
     }
