@@ -23,7 +23,9 @@ namespace OCM.API.OutputProviders
             SelectedKMLVersion = version;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task GetOutput(HttpContext context, System.IO.Stream outputStream, IEnumerable<Common.Model.ChargePoint> dataList, Common.APIRequestParams settings)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             /*<Document>
                   <Placemark>
