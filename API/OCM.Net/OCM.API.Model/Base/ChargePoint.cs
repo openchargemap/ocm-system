@@ -250,7 +250,9 @@ namespace OCM.API.Common.Model
         {
             get
             {
-                var keyDates = new DateTime?[] { this.DateCreated, this.DateLastStatusUpdate, this.DateLastConfirmed };
+                // get max date where data was last reviewed or had a contribution. Date Created is considered up to 6 months from creation otherwise it is not counted.
+
+                var keyDates = new DateTime?[] { this.DateCreated > DateTime.UtcNow.AddMonths(-6) ? this.DateCreated : null, this.DateLastStatusUpdate, this.DateLastConfirmed };
                 return keyDates.Max();
 
                 //positive comments within last 6 months
