@@ -188,16 +188,6 @@ namespace OCM.Import.Providers
             System.Diagnostics.Debug.WriteLine(message);
         }
 
-        public EVSE GetEVSEFromCP(ChargePoint cp)
-        {
-            EVSE e = new EVSE();
-            e.Title = cp.AddressInfo.Title;
-            e.Latitude = cp.AddressInfo.Latitude;
-            e.Longitude = cp.AddressInfo.Longitude;
-
-            return e;
-        }
-
         public string ConvertUppercaseToTitleCase(string val)
         {
             if (val.ToUpper() == val)
@@ -298,78 +288,6 @@ namespace OCM.Import.Providers
             catch (Exception)
             {
                 Log("Failed to saev input file:" + path);
-            }
-        }
-
-        public bool ExportXMLFile(List<ChargePoint> dataList, string outputPath)
-        {
-            //not implemented
-            return false;
-        }
-
-        public bool ExportCSVFile(List<EVSE> dataList, string outputPath)
-        {
-            //not implemented
-            return false;
-        }
-
-        public bool ExportXMLFile(List<EVSE> dataList, string outputPath)
-        {
-            string output = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
-            output += "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:evse=\"http://www.openchargemap.org/RssEVSE\">\r\n";
-            string itemTemplate = "\t<entry><title>{title}</title><link>{link}</link><id>{id}</id><updated>{updated}</updated><content>{content}</content><georss:point>{latitude} {longitude}</georss:point><evse:status>{status}</evse:status>{extendedattributes}</entry>\r\n";
-
-            foreach (var item in dataList)
-            {
-                string entry = itemTemplate;
-                entry = entry.Replace("{title}", item.Title);
-                entry = entry.Replace("{link}", item.Link);
-                entry = entry.Replace("{id}", item.ID);
-                entry = entry.Replace("{updated}", item.Updated.ToUniversalTime().ToString());
-                entry = entry.Replace("{content}", item.Content);
-                entry = entry.Replace("{latitude}", (item.Latitude != null ? item.Latitude.ToString() : ""));
-                entry = entry.Replace("{longitude}", (item.Longitude != null ? item.Longitude.ToString() : ""));
-                entry = entry.Replace("{status}", item.Status);
-
-                string extendedAttributes = "<evse:attributes>\r\n";
-                if (item.ExtendedAttributes != null)
-                {
-                    foreach (var extAttr in item.ExtendedAttributes)
-                    {
-                        extendedAttributes += "<evse:attribute name=\"" + extAttr.Name + "\">" + extAttr.Value + "</evse:attribute>";
-                    }
-                }
-                extendedAttributes += "</evse:attributes>\r\n";
-                entry = entry.Replace("{extendedattributes}", extendedAttributes);
-                output += entry;
-            }
-
-            output += "</feed>";
-
-            System.IO.File.WriteAllText(outputPath, output);
-
-            return true;
-        }
-
-        public string OutputExtendedAttribute(EVSE evse, string attributeName)
-        {
-            if (evse.ExtendedAttributes != null)
-            {
-                if (evse.ExtendedAttributes.Exists(a => a.Name == attributeName))
-                {
-                    return evse.ExtendedAttributes.First(a => a.Name == attributeName).Value.ToString();
-                }
-            }
-            return "";
-        }
-
-        public void PopulateExtendedAttribute(EVSE evse, JToken item, string outputName, string inputName)
-        {
-            if (evse.ExtendedAttributes == null) evse.ExtendedAttributes = new List<ExtendedAttribute>();
-
-            if (item[inputName] != null)
-            {
-                evse.ExtendedAttributes.Add(new ExtendedAttribute { Name = outputName, Value = item[inputName].ToString() });
             }
         }
 
@@ -667,7 +585,7 @@ namespace OCM.Import.Providers
 
         public static double? ComputePowerkWForConnectionInfo(ConnectionInfo cinfo)
         {
-            return OCM.API.Common.Model.Extensions.ConnectionInfo.ComputePowerkW(cinfo);
+            return OCM.API.Common.Model.ConnectionInfo.ComputePowerkW(cinfo);
         }
     }
 }

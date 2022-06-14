@@ -965,16 +965,6 @@ namespace OCM.Import
 
                     GC.Collect();
 
-
-                    //export/apply updates
-                    if (p.ExportType == ExportType.XML)
-                    {
-                        Log("Exporting XML..");
-
-                        //output xml
-                        p.ExportXMLFile(finalList, outputPath + p.OutputNamePrefix + ".xml");
-                    }
-
                     if (p.ExportType == ExportType.CSV)
                     {
                         Log("Exporting CSV..");
