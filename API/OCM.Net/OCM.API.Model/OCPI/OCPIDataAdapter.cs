@@ -1,4 +1,5 @@
 ﻿using OCM.Model.OCPI;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,9 +8,10 @@ namespace OCM.API.Common.Model.OCPI
 {
     public class OCPIDataAdapter
     {
+    
         CoreReferenceData _coreReferenceData { get; set; }
 
-        private List<RegionInfo> _countries = new List<RegionInfo>();
+        private readonly List<RegionInfo> _countries = new();
         public OCPIDataAdapter(CoreReferenceData coreReferenceData)
         {
             _coreReferenceData = coreReferenceData;
@@ -18,18 +20,22 @@ namespace OCM.API.Common.Model.OCPI
             _countries = new List<RegionInfo>();
             foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
-                RegionInfo country = new RegionInfo(culture.LCID);
-                if (_countries.Where(p => p.Name == country.Name).Count() == 0)
+                RegionInfo country = new(culture.LCID);
+                if (!_countries.Where(p => p.Name == country.Name).Any())
                     _countries.Add(country);
             }
         }
 
         private string GetCountryCodeFromISO3(string srcISO)
         {
-
             return _countries.FirstOrDefault(c => c.ThreeLetterISORegionName == srcISO).TwoLetterISORegionName;
-
         }
+
+        /// <summary>
+        /// Map from a set of OCPI locations to a set of OCM ChargePoint
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source)
         {
             var output = new List<ChargePoint>();
@@ -60,62 +66,190 @@ namespace OCM.API.Common.Model.OCPI
                     Connections = new List<ConnectionInfo>()
                 };
 
+                List<OCM.Model.OCPI.Evse> evse = new();
+
                 if (i.Evses?.Any() == true)
                 {
-                    // TODO map status
-
-                    foreach (var e in i.Evses)
-                    {
-                        foreach (var c in e.Connectors)
-                        {
-                            var evse_id = e.Evse_id ?? e.Uid;
-
-                            var connectionInfo = new ConnectionInfo
-                            {
-                                Reference = c.Id,
-                                PowerKW = c.Max_electric_power == 0 ? null : c.Max_electric_power,
-                                Voltage = c.Max_voltage,
-                                Amps = c.Max_amperage
-                            };
-
-                            // set power type
-                            if (c.Power_type == ConnectorPower_type.DC)
-                            {
-                                connectionInfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
-                            }
-                            else if (c.Power_type == ConnectorPower_type.AC_1_PHASE)
-                            {
-                                connectionInfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
-                            }
-                            else if (c.Power_type == ConnectorPower_type.AC_3_PHASE)
-                            {
-                                connectionInfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
-                            }
-
-                            // calc power kw if not specified
-                            if (connectionInfo.PowerKW == 0 || connectionInfo.PowerKW == null)
-                            {
-                                connectionInfo.PowerKW = ConnectionInfo.ComputePowerkW(connectionInfo);
-                            }
-
-                            // set status
-                            // set connector type
-                            connectionInfo.ConnectionTypeID = ConnectionTypeFromStandard(c.Standard, c.Format);
-
-
-                            cp.Connections.Add(connectionInfo);
-                        }
-                    }
-                    output.Add(cp);
+                    evse = new List<Evse>(i.Evses);
+                }
+                else if (i.AdditionalProperties.ContainsKey("evses"))
+                {
+                    // Older OCPI has EVSE list as an additional property
+                    evse = (List<OCM.Model.OCPI.Evse>)(i.AdditionalProperties["evses"]);
                 }
 
+                // TODO: map status at per EVSE group level
+
+                foreach (var e in evse)
+                {
+                    cp.StatusTypeID = MapOCMStatusTypeFromStatus(e.Status);
+                    foreach (var c in e.Connectors)
+                    {
+                        var evse_id = e.Evse_id ?? e.Uid;
+
+                        var connectionInfo = new ConnectionInfo
+                        {
+                            Reference = c.Id,
+                            PowerKW = c.Max_electric_power == 0 ? null : c.Max_electric_power,
+                            Voltage = c.Max_voltage,
+                            Amps = c.Max_amperage,
+                            // set power type
+                            CurrentTypeID = MapOCMPowerTypeFromOCPI(c.Power_type)
+                        };
+
+                        // calc power kw if not specified
+                        if (connectionInfo.PowerKW == 0 || connectionInfo.PowerKW == null)
+                        {
+                            connectionInfo.PowerKW = ConnectionInfo.ComputePowerkW(connectionInfo);
+                        }
+
+                        // set status
+                        // set connector type
+                        connectionInfo.ConnectionTypeID = MapOCMConnectionTypeFromStandard(c.Standard, c.Format);
+
+                        cp.Connections.Add(connectionInfo);
+                    }
+                }
+                output.Add(cp);
+            }
+
+            return output;
+        }
+
+
+        /// <summary>
+        /// Map from a set of OCM ChargePoints locations to a set of OCPI Locations
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<OCM.Model.OCPI.Location> ToOCPI(IEnumerable<OCM.API.Common.Model.ChargePoint> source)
+        {
+            var output = new List<Location>();
+
+            foreach (var i in source)
+            {
+
+                var poi = new Location
+                {
+                    Id = i.ID.ToString(),
+                    City = i.AddressInfo.Town,
+                    Address = i.AddressInfo.AddressLine1,
+                    Coordinates = new GeoLocation { Latitude = i.AddressInfo.Latitude.ToString(), Longitude = i.AddressInfo.Latitude.ToString() },
+                    Country_code = i.AddressInfo.Country.ISOCode,
+                    Last_updated = i.DateLastVerified != null ? ToRfc3339String(i.DateLastVerified.Value) : null,
+                    Postal_code = i.AddressInfo.Postcode,
+                    State = i.AddressInfo.StateOrProvince,
+                    Name = i.AddressInfo.Title,
+                    Directions = !string.IsNullOrEmpty(i.AddressInfo.AccessComments) ? new DisplayText[] { new DisplayText { Text = i.AddressInfo.AccessComments } } : null,
+                    Evses = new List<Evse>()
+                };
+
+
+                // TODO: map status at per EVSE group level
+                var evse = new Evse { Connectors = new List<Connector>() };
+
+                foreach (var e in i.Connections)
+                {
+                    var conn = new Connector
+                    {
+                        Id = e.ID.ToString(),
+                        Format = ConnectorFormat.CABLE,
+                        Max_voltage = (int)e.Voltage,
+                        Max_amperage = (int)e.Amps,
+                        Max_electric_power = (int)e.PowerKW,
+                        Standard = MapOCPIConnectionFromOCM(e.ConnectionTypeID, e.CurrentTypeID),
+                        Power_type = MapOCPIPowerTypeFromOCM(e.CurrentTypeID)
+                    };
+
+                    evse.Status = MapOCPIStatusFromOCM(e.StatusTypeID ?? i.StatusTypeID);
+
+                    evse.Connectors.Add(conn);
+
+                }
+
+                output.Add(poi);
             }
             return output;
         }
 
-        public int? ConnectionTypeFromStandard(ConnectorStandard standard, ConnectorFormat format)
+        private static ConnectorPower_type MapOCPIPowerTypeFromOCM(int? currentTypeID)
         {
-            var mapping = new Dictionary<ConnectorStandard, int>
+            var mapping = GetPowerTypeMapping();
+            return mapping.FirstOrDefault(m => m.Value == currentTypeID).Key;
+        }
+
+        private static int MapOCMPowerTypeFromOCPI(ConnectorPower_type type)
+        {
+            var mapping = GetPowerTypeMapping();
+            return mapping[type];
+        }
+
+        private static ConnectorStandard MapOCPIConnectionFromOCM(int? connectionTypeId)
+        {
+            var mapping = GetConnectionTypeMapping();
+            var connectionType = mapping.FirstOrDefault(m => m.Value == connectionTypeId);
+            return connectionType.Key;
+        }
+
+        private static EvseStatus MapOCPIStatusFromOCM(int? statusTypeId)
+        {
+            var mapping = GetStatusMapping();
+            var status = mapping.FirstOrDefault(m => m.Value == statusTypeId);
+            return status.Key;
+        }
+
+        public static int? MapOCMStatusTypeFromStatus(EvseStatus status, bool useLiveStatus = true)
+        {
+            var mapping = GetStatusMapping();
+
+            var mappedStatusId = mapping[status];
+
+            if (!useLiveStatus)
+            {
+                if (status == EvseStatus.AVAILABLE || status == EvseStatus.CHARGING || status == EvseStatus.RESERVED || status == EvseStatus.BLOCKED)
+                {
+                    mappedStatusId = (int)StandardStatusTypes.Operational;
+                }
+            }
+
+            return mappedStatusId;
+        }
+
+        public static int? MapOCMConnectionTypeFromStandard(ConnectorStandard standard, ConnectorFormat format)
+        {
+            var mapping = GetConnectionTypeMapping();
+
+            var mappedConnectorId = mapping[standard];
+
+            // distinguish between mennekes socket vs tethered
+            if (mappedConnectorId == (int)StandardConnectionTypes.MennekesType2 && format == ConnectorFormat.SOCKET)
+            {
+                mappedConnectorId = (int)StandardConnectionTypes.MennekesType2Tethered;
+            }
+
+            return mappedConnectorId;
+
+        }
+
+        public static string ToRfc3339String(DateTime dateTime)
+        {
+            // based on https://sebnilsson.com/blog/c-datetime-to-rfc3339-iso-8601/
+            return dateTime.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz", DateTimeFormatInfo.InvariantInfo);
+        }
+
+        private static Dictionary<ConnectorPower_type, int> GetPowerTypeMapping()
+        {
+            return new Dictionary<ConnectorPower_type, int>
+            {
+                { ConnectorPower_type.DC,(int)StandardCurrentTypes.DC },
+                { ConnectorPower_type.AC_1_PHASE,(int)StandardCurrentTypes.SinglePhaseAC },
+                { ConnectorPower_type.AC_3_PHASE,(int)StandardCurrentTypes.ThreePhaseAC }
+            };
+        }
+
+        private static Dictionary<ConnectorStandard, int> GetConnectionTypeMapping()
+        {
+            return new Dictionary<ConnectorStandard, int>
             {
                 { ConnectorStandard.UNKNOWN,(int)StandardConnectionTypes.Unknown }, // unknown is not an official part of the OCPI spec
                 { ConnectorStandard.CHADEMO, (int)StandardConnectionTypes.CHAdeMO },
@@ -146,17 +280,22 @@ namespace OCM.API.Common.Model.OCPI
                 { ConnectorStandard.TESLA_R,(int)StandardConnectionTypes.TeslaRoadster },
                 { ConnectorStandard.TESLA_S,(int)StandardConnectionTypes.TeslaProprietary },
             };
+        }
 
-            var mappedConnectorId = mapping[standard];
-
-            // distinguish between mennekes socket vs tethered
-            if (mappedConnectorId == (int)StandardConnectionTypes.MennekesType2 && format == ConnectorFormat.SOCKET)
+        private static Dictionary<EvseStatus, int> GetStatusMapping()
+        {
+            return new Dictionary<EvseStatus, int>
             {
-                mappedConnectorId = (int)StandardConnectionTypes.MennekesType2Tethered;
-            }
-
-            return mappedConnectorId;
-
+                { EvseStatus.UNKNOWN,(int)StandardStatusTypes.Unknown },
+                { EvseStatus.AVAILABLE, (int)StandardStatusTypes.CurrentlyAvailable },
+                { EvseStatus.BLOCKED, (int)StandardStatusTypes.TemporarilyUnavailable },
+                { EvseStatus.CHARGING, (int)StandardStatusTypes.CurrentlyInUse },
+                { EvseStatus.INOPERATIVE, (int)StandardStatusTypes.NotOperational },
+                { EvseStatus.OUTOFORDER, (int)StandardStatusTypes.NotOperational },
+                { EvseStatus.PLANNED, (int)StandardStatusTypes.PlannedForFutureDate },
+                { EvseStatus.REMOVED, (int)StandardStatusTypes.RemovedDecomissioned },
+                { EvseStatus.RESERVED, (int)StandardStatusTypes.CurrentlyInUse }
+            };
         }
     }
 }
