@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Remove="App.config" />
     <None Remove="Assets\ocpi_2_1_1_locations-fastned.json" />
+    <None Remove="Assets\ocpi_2_2_locations-evio.json" />
     <None Remove="Assets\ocpi_3_0_0_location_example.json" />
   </ItemGroup>
 
@@ -25,6 +26,9 @@
     </Content>
     <Content Include="Assets\ocpi_2_1_1_locations-fastned.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_2_locations-evio.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_3_0_0_location_example.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
