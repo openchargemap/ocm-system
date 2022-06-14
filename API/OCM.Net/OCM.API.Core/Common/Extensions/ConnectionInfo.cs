@@ -47,7 +47,7 @@ namespace OCM.API.Common.Model.Extensions
 
             if (connectionInfo.PowerKW == null || connectionInfo.PowerKW == 0)
             {
-                connectionInfo.PowerKW = ConnectionInfo.ComputePowerkW(connectionInfo);
+                connectionInfo.PowerKW = OCM.API.Common.Model.ConnectionInfo.ComputePowerkW(connectionInfo);
             }
 
             // determine legacy charging 'level' (SAE definition) based on kw/voltage if available
@@ -106,26 +106,7 @@ namespace OCM.API.Common.Model.Extensions
             return null;
         }
 
-        public static double? ComputePowerkW(Common.Model.ConnectionInfo cinfo)
-        {
-            var powerkW = cinfo.PowerKW;
 
-            if (cinfo.Amps > 0 && cinfo.Voltage > 0)
-            {
-                if (cinfo.CurrentTypeID == null || cinfo.CurrentTypeID == (int)StandardCurrentTypes.SinglePhaseAC || cinfo.CurrentTypeID == (int)StandardCurrentTypes.DC)
-                {
-                    powerkW = ((double)cinfo.Amps * (double)cinfo.Voltage / 1000);
-                }
-                else
-                {
-                    powerkW = ((double)cinfo.Amps * (double)cinfo.Voltage * 1.732 / 1000);
-                }
-
-                powerkW = Math.Round((double)powerkW, 1);
-            }
-
-            return powerkW;
-        }
     }
 
 

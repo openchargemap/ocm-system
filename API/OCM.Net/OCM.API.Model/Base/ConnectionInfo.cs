@@ -59,5 +59,26 @@ namespace OCM.API.Common.Model
             if (output.EndsWith(", ")) output = output.Substring(0, output.Length - 2);
             return output;
         }
+
+        public static double? ComputePowerkW(Common.Model.ConnectionInfo cinfo)
+        {
+            var powerkW = cinfo.PowerKW;
+
+            if (cinfo.Amps > 0 && cinfo.Voltage > 0)
+            {
+                if (cinfo.CurrentTypeID == null || cinfo.CurrentTypeID == (int)StandardCurrentTypes.SinglePhaseAC || cinfo.CurrentTypeID == (int)StandardCurrentTypes.DC)
+                {
+                    powerkW = ((double)cinfo.Amps * (double)cinfo.Voltage / 1000);
+                }
+                else
+                {
+                    powerkW = ((double)cinfo.Amps * (double)cinfo.Voltage * 1.732 / 1000);
+                }
+
+                powerkW = Math.Round((double)powerkW, 1);
+            }
+
+            return powerkW;
+        }
     }
 }
