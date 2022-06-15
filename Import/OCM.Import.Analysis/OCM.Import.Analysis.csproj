@@ -34,6 +34,27 @@
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.cpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.dbf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.prj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.README.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.shp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.shx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shapefiles\World\ne_10m_admin_0_countries.VERSION.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Shapefiles\World\ne_10m_admin_0_map_units.cpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
