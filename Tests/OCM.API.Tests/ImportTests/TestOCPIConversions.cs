@@ -1,4 +1,5 @@
-﻿using OCM.API.Common;
+﻿using Newtonsoft.Json;
+using OCM.API.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -21,7 +22,7 @@ namespace OCM.API.Tests
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 
             var ocpiList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.Location>>(json);
-            var poiResults = adapter.FromOCPI(ocpiList);
+            var poiResults = adapter.FromOCPI(ocpiList, 0);
 
             Assert.Single(poiResults);
         }
@@ -38,11 +39,16 @@ namespace OCM.API.Tests
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 
             var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json);
-            var poiResults = adapter.FromOCPI(response.Data);
+            var ocpiData = response.Data;
 
-            Assert.Equal(105, poiResults.Count());
+            var poiResults = adapter.FromOCPI(ocpiData, 0);
+
+            Assert.Equal(ocpiData.Count, poiResults.Count());
+
+            Assert.Equal("NLD", ocpiData.First().Country);
+            Assert.Equal(159, poiResults.First().AddressInfo.CountryID);
+            Assert.Equal(33, poiResults.First().Connections.First().ConnectionTypeID);
         }
-
 
         [Fact]
         async Task CanConvertFromOCPI_EVIO()
@@ -56,9 +62,11 @@ namespace OCM.API.Tests
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 
             var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.Location>>(json);
-            var poiResults = adapter.FromOCPI(response);
+            var poiResults = adapter.FromOCPI(response, 30);
 
             Assert.Equal(21, poiResults.Count());
+
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings {  NullValueHandling= NullValueHandling.Ignore}));
         }
     }
 }
