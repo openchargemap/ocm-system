@@ -156,7 +156,8 @@ namespace OCM.Import.Providers
 
         public DataProvider DefaultDataProvider { get; set; }
 
-        protected CookieAwareWebClient webClient = new CookieAwareWebClient();
+        private static readonly CookieAwareWebClient cookieAwareWebClient = new();
+        protected CookieAwareWebClient webClient = cookieAwareWebClient;
 
         public bool ImportInitialisationRequired { get; set; }
 

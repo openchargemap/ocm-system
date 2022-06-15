@@ -100,6 +100,8 @@ namespace OCM.Import
         public bool FetchExistingFromAPI { get; set; } = false;
         public bool PerformDeduplication { get; set; } = true;
         public string ProviderName { get; set; }
+
+        public Dictionary<string, string> Credentials { get; set; }
     }
 
     public class ImportManager
@@ -202,11 +204,14 @@ namespace OCM.Import
                 providers.Add(new ImportProvider_NobilDotNo(nobil));
             }
 
-            //providers.Add(new ImportProvider_OplaadpalenNL());
+            // providers.Add(new ImportProvider_OplaadpalenNL()); // no longer used
+            // providers.Add(new ImportProvider_DataGouvFr()); // data has changed, no longer available
+            // providers.Add(new ImportProvider_Bundesnetzagentur()); // not used - import has no unique ids
+            
             providers.Add(new ImportProvider_ICAEN());
-            providers.Add(new ImportProvider_DataGouvFr());
             providers.Add(new ImportProvider_GenericExcel());
-            providers.Add(new ImportProvider_Bundesnetzagentur());
+
+            providers.Add(new ImportProvider_OCPI());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -223,7 +228,7 @@ namespace OCM.Import
 
         public async Task<bool> PerformImportProcessing(ImportProcessSettings settings)
         {
-            var credentials = GetAPISessionCredentials(settings.ApiIdentifier, settings.ApiSessionToken);
+            var credentials = GetAPISessionCredentials("", settings.Credentials["IMPORT-ocm-system"]);
 
             var coreRefData = await _client.GetCoreReferenceDataAsync();
 
@@ -839,28 +844,37 @@ namespace OCM.Import
                     ((IImportProviderWithInit)provider).InitImportProvider();
                 }
 
-                if (string.IsNullOrEmpty(p.InputPath))
+                if (p is ImportProvider_OCPI)
                 {
-                    p.InputPath = Path.Combine(settings.DefaultDataPath, "cache_" + p.ProviderName + ".dat");
-                }
-
-                if (settings.FetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
-                {
-                    Log("Loading input data from URL..");
-                    loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
+                    (p as ImportProvider_OCPI).Init(dataProviderId: 30, locationsEndpoint: "https://api.go-evio.com/locations", "apikey", settings.Credentials["OCPI-EVIO"]);
+                    loadOK = (p as ImportProvider_OCPI).LoadInputFromURL(p.AutoRefreshURL);
                 }
                 else
                 {
-                    if (p.IsStringData && !p.UseCustomReader)
-                    {
-                        Log("Loading input data from file..");
 
-                        loadOK = p.LoadInputFromFile(p.InputPath);
+                    if (string.IsNullOrEmpty(p.InputPath))
+                    {
+                        p.InputPath = Path.Combine(settings.DefaultDataPath, "cache_" + p.ProviderName + ".dat");
+                    }
+
+                    if (settings.FetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
+                    {
+                        Log("Loading input data from URL..");
+                        loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
                     }
                     else
                     {
-                        //binary streams pass as OK by default
-                        loadOK = true;
+                        if (p.IsStringData && !p.UseCustomReader)
+                        {
+                            Log("Loading input data from file..");
+
+                            loadOK = p.LoadInputFromFile(p.InputPath);
+                        }
+                        else
+                        {
+                            //binary streams pass as OK by default
+                            loadOK = true;
+                        }
                     }
                 }
 
