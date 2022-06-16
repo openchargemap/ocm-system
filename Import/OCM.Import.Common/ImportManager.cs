@@ -758,6 +758,8 @@ namespace OCM.Import
                 destItem.UsageType = sourceItem.UsageType;
                 destItem.UsageTypeID = sourceItem.UsageTypeID;
                 destItem.UsageCost = sourceItem.UsageCost;
+                destItem.StatusType = sourceItem.StatusType;
+                destItem.StatusTypeID = sourceItem.StatusTypeID;
                 destItem.NumberOfPoints = sourceItem.NumberOfPoints;
                 destItem.GeneralComments = sourceItem.GeneralComments;
                 destItem.DateLastConfirmed = sourceItem.DateLastConfirmed;
@@ -800,8 +802,7 @@ namespace OCM.Import
                                 existingConnection.ConnectionType = conn.ConnectionType;
                                 existingConnection.ConnectionTypeID = conn.ConnectionTypeID;
                                 existingConnection.Quantity = conn.Quantity;
-                                existingConnection.LevelID = conn.LevelID;
-                                existingConnection.Level = conn.Level;
+                                
                                 existingConnection.Reference = conn.Reference;
                                 existingConnection.StatusTypeID = conn.StatusTypeID;
                                 existingConnection.StatusType = conn.StatusType;

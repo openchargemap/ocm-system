@@ -8,11 +8,12 @@ namespace OCM.API.Common.Model.OCPI
 {
     public class OCPIDataAdapter
     {
-    
+
         CoreReferenceData _coreReferenceData { get; set; }
+        bool _useLiveStatus { get; set; }
 
         private readonly List<RegionInfo> _countries = new();
-        public OCPIDataAdapter(CoreReferenceData coreReferenceData)
+        public OCPIDataAdapter(CoreReferenceData coreReferenceData, bool useLiveStatus = false)
         {
             _coreReferenceData = coreReferenceData;
 
@@ -24,6 +25,7 @@ namespace OCM.API.Common.Model.OCPI
                 if (!_countries.Where(p => p.Name == country.Name).Any())
                     _countries.Add(country);
             }
+            _useLiveStatus = useLiveStatus;
         }
 
         private string GetCountryCodeFromISO3(string srcISO)
@@ -36,9 +38,8 @@ namespace OCM.API.Common.Model.OCPI
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source)
+        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId)
         {
-            var output = new List<ChargePoint>();
 
             foreach (var i in source)
             {
@@ -47,17 +48,19 @@ namespace OCM.API.Common.Model.OCPI
 
                 if (string.IsNullOrEmpty(iso2Code) && i.Country != null)
                 {
-                    GetCountryCodeFromISO3(i.Country);
+                    iso2Code = GetCountryCodeFromISO3(i.Country);
                 }
 
                 var cp = new ChargePoint
                 {
                     DataProvidersReference = i.Id,
+                    DataProviderID = dataProviderId,
                     AddressInfo = new AddressInfo
                     {
                         Title = i.Name,
                         AddressLine1 = i.Address,
                         Town = i.City,
+                        Postcode = i.Postal_code,
                         Latitude = double.Parse(i.Coordinates.Latitude),
                         Longitude = double.Parse(i.Coordinates.Longitude),
                         CountryID = _coreReferenceData.Countries.FirstOrDefault(c => c.ISOCode == iso2Code)?.ID,
@@ -82,7 +85,7 @@ namespace OCM.API.Common.Model.OCPI
 
                 foreach (var e in evse)
                 {
-                    cp.StatusTypeID = MapOCMStatusTypeFromStatus(e.Status);
+                    cp.StatusTypeID = MapOCMStatusTypeFromStatus(e.Status, _useLiveStatus);
                     foreach (var c in e.Connectors)
                     {
                         var evse_id = e.Evse_id ?? e.Uid;
@@ -94,7 +97,8 @@ namespace OCM.API.Common.Model.OCPI
                             Voltage = c.Max_voltage,
                             Amps = c.Max_amperage,
                             // set power type
-                            CurrentTypeID = MapOCMPowerTypeFromOCPI(c.Power_type)
+                            CurrentTypeID = MapOCMPowerTypeFromOCPI(c.Power_type),
+                            Quantity = 1
                         };
 
                         // calc power kw if not specified
@@ -110,10 +114,9 @@ namespace OCM.API.Common.Model.OCPI
                         cp.Connections.Add(connectionInfo);
                     }
                 }
-                output.Add(cp);
-            }
 
-            return output;
+                yield return cp;
+            }
         }
 
 
@@ -124,8 +127,6 @@ namespace OCM.API.Common.Model.OCPI
         /// <returns></returns>
         public static IEnumerable<OCM.Model.OCPI.Location> ToOCPI(IEnumerable<OCM.API.Common.Model.ChargePoint> source)
         {
-            var output = new List<Location>();
-
             foreach (var i in source)
             {
 
@@ -144,7 +145,6 @@ namespace OCM.API.Common.Model.OCPI
                     Evses = new List<Evse>()
                 };
 
-
                 // TODO: map status at per EVSE group level
                 var evse = new Evse { Connectors = new List<Connector>() };
 
@@ -157,7 +157,7 @@ namespace OCM.API.Common.Model.OCPI
                         Max_voltage = (int)e.Voltage,
                         Max_amperage = (int)e.Amps,
                         Max_electric_power = (int)e.PowerKW,
-                        Standard = MapOCPIConnectionFromOCM(e.ConnectionTypeID, e.CurrentTypeID),
+                        Standard = MapOCPIConnectionFromOCM(e.ConnectionTypeID),
                         Power_type = MapOCPIPowerTypeFromOCM(e.CurrentTypeID)
                     };
 
@@ -167,9 +167,8 @@ namespace OCM.API.Common.Model.OCPI
 
                 }
 
-                output.Add(poi);
+                yield return poi;
             }
-            return output;
         }
 
         private static ConnectorPower_type MapOCPIPowerTypeFromOCM(int? currentTypeID)
