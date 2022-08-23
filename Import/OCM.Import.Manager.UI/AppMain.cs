@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Amazon.Runtime.Internal.Util;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Configuration;
 using OCM.API.Common.Model;
 using OCM.Import;
 using OCM.Import.Manager.UI.Properties;
@@ -19,6 +22,8 @@ namespace Import
         List<IImportProvider> _providers;
 
         ImportManager _importManager;
+
+        IConfigurationRoot _config;
 
         public AppMain()
         {
@@ -48,13 +53,13 @@ namespace Import
 
             var configPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            var config = new ConfigurationBuilder()
+            _config = new ConfigurationBuilder()
                    .SetBasePath(configPath)
                    .AddJsonFile("appsettings.json", optional: true)
                    .Build();
 
             var appsettings = new OCM.Core.Settings.CoreSettings();
-            config.GetSection("ImportSettings").Bind(appsettings);
+            _config.GetSection("ImportSettings").Bind(appsettings);
 
 
             _importManager = new ImportManager(settings);
@@ -82,6 +87,13 @@ namespace Import
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
+            var client = new SecretClient(new Uri("https://import-keyvault.vault.azure.net/"), new DefaultAzureCredential());
+            var secret = await client.GetSecretAsync("IMPORT-ocm-system");
+
+
+            var apiKeys = new Dictionary<string, string>();
+            apiKeys.Add("IMPORT-ocm-system", secret.Value.Value);
+
             var importProcessSettings = new ImportProcessSettings
             {
                 ExportType = exportType,
@@ -92,7 +104,8 @@ namespace Import
                 CacheInputData = chkCacheInputData.Checked,
                 PerformDeduplication = chkDeduplication.Checked,
                 FetchExistingFromAPI = true,
-                ProviderName = lstProvider.SelectedValue.ToString()
+                ProviderName = lstProvider.SelectedValue.ToString(),
+                Credentials = apiKeys
             };
 
             await _importManager.PerformImportProcessing(importProcessSettings);

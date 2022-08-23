@@ -152,7 +152,7 @@ namespace OCM.Import.Providers
                 var deviceController = item["DeviceController"];
 
                 cp.AddressInfo.RelatedURL = deviceController["Website"].ToString();
-                var deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.Contains(deviceController["OrganisationName"].ToString()));
+                var deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(deviceController["OrganisationName"].ToString().ToLower().Trim()));
                 if (deviceOperator != null)
                 {
                     cp.OperatorID = deviceOperator.ID;
@@ -161,7 +161,7 @@ namespace OCM.Import.Providers
                 {
                     //operator from device owner
                     var devOwner = item["DeviceOwner"];
-                    deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.Contains(devOwner["OrganisationName"].ToString()));
+                    deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(devOwner["OrganisationName"].ToString().ToLower().Trim()));
                     if (deviceOperator != null)
                     {
                         cp.OperatorID = deviceOperator.ID;
@@ -197,9 +197,21 @@ namespace OCM.Import.Providers
                         case "APT":
                             cp.OperatorID = 3341;
                             break;
+                        case "ecars ESB":
+                            cp.OperatorID = 22;
+                            break;
+                        case "GRIDSERVE Sustainable Energy":
+                            cp.OperatorID = 3430;
+                            break;
+                        case "ESB EV Solutions":
+                            cp.OperatorID = 3357;
+                            break;
                     }
 
-                    if (cp.OperatorID == null) Log("Unknown Operator: " + deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString());
+                    if (cp.OperatorID == null)
+                    {
+                        Log("Unknown Operator: " + deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString());
+                    }
                 }
 
                 //determine most likely usage type

@@ -951,7 +951,7 @@ namespace OCM.Import
 
                     if (settings.PerformDeduplication)
                     {
-                        Log("De-Deuplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
+                        Log("Deduplicating list (" + p.ProviderName + ":: " + list.Count + " Items)..");
 
                         //de-duplicate and clean list based on existing data
                         finalList = await DeDuplicateList(list, true, coreRefData, resultReport, p.AllowDuplicatePOIWithDifferentOperator, settings.FetchExistingFromAPI, DUPLICATE_DISTANCE_METERS);

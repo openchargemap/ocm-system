@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
@@ -57,28 +57,38 @@ namespace OCM.Import.Providers
             var results = InputData.Split('\n');
 
             var preprocessedRows = new List<string>();
+
+            var performRowRepair = false;
+
+
             // preprocess data to find line breaks in addresses and repair those rows
-            for (var n = 1; n < results.Length; n++)
+            if (performRowRepair)
             {
-                var row = results[n];
-
-                if (n + 1 < results.Length)
+                for (var n = 1; n < results.Length; n++)
                 {
-                    var nextRow = results[n + 1];
+                    var row = results[n];
 
-                    if (!string.IsNullOrEmpty(nextRow) && (Char.IsDigit(nextRow[0]) || row.Length < 200))
+                    if (n + 1 < results.Length)
                     {
-                        // probably a postcode or broken line in title, merge row with next row
-                        row = row.Trim() + " " + nextRow;
+                        var nextRow = results[n + 1];
 
-                        Log("Repaired row " + n + "::" + row);
-                        n++; // skip next row
+                        if (!string.IsNullOrEmpty(nextRow) && Char.IsDigit(nextRow[0]))
+                        {
+                            // probably a postcode or broken line in title, merge row with next row
+                            row = row.Trim() + " " + nextRow;
+
+                            Log("Repaired row " + n + "::" + row);
+                            n++; // skip next row
+                        }
                     }
+
+                    preprocessedRows.Add(row);
                 }
-
-                preprocessedRows.Add(row);
             }
-
+            else
+            {
+                preprocessedRows = results.ToList();
+            }
             var keyLookup = results[0].Replace("\r", "").Split(';').ToList();
 
             Dictionary<string, int> unmatchedNetworks = new Dictionary<string, int>();
@@ -112,7 +122,7 @@ namespace OCM.Import.Providers
                             var reference = cols[keyLookup.FindIndex(a => a == "id_station")]?.Trim();
                             var address = cols[keyLookup.FindIndex(a => a == "ad_station")]?.Trim();
                             var numStations = cols[keyLookup.FindIndex(a => a == "nbre_pdc")];
-                            var hours = cols[keyLookup.FindIndex(a => a == "accessibilité")];
+                            var hours = keyLookup.FindIndex(a => a == "accessibilité") > 0 ? cols[keyLookup.FindIndex(a => a == "accessibilité")] : null;
                             var additionalInfo = cols[keyLookup.FindIndex(a => a == "observations")];
                             var networkName = cols[keyLookup.FindIndex(a => a == "n_enseigne")]?.ToLower().Trim();
 
@@ -145,6 +155,19 @@ namespace OCM.Import.Providers
 
                                 case "gratuit":
                                     poi.UsageTypeID = (int)StandardUsageTypes.Public_PayAtLocation;
+                                    break;
+                                case "se renseigner auprès de l'établissement":
+                                case "Gratuit, usage interne uniquement":
+                                    poi.UsageTypeID = (int)StandardUsageTypes.PrivatelyOwned_NoticeRequired;
+                                    break;
+                                case "gratuit Tesla":
+                                    poi.UsageTypeID = (int)StandardUsageTypes.Public;
+                                    break;
+                                case "Carte Mobive":
+                                    poi.UsageTypeID = (int)StandardUsageTypes.Public_MembershipRequired;
+                                    break;
+                                case "":
+                                    poi.UsageTypeID = (int)StandardUsageTypes.Public;
                                     break;
                                 default:
                                     Log("Unknown Usage Type: " + usageType);
@@ -179,6 +202,7 @@ namespace OCM.Import.Providers
                                     case "mennekes":
                                     case "mennekes.m":
                                     case "t2":
+                                    case "type 2 et prise domestique":
                                     case "type 2":
                                         connection.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
                                         connection.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
@@ -191,6 +215,7 @@ namespace OCM.Import.Providers
                                         break;
 
                                     case "ccs combo2":
+                                    case "ccs":
                                     case "combo 2":
                                     case "combo2":
                                     case "combo":
@@ -215,6 +240,10 @@ namespace OCM.Import.Providers
                                         break;
                                     case "chademo":
                                         connection.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;
+                                        connection.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                                        break;
+                                    case "":
+                                        connection.ConnectionTypeID = (int)StandardConnectionTypes.Unknown;
                                         connection.CurrentTypeID = (int)StandardCurrentTypes.DC;
                                         break;
                                     default:
@@ -271,6 +300,11 @@ namespace OCM.Import.Providers
 
                             poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
 
+                            if (!string.IsNullOrEmpty(operatorName))
+                            {
+                                networkName = operatorName;
+                            }
+
                             if (!string.IsNullOrWhiteSpace(networkName))
                             {
                                 // specific network mappings
@@ -279,6 +313,8 @@ namespace OCM.Import.Providers
 
                                 // shared network mappings
                                 if (operatorName == "freshmile") networkName = "freshmile";
+
+                                if (operatorName.StartsWith("alizã")) networkName = "Alizé";
 
                                 var network = refData.Operators.FirstOrDefault(o => o.Title.Contains(networkName, StringComparison.InvariantCultureIgnoreCase));
 
