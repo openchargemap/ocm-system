@@ -17,7 +17,7 @@
   "devDependencies": {
     "http-server": "^0.8.0",
     "jake": "8.0.15",
-    "typedoc": "^0.3.4",
+    "typedoc": "^0.23.19",
     "typescript": "^2.3.0",
     "uglify-js": "*",
     "wrench": "*"
