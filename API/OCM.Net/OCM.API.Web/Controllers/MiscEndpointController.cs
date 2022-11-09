@@ -25,7 +25,7 @@ namespace OCM.API.Web.Standard.Controllers
         [Route("/v3/openapi")]
         public IActionResult GetOpenAPIDefinition()
         {
-            return Redirect("https://raw.githubusercontent.com/openchargemap/ocm-docs/master/Model/schema/ocm-api-schema.yaml");
+            return Redirect("https://raw.githubusercontent.com/openchargemap/ocm-docs/master/Model/schema/ocm-openapi-spec.yaml");
         }
     }
 }
