@@ -49,7 +49,7 @@ namespace OCM.Import.Providers
             var resourceUrl = o["resources"][0]["latest"].ToString();
 
             HttpClient client = new HttpClient();
-            var poiDataCsv= client.GetStringAsync(resourceUrl).Result;
+            var poiDataCsv = client.GetStringAsync(resourceUrl).Result;
 
             //whole file cleanup (broken newline in text)
             InputData = poiDataCsv.Replace("\n\";", "\";");

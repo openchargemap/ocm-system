@@ -122,7 +122,7 @@ namespace OCM.Core.Util
             var searchPolygon = CreatePolygonFromPolyLine(points, distanceKM);
 
             //   if (!searchPolygon.Shell.IsCCW) searchPolygon = searchPolygon.Reverse();
-            
+
             List<OCM.API.Common.LatLon> polyPoints = searchPolygon.ExteriorRing.Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
 
             return polyPoints;
@@ -135,7 +135,7 @@ namespace OCM.Core.Util
             LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
 
             return polyLine.ConvexHull().Coordinates.Select(p => new LatLon { Latitude = p.Y, Longitude = p.X }).ToList();
-            
+
         }
 
         public static string SearchPolygonWKTFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
@@ -153,7 +153,7 @@ namespace OCM.Core.Util
         private static Polygon CreatePolygonFromPolyLine(List<OCM.API.Common.LatLon> points, double distanceKM)
         {
             var factory = GetGeometryFactoryEx();
-           //helps make polygon shell counter clockwise
+            //helps make polygon shell counter clockwise
             LineString polyLine = factory.CreateLineString(points.Select(p => new Coordinate((double)p.Longitude, (double)p.Latitude)).ToArray());
 
             var searchPolygon = polyLine.Buffer(distanceKM / 2 / 100, points.Count) as Polygon;
@@ -164,7 +164,7 @@ namespace OCM.Core.Util
 
         private static GeometryFactoryEx GetGeometryFactoryEx()
         {
-            var geo= new GeometryFactoryEx(new PrecisionModel(PrecisionModels.FloatingSingle), GeoManager.StandardSRID);
+            var geo = new GeometryFactoryEx(new PrecisionModel(PrecisionModels.FloatingSingle), GeoManager.StandardSRID);
             geo.OrientationOfExteriorRing = LinearRingOrientation.CCW;
             return geo;
         }

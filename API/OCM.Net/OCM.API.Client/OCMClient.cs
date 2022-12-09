@@ -228,14 +228,14 @@ namespace OCM.API.Client
 
                 _logger?.LogInformation($"Client: Fetching data from {url}");
                 string data = await FetchDataStringFromURLAsync(url);
-                _logger?.LogInformation($"Client: fetch completed: { stopwatch.Elapsed.TotalSeconds}s");
+                _logger?.LogInformation($"Client: fetch completed: {stopwatch.Elapsed.TotalSeconds}s");
 
                 return JsonConvert.DeserializeObject<List<ChargePoint>>(data);
             }
             catch (Exception exp)
             {
                 //failed!
-                _logger?.LogInformation($"Client: fetch failed: { stopwatch.Elapsed.TotalSeconds}s {exp.ToString()}");
+                _logger?.LogInformation($"Client: fetch failed: {stopwatch.Elapsed.TotalSeconds}s {exp.ToString()}");
                 return null;
             }
             stopwatch.Stop();
@@ -319,7 +319,7 @@ namespace OCM.API.Client
 
         public async Task<Common.Model.Extended.GeocodingResult> Geocode(double latitude, double longitude)
         {
-            string url = $"{ServiceBaseURL }/geocode?output=json&latitude={latitude}&longitude={longitude}";
+            string url = $"{ServiceBaseURL}/geocode?output=json&latitude={latitude}&longitude={longitude}";
             var result = await FetchDataStringFromURLAsync(url);
             return JsonConvert.DeserializeObject<Common.Model.Extended.GeocodingResult>(result);
         }

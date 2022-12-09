@@ -10,7 +10,7 @@ namespace OCM.MVC.Models
     {
         public POIBrowseModel()
         {
-           
+
             this.AllowOptionalCountrySelection = true;
         }
         public POIBrowseModel(CoreReferenceData refData)

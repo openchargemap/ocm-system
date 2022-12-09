@@ -66,7 +66,7 @@ namespace OCM.API.Tests
 
             Assert.Equal(21, poiResults.Count());
 
-            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings {  NullValueHandling= NullValueHandling.Ignore}));
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
     }
 }

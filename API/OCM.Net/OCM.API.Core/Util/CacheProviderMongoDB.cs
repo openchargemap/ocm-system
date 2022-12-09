@@ -331,7 +331,7 @@ namespace OCM.Core.Data
 
                 stopwatch.Stop();
 
-                System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
+                System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds} seconds");
 
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
                 stopwatch.Restart();
@@ -341,7 +341,7 @@ namespace OCM.Core.Data
                     poiList.Add(OCM.API.Common.Model.Extensions.ChargePoint.FromDataModel(cp, true, true, true, true, refData));
                 }
 
-                System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds } seconds");
+                System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds} seconds");
 
                 return poiList;
             }
@@ -355,7 +355,7 @@ namespace OCM.Core.Data
 
                 stopwatch.Stop();
 
-                System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds } seconds");
+                System.Diagnostics.Debug.WriteLine($"POI List retrieved in {stopwatch.Elapsed.TotalSeconds} seconds");
                 stopwatch.Restart();
 
                 var poiList = new List<OCM.API.Common.Model.ChargePoint>();
@@ -366,11 +366,11 @@ namespace OCM.Core.Data
 
                     if (poiList.Count % 100 == 0)
                     {
-                        System.Diagnostics.Debug.WriteLine($"POIs processed { poiList.Count} in {stopwatch.Elapsed.TotalSeconds } seconds");
+                        System.Diagnostics.Debug.WriteLine($"POIs processed {poiList.Count} in {stopwatch.Elapsed.TotalSeconds} seconds");
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds } seconds");
+                System.Diagnostics.Debug.WriteLine($"POI List model prepared in {stopwatch.Elapsed.TotalSeconds} seconds");
 
                 return poiList;
             }
@@ -1007,7 +1007,7 @@ namespace OCM.Core.Data
                     var geometry = new GeoJsonPolygon<GeoJson2DGeographicCoordinates>(new GeoJsonPolygonCoordinates<GeoJson2DGeographicCoordinates>(linearRing));
 
                     var polygonQueryBson = geometry.ToBsonDocument();
-                    var crsDoc = BsonDocument.Parse("{ type: \"name\",  properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:"+ GeoManager.StandardSRID+ "\" } }");
+                    var crsDoc = BsonDocument.Parse("{ type: \"name\",  properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:" + GeoManager.StandardSRID + "\" } }");
                     polygonQueryBson.Add("crs", crsDoc);
 
                     var geoJson = polygonQueryBson.ToJson();

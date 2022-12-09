@@ -71,7 +71,8 @@ namespace OCM.MVC.Controllers
                 if (!savedOK)
                 {
                     ViewBag.ErrorMessage = "Please check you have filled out all of the fields. All information is required.";
-                } else
+                }
+                else
                 {
                     ViewBag.Submitted = true;
                 }

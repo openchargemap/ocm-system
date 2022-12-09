@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using OCM.API.Common.Model;
-using OCM.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -103,13 +101,13 @@ namespace OCM.API.Common.DataSummary
                 //mongodb cache version of query
                 var cacheDB = new OCM.Core.Data.CacheProviderMongoDB();
                 var poiCollection = cacheDB.GetPOICollection();
-            
+
 
                 var results = poiCollection.AsQueryable()
                     .Where(c => c.SubmissionStatus.IsLive == true)
                     .GroupBy(c => c.AddressInfo.Country)
                     .Select(c => new { c.Key, NumItems = c.Count(), NumStations = c.Sum(s => s.NumberOfPoints > 0 ? s.NumberOfPoints : 1) });
-                                          
+
 
                 CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
                 TextInfo textInfo = cultureInfo.TextInfo;

@@ -206,8 +206,8 @@ namespace OCM.Import
 
             // providers.Add(new ImportProvider_OplaadpalenNL()); // no longer used
             // providers.Add(new ImportProvider_DataGouvFr()); // data has changed, no longer available
-            // providers.Add(new ImportProvider_Bundesnetzagentur()); // not used - import has no unique ids
-            
+                                                            // providers.Add(new ImportProvider_Bundesnetzagentur()); // not used - import has no unique ids
+
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
 
@@ -228,6 +228,7 @@ namespace OCM.Import
 
         public async Task<bool> PerformImportProcessing(ImportProcessSettings settings)
         {
+
             var credentials = GetAPISessionCredentials("", settings.Credentials["IMPORT-ocm-system"]);
 
             var coreRefData = await _client.GetCoreReferenceDataAsync();
@@ -802,7 +803,7 @@ namespace OCM.Import
                                 existingConnection.ConnectionType = conn.ConnectionType;
                                 existingConnection.ConnectionTypeID = conn.ConnectionTypeID;
                                 existingConnection.Quantity = conn.Quantity;
-                                
+
                                 existingConnection.Reference = conn.Reference;
                                 existingConnection.StatusTypeID = conn.StatusTypeID;
                                 existingConnection.StatusType = conn.StatusType;
@@ -1103,13 +1104,13 @@ namespace OCM.Import
                 {
                     subList = poiList.Skip(currentIndex).Take(pageSize);
                     itemsProcessed += pageSize;
-                    Log($"Publishing items { currentIndex } to {currentIndex + pageSize - 1}..");
+                    Log($"Publishing items {currentIndex} to {currentIndex + pageSize - 1}..");
                 }
                 else
                 {
                     subList = poiList.Skip(currentIndex).Take(itemsRemaining);
                     itemsProcessed += itemsRemaining;
-                    Log($"Publishing items { currentIndex } to {currentIndex + itemsRemaining}..");
+                    Log($"Publishing items {currentIndex} to {currentIndex + itemsRemaining}..");
                 }
 
                 _client.UpdateItems(subList.ToList(), credentials);

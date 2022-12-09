@@ -51,7 +51,7 @@ namespace OCM.API.Web.Standard
 #if DEBUG
             app.UseBlockingDetection();
 #endif
-      
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

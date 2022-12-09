@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Azure.Identity;
+﻿using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using OCM.API.Common.Model;
@@ -8,7 +7,6 @@ using OCM.Import.Manager.UI.Properties;
 using OCM.Import.Providers;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;

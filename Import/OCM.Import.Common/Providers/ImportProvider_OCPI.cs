@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OCM.Import.Providers
 {
@@ -22,7 +21,7 @@ namespace OCM.Import.Providers
             SourceEncoding = Encoding.GetEncoding("UTF-8");
             IsAutoRefreshed = true;
             AllowDuplicatePOIWithDifferentOperator = true;
-           
+
         }
 
         public void Init(int dataProviderId, string locationsEndpoint, string authHeaderKey, string authHeaderValue)
@@ -51,7 +50,7 @@ namespace OCM.Import.Providers
         {
             try
             {
-                webClient.Headers.Add(_authHeaderKey,_authHeaderValue);
+                webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
                 webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
                 InputData = webClient.DownloadString(url);

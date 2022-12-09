@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using OCM.API.Common;
 using OCM.Core.Settings;
 using System;
-using System.Configuration;
 
 namespace OCM.MVC.Controllers
 {

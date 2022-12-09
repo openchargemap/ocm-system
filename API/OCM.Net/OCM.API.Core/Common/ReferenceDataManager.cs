@@ -214,19 +214,19 @@ namespace OCM.API.Common
 
             data.SubmissionStatusTypes = new List<Model.SubmissionStatusType>();
             await dataModel.SubmissionStatusTypes.ForEachAsync(s => data.SubmissionStatusTypes.Add(Model.Extensions.SubmissionStatusType.FromDataModel(s)));
-            
+
             data.MetadataGroups = new List<Model.MetadataGroup>();
             var groups = dataModel.MetadataGroups
                             .Include(m => m.MetadataFields)
                                 .ThenInclude(f => f.DataType)
                             .Include(m => m.MetadataFields)
                                 .ThenInclude(f => f.MetadataFieldOptions);
-            
+
             await groups.ForEachAsync(g => data.MetadataGroups.Add(Model.Extensions.MetadataGroup.FromDataModel(g)));
-            
+
             data.DataTypes = new List<Model.DataType>();
             await dataModel.DataTypes.ForEachAsync(d => data.DataTypes.Add(Model.Extensions.DataType.FromDataModel(d)));
-            
+
             data.ChargePoint = new ChargePoint()
             {
                 AddressInfo = new Model.AddressInfo(),

@@ -105,13 +105,13 @@ namespace OCM.API.Tests
         }
 
         [Fact]
-        
-          public async Task GetDataSummary()
+
+        public async Task GetDataSummary()
         {
             var api = new OCM.API.Common.DataSummary.DataSummaryManager();
             var list = api.GetAllCountryStats();
             Assert.NotNull(list);
             Assert.True(list.Count > 0);
+        }
     }
-}
 }
