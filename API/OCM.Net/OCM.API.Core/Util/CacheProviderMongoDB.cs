@@ -509,7 +509,7 @@ namespace OCM.Core.Data
                         await Task.Delay(300);
 
                         var pageIndex = 0;
-                        var pageSize = 1000;
+                        var pageSize = 5000;
                         var total = 0;
 
                         //get batch of poi to insert
@@ -521,7 +521,14 @@ namespace OCM.Core.Data
 
                             System.Diagnostics.Debug.WriteLine($"Inserting batch {pageIndex} :: {pageIndex * pageSize}");
 
-                            await InsertAllPOI(poiList, poiCollection);
+                            try
+                            {
+                                await InsertAllPOI(poiList, poiCollection);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger?.LogError($"Failed to insert batch {pageIndex} POI {poiList[0].ID} onwards. {ex.Message}");
+                            }
 
                             pageIndex++;
                             total += poiList.Count;

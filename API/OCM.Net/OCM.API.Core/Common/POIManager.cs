@@ -695,6 +695,21 @@ namespace OCM.API.Common
 
             if (cp.Connections == null || cp.Connections?.Count == 0) return new ValidationResult { IsValid = false, Message = "One or more Connections required", Item = cp };
 
+            if (cp.GeneralComments?.Length > 2048)
+            {
+                return new ValidationResult { IsValid = false, Message = "Comments field is too long. Max length 2048 characters", Item = cp };
+            }
+
+            if (cp.AddressInfo.GeneralComments?.Length > 2048)
+            {
+                return new ValidationResult { IsValid = false, Message = "Address Comments field is too long. Max length 2048 characters", Item = cp };
+            }
+
+            if (cp.AddressInfo.AccessComments?.Length > 2048)
+            {
+                return new ValidationResult { IsValid = false, Message = "Access Comments field is too long. Max length 2048 characters", Item = cp };
+            }
+
             //otherwise, looks basically valid
             return new ValidationResult { IsValid = true, Message = "Passed basic validation", Item = cp };
         }
