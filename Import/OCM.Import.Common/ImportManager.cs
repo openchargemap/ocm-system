@@ -862,7 +862,10 @@ namespace OCM.Import
                     if (settings.FetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
                     {
                         Log("Loading input data from URL..");
+                        var sw = Stopwatch.StartNew();
                         loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
+                        sw.Stop();
+                        Log($"Data downloaded in {sw.Elapsed.TotalSeconds}s.");
                     }
                     else
                     {
@@ -910,6 +913,7 @@ namespace OCM.Import
 
                     if (list.Any(f => f.AddressCleaningRequired == true))
                     {
+                        Log("Address cleaning required, performing clean..");
                         await addressLookupCacheManager.LoadCache();
                         // need to perform address lookups
                         foreach (var i in list)
@@ -963,6 +967,8 @@ namespace OCM.Import
                         finalList = list.ToList();
                     }
 
+
+                    Log("Preparing final processed list for output..");
 
                     // remove items with no changes
 

@@ -281,13 +281,19 @@ namespace OCM.Import.Providers
 
         public void SaveInputFile(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                Log("Cannot save input file, path for save file is empty");
+                return;
+            }
+
             try
             {
                 System.IO.File.WriteAllText(path, this.InputData);
             }
-            catch (Exception)
+            catch
             {
-                Log("Failed to saev input file:" + path);
+                Log("Failed to save input file:" + path);
             }
         }
 

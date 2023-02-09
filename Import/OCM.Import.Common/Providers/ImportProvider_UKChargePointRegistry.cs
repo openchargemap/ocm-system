@@ -135,7 +135,7 @@ namespace OCM.Import.Providers
 
                     if (countryID == null)
                     {
-                        this.Log("Country Not Matched, will require Geolocation:" + item["country"].ToString());
+                        this.Log($"Country Not Matched, will require Geolocation: {addressDetails["Country"]}");
                     }
                     else
                     {
@@ -205,6 +205,27 @@ namespace OCM.Import.Providers
                             break;
                         case "ESB EV Solutions":
                             cp.OperatorID = 3357;
+                            break;
+                        case "ChargePoint Network (Netherlands) B.V.":
+                            cp.OperatorID = 5;
+                            break;
+                        case "SureCharge/FM Conway":
+                            cp.OperatorID = 3612;
+                            break;
+                        case "EV-Dot":
+                            cp.OperatorID = 3446;
+                            break;
+                        case "Clenergy EV":
+                            cp.OperatorID = 3605;
+                            break;
+                        case "ScottishPower":
+                            cp.OperatorID = 3537;
+                            break;
+                        case "IONITY GmbH":
+                            cp.OperatorID = 3299;
+                            break;
+                        case "BP-Pulse (POLAR)":
+                            cp.OperatorID = 32;
                             break;
                     }
 

@@ -1,4 +1,4 @@
-﻿using Azure.Identity;
+using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using OCM.API.Common.Model;
@@ -20,6 +20,7 @@ namespace Import
         List<IImportProvider> _providers;
 
         ImportManager _importManager;
+        ImportSettings _settings;
 
         IConfigurationRoot _config;
 
@@ -39,15 +40,7 @@ namespace Import
 
             this.txtImportJSONPath.Text = System.Configuration.ConfigurationManager.AppSettings["ImportBasePath"];
 
-            var settings = new ImportSettings
-            {
-                GeolocationShapefilePath = System.Configuration.ConfigurationManager.AppSettings["GeolocationShapefilePath"],
-                ImportUserAPIKey = System.Configuration.ConfigurationManager.AppSettings["APIKey"],
-                MasterAPIBaseUrl = System.Configuration.ConfigurationManager.AppSettings["APIBaseUrl"],
-                TempFolderPath = System.Configuration.ConfigurationManager.AppSettings["ImportBasePath"]
-            };
-
-
+            var settings = new ImportSettings();
 
             var configPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -56,9 +49,9 @@ namespace Import
                    .AddJsonFile("appsettings.json", optional: true)
                    .Build();
 
-            var appsettings = new OCM.Core.Settings.CoreSettings();
-            _config.GetSection("ImportSettings").Bind(appsettings);
-
+            
+            _config.GetSection("ImportSettings").Bind(settings);
+            _settings = settings;
 
             _importManager = new ImportManager(settings);
 
@@ -85,7 +78,8 @@ namespace Import
             this.btnProcessImports.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
 
-            var client = new SecretClient(new Uri("https://import-keyvault.vault.azure.net/"), new DefaultAzureCredential());
+            var azureCred = new ClientSecretCredential(_settings.KeyVaultTenantId, _settings.KeyVaultClientId, _settings.KeyVaultSecret);
+            var client = new SecretClient(_settings.KeyVaultUri, azureCred);
             var secret = await client.GetSecretAsync("IMPORT-ocm-system");
 
 

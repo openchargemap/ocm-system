@@ -18,13 +18,17 @@ namespace OCM.Import.Worker
         private Timer? _timer;
         private bool _isImportInProgress = false;
         private ImportSettings _settings;
-
+        private IConfiguration _config;
         public Worker(ILogger<Worker> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _config = configuration;
+
 
             _settings = new ImportSettings();
             configuration.GetSection("ImportSettings").Bind(_settings);
+
+
             if (string.IsNullOrEmpty(_settings.ImportUserAgent)) _settings.ImportUserAgent = "OCM-API-Worker";
         }
 
@@ -33,7 +37,7 @@ namespace OCM.Import.Worker
             _logger.LogInformation($"Import Worker Starting. Import syncing every {_settings.ImportRunFrequencyMinutes} minutes");
 
             // check for work to do every N minutes
-            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(_settings.ImportRunFrequencyMinutes));
+            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(_settings.ImportRunFrequencyMinutes*60));
         }
 
         private async void PerformTasks(object? state)
@@ -70,6 +74,10 @@ namespace OCM.Import.Worker
                             indexOfNextProvider = indexOfLastProvider + 1;
                         }
                     }
+                    else
+                    {
+                        indexOfNextProvider = 0;
+                    }
 
                     status.LastImportedProvider = allProviders[indexOfNextProvider];
 
@@ -81,6 +89,8 @@ namespace OCM.Import.Worker
                     {
                         var stopwatch = Stopwatch.StartNew();
 
+                        var apiKeys = _config.AsEnumerable().Where(k => k.Key.StartsWith("OCPI-") || k.Key.StartsWith("IMPORT-")).ToDictionary(k => k.Key, v => v.Value);
+
                         var importedOK = await importManager.PerformImportProcessing(
                             new ImportProcessSettings
                             {
@@ -89,7 +99,8 @@ namespace OCM.Import.Worker
                                 FetchLiveData = true,
                                 FetchExistingFromAPI = true,
                                 PerformDeduplication = true,
-                                ProviderName = status.LastImportedProvider // leave blank to do all
+                                ProviderName = status.LastImportedProvider, // leave blank to do all
+                                Credentials = apiKeys
                             });
 
                         status.LastImportStatus = importedOK ? "Imported" : "Failed";
