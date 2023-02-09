@@ -21,7 +21,7 @@ namespace OCM.API.Common.Model.OCPI
             _countries = new List<RegionInfo>();
             foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
-                RegionInfo country = new(culture.LCID);
+                RegionInfo country = new(culture.Name);
                 if (!_countries.Where(p => p.Name == country.Name).Any())
                     _countries.Add(country);
             }
