@@ -145,7 +145,7 @@ namespace OCM.API.Common
 
                 return rect;
             }
-            catch (Exception exp)
+            catch
             {
                 return null;
             }
@@ -157,7 +157,7 @@ namespace OCM.API.Common
             {
                 return ParsePointsList(val);
             }
-            catch (Exception exp)
+            catch
             {
                 return null;
             }
@@ -183,7 +183,7 @@ namespace OCM.API.Common
                 }
                 return pointsList;
             }
-            catch (Exception exp) { return null; }
+            catch { return null; }
         }
 
         protected List<LatLon> ParsePointsList(string val)

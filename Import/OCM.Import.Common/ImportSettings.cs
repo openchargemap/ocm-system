@@ -15,6 +15,11 @@ namespace OCM.Import
         public List<string> EnabledImports { get; set; } = new List<string>();
 
         public Dictionary<string, string> ApiKeys { get; set; } = new Dictionary<string, string>();
+
+        public string KeyVaultUri { get; set; }
+        public string KeyVaultTenantId { get; set; }
+        public string KeyVaultClientId { get; set; }
+        public string KeyVaultSecret { get; set; }
     }
 
     public class ImportStatus

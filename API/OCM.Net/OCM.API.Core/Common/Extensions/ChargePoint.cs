@@ -20,7 +20,7 @@ namespace OCM.API.Common.Model.Extensions
             poi.UUID = source.Uuid;
 
             //populate data provider info (full object or id only)
-            if (isVerboseMode && source.DataProviderId != null)
+            if (isVerboseMode)
             {
                 poi.DataProvider = refData.DataProviders.FirstOrDefault(i => i.ID == source.DataProviderId) ?? DataProvider.FromDataModel(source.DataProvider);
                 poi.DataProviderID = source.DataProviderId;

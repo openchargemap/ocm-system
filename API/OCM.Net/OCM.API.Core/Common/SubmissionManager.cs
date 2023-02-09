@@ -482,7 +482,7 @@ namespace OCM.API.Common
 
                 return dataComment.Id;
             }
-            catch (Exception exp)
+            catch
             {
                 return -2; //error saving
             }
