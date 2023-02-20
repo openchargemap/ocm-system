@@ -79,7 +79,7 @@ namespace Import
             this.Cursor = Cursors.WaitCursor;
 
             var azureCred = new ClientSecretCredential(_settings.KeyVaultTenantId, _settings.KeyVaultClientId, _settings.KeyVaultSecret);
-            var client = new SecretClient(_settings.KeyVaultUri, azureCred);
+            var client = new SecretClient(new Uri(_settings.KeyVaultUri), azureCred);
             var secret = await client.GetSecretAsync("IMPORT-ocm-system");
 
 
