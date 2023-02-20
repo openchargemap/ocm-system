@@ -23,10 +23,14 @@ namespace OCM.API.Common.Model
     public enum StandardOperators
     {
         UnknownOperator = 1,
+        PrivateIndividual = 44,
+        BusinessOwner = 45,
         ChargePoint = 5,
         Blink = 9,
         Tesla = 23,
-        ChargeFox = 3339
+        ChargeFox = 3339,
+        ShellRechargeUS = 59,
+        BPPulse = 32
     }
 
     public enum StandardUsageTypes
