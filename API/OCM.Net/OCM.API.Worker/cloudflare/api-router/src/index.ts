@@ -224,12 +224,12 @@ class OCMRouter {
 
 		let banned_ua: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_UA", "json");
 		let banned_ip: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_IP", "json");
-		let banned_keys: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_KEYS", "json");
+		let banned_keys: string[] = <string[]>await this.getConfigKVJson(env,"API_BANNED_KEYS");
 
 		const clientIP = request.headers.get('cf-connecting-ip');
 		const userAgent = request.headers.get('user-agent');
 
-		let abuseMsg = "Blocked for API Abuse. Callers spamming API with repeated duplicate calls may be auto banned.";
+		let abuseMsg = "API call blocked. Callers with repeated duplicate calls may be auto banned and you must ensure you are using a real API key.";
 
 		if (userAgent != null && banned_ua.includes(userAgent)) {
 			status = "BANNED_UA";
