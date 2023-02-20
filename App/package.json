@@ -15,9 +15,9 @@
     "node-sass": "^4.12.0"
   },
   "devDependencies": {
-    "http-server": "^0.8.0",
+    "http-server": "^14.1.1",
     "jake": "8.0.15",
-    "typedoc": "^0.3.4",
+    "typedoc": "^0.23.25",
     "typescript": "^2.3.0",
     "uglify-js": "*",
     "wrench": "*"
