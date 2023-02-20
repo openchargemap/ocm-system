@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
@@ -69,6 +69,10 @@ namespace OCM.Import.Providers
                     if (item["station_name"] != null) cp.AddressInfo.Title = item["station_name"].ToString();
                     cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
                     cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ");
+                    if (cp.AddressInfo.Title.Length > 100)
+                    {
+                        cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 100);
+                    }
                     if (item["city"] != null) cp.AddressInfo.Town = item["city"].ToString();
                     if (item["state"] != null) cp.AddressInfo.StateOrProvince = item["state"].ToString();
                     if (item["zip"] != null) cp.AddressInfo.Postcode = item["zip"].ToString();
@@ -117,15 +121,42 @@ namespace OCM.Import.Providers
                         {
                             cp.OperatorID = deviceOperatorInfo.ID;
                         }
-                        else if (deviceController == "tesla destination")
+                        else if (deviceController != "non-networked")
                         {
-                            cp.OperatorID = (int)StandardOperators.Tesla;
-                        }
-                        else
-                        {
-                            if (deviceController != "non-networked")
+
+                            switch (deviceController)
                             {
-                                this.Log("Unknown network operator:" + deviceController);
+                                case "tesla destination":
+                                    cp.OperatorID = (int)StandardOperators.Tesla;
+                                    break;
+                                case "shell_recharge":
+                                    cp.OperatorID = 59;
+                                    break;
+                                case "rivian_waypoints":
+                                    cp.OperatorID = 3617; //3607 = Rivian Adventure
+                                    break;
+                                case "bchydro":
+                                    cp.OperatorID = 3385;
+                                    break;
+                                case "powerflex":
+                                    cp.OperatorID = 3618;
+                                    break;
+                                case "semacharge":
+                                    cp.OperatorID = 39;
+                                    break;
+                                case "ampup":
+                                    cp.OperatorID = 3619;
+                                    break;
+                                case "livingston":
+                                    cp.OperatorID = 3620;
+                                    break;
+                                case "chargelab":
+                                    cp.OperatorID = 3621;
+                                    break;
+                                default:
+                                    this.Log("Unknown network operator:" + deviceController);
+                                    break;
+
                             }
                         }
                     }
