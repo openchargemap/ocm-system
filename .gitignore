@@ -130,3 +130,5 @@ UpgradeLog*.XML
 *.pubxml
 
 \.vs/
+
+API/OCM.Net/OCM.API.Worker/cloudflare/api-router/.wrangler/
