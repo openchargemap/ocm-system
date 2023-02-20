@@ -41,7 +41,7 @@
     <None Remove="Service References\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CompareNETObjects" Version="4.78.0" />
+    <PackageReference Include="CompareNETObjects" Version="4.79.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
     <PackageReference Include="DotNetProjects.IndexedLinq" Version="2.0.18" />
     <PackageReference Include="GeoCoordinate.NetStandard1" Version="1.0.1" />
