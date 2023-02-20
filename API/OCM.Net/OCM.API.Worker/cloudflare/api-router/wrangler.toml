@@ -1,0 +1,11 @@
+name = "ocm-api"
+main = "src/index.ts"
+compatibility_date = "2023-02-20"
+kv_namespaces = [
+  { binding = "OCM_CONFIG_KV", id = "15b8453a7cd843e492d1e1eba99f5509", preview_id = "434743cb34a84739bf65dfc9dadc1d44" }
+]
+
+[[ d1_databases ]]
+binding = "OCM_API_STATS"
+database_name = "ocm-api-stats"
+database_id = "08855b23-7926-4a2b-836e-b5f3264a8101"
