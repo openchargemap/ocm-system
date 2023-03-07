@@ -71,19 +71,23 @@ namespace OCM.Import.Providers
                 var countryCode = item["Land_code"].InnerText;
                 if (countryCode.ToUpper() == "NOR")
                 {
-                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "no")?.ID;
+                    cp.AddressInfo.CountryID = 168;
                 }
                 else if (countryCode.ToUpper() == "FIN")
                 {
-                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "fi")?.ID;
+                    cp.AddressInfo.CountryID = 79;
                 }
                 else if (countryCode.ToUpper() == "SWE")
                 {
-                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "se")?.ID;
+                    cp.AddressInfo.CountryID = 216;
                 }
                 else if (countryCode.ToUpper() == "DAN")
                 {
-                    cp.AddressInfo.CountryID = coreRefData.Countries.FirstOrDefault(c => c.ISOCode.ToLower() == "dk")?.ID;
+                    cp.AddressInfo.CountryID = 65;
+                }
+                else if (countryCode.ToUpper() == "ISL")
+                {
+                    cp.AddressInfo.CountryID = 105;
                 }
                 else
                 {
