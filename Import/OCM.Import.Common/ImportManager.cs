@@ -106,7 +106,7 @@ namespace OCM.Import
 
     public class ImportManager
     {
-        public const int DUPLICATE_DISTANCE_METERS = 200;
+        public const int DUPLICATE_DISTANCE_METERS = 50;
 
         public bool ImportUpdatesOnly { get; set; }
 
