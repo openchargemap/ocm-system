@@ -13,6 +13,9 @@ namespace OCM.API.Common.Model.OCPI
         bool _useLiveStatus { get; set; }
 
         private readonly List<RegionInfo> _countries = new();
+
+        internal Dictionary<string, int> _unmappedOperators = new Dictionary<string, int>();
+
         public OCPIDataAdapter(CoreReferenceData coreReferenceData, bool useLiveStatus = false)
         {
             _coreReferenceData = coreReferenceData;
@@ -38,7 +41,7 @@ namespace OCM.API.Common.Model.OCPI
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId)
+        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId, Dictionary<string, int> operatorMappings = null)
         {
 
             foreach (var i in source)
@@ -57,7 +60,7 @@ namespace OCM.API.Common.Model.OCPI
                     DataProviderID = dataProviderId,
                     AddressInfo = new AddressInfo
                     {
-                        Title = i.Name,
+                        Title = i.Name ?? i.Address,
                         AddressLine1 = i.Address,
                         Town = i.City,
                         Postcode = i.Postal_code,
@@ -93,7 +96,7 @@ namespace OCM.API.Common.Model.OCPI
                         var connectionInfo = new ConnectionInfo
                         {
                             Reference = c.Id,
-                            PowerKW = c.Max_electric_power == 0 ? null : c.Max_electric_power,
+                            PowerKW = c.Max_electric_power == 0 ? null : c.Max_electric_power / 1000,
                             Voltage = c.Max_voltage,
                             Amps = c.Max_amperage,
                             // set power type
@@ -115,10 +118,60 @@ namespace OCM.API.Common.Model.OCPI
                     }
                 }
 
+                // map operator
+                if (i.Operator != null && !string.IsNullOrEmpty(i.Operator.Name))
+                {
+                    if (operatorMappings != null && operatorMappings.ContainsKey(i.Operator.Name))
+                    {
+                        cp.OperatorID = operatorMappings[i.Operator.Name];
+                    }
+                    else
+                    {
+                        if (!_unmappedOperators.ContainsKey(i.Operator.Name))
+                        {
+                            _unmappedOperators.Add(i.Operator.Name, 1);
+                        }
+                        else
+                        {
+                            _unmappedOperators[i.Operator.Name]++;
+                        }
+                    }
+                }
+                else
+                {
+                    // operator may be stored as party id
+                    if (!string.IsNullOrEmpty(i.Party_id))
+                    {
+                        if (operatorMappings != null && operatorMappings.ContainsKey(i.Party_id))
+                        {
+                            cp.OperatorID = operatorMappings[i.Party_id];
+                        }
+                        else
+                        {
+                            if (!_unmappedOperators.ContainsKey(i.Party_id))
+                            {
+                                _unmappedOperators.Add(i.Party_id, 1);
+                            }
+                            else
+                            {
+                                _unmappedOperators[i.Party_id]++;
+                            }
+                        }
+                    }
+                }
+
                 yield return cp;
             }
         }
 
+        /// <summary>
+        /// Get the list of operators we failed to match
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, int> GetUnmappedOperators()
+        {
+            return _unmappedOperators;
+        }
 
         /// <summary>
         /// Map from a set of OCM ChargePoints locations to a set of OCPI Locations

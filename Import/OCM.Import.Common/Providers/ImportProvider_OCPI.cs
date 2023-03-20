@@ -7,13 +7,15 @@ using System.Text;
 
 namespace OCM.Import.Providers
 {
-    internal class ImportProvider_OCPI : BaseImportProvider, IImportProvider
+    public class ImportProvider_OCPI : BaseImportProvider, IImportProvider
     {
         private string _authHeaderKey = "";
         private string _authHeaderValue = "";
 
         private int _dataProviderId = 1;
 
+        public Dictionary<string,int> OperatorMappings = new Dictionary<string,int>();
+        internal OCPIDataAdapter _adapter;
         public ImportProvider_OCPI()
         {
             this.ProviderName = "ocpi";
@@ -24,7 +26,9 @@ namespace OCM.Import.Providers
 
         }
 
-        public void Init(int dataProviderId, string locationsEndpoint, string authHeaderKey, string authHeaderValue)
+        public string AuthHeaderValue { set { _authHeaderValue = value; } }
+
+        public void Init(int dataProviderId, string locationsEndpoint, string authHeaderKey = null, string authHeaderValue = null)
         {
             AutoRefreshURL = locationsEndpoint;
 
@@ -37,11 +41,19 @@ namespace OCM.Import.Providers
 
         public List<ChargePoint> Process(CoreReferenceData coreRefData)
         {
-            var adapter = new OCPIDataAdapter(coreRefData, useLiveStatus: false);
+
+            _adapter= new OCPIDataAdapter(coreRefData, useLiveStatus: false);
 
             var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.Location>>(InputData);
 
-            var poiResults = adapter.FromOCPI(response, _dataProviderId);
+            var poiResults = _adapter.FromOCPI(response, _dataProviderId, OperatorMappings);
+
+            var unmappedOperators = _adapter.GetUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
 
             return poiResults.ToList();
         }
@@ -50,7 +62,11 @@ namespace OCM.Import.Providers
         {
             try
             {
-                webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
+                if (_authHeaderKey != null)
+                {
+                    webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
+                }
+                
                 webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
                 InputData = webClient.DownloadString(url);

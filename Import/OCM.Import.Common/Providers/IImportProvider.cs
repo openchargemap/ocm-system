@@ -7,6 +7,8 @@ namespace OCM.Import.Providers
     {
         string GetProviderName();
         List<ChargePoint> Process(CoreReferenceData coreRefData);
+
+        bool LoadInputFromURL(string url);
     }
 
     public interface IImportProviderWithInit : IImportProvider

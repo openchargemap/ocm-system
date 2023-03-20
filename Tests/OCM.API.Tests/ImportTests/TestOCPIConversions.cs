@@ -68,5 +68,29 @@ namespace OCM.API.Tests
 
             System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
+
+        [Fact]
+        async Task CanConvertFromOCPI_MobiePt()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_locations-mobie.pt.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
+
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.Location>>(json);
+            var poiResults = adapter.FromOCPI(response, 7).ToList();
+
+            Assert.Equal(3299, poiResults.Count());
+
+            // ensure power KW does not exceed a reasonable value
+            Assert.Empty(poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000)));
+
+            var output = JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            System.IO.File.WriteAllText("C:\\temp\\ocm\\ocpi.json", output);
+        }
     }
 }

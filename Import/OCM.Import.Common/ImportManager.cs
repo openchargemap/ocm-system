@@ -206,12 +206,12 @@ namespace OCM.Import
 
             // providers.Add(new ImportProvider_OplaadpalenNL()); // no longer used
             // providers.Add(new ImportProvider_DataGouvFr()); // data has changed, no longer available
-                                                            // providers.Add(new ImportProvider_Bundesnetzagentur()); // not used - import has no unique ids
+            // providers.Add(new ImportProvider_Bundesnetzagentur()); // not used - import has no unique ids
 
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
 
-            providers.Add(new ImportProvider_OCPI());
+            providers.Add(new ImportProvider_GoEvio());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -841,45 +841,42 @@ namespace OCM.Import
             try
             {
                 bool loadOK = false;
+
+                if (p is ImportProvider_GoEvio)
+                {
+                    (p as ImportProvider_GoEvio).AuthHeaderValue = settings.Credentials["OCPI-EVIO"];
+                }
+
                 if (p.ImportInitialisationRequired && p is IImportProviderWithInit)
                 {
                     ((IImportProviderWithInit)provider).InitImportProvider();
                 }
 
-                if (p is ImportProvider_OCPI)
+                if (string.IsNullOrEmpty(p.InputPath))
                 {
-                    (p as ImportProvider_OCPI).Init(dataProviderId: 30, locationsEndpoint: "https://api.go-evio.com/locations", "apikey", settings.Credentials["OCPI-EVIO"]);
-                    loadOK = (p as ImportProvider_OCPI).LoadInputFromURL(p.AutoRefreshURL);
+                    p.InputPath = Path.Combine(settings.DefaultDataPath, "cache_" + p.ProviderName + ".dat");
+                }
+
+                if (settings.FetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
+                {
+                    Log("Loading input data from URL..");
+                    var sw = Stopwatch.StartNew();
+                    loadOK = provider.LoadInputFromURL(p.AutoRefreshURL);
+                    sw.Stop();
+                    Log($"Data downloaded in {sw.Elapsed.TotalSeconds}s.");
                 }
                 else
                 {
-
-                    if (string.IsNullOrEmpty(p.InputPath))
+                    if (p.IsStringData && !p.UseCustomReader)
                     {
-                        p.InputPath = Path.Combine(settings.DefaultDataPath, "cache_" + p.ProviderName + ".dat");
-                    }
+                        Log("Loading input data from file..");
 
-                    if (settings.FetchLiveData && p.IsAutoRefreshed && !String.IsNullOrEmpty(p.AutoRefreshURL))
-                    {
-                        Log("Loading input data from URL..");
-                        var sw = Stopwatch.StartNew();
-                        loadOK = p.LoadInputFromURL(p.AutoRefreshURL);
-                        sw.Stop();
-                        Log($"Data downloaded in {sw.Elapsed.TotalSeconds}s.");
+                        loadOK = provider.LoadInputFromURL(p.InputPath);
                     }
                     else
                     {
-                        if (p.IsStringData && !p.UseCustomReader)
-                        {
-                            Log("Loading input data from file..");
-
-                            loadOK = p.LoadInputFromFile(p.InputPath);
-                        }
-                        else
-                        {
-                            //binary streams pass as OK by default
-                            loadOK = true;
-                        }
+                        //binary streams pass as OK by default
+                        loadOK = true;
                     }
                 }
 

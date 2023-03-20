@@ -62,6 +62,12 @@
     <ProjectReference Include="..\..\Import\OCM.Import.Analysis\OCM.Import.Analysis.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\ocpi_2_2_locations-mobie.pt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <Copy SourceFiles="App.config" DestinationFiles="$(OutDir)\testhost.dll.config" />
     <Copy SourceFiles="App.config" DestinationFiles="$(OutDir)\testhost.x86.dll.config" />
