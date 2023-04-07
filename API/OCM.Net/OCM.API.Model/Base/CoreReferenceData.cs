@@ -97,7 +97,9 @@ namespace OCM.API.Common.Model
         Type3 = 26,
         Europlug = 13,
         AS3112 = 29,
-        ThreePhaseAU = 1041
+        ThreePhaseAU = 1041,
+        GB_T_AC = 1038,
+        GB_T_DC = 1040
     }
 
     public enum StandardCurrentTypes
