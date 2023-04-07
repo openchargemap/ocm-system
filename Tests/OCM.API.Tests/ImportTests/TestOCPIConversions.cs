@@ -70,6 +70,26 @@ namespace OCM.API.Tests
         }
 
         [Fact]
+        async Task CanConvertFromOCPI_Sitronics()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-sitronics.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
+
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json);
+            var ocpiData = response.Data;
+            var poiResults = adapter.FromOCPI(ocpiData, 31);
+
+            Assert.Equal(10, poiResults.Count());
+
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+        }
+
+        [Fact]
         async Task CanConvertFromOCPI_MobiePt()
         {
             var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

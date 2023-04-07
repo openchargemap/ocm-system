@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OCM.Import.Providers
+namespace OCM.Import.Providers.OCPI
 {
     public class ImportProvider_OCPI : BaseImportProvider, IImportProvider
     {
@@ -14,11 +14,11 @@ namespace OCM.Import.Providers
 
         private int _dataProviderId = 1;
 
-        public Dictionary<string,int> OperatorMappings = new Dictionary<string,int>();
+        public Dictionary<string, int> OperatorMappings = new Dictionary<string, int>();
         internal OCPIDataAdapter _adapter;
         public ImportProvider_OCPI()
         {
-            this.ProviderName = "ocpi";
+            ProviderName = "ocpi";
             OutputNamePrefix = "ocpi";
             SourceEncoding = Encoding.GetEncoding("UTF-8");
             IsAutoRefreshed = true;
@@ -42,9 +42,20 @@ namespace OCM.Import.Providers
         public List<ChargePoint> Process(CoreReferenceData coreRefData)
         {
 
-            _adapter= new OCPIDataAdapter(coreRefData, useLiveStatus: false);
+            _adapter = new OCPIDataAdapter(coreRefData, useLiveStatus: false);
 
-            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OCM.Model.OCPI.Location>>(InputData);
+            List<Model.OCPI.Location> response;
+
+            if (InputData.IndexOf("\"data\":") > 0)
+            {
+                var result = Newtonsoft.Json.JsonConvert.DeserializeObject<Model.OCPI.OcpiResponseLocationList>(InputData);
+                response = result.Data.ToList();
+            }
+            else
+            {
+                response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Model.OCPI.Location>>(InputData);
+            }
+
 
             var poiResults = _adapter.FromOCPI(response, _dataProviderId, OperatorMappings);
 
@@ -66,7 +77,7 @@ namespace OCM.Import.Providers
                 {
                     webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
                 }
-                
+
                 webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
                 InputData = webClient.DownloadString(url);

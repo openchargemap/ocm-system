@@ -8,6 +8,7 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.Import.Misc;
 using OCM.Import.Providers;
+using OCM.Import.Providers.OCPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -179,7 +180,6 @@ namespace OCM.Import
             List<IImportProvider> providers = new List<IImportProvider>();
 
             providers.Add(new ImportProvider_UKChargePointRegistry());
-            //providers.Add(new ImportProvider_CarStations());
             providers.Add(new ImportProvider_Mobie());
 
             if (_settings.ApiKeys.TryGetValue("afdc_energy_gov", out var afdcKey))
@@ -204,14 +204,10 @@ namespace OCM.Import
                 providers.Add(new ImportProvider_NobilDotNo(nobil));
             }
 
-            // providers.Add(new ImportProvider_OplaadpalenNL()); // no longer used
-            // providers.Add(new ImportProvider_DataGouvFr()); // data has changed, no longer available
-            // providers.Add(new ImportProvider_Bundesnetzagentur()); // not used - import has no unique ids
-
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
-
             providers.Add(new ImportProvider_GoEvio());
+            providers.Add(new ImportProvider_Sitronics());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -845,6 +841,9 @@ namespace OCM.Import
                 if (p is ImportProvider_GoEvio)
                 {
                     (p as ImportProvider_GoEvio).AuthHeaderValue = settings.Credentials["OCPI-EVIO"];
+                }
+                else if (p is ImportProvider_Sitronics)
+                {
                 }
 
                 if (p.ImportInitialisationRequired && p is IImportProviderWithInit)

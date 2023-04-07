@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OCM.Import.Providers
+namespace OCM.Import.Providers.OCPI
 {
     public class ImportProvider_Mobie : ImportProvider_OCPI, IImportProvider
     {
@@ -25,17 +25,6 @@ namespace OCM.Import.Providers
 
         List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
         {
-            var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == 100);//imported and published
-            var status_operational = coreRefData.StatusTypes.First(os => os.ID == 50);
-            var status_notoperational = coreRefData.StatusTypes.First(os => os.ID == 100);
-
-            var status_operationalMixed = coreRefData.StatusTypes.First(os => os.ID == 75);
-            var status_available = coreRefData.StatusTypes.First(os => os.ID == 10);
-            var status_inuse = coreRefData.StatusTypes.First(os => os.ID == 20);
-            var status_unknown = coreRefData.StatusTypes.First(os => os.ID == 0);
-            var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == 1);
-            var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == 2);
-
             // Mappings based on https://mobie.pt/en/mobienetwork/finding-charging-points
             OperatorMappings = new Dictionary<string, int>()
             {
@@ -61,7 +50,7 @@ namespace OCM.Import.Providers
                 { "ECI",3647 }
             };
 
-            var outputList = base.Process(coreRefData);
+            var outputList = Process(coreRefData);
 
             return outputList;
         }

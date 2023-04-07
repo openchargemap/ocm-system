@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OCM.Import.Providers
+namespace OCM.Import.Providers.OCPI
 {
     public class ImportProvider_GoEvio : ImportProvider_OCPI, IImportProvider
     {
@@ -17,13 +17,13 @@ namespace OCM.Import.Providers
 
             IsAutoRefreshed = true;
             IsProductionReady = true;
-            
+
             Init(dataProviderId: 30, "https://api.go-evio.com/locations", "apikey");
         }
 
         List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
         {
-            var outputList = base.Process(coreRefData);
+            var outputList = Process(coreRefData);
             return outputList;
         }
     }
