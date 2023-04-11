@@ -1,4 +1,5 @@
-﻿using OCM.API.Common.Model;
+﻿using Newtonsoft.Json;
+using OCM.API.Common.Model;
 using OCM.API.Common.Model.OCPI;
 using System;
 using System.Collections.Generic;
@@ -45,15 +46,25 @@ namespace OCM.Import.Providers.OCPI
             _adapter = new OCPIDataAdapter(coreRefData, useLiveStatus: false);
 
             List<Model.OCPI.Location> response;
+            var deserializeSettings = new JsonSerializerSettings
+            {
+                Error = (obj, args) =>
+                {
+                    var contextErrors = args.ErrorContext;
+                    contextErrors.Handled = true;
+
+                    Log($"Error parsing item {contextErrors.Error}");
+                }
+            };
 
             if (InputData.IndexOf("\"data\":") > 0)
             {
-                var result = Newtonsoft.Json.JsonConvert.DeserializeObject<Model.OCPI.OcpiResponseLocationList>(InputData);
+                var result = Newtonsoft.Json.JsonConvert.DeserializeObject<Model.OCPI.OcpiResponseLocationList>(InputData, deserializeSettings);
                 response = result.Data.ToList();
             }
             else
             {
-                response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Model.OCPI.Location>>(InputData);
+                response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Model.OCPI.Location>>(InputData, deserializeSettings);
             }
 
 
