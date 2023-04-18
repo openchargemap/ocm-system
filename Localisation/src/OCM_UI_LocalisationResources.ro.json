@@ -1,0 +1,259 @@
+{
+  "_langTitle": "Română",
+  "_langCode": "ro",
+  "ocm": {
+    "general": {
+      "shortDescription": "catalogul locațiilor stațiilor publice de încărcare mașini electrice",
+      "linkWebApp": "Caută locații folosind aplicația web",
+      "linkBrowsePOI": "Afișare toate locațiile",
+      "browsePOI": "Afișare locații stații de încărcare",
+      "loadingProgress": "Așteptați, vă rog...",
+      "addLocation": "Adaugă locație",
+      "addItem": "Adaugă",
+      "favourites": "Favorite",
+      "settings": "Setări",
+      "about": "Despre",
+      "signIn": "Conectare",
+      "signOut": "Deconectare"
+    },
+    "details": {
+      "sectionTitle": "Locație încărcare",
+      "location": {
+        "sectionTitle": "Detalii locație",
+        "title": "Numele locației",
+        "address": "Adresa",
+        "addressLine1": "Adresa (suplimentar)",
+        "addressLine2": "Adresa (suplimentar)",
+        "town": "Localitate",
+        "stateOrProvince": "Județ/Regiune",
+        "postcode": "Cod poștal",
+        "country": "Țara",
+        "latitude": "Latitudine",
+        "longitude": "Longitudine",
+        "contactTelephone1": "Telefon contact principal",
+        "contactTelephone2": "Telefon contact alternativ",
+        "contactEmail": "Email contact",
+        "map": "Hartă",
+        "streetView": "Vizualizare stradă",
+        "addressRelatedURL": "Pagina web"
+      },
+      "generalComments": "Informații generale",
+      "accessComments": "Informații acces",
+      "advancedDetails": "Informații suplimentare",
+      "numberOfPoints": "Număr locuri de încărcare",
+      "usageType": "Utilizare",
+      "usageCost": "Cost utilizare",
+      "operationalStatus": "Operational Status",
+      "datePlanned": "Data estimată",
+      "dateLastConfirmed": "Data ultima confirmare",
+      "lastUpdated": "Data ultima actualizare",
+      "refNumber": "Nr ref. OpenChargeMap",
+      "dataQualityLevel": "Nivel calitate date",
+      "importedDataNotice": "Atenție: Aceste date au fost adăugate automat, modificările trebuie trimise direct la autor.",
+      "submissionStatus": "Starea trimiterii",
+      "placesNearby": {
+        "sectionTitle": "Locuri în apropiere"
+      },
+      "mediaItems": {
+        "sectionTitle": "Fotografii",
+        "addPrompt": "Încarcă fotografii pentru această locație"
+      },
+      "metadataValues": {
+        "sectionTitle": "Cuvinte cheie suplimentare"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Comentarii și evaluări",
+        "zeroComments": "Nu există comentarii de la utilizatori",
+        "addPrompt": "Adaugă comentariu sau actualizează starea"
+      },
+      "equipment": {
+        "sectionTitle": "Detalii stație",
+        "connectionType": "Tip conector",
+        "powerKW": "Putere maximă (KW)",
+        "powerLevel": "Nivel",
+        "quantity": "Prize",
+        "supplyType": "Tip curent",
+        "voltage": "Voltaj",
+        "current": "Curent maxim",
+        "comment": "Comentarii",
+        "reference": "Referință"
+      },
+      "dataProvider": {
+        "sectionTitle": "Sursă date",
+        "website": "Pagina web",
+        "providersReference": "Referință sursă"
+      },
+      "operator": {
+        "sectionTitle": "Operator/Rețea",
+        "operatorsReference": "Ref. Operator"
+      }
+    },
+    "search": {
+      "sectionTitle": "Căutare",
+      "locationInput": "Locație",
+      "useMyLocation": "Caută în apropiere",
+      "distance": "Distanța",
+      "chargingLevels": "Putere încărcare",
+      "minPowerKW": "Putere min. kW",
+      "connectionTypes": "Tip conector",
+      "networkOperators": "Operator/Rețea",
+      "countries": "Țară",
+      "submissionStatus": "Stare locație",
+      "usageTypes": "Acces",
+      "operationalStatusTypes": "Status",
+      "performSearch": "Caută",
+      "progress": "Căutare.."
+    },
+    "navigation": {
+      "home": "Acasă",
+      "browse": {
+        "sectionTitle": "Listă",
+        "allLocations": "Toate locațiile",
+        "byCountry": "După țară",
+        "avaitingReview": "Aprobare în așteptare",
+        "recentActivity": "Activitatea recentă",
+        "webApp": "Aplicația web pentru smartphone",
+        "statistics": "Statistici",
+        "awaitingReviewImported": "Locații importate care așteaptă aprobare",
+        "editqueue": "Modificări care așteaptă aprobare"
+      },
+      "develop": {
+        "sectionTitle": "Dezvoltatori",
+        "api": "API",
+        "htmlWidgets": "Piese HTML",
+        "examples": "Exemple",
+        "getInvolved": "Contribuie",
+        "code": "Vezi codul sursă (GitHub)",
+        "translate": "Contribuie traducere"
+      },
+      "discuss": "Discuții",
+      "about": {
+        "termsPrivacy": "Termeni și Confidențialitate",
+        "contact": "Contact",
+        "guidance": "Instrucțiuni pentru contribuitori"
+      },
+      "profile": {
+        "sectionTitle": "Profilul meu",
+        "subscriptions": "Abonamentele mele",
+        "comments": "Comentariile mele",
+        "uploads": "Fișierele mele încărcate"
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": "Poți",
+        "browseLocations": "căuta locații în apropiere de tine",
+        "commentsPhotos": "și adăuga comentarii și fotografii",
+        "dontSeePOI": "Nu găsești o locație care știi că există?"
+      },
+      "getStations": {
+        "sectionTitle": "Obține date stație de încărcare",
+        "who": "Producători auto, producători sisteme de navigație, dezvoltatori aplicații, proprietari site-uri web:",
+        "what": "Puteți accesa și descărca datele stațiilor de încărcare folosind ",
+        "websiteOperators": "Dacă ai un site web și dorești o hartă cu locațiile stațiilor de încărcare, poți",
+        "embedMap": "integra o hartă direct în site"
+      },
+      "supplyData": {
+        "sectionTitle": "Operatori și furnizori date",
+        "who": "Furnizori stații de încărcare, operatori rețele, autorități locale și naționale, aplicații și site-uri specializate:",
+        "needData": "Avem nevoie de contribuția voastră.",
+        "what": "Ne poți furniza informații actualizate despre stațiile de încărcare, indiferent dacă dețineți, operați sau pur și simplu monitorizați locațiile cu stații de încărcare. Vă rugăm",
+        "contactUs": "să ne contactați",
+        "getStarted": "pentru a începe"
+      },
+      "stats": {
+        "locations": "Locații",
+        "locationSummary": "{totalStations} stații de încărcare în {totalLocations} locații."
+      },
+      "shortProjectSummary": "Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.",
+      "getApp": "Descarcă aplicația",
+      "tip": "Sfat:",
+      "searching": {
+        "quickWay": "Dacă ai nevoie de o modalitate rapidă să găsești cea mai apropiată stație de încărcare, poți încerca",
+        "webApp": "Aplicația Web",
+        "searchAppStore": "în special pe telefonul mobil. Poți instala și aplicația din Store pentru acces permanent."
+      },
+      "sponsors": "Căutăm fonduri și sponsori, ne puteți ajuta? {link:Find out more}.",
+      "termsNotice": "Prin utilizarea serviciilor noastre și trimiterea informațiilor la Open Charge Map, ești de acord cu {link:standard terms, privacy policy and licensing}.",
+      "about": {
+        "ourService": "Serviciile noastre",
+        "aim": {
+          "title": "Scopul nostru",
+          "p1": "Scopul nostru este să lucrăm cu comunitatea pentru a dezvolta și a oferi o bază de date de înaltă calitate, publică, gratuită și deschisă cu locațiile stațiilor de încărcare la nivel global.",
+          "p2": "Obiectivul nostru este de a evita proliferarea de hărți/site-uri web/aplicații independente cu locații de încărcare duplicate sau contradictorii și de a oferi (pe cât posibil) un punct de referință unic, de încredere pentru informațiile despre locația stațiilor de încărcare. În loc să concuram cu alți furnizori de date, ne propunem să cooperăm cu aceștia și să le oferim servicii, în schimbul eforturilor de partajare a datelor."
+        },
+        "whyOCM": {
+          "title": "De ce să folosiți Open Charge Map?",
+          "content": "Prin utilizarea Open Charge Map puteți ajuta și contribui la îmbunătățirea informațiilor din baza de date prin furnizarea de recenzii, editări, completări, comentarii, fotografii și prin promovarea serviciului altor utilizatori. Avantajul OCM față de alți furnizori este că scopul OCM este de a partaja informații în mod deschis, în timp ce furnizorii comerciali trebuie să-și păstreze informațiile pentru ei înșiși (sau în limitele propriilor aplicații etc.) pentru a menține un set de date profitabil din punct de vedere comercial."
+        },
+        "funding": {
+          "title": "Finanțare",
+          "p1": "Open Charge Map este dezvoltat și operat de voluntari. Dacă puteți oferi finanțare pentru a sprijini proiectul sau pentru a finanța lucrări specifice, vă rugăm să {link-contact:get in contact}. Mai multe informații despre finanțare și costurile proiectului {link-funding:is available}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Dezvoltatori și contribuitori",
+          "p1": "Proiectul {link_github:GitHub project} oferă un canal de comunicare pentru contribuitorii tehnici externi pentru a discuta și influența sistemul și planurile noastre. Comunitatea noastră {link_google_plus:Google+} este mijlocul nostru principal de a face schimb de idei și de a aduna feedback de la părțile interesate.",
+          "p2": "Poți consulta lista cu principalii contribuitori {link_code:code}, {link_translations:translations} și {link_data:data}."
+        },
+        "projectStats": {
+          "sectionTitle": "Statistici proiect",
+          "general": "Statistici generale pentru Open Charge Map {link:data and usage} disponibile."
+        },
+        "dataSources": {
+          "title": "Furnizori date",
+          "p1": "Datele puse la dispoziție prin sistemul Open Charge Map și serviciile conexe provin din mai multe surse și sunt adesea furnizate direct (\"crowd sourced\") de către utilizatorii noștri și cei ai aplicațiilor care folosesc serviciile noastre.",
+          "p2": "Mulțumiri pentru următorii mari furnizori de date din baza noastră de date:"
+        }
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Necompletat)",
+        "value_0": "Necunoscut",
+        "value_10": "Disponibil (Status Automat)",
+        "value_20": "Utilizat (Status Automat)",
+        "value_30": "Temporar indisponibil",
+        "value_50": "Operational",
+        "value_75": "Partial operational (Mixt)",
+        "value_100": "Indisponibil",
+        "value_150": "Disponibil în curând",
+        "value_200": "Desființat"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Necompletat)",
+        "value_1": "(Operator necunoscut)",
+        "value_44": "(Rezidențial/Individual)",
+        "value_45": "(Companie)"
+      },
+      "usageType": {
+        "value_minus1": "(Necompletat)",
+        "value_0": "(Necunoscut)",
+        "value_1": "Public",
+        "value_2": "Privat - Acces restricționat",
+        "value_3": "Privat - Cu programare",
+        "value_4": "Public - Pentru membri",
+        "value_5": "Public - Plată la locație",
+        "value_6": "Privat - Pentru angajați, vizitatori sau clienți",
+        "value_7": "Public - Cu programare"
+      },
+      "connectionType": {
+        "value_minus1": "(Necompletat)",
+        "value_0": "(Necunoscut)"
+      },
+      "levelType": {
+        "value_minus1": "(Necompletat)",
+        "value_0": "(Necunoscut)",
+        "value_1": "Nivel 1 : Scăzut (Sub 2kW)",
+        "value_2": "Nivel 2 : Mediu (Peste 2kW)",
+        "value_3": "Nivel 3:  Ridicat (Peste 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Necompletat)",
+        "value_0": "(Necunoscut)",
+        "value_10": "AC (Monofazat)",
+        "value_20": "AC (Trifazat)",
+        "value_30": "DC"
+      }
+    }
+  }
+}
