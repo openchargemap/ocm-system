@@ -39,7 +39,7 @@ Please contribute in any way you can:
   - Grow the user base
     - Advocacy, tell people about [Open Charge Map](https://openchargemap.org) and help them use it.
   - Improve the system:
-    - Help translate the system into other languages using the [webtranslateit](https://webtranslateit.com/en/projects/6978-Open-Charge-Map) project 
+    - Help translate the app into other languages see https://github.com/openchargemap/ocm-app/issues/35
     - Help write documentation
     - Web App (HTML/CSS/JavaScript)
     - Website development (MVC)
