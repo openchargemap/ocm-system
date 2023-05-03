@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
+using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,11 +11,34 @@ using System.Threading.Tasks;
 
 namespace OCM.API.OutputProviders
 {
+    public class POINonComputedContractResolver : DefaultContractResolver
+    {
+        public static readonly POINonComputedContractResolver Instance = new POINonComputedContractResolver();
+
+        protected override JsonProperty CreateProperty(System.Reflection.MemberInfo member, MemberSerialization memberSerialization)
+        {
+            JsonProperty property = base.CreateProperty(member, memberSerialization);
+
+            // don't seralize computed properties
+            if (property.DeclaringType == typeof(ChargePoint) && 
+                property.PropertyName == "IsRecentlyVerified"
+                ||
+                property.PropertyName == "DataQualityLevel"
+                )
+            {
+                property.ShouldSerialize = instance => false;
+            }
+
+            return property;
+        }
+    }
+
     public class JSONOutputProvider : OutputProviderBase, IOutputProvider
     {
         public JSONOutputProvider()
         {
             ContentType = "application/json";
+
         }
 
         public string PerformSerialisationToString(object graph, JsonSerializerSettings serializerSettings)
@@ -157,6 +181,11 @@ namespace OCM.API.OutputProviders
             if (settings.IsCamelCaseOutput)
             {
                 jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            }
+
+            if (settings.ExcludeComputedProperties)
+            {
+                jsonSettings.ContractResolver = new POINonComputedContractResolver();
             }
 
             return jsonSettings;

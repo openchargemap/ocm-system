@@ -140,6 +140,11 @@ namespace OCM.API.Common
         /// </summary>
         public int? LevelOfDetail { get; set; }
 
+        /// <summary>
+        /// if true, remove computed POI properties from output (e.g. IsRecentlyVerified)
+        /// </summary>
+        public bool ExcludeComputedProperties { get; set; } = false;
+
         #region deprecated api filters
 
         public bool FastChargeOnly { get; set; }
@@ -251,6 +256,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(requestParams["verbose"])) settings.IsVerboseOutput = ParseBool(requestParams["verbose"], false);
             if (!String.IsNullOrEmpty(requestParams["compact"])) settings.IsCompactOutput = ParseBool(requestParams["compact"], false);
             if (!String.IsNullOrEmpty(requestParams["camelcase"])) settings.IsCamelCaseOutput = ParseBool(requestParams["camelcase"], false);
+            if (!String.IsNullOrEmpty(requestParams["excludecomputed"])) settings.ExcludeComputedProperties = ParseBool(requestParams["excludecomputed"], false);
             if (!String.IsNullOrEmpty(requestParams["callback"])) settings.Callback = ParseString(requestParams["callback"]);
 
             if (!String.IsNullOrEmpty(requestParams["maxresults"]))
