@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OCM.API.Common.Model;
 using OCM.Core.Data;
@@ -193,10 +193,17 @@ namespace OCM.API.Common
                             //set/update cp properties from simple model to data model
                             var poiData = poiManager.PopulateChargePoint_SimpleToData(poiB, DataModel);
 
-                            //set status type to published if previously unset
-                            if (poiData.SubmissionStatusTypeId == null)
+                            if (poiData.Id == 0 && queueItem.EntityId > 0 && poiA == null)
+                            {
+                                // processing an edit that is a new item, load the existing item from the database directly
+                                poiData = DataModel.ChargePoints.FirstOrDefault(p => p.Id == (int)queueItem.EntityId);
+                            }
+
+                            //set status type to published if previously unset or pending review
+                            if (poiData.SubmissionStatusTypeId == null || (poiData.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poiData.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_UnderReview))
                             {
                                 poiData.SubmissionStatusType = DataModel.SubmissionStatusTypes.First(s => s.Id == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                                poiData.SubmissionStatusTypeId = poiData.SubmissionStatusType.Id;
                             }
 
                             poiData.DateLastStatusUpdate = DateTime.UtcNow;

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Utils;
@@ -83,7 +84,7 @@ namespace OCM.MVC.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult ConvertPermissions()
         {
-            //convert all user permission to new format where applicable
+            //convert all systemUser permission to new format where applicable
             new UserManager().ConvertUserPermissions();
             return RedirectToAction("Index", "Admin", new { result = "processed" });
         }
@@ -229,8 +230,13 @@ namespace OCM.MVC.Controllers
 
         public async Task<JsonResult> PollForTasks(string key)
         {
-            int notificationsSent = 0;
+            var notificationsSent = 0;
+            var itemsAutoApproved = 0;
+            var exceptionCount = 0;
+            var logItems = new List<string>();
+
             MirrorStatus mirrorStatus = null;
+
             //poll for periodic tasks (subscription notifications etc)
             if (key == System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"])
             {
@@ -255,38 +261,74 @@ namespace OCM.MVC.Controllers
                 var autoApproveDays = 3;
 
                 var poiManager = new POIManager();
-                var newPois = await poiManager.GetPOIListAsync(new APIRequestParams { SubmissionStatusTypeID = 1 });
-                var user = new UserManager().GetUser((int)StandardUsers.System);
 
-                foreach (var poi in newPois)
-                {
-                    if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
-                    {
-                        if (poi.DateCreated < DateTime.UtcNow.AddDays(-autoApproveDays))
-                        {
-                            poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
-                            await new SubmissionManager().PerformPOISubmission(poi, user);
-                        }
-
-                    }
-                }
+                var userManager = new UserManager();
+                var systemUser = userManager.GetUser((int)StandardUsers.System);
 
                 // check for edit queue items to auto approve 
                 using (var editQueueManager = new EditQueueManager())
                 {
-                    var queueItems = (await editQueueManager.GetEditQueueItems(new EditQueueFilter { ShowProcessed = false }))
+                    var queueItems = (await editQueueManager.GetEditQueueItems(new EditQueueFilter { ShowProcessed = false, ShowEditsOnly = false }))
                         .Where(q => q.DateProcessed == null).ToList()
                         .OrderBy(q => q.DateSubmitted);
 
                     foreach (var i in queueItems)
                     {
-                        if (i.DateSubmitted < DateTime.UtcNow.AddDays(-autoApproveDays))
+                        try
                         {
-                            await editQueueManager.ProcessEditQueueItem(i.ID, true, (int)StandardUsers.System, true, "Auto Approved");
+                            var editPOI = JsonConvert.DeserializeObject<OCM.API.Common.Model.ChargePoint>(i.EditData);
+                            var submitter = userManager.GetUser(i.User.ID);
+
+                            var submitterHasEditPermissions = UserManager.HasUserPermission(submitter, editPOI.AddressInfo.CountryID, PermissionLevel.Editor);
+
+                            // auto approve if submitter has edit permissions, or edit has been in queue for more than 3 days
+                            if (submitterHasEditPermissions || i.DateSubmitted < DateTime.UtcNow.AddDays(-autoApproveDays))
+                            {
+
+                                await editQueueManager.ProcessEditQueueItem(i.ID, true, (int)StandardUsers.System, false, "Auto Approved");
+
+                                itemsAutoApproved++;
+                            }
+                            else
+                            {
+                                if (submitter.ReputationPoints >= 50 && submitter.Permissions == null)
+                                {
+                                    logItems.Add($"User {submitter.Username} [{submitter.ID}] has high reputation [{submitter.ReputationPoints}] but no country editor permissions.");
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            exceptionCount++;
                         }
                     }
                 }
 
+
+                // auto approve new items if they have been in the system for more than 3 days
+                var newPois = await poiManager.GetPOIListAsync(new APIRequestParams { SubmissionStatusTypeID = 1 });
+
+                foreach (var poi in newPois)
+                {
+                    if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
+                    {
+           
+                        if (poi.DateCreated < DateTime.UtcNow.AddDays(-autoApproveDays))
+                        {
+                            try
+                            {
+                                poi.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Submitted_Published;
+                                await new SubmissionManager().PerformPOISubmission(poi, systemUser);
+                                itemsAutoApproved++;
+                            }
+                            catch
+                            {
+                                exceptionCount++;
+                            }
+                        }
+
+                    }
+                }
 
                 //update cache mirror
                 try
@@ -314,7 +356,14 @@ namespace OCM.MVC.Controllers
 
                 }
             }
-            return Json(new { NotificationsSent = notificationsSent, MirrorStatus = mirrorStatus });
+            return Json(new
+            {
+                NotificationsSent = notificationsSent,
+                MirrorStatus = mirrorStatus,
+                ExceptionCount = exceptionCount,
+                AutoApproved = itemsAutoApproved,
+                Log = logItems
+            });
         }
 
         [Authorize(Roles = "Admin")]
