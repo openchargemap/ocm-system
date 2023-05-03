@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
@@ -31,6 +31,8 @@ namespace OCM.Import.Providers
             var dataList = o["ChargeDevice"].ToArray();
 
             int itemCount = 0;
+
+            Dictionary<string, int> unmappedOperators = new Dictionary<string, int>();
 
             foreach (var dataItem in dataList)
             {
@@ -113,6 +115,11 @@ namespace OCM.Import.Providers
                     cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
                 }
 
+                if (string.IsNullOrEmpty(cp.AddressInfo.Title))
+                {
+                    Log("Could not identify address title");
+
+                }
                 //cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
 
                 if (!String.IsNullOrEmpty(addressDetails["Country"].ToString()))
@@ -142,31 +149,14 @@ namespace OCM.Import.Providers
                         cp.AddressInfo.CountryID = countryID;
                     }
                 }
-                else
-                {
-                    //default to US if no country identified
-                    //cp.AddressInfo.Country = cp.AddressInfo.Country = coreRefData.Countries.FirstOrDefault(cy => cy.ID == 2);
-                }
+
 
                 //operator from DeviceController
                 var deviceController = item["DeviceController"];
-
                 cp.AddressInfo.RelatedURL = deviceController["Website"].ToString();
+
                 var deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(deviceController["OrganisationName"].ToString().ToLower().Trim()));
-                if (deviceOperator != null)
-                {
-                    cp.OperatorID = deviceOperator.ID;
-                }
-                else
-                {
-                    //operator from device owner
-                    var devOwner = item["DeviceOwner"];
-                    deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(devOwner["OrganisationName"].ToString().ToLower().Trim()));
-                    if (deviceOperator != null)
-                    {
-                        cp.OperatorID = deviceOperator.ID;
-                    }
-                }
+
 
                 if (cp.OperatorID == null)
                 {
@@ -174,64 +164,194 @@ namespace OCM.Import.Providers
 
                     // match specific operators
 
-                    switch (operatorName)
+                    switch (operatorName?.ToLower().Trim())
                     {
-                        case "Chargemaster (POLAR)":
-                            cp.OperatorID = 8;
-                            break;
-                        case "Ecotricity (Electric Highway)":
-                            cp.OperatorID = 24;
-                            break;
-                        case "ecar NI":
-                            cp.OperatorID = 91;
-                            break;
-                        case "eo Charging":
-                            cp.OperatorID = 3298;
-                            break;
-                        case "Alfa Power":
+                        case "alfa power":
                             cp.OperatorID = 3326;
                             break;
-                        case "InCharge - an initiative by Vattenfall":
-                            cp.OperatorID = 3343;
+                        case "allego":
+                            cp.OperatorID = 103;
                             break;
-                        case "APT":
+                        case "apt":
                             cp.OperatorID = 3341;
                             break;
-                        case "ecars ESB":
-                            cp.OperatorID = 22;
+                        case "be.ev":
+                            cp.OperatorID = 3481;
                             break;
-                        case "GRIDSERVE Sustainable Energy":
-                            cp.OperatorID = 3430;
+                        case "liberty charge":
+                        case "believ":
+                            cp.OperatorID = 3511;
                             break;
-                        case "ESB EV Solutions":
-                            cp.OperatorID = 3357;
-                            break;
-                        case "ChargePoint Network (Netherlands) B.V.":
-                            cp.OperatorID = 5;
-                            break;
-                        case "SureCharge/FM Conway":
-                            cp.OperatorID = 3612;
-                            break;
-                        case "EV-Dot":
-                            cp.OperatorID = 3446;
-                            break;
-                        case "Clenergy EV":
-                            cp.OperatorID = 3605;
-                            break;
-                        case "ScottishPower":
-                            cp.OperatorID = 3537;
-                            break;
-                        case "IONITY GmbH":
-                            cp.OperatorID = 3299;
-                            break;
-                        case "BP-Pulse (POLAR)":
+                        case "bp-pulse (polar)":
+                        case "bp pulse":
                             cp.OperatorID = 32;
                             break;
+                        case "city ev":
+                            cp.OperatorID = 3349;
+                            break;
+                        case "chargemaster (polar)":
+                            cp.OperatorID = 8;
+                            break;
+                        case "charge your car":
+                            cp.OperatorID = 20;
+                            break;
+                        case "chargeplace scotland":
+                            cp.OperatorID = 3315;
+                            break;
+                        case "char.gy":
+                            cp.OperatorID = 3345;
+                            break;
+                        case "chargepoint network (netherlands) b.v.":
+                            cp.OperatorID = 5;
+                            break;
+                        case "clenergy ev":
+                            cp.OperatorID = 3605;
+                            break;
+                        case "connected kerb":
+                            cp.OperatorID = 3509;
+                            break;
+                        case "drax energy solutions limited":
+                            cp.OperatorID = 3614;
+                            break;
+                        case "ecotricity (electric highway)":
+                            cp.OperatorID = 24;
+                            break;
+                        case "ecar ni":
+                            cp.OperatorID = 91;
+                            break;
+                        case "e.on drive":
+                            cp.OperatorID = 3403;
+                            break;
+                        case "eb charging":
+                            cp.OperatorID = 3391;
+                            break;
+                        case "esb ev solutions":
+                            cp.OperatorID = 3357;
+                            break;
+                        case "elektromotive":
+                            cp.OperatorID = 9;
+                            break;
+                        case "eo charging":
+                            cp.OperatorID = 3298;
+                            break;
+                        case "ev-dot":
+                            cp.OperatorID = 3446;
+                            break;
+                        case "ecars esb":
+                            cp.OperatorID = 22;
+                            break;
+                        case "equans ev solutions":
+                            cp.OperatorID = 150;
+                            break;
+                        case "ez-charge":
+                            cp.OperatorID = 3515;
+                            break;
+                        case "fastned":
+                            cp.OperatorID = 74;
+                            break;
+                        case "gridserve sustainable energy":
+                            cp.OperatorID = 3430;
+                            break;
+                        case "hubsta":
+                            cp.OperatorID = 3356;
+                            break;
+                        /*                        case "incharge - an initiative by vattenfall":
+                                                    cp.OperatorID = 3343;
+                                                    break;*/
+                        case "instavolt ltd":
+                            cp.OperatorID = 3296;
+                            break;
+                        case "joju ltd":
+                            cp.OperatorID = 3393;
+                            break;
+                        case "mer":
+                            cp.OperatorID = 3492;
+                            break;
+                        case "nissan":
+                            cp.OperatorID = 7;
+                            break;
+                        case "osprey":
+                            cp.OperatorID = 203;
+                            break;
+                        case "plug n go ltd":
+                            cp.OperatorID = 3613;
+                            break;
+                        case "pod point":
+                            cp.OperatorID = 3;
+                            break;
+                        case "project ev":
+                            cp.OperatorID = 3629;
+                            break;
+                        case "ionity gmbh":
+                            cp.OperatorID = 3299;
+                            break;
+                        case "surecharge/fm conway":
+                            cp.OperatorID = 3612;
+                            break;
+                        case "scottishpower":
+                            cp.OperatorID = 3537;
+                            break;
+                        case "shell recharge":
+                        case "shell recharge solutions":
+                            cp.OperatorID = 3392;
+                            break;
+                        case "silverstone green energy":
+                            cp.OperatorID = 3615;
+                            break;
+                        case "source london":
+                            cp.OperatorID = 25;
+                            break;
+                        case "swarco e.connect":
+                            cp.OperatorID = 3341;
+                            break;
+                        case "tonik energy":
+                            cp.OperatorID = 3366;
+                            break;
+                        case "ubitricity":
+                            cp.OperatorID = 2244;
+                            break;
+                        case "vendelectric":
+                            cp.OperatorID = 3473;
+                            break;
+                        case "wattif ev uk limited":
+                            cp.OperatorID = 3667;
+                            break;
+                        case "zest":
+                            cp.OperatorID = 3581;
+                            break;
+                    }
+
+                    // if not yet mapped, attempt operator map based on closest name
+                    if (cp.OperatorID == null)
+                    {
+                        /* if (deviceOperator != null)
+                         {
+                             cp.OperatorID = deviceOperator.ID;
+                         }
+                         else
+                         {
+                             //operator from device owner
+                             var devOwner = item["DeviceOwner"];
+                             deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(devOwner["OrganisationName"].ToString().ToLower().Trim()));
+                             if (deviceOperator != null)
+                             {
+                                 cp.OperatorID = deviceOperator.ID;
+                             }
+                         }*/
                     }
 
                     if (cp.OperatorID == null)
                     {
-                        Log("Unknown Operator: " + deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString());
+                        var unmappedOperator = (deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString())?.ToLower();
+                        if (unmappedOperators.ContainsKey(unmappedOperator))
+                        {
+                            unmappedOperators[unmappedOperator]++;
+                        }
+                        else
+                        {
+                            unmappedOperators.Add(unmappedOperator, 1);
+                        }
+
                     }
                 }
 
@@ -408,6 +528,15 @@ namespace OCM.Import.Providers
                 {
                     outputList.Add(new ChargePoint(cp));
                     itemCount++;
+                }
+            }
+
+            if (unmappedOperators.Any())
+            {
+                Log("Unmapped operators: ");
+                foreach (var uo in unmappedOperators.OrderBy(u => u.Key))
+                {
+                    Log($"{uo.Key} :: {uo.Value}");
                 }
             }
 
