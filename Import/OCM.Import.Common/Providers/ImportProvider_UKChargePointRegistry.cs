@@ -1,3 +1,5 @@
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 using System;
@@ -22,21 +24,23 @@ namespace OCM.Import.Providers
 
         public List<API.Common.Model.ChargePoint> Process(CoreReferenceData coreRefData)
         {
-            List<ChargePoint> outputList = new List<ChargePoint>();
+            var outputList = new List<ChargePoint>();
 
-            string source = InputData;
+            var source = InputData;
 
-            JObject o = JObject.Parse(source);
+            var o = JObject.Parse(source);
+
+            //System.IO.File.WriteAllText("c:\\temp\\ukchargepointregistry.json", JsonConvert.SerializeObject(o, Formatting.Indented));
 
             var dataList = o["ChargeDevice"].ToArray();
 
-            int itemCount = 0;
+            var itemCount = 0;
 
-            Dictionary<string, int> unmappedOperators = new Dictionary<string, int>();
+            var unmappedOperators = new Dictionary<string, int>();
 
             foreach (var dataItem in dataList)
             {
-                bool skipPOI = false;
+                var skipPOI = false;
                 var item = dataItem;
                 var cp = new POIDetails();
 
@@ -47,124 +51,199 @@ namespace OCM.Import.Providers
                 {
                     skipPOI = true;
                 }
-
-                var locationType = item["LocationType"].ToString();
-                if (!String.IsNullOrEmpty(locationType))
+                else
                 {
-                    if (locationType.ToLower().Contains("home"))
+
+                    var locationType = item["LocationType"].ToString();
+                    if (!String.IsNullOrEmpty(locationType))
                     {
-                        skipPOI = true;
+                        if (locationType.ToLower().Contains("home"))
+                        {
+                            skipPOI = true;
+                        }
                     }
-                }
 
-                //parse reset of POI data
-                cp.DataProviderID = this.DataProviderID; //UK National Charge Point Registry
-                cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
-                cp.DateLastStatusUpdate = DateTime.UtcNow;
-                cp.AddressInfo = new AddressInfo();
+                    //parse reset of POI data
+                    cp.DataProviderID = this.DataProviderID; //UK National Charge Point Registry
+                    cp.DataProvidersReference = item["ChargeDeviceId"].ToString();
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
+                    cp.AddressInfo = new AddressInfo();
 
-                var locationDetails = item["ChargeDeviceLocation"];
-                var addressDetails = locationDetails["Address"];
+                    var locationDetails = item["ChargeDeviceLocation"];
+                    var addressDetails = locationDetails["Address"];
 
-                cp.AddressInfo.RelatedURL = "";
-                cp.DateLastStatusUpdate = DateTime.UtcNow;
-                cp.AddressInfo.AddressLine1 = (String.IsNullOrEmpty(addressDetails["Street"].ToString()) ? addressDetails["BuildingNumber"].ToString() + " " + addressDetails["Thoroughfare"].ToString() : addressDetails["Street"].ToString().Replace("<br>", ", ")).Trim();
-                cp.AddressInfo.Title = String.IsNullOrEmpty(locationDetails["LocationShortDescription"].ToString()) ? cp.AddressInfo.AddressLine1 : locationDetails["LocationShortDescription"].ToString();
-                cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
-                cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ").Trim();
-                if (cp.AddressInfo.Title.Length > 100) cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 64) + "..";
-                cp.AddressInfo.Town = addressDetails["PostTown"].ToString();
-                string dependantLocality = addressDetails["DependantLocality"].ToString();
-                if (!String.IsNullOrEmpty(dependantLocality) && dependantLocality.ToLower() != cp.AddressInfo.Town.ToLower())
-                {
-                    //use depenendantLocality if provided and is not same as town
-                    cp.AddressInfo.AddressLine2 = dependantLocality;
-                }
-                cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString();
-                cp.AddressInfo.Latitude = double.Parse(locationDetails["Latitude"].ToString());
-                cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
-                cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n", ", ");
+                    cp.AddressInfo.RelatedURL = "";
+                    cp.DateLastStatusUpdate = DateTime.UtcNow;
 
-                //if title is empty, attempt to add a suitable replacement
-                if (String.IsNullOrEmpty(cp.AddressInfo.Title))
-                {
-                    if (!String.IsNullOrEmpty(cp.AddressInfo.AddressLine1))
+
+                    var street = addressDetails["Street"]?.ToString().Trim();
+                    var thoroughfare = addressDetails["Thoroughfare"]?.ToString().Trim();
+                    var buildingNumber = addressDetails["BuildingNumber"]?.ToString().Trim();
+                    var buildingName = addressDetails["BuildingName"]?.ToString().Trim();
+
+                    cp.AddressInfo.AddressLine1 = street?.Replace("<br>", ", ").Trim();
+
+                    if (cp.AddressInfo.AddressLine1?.ToLower().StartsWith("asset no.") == true || cp.AddressInfo.AddressLine1?.ToLower() == "na")
                     {
-                        cp.AddressInfo.Title = cp.AddressInfo.AddressLine1.Trim();
+                        cp.AddressInfo.AddressLine1 = "";
+                    }
+
+                    if (string.IsNullOrEmpty(cp.AddressInfo.AddressLine1))
+                    {
+                        if (!string.IsNullOrEmpty(buildingNumber) && !string.IsNullOrEmpty(thoroughfare))
+                        {
+                            cp.AddressInfo.AddressLine1 = $"{buildingNumber} {thoroughfare}";
+                        }
+                        else if (!string.IsNullOrEmpty(buildingName))
+                        {
+                            cp.AddressInfo.AddressLine1 = buildingName;
+                        }
+                        else if (!string.IsNullOrEmpty(thoroughfare))
+                        {
+                            cp.AddressInfo.AddressLine1 = thoroughfare;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(cp.AddressInfo.AddressLine1))
+                    {
+                        Log("Could not determine address line 1");
+                    }
+
+                    cp.AddressInfo.Town = addressDetails["PostTown"].ToString();
+                    var dependantLocality = addressDetails["DependantLocality"].ToString();
+                    if (!String.IsNullOrEmpty(dependantLocality) && dependantLocality.ToLower() != cp.AddressInfo.Town.ToLower())
+                    {
+                        //use dependantLocality if provided and is not same as town
+                        cp.AddressInfo.AddressLine2 = dependantLocality;
+                    }
+                    cp.AddressInfo.Postcode = addressDetails["PostCode"].ToString().Trim();
+                    cp.AddressInfo.Latitude = double.Parse(locationDetails["Latitude"].ToString());
+                    cp.AddressInfo.Longitude = double.Parse(locationDetails["Longitude"].ToString());
+                    cp.AddressInfo.AccessComments = locationDetails["LocationLongDescription"].ToString().Replace("<br>", ", ").Replace("\r\n", ", ").Replace("\n", ", ");
+
+                    // try to determine a suitable title for the location
+
+                    var chargeDeviceName = item["ChargeDeviceName"]?.ToString().Trim();
+                    var chargeDeviceText = item["ChargeDeviceText"]?.ToString().Trim();
+                    var chargeDeviceRef = item["ChargeDeviceRef"]?.ToString().Trim();
+                    var locationShortDescription = locationDetails["LocationShortDescription"]?.ToString().Trim();
+
+                    // skip device name values that are typically not useful
+                    if (chargeDeviceName.ToLower().StartsWith("suby") || chargeDeviceName.ToLower().StartsWith("steob"))
+                    {
+                        chargeDeviceName = "";
+                    }
+                    if (chargeDeviceText.ToLower().StartsWith("suby") || chargeDeviceName.ToLower().StartsWith("steob") || chargeDeviceText?.ToLower().StartsWith("public access") == true)
+                    {
+                        chargeDeviceText = "";
+                    }
+
+                    if (!string.IsNullOrEmpty(chargeDeviceText))
+                    {
+                        cp.AddressInfo.Title = chargeDeviceText;
+                    }
+                    else if (!string.IsNullOrEmpty(chargeDeviceName))
+                    {
+                        cp.AddressInfo.Title = chargeDeviceName;
+                    }
+                    else if (!string.IsNullOrEmpty(locationShortDescription))
+                    {
+                        cp.AddressInfo.Title = locationShortDescription;
+                    }
+                    else if (!string.IsNullOrEmpty(street) && !street.ToLower().Contains("asset no."))
+                    {
+                        cp.AddressInfo.Title = street;
+                    }
+                    else if (!string.IsNullOrEmpty(thoroughfare))
+                    {
+                        cp.AddressInfo.Title = thoroughfare;
+                    }
+                    else if (!string.IsNullOrEmpty(chargeDeviceRef))
+                    {
+                        cp.AddressInfo.Title = chargeDeviceRef;
                     }
                     else
+                    {
+                        // fail
+                        cp.AddressInfo.Title = "";
+                    }
+
+                    cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("&amp;", "&");
+                    cp.AddressInfo.Title = cp.AddressInfo.Title.Replace("<br>", ", ").Trim();
+                    if (cp.AddressInfo.Title.Length > 100) cp.AddressInfo.Title = cp.AddressInfo.Title.Substring(0, 64) + "..";
+
+                    if (cp.AddressInfo.Title == "NA" && cp.AddressInfo.AddressLine1 == "NA")
+                    {
+                        // item needs an address resolved
+                        cp.AddressInfo.Title = "";
+                        cp.AddressCleaningRequired = true;
+                        cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
+                    }
+
+                    if (cp.AddressInfo.Title == "NA")
                     {
                         cp.AddressInfo.Title = cp.AddressInfo.Postcode;
                     }
-                }
 
-                if (cp.AddressInfo.Title == "NA" && cp.AddressInfo.AddressLine1 == "NA")
-                {
-                    // item needs an address resolved
-                    cp.AddressInfo.Title = "";
-                    cp.AddressCleaningRequired = true;
-                    cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
-
-                }
-
-                if (cp.AddressInfo.Title.ToLower().StartsWith("asset no.") && cp.AddressInfo.AddressLine1.ToLower().StartsWith("asset no."))
-                {
-                    // item needs an address resolved
-                    cp.AddressInfo.Title = "";
-                    cp.AddressCleaningRequired = true;
-                    cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_UnderReview;
-                }
-
-                if (string.IsNullOrEmpty(cp.AddressInfo.Title))
-                {
-                    Log("Could not identify address title");
-
-                }
-                //cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
-
-                if (!String.IsNullOrEmpty(addressDetails["Country"].ToString()))
-                {
-                    string country = addressDetails["Country"].ToString();
-                    int? countryID = null;
-
-                    var countryVal = coreRefData.Countries.FirstOrDefault(c => c.Title.ToLower() == country.Trim().ToLower());
-                    if (countryVal == null)
+                    if (string.IsNullOrEmpty(cp.AddressInfo.Title))
                     {
-                        country = country.ToUpper();
-                        //match country
-                        if (country == "GB" || country == "US" || country == "USA" || country == "U.S." || country == "U.S.A.") countryID = 2;
-                        if (country == "UK" || country == "GB" || country == "GREAT BRITAIN" || country == "UNITED KINGDOM") countryID = 1;
+                        Log("Could not identify address title");
                     }
-                    else
+                    //cp.AddressInfo.ContactTelephone1 = item["phone"].ToString();
+
+                    if (!String.IsNullOrEmpty(addressDetails["Country"].ToString()))
                     {
-                        countryID = countryVal.ID;
+                        var country = addressDetails["Country"].ToString();
+                        int? countryID = null;
+
+                        var countryVal = coreRefData.Countries.FirstOrDefault(c => c.Title.ToLower() == country.Trim().ToLower());
+                        if (countryVal == null)
+                        {
+                            country = country.ToUpper();
+                            //match country
+                            if (country == "GB" || country == "US" || country == "USA" || country == "U.S." || country == "U.S.A.") countryID = 2;
+                            if (country == "UK" || country == "GB" || country == "GREAT BRITAIN" || country == "UNITED KINGDOM") countryID = 1;
+                        }
+                        else
+                        {
+                            countryID = countryVal.ID;
+                        }
+
+                        if (countryID == null)
+                        {
+                            this.Log($"Country Not Matched, will require Geolocation: {addressDetails["Country"]}");
+                        }
+                        else
+                        {
+                            cp.AddressInfo.CountryID = countryID;
+                        }
                     }
 
-                    if (countryID == null)
+                    //operator from DeviceController
+                    var deviceController = item["DeviceController"];
+                    cp.AddressInfo.RelatedURL = deviceController["Website"].ToString();
+
+                    var deviceControllerName = deviceController["OrganisationName"]?.ToString();
+                    var deviceOwnerName = item["DeviceOwner"]["OrganisationName"]?.ToString();
+                    var deviceNetworks = item["DeviceNetworks"]?.ToString().Split(",");
+
+                    var networkOperator = deviceControllerName;
+
+                    if (string.IsNullOrEmpty(networkOperator))
                     {
-                        this.Log($"Country Not Matched, will require Geolocation: {addressDetails["Country"]}");
+                        if (!string.IsNullOrEmpty(deviceOwnerName))
+                        {
+                            networkOperator = deviceOwnerName;
+                        }
+                        else if (deviceNetworks != null && deviceNetworks.Any())
+                        {
+                            networkOperator = deviceNetworks[0];
+                        }
                     }
-                    else
-                    {
-                        cp.AddressInfo.CountryID = countryID;
-                    }
-                }
-
-
-                //operator from DeviceController
-                var deviceController = item["DeviceController"];
-                cp.AddressInfo.RelatedURL = deviceController["Website"].ToString();
-
-                var deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(deviceController["OrganisationName"].ToString().ToLower().Trim()));
-
-
-                if (cp.OperatorID == null)
-                {
-                    string operatorName = deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString();
 
                     // match specific operators
 
-                    switch (operatorName?.ToLower().Trim())
+                    switch (networkOperator?.ToLower().Trim())
                     {
                         case "alfa power":
                             cp.OperatorID = 3326;
@@ -188,6 +267,9 @@ namespace OCM.Import.Providers
                             break;
                         case "city ev":
                             cp.OperatorID = 3349;
+                            break;
+                        case "citipark":
+                            cp.OperatorID = 3670;
                             break;
                         case "chargemaster (polar)":
                             cp.OperatorID = 8;
@@ -255,9 +337,6 @@ namespace OCM.Import.Providers
                         case "hubsta":
                             cp.OperatorID = 3356;
                             break;
-                        /*                        case "incharge - an initiative by vattenfall":
-                                                    cp.OperatorID = 3343;
-                                                    break;*/
                         case "instavolt ltd":
                             cp.OperatorID = 3296;
                             break;
@@ -321,28 +400,9 @@ namespace OCM.Import.Providers
                             break;
                     }
 
-                    // if not yet mapped, attempt operator map based on closest name
                     if (cp.OperatorID == null)
                     {
-                        /* if (deviceOperator != null)
-                         {
-                             cp.OperatorID = deviceOperator.ID;
-                         }
-                         else
-                         {
-                             //operator from device owner
-                             var devOwner = item["DeviceOwner"];
-                             deviceOperator = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Trim().Contains(devOwner["OrganisationName"].ToString().ToLower().Trim()));
-                             if (deviceOperator != null)
-                             {
-                                 cp.OperatorID = deviceOperator.ID;
-                             }
-                         }*/
-                    }
-
-                    if (cp.OperatorID == null)
-                    {
-                        var unmappedOperator = (deviceController["OrganisationName"]?.ToString() ?? item["DeviceOwner"]["OrganisationName"]?.ToString())?.ToLower();
+                        var unmappedOperator = networkOperator;
                         if (unmappedOperators.ContainsKey(unmappedOperator))
                         {
                             unmappedOperators[unmappedOperator]++;
@@ -351,183 +411,182 @@ namespace OCM.Import.Providers
                         {
                             unmappedOperators.Add(unmappedOperator, 1);
                         }
-
                     }
-                }
 
-                //determine most likely usage type
-                cp.UsageTypeID = (int)StandardUsageTypes.Public;
+                    //determine most likely usage type
+                    cp.UsageTypeID = (int)StandardUsageTypes.Public;
 
-                if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE")
-                {
-                    //membership required
-                    cp.UsageTypeID = (int)StandardUsageTypes.Public_MembershipRequired;
-                }
-                else
-                {
-                    if (item["PaymentRequiredFlag"].ToString().ToUpper() == "TRUE")
+                    if (item["SubscriptionRequiredFlag"].ToString().ToUpper() == "TRUE")
                     {
-                        //payment required
-                        cp.UsageTypeID = (int)StandardUsageTypes.Public_PayAtLocation;
+                        //membership required
+                        cp.UsageTypeID = (int)StandardUsageTypes.Public_MembershipRequired;
                     }
                     else
                     {
-                        //accessible 24 hours, payment not required and membership not required, assume public
-                        if (item["Accessible24Hours"].ToString().ToUpper() == "TRUE")
+                        if (item["PaymentRequiredFlag"].ToString().ToUpper() == "TRUE")
                         {
-                            cp.UsageTypeID = (int)StandardUsageTypes.Public;
+                            //payment required
+                            cp.UsageTypeID = (int)StandardUsageTypes.Public_PayAtLocation;
                         }
-                    }
-                }
-
-                //special usage cases detected from text
-                if (cp.AddressInfo.ToString().ToLower().Contains("no public access"))
-                {
-                    cp.UsageTypeID = (int)StandardUsageTypes.PrivateRestricted;
-                }
-
-                //add connections
-                var connectorList = item["Connector"].ToArray();
-                foreach (var conn in connectorList)
-                {
-                    ConnectionInfo cinfo = new ConnectionInfo() { };
-
-                    if (conn["RatedOutputkW"] != null)
-                    {
-                        double tmpKw = 0;
-                        if (double.TryParse(conn["RatedOutputkW"].ToString(), out tmpKw))
+                        else
                         {
-                            cinfo.PowerKW = tmpKw;
-                        }
-                    }
-
-                    if (conn["RatedOutputVoltage"] != null)
-                    {
-                        int tmpV = 0;
-                        if (int.TryParse(conn["RatedOutputVoltage"].ToString(), out tmpV))
-                        {
-                            cinfo.Voltage = tmpV;
-                        }
-                    }
-
-                    if (conn["RatedOutputCurrent"] != null)
-                    {
-                        int tmpA = 0;
-                        if (int.TryParse(conn["RatedOutputCurrent"].ToString(), out tmpA))
-                        {
-                            cinfo.Amps = tmpA;
-                        }
-                    }
-
-                    string connectorType = conn["ConnectorType"].ToString();
-
-                    if (!String.IsNullOrEmpty(connectorType))
-                    {
-
-                        cinfo.Reference = conn["ConnectorId"].ToString();
-
-                        if (connectorType.ToUpper().Contains("BS 1363") || connectorType.ToUpper().Contains("3-PIN TYPE G (BS1363)"))
-                        {
-                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.BS1363TypeG; //UK 13 amp plug
-                            cinfo.LevelID = 2; // default to level 2
-                        }
-
-                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 1 (SAE J1772)" || connectorType.ToUpper() == "TYPE 1 SAEJ1772 (IEC 62196)")
-                        {
-                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772;
-                            cinfo.LevelID = 2; // default to level 2
-                        }
-
-                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 2" || connectorType.ToUpper().Contains("(IEC62196)"))
-                        {
-                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
-                            cinfo.LevelID = 2;
-
-                            if (cinfo.Amps > 32)
+                            //accessible 24 hours, payment not required and membership not required, assume public
+                            if (item["Accessible24Hours"].ToString().ToUpper() == "TRUE")
                             {
-                                // assume connector is tethered due to high current
-                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2Tethered;
+                                cp.UsageTypeID = (int)StandardUsageTypes.Public;
                             }
+                        }
+                    }
 
-                            // handle Type 2 Tesla (IEC62196) DC which are Type 2 but tesla access only 
-                            if (connectorType.ToUpper() == "TYPE 2 TESLA (IEC62196) DC")
+                    //special usage cases detected from text
+                    if (cp.AddressInfo.ToString().ToLower().Contains("no public access"))
+                    {
+                        cp.UsageTypeID = (int)StandardUsageTypes.PrivateRestricted;
+                    }
+
+                    //add connections
+                    var connectorList = item["Connector"].ToArray();
+                    foreach (var conn in connectorList)
+                    {
+                        var cinfo = new ConnectionInfo() { };
+
+                        if (conn["RatedOutputkW"] != null)
+                        {
+                            double tmpKw = 0;
+                            if (double.TryParse(conn["RatedOutputkW"].ToString(), out tmpKw))
                             {
-
-                                cinfo.Comments = "Tesla Only";
+                                cinfo.PowerKW = tmpKw;
                             }
                         }
 
-                        if (connectorType.ToUpper() == "JEVS G 105 (CHADEMO)" || connectorType.ToUpper() == "JEVS G105 (CHADEMO) DC")
+                        if (conn["RatedOutputVoltage"] != null)
                         {
-                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;
-                            cinfo.LevelID = 3;
-                        }
-
-                        if (connectorType.ToUpper() == "IEC 62196-2 TYPE 3")
-                        {
-                            cinfo.ConnectionTypeID = 26; //IEC 62196-2 type 3
-                            cinfo.LevelID = 2;
-                        }
-
-                        if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
-                        {
-                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
-                            cinfo.LevelID = 3;
-                        }
-
-                        if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
-                        {
-                            cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
-                            cinfo.LevelID = 3;
-                        }
-
-                        if (conn["ChargePointStatus"] != null)
-                        {
-                            cinfo.StatusTypeID = (int)StandardStatusTypes.Operational;
-                            if (conn["ChargePointStatus"].ToString() == "Out of service") cinfo.StatusTypeID = (int)StandardStatusTypes.NotOperational;
-                        }
-
-                        if (conn["ChargeMethod"] != null && !String.IsNullOrEmpty(conn["ChargeMethod"].ToString()))
-                        {
-                            string method = conn["ChargeMethod"].ToString();
-                            //Single Phase AC, Three Phase AC, DC
-                            if (method == "Single Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
-                            if (method == "Three Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
-                            if (method == "DC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
-                        }
-
-                        if (cinfo.ConnectionTypeID == null)
-                        {
-                            if (!String.IsNullOrEmpty(connectorType))
+                            var tmpV = 0;
+                            if (int.TryParse(conn["RatedOutputVoltage"].ToString(), out tmpV))
                             {
-                                Log("Unknown connector type:" + connectorType);
+                                cinfo.Voltage = tmpV;
                             }
                         }
 
-                        if (cp.Connections == null)
+                        if (conn["RatedOutputCurrent"] != null)
                         {
-                            cp.Connections = new List<ConnectionInfo>();
+                            var tmpA = 0;
+                            if (int.TryParse(conn["RatedOutputCurrent"].ToString(), out tmpA))
+                            {
+                                cinfo.Amps = tmpA;
+                            }
                         }
-                        if (!IsConnectionInfoBlank(cinfo))
+
+                        var connectorType = conn["ConnectorType"].ToString();
+
+                        if (!String.IsNullOrEmpty(connectorType))
                         {
-                            //TODO: skip items with blank address info
-                            cp.Connections.Add(cinfo);
+
+                            cinfo.Reference = conn["ConnectorId"].ToString();
+
+                            if (connectorType.ToUpper().Contains("BS 1363") || connectorType.ToUpper().Contains("3-PIN TYPE G (BS1363)"))
+                            {
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.BS1363TypeG; //UK 13 amp plug
+                                cinfo.LevelID = 2; // default to level 2
+                            }
+
+                            if (connectorType.ToUpper() == "IEC 62196-2 TYPE 1 (SAE J1772)" || connectorType.ToUpper() == "TYPE 1 SAEJ1772 (IEC 62196)")
+                            {
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.J1772;
+                                cinfo.LevelID = 2; // default to level 2
+                            }
+
+                            if (connectorType.ToUpper() == "IEC 62196-2 TYPE 2" || connectorType.ToUpper().Contains("(IEC62196)"))
+                            {
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2;
+                                cinfo.LevelID = 2;
+
+                                if (cinfo.Amps > 32)
+                                {
+                                    // assume connector is tethered due to high current
+                                    cinfo.ConnectionTypeID = (int)StandardConnectionTypes.MennekesType2Tethered;
+                                }
+
+                                // handle Type 2 Tesla (IEC62196) DC which are Type 2 but tesla access only 
+                                if (connectorType.ToUpper() == "TYPE 2 TESLA (IEC62196) DC")
+                                {
+
+                                    cinfo.Comments = "Tesla Only";
+                                }
+                            }
+
+                            if (connectorType.ToUpper() == "JEVS G 105 (CHADEMO)" || connectorType.ToUpper() == "JEVS G105 (CHADEMO) DC")
+                            {
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CHAdeMO;
+                                cinfo.LevelID = 3;
+                            }
+
+                            if (connectorType.ToUpper() == "IEC 62196-2 TYPE 3")
+                            {
+                                cinfo.ConnectionTypeID = 26; //IEC 62196-2 type 3
+                                cinfo.LevelID = 2;
+                            }
+
+                            if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
+                            {
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                                cinfo.LevelID = 3;
+                            }
+
+                            if (connectorType.ToUpper() == "TYPE 2 COMBO (IEC62196) DC")
+                            {
+                                cinfo.ConnectionTypeID = (int)StandardConnectionTypes.CCSComboType2;
+                                cinfo.LevelID = 3;
+                            }
+
+                            if (conn["ChargePointStatus"] != null)
+                            {
+                                cinfo.StatusTypeID = (int)StandardStatusTypes.Operational;
+                                if (conn["ChargePointStatus"].ToString() == "Out of service") cinfo.StatusTypeID = (int)StandardStatusTypes.NotOperational;
+                            }
+
+                            if (conn["ChargeMethod"] != null && !String.IsNullOrEmpty(conn["ChargeMethod"].ToString()))
+                            {
+                                var method = conn["ChargeMethod"].ToString();
+                                //Single Phase AC, Three Phase AC, DC
+                                if (method == "Single Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.SinglePhaseAC;
+                                if (method == "Three Phase AC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
+                                if (method == "DC") cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            }
+
+                            if (cinfo.ConnectionTypeID == null)
+                            {
+                                if (!String.IsNullOrEmpty(connectorType))
+                                {
+                                    Log("Unknown connector type:" + connectorType);
+                                }
+                            }
+
+                            if (cp.Connections == null)
+                            {
+                                cp.Connections = new List<ConnectionInfo>();
+                            }
+                            if (!IsConnectionInfoBlank(cinfo))
+                            {
+                                //TODO: skip items with blank address info
+                                cp.Connections.Add(cinfo);
+                            }
                         }
                     }
-                }
 
-                //apply data attribution metadata
-                if (cp.MetadataValues == null) cp.MetadataValues = new List<MetadataValue>();
-                cp.MetadataValues.Add(new MetadataValue { MetadataFieldID = (int)StandardMetadataFields.Attribution, ItemValue = DataAttribution });
+                    //apply data attribution metadata
+                    if (cp.MetadataValues == null) cp.MetadataValues = new List<MetadataValue>();
+                    cp.MetadataValues.Add(new MetadataValue { MetadataFieldID = (int)StandardMetadataFields.Attribution, ItemValue = DataAttribution });
 
-                if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
+                    if (cp.DataQualityLevel == null) cp.DataQualityLevel = 3;
 
-                if (cp.SubmissionStatusTypeID == null) cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
+                    if (cp.SubmissionStatusTypeID == null) cp.SubmissionStatusTypeID = (int)StandardSubmissionStatusTypes.Imported_Published;
 
-                if (!skipPOI)
-                {
-                    outputList.Add(new ChargePoint(cp));
-                    itemCount++;
+                    if (!skipPOI)
+                    {
+                        outputList.Add(new ChargePoint(cp));
+                        itemCount++;
+                    }
                 }
             }
 
@@ -547,7 +606,7 @@ namespace OCM.Import.Providers
         public string NormalizePostcode(string postcode)
         {
             //TODO: more sensible detection of postcode format CV32 5?? vs E1 0BH etc
-            string origPostcode = postcode + "";
+            var origPostcode = postcode + "";
             //removes end and start spaces
             postcode = postcode.Trim();
             //removes in middle spaces
