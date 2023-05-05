@@ -32,9 +32,15 @@ namespace OCM.Web
         {
             services.AddDataProtection().SetApplicationName("OCM.Web");
 
+
+            var conn = "OCMEntities";
+#if DEBUG
+            conn = "OCMEntitiesDebug";
+#endif
+
             services.AddDistributedSqlServerCache(options =>
             {
-                options.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString;
+                options.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[conn].ConnectionString;
                 options.SchemaName = "dbo";
                 options.TableName = "SessionState";
 

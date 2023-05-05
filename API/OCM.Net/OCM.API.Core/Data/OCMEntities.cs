@@ -61,7 +61,11 @@ namespace OCM.Core.Data
                 optionsBuilder.UseLoggerFactory(ConsoleLogger);
                 optionsBuilder.UseLazyLoadingProxies();
 
-                optionsBuilder.UseSqlServer(System.Configuration.ConfigurationManager.ConnectionStrings["OCMEntities"].ConnectionString, x =>
+                var conn = "OCMEntities";
+#if DEBUG
+                conn = "OCMEntitiesDebug";
+#endif
+                optionsBuilder.UseSqlServer(System.Configuration.ConfigurationManager.ConnectionStrings[conn].ConnectionString, x =>
                 {
                     x.UseNetTopologySuite();
                     x.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
