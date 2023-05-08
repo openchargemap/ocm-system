@@ -8,24 +8,25 @@
       "name": "1001",
       "address": "Cosmos Karelia, деревня Шуйская Чупа",
       "city": "Карелия",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "61.957618",
         "longitude": "34.196205"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "a35cf07a-a48c-44c5-a9bb-d8e741ab992d",
           "evse_id": "a35cf07a-a48c-44c5-a9bb-d8e741ab992d",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "141",
+              "id": "b059929f-a8cd-4c05-9874-82584733df01",
               "standard": "IEC_62196_T2",
               "format": "CABLE",
               "power_type": "AC_3_PHASE",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 22000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -33,11 +34,12 @@
             "latitude": "61.957618",
             "longitude": "34.196205"
           },
-          "last_updated": "2023-01-27T14:16:03.522495"
+          "last_updated": "2023-04-13T12:38:40.908"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-01-27T14:16:03.522495"
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
     },
     {
       "country_code": "RU",
@@ -45,26 +47,27 @@
       "id": "a71b1a1d-550b-4077-b12d-3748c56798b0",
       "publish": true,
       "name": "1002",
-      "address": "Cosmos Petrozavodsk Hotel, ул. Куйбышева, д. 26, Петрозаводск",
+      "address": "Cosmos Hotel, Куйбышева, 26, Петрозаводск",
       "city": "Петрозаводск",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "61.795443",
         "longitude": "34.371862"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "ceed823b-581a-48b0-bd5d-b963020356da",
           "evse_id": "ceed823b-581a-48b0-bd5d-b963020356da",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "143",
+              "id": "a349d2d3-3239-4eab-a889-9267e2339a38",
               "standard": "IEC_62196_T2",
               "format": "CABLE",
               "power_type": "AC_3_PHASE",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 22000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -72,92 +75,21 @@
             "latitude": "61.795443",
             "longitude": "34.371862"
           },
-          "last_updated": "2023-03-14T15:49:32.648269"
+          "last_updated": "2023-04-13T12:38:40.908"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-03-14T15:49:32.648269"
-    },
-    {
-      "country_code": "RU",
-      "party_id": "SIT",
-      "id": "23f35141-46a2-40c0-8a65-e2f324d8c489",
-      "publish": true,
-      "name": "2009",
-      "address": "АЗС Нефтьмагистраль, Международное шоссе, Химки",
-      "city": "Москва",
-      "country": "TheRussianFederation",
-      "coordinates": {
-        "latitude": "55.92049",
-        "longitude": "37.39521"
-      },
-      "evses": [
+      "images": [
         {
-          "uid": "1",
-          "evse_id": "573baf78-fba0-4e29-980f-4bed3269189b",
-          "status": "AVAILABLE",
-          "connectors": [
-            {
-              "id": "106",
-              "standard": "IEC_62196_T2_COMBO",
-              "format": "CABLE",
-              "power_type": "AC_3_PHASE",
-              "max_voltage": 0,
-              "max_amperage": 0,
-              "last_updated": "0001-01-01T00:00:00"
-            }
-          ],
-          "coordinates": {
-            "latitude": "55.92049",
-            "longitude": "37.39521"
-          },
-          "last_updated": "2023-03-14T14:51:15.695658"
-        },
-        {
-          "uid": "2",
-          "evse_id": "f032c8cd-196a-4f4c-9321-3f67927fd90f",
-          "status": "AVAILABLE",
-          "connectors": [
-            {
-              "id": "107",
-              "standard": "CHADEMO",
-              "format": "CABLE",
-              "power_type": "AC_3_PHASE",
-              "max_voltage": 0,
-              "max_amperage": 0,
-              "last_updated": "0001-01-01T00:00:00"
-            }
-          ],
-          "coordinates": {
-            "latitude": "55.92049",
-            "longitude": "37.39521"
-          },
-          "last_updated": "2023-03-14T14:51:15.695658"
-        },
-        {
-          "uid": "3",
-          "evse_id": "ca895c84-4e21-443b-a6e3-1e8dfe8587dd",
-          "status": "AVAILABLE",
-          "connectors": [
-            {
-              "id": "105",
-              "standard": "IEC_62196_T2",
-              "format": "CABLE",
-              "power_type": "AC_3_PHASE",
-              "max_voltage": 0,
-              "max_amperage": 0,
-              "last_updated": "0001-01-01T00:00:00"
-            }
-          ],
-          "coordinates": {
-            "latitude": "55.92049",
-            "longitude": "37.39521"
-          },
-          "last_updated": "2023-03-14T14:51:15.695658"
+          "url": "http://ezs.sitronics.com/photo/1002/760c6296_1002 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
         }
       ],
-      "time_zone": "Europe/Moscow",
-      "last_updated": "2023-03-14T14:51:15.695658"
+      "last_updated": "2023-04-13T12:38:40.908"
     },
     {
       "country_code": "RU",
@@ -167,24 +99,25 @@
       "name": "2302",
       "address": "Лукойл, Батумское ш, 34, п. Дагомыс, Сочи",
       "city": "Сочи",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "43.661448",
         "longitude": "39.672847"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "1a86fe46-4e8c-4d53-969e-7411e559d898",
           "evse_id": "1a86fe46-4e8c-4d53-969e-7411e559d898",
-          "status": "UNKNOWN",
+          "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "125",
+              "id": "2e252c23-5a1d-4bbe-9d27-5bdc06446679",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -192,20 +125,21 @@
             "latitude": "43.661448",
             "longitude": "39.672847"
           },
-          "last_updated": "2023-04-05T11:03:15.112852"
+          "last_updated": "2023-05-04T12:47:30.842"
         },
         {
-          "uid": "2",
+          "uid": "99808c9f-7e94-4595-8f5b-ee8f9b50261d",
           "evse_id": "99808c9f-7e94-4595-8f5b-ee8f9b50261d",
-          "status": "UNKNOWN",
+          "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "126",
+              "id": "0373c007-c6b8-4347-a26d-4476e6544253",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 50000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -213,20 +147,21 @@
             "latitude": "43.661448",
             "longitude": "39.672847"
           },
-          "last_updated": "2023-04-05T11:03:15.112852"
+          "last_updated": "2023-05-04T12:47:30.842"
         },
         {
-          "uid": "3",
+          "uid": "d514b96b-7929-4fca-b280-c390efc1eb8f",
           "evse_id": "d514b96b-7929-4fca-b280-c390efc1eb8f",
-          "status": "UNKNOWN",
+          "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "147",
+              "id": "ec429e18-2153-4175-8da7-4183bb46ce07",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -234,11 +169,29 @@
             "latitude": "43.661448",
             "longitude": "39.672847"
           },
-          "last_updated": "2023-04-05T11:03:15.112852"
+          "last_updated": "2023-05-04T12:47:30.842"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-04-05T11:03:15.112852"
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2302/9b68b0c7_2302_1 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/2302/b471300b_2302_0 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-04T12:47:30.842"
     },
     {
       "country_code": "RU",
@@ -248,24 +201,25 @@
       "name": "2303",
       "address": "Лукойл, Ленина, 276, Сочи",
       "city": "Сочи",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "43.457002",
         "longitude": "39.9044"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "70bfb247-cb73-4d16-8796-800016b81cea",
           "evse_id": "70bfb247-cb73-4d16-8796-800016b81cea",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "121",
+              "id": "37a83871-0143-4f3b-83d9-ffe7aa193cd9",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -273,20 +227,21 @@
             "latitude": "43.457002",
             "longitude": "39.9044"
           },
-          "last_updated": "2023-03-14T21:13:07.203888"
+          "last_updated": "2023-05-04T07:54:56.191"
         },
         {
-          "uid": "2",
+          "uid": "4d8fa87a-5b62-48fa-b616-5fefbde8d022",
           "evse_id": "4d8fa87a-5b62-48fa-b616-5fefbde8d022",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "122",
+              "id": "62e099a0-920f-40e5-8acb-84b8d4436caf",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 50000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -294,20 +249,21 @@
             "latitude": "43.457002",
             "longitude": "39.9044"
           },
-          "last_updated": "2023-03-14T21:13:07.203888"
+          "last_updated": "2023-05-04T07:54:56.191"
         },
         {
-          "uid": "3",
+          "uid": "ebb9bb9f-8530-4190-b75d-b219ec78fabf",
           "evse_id": "ebb9bb9f-8530-4190-b75d-b219ec78fabf",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "146",
+              "id": "1ec1aae4-c466-42f3-b630-1675688ac836",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -315,11 +271,21 @@
             "latitude": "43.457002",
             "longitude": "39.9044"
           },
-          "last_updated": "2023-03-14T21:13:07.203888"
+          "last_updated": "2023-05-04T07:54:56.191"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-03-14T21:13:07.203888"
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2303/d00dc9c5_2303_1 (1).jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-04T07:54:56.191"
     },
     {
       "country_code": "RU",
@@ -327,26 +293,27 @@
       "id": "7555a5d7-c0bb-4164-bb8d-a007359fd35a",
       "publish": true,
       "name": "2304",
-      "address": "Лукойл, Защитников Кавказа, 1А, п. Красная Поляна, Сочи",
+      "address": "Лукойл, Защитников Кавказа, 1А, Сочи",
       "city": "Сочи",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "43.670365",
         "longitude": "40.188801"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "68afb445-afbe-4ada-a858-de7aaf844ab5",
           "evse_id": "68afb445-afbe-4ada-a858-de7aaf844ab5",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "123",
+              "id": "cedd5e3c-0f95-48b8-81ad-d7908dda15fc",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -354,20 +321,21 @@
             "latitude": "43.670365",
             "longitude": "40.188801"
           },
-          "last_updated": "2023-02-09T07:50:17.085479"
+          "last_updated": "2023-04-13T12:38:40.908"
         },
         {
-          "uid": "2",
+          "uid": "43144075-0cc2-4876-b88b-d1433b8b048f",
           "evse_id": "43144075-0cc2-4876-b88b-d1433b8b048f",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "124",
+              "id": "0ea8a237-d633-4c95-aaaf-1eb9b36d7d00",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 50000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -375,32 +343,43 @@
             "latitude": "43.670365",
             "longitude": "40.188801"
           },
-          "last_updated": "2023-02-09T07:50:17.085479"
+          "last_updated": "2023-04-13T12:38:40.908"
         },
         {
-          "uid": "3",
+          "uid": "e6a93a60-7d97-4e72-80b9-771d6054ff15",
           "evse_id": "e6a93a60-7d97-4e72-80b9-771d6054ff15",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "148",
+              "id": "75e9fd3e-ebd5-41d5-9a1d-aa89bc290c0d",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
-              "last_updated": "2023-02-09T07:50:17.085479"
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-09T07:50:17.085"
             }
           ],
           "coordinates": {
             "latitude": "43.670365",
             "longitude": "40.188801"
           },
-          "last_updated": "2023-02-09T07:50:17.085479"
+          "last_updated": "2023-04-13T12:38:40.908"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-02-09T07:50:17.085479"
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2304/bd9d7386_2304_1 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
     },
     {
       "country_code": "RU",
@@ -408,80 +387,84 @@
       "id": "74eb10c5-f16e-48d6-b557-3f1303a90b85",
       "publish": true,
       "name": "2305",
-      "address": "Лукойл, М-4, 1442 км, Краснодарский край ",
+      "address": "Лукойл, М-4, 1442 км, с. Бжид ",
       "city": "Туапсинский район",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "44.366261",
         "longitude": "38.69521"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "31c8b277-c6cb-4511-96aa-30bcdd0b28c1",
           "evse_id": "31c8b277-c6cb-4511-96aa-30bcdd0b28c1",
-          "status": "UNKNOWN",
+          "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "264",
+              "id": "3ac9f5b9-f93d-4a5f-9cb3-d5193bc9f11e",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
-              "last_updated": "2023-02-09T13:19:32.387206"
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-09T13:19:32.387"
             }
           ],
           "coordinates": {
             "latitude": "44.366261",
             "longitude": "38.69521"
           },
-          "last_updated": "2023-03-14T21:18:45.926904"
+          "last_updated": "2023-04-13T12:38:40.908"
         },
         {
-          "uid": "2",
+          "uid": "8d5b475d-17da-44e3-8fae-2945da068ad7",
           "evse_id": "8d5b475d-17da-44e3-8fae-2945da068ad7",
-          "status": "UNKNOWN",
+          "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "267",
+              "id": "67cf6f13-8f7d-4c48-8a83-ba4f48466ea7",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
-              "last_updated": "2023-02-14T11:29:05.266029"
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-14T11:29:05.266"
             }
           ],
           "coordinates": {
             "latitude": "44.366261",
             "longitude": "38.69521"
           },
-          "last_updated": "2023-03-14T21:18:45.926904"
+          "last_updated": "2023-04-13T12:38:40.908"
         },
         {
-          "uid": "3",
+          "uid": "7573b42d-991e-41cc-a6bd-50e9738a6367",
           "evse_id": "7573b42d-991e-41cc-a6bd-50e9738a6367",
-          "status": "UNKNOWN",
+          "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "265",
+              "id": "0eb3791e-f7e4-4baa-a5bf-1705f528e2d2",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
-              "last_updated": "2023-02-14T11:25:38.300525"
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-14T11:25:38.3"
             }
           ],
           "coordinates": {
             "latitude": "44.366261",
             "longitude": "38.69521"
           },
-          "last_updated": "2023-03-14T21:18:45.926904"
+          "last_updated": "2023-04-13T12:38:40.908"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-03-14T21:18:45.926904"
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
     },
     {
       "country_code": "RU",
@@ -491,24 +474,25 @@
       "name": "2306",
       "address": "Лукойл, г. Геленджик, Сухумское шоссе, 34 км",
       "city": "Геленджик",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "44.596369",
         "longitude": "38.045592"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "b814f0f9-55be-4b69-815c-20173f8b6828",
           "evse_id": "b814f0f9-55be-4b69-815c-20173f8b6828",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "198",
+              "id": "5239cf0d-15d2-4668-8c7a-0aa473ef2bc6",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -516,20 +500,21 @@
             "latitude": "44.596369",
             "longitude": "38.045592"
           },
-          "last_updated": "2023-03-18T13:22:31.529431"
+          "last_updated": "2023-04-13T12:38:40.908"
         },
         {
-          "uid": "2",
+          "uid": "e3184801-7025-4487-9a18-01b6be185ac6",
           "evse_id": "e3184801-7025-4487-9a18-01b6be185ac6",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "199",
+              "id": "5f3a9c32-abd7-48b8-b757-cd89de18a55f",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 50000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -537,20 +522,21 @@
             "latitude": "44.596369",
             "longitude": "38.045592"
           },
-          "last_updated": "2023-03-18T13:22:31.529431"
+          "last_updated": "2023-04-13T12:38:40.908"
         },
         {
-          "uid": "3",
+          "uid": "852d0e89-0013-49fa-bc63-632abbb5ee57",
           "evse_id": "852d0e89-0013-49fa-bc63-632abbb5ee57",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "200",
+              "id": "af164351-b2ec-4547-8af9-13f43e2d602c",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -558,11 +544,21 @@
             "latitude": "44.596369",
             "longitude": "38.045592"
           },
-          "last_updated": "2023-03-18T13:22:31.529431"
+          "last_updated": "2023-04-13T12:38:40.908"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-03-18T13:22:31.529431"
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2306/906d6b1a_2306 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
     },
     {
       "country_code": "RU",
@@ -572,24 +568,25 @@
       "name": "2307",
       "address": "Роснефть, Синева, 120, Крымск",
       "city": "Крымск",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "44.931637",
         "longitude": "37.964779"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "ed3c69fc-cc2c-4b10-86cf-36ab11b20588",
           "evse_id": "ed3c69fc-cc2c-4b10-86cf-36ab11b20588",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "204",
+              "id": "324933c6-d287-40b2-93bd-a658263d4320",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -597,20 +594,21 @@
             "latitude": "44.931637",
             "longitude": "37.964779"
           },
-          "last_updated": "2023-03-14T21:23:22.351822"
+          "last_updated": "2023-05-05T14:00:23.214"
         },
         {
-          "uid": "2",
+          "uid": "6c8ee182-afb2-475e-bb43-76bb93c2d208",
           "evse_id": "6c8ee182-afb2-475e-bb43-76bb93c2d208",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "205",
+              "id": "ba280724-0a0b-447c-843e-6649f3def3be",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 50000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -618,32 +616,43 @@
             "latitude": "44.931637",
             "longitude": "37.964779"
           },
-          "last_updated": "2023-03-14T21:23:22.351822"
+          "last_updated": "2023-05-05T14:00:23.214"
         },
         {
-          "uid": "3",
+          "uid": "44606e65-b415-477f-b0f2-351c45f0b801",
           "evse_id": "44606e65-b415-477f-b0f2-351c45f0b801",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "206",
+              "id": "f1f4ca41-7334-4196-9b21-b198d9d36420",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
-              "last_updated": "2023-02-14T11:52:21.157892"
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-14T11:52:21.157"
             }
           ],
           "coordinates": {
             "latitude": "44.931637",
             "longitude": "37.964779"
           },
-          "last_updated": "2023-03-14T21:23:22.351822"
+          "last_updated": "2023-05-05T14:00:23.214"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-03-14T21:23:22.351822"
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2307/ec52b598_2307 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-05T14:00:23.214"
     },
     {
       "country_code": "RU",
@@ -653,24 +662,25 @@
       "name": "2308",
       "address": "Лукойл, М-4, 1384 км, 4, Горячий Ключ",
       "city": " г. Горячий ключ",
-      "country": "TheRussianFederation",
+      "country": "RUS",
       "coordinates": {
         "latitude": "44.651691",
         "longitude": "39.150847"
       },
       "evses": [
         {
-          "uid": "1",
+          "uid": "4afb871e-793b-4ab8-a456-0ecd94efe4a4",
           "evse_id": "4afb871e-793b-4ab8-a456-0ecd94efe4a4",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "210",
+              "id": "16c23268-2f4e-4294-8b5c-dc7c32cb0791",
               "standard": "IEC_62196_T2_COMBO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -678,20 +688,21 @@
             "latitude": "44.651691",
             "longitude": "39.150847"
           },
-          "last_updated": "2023-04-05T08:47:23.135331"
+          "last_updated": "2023-05-04T11:16:49.613"
         },
         {
-          "uid": "2",
+          "uid": "9057dc1e-92b6-41cf-b43d-201fd46f7b92",
           "evse_id": "9057dc1e-92b6-41cf-b43d-201fd46f7b92",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "211",
+              "id": "507f583f-2150-4036-aa30-46bbbf989ac0",
               "standard": "CHADEMO",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 50000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -699,20 +710,21 @@
             "latitude": "44.651691",
             "longitude": "39.150847"
           },
-          "last_updated": "2023-04-05T08:47:23.135331"
+          "last_updated": "2023-05-04T11:16:49.613"
         },
         {
-          "uid": "3",
+          "uid": "9cd833bf-51dc-4eaa-a4ea-71cfaa9a3e46",
           "evse_id": "9cd833bf-51dc-4eaa-a4ea-71cfaa9a3e46",
           "status": "AVAILABLE",
           "connectors": [
             {
-              "id": "212",
+              "id": "c684a30c-0bc9-4772-925b-9d9bde1c586a",
               "standard": "GBT_DC",
               "format": "CABLE",
-              "power_type": "AC_3_PHASE",
+              "power_type": "DC",
               "max_voltage": 0,
               "max_amperage": 0,
+              "max_electric_power": 120000,
               "last_updated": "0001-01-01T00:00:00"
             }
           ],
@@ -720,14 +732,4702 @@
             "latitude": "44.651691",
             "longitude": "39.150847"
           },
-          "last_updated": "2023-04-05T08:47:23.135331"
+          "last_updated": "2023-05-04T11:16:49.613"
         }
       ],
       "time_zone": "Europe/Moscow",
-      "last_updated": "2023-04-05T08:47:23.135331"
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2308/41409928_2308.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/2308/58e09c36_2308_1.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-04T11:16:49.613"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "f2060dd2-21ec-4237-9049-62b91f680b61",
+      "publish": true,
+      "name": "2309",
+      "address": "Лукойл, Транспортная, 32, ст-ца Кущевская",
+      "city": "ст. Кущевская",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "46.555215",
+        "longitude": "39.676901"
+      },
+      "evses": [
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-04-30T20:28:07.518"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.555215",
+            "longitude": "39.676901"
+          },
+          "last_updated": "2023-05-04T14:35:48.111"
+        },
+        {
+          "uid": "d4856262-0cbb-4731-a2b4-f5e55921ddcf",
+          "evse_id": "d4856262-0cbb-4731-a2b4-f5e55921ddcf",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "be5ff6f1-667a-4123-916b-0d96d04eb731",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.555215",
+            "longitude": "39.676901"
+          },
+          "last_updated": "2023-05-04T14:35:48.111"
+        },
+        {
+          "uid": "5282e745-6139-4cf6-a7aa-27e4a68cd8c8",
+          "evse_id": "5282e745-6139-4cf6-a7aa-27e4a68cd8c8",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "8cbe592a-fad9-4bf1-98b3-c3fa27e17bdb",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.555215",
+            "longitude": "39.676901"
+          },
+          "last_updated": "2023-05-04T14:35:48.111"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2309/26df92f0_2309.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/2309/463fe3c6_2309_1.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-04T14:35:48.111"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "2e44f574-e906-4fa9-9931-333f826ab844",
+      "publish": true,
+      "name": "2310",
+      "address": "Роснефть, М-4, 1301 км, ст-ца Пластуновская",
+      "city": "ст. Пластуновская, Краснодарский край",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "45.307073",
+        "longitude": "39.234764"
+      },
+      "evses": [
+        {
+          "uid": "0dcfa488-6d4b-411f-9ac2-5a2c22bcd404",
+          "evse_id": "0dcfa488-6d4b-411f-9ac2-5a2c22bcd404",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "d8580796-293d-40ae-aff6-544a5d67f489",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-15T11:34:01.081"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.307073",
+            "longitude": "39.234764"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "10ca1266-868f-4259-8f27-c0d5d5b1d303",
+          "evse_id": "10ca1266-868f-4259-8f27-c0d5d5b1d303",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3ccab4fa-4a51-447f-b96e-6b0d73546471",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.307073",
+            "longitude": "39.234764"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "1ae991ed-f4a0-4433-bc3c-2e665bd554b0",
+          "evse_id": "1ae991ed-f4a0-4433-bc3c-2e665bd554b0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "fabe49be-2edc-4169-a065-4d7104cd29b7",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.307073",
+            "longitude": "39.234764"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2310/dafe0a9b_2310.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "35d694bf-79e5-463b-bf71-ebf1ca248432",
+      "publish": true,
+      "name": "2311",
+      "address": "Лукойл, М-4, 1179 км, ст-ца Октябрьская",
+      "city": "ст-ца Октябрьская",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "46.276312",
+        "longitude": "39.830677"
+      },
+      "evses": [
+        {
+          "uid": "7f7f7f67-f78e-4046-8d4a-8300aa69f1cf",
+          "evse_id": "7f7f7f67-f78e-4046-8d4a-8300aa69f1cf",
+          "status": "OUTOFORDER",
+          "connectors": [
+            {
+              "id": "f6506c5e-42a1-49d3-b5da-8463ec22b080",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.276312",
+            "longitude": "39.830677"
+          },
+          "last_updated": "2023-05-07T14:38:00.586"
+        },
+        {
+          "uid": "1bd3ef30-92d6-4db0-b42b-0b4cd4a8eb13",
+          "evse_id": "1bd3ef30-92d6-4db0-b42b-0b4cd4a8eb13",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "b7fed58e-d594-4c1f-bad4-3d896243013e",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.276312",
+            "longitude": "39.830677"
+          },
+          "last_updated": "2023-05-07T14:38:00.586"
+        },
+        {
+          "uid": "021a01d9-2137-4385-b9f5-f67a8b832df5",
+          "evse_id": "021a01d9-2137-4385-b9f5-f67a8b832df5",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "111987cd-4601-4bd2-9f3c-6ea671d9c2cd",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.276312",
+            "longitude": "39.830677"
+          },
+          "last_updated": "2023-05-07T14:38:00.586"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2311/a97d4110_2311.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/2311/d32c1088_2311_1.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-07T14:38:00.586"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "df8067e1-26a2-40a1-813f-aaa648d70285",
+      "publish": true,
+      "name": "2312",
+      "address": "Лукойл, М-4, 1384 км, 6, Горячий Ключ",
+      "city": "Горячий ключ",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "44.651548",
+        "longitude": "39.153215"
+      },
+      "evses": [
+        {
+          "uid": "4b5e732d-32da-4f9f-850e-473e7f052e1c",
+          "evse_id": "4b5e732d-32da-4f9f-850e-473e7f052e1c",
+          "status": "OUTOFORDER",
+          "connectors": [
+            {
+              "id": "7a0fcdfb-d847-4e88-88a5-8216ce5261a2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.651548",
+            "longitude": "39.153215"
+          },
+          "last_updated": "2023-04-28T15:54:22.522"
+        },
+        {
+          "uid": "9dffbc89-8f57-452f-9783-c39383aefe43",
+          "evse_id": "9dffbc89-8f57-452f-9783-c39383aefe43",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "c68f447a-eabc-4757-bc0a-b70965079e0f",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.651548",
+            "longitude": "39.153215"
+          },
+          "last_updated": "2023-04-28T15:54:22.522"
+        },
+        {
+          "uid": "935a82af-8631-472a-9925-d9fd67750407",
+          "evse_id": "935a82af-8631-472a-9925-d9fd67750407",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4cf8a867-1757-496d-84c9-599320017748",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.651548",
+            "longitude": "39.153215"
+          },
+          "last_updated": "2023-04-28T15:54:22.522"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2312/8055aa88_2312.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-28T15:54:22.522"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "a0b77b78-7224-4f2e-8aef-f5c480c8e222",
+      "publish": true,
+      "name": "2313",
+      "address": "Лукойл, М-4, 1278 км, Кореновский район",
+      "city": "г. Кореновск, Краснодарский край",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "45.468584",
+        "longitude": "39.395048"
+      },
+      "evses": [
+        {
+          "uid": "f33d574b-2296-4bba-83c4-005d4710cc6a",
+          "evse_id": "f33d574b-2296-4bba-83c4-005d4710cc6a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "aebfb50e-dc78-4ac8-b6b7-b6e3e539235c",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.468584",
+            "longitude": "39.395048"
+          },
+          "last_updated": "2023-04-23T12:43:18.273"
+        },
+        {
+          "uid": "e3113845-19d6-4815-8838-896f589470ec",
+          "evse_id": "e3113845-19d6-4815-8838-896f589470ec",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "9051b317-cfd7-440b-87a2-50f70c90301a",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.468584",
+            "longitude": "39.395048"
+          },
+          "last_updated": "2023-04-23T12:43:18.273"
+        },
+        {
+          "uid": "71a10d42-ed5b-4d40-9030-b492ebf20d15",
+          "evse_id": "71a10d42-ed5b-4d40-9030-b492ebf20d15",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "da63ab66-0077-48be-bd8b-da2e7b1c818f",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.468584",
+            "longitude": "39.395048"
+          },
+          "last_updated": "2023-04-23T12:43:18.273"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2313/4fc377d2_2313.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-23T12:43:18.273"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "ab722ba7-9c87-4b64-b4b8-4381ea73c7d2",
+      "publish": true,
+      "name": "2314",
+      "address": "Лукойл, М-4, 1177 км, ст-ца Крыловская",
+      "city": "ст-ца Крыловская",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "46.292597",
+        "longitude": "39.822194"
+      },
+      "evses": [
+        {
+          "uid": "8cc11b33-12f5-44dd-a895-4b9c46481699",
+          "evse_id": "8cc11b33-12f5-44dd-a895-4b9c46481699",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "c97827bf-c48b-4e37-b19a-a689d81954e9",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.292597",
+            "longitude": "39.822194"
+          },
+          "last_updated": "2023-04-23T16:16:50.837"
+        },
+        {
+          "uid": "7f754c3f-0427-4533-991c-06d26d4388b0",
+          "evse_id": "7f754c3f-0427-4533-991c-06d26d4388b0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "0e3fe04c-3c8e-41e1-8d42-32603ed9e702",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.292597",
+            "longitude": "39.822194"
+          },
+          "last_updated": "2023-04-23T16:16:50.837"
+        },
+        {
+          "uid": "abb39ff4-7c93-4273-aa00-d003176031df",
+          "evse_id": "abb39ff4-7c93-4273-aa00-d003176031df",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "334c1a34-8f5f-4f67-a704-3c55565d19ad",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.292597",
+            "longitude": "39.822194"
+          },
+          "last_updated": "2023-04-23T16:16:50.837"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2314/7090d1f8_2314.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-23T16:16:50.837"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "3f9fff80-8bef-4796-a503-73e2a81c0765",
+      "publish": true,
+      "name": "2315",
+      "address": "Роснефть, М-4, 1196 км, ст-ца Павловская",
+      "city": "ст-ца Павловская",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "46.128566",
+        "longitude": "39.861822"
+      },
+      "evses": [
+        {
+          "uid": "ef8a710c-9cf2-42c2-8794-ce89ea052316",
+          "evse_id": "ef8a710c-9cf2-42c2-8794-ce89ea052316",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ac2c2517-309a-488c-aa48-e3aa62efcb46",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.128566",
+            "longitude": "39.861822"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "c280fbee-2006-46c4-922d-6adc75d5bfdf",
+          "evse_id": "c280fbee-2006-46c4-922d-6adc75d5bfdf",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e6df820f-660f-4d2b-a1a9-b8875405981b",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.128566",
+            "longitude": "39.861822"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "a60d9157-8e56-4851-a172-ac5d49503947",
+          "evse_id": "a60d9157-8e56-4851-a172-ac5d49503947",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "c722ece8-299d-456b-a8a2-66afe5d048c6",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.128566",
+            "longitude": "39.861822"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "8afe0657-a6bf-49ee-8079-08062c7d4ade",
+      "publish": true,
+      "name": "2316",
+      "address": "Роснефть, М-4, 1232 км, ст-ца Ирклиевская",
+      "city": "ст-ца Ирклиевская ",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "45.841154",
+        "longitude": "39.677816"
+      },
+      "evses": [
+        {
+          "uid": "6006057c-4a09-4e55-90db-0bc30eeb69b0",
+          "evse_id": "6006057c-4a09-4e55-90db-0bc30eeb69b0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "b22fe203-c086-4417-a682-696dfb780461",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.841154",
+            "longitude": "39.677816"
+          },
+          "last_updated": "2023-05-02T14:25:26.45"
+        },
+        {
+          "uid": "f5508ac9-91aa-4565-ab4e-e33f9f2a8a2f",
+          "evse_id": "f5508ac9-91aa-4565-ab4e-e33f9f2a8a2f",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "d86e56d5-8469-41af-bee5-bf5857d683d3",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.841154",
+            "longitude": "39.677816"
+          },
+          "last_updated": "2023-05-02T14:25:26.45"
+        },
+        {
+          "uid": "35ad5d7d-d50a-4f84-98a5-62f7b5e7b706",
+          "evse_id": "35ad5d7d-d50a-4f84-98a5-62f7b5e7b706",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e478bcfe-e8e0-4b97-86a9-5e029ef1b89d",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.841154",
+            "longitude": "39.677816"
+          },
+          "last_updated": "2023-05-02T14:25:26.45"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-02T14:25:26.45"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "a34afce0-ab11-4524-a2ff-879a46ccbd52",
+      "publish": true,
+      "name": "2317",
+      "address": "Роснефть, 03К-012, ст-ца Ленинградская",
+      "city": "ст. Ленинградская",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "46.30437",
+        "longitude": "39.355247"
+      },
+      "evses": [
+        {
+          "uid": "92b99922-d2c2-42f5-8761-c1af8abf503c",
+          "evse_id": "92b99922-d2c2-42f5-8761-c1af8abf503c",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1386d189-39b9-45cb-9db6-61d04ff6c561",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-16T10:23:36.203"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.30437",
+            "longitude": "39.355247"
+          },
+          "last_updated": "2023-05-02T07:11:22.237"
+        },
+        {
+          "uid": "8af49e20-d911-43aa-8a4d-7394a445798d",
+          "evse_id": "8af49e20-d911-43aa-8a4d-7394a445798d",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "31312429-3645-4135-a837-c54b8b59c1b5",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-01-16T10:23:56.37"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.30437",
+            "longitude": "39.355247"
+          },
+          "last_updated": "2023-05-02T07:11:22.237"
+        },
+        {
+          "uid": "ca5dec14-d3b0-4911-9c8d-8b0ed701ae15",
+          "evse_id": "ca5dec14-d3b0-4911-9c8d-8b0ed701ae15",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "af9724d3-786f-4088-9b5c-9da1584609f0",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-16T10:24:03.392"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.30437",
+            "longitude": "39.355247"
+          },
+          "last_updated": "2023-05-02T07:11:22.237"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-02T07:11:22.237"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "b6df45b0-46fb-4a84-9c35-2dc3d69ea3cc",
+      "publish": true,
+      "name": "2318",
+      "address": "Роснефть, Транспортная, 11, ст-ца Кущевская",
+      "city": "ст-ца Кущевская",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "46.571104",
+        "longitude": "39.674012"
+      },
+      "evses": [
+        {
+          "uid": "0dbe5956-385a-44ee-859a-1304040ac5dd",
+          "evse_id": "0dbe5956-385a-44ee-859a-1304040ac5dd",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "a5e6d68b-0b77-47ac-8ce8-6938b6e7abb3",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.571104",
+            "longitude": "39.674012"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "dc6c1144-d04c-417d-92ee-5439987b0d3c",
+          "evse_id": "dc6c1144-d04c-417d-92ee-5439987b0d3c",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "783cf10b-49c6-4a89-b9ac-a705a0d5edd5",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.571104",
+            "longitude": "39.674012"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "bdb557e5-e589-4fca-89ad-1ac61047ca8e",
+          "evse_id": "bdb557e5-e589-4fca-89ad-1ac61047ca8e",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "83c8ac85-17cc-472e-adbe-9937e2c2ccc3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "46.571104",
+            "longitude": "39.674012"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2318/1789c9d7_2318 (2).jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "fd04ecb5-de24-4e09-8de6-c10dfd6e3fe0",
+      "publish": true,
+      "name": "2319",
+      "address": "Роснефть, Магистральная, 4, пгт. Афипский",
+      "city": "Краснодар",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "44.892926",
+        "longitude": "38.857734"
+      },
+      "evses": [
+        {
+          "uid": "b3171fe1-4cbf-4b70-bd9e-6363bdbaf11f",
+          "evse_id": "b3171fe1-4cbf-4b70-bd9e-6363bdbaf11f",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "b944dab6-f52e-41a9-bb9c-19829a097a78",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.892926",
+            "longitude": "38.857734"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "f63856b9-e7a5-4c62-a703-859ba2382495",
+          "evse_id": "f63856b9-e7a5-4c62-a703-859ba2382495",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "93afc9ad-741a-4835-86a4-013fd72a1311",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.892926",
+            "longitude": "38.857734"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "16e4ec79-dfb4-4543-9888-fa8f6708503a",
+          "evse_id": "16e4ec79-dfb4-4543-9888-fa8f6708503a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e30cbf0e-b61c-4d6f-bad1-4f76fa0f196b",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.892926",
+            "longitude": "38.857734"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "0c982f9a-6838-4b18-878b-cfa97b069ee5",
+      "publish": true,
+      "name": "2320",
+      "address": "Лукойл, А-289, с.п. Трудобеликовское,",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "45.272775",
+        "longitude": "38.181121"
+      },
+      "evses": [
+        {
+          "uid": "9c7374cb-3a17-4570-9390-af9181b86e61",
+          "evse_id": "9c7374cb-3a17-4570-9390-af9181b86e61",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "33f61cb6-cfd8-4339-b543-fa19bcbffe98",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.272775",
+            "longitude": "38.181121"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "12730e8a-293b-4098-89a6-f084a126c7f0",
+          "evse_id": "12730e8a-293b-4098-89a6-f084a126c7f0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1029e55b-822c-410e-b172-c4d0faf075a1",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.272775",
+            "longitude": "38.181121"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "2b3a5cd7-0757-4d80-9343-0f0000d59821",
+          "evse_id": "2b3a5cd7-0757-4d80-9343-0f0000d59821",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "724fe1bf-276b-4472-bd61-73ff1eec3fd7",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-19T09:15:46.011"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.272775",
+            "longitude": "38.181121"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/2320/bc9e4272_2320.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/2320/cd4dc820_2320_1.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "a8f56664-9be2-42ed-ab57-8e50ce6c6b36",
+      "publish": true,
+      "name": "2321",
+      "address": "Лукойл, Колонтай, 101, Темрюк",
+      "city": "Темрюк",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "45.26212",
+        "longitude": "37.411585"
+      },
+      "evses": [
+        {
+          "uid": "b6fba7de-b244-4570-9e5a-293594b42e46",
+          "evse_id": "b6fba7de-b244-4570-9e5a-293594b42e46",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "62d2695f-0fcb-47cd-88dc-3da15b015477",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-15T08:55:19.372"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.26212",
+            "longitude": "37.411585"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "87859283-3924-4879-b553-52a50b6731c3",
+          "evse_id": "87859283-3924-4879-b553-52a50b6731c3",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "7598cf97-1895-4803-a05f-a9f085abe377",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-26T17:19:48.775"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.26212",
+            "longitude": "37.411585"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "fc1f3ca7-abaa-4976-b840-53594504f023",
+          "evse_id": "fc1f3ca7-abaa-4976-b840-53594504f023",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "844ce0b1-1e49-42d0-a5e7-d0d0614d00da",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-26T17:19:32.482"
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.26212",
+            "longitude": "37.411585"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "51d3c760-f70a-4f21-ae9e-e27470445ee9",
+      "publish": true,
+      "name": "2322",
+      "address": "Лукойл, Ленина, 165 А, с. Архипо-Осиповка",
+      "city": "с. Архипо - Осиповка",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "44.370996",
+        "longitude": "38.547656"
+      },
+      "evses": [
+        {
+          "uid": "8ff5ff39-fbf4-4f91-9cf3-397822fc1ff0",
+          "evse_id": "8ff5ff39-fbf4-4f91-9cf3-397822fc1ff0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "dbd176cf-fc89-494f-8ea7-8c33f2251f30",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-02T14:07:53.438"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.370996",
+            "longitude": "38.547656"
+          },
+          "last_updated": "2023-05-04T08:30:20.881"
+        },
+        {
+          "uid": "1291b2ff-2fb9-487b-9d22-2eef46420f42",
+          "evse_id": "1291b2ff-2fb9-487b-9d22-2eef46420f42",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "84303cd9-1ddc-4014-9796-d63b15654e63",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-02T14:08:14.125"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.370996",
+            "longitude": "38.547656"
+          },
+          "last_updated": "2023-05-04T08:30:20.881"
+        },
+        {
+          "uid": "ade8ac0d-8347-47f6-a7a2-37619c9325a0",
+          "evse_id": "ade8ac0d-8347-47f6-a7a2-37619c9325a0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2667072b-e2fb-4c07-974d-9e344f0e02a6",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-02T14:08:24.943"
+            }
+          ],
+          "coordinates": {
+            "latitude": "44.370996",
+            "longitude": "38.547656"
+          },
+          "last_updated": "2023-05-04T08:30:20.881"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-04T08:30:20.881"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "6bebd895-7ddc-4048-b7e4-5bd2d6069f42",
+      "publish": true,
+      "name": "3601",
+      "address": "Cosmos Voronezh, Кирова, д. 9/1, Воронеж",
+      "city": "Воронеж",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "51.657046",
+        "longitude": "39.191636"
+      },
+      "evses": [
+        {
+          "uid": "b2aae1e6-ccd7-4694-a4d2-3d10a44a302a",
+          "evse_id": "b2aae1e6-ccd7-4694-a4d2-3d10a44a302a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e143a653-ce55-4e0d-86d9-5b6c7d19f463",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-02-01T08:51:16.31"
+            }
+          ],
+          "coordinates": {
+            "latitude": "51.657046",
+            "longitude": "39.191636"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "629ca390-380e-49b8-b998-415adb4d01de",
+      "publish": true,
+      "name": "3701",
+      "address": "KFC, ул. 10 Августа, д.29 ",
+      "city": "Иваново",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.996651",
+        "longitude": "40.981377"
+      },
+      "evses": [
+        {
+          "uid": "51c97a96-7f5b-4e5e-83d4-612d4133f9dc",
+          "evse_id": "51c97a96-7f5b-4e5e-83d4-612d4133f9dc",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "dd70a43b-5f78-48e1-ba4d-6394336b4931",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-22T09:00:41.715"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.996651",
+            "longitude": "40.981377"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "3c0e3bfa-b682-4aa1-a42b-f880b0dfa915",
+          "evse_id": "3c0e3bfa-b682-4aa1-a42b-f880b0dfa915",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4df83af7-ac81-464d-b82f-100bc9d4e709",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-22T09:00:53.772"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.996651",
+            "longitude": "40.981377"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "7441ef6d-189f-471a-8a0e-f2d9f96cb40a",
+          "evse_id": "7441ef6d-189f-471a-8a0e-f2d9f96cb40a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "abfc49f2-0019-40f4-bb33-42bd4fd13f06",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-03-22T09:01:18.264"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.996651",
+            "longitude": "40.981377"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/3701/7fe0f76e_Иваново 2 1 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "35ac7a72-d1e0-49ae-8e76-76ca87eb775e",
+      "publish": true,
+      "name": "4701",
+      "address": "Лукойл, А-121, 58 км, д. Иваново, Лен.область",
+      "city": " Ленинградская обл.",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "60.532709",
+        "longitude": "30.187086"
+      },
+      "evses": [
+        {
+          "uid": "9368765d-8a39-4ab9-b1a1-3263e8b7d811",
+          "evse_id": "9368765d-8a39-4ab9-b1a1-3263e8b7d811",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e048be8c-4bdc-43f5-b95d-5e84367bd24c",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.532709",
+            "longitude": "30.187086"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "f6901986-9de5-4286-8a3a-bf12a5523656",
+          "evse_id": "f6901986-9de5-4286-8a3a-bf12a5523656",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "8a56b886-acca-4b0c-a3e3-79b49d7d6d29",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 150000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.532709",
+            "longitude": "30.187086"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "ce821a6b-be13-455c-9115-73e2b5f10397",
+          "evse_id": "ce821a6b-be13-455c-9115-73e2b5f10397",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1d2bcb27-ff8c-4581-a3cf-c7688fc7ba00",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 90000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.532709",
+            "longitude": "30.187086"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "7ad024e9-4130-4b72-ab87-894e8e64553e",
+      "publish": true,
+      "name": "4702",
+      "address": "Лукойл, А-118, р-н Всеволожский, Лен.область",
+      "city": "Ленинградская обл.",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "60.085079",
+        "longitude": "30.37541"
+      },
+      "evses": [
+        {
+          "uid": "96222eda-ba37-4640-aa3c-2ee893637d2e",
+          "evse_id": "96222eda-ba37-4640-aa3c-2ee893637d2e",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "7219f8bd-253c-4e04-b101-20557ca44040",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.085079",
+            "longitude": "30.37541"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "e97ac54c-d62b-4785-89e7-07dc9a45d9d8",
+          "evse_id": "e97ac54c-d62b-4785-89e7-07dc9a45d9d8",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "07f3992a-49da-4a4e-a6ec-b2267bd333f3",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 150000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.085079",
+            "longitude": "30.37541"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "d18e4bdf-f224-4d13-b5d2-209c50764264",
+          "evse_id": "d18e4bdf-f224-4d13-b5d2-209c50764264",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e55d48ff-a65f-4660-928b-9a0904890f0b",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 90000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.085079",
+            "longitude": "30.37541"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/4702/1fc6481e_4702 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "d60acf2f-b6f7-4998-aad4-d4e36c773926",
+      "publish": true,
+      "name": "4703",
+      "address": "ТРК Ребус, Железнодорожный тупик, 4, Выборг",
+      "city": "Выборг",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "60.707807",
+        "longitude": "28.771712"
+      },
+      "evses": [
+        {
+          "uid": "35e33ba4-8655-4935-8802-e195ad686641",
+          "evse_id": "35e33ba4-8655-4935-8802-e195ad686641",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2cf25a17-1335-48cd-87e1-5656a04d7a47",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.707807",
+            "longitude": "28.771712"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "0fdf40ab-e619-44a2-9228-61ef41909f6a",
+          "evse_id": "0fdf40ab-e619-44a2-9228-61ef41909f6a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "aacd701d-f189-47d3-b90a-623f0775899b",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 150000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.707807",
+            "longitude": "28.771712"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "a563ed29-263e-453a-8be6-4cc686e6e60a",
+          "evse_id": "a563ed29-263e-453a-8be6-4cc686e6e60a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "f0ed2424-e2d6-4a8c-930a-edbe7f9b9405",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 90000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.707807",
+            "longitude": "28.771712"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "2623713d-1b62-4701-a459-7c298830dac3",
+      "publish": true,
+      "name": "4704",
+      "address": "Лукойл, Скандинавия, 192 км, п. Торфяновка",
+      "city": " Ленинградская обл.",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "60.607201",
+        "longitude": "28.009112"
+      },
+      "evses": [
+        {
+          "uid": "65a0c4f6-392d-4ec1-9ff9-eb028119d0e1",
+          "evse_id": "65a0c4f6-392d-4ec1-9ff9-eb028119d0e1",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "8ec690d0-0d81-4260-9d81-542aa7879df9",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.607201",
+            "longitude": "28.009112"
+          },
+          "last_updated": "2023-05-03T13:04:31.595"
+        },
+        {
+          "uid": "abdeb821-adf3-47fb-af76-72d8e2682bf4",
+          "evse_id": "abdeb821-adf3-47fb-af76-72d8e2682bf4",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "049900e4-fc5f-47d6-a136-4b760339377c",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 150000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.607201",
+            "longitude": "28.009112"
+          },
+          "last_updated": "2023-05-03T13:04:31.595"
+        },
+        {
+          "uid": "1c41052b-24de-4793-a621-7b09376e9812",
+          "evse_id": "1c41052b-24de-4793-a621-7b09376e9812",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3d68dd02-1dec-463f-bb1e-5322eabc2ca1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 90000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.607201",
+            "longitude": "28.009112"
+          },
+          "last_updated": "2023-05-03T13:04:31.595"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-03T13:04:31.595"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "1bfeceea-8638-4a94-b14b-76528b576dea",
+      "publish": true,
+      "name": "4705",
+      "address": "Лукойл, А-121, д. Варшко, Лен. область",
+      "city": " Ленинградская обл.",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "60.670464",
+        "longitude": "30.019006"
+      },
+      "evses": [
+        {
+          "uid": "9a9c018f-a739-42c9-bea6-204f036a4a42",
+          "evse_id": "9a9c018f-a739-42c9-bea6-204f036a4a42",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "0d3839e2-5c77-4b9d-b2f9-29369ecb970b",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.670464",
+            "longitude": "30.019006"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "6c1e951a-4bc7-405d-b55b-e66b4021b382",
+          "evse_id": "6c1e951a-4bc7-405d-b55b-e66b4021b382",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "fc062786-f712-42a9-9a21-1caed363902b",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 150000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.670464",
+            "longitude": "30.019006"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "bb1168e8-0b06-4381-a39e-5f2d916ff6c3",
+          "evse_id": "bb1168e8-0b06-4381-a39e-5f2d916ff6c3",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "d26e9aba-3f5f-43d0-8d0e-ff8a0f03977d",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 90000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "60.670464",
+            "longitude": "30.019006"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "b1ef6c3d-691f-471f-aeac-a0ceca6a7d53",
+      "publish": true,
+      "name": "5202",
+      "address": "Фучика, 7, Нижний Новгород",
+      "city": "Нижний Новгород",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.238338",
+        "longitude": "43.869246"
+      },
+      "evses": [
+        {
+          "uid": "850e4234-e895-4531-8603-8f0c34031f14",
+          "evse_id": "850e4234-e895-4531-8603-8f0c34031f14",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "591552e5-bf36-4e3c-acaf-cbc96b8dcac1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.238338",
+            "longitude": "43.869246"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "a16e85ae-64db-41f3-ac05-cbf6eb2c0a21",
+          "evse_id": "a16e85ae-64db-41f3-ac05-cbf6eb2c0a21",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e7eb63fb-d81e-46cb-a651-ddef396323ac",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.238338",
+            "longitude": "43.869246"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "8f8abccb-82cd-45e1-a6cc-8e9cb3d15239",
+          "evse_id": "8f8abccb-82cd-45e1-a6cc-8e9cb3d15239",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "0b7d31c9-88f2-42f2-8235-936c4b1deea9",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.238338",
+            "longitude": "43.869246"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/5202/c2ab4115_5202.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "dfd33a25-6c9b-4859-9a67-83cf1432fc6a",
+      "publish": true,
+      "name": "5205",
+      "address": "Проспект Героев, 72а, Нижний Новгород",
+      "city": "Н. Новгород",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.322060",
+        "longitude": "43.879460"
+      },
+      "evses": [
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 200,
+              "max_electric_power": 150000,
+              "last_updated": "2023-04-14T11:55:39.367"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.322060",
+            "longitude": "43.879460"
+          },
+          "last_updated": "2023-05-01T14:46:12.138"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 200,
+              "max_electric_power": 120000,
+              "last_updated": "2023-04-14T11:55:00.956"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.322060",
+            "longitude": "43.879460"
+          },
+          "last_updated": "2023-05-01T14:46:12.138"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 200,
+              "max_electric_power": 90000,
+              "last_updated": "2023-04-14T11:54:36.3"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.322060",
+            "longitude": "43.879460"
+          },
+          "last_updated": "2023-05-01T14:46:12.138"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/5205/9de4198e_photo_2023-04-17_13-14-07.jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/5205/949699af_photo_2023-04-17_13-13-07.jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/5205/a53b9833_photo_2023-04-17_13-13-07 (2).jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/5205/fbc0604d_photo_2023-04-17_13-13-07 (3).jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-01T14:46:12.138"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "93ced55b-a937-4e1d-b450-84975763e12b",
+      "publish": false,
+      "name": "5211",
+      "address": "№5211 •‎ Автопарк, Нижний Новгород",
+      "city": "Нижний Новгород",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.289745",
+        "longitude": "43.87386"
+      },
+      "evses": [
+        {
+          "uid": "cd7999aa-90cd-41bc-86b7-31dc59a4df7e",
+          "evse_id": "cd7999aa-90cd-41bc-86b7-31dc59a4df7e",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "62cf260c-c906-45e9-a667-9d6eaf064920",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.289745",
+            "longitude": "43.87386"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "76e7c058-5d91-4ef3-9455-0061f2f6d7fd",
+          "evse_id": "76e7c058-5d91-4ef3-9455-0061f2f6d7fd",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "04e8e263-418b-44de-a583-4bf545c8ff6a",
+              "standard": "DOMESTIC_F",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 0,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.289745",
+            "longitude": "43.87386"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "edfe0e8e-0c4b-4908-b9a6-1c8b6d035252",
+      "publish": true,
+      "name": "5212",
+      "address": "№5212 •‎ Автопарк, Нижний Новгород ",
+      "city": "Нижний Новгород",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.289945",
+        "longitude": "43.873614"
+      },
+      "evses": [
+        {
+          "uid": "27ed456a-b584-4075-a913-aa2df24466c5",
+          "evse_id": "27ed456a-b584-4075-a913-aa2df24466c5",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e8c54eaf-4572-4693-ae25-dcbfeddc3219",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.289945",
+            "longitude": "43.873614"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "fc4366bd-c355-48a9-87a4-bee5c7e8f060",
+          "evse_id": "fc4366bd-c355-48a9-87a4-bee5c7e8f060",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "6b75ded2-755e-4d8e-9834-f2f611cef13f",
+              "standard": "DOMESTIC_F",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 0,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.289945",
+            "longitude": "43.873614"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "7a03cac9-0b05-4169-828c-7a16cfcb2d46",
+      "publish": true,
+      "name": "5213",
+      "address": "№5213 •‎ Автопарк, Нижний Новгород",
+      "city": "Нижний Новгород",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.290121",
+        "longitude": "43.873325"
+      },
+      "evses": [
+        {
+          "uid": "a06ee096-7655-405e-a45d-ea01fef8ac86",
+          "evse_id": "a06ee096-7655-405e-a45d-ea01fef8ac86",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "fec448c8-a85d-4d16-98a8-8f00271bf948",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.290121",
+            "longitude": "43.873325"
+          },
+          "last_updated": "2023-05-05T09:45:11.642"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-05T09:45:11.642"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "2a5d5022-d3ab-43d2-8557-ce126b738b91",
+      "publish": true,
+      "name": "6101",
+      "address": "Лукойл, М-4, 827 км, Грай-Воронец",
+      "city": "Ростовская обл., М4 Дон",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "49.163741",
+        "longitude": "40.597958"
+      },
+      "evses": [
+        {
+          "uid": "437f6c5b-abbf-41c2-9260-5702756f63d7",
+          "evse_id": "437f6c5b-abbf-41c2-9260-5702756f63d7",
+          "status": "OUTOFORDER",
+          "connectors": [
+            {
+              "id": "8d931273-4810-42ee-885e-9809e47916fe",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "49.163741",
+            "longitude": "40.597958"
+          },
+          "last_updated": "2023-05-02T10:05:09.87"
+        },
+        {
+          "uid": "3fb3b8e4-a512-41c3-9443-b2ffd1d8c419",
+          "evse_id": "3fb3b8e4-a512-41c3-9443-b2ffd1d8c419",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "995a21e5-ba7b-4593-9b9a-e442540d066a",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "49.163741",
+            "longitude": "40.597958"
+          },
+          "last_updated": "2023-05-02T10:05:09.87"
+        },
+        {
+          "uid": "54363ea2-67f5-4f01-bbe4-4d77df78ce44",
+          "evse_id": "54363ea2-67f5-4f01-bbe4-4d77df78ce44",
+          "status": "CHARGING",
+          "connectors": [
+            {
+              "id": "d4fe2018-c013-4373-bbd8-36ad42fc5770",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-19T10:21:43.397"
+            }
+          ],
+          "coordinates": {
+            "latitude": "49.163741",
+            "longitude": "40.597958"
+          },
+          "last_updated": "2023-05-02T10:05:09.87"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/6101/2802730c_6101 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-02T10:05:09.87"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "34926e88-96e2-4c5f-b396-e3a5419e194e",
+      "publish": true,
+      "name": "6102",
+      "address": "Лукойл, М-4, 907 км, пгт Глубокий",
+      "city": "Ростовская обл., М4 Дон",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "48.510627",
+        "longitude": "40.341236"
+      },
+      "evses": [
+        {
+          "uid": "8c92e858-5a76-4d68-bbcf-3827f9e8d725",
+          "evse_id": "8c92e858-5a76-4d68-bbcf-3827f9e8d725",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "3d03e643-4a30-425e-9993-e0920c338f7e",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "48.510627",
+            "longitude": "40.341236"
+          },
+          "last_updated": "2023-05-03T10:51:22.883"
+        },
+        {
+          "uid": "f60aa629-e940-41a1-99ac-5e9ef2a9b23c",
+          "evse_id": "f60aa629-e940-41a1-99ac-5e9ef2a9b23c",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "c1c3ea19-194b-4032-9347-ea9c814b941a",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "48.510627",
+            "longitude": "40.341236"
+          },
+          "last_updated": "2023-05-03T10:51:22.883"
+        },
+        {
+          "uid": "05ac4195-354b-482e-b06d-7a988561f55d",
+          "evse_id": "05ac4195-354b-482e-b06d-7a988561f55d",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "6997abbc-d5bd-4787-93a6-0c900175ae8a",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-19T10:22:13.441"
+            }
+          ],
+          "coordinates": {
+            "latitude": "48.510627",
+            "longitude": "40.341236"
+          },
+          "last_updated": "2023-05-03T10:51:22.883"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/6102/e30094e6_6102 (2).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-03T10:51:22.883"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "c600da09-e14d-4dd5-af52-c53294ffb178",
+      "publish": true,
+      "name": "6103",
+      "address": "Лукойл, М-4, 947 км, р-н Красносулинский",
+      "city": "Ростовская обл., М4 Дон",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "48.165358",
+        "longitude": "40.262262"
+      },
+      "evses": [
+        {
+          "uid": "85e47a44-899b-43f0-8394-366c07e480c5",
+          "evse_id": "85e47a44-899b-43f0-8394-366c07e480c5",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "19efdeb8-2da4-4488-815a-a0a9c0d94413",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "48.165358",
+            "longitude": "40.262262"
+          },
+          "last_updated": "2023-05-02T09:16:53.218"
+        },
+        {
+          "uid": "f34943cf-2f15-4075-a6da-85d9ce9e7777",
+          "evse_id": "f34943cf-2f15-4075-a6da-85d9ce9e7777",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "09bc690a-1b10-42e9-ae65-7760ceec469b",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-01-31T13:55:25.808"
+            }
+          ],
+          "coordinates": {
+            "latitude": "48.165358",
+            "longitude": "40.262262"
+          },
+          "last_updated": "2023-05-02T09:16:53.218"
+        },
+        {
+          "uid": "dff3a9ea-17d8-420a-bd31-87a9cf4da387",
+          "evse_id": "dff3a9ea-17d8-420a-bd31-87a9cf4da387",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2d92e868-6a74-48a5-b1e2-1b66fc9145f3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-02-04T13:29:54.494"
+            }
+          ],
+          "coordinates": {
+            "latitude": "48.165358",
+            "longitude": "40.262262"
+          },
+          "last_updated": "2023-05-02T09:16:53.218"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/6103/634361ee_6103_2 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/6103/140b6ce7_6103_1 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-02T09:16:53.218"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "9ba34d8e-2567-48e9-806b-8f764e81047e",
+      "publish": true,
+      "name": "6104",
+      "address": "Лукойл,М-4, 1024 км, р-н Октябрьский",
+      "city": "Ростовская обл., М4 Дон",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "47.537387",
+        "longitude": "39.968524"
+      },
+      "evses": [
+        {
+          "uid": "c21ac6ae-aaf1-49f9-8498-37f63b6526ed",
+          "evse_id": "c21ac6ae-aaf1-49f9-8498-37f63b6526ed",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "5907cae3-f0b3-4de1-bc28-1f919cd4183f",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "47.537387",
+            "longitude": "39.968524"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "973b7654-15ac-4402-a8e0-9d8f02ce5b0e",
+          "evse_id": "973b7654-15ac-4402-a8e0-9d8f02ce5b0e",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "b2f61925-f7df-4cab-8137-20b7c153002b",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "47.537387",
+            "longitude": "39.968524"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "2cbf7825-0045-461a-b46f-69817f5fe6cc",
+          "evse_id": "2cbf7825-0045-461a-b46f-69817f5fe6cc",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ea333eee-7194-4225-bc8f-6892abb9405d",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 120000,
+              "last_updated": "2023-01-19T10:21:56.173"
+            }
+          ],
+          "coordinates": {
+            "latitude": "47.537387",
+            "longitude": "39.968524"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/6104/b3bb482a_6104_ (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "7dab743d-27fd-4f0b-80e6-f10239a97b08",
+      "publish": true,
+      "name": "7101",
+      "address": "ул, Пролетарская, 2, Тула",
+      "city": "Тула",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "54.193101",
+        "longitude": "37.641283"
+      },
+      "evses": [
+        {
+          "uid": "635e75bc-871a-409b-bc2d-308e7b28b513",
+          "evse_id": "635e75bc-871a-409b-bc2d-308e7b28b513",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "44478fd1-0bca-433b-a418-e5f8d3d97eed",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-13T13:01:18.661"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.193101",
+            "longitude": "37.641283"
+          },
+          "last_updated": "2023-04-29T07:35:19.052"
+        },
+        {
+          "uid": "63a7f87c-293d-4c6e-a42e-53a66a307221",
+          "evse_id": "63a7f87c-293d-4c6e-a42e-53a66a307221",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "37148098-c55a-49be-834e-d0e52a43f849",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-13T13:01:29.078"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.193101",
+            "longitude": "37.641283"
+          },
+          "last_updated": "2023-04-29T07:35:19.052"
+        },
+        {
+          "uid": "17dc961a-249d-4436-981f-35b32f659f20",
+          "evse_id": "17dc961a-249d-4436-981f-35b32f659f20",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "e3f6ff81-1dcd-48dd-bf04-70fd10e0db58",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-03-13T13:01:40.131"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.193101",
+            "longitude": "37.641283"
+          },
+          "last_updated": "2023-04-29T07:35:19.052"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7101/701673bf_7101 1 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-29T07:35:19.052"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "44759861-bd89-40ed-ab94-38132d6b9b53",
+      "publish": true,
+      "name": "7301",
+      "address": "ТЦ «Аквамолл», Московское ш, 108к2, Ульяновск",
+      "city": "Ульяновск",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "54.306459",
+        "longitude": "48.361693"
+      },
+      "evses": [
+        {
+          "uid": "86997f34-e771-48af-8f1c-0ce82ed96a75",
+          "evse_id": "86997f34-e771-48af-8f1c-0ce82ed96a75",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "67c18770-bc61-41dd-8698-a7ff164cb79e",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.306459",
+            "longitude": "48.361693"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "93f27652-b453-431e-ae95-71b19e13f619",
+          "evse_id": "93f27652-b453-431e-ae95-71b19e13f619",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "cd16aad2-dc75-4cc6-8c2f-4dfe0774425e",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.306459",
+            "longitude": "48.361693"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "b5ce13ae-673a-4856-9112-6c295af11fe8",
+          "evse_id": "b5ce13ae-673a-4856-9112-6c295af11fe8",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "d1228a07-c988-4864-b3c3-5b133b706be9",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.306459",
+            "longitude": "48.361693"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Ulyanovsk",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7301/ece37db6_7301 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "c1965f3e-9b66-4023-9a8d-c8f1217c3a3f",
+      "publish": true,
+      "name": "7302",
+      "address": "ТЦ «Самолет», Ульяновский пр., д.1, Ульяновск",
+      "city": "Ульяновск",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "54.368699",
+        "longitude": "48.587829"
+      },
+      "evses": [
+        {
+          "uid": "9354a719-ba32-4609-a92d-26ad68934953",
+          "evse_id": "9354a719-ba32-4609-a92d-26ad68934953",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "0d76327a-a5d6-40a6-925a-cb8737d73ade",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-03T12:23:08.425"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.368699",
+            "longitude": "48.587829"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "caaeaeea-39a8-423e-bebf-5e024528b4bb",
+          "evse_id": "caaeaeea-39a8-423e-bebf-5e024528b4bb",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ad4f2f96-312d-42f6-bf26-14b9f8b837b1",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-03T12:23:52.468"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.368699",
+            "longitude": "48.587829"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "d532a29c-fa84-4712-816d-83708925a329",
+          "evse_id": "d532a29c-fa84-4712-816d-83708925a329",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "34a35b33-65ee-4921-b310-b0a68a08bc9d",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-02-03T12:23:59.228"
+            }
+          ],
+          "coordinates": {
+            "latitude": "54.368699",
+            "longitude": "48.587829"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Ulyanovsk",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "cd6c97aa-b96f-432d-b9ca-0fb3aaa37786",
+      "publish": true,
+      "name": "7701",
+      "address": "БЦ РТС, Волгоградский проспект, 32к31",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.71842",
+        "longitude": "37.69051"
+      },
+      "evses": [
+        {
+          "uid": "150135cb-aa1f-4b3b-9510-d626526b9766",
+          "evse_id": "150135cb-aa1f-4b3b-9510-d626526b9766",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "c07aecc3-1360-4593-8c1d-914a4a64544a",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "2023-03-27T08:13:43.71"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.71842",
+            "longitude": "37.69051"
+          },
+          "last_updated": "2023-04-13T11:28:55.185"
+        },
+        {
+          "uid": "fca9ff9a-568b-4072-a3a3-caa937eeba4b",
+          "evse_id": "fca9ff9a-568b-4072-a3a3-caa937eeba4b",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "da9f16bd-5b6d-4a35-ad9a-bf07d8e07a9d",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "2023-03-27T08:13:32.991"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.71842",
+            "longitude": "37.69051"
+          },
+          "last_updated": "2023-04-13T11:28:55.185"
+        },
+        {
+          "uid": "029ae6e1-d398-4a4d-bd6d-3a6476200c8a",
+          "evse_id": "029ae6e1-d398-4a4d-bd6d-3a6476200c8a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "3373620f-55be-4ab8-8be8-5c11e94a7e7b",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "2023-03-27T08:13:38.817"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.71842",
+            "longitude": "37.69051"
+          },
+          "last_updated": "2023-04-13T11:28:55.185"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7701/69a70e91_7701 епром (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T11:28:55.185"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "f808dcda-5c85-4c7e-8a73-66e305c915cc",
+      "publish": true,
+      "name": "7703",
+      "address": "ТЦ «Красный Кит», Ленина, 2, Красногорск ",
+      "city": "Красногорск",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.819388",
+        "longitude": "37.320851"
+      },
+      "evses": [
+        {
+          "uid": "f02b02f3-948d-45aa-b028-0ec9d6c52102",
+          "evse_id": "f02b02f3-948d-45aa-b028-0ec9d6c52102",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "6a1b549f-869d-47a2-86ff-daabddbdad74",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.819388",
+            "longitude": "37.320851"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "21898150-9a07-46fd-85a0-bf62f378bb22",
+          "evse_id": "21898150-9a07-46fd-85a0-bf62f378bb22",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "33aff984-2f74-4f05-8968-2e6c7909aa2c",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.819388",
+            "longitude": "37.320851"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "2a9c4fa7-312d-4a5d-8542-2c6b39a2c8e2",
+          "evse_id": "2a9c4fa7-312d-4a5d-8542-2c6b39a2c8e2",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "65afe8a9-7498-4f7f-af51-bc1d337d733b",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.819388",
+            "longitude": "37.320851"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7703/a942e991_7703 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "c6d0e829-b562-4402-9740-b8ff296f6378",
+      "publish": true,
+      "name": "7704",
+      "address": "Отель «Изумрудный лес», вблизи п. Нарынка, МО",
+      "city": "п. Нарынка, МО",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.128942",
+        "longitude": "36.507777"
+      },
+      "evses": [
+        {
+          "uid": "45bba86b-ccc8-42f7-908c-8aa1f0d939be",
+          "evse_id": "45bba86b-ccc8-42f7-908c-8aa1f0d939be",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "9bbc8fdb-8b8f-4994-984c-8f75f581826a",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.128942",
+            "longitude": "36.507777"
+          },
+          "last_updated": "2023-04-20T08:19:28.951"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 30000,
+              "last_updated": "2023-04-20T08:19:23.351"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.128942",
+            "longitude": "36.507777"
+          },
+          "last_updated": "2023-04-20T08:19:28.951"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 30000,
+              "last_updated": "2023-04-20T08:19:28.951"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.128942",
+            "longitude": "36.507777"
+          },
+          "last_updated": "2023-04-20T08:19:28.951"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7704/df049864_7704 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-20T08:19:28.951"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "29639be2-4e44-4748-ae41-a26a3b005b11",
+      "publish": true,
+      "name": "7706",
+      "address": "ТЦ Арена Плаза, Ленинградский пр, 36, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.791914",
+        "longitude": "37.5604"
+      },
+      "evses": [
+        {
+          "uid": "61e836f7-f9f8-4865-9a7d-dd7449a0d0fe",
+          "evse_id": "61e836f7-f9f8-4865-9a7d-dd7449a0d0fe",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2b769b82-89eb-4b17-acbd-12b1e4d9efdd",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.791914",
+            "longitude": "37.5604"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "92fdec96-4f07-4aaa-81d7-f850dd6220c2",
+          "evse_id": "92fdec96-4f07-4aaa-81d7-f850dd6220c2",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "5a4c77e3-1eb4-42a0-bd26-13ab209903a6",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.791914",
+            "longitude": "37.5604"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "c4ef7905-f4e6-4c1f-931b-ec1de2cb3e74",
+          "evse_id": "c4ef7905-f4e6-4c1f-931b-ec1de2cb3e74",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "60ea02a8-7f48-4808-8b23-13e60054e6ee",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.791914",
+            "longitude": "37.5604"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7706/c3a8a26e_7706 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "d25bb7a8-f1f2-4a27-9098-3f21ae1f7092",
+      "publish": true,
+      "name": "7708",
+      "address": "ТРЦ «Павелецкая Плаза», Павелецкая пл., 3",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.730965",
+        "longitude": "37.639987"
+      },
+      "evses": [
+        {
+          "uid": "3da150f7-3c85-4fc9-b5af-ebf621f9d3a2",
+          "evse_id": "3da150f7-3c85-4fc9-b5af-ebf621f9d3a2",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "a576897f-aabd-4567-86be-b52e33bb2e83",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 100000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.730965",
+            "longitude": "37.639987"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "d80d8987-00cb-4313-92f0-9f5a0c6e3de2",
+          "evse_id": "d80d8987-00cb-4313-92f0-9f5a0c6e3de2",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "0d0ab46d-5096-482c-867a-597524a2af01",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.730965",
+            "longitude": "37.639987"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "ed889a2e-85d8-4805-931d-fdcd89522907",
+          "evse_id": "ed889a2e-85d8-4805-931d-fdcd89522907",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "5ac229ca-a1e4-40a1-b9c6-a74dcc2218c9",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.730965",
+            "longitude": "37.639987"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7708/a5b5c66c_7708 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "d3f5e968-79d4-4d12-8851-cf6069f7cfa4",
+      "publish": true,
+      "name": "7711",
+      "address": "Отель «Изумрудный лес», вблизи п. Нарынка",
+      "city": "п. Нарынка, МО",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.129076",
+        "longitude": "36.507911"
+      },
+      "evses": [
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-26T12:50:19.672"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.129076",
+            "longitude": "36.507911"
+          },
+          "last_updated": "2023-04-26T12:50:24.418"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-26T12:50:24.418"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.129076",
+            "longitude": "36.507911"
+          },
+          "last_updated": "2023-04-26T12:50:24.418"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7711/253703cd_7711 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-26T12:50:24.418"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "58713bde-0263-4def-85db-7b6c7a2f2576",
+      "publish": true,
+      "name": "7712",
+      "address": "ТЦ Тиара, Мичуринский пр-т, 27, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.697176",
+        "longitude": "37.499772"
+      },
+      "evses": [
+        {
+          "uid": "1d61c32f-494c-49cb-8e09-03cc876a9d21",
+          "evse_id": "1d61c32f-494c-49cb-8e09-03cc876a9d21",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1cf3763f-07e9-48de-9d22-c569f62fef90",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-01-09T13:42:23.052"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.697176",
+            "longitude": "37.499772"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "3361c32f-494c-49cb-8e09-03cc876a9d21",
+          "evse_id": "3361c32f-494c-49cb-8e09-03cc876a9d21",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "33f3763f-07e9-48de-9d22-c569f62fef90",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-04-07T18:57:44.92"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.697176",
+            "longitude": "37.499772"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "e18a97e5-e0f3-45a1-8313-7d37ee0df369",
+          "evse_id": "e18a97e5-e0f3-45a1-8313-7d37ee0df369",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ba03771f-b429-4eb3-aade-0635a568fde6",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-01-09T13:42:38.074"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.697176",
+            "longitude": "37.499772"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "13a98834-95ef-4f6c-9014-d181e613e797",
+      "publish": true,
+      "name": "7713",
+      "address": "Гипермаркет Говорово, 47й км МКАД, вл31с1",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.659474",
+        "longitude": "37.428267"
+      },
+      "evses": [
+        {
+          "uid": "68480170-139b-4d9c-86b5-17d90dc43840",
+          "evse_id": "68480170-139b-4d9c-86b5-17d90dc43840",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "6c1b5ac3-0659-4603-89a5-7937c288e8af",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-27T09:43:09.861"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.659474",
+            "longitude": "37.428267"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "0a95ed3e-5f3e-4015-8b24-d5dcc1e4bab6",
+          "evse_id": "0a95ed3e-5f3e-4015-8b24-d5dcc1e4bab6",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "2e6f41e0-3763-42c9-a1c8-c756aa152086",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-27T09:43:19.195"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.659474",
+            "longitude": "37.428267"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "e02f6d71-e972-43f1-8701-3e528c0800ef",
+          "evse_id": "e02f6d71-e972-43f1-8701-3e528c0800ef",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ffb451d5-32ff-40a5-8c35-212a1e0282fe",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-03-27T09:43:29.537"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.659474",
+            "longitude": "37.428267"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7713/8f11e166_7713_1.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/7713/b5ed3726_7713_2.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "afe8f1ca-58f8-4a6f-9d09-d550ae76a165",
+      "publish": true,
+      "name": "7714",
+      "address": "ТЦ «Юнимолл», Новорижское ш., Красногорск",
+      "city": "Красногорск",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.8001",
+        "longitude": "37.2814"
+      },
+      "evses": [
+        {
+          "uid": "ad09455a-ae94-4928-ac64-1794dda8ad1c",
+          "evse_id": "ad09455a-ae94-4928-ac64-1794dda8ad1c",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ae31c32e-76cb-4d3b-a0d4-7cf7a049d5b4",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.8001",
+            "longitude": "37.2814"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7714/b44892f2_7714 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "40baae4a-8a0e-4fd7-98de-04967e124179",
+      "publish": true,
+      "name": "7715",
+      "address": "ТЦ «Потапово», Ак. Понтрягина, 14, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.533052",
+        "longitude": "37.498714"
+      },
+      "evses": [
+        {
+          "uid": "f03a3cb4-dc4c-4001-9405-c602806e640b",
+          "evse_id": "f03a3cb4-dc4c-4001-9405-c602806e640b",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ee88fb5a-8997-40f1-9236-3e26a7520932",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-21T08:25:09.275"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.533052",
+            "longitude": "37.498714"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "436d6374-c567-484b-bacf-ddaea042e561",
+          "evse_id": "436d6374-c567-484b-bacf-ddaea042e561",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "8305fdda-72fb-49bd-a4d7-b56ce0affb17",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-02-21T08:25:38.223"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.533052",
+            "longitude": "37.498714"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "cd483329-184d-4341-9542-0c1465b2a381",
+          "evse_id": "cd483329-184d-4341-9542-0c1465b2a381",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4bd635c4-28ac-4644-b46f-3ee41f5222ac",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-02-21T08:25:44.804"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.533052",
+            "longitude": "37.498714"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7715/4495e805_7715 (1).jpg",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "jpg",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "9f1a1818-2b06-471f-9274-b4fbaf246fc1",
+      "publish": true,
+      "name": "7716",
+      "address": "ДЦ Helios City, 1-й пр. Перова Поля, 9с1",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.750124",
+        "longitude": "37.771528"
+      },
+      "evses": [
+        {
+          "uid": "13d60dcf-93d3-4002-89ed-1ec135820eb5",
+          "evse_id": "13d60dcf-93d3-4002-89ed-1ec135820eb5",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "520efa89-7aed-46aa-bb46-75b91b707d61",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-01-09T13:07:11.444"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.750124",
+            "longitude": "37.771528"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "aa055c9e-742c-4e1b-a3bc-40d00c6995c6",
+          "evse_id": "aa055c9e-742c-4e1b-a3bc-40d00c6995c6",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "6db27643-5820-46fa-ac03-5ac4ff5051c8",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-01-09T13:07:19.947"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.750124",
+            "longitude": "37.771528"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "db3bfafb-203a-4182-915a-11de9481e779",
+          "evse_id": "db3bfafb-203a-4182-915a-11de9481e779",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "13c94c66-a894-4a5e-8858-4f6b42c58e23",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-01-09T13:07:26.777"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.750124",
+            "longitude": "37.771528"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "46daf5b4-5c48-43dc-8e8c-09dfc0c9cf0f",
+      "publish": true,
+      "name": "7717",
+      "address": "ЗК «Солярис» п. Нагорное, Мытищинский район",
+      "city": "пос. Нагорное",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.911141",
+        "longitude": "37.628636"
+      },
+      "evses": [
+        {
+          "uid": "0d88e42a-80b3-4350-8fa8-01c50b9f2798",
+          "evse_id": "0d88e42a-80b3-4350-8fa8-01c50b9f2798",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "2bf7008a-9bf5-48a5-821b-48c9cd9b749b",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-01-25T12:52:46.38"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.911141",
+            "longitude": "37.628636"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7717/59c65619_7717 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "adcc36f4-5fcd-4bc7-8258-9f52ae21a284",
+      "publish": true,
+      "name": "7718",
+      "address": "6-я Радиальная, 5к5, Москва (4 этаж)",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.604535",
+        "longitude": "37.657682"
+      },
+      "evses": [
+        {
+          "uid": "335dec14-d3b0-4911-9c8d-8b0ed701ae15",
+          "evse_id": "335dec14-d3b0-4911-9c8d-8b0ed701ae15",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "339724d3-786f-4088-9b5c-9da1584609f0",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-21T07:11:30.175"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.604535",
+            "longitude": "37.657682"
+          },
+          "last_updated": "2023-04-21T07:11:36.08"
+        },
+        {
+          "uid": "333a5cd7-0757-4d80-9343-0f0000d59821",
+          "evse_id": "333a5cd7-0757-4d80-9343-0f0000d59821",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "334fe1bf-276b-4472-bd61-73ff1eec3fd7",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-21T07:11:36.08"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.604535",
+            "longitude": "37.657682"
+          },
+          "last_updated": "2023-04-21T07:11:36.08"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7718/bacca708_7718 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-21T07:11:36.08"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "d4db90be-6b95-4625-89b7-0a2ae0bf2ad5",
+      "publish": false,
+      "name": "7720",
+      "address": "ЖК «Крылья», Лобачевского, 120с2, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.695377",
+        "longitude": "37.469805"
+      },
+      "evses": [
+        {
+          "uid": "1f5b3e40-b928-47ce-a72d-2c7c42858eba",
+          "evse_id": "1f5b3e40-b928-47ce-a72d-2c7c42858eba",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "952316f6-3326-41ea-aac8-bb8c6bbf3d6d",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.695377",
+            "longitude": "37.469805"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7720/861f4893_7720 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "07f3c0bd-f087-4cd9-ab17-1fbef448ce2b",
+      "publish": false,
+      "name": "7721",
+      "address": "ЖК «Крылья», Лобачевского, 120с2, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.694908",
+        "longitude": "37.469739"
+      },
+      "evses": [
+        {
+          "uid": "b2cfa6a1-d433-4748-98ac-ad559343d219",
+          "evse_id": "b2cfa6a1-d433-4748-98ac-ad559343d219",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "5ad88837-1a02-4319-a037-0b085a730180",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.694908",
+            "longitude": "37.469739"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "c649b55a-5196-4653-abc1-47c1c6192509",
+          "evse_id": "c649b55a-5196-4653-abc1-47c1c6192509",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "76a33461-b7c4-4d26-8046-1d2636c16a4d",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 30000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.694908",
+            "longitude": "37.469739"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "f6ff8143-7be8-41ac-862f-d212d88728cc",
+          "evse_id": "f6ff8143-7be8-41ac-862f-d212d88728cc",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "ba61b5ab-7bcf-4b30-8ca8-3d2c287b9eca",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 30000,
+              "last_updated": "0001-01-01T00:00:00"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.694908",
+            "longitude": "37.469739"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7721/c1c88e12_7720 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "8dadf682-1a1f-47e2-b268-a859548a0df6",
+      "publish": true,
+      "name": "7723",
+      "address": "АЗС «Роснефть», Чайковского, 79, Клин",
+      "city": "Клин",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "56.325988",
+        "longitude": "36.755147"
+      },
+      "evses": [
+        {
+          "uid": "7fa48633-c247-4217-89b9-c1320752b2e7",
+          "evse_id": "7fa48633-c247-4217-89b9-c1320752b2e7",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "b9ff66dd-59a1-4e3d-9b60-28f916dcd566",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-23T09:51:51.037"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.325988",
+            "longitude": "36.755147"
+          },
+          "last_updated": "2023-05-04T14:11:32.329"
+        },
+        {
+          "uid": "d553e099-9946-42f4-8c20-a03afb3803fe",
+          "evse_id": "d553e099-9946-42f4-8c20-a03afb3803fe",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "4b5f4722-5c21-45c5-8c6f-ca60e5650850",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-03-15T05:58:39.536"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.325988",
+            "longitude": "36.755147"
+          },
+          "last_updated": "2023-05-04T14:11:32.329"
+        },
+        {
+          "uid": "411087f6-a331-4be2-92c8-410d56bd20d9",
+          "evse_id": "411087f6-a331-4be2-92c8-410d56bd20d9",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "d370eb68-65d2-4541-9361-2606a2c5ff6c",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-03-15T05:58:56.394"
+            }
+          ],
+          "coordinates": {
+            "latitude": "56.325988",
+            "longitude": "36.755147"
+          },
+          "last_updated": "2023-05-04T14:11:32.329"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-04T14:11:32.329"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "d0e94369-ef61-4783-8f5a-63d5558623da",
+      "publish": true,
+      "name": "7724",
+      "address": "Гончарная, 20/1, стр.1, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.744312",
+        "longitude": "37.64818"
+      },
+      "evses": [
+        {
+          "uid": "deaeb22c-2dcd-4ec3-9c4e-383e8f5de265",
+          "evse_id": "deaeb22c-2dcd-4ec3-9c4e-383e8f5de265",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "18f358a4-ed18-43c0-b50a-5a7e19613d62",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 380,
+              "max_amperage": 16,
+              "max_electric_power": 22000,
+              "last_updated": "2023-03-07T08:25:21.968"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.744312",
+            "longitude": "37.64818"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7724/3da692e3_7724 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/7724/f2fd3da4_7724_1 (1).png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "8d391ec5-bcc3-4ddb-bcab-eabb9d003a21",
+      "publish": true,
+      "name": "7725",
+      "address": "Мал. Семеновская, 5с1, Москва",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.784691",
+        "longitude": "37.706911"
+      },
+      "evses": [
+        {
+          "uid": "85bd07e0-8867-4bb5-875a-969140f04be0",
+          "evse_id": "85bd07e0-8867-4bb5-875a-969140f04be0",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "bddf406d-bb98-4c4e-b728-aadd37978eb7",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-03-21T12:03:52.958"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.784691",
+            "longitude": "37.706911"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "6e872fda-0799-4075-9897-d51e85266732",
+          "evse_id": "6e872fda-0799-4075-9897-d51e85266732",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "7342f748-0101-4f1f-91a0-52011da16fd1",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "2023-03-21T12:05:06.07"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.784691",
+            "longitude": "37.706911"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        },
+        {
+          "uid": "fb04ca56-91d4-4acb-8cab-8b6abf8f057e",
+          "evse_id": "fb04ca56-91d4-4acb-8cab-8b6abf8f057e",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "a6c6d044-1428-4575-9b14-77e43c4b0350",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 60000,
+              "last_updated": "2023-03-22T07:51:53.421"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.784691",
+            "longitude": "37.706911"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/7725/09801edb_7725.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "50385244-9c07-4155-bb32-33f5b9875588",
+      "publish": true,
+      "name": "7727",
+      "address": "Дубравная ул., д.51, стр.2",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.840658",
+        "longitude": "37.353944"
+      },
+      "evses": [
+        {
+          "uid": "b1d70b6d-7930-4143-86c1-4c1b2e2666a4",
+          "evse_id": "b1d70b6d-7930-4143-86c1-4c1b2e2666a4",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "f3861757-0fab-42e1-b39f-9dd16525adca",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-03T13:03:19.81"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.840658",
+            "longitude": "37.353944"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "0c2c23d3-eb67-440e-9f58-45d4e9d5241c",
+      "publish": true,
+      "name": "7729",
+      "address": "ул. Ал. Монаховой, д. 61, стр.1, Коммунарка",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.556603",
+        "longitude": "37.496545"
+      },
+      "evses": [
+        {
+          "uid": "8d064178-bd07-4f37-88da-c2ddfd9f1154",
+          "evse_id": "8d064178-bd07-4f37-88da-c2ddfd9f1154",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "feb2ee0b-17be-46ac-8627-f60334f26710",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-03T19:49:04.224"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.556603",
+            "longitude": "37.496545"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "0f0c7ff7-eb3c-4fe4-a12c-2d0d24c1d2dc",
+      "publish": true,
+      "name": "7730",
+      "address": "Широкая ул., 2а, Москва, Глобус",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.887501",
+        "longitude": "37.635663"
+      },
+      "evses": [
+        {
+          "uid": "bc4a7fe1-91ff-4ef9-adab-fc1a9ed57d1a",
+          "evse_id": "bc4a7fe1-91ff-4ef9-adab-fc1a9ed57d1a",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "e3210697-0bde-4a29-b124-17e9f8a9e735",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-04-03T16:10:46.85"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.887501",
+            "longitude": "37.635663"
+          },
+          "last_updated": "2023-04-13T12:38:40.908"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-04-13T12:38:40.908"
+    },
+    {
+      "country_code": "RU",
+      "party_id": "SIT",
+      "id": "d4e0783e-ee73-482e-821d-39d3dc279f78",
+      "publish": true,
+      "name": "7732",
+      "address": "АЗС Нефтьмагистраль, ш. Международное, Химки",
+      "city": "Москва",
+      "country": "RUS",
+      "coordinates": {
+        "latitude": "55.92049",
+        "longitude": "37.39521"
+      },
+      "evses": [
+        {
+          "uid": "9f43e8b0-9837-4c1f-9267-612fd67354f4",
+          "evse_id": "9f43e8b0-9837-4c1f-9267-612fd67354f4",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "8577c149-4a53-45ee-af91-fc7e4394788f",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-05-01T14:34:54.819"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.92049",
+            "longitude": "37.39521"
+          },
+          "last_updated": "2023-05-03T10:00:18.866"
+        },
+        {
+          "uid": "3045485a-4780-48b9-ae75-f040dc2ffcad",
+          "evse_id": "3045485a-4780-48b9-ae75-f040dc2ffcad",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "be340ff0-ee4b-4db1-a7da-d7605c123898",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 50000,
+              "last_updated": "2023-05-01T14:35:05.35"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.92049",
+            "longitude": "37.39521"
+          },
+          "last_updated": "2023-05-03T10:00:18.866"
+        },
+        {
+          "uid": "79bcae44-1e89-407b-89a5-fb5945855046",
+          "evse_id": "79bcae44-1e89-407b-89a5-fb5945855046",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "0c688684-9546-4a91-b3c9-aaa884c2eb06",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-05-01T14:35:14.302"
+            }
+          ],
+          "coordinates": {
+            "latitude": "55.92049",
+            "longitude": "37.39521"
+          },
+          "last_updated": "2023-05-03T10:00:18.866"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "images": [],
+      "last_updated": "2023-05-03T10:00:18.866"
+    },
+    {
+      "country_code": "AM",
+      "party_id": "SIT",
+      "id": "6f3bdb1f-c360-43f5-b3ab-cad1d5b6883e",
+      "publish": true,
+      "name": "9901",
+      "address": "Aratashen winery, дер. Араташен, Комитаса 1/3",
+      "city": "Ереван",
+      "country": "ARM",
+      "coordinates": {
+        "latitude": "40.134937",
+        "longitude": "44.227299"
+      },
+      "evses": [
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 16,
+              "max_electric_power": 22000,
+              "last_updated": "2023-05-05T09:01:04.226"
+            }
+          ],
+          "coordinates": {
+            "latitude": "40.134937",
+            "longitude": "44.227299"
+          },
+          "last_updated": "2023-05-06T13:23:40.639"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "IEC_62196_T1",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-05-05T10:27:28.485"
+            }
+          ],
+          "coordinates": {
+            "latitude": "40.134937",
+            "longitude": "44.227299"
+          },
+          "last_updated": "2023-05-06T13:23:40.639"
+        },
+        {
+          "uid": null,
+          "evse_id": null,
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": null,
+              "standard": "GBT_AC",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 0,
+              "max_amperage": 0,
+              "max_electric_power": 22000,
+              "last_updated": "2023-05-05T10:27:36.145"
+            }
+          ],
+          "coordinates": {
+            "latitude": "40.134937",
+            "longitude": "44.227299"
+          },
+          "last_updated": "2023-05-06T13:23:40.639"
+        }
+      ],
+      "time_zone": "Asia/Yerevan",
+      "images": [
+        {
+          "url": "http://ezs.sitronics.com/photo/9901/e06c5d41_9901_3.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/9901/cebbecfb_9901_2.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        },
+        {
+          "url": "http://ezs.sitronics.com/photo/9901/06301913_9901_1.png",
+          "thumbnail": null,
+          "category": "LOCATION",
+          "type": "png",
+          "width": null,
+          "height": null
+        }
+      ],
+      "last_updated": "2023-05-06T13:23:40.639"
     }
   ],
-  "status_code": 1000,
+  "status_code": "Success",
   "status_message": "Success",
-  "timestamp": "2023-04-06T09:00:03.2603111+00:00"
+  "timestamp": "2023-05-08T01:58:08.3812354+00:00"
 }
