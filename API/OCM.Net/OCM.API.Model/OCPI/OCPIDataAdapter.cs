@@ -91,7 +91,6 @@ namespace OCM.API.Common.Model.OCPI
                     cp.StatusTypeID = MapOCMStatusTypeFromStatus(e.Status, _useLiveStatus);
                     foreach (var c in e.Connectors)
                     {
-                        var evse_id = e.Evse_id ?? e.Uid;
 
                         var connectionInfo = new ConnectionInfo
                         {

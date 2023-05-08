@@ -69,9 +69,25 @@ namespace OCM.API.Tests
             System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
 
+
         [Fact]
         async Task CanConvertFromOCPI_Sitronics()
         {
+
+            var parseErrors = 0;
+            var deserializeSettings = new JsonSerializerSettings
+            {
+                Error = (obj, args) =>
+                {
+                    var contextErrors = args.ErrorContext;
+                    contextErrors.Handled = true;
+
+                    System.Console.WriteLine($"Error parsing item {contextErrors.Error}");
+                    parseErrors++;
+                }
+            };
+
+
             var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-sitronics.json");
 
@@ -80,11 +96,13 @@ namespace OCM.API.Tests
 
             var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
 
-            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json);
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json, deserializeSettings);
             var ocpiData = response.Data;
             var poiResults = adapter.FromOCPI(ocpiData, 31);
 
-            Assert.Equal(10, poiResults.Count());
+            Assert.Equal(65, poiResults.Count());
+
+            Assert.Equal(0, parseErrors);
 
             System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
