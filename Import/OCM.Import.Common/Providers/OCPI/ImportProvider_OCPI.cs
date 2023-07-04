@@ -40,6 +40,17 @@ namespace OCM.Import.Providers.OCPI
             _dataProviderId = dataProviderId;
         }
 
+        public virtual Dictionary<string, int> GetOperatorMappings()
+        {
+            return OperatorMappings;
+        }
+
+        private Dictionary<string, int> _unmappedOperators;
+        public Dictionary<string, int> GetPostProcessingUnmappedOperators()
+        {
+            return _unmappedOperators;
+        }
+
         public List<ChargePoint> Process(CoreReferenceData coreRefData)
         {
 
@@ -67,15 +78,11 @@ namespace OCM.Import.Providers.OCPI
                 response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Model.OCPI.Location>>(InputData, deserializeSettings);
             }
 
+            OperatorMappings = GetOperatorMappings();
 
             var poiResults = _adapter.FromOCPI(response, _dataProviderId, OperatorMappings);
 
-            var unmappedOperators = _adapter.GetUnmappedOperators();
-
-            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
-            {
-                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
-            }
+            _unmappedOperators = _adapter.GetUnmappedOperators();
 
             return poiResults.ToList();
         }
@@ -84,7 +91,7 @@ namespace OCM.Import.Providers.OCPI
         {
             try
             {
-                if (_authHeaderKey != null)
+                if (!string.IsNullOrEmpty(_authHeaderKey))
                 {
                     webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
                 }

@@ -21,13 +21,16 @@ namespace OCM.Import.Providers.OCPI
             Init(dataProviderId: 31, "http://ezs.sitronics.com:7059/ocpi/2.2.1/cpo/locations", "Authorization");
         }
 
-        List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
+        public override Dictionary<string, int> GetOperatorMappings()
         {
-            OperatorMappings = new Dictionary<string, int>()
+            return new Dictionary<string, int>()
             {
                 { "SIT",3656 },
             };
+        }
 
+        List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
+        {
             var outputList = Process(coreRefData);
             return outputList;
         }
