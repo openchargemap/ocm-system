@@ -135,6 +135,9 @@ namespace OCM.Import.Providers
                                 case "rivian_waypoints":
                                     cp.OperatorID = 3617; //3607 = Rivian Adventure
                                     break;
+                                case "rivian_adventure":
+                                    cp.OperatorID = 3607; 
+                                    break;
                                 case "bchydro":
                                     cp.OperatorID = 3385;
                                     break;
@@ -152,6 +155,24 @@ namespace OCM.Import.Providers
                                     break;
                                 case "chargelab":
                                     cp.OperatorID = 3621;
+                                    break;
+                                case "universal":
+                                    cp.OperatorID = 3694;
+                                    break;
+                                case "graviti_energy":
+                                    cp.OperatorID = 3695;
+                                    break;
+                                case "evrange":
+                                    cp.OperatorID = 3526;
+                                    break;
+                                case "zefnet":
+                                    cp.OperatorID = 3454;
+                                    break;
+                                case "red_e":
+                                    cp.OperatorID = 3696;
+                                    break;
+                                case "7charge":
+                                    cp.OperatorID = 3697;
                                     break;
                                 default:
                                     this.Log("Unknown network operator:" + deviceController);
