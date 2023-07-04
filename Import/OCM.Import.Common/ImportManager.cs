@@ -208,6 +208,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_GenericExcel());
             providers.Add(new ImportProvider_GoEvio());
             providers.Add(new ImportProvider_Sitronics());
+            providers.Add(new ImportProvider_Lakd());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
