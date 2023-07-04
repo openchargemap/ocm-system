@@ -15,6 +15,8 @@
     <None Remove="Assets\ocpi_2_1_1_locations-fastned.json" />
     <None Remove="Assets\ocpi_2_2_1_locations-sitronics.json" />
     <None Remove="Assets\ocpi_2_2_locations-evio.json" />
+    <None Remove="Assets\ocpi_2_2_locations-lakd.lt.json" />
+    <None Remove="Assets\ocpi_2_2_locations-mobie.pt.json" />
     <None Remove="Assets\ocpi_3_0_0_location_example.json" />
   </ItemGroup>
 
@@ -26,12 +28,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_2_1_1_locations-fastned.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_2_2_1_locations-sitronics.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_2_2_locations-evio.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_2_locations-lakd.lt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_2_locations-mobie.pt.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_3_0_0_location_example.json">
@@ -64,12 +72,7 @@
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj" />
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Web\OCM.API.Web.csproj" />
     <ProjectReference Include="..\..\Import\OCM.Import.Analysis\OCM.Import.Analysis.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Assets\ocpi_2_2_locations-mobie.pt.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\..\Import\OCM.Import.Common\OCM.Import.Common.csproj" />
   </ItemGroup>
 
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
