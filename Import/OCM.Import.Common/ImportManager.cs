@@ -11,6 +11,7 @@ using OCM.Import.Providers;
 using OCM.Import.Providers.OCPI;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -232,11 +233,12 @@ namespace OCM.Import
 
             var providers = GetImportProviders(coreRefData.DataProviders);
 
+            var providerMatched = false;
             foreach (var provider in providers)
             {
                 if (settings.ProviderName == null || settings.ProviderName.ToLower() == provider.GetProviderName().ToLower())
                 {
-
+                    providerMatched = true;
                     var result = await PerformImport(settings, credentials, coreRefData, provider);
 
                     Log(result.Log);
@@ -246,7 +248,12 @@ namespace OCM.Import
                 }
             }
 
-            return false; ;
+            if (!string.IsNullOrEmpty(settings.ProviderName) && !providerMatched)
+            {
+                Log($"No import provider was matched for {settings.ProviderName}");
+            }
+
+            return false;
         }
 
         public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false, int dupeDistance = DUPLICATE_DISTANCE_METERS)
@@ -698,15 +705,15 @@ namespace OCM.Import
                 int dataProviderId = (previous.DataProvider != null ? previous.DataProvider.ID : (int)previous.DataProviderID);
                 if (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate due to exact equal latlon to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
+                    Log(current.AddressInfo.ToString() + " is Duplicate in batch due to exact equal latlon to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
                 else if (new GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate due to close proximity to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
+                    Log(current.AddressInfo.ToString() + " is Duplicate in batch due to close proximity to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
                 else if (previous.AddressInfo.Title == current.AddressInfo.Title && previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1 && previous.AddressInfo.Postcode == current.AddressInfo.Postcode)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate due to same Title and matching AddressLine1 and Postcode  [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
+                    Log(current.AddressInfo.ToString() + " is Duplicate in batch due to same Title and matching AddressLine1 and Postcode  [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
                 }
                 return true;
             }
@@ -906,7 +913,6 @@ namespace OCM.Import
 
                 if (list.Count > 0)
                 {
-
 
                     if (list.Any(f => f.AddressCleaningRequired == true))
                     {
