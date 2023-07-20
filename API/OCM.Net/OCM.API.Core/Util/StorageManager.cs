@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.Model;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,32 @@ namespace OCM.Core.Util
             }
             else
             {
-                return await UploadImageBlobAmazonS3(fileName, blobName, metadataTags);
+                string r2Url = "";
+                string s3Url = "";
+                // upload to s3
+                try
+                {
+                    s3Url = await UploadImageBlobAmazonS3(fileName, blobName, metadataTags);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
+
+                // upload to cloudflare
+                try
+                {
+
+                    r2Url = await UploadImageBlobCloudflareR2(fileName, blobName, metadataTags);
+                    System.Diagnostics.Debug.WriteLine(r2Url);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
+
+                return r2Url ?? s3Url;
+
             }
         }
 
@@ -101,6 +127,60 @@ namespace OCM.Core.Util
                      putRequest2.Metadata.Add("x-amz-meta-title", "someTitle");
 
                      PutObjectResponse response2 = client.PutObject(putRequest2);*/
+                }
+                catch (AmazonS3Exception amazonS3Exception)
+                {
+                    if (amazonS3Exception.ErrorCode != null &&
+                        (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId")
+                        ||
+                        amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
+                    {
+                        Console.WriteLine("Check the provided AWS Credentials.");
+                        Console.WriteLine(
+                            "For service sign up go to http://aws.amazon.com/s3");
+                    }
+                    else
+                    {
+                        Console.WriteLine(
+                            "Error occurred. Message:'{0}' when writing an object"
+                            , amazonS3Exception.Message);
+                    }
+                    return null;
+                }
+            }
+        }
+
+        public static async Task<string> UploadImageBlobCloudflareR2(string fileName, string blobName, List<KeyValuePair<string, string>> metadataTags)
+        {
+            string bucketName = ConfigurationManager.AppSettings["CloudflareR2ContainerName"];
+            string accessKey = ConfigurationManager.AppSettings["CloudflareR2AccessKey"];
+            string accessSecret = ConfigurationManager.AppSettings["CloudflareR2AccessSecret"];
+            string r2Endpoint = ConfigurationManager.AppSettings["CloudflareR2Endpoint"];
+
+            var credentials = new BasicAWSCredentials(accessKey, accessSecret);
+
+            using (var client = new AmazonS3Client(credentials, new AmazonS3Config { ServiceURL = r2Endpoint }))
+            {
+                //upload: http://docs.aws.amazon.com/AmazonS3/latest/dev/UploadObjSingleOpNET.html
+                try
+                {
+                    PutObjectRequest putRequest1 = new PutObjectRequest
+                    {
+                        BucketName = bucketName,
+                        Key = "images/" + blobName,
+                        FilePath = fileName,
+                        CannedACL = S3CannedACL.PublicRead,
+                        DisablePayloadSigning = true
+                    };
+
+                    foreach (var m in metadataTags)
+                    {
+                        putRequest1.Metadata.Add(m.Key, m.Value);
+                    }
+
+                    PutObjectResponse response1 = await client.PutObjectAsync(putRequest1);
+                    return "https://media.openchargemap.io/images/" + blobName;
+
                 }
                 catch (AmazonS3Exception amazonS3Exception)
                 {
