@@ -55,11 +55,12 @@ namespace OCM.Import.Worker
                     var status = new ImportStatus { DateLastImport = DateTime.UtcNow, LastImportedProvider = "", LastImportStatus = "Started" };
 
                     var statusPath = Path.Combine(tempPath, "import_status.json");
-                    if (File.Exists(statusPath))
+                    var ignoreLastStatus = false; // if true, don't load the last status from file, just start from first provider
+
+                    if (File.Exists(statusPath) && !ignoreLastStatus)
                     {
                         status = System.Text.Json.JsonSerializer.Deserialize<ImportStatus>(File.ReadAllText(statusPath));
                     }
-
 
                     var allProviders = _settings.EnabledImports;
                     var indexOfLastProvider = allProviders.IndexOf(status.LastImportedProvider ?? "");

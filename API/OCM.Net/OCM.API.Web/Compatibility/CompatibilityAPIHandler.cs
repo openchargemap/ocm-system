@@ -264,11 +264,13 @@ namespace OCM.API
                     }
 
                     // refresh cache
-                    var cacheTask = System.Threading.Tasks.Task.Run(async () =>
+                    try
                     {
-                        return await Core.Data.CacheManager.RefreshCachedData();
-                    });
-                    cacheTask.Wait();
+                        var cacheTask = Core.Data.CacheManager.RefreshCachedData();
+                        await cacheTask.ConfigureAwait(false);
+                        cacheTask.Start();
+                    }
+                    catch { }
 
                     context.Response.StatusCode = 202;
                     return true;

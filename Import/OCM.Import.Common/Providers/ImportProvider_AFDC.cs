@@ -342,6 +342,7 @@ namespace OCM.Import.Providers
                             //assume basic level 1 power
                             Voltage = 120,
                             Amps = 16,
+                            Comments = "kW power is an estimate based on the connection type",
                             CurrentTypeID = 10 //AC
                         };
 
@@ -373,6 +374,7 @@ namespace OCM.Import.Providers
                             //assume basic level 2 power
                             Voltage = 230,
                             Amps = 16,
+                            Comments= "kW power is an estimate based on the connection type",
                             CurrentTypeID = 10 //AC
                         };
 
@@ -420,8 +422,9 @@ namespace OCM.Import.Providers
                                 LevelID = chrgLevel3.ID,
 
                                 //assume basic level 3 power
-                                Voltage = 400,
-                                Amps = 100,
+                               // Voltage = 400,
+                               // Amps = 100,
+                                Comments="kW power is an estimate based on the connection type",
                                 PowerKW = 50,
                                 CurrentTypeID = (int)StandardCurrentTypes.DC //DC
                             };

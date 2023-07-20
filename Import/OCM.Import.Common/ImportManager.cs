@@ -1098,7 +1098,7 @@ namespace OCM.Import
 
             var itemCount = poiList.Count();
             var itemsProcessed = 0;
-            var pageSize = 500;
+            var pageSize = 100;
             var pageIndex = 0;
 
             Log($"Publishing a total of {itemCount} items ..");
@@ -1113,18 +1113,18 @@ namespace OCM.Import
                 {
                     subList = poiList.Skip(currentIndex).Take(pageSize);
                     itemsProcessed += pageSize;
-                    Log($"Publishing items {currentIndex} to {currentIndex + pageSize - 1}..");
+                    Log($"[{DateTime.Now}] Publishing items {currentIndex} to {currentIndex + pageSize - 1}..");
                 }
                 else
                 {
                     subList = poiList.Skip(currentIndex).Take(itemsRemaining);
                     itemsProcessed += itemsRemaining;
-                    Log($"Publishing items {currentIndex} to {currentIndex + itemsRemaining}..");
+                    Log($"[{DateTime.Now}] Publishing items {currentIndex} to {currentIndex + itemsRemaining}..");
                 }
 
                 _client.UpdateItems(subList.ToList(), credentials);
 
-                await Task.Delay(2500);
+                await Task.Delay(500);
                 pageIndex++;
             }
 
