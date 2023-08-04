@@ -7,5 +7,5 @@ kv_namespaces = [
 
 [[ d1_databases ]]
 binding = "OCM_API_STATS"
-database_name = "ocm-api-stats"
-database_id = "08855b23-7926-4a2b-836e-b5f3264a8101"
+database_name = "ocm-api-statistics"
+database_id = "faad3a5a-714b-4ff4-b71e-6ea2d66d43b1"

@@ -119,26 +119,32 @@ class OCMRouter {
 		let status = "OK";
 
 		let response: Response;
+		let logKeyUsage = true;
 
 		if (this.enableAPIKeyRules) {
 			let maxresults = this.getParameterByName(request.url, "maxresults");
 
 			if (apiKey == null && this.requireAPIKeyForAllRequests == true && request.method != "OPTIONS") {
 				status = "REJECTED_APIKEY_MISSING";
+				logKeyUsage = false;
 				response = this.rejectRequest(status);
-
 			}
 			else if (apiKey == null && maxresults != null && parseInt(maxresults) > 250) {
 				status = "REJECTED_APIKEY_MISSING";
+				logKeyUsage = false;
 				response = this.rejectRequest(status);
-
 			} else {
 				if (this.enableDebug) console.log("Passing request with API Key or key not required:" + apiKey);
 
-				//respond
-				response = await this.fetchAndApply(request, env, context, apiKey, status);
+				if (await this.isAPIKeyValid(env, apiKey)) {
+					//respond
+					response = await this.fetchAndApply(request, env, context, apiKey, status);
+				} else {
+					status = "REJECTED_APIKEY_INVALID";
+					logKeyUsage = false;
+					response = this.rejectRequest(status);
+				}
 			}
-
 
 		} else {
 			//respond
@@ -146,7 +152,7 @@ class OCMRouter {
 		}
 
 		// none-blocking log
-		if (this.enableLogging) {
+		if (this.enableLogging && logKeyUsage) {
 			context.waitUntil(this.attemptLog(request, apiKey, status));
 			if (apiKey) {
 				try {
@@ -158,6 +164,62 @@ class OCMRouter {
 		}
 		return response;
 
+	}
+
+	async isAPIKeyValid(env: Env, apiKey: string | null) {
+		if (apiKey == null) return false;
+
+		if (apiKey == 'statuscake') {
+			return true;
+		}
+
+		if (this.enableLogging) console.debug("Checking key:" + apiKey);
+
+		if (! /^(?:\{{0,1}(?:[0-9a-fA-F]){8}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){12}\}{0,1})$/.test(apiKey)) {
+			console.debug("Failed regex:" + apiKey);
+			return false;
+		}
+
+		let query: D1Result;
+		try {
+			const stmt = env.OCM_API_STATS.prepare('SELECT * FROM apikey WHERE apikey = ?1').bind(apiKey);
+			query = await stmt.all();
+
+			if (query.results && query.results.length > 0 == true) {
+				if (this.enableLogging) console.debug("Found key in d1 db:" + apiKey);
+				return true;
+			}
+			else {
+				// key not found in our cache, check our API
+				let url = new URL("https://api-01.openchargemap.io/v3/key?key=" + apiKey);
+				let response = await fetch(url);
+				if (response.ok) {
+					let data: any = await response.json();
+					// {"appId":"fa3cacf4-4773-4ecc-bee4-0cddf5e91e93","title":"Open Charge Ma","url":"https://opencollective.com/openchargemap"}
+					if (data && data.appId) {
+
+						if (this.enableLogging) console.debug("Got key from API, storing in DB:" + apiKey);
+						// add key to cache
+						await env.OCM_API_STATS
+							.prepare('INSERT INTO apikey (apikey,title,datemodified) VALUES (?1,?2,?3)')
+							.bind(apiKey.toLowerCase(), data.title, new Date().toISOString())
+							.run();
+
+						return true;
+					}
+				}
+
+				return false;
+			}
+		} catch (e: any) {
+			console.log({
+				message: e.message,
+				cause: e.cause.message,
+			});
+
+			// if db query fails, allow key
+			return true;
+		}
 	}
 
 	async updateUsageStats(env: Env, key: string) {
@@ -192,10 +254,8 @@ class OCMRouter {
 				cause: e.cause.message,
 			});
 		}
-
-
-
 	}
+
 	async attemptLog(request: Request, apiKey: string | null, status: string) {
 
 		// attempt to log but timeout after 1000 ms if no response from log
@@ -224,7 +284,7 @@ class OCMRouter {
 
 		let banned_ua: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_UA", "json");
 		let banned_ip: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_IP", "json");
-		let banned_keys: string[] = <string[]>await this.getConfigKVJson(env,"API_BANNED_KEYS");
+		let banned_keys: string[] = <string[]>await this.getConfigKVJson(env, "API_BANNED_KEYS");
 
 		const clientIP = request.headers.get('cf-connecting-ip');
 		const userAgent = request.headers.get('user-agent');
@@ -236,12 +296,12 @@ class OCMRouter {
 			return this.rejectRequest(abuseMsg)
 		}
 
-		if (clientIP != null && banned_ip.includes(clientIP)) {
+		if (clientIP != null && banned_ip?.includes(clientIP)) {
 			status = "BANNED_IP";
 			return this.rejectRequest(abuseMsg)
 		}
 
-		if (apiKey != null && banned_keys.includes(apiKey)) {
+		if (apiKey != null && banned_keys?.includes(apiKey)) {
 			status = "BANNED_KEY";
 			return this.rejectRequest(abuseMsg)
 		}
