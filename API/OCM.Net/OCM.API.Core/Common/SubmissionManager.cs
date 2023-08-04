@@ -73,7 +73,8 @@ namespace OCM.API.Common
                 WebsiteUrl = agreement.WebsiteURL,
                 DateAgreed = DateTime.UtcNow,
                 DateCreated = DateTime.UtcNow,
-                Comments = agreement.Comments
+                Comments = agreement.Comments,
+                Credentials =agreement.Credentials,
             };
 
             dataModel.DataSharingAgreements.Add(item);
