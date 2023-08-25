@@ -17,7 +17,8 @@ namespace OCM.API.Common.Model
         PartlyOperational = 75,
         NotOperational = 100,
         PlannedForFutureDate = 150,
-        RemovedDecomissioned = 200
+        RemovedDecomissioned = 200,
+        RemovedDuplicate = 210
     }
 
     public enum StandardOperators

@@ -268,7 +268,7 @@ namespace OCM.Import
                                 where poi.AddressInfo.CountryID != null
                                 select (int)poi.AddressInfo.CountryID).Distinct().ToArray();
 
-            APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = true, SubmissionStatusTypeID = 0 };
+            APIRequestParams filters = new APIRequestParams { CountryIDs = countryIds, MaxResults = 1000000, EnableCaching = true, SubmissionStatusTypeID = new int[] { 0 } };
 
             IEnumerable<ChargePoint> masterList = new List<ChargePoint>();
             if (fetchExistingFromAPI)
@@ -852,6 +852,7 @@ namespace OCM.Import
                 }
                 else if (p is ImportProvider_Sitronics)
                 {
+                    (p as ImportProvider_Sitronics).AuthHeaderValue = "Token openchargemapDkxXXliO4542YWQzY2M0NGQyCgn";
                 }
 
                 if (p.ImportInitialisationRequired && p is IImportProviderWithInit)

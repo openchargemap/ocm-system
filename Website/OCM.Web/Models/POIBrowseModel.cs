@@ -89,7 +89,7 @@ namespace OCM.MVC.Models
         {
             get
             {
-                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.SubmissionStatusTypes), null);
+                return SimpleSelectList(ToListOfSimpleData(ReferenceData?.SubmissionStatusTypes), this.SubmissionStatusTypeID);
             }
         }
 

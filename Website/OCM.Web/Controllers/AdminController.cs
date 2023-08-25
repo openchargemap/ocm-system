@@ -306,7 +306,7 @@ namespace OCM.MVC.Controllers
 
 
                 // auto approve new items if they have been in the system for more than 3 days
-                var newPois = await poiManager.GetPOIListAsync(new APIRequestParams { SubmissionStatusTypeID = 1 });
+                var newPois = await poiManager.GetPOIListAsync(new APIRequestParams { SubmissionStatusTypeID = new int[] { 1 } });
 
                 foreach (var poi in newPois)
                 {

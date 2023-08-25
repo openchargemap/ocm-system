@@ -58,7 +58,7 @@ namespace OCM.API.Common
 
         public string ConnectionType { get; set; }
 
-        public int? SubmissionStatusTypeID { get; set; }
+        public int[] SubmissionStatusTypeID { get; set; }
 
         public int MaxResults { get; set; }
 
@@ -245,7 +245,7 @@ namespace OCM.API.Common
             if (!String.IsNullOrEmpty(requestParams["polygon"])) settings.Polygon = ParsePolygon(requestParams["polygon"], true);
 
             if (!String.IsNullOrEmpty(requestParams["connectiontype"])) settings.ConnectionType = ParseString(requestParams["connectiontype"]);
-            if (!String.IsNullOrEmpty(requestParams["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseInt(requestParams["submissionstatustypeid"]);
+            if (!String.IsNullOrEmpty(requestParams["submissionstatustypeid"])) settings.SubmissionStatusTypeID = ParseIntList(requestParams["submissionstatustypeid"]);
             if (!String.IsNullOrEmpty(requestParams["modifiedsince"])) settings.ChangesFromDate = ParseDate(requestParams["modifiedsince"]);
             if (!String.IsNullOrEmpty(requestParams["createdsince"])) settings.CreatedFromDate = ParseDate(requestParams["createdsince"]);
 
@@ -313,7 +313,7 @@ namespace OCM.API.Common
                 if (CountryCode != null) key += ":" + CountryCode;
                 if (ConnectionType != null) key += ":" + ConnectionType;
                 key += ":" + FastChargeOnly.ToString();
-                if (SubmissionStatusTypeID != null) key += ":" + SubmissionStatusTypeID.ToString();
+                if (SubmissionStatusTypeID != null) key += ":" + IntArrayToString(SubmissionStatusTypeID);
                 key += ":" + MaxResults.ToString();
                 key += ":" + IncludeComments.ToString();
                 key += ":" + this.IsCompactOutput.ToString();

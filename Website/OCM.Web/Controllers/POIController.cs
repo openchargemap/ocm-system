@@ -77,6 +77,8 @@ namespace OCM.MVC.Controllers
             filter.StatusTypeIDs = this.ConvertNullableSelection(filter.StatusTypeIDs);
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
             filter.DataProviderIDs = this.ConvertNullableSelection(filter.DataProviderIDs);
+            filter.SubmissionStatusTypeID= this.ConvertNullableSelection(filter.SubmissionStatusTypeID);
+
             filter.IncludeComments = true;
 
             if (IsRequestByRobot)

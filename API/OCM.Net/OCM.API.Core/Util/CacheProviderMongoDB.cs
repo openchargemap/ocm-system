@@ -1157,19 +1157,16 @@ namespace OCM.Core.Data
                 poiList = poiList.Where(c => c.OperatorID != null && filter.OperatorIDs.Contains((int)c.OperatorID));
             }
 
-            if (filter.SubmissionStatusTypeID == null)
+
+            if (filter.SubmissionStatusTypeID?.Any(t => t > 0) == true)
+            {
+                //specific submission status
+                poiList = poiList.Where(c => c.SubmissionStatusTypeID != null && filter.SubmissionStatusTypeID.Contains((int)c.SubmissionStatusTypeID));
+            }
+            else
             {
                 // default to published submissions
                 poiList = poiList.Where(c => c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published);
-            }
-            else if (filter.SubmissionStatusTypeID > 0)
-            {
-                //specific submission status
-                poiList = poiList.Where(c => c.SubmissionStatusTypeID == filter.SubmissionStatusTypeID);
-            }
-            else if (filter.SubmissionStatusTypeID == 0)
-            {
-                //use all pois regardless of submission status
             }
 
             // exclude any delisted POIs
@@ -1194,7 +1191,7 @@ namespace OCM.Core.Data
                 poiList = poiList.Where(c => filter.GreaterThanId.HasValue && c.ID > greaterThanId);
             }
 
-            // depreceated filter by dataprovider name
+            // deprecated filter by dataprovider name
             if (filter.DataProviderName != null)
             {
                 poiList = poiList.Where(c => c.DataProvider.Title == filter.DataProviderName);
@@ -1223,7 +1220,7 @@ namespace OCM.Core.Data
             }
 
             // exclude any decomissioned items
-            poiList = poiList.Where(c => c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned);
+            poiList = poiList.Where(c => c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned && c.StatusTypeID != (int)StandardStatusTypes.RemovedDuplicate);
 
             if (filter.DataProviderIDs?.Any() == true)
             {

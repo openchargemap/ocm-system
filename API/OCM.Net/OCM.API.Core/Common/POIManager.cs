@@ -214,20 +214,18 @@ namespace OCM.API.Common
                 poiList = poiList.Where(c => filter.OperatorIDs.Contains((int)c.OperatorId));
             }
 
-            if (filter.SubmissionStatusTypeID == null)
+
+            if (filter.SubmissionStatusTypeID?.Any(t => t > 0) == true)
+            {
+                //specific submission status
+                poiList = poiList.Where(c => c.SubmissionStatusTypeId != null && filter.SubmissionStatusTypeID.Contains((int)c.SubmissionStatusTypeId));
+            }
+            else
             {
                 // default to published submissions
                 poiList = poiList.Where(c => c.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeId == (int)StandardSubmissionStatusTypes.Submitted_Published);
             }
-            else if (filter.SubmissionStatusTypeID > 0)
-            {
-                //specific submission status
-                poiList = poiList.Where(c => c.SubmissionStatusTypeId == filter.SubmissionStatusTypeID);
-            }
-            else if (filter.SubmissionStatusTypeID == 0)
-            {
-                //use all pois regardless of submission status
-            }
+
 
             // exclude any delisted POIs
             poiList = poiList.Where(c => c.SubmissionStatusTypeId != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation);
@@ -280,7 +278,7 @@ namespace OCM.API.Common
             }
 
             // exclude any decomissioned items
-            poiList = poiList.Where(c => c.StatusTypeId != (int)StandardStatusTypes.RemovedDecomissioned);
+            poiList = poiList.Where(c => c.StatusTypeId != (int)StandardStatusTypes.RemovedDecomissioned && c.StatusTypeId != (int)StandardStatusTypes.RemovedDecomissioned);
 
             if (filter.DataProviderIDs?.Any() == true)
             {
