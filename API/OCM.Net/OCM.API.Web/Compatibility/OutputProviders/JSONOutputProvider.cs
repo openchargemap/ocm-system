@@ -3,11 +3,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
 using OCM.API.Common.Model;
+using OCM.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace OCM.API.OutputProviders
@@ -21,7 +23,7 @@ namespace OCM.API.OutputProviders
             var property = base.CreateProperty(member, memberSerialization);
 
             // don't seralize computed properties
-            if (property.DeclaringType == typeof(ChargePoint) &&
+            if (property.DeclaringType == typeof(Common.Model.ChargePoint) &&
                 property.PropertyName == "IsRecentlyVerified"
                 ||
                 property.PropertyName == "DataQualityLevel"
@@ -98,6 +100,7 @@ namespace OCM.API.OutputProviders
             await s.FlushAsync();
         }
 
+    
         public async Task PerformSerialisationV3(System.IO.Stream outputStream, object graph, string jsCallbackName, JsonSerializerOptions serializerSettings)
         {
             System.IO.StreamWriter s = new StreamWriter(outputStream);
@@ -108,7 +111,6 @@ namespace OCM.API.OutputProviders
             }
 
             await System.Text.Json.JsonSerializer.SerializeAsync(outputStream, graph, serializerSettings);
-            //await s.WriteAsync(json);
 
             if (jsCallbackName != null)
             {
@@ -261,7 +263,6 @@ namespace OCM.API.OutputProviders
             {
                 // jsonSettings.ContractResolver = new POINonComputedContractResolver();
             }
-
             return jsonSettings;
         }
     }
