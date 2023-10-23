@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OCM.API.OutputProviders
@@ -15,12 +16,12 @@ namespace OCM.API.OutputProviders
     {
         public static readonly POINonComputedContractResolver Instance = new POINonComputedContractResolver();
 
-        protected override JsonProperty CreateProperty(System.Reflection.MemberInfo member, MemberSerialization memberSerialization)
+        protected override Newtonsoft.Json.Serialization.JsonProperty CreateProperty(System.Reflection.MemberInfo member, MemberSerialization memberSerialization)
         {
-            JsonProperty property = base.CreateProperty(member, memberSerialization);
+            var property = base.CreateProperty(member, memberSerialization);
 
             // don't seralize computed properties
-            if (property.DeclaringType == typeof(ChargePoint) && 
+            if (property.DeclaringType == typeof(ChargePoint) &&
                 property.PropertyName == "IsRecentlyVerified"
                 ||
                 property.PropertyName == "DataQualityLevel"
@@ -35,13 +36,15 @@ namespace OCM.API.OutputProviders
 
     public class JSONOutputProvider : OutputProviderBase, IOutputProvider
     {
+        private bool _useSystemTextJson = true;
+
         public JSONOutputProvider()
         {
             ContentType = "application/json";
 
         }
 
-        public string PerformSerialisationToString(object graph, JsonSerializerSettings serializerSettings)
+        public async Task<string> PerformSerialisationToString(object graph, JsonSerializerSettings serializerSettings)
         {
             if (serializerSettings != null)
             {
@@ -62,7 +65,7 @@ namespace OCM.API.OutputProviders
         public void PerformBinarySerialisation(System.IO.Stream outputStream, object graph, string jsCallbackName)
         {
             //MemoryStream ms = new MemoryStream();
-            JsonSerializer serializer = new JsonSerializer();
+            Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
 
             // serialize product to BSON
             BsonWriter writer = new BsonWriter(outputStream);
@@ -84,8 +87,28 @@ namespace OCM.API.OutputProviders
                 await s.WriteAsync(jsCallbackName + "(");
             }
 
-            string json = PerformSerialisationToString(graph, serializerSettings);
+            string json = await PerformSerialisationToString(graph, serializerSettings);
             await s.WriteAsync(json);
+
+            if (jsCallbackName != null)
+            {
+                await s.WriteAsync(")");
+            }
+
+            await s.FlushAsync();
+        }
+
+        public async Task PerformSerialisationV3(System.IO.Stream outputStream, object graph, string jsCallbackName, JsonSerializerOptions serializerSettings)
+        {
+            System.IO.StreamWriter s = new StreamWriter(outputStream);
+
+            if (jsCallbackName != null)
+            {
+                await s.WriteAsync(jsCallbackName + "(");
+            }
+
+            await System.Text.Json.JsonSerializer.SerializeAsync(outputStream, graph, serializerSettings);
+            //await s.WriteAsync(json);
 
             if (jsCallbackName != null)
             {
@@ -136,7 +159,15 @@ namespace OCM.API.OutputProviders
         {
             if (settings.APIVersion >= 2)
             {
-                await PerformSerialisationV2(outputStream, dataList, settings.Callback, GetSerializerSettings(settings));
+                if (_useSystemTextJson)
+                {
+                    // use System.Text.Json as optimisation instead of Newtonsoft
+                    await PerformSerialisationV3(outputStream, dataList, settings.Callback, GetSerializerOptions(settings));
+                }
+                else
+                {
+                    await PerformSerialisationV2(outputStream, dataList, settings.Callback, GetSerializerSettings(settings));
+                }
             }
             else
             {
@@ -149,7 +180,15 @@ namespace OCM.API.OutputProviders
         {
             if (settings.APIVersion >= 2)
             {
-                await PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
+                if (_useSystemTextJson)
+                {
+                    await PerformSerialisationV3(outputStream, data, settings.Callback, GetSerializerOptions(settings));
+                }
+                else
+                {
+                    await PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
+                }
+
             }
             else
             {
@@ -160,7 +199,14 @@ namespace OCM.API.OutputProviders
 
         public async Task GetOutput(HttpContext context, Stream outputStream, Object data, Common.APIRequestParams settings)
         {
-            await PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
+            if (_useSystemTextJson)
+            {
+                await PerformSerialisationV3(outputStream, data, settings.Callback, GetSerializerOptions(settings));
+            }
+            else
+            {
+                await PerformSerialisationV2(outputStream, data, settings.Callback, GetSerializerSettings(settings));
+            }
         }
 
         private JsonSerializerSettings GetSerializerSettings(Common.APIRequestParams settings)
@@ -186,6 +232,34 @@ namespace OCM.API.OutputProviders
             if (settings.ExcludeComputedProperties)
             {
                 jsonSettings.ContractResolver = new POINonComputedContractResolver();
+            }
+
+            return jsonSettings;
+        }
+
+        private System.Text.Json.JsonSerializerOptions GetSerializerOptions(Common.APIRequestParams settings)
+        {
+            JsonSerializerOptions jsonSettings = new JsonSerializerOptions();
+
+            if (!settings.IsVerboseOutput)
+            {
+                jsonSettings.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            }
+
+            jsonSettings.WriteIndented = true;
+
+            if (settings.IsCompactOutput)
+            {
+                jsonSettings.WriteIndented = false;
+            }
+            if (settings.IsCamelCaseOutput)
+            {
+                jsonSettings.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            }
+
+            if (settings.ExcludeComputedProperties)
+            {
+                // jsonSettings.ContractResolver = new POINonComputedContractResolver();
             }
 
             return jsonSettings;

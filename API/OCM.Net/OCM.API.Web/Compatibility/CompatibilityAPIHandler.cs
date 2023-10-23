@@ -402,7 +402,7 @@ namespace OCM.API
         /// <param name="context"></param>
         private async Task<bool> PerformOutput(HttpContext context)
         {
-            //decide correct reponse type
+            //decide correct response type
             IOutputProvider outputProvider = null;
             var filter = new APIRequestParams();
 

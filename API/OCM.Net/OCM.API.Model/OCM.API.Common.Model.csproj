@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{F330ECA1-D079-4EE0-AEB4-30A3FD67FE03}</ProjectGuid>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <AssemblyTitle>OCM.API.Model</AssemblyTitle>
     <Company>http://openchargemap.org</Company>
