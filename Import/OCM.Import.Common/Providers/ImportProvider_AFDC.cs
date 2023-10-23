@@ -144,8 +144,8 @@ namespace OCM.Import.Providers
                                 case "powerflex":
                                     cp.OperatorID = 3618;
                                     break;
-                                case "semacharge":
-                                    cp.OperatorID = 39;
+                                case "semacharge": // now Blink
+                                    cp.OperatorID = 9;
                                     break;
                                 case "ampup":
                                     cp.OperatorID = 3619;
@@ -173,6 +173,18 @@ namespace OCM.Import.Providers
                                     break;
                                 case "7charge":
                                     cp.OperatorID = 3697;
+                                    break;
+                                case "wave":
+                                    cp.OperatorID = 3724;
+                                    break;
+                                case "flash":
+                                    cp.OperatorID = 3723;
+                                    break;
+                                case "evmatch":
+                                    cp.OperatorID = 3725;
+                                    break;
+                                case "circle_k":
+                                    cp.OperatorID = 3510;
                                     break;
                                 default:
                                     this.Log("Unknown network operator:" + deviceController);
