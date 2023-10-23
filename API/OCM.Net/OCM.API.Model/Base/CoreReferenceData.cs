@@ -115,7 +115,9 @@ namespace OCM.API.Common.Model
         POIType = 1,
         AccessHours = 2,
         Attribution = 4,
-        VehicleType = 5
+        VehicleType = 5,
+        ExternalReferenceId = 6,
+        ExternalUrl = 9
     }
 
     public enum StandardMetadataFieldOptions
