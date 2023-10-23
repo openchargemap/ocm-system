@@ -636,7 +636,7 @@ namespace OCM.API.Tests
                 MaxResults = 20,
                 Latitude = 51.5077,
                 Longitude = -0.134,
-                SubmissionStatusTypeID = 250
+                SubmissionStatusTypeID = new int[] { 250 }
             };
 
             var cacheResults = api.GetPOIList(searchParams);
@@ -650,7 +650,7 @@ namespace OCM.API.Tests
             // ensure only results from given countries
             foreach (var p in cacheResults)
             {
-                Assert.True(p.SubmissionStatusTypeID == searchParams.SubmissionStatusTypeID);
+                Assert.True(p.SubmissionStatusTypeID == searchParams.SubmissionStatusTypeID[0]);
             }
 
         }
