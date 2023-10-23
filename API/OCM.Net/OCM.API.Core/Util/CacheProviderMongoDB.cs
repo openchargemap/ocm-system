@@ -974,6 +974,7 @@ namespace OCM.Core.Data
                 System.Diagnostics.Debug.Print($"MongoDB got poiList as Queryable @ {stopwatch.ElapsedMilliseconds}ms");
 
                 //filter by points along polyline, bounding box or polygon
+                
                 if (
                     (filter.Polyline != null && filter.Polyline.Any())
                     || (filter.BoundingBox != null && filter.BoundingBox.Any())
@@ -1022,7 +1023,7 @@ namespace OCM.Core.Data
                     // var geoFilter = Builders<POIMongoDB>.Filter.GeoWithin(x => x.SpatialPosition, polygonQueryBson);
                     var geoQuery = "{\"SpatialPosition\": {\"$geoWithin\": {\"$geometry\": " + geoJson + " } } }";
                     var geoBson = BsonDocument.Parse(geoQuery);
-                    poiList = (await collection.Find(geoBson).ToListAsync()).AsQueryable();
+                    poiList = (await collection.FindAsync(geoBson)).ToEnumerable().AsQueryable();
 
                 }
                 else if (requiresDistance)
@@ -1032,7 +1033,7 @@ namespace OCM.Core.Data
 
                     var geoFilter = Builders<POIMongoDB>.Filter.NearSphere(p => p.SpatialPosition, searchPoint, (double)filter.Distance * 1000);
 
-                    poiList = (await collection.Find(geoFilter).ToListAsync()).AsQueryable();
+                    poiList = (await collection.FindAsync(geoFilter)).ToEnumerable().AsQueryable();
                 }
 
                 poiList = ApplyQueryFilters(filter, poiList);
@@ -1065,7 +1066,7 @@ namespace OCM.Core.Data
                         }
                         // In boundingbox more, if no sorting was requested by the user,
                         // do not perform any sorting for performance reasons.
-                        results = poiList.Take(filter.MaxResults).AsQueryable();
+                        results = poiList.Take(filter.MaxResults);
                     }
 
                     System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
@@ -1073,7 +1074,7 @@ namespace OCM.Core.Data
                 else
                 {
                     //distance is required, calculate and populate in results
-                    results = poiList.ToArray().AsQueryable();
+                    results = poiList;
                     //populate distance
                     foreach (var p in results)
                     {
@@ -1137,7 +1138,7 @@ namespace OCM.Core.Data
                 stopwatch.Stop();
                 System.Diagnostics.Debug.WriteLine("Cache Provider POI Total Query Time:" + stopwatch.ElapsedMilliseconds + "ms");
 
-                var output = results.ToList();
+                var output = results.AsEnumerable();
                 return output;
             }
             else
