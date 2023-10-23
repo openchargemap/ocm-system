@@ -41,6 +41,21 @@ namespace OCM.API.Common
             return null;
         }
 
+        public bool IsExistingUser(string emailAddress)
+        {
+            if (!string.IsNullOrWhiteSpace(emailAddress))
+            {
+                var user = dataModel.Users.FirstOrDefault(u => u.EmailAddress.ToLower() == emailAddress);
+
+                if (user != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool HasPassword(int userId)
         {
             var user = dataModel.Users.FirstOrDefault(u => u.Id == userId);
@@ -142,7 +157,7 @@ namespace OCM.API.Common
             userDetails.IdentityProvider = "OCM";
             userDetails.Identifier = model.EmailAddress;
 
-            userDetails.Username = model.Username;
+            userDetails.Username = model.Username ?? model.EmailAddress.Substring(0, model.EmailAddress.IndexOf("@"));
             userDetails.EmailAddress = model.EmailAddress;
             userDetails.DateCreated = DateTime.UtcNow;
             userDetails.DateLastLogin = DateTime.UtcNow;

@@ -9,5 +9,8 @@ namespace OCM.API.Common.Model
 
         [Display(Name = "Password"), Required, MinLength(6), DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
         public string Password { get; set; }
+
+        // optional
+        public string Username { get; set; }
     }
 }
