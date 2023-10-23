@@ -19,6 +19,17 @@
 <div>
     <h2 data-localize="ocm.infoText.about.funding.title">Funding</h2>
     <p data-localize="ocm.infoText.about.funding.p1">Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please <a href="@Url.Action("Contact","About")" data-localize-id="link-contact">get in touch</a>. More information on funding and project costs <a href="@Url.Action("Funding","About")" data-localize-id="link-funding">is available</a>.</p>
+    <h3>Sponsors</h3>
+    <p>
+        We are grateful to the following project sponsors:
+        <ul>
+
+            <li><a href="https://webprofusion.com">webprofusion.com</a> : Gold Sponsor</li>
+            <li><a href="https://ev.energy">ev.energy</a> : Silver Sponsor</li>
+            <li><a href="https://opensource.microsoft.com/">Microsoft Open Source</a> : Silver Sponsor</li>
+        </ul>
+    </p>
+    <p>If you would like to become a sponsor to help us fund service infrastructure costs, you can directly purchase a sponsorship <a href="https://buy.stripe.com/5kA6ru2Xrb2W4RacMP">via Stripe</a></p>
 </div>
 
 <div class="row">
@@ -52,12 +63,11 @@
     <h4>@provider.Title</h4>
     <p>
         DataProviderID: @provider.ID <br>
-        @(provider.WebsiteURL != null ? provider.WebsiteURL  : "")
+        @(provider.WebsiteURL != null ? provider.WebsiteURL : "")
     </p>
     <p>
-        <em> 
-        @(provider.License != null ? " License: " + @provider.License : "(not licensed)")
+        <em>
+            @(provider.License != null ? " License: " + @provider.License : "(not licensed)")
         </em>
     </p>
 }
- 
