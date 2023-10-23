@@ -114,7 +114,7 @@ namespace OCM.Core.Data
     public class CacheProviderMongoDB
     {
         private const int DefaultPolylineSearchDistanceKM = 5;
-        private const int DefaultLatLngSearchDistanceKM = 1000;
+        private const int DefaultLatLngSearchDistanceKM = 50;
 
         private MongoClient client = null;
         private IMongoDatabase database = null;

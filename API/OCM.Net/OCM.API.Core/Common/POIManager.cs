@@ -33,7 +33,7 @@ namespace OCM.API.Common
     public class POIManager
     {
         private const int DefaultPolylineSearchDistanceKM = 5;
-        private const int DefaultLatLngSearchDistanceKM = 1000;
+        private const int DefaultLatLngSearchDistanceKM = 50;
 
         public bool LoadUserComments = false;
 
