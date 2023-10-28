@@ -92,10 +92,10 @@
                 <li class="nav-item dropdown">
                     <a href="@Url.Action("Index", "POI")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.navigation.browse.sectionTitle">browse</span> <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="https://map.openchargemap.io" data-localize="ocm.general.map">map</a>
+                        <a class="dropdown-item" href="https://map.openchargemap.io" data-localize="ocm.general.map">Map</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">All Locations</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">By Country</a>
                         <!-- <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>-->
 
 
@@ -106,10 +106,10 @@
                 <li class="nav-item dropdown">
                     <a href="@Url.Action("Index", "Develop")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.navigation.develop.sectionTitle">develop</span> <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="@Url.Action("Index", "Develop")#api" data-localize="ocm.navigation.develop.api">API and embedding</a>
-                        <a class="dropdown-item" href="@Url.Action("Apps", "Develop")" data-localize="ocm.navigation.develop.examples">examples</a>
-                        <a class="dropdown-item" href="https://github.com/openchargemap" data-localize="ocm.navigation.develop.code">see the code (on github)</a>
-                        <a class="dropdown-item" href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map" data-localize="ocm.navigation.develop.translate">help translate</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Develop")#api" data-localize="ocm.navigation.develop.api">API and Embedding</a>
+                        <a class="dropdown-item" href="@Url.Action("Apps", "Develop")" data-localize="ocm.navigation.develop.examples">Examples</a>
+                        <a class="dropdown-item" href="https://github.com/openchargemap" data-localize="ocm.navigation.develop.code">See the Code (on Github)</a>
+                        <a class="dropdown-item" href="https://webtranslateit.com/en/projects/6978-Open-Charge-Map" data-localize="ocm.navigation.develop.translate">Help Translate</a>
                     </div>
                 </li>
 
@@ -117,27 +117,27 @@
                     <a href="https://community.openchargemap.org" class="nav-link dropdown-toggle" data-toggle="dropdown">community <b class="caret"></b></a>
                     <div class="dropdown-menu">
 
-                        <a class="dropdown-item" href="https://community.openchargemap.org">discussions</a>
-                        <a class="dropdown-item" href="https://github.com/openchargemap/ocm-system/issues">github</a>
-                        <a class="dropdown-item" href="https://twitter.com/#!/open_charge_map">twitter</a>
+                        <a class="dropdown-item" href="https://community.openchargemap.org">Discussions</a>
+                        <a class="dropdown-item" href="https://github.com/openchargemap/ocm-system/issues">Github</a>
+                        <a class="dropdown-item" href="https://twitter.com/#!/open_charge_map">Twitter</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Activity", "POI")" data-localize="ocm.navigation.browse.recentActivity">recent activity</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "Stats")" data-localize="ocm.navigation.browse.statistics">statistics</a>
+                        <a class="dropdown-item" href="@Url.Action("Activity", "POI")" data-localize="ocm.navigation.browse.recentActivity">Recent Activity</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Stats")" data-localize="ocm.navigation.browse.statistics">Statistics</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">new locations awaiting approval</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">imported locations awaiting approval</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edits awaiting approval</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">New Locations Awaiting Approval</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">Imported Locations Awaiting Approval</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">Edits Awaiting Approval</a>
                     </div>
                 </li>
 
                 <li class="nav-item dropdown">
                     <a href="@Url.Action("Index", "About")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.general.about">about</span> <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="@Url.Action("Index", "About")" data-localize="ocm.general.about">about</a>
-                        <a class="dropdown-item" href="@Url.Action("Terms", "About")" data-localize="ocm.navigation.about.termsPrivacy">terms &amp; privacy</a>
-                        <a class="dropdown-item" href="@Url.Action("Guidance", "About")" data-localize="ocm.navigation.about.guidance">guidance for contributors</a>
-                        <a class="dropdown-item" href="@Url.Action("DataSharing", "About")" >share data</a>
-                        <a class="dropdown-item" href="@Url.Action("Contact", "About")" data-localize="ocm.navigation.about.contact">contact</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "About")" data-localize="ocm.general.about">About</a>
+                        <a class="dropdown-item" href="@Url.Action("Terms", "About")" data-localize="ocm.navigation.about.termsPrivacy">Terms &amp; Privacy</a>
+                        <a class="dropdown-item" href="@Url.Action("Guidance", "About")" data-localize="ocm.navigation.about.guidance">Guidance for Contributors</a>
+                        <a class="dropdown-item" href="@Url.Action("DataSharing", "About")" >Share Data</a>
+                        <a class="dropdown-item" href="@Url.Action("Contact", "About")" data-localize="ocm.navigation.about.contact">Contact</a>
                     </div>
                 </li>
 
