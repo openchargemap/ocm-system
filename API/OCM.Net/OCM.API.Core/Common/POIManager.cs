@@ -359,8 +359,7 @@ namespace OCM.API.Common
             // clone filter settings to remove mutation side effects in callers
             var filter = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filterParams));
 
-            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: GeoManager.StandardSRID);
-
+       
             var stopwatch = Stopwatch.StartNew();
 
             filter.EnableCaching = false;
@@ -398,6 +397,8 @@ namespace OCM.API.Common
                         refData = await refDataManager.GetCoreReferenceDataAsync();
                     }
                 }
+
+                var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: GeoManager.StandardSRID);
 
                 int maxResults = filter.MaxResults;
                 this.LoadUserComments = filter.IncludeComments;

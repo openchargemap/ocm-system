@@ -57,7 +57,7 @@ namespace OCM.API.Web.Standard
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
             app.UseResponseCompression();
 

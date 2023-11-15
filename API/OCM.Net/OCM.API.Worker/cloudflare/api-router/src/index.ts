@@ -152,8 +152,10 @@ class OCMRouter {
 		}
 
 		// none-blocking log
-		if (this.enableLogging && logKeyUsage) {
+		if (this.enableLogging) {
 			context.waitUntil(this.attemptLog(request, apiKey, status));
+		}
+		if (logKeyUsage){
 			if (apiKey) {
 				try {
 					context.waitUntil(this.updateUsageStats(env, apiKey));
@@ -162,6 +164,7 @@ class OCMRouter {
 				}
 			}
 		}
+
 		return response;
 
 	}
@@ -372,6 +375,12 @@ class OCMRouter {
 				url.port = "80";
 			}
 
+			// debug has to change port to forward to API
+			if (url.port=="8787"){
+				url.protocol = "https";
+				url.port = "443";
+			}
+
 			// get cached response if available, otherwise fetch new response and cache it
 			let cache = caches.default;
 			let response = null;
@@ -408,7 +417,7 @@ class OCMRouter {
 
 				} catch {
 					// failed to fetch from mirror, try primary
-					console.log("Forwarded request failed. Retrying to primary API");
+					console.log(`Forwarded request failed ${url}. Retrying to primary API`);
 
 					// add failed mirror to skipped mirrors
 					if (mirrorIndex != 0) {
