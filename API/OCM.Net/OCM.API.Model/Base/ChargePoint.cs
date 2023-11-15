@@ -77,6 +77,7 @@ namespace OCM.API.Common.Model
         public int? SubmissionStatusTypeID { get; set; }
 
         [JsonIgnoreAttribute]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool AddressCleaningRequired { get; set; }
 
     }
@@ -138,14 +139,17 @@ namespace OCM.API.Common.Model
         /// Level of detail (map priority) for internal use only
         /// </summary>
         [JsonIgnoreAttribute]
+        [System.Text.Json.Serialization.JsonIgnore]
         public int? LevelOfDetail { get; set; }
 
         #region deprecated properties
 
         [Obsolete, JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<ChargerInfo> Chargers { get; set; }
 
         [Obsolete, JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string MetadataTags { get; set; }
 
         #endregion deprecated properties

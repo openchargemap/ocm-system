@@ -66,6 +66,7 @@ namespace OCM.API.Common.Model
         #region deprecated properties
 
         [Obsolete, JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string GeneralComments { get; set; }
 
         #endregion deprecated properties

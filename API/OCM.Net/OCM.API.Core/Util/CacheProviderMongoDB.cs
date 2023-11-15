@@ -55,6 +55,7 @@ namespace OCM.Core.Data
     public class POIMongoDB : OCM.API.Common.Model.ChargePoint
     {
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> SpatialPosition { get; set; }
 
         public static POIMongoDB FromChargePoint(OCM.API.Common.Model.ChargePoint cp, POIMongoDB poi = null)
@@ -975,6 +976,7 @@ namespace OCM.Core.Data
 
                 //filter by points along polyline, bounding box or polygon
                 
+                
                 if (
                     (filter.Polyline != null && filter.Polyline.Any())
                     || (filter.BoundingBox != null && filter.BoundingBox.Any())
@@ -1073,8 +1075,8 @@ namespace OCM.Core.Data
                 }
                 else
                 {
-                    //distance is required, calculate and populate in results
-                    results = poiList;
+                    //distance is required, calculate and populate in results, mutate result set with distance unit
+                    results = poiList.ToArray().AsQueryable();
                     //populate distance
                     foreach (var p in results)
                     {

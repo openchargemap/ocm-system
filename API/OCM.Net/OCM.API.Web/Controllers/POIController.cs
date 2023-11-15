@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OCM.API.Common;
 using OCM.API.Common.Model;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace OCM.API.Web.Standard.Controllers
@@ -21,7 +26,7 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ChargePoint> Get()
+        public async Task<IActionResult> Get()
         {
 
             // use custom query string parsing for compatibility
@@ -48,7 +53,12 @@ namespace OCM.API.Web.Standard.Controllers
 
             var list = api.GetPOIList(filter);
 
-            return list;
+            var options = new JsonSerializerOptions { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+            string jsonString = JsonSerializer.Serialize(list, options);
+
+            return new OkObjectResult(jsonString);
+
+
         }
 
         [HttpGet]

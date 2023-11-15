@@ -523,6 +523,7 @@ namespace OCM.API
                 if (filter.Action == "getchargepoints" || filter.Action == "poi")
                 {
                     await OutputPOIList(outputProvider, context, filter);
+
                     return true;
                 }
 

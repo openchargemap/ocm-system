@@ -456,7 +456,7 @@ namespace OCM.API.Tests
 
             // mongodb cache results
             var searchParams = new Common.APIRequestParams { AllowMirrorDB = true, IsVerboseOutput = false, Polyline = polyline, DistanceUnit = Common.Model.DistanceUnit.KM, Distance = 1 };
-            var cacheResults = api.GetPOIList(searchParams);
+            var cacheResults = api.GetPOIList(searchParams).ToList();
             Assert.True(cacheResults.Count() > 0);
             Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
@@ -495,7 +495,7 @@ namespace OCM.API.Tests
             var searchParams = new Common.APIRequestParams { AllowMirrorDB = true, AllowDataStoreDB = false, IsVerboseOutput = false, Polyline = polyline, DistanceUnit = Common.Model.DistanceUnit.KM, Distance = 5 };
 
             // POI cache db
-            var cacheResults = api.GetPOIList(searchParams);
+            var cacheResults = api.GetPOIList(searchParams).ToList();
 
             Assert.True(cacheResults.Count() > 0);
             Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
@@ -605,7 +605,7 @@ namespace OCM.API.Tests
                 CountryIDs = new int[] { 3, 19 }
             };
 
-            var cacheResults = api.GetPOIList(searchParams);
+            var cacheResults = api.GetPOIList(searchParams).ToList();
             Assert.True(cacheResults.Count() > 0);
             Assert.True(cacheResults.Count() <= searchParams.MaxResults, $"Result count must be less than {searchParams.MaxResults})");
 
