@@ -42,8 +42,7 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpPost]
-       
-        public ActionResult Register([FromBody]LoginModel registration)
+        public ActionResult Register([FromBody] RegistrationModel registration)
         {
             if (string.IsNullOrWhiteSpace(registration.EmailAddress))
             {
@@ -58,7 +57,7 @@ namespace OCM.API.Web.Standard.Controllers
             if (!userManager.IsExistingUser(registration.EmailAddress))
             {
                 // credentials don't match existing user
-                var user = userManager.RegisterNewUser(new RegistrationModel {  EmailAddress=registration.EmailAddress, Password=registration.Password, Username = registration.Username});
+                var user = userManager.RegisterNewUser(registration);
 
                 if (user == null)
                 {

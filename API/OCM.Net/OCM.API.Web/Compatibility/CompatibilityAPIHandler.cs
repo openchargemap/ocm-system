@@ -746,7 +746,7 @@ namespace OCM.API
             string access_token = null;
             var responseEnvelope = new APIResponseEnvelope();
 
-            if (user != null)
+            if (user == null)
             {
                 context.Response.StatusCode = 401;
                 return;
@@ -842,6 +842,13 @@ namespace OCM.API
             {
                 this.APIBehaviourVersion = 3;
                 this.DefaultAction = "profile.authenticate";
+                this.IsQueryByPost = true;
+            }
+
+            if (context.Request.Path.ToString().Contains("profile/register"))
+            {
+                this.APIBehaviourVersion = 3;
+                this.DefaultAction = "profile.register";
                 this.IsQueryByPost = true;
             }
 

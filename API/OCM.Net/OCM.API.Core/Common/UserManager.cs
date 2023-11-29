@@ -169,7 +169,7 @@ namespace OCM.API.Common
             SetNewPassword(userDetails.Id, (PasswordChangeModel)model);
             AssignNewSessionToken(userDetails.Id);
 
-            return API.Common.Model.Extensions.User.BasicFromDataModel(userDetails);
+            return GetUser(userDetails.Id);
         }
 
         public User GetUser(int id)
