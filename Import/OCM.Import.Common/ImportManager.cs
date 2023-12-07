@@ -852,7 +852,7 @@ namespace OCM.Import
                 }
                 else if (p is ImportProvider_Sitronics)
                 {
-                    (p as ImportProvider_Sitronics).AuthHeaderValue = "Token openchargemapDkxXXliO4542YWQzY2M0NGQyCgn";
+                    (p as ImportProvider_Sitronics).AuthHeaderValue = "Token";
                 }
 
                 if (p.ImportInitialisationRequired && p is IImportProviderWithInit)
@@ -869,7 +869,7 @@ namespace OCM.Import
                 {
                     Log("Loading input data from URL..");
                     var sw = Stopwatch.StartNew();
-                    loadOK = provider.LoadInputFromURL(p.AutoRefreshURL);
+                    loadOK = await provider.LoadInputFromURL(p.AutoRefreshURL);
                     sw.Stop();
                     Log($"Data downloaded in {sw.Elapsed.TotalSeconds}s.");
                 }
@@ -879,7 +879,7 @@ namespace OCM.Import
                     {
                         Log("Loading input data from file..");
 
-                        loadOK = provider.LoadInputFromURL(p.InputPath);
+                        loadOK = await provider.LoadInputFromURL(p.InputPath);
                     }
                     else
                     {

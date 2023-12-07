@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace OCM.Import.Providers
@@ -230,14 +232,15 @@ namespace OCM.Import.Providers
             return sb.ToString();
         }
 
-        public bool LoadInputFromURL(string url)
+        public async Task<bool> LoadInputFromURL(string url)
         {
+            HttpClient client = new HttpClient();
             try
             {
                 if (String.IsNullOrEmpty(HTTPPostVariables))
                 {
                     //get
-                    InputData = webClient.DownloadString(url);
+                    InputData = await client.GetStringAsync(url);
                 }
                 else
                 {

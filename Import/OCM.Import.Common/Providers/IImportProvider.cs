@@ -1,5 +1,6 @@
 ﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OCM.Import.Providers
 {
@@ -8,7 +9,7 @@ namespace OCM.Import.Providers
         string GetProviderName();
         List<ChargePoint> Process(CoreReferenceData coreRefData);
 
-        bool LoadInputFromURL(string url);
+        Task<bool> LoadInputFromURL(string url);
     }
 
     public interface IImportProviderWithInit : IImportProvider
