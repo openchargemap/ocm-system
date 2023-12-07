@@ -14,7 +14,7 @@ namespace OCM.Import.Providers
         {
             ProviderName = "chargepoints.dft.gov.uk";
             OutputNamePrefix = "ukchargepointregistry";
-            AutoRefreshURL = "http://chargepoints.dft.gov.uk/api/retrieve/registry/format/json";
+            AutoRefreshURL = "https://chargepoints.dft.gov.uk/api/retrieve/registry/format/json";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             MergeDuplicatePOIEquipment = false;
@@ -261,6 +261,9 @@ namespace OCM.Import.Providers
                         case "believ":
                             cp.OperatorID = 3511;
                             break;
+                        case "blink charging":
+                            cp.OperatorID = 3737;
+                            break;
                         case "bp-pulse (polar)":
                         case "bp pulse":
                             cp.OperatorID = 32;
@@ -322,6 +325,9 @@ namespace OCM.Import.Providers
                         case "ecars esb":
                             cp.OperatorID = 22;
                             break;
+                        case "electroad":
+                            cp.OperatorID = 3740;
+                            break;
                         case "equans ev solutions":
                             cp.OperatorID = 150;
                             break;
@@ -330,6 +336,9 @@ namespace OCM.Import.Providers
                             break;
                         case "fastned":
                             cp.OperatorID = 74;
+                            break;
+                        case "flowbird smart city uk ltd":
+                            cp.OperatorID = 3739;
                             break;
                         case "gridserve sustainable energy":
                             cp.OperatorID = 3430;
@@ -386,6 +395,9 @@ namespace OCM.Import.Providers
                         case "tonik energy":
                             cp.OperatorID = 3366;
                             break;
+                        case "trojan energy limited":
+                            cp.OperatorID = 3738;
+                            break;
                         case "ubitricity":
                             cp.OperatorID = 2244;
                             break;
@@ -394,6 +406,9 @@ namespace OCM.Import.Providers
                             break;
                         case "wattif ev uk limited":
                             cp.OperatorID = 3667;
+                            break;
+                        case "wenea services uk limited":
+                            cp.OperatorID = 3371;
                             break;
                         case "zest":
                             cp.OperatorID = 3581;

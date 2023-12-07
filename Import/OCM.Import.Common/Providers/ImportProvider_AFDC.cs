@@ -186,6 +186,9 @@ namespace OCM.Import.Providers
                                 case "circle_k":
                                     cp.OperatorID = 3510;
                                     break;
+                                case "chargeup":
+                                    cp.OperatorID = 3734;
+                                    break;
                                 default:
                                     this.Log("Unknown network operator:" + deviceController);
                                     break;
