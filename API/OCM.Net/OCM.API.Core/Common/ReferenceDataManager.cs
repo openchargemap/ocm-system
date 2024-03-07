@@ -164,7 +164,7 @@ namespace OCM.API.Common
             //list of Operators
             data.Operators = new List<Model.OperatorInfo>();
 
-            if (filter.CountryIDs?.Any() == true)
+            if (filter.FilterOperatorsOnCountry && filter.CountryIDs?.Any() == true)
             {
                 // fetch connection types used in the list of given countries, with count of usage in the set
                 var usedNetworks = dataModel.Operators.Include(o => o.AddressInfo)

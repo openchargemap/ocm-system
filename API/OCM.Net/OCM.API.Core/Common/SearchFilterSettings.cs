@@ -145,6 +145,11 @@ namespace OCM.API.Common
         /// </summary>
         public bool ExcludeComputedProperties { get; set; } = false;
 
+        /// <summary>
+        /// if true, only operators currently present in a country are returned
+        /// </summary>
+        public bool FilterOperatorsOnCountry { get; set; } = false;
+
         #region deprecated api filters
 
         public bool FastChargeOnly { get; set; }

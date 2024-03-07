@@ -866,18 +866,21 @@ namespace OCM.Core.Data
                         refData.ConnectionTypes.RemoveAll(a => !connectionsInCountry.Any(r => r.ConnectionTypeId == a.ID));
 
 
-                        // filter on operators present within given countries
+                        if (filter.FilterOperatorsOnCountry)
+                        {
+                            // filter on operators present within given countries
 
-                        var operatorsInCountry = poiCollection.Where(poi =>
-                                                    poi.AddressInfo.CountryID != null
-                                                    && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
-                                                    && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
-                                                    && poi.OperatorID != null)
-                                                    .Select(p => new { CountryId = p.AddressInfo.CountryID, OperatorId = p.OperatorID })
-                                                    .ToArray()
-                                                    .Distinct();
+                            var operatorsInCountry = poiCollection.Where(poi =>
+                                                        poi.AddressInfo.CountryID != null
+                                                        && filter.CountryIDs.Contains((int)poi.AddressInfo.CountryID)
+                                                        && (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published)
+                                                        && poi.OperatorID != null)
+                                                        .Select(p => new { CountryId = p.AddressInfo.CountryID, OperatorId = p.OperatorID })
+                                                        .ToArray()
+                                                        .Distinct();
 
-                        refData.Operators.RemoveAll(a => !operatorsInCountry.Any(r => r.OperatorId == a.ID));
+                            refData.Operators.RemoveAll(a => !operatorsInCountry.Any(r => r.OperatorId == a.ID));
+                        }
 
                     }
 
@@ -975,8 +978,8 @@ namespace OCM.Core.Data
                 System.Diagnostics.Debug.Print($"MongoDB got poiList as Queryable @ {stopwatch.ElapsedMilliseconds}ms");
 
                 //filter by points along polyline, bounding box or polygon
-                
-                
+
+
                 if (
                     (filter.Polyline != null && filter.Polyline.Any())
                     || (filter.BoundingBox != null && filter.BoundingBox.Any())
