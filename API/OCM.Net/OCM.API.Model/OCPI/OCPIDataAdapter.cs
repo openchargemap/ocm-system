@@ -41,7 +41,7 @@ namespace OCM.API.Common.Model.OCPI
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId, Dictionary<string, int> operatorMappings = null)
+        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId, Dictionary<string, int> operatorMappings = null, int? defaultOperatorId = null)
         {
             foreach (var i in source)
             {
@@ -52,6 +52,16 @@ namespace OCM.API.Common.Model.OCPI
                 {
                     iso2Code = GetCountryCodeFromISO3(i.Country);
                 }
+
+                if (iso2Code == "FR" && i.Country == "ESP")
+                {
+                    // workaround for mismatched country code
+
+                    System.Diagnostics.Debug.WriteLine($"Mismatched country code in source {iso2Code} :: {i.Country}");
+
+                    iso2Code = GetCountryCodeFromISO3(i.Country);
+                }
+
                 ChargePoint cp = null;
                 try
                 {
@@ -90,32 +100,44 @@ namespace OCM.API.Common.Model.OCPI
                     foreach (var e in evse)
                     {
                         cp.StatusTypeID = MapOCMStatusTypeFromStatus(e.Status, _useLiveStatus);
-                        foreach (var c in e.Connectors)
+
+                        if (cp.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned)
                         {
-
-                            var connectionInfo = new ConnectionInfo
+                            foreach (var c in e.Connectors)
                             {
-                                Reference = c.Id,
-                                PowerKW = c.Max_electric_power == 0 ? null : c.Max_electric_power / 1000,
-                                Voltage = c.Max_voltage > 0 ? c.Max_voltage : null,
-                                Amps = c.Max_amperage > 0 ? c.Max_amperage : null,
-                                // set power type
-                                CurrentTypeID = MapOCMPowerTypeFromOCPI(c.Power_type),
-                                StatusTypeID = cp.StatusTypeID,
-                                Quantity = 1
-                            };
 
-                            // calc power kw if not specified
-                            if (connectionInfo.PowerKW == 0 || connectionInfo.PowerKW == null)
-                            {
-                                connectionInfo.PowerKW = ConnectionInfo.ComputePowerkW(connectionInfo);
+                                var connectionInfo = new ConnectionInfo
+                                {
+                                    Reference = c.Id,
+                                    PowerKW = c.Max_electric_power == 0 ? null : c.Max_electric_power / 1000,
+                                    Voltage = c.Max_voltage > 0 ? c.Max_voltage : null,
+                                    Amps = c.Max_amperage > 0 ? c.Max_amperage : null,
+                                    // set power type
+                                    CurrentTypeID = MapOCMPowerTypeFromOCPI(c.Power_type),
+                                    StatusTypeID = cp.StatusTypeID,
+                                    Quantity = 1
+                                };
+
+
+
+                                // calc power kw if not specified
+                                if (connectionInfo.PowerKW == 0 || connectionInfo.PowerKW == null)
+                                {
+                                    connectionInfo.PowerKW = ConnectionInfo.ComputePowerkW(connectionInfo);
+                                }
+                                else if (connectionInfo.PowerKW > 1000)
+                                {
+                                    // common mistake is to supply W figure for kW
+                                    connectionInfo.PowerKW = connectionInfo.PowerKW / 1000;
+                                }
+
+
+                                // set status
+                                // set connector type
+                                connectionInfo.ConnectionTypeID = MapOCMConnectionTypeFromStandard(c.Standard, c.Format);
+
+                                cp.Connections.Add(connectionInfo);
                             }
-
-                            // set status
-                            // set connector type
-                            connectionInfo.ConnectionTypeID = MapOCMConnectionTypeFromStandard(c.Standard, c.Format);
-
-                            cp.Connections.Add(connectionInfo);
                         }
                     }
 
@@ -158,6 +180,12 @@ namespace OCM.API.Common.Model.OCPI
                                     _unmappedOperators[i.Party_id]++;
                                 }
                             }
+                        }
+
+                        // resort to default if no other operator identified
+                        if (cp.OperatorID == null && defaultOperatorId != null)
+                        {
+                            cp.OperatorID = defaultOperatorId;
                         }
                     }
 
@@ -270,6 +298,11 @@ namespace OCM.API.Common.Model.OCPI
                 if (status == EvseStatus.AVAILABLE || status == EvseStatus.CHARGING || status == EvseStatus.RESERVED || status == EvseStatus.BLOCKED)
                 {
                     mappedStatusId = (int)StandardStatusTypes.Operational;
+                }
+
+                if (status == EvseStatus.REMOVED)
+                {
+                    mappedStatusId = (int)StandardStatusTypes.RemovedDecomissioned;
                 }
             }
 

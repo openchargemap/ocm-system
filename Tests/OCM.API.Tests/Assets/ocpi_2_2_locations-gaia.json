@@ -1,0 +1,725 @@
+{
+  "data": [
+    {
+      "id": "ES*VAL*GNRDR",
+      "country_code": "FR",
+      "party_id": "GRN",
+      "publish": true,
+      "publish_allowed_to": [],
+      "name": "Generador Coworking",
+      "address": "Carrer del Camí a la Mar 46",
+      "city": "Alboraia",
+      "postal_code": "46120",
+      "country": "ESP",
+      "coordinates": {
+        "latitude": "39.499590",
+        "longitude": "-0.341840"
+      },
+      "parking_type": "ON_DRIVEWAY",
+      "evses": [
+        {
+          "uid": "4be5f945-c702-4b9d-a740-553d56bcdb00",
+          "status": "REMOVED",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 16,
+              "max_electric_power": 11000,
+              "last_updated": "2024-04-11T11:04:57.382Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.499590",
+            "longitude": "-0.341840"
+          },
+          "physical_reference": "ES*VAL*GNRDR-1",
+          "parking_restrictions": [],
+          "last_updated": "2024-04-11T11:04:57.382Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Gaia Green Tech"
+      },
+      "facilities": [],
+      "time_zone": "Europe/Madrid",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "charging_when_closed": true,
+      "last_updated": "2024-04-11T11:04:57.382Z"
+    },
+    {
+      "id": "ES*VAL*PATACONA*1",
+      "country_code": "FR",
+      "party_id": "GRN",
+      "publish": true,
+      "publish_allowed_to": [],
+      "name": "Playa de la Patacona",
+      "address": "Passeig Marítim de la Patacona 55",
+      "city": "Alboraia",
+      "postal_code": "46120",
+      "country": "ESP",
+      "coordinates": {
+        "latitude": "39.489800",
+        "longitude": "-0.325430"
+      },
+      "parking_type": "ON_STREET",
+      "evses": [
+        {
+          "uid": "f28141f4-43d2-41a3-a448-c077d7d8f132",
+          "status": "REMOVED",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "last_updated": "2024-04-11T11:05:16.884Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.489800",
+            "longitude": "-0.325430"
+          },
+          "physical_reference": "B",
+          "last_updated": "2024-04-11T11:05:16.884Z"
+        },
+        {
+          "uid": "726cd37e-1b62-4da8-b6b0-53a32bd7ba54",
+          "status": "REMOVED",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "last_updated": "2024-04-11T11:05:16.884Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.489800",
+            "longitude": "-0.325430"
+          },
+          "physical_reference": "A",
+          "last_updated": "2024-04-11T11:05:16.884Z"
+        },
+        {
+          "uid": "72ea05dc-c4f2-47dd-8223-9ad754e51087",
+          "evse_id": "FR*GRN*EES*VAL*PATACONA*1*B",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:32:34.105Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.489800",
+            "longitude": "-0.325430"
+          },
+          "physical_reference": "B",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T07:14:35.466Z"
+        },
+        {
+          "uid": "0854c514-0f05-46b8-833e-ebbb198e48c3",
+          "evse_id": "FR*GRN*EES*VAL*PATACONA*1*A",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:32:34.197Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.489800",
+            "longitude": "-0.325430"
+          },
+          "physical_reference": "A",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T06:37:24.092Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Gaia Charge"
+      },
+      "owner": {
+        "name": "Ayuntamiento de Alboraya"
+      },
+      "facilities": [
+        "HOTEL",
+        "RESTAURANT",
+        "CAFE",
+        "SPORT",
+        "RECREATION_AREA",
+        "NATURE",
+        "BIKE_SHARING",
+        "BUS_STOP",
+        "PARKING_LOT",
+        "WIFI"
+      ],
+      "time_zone": "Europe/Madrid",
+      "opening_times": {
+        "twentyfourseven": false,
+        "regular_hours": [
+          {
+            "weekday": 1,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 2,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 3,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 4,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 5,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 6,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 7,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          }
+        ]
+      },
+      "charging_when_closed": true,
+      "last_updated": "2024-05-30T07:14:35.466Z"
+    },
+    {
+      "id": "ES*VAL*ALB*FUSTERS*1",
+      "country_code": "FR",
+      "party_id": "GRN",
+      "publish": true,
+      "publish_allowed_to": [],
+      "name": "Carrer dels Fusters",
+      "address": "Vía del Ferrocarril 6",
+      "city": "Alboraya",
+      "postal_code": "46120",
+      "country": "ESP",
+      "coordinates": {
+        "latitude": "39.499750",
+        "longitude": "-0.346330"
+      },
+      "parking_type": "PARKING_LOT",
+      "evses": [
+        {
+          "uid": "059e10df-9629-440f-938b-812c2f15f6f1",
+          "evse_id": "FR*GRN*EES*VAL*ALB*FUSTERS*1*B",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:32:15.839Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.499750",
+            "longitude": "-0.346330"
+          },
+          "physical_reference": "B",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T07:15:02.353Z"
+        },
+        {
+          "uid": "e3cec1dc-dbcd-4e3e-a306-f0ed18f5c120",
+          "evse_id": "FR*GRN*EES*VAL*ALB*FUSTERS*1*A",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:32:15.732Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.499750",
+            "longitude": "-0.346330"
+          },
+          "physical_reference": "A",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T07:58:02.841Z"
+        },
+        {
+          "uid": "ed4d288a-8d7c-4c75-a391-075e1d2c1884",
+          "evse_id": "FR*GRN*EES*VAL*ALB*FUSTERS*2*C",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:31:57.906Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.499750",
+            "longitude": "-0.346330"
+          },
+          "physical_reference": "C",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T08:00:32.502Z"
+        },
+        {
+          "uid": "ba942d6b-5e0e-4d00-b15a-bf15ec511659",
+          "evse_id": "FR*GRN*EES*VAL*ALB*FUSTERS*2*D",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:31:58.023Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.499750",
+            "longitude": "-0.346330"
+          },
+          "physical_reference": "D",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T08:00:35.805Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Gaia Charge"
+      },
+      "owner": {
+        "name": "Ayuntamiento de Alboraya"
+      },
+      "facilities": [
+        "BIKE_SHARING",
+        "BUS_STOP",
+        "PARKING_LOT",
+        "FUEL_STATION"
+      ],
+      "time_zone": "Europe/Madrid",
+      "opening_times": {
+        "twentyfourseven": false,
+        "regular_hours": [
+          {
+            "weekday": 1,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 2,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 3,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 4,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 5,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 6,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 7,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          }
+        ]
+      },
+      "charging_when_closed": true,
+      "last_updated": "2024-05-30T08:00:35.805Z"
+    },
+    {
+      "id": "ES*VAL*ALB*ARTESANS*1",
+      "country_code": "FR",
+      "party_id": "GRN",
+      "publish": true,
+      "publish_allowed_to": [],
+      "name": "Carrer dels Artesans",
+      "address": "Carrer dels Artesans 2",
+      "city": "Alboraia",
+      "postal_code": "46120",
+      "country": "ESP",
+      "coordinates": {
+        "latitude": "39.502010",
+        "longitude": "-0.344680"
+      },
+      "parking_type": "ON_STREET",
+      "evses": [
+        {
+          "uid": "d888871f-9f10-4f4c-8757-e658f223c085",
+          "evse_id": "FR*GRN*EES*VAL*ALB*ARTESANS*2*D",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:30:56.457Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.502010",
+            "longitude": "-0.344680"
+          },
+          "physical_reference": "D",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T08:00:31.097Z"
+        },
+        {
+          "uid": "34a26524-d94f-4f24-855d-e2f205f4adcd",
+          "evse_id": "FR*GRN*EES*VAL*ALB*ARTESANS*2*C",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:30:56.687Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.502010",
+            "longitude": "-0.344680"
+          },
+          "physical_reference": "C",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-29T20:37:56.510Z"
+        },
+        {
+          "uid": "3990905f-840a-4db5-b194-49c4683d20b7",
+          "evse_id": "FR*GRN*EES*VAL*ALB*ARTESANS*1*B",
+          "status": "CHARGING",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:31:25.613Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.502010",
+            "longitude": "-0.344680"
+          },
+          "physical_reference": "B",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T07:26:41.395Z"
+        },
+        {
+          "uid": "18ff245d-e2b3-4f21-8df1-34d616f24c1c",
+          "evse_id": "FR*GRN*EES*VAL*ALB*ARTESANS*1*A",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHARGING_PROFILE_CAPABLE",
+            "CHARGING_PREFERENCES_CAPABLE",
+            "REMOTE_START_STOP_CAPABLE",
+            "RFID_READER",
+            "TOKEN_GROUP_CAPABLE",
+            "UNLOCK_CAPABLE"
+          ],
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 32,
+              "max_electric_power": 22000,
+              "tariff_ids": [
+                "FRGRNT000004"
+              ],
+              "last_updated": "2024-05-10T10:31:25.740Z"
+            }
+          ],
+          "coordinates": {
+            "latitude": "39.502010",
+            "longitude": "-0.344680"
+          },
+          "physical_reference": "A",
+          "parking_restrictions": [
+            "EV_ONLY",
+            "PLUGGED"
+          ],
+          "last_updated": "2024-05-30T07:44:14.849Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Gaia Charge"
+      },
+      "owner": {
+        "name": "Ayuntamiento de Alboraya"
+      },
+      "facilities": [
+        "PARKING_LOT",
+        "FUEL_STATION"
+      ],
+      "time_zone": "Europe/Madrid",
+      "opening_times": {
+        "twentyfourseven": false,
+        "regular_hours": [
+          {
+            "weekday": 1,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 2,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 3,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 4,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 5,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 6,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          },
+          {
+            "weekday": 7,
+            "period_begin": "00:00",
+            "period_end": "00:00"
+          }
+        ]
+      },
+      "charging_when_closed": true,
+      "last_updated": "2024-05-30T08:00:31.097Z"
+    }
+  ],
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2024-05-30T08:00:44.035Z"
+}

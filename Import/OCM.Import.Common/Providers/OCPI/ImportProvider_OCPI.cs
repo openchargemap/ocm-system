@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OCM.Import.Providers.OCPI
 {
     public class ImportProvider_OCPI : BaseImportProvider, IImportProvider
     {
-        private string _authHeaderKey = "";
         private string _authHeaderValue = "";
 
         private int _dataProviderId = 1;
@@ -24,20 +24,32 @@ namespace OCM.Import.Providers.OCPI
             SourceEncoding = Encoding.GetEncoding("UTF-8");
             IsAutoRefreshed = true;
             AllowDuplicatePOIWithDifferentOperator = true;
-
         }
 
+        /// <summary>
+        /// If applicable, the key for this imports Authorization header value in our secrets vault
+        /// </summary>
+        public string CredentialKey { get; set; }
+
+
+        /// <summary>
+        /// If operator not specified in OCPI, default operator to use.
+        /// </summary>
+        public int? DefaultOperatorID { get; set; }
+        /// <summary>
+        /// Optional value for the Authorization header if required.
+        /// </summary>
         public string AuthHeaderValue { set { _authHeaderValue = value; } }
 
-        public void Init(int dataProviderId, string locationsEndpoint, string authHeaderKey = null, string authHeaderValue = null)
+        public void Init(int dataProviderId, string locationsEndpoint, string authHeaderValue = null)
         {
             AutoRefreshURL = locationsEndpoint;
-
-            _authHeaderKey = authHeaderKey;
 
             _authHeaderValue = authHeaderValue;
 
             _dataProviderId = dataProviderId;
+
+            DataProviderID = _dataProviderId;
         }
 
         public virtual Dictionary<string, int> GetOperatorMappings()
@@ -80,20 +92,20 @@ namespace OCM.Import.Providers.OCPI
 
             OperatorMappings = GetOperatorMappings();
 
-            var poiResults = _adapter.FromOCPI(response, _dataProviderId, OperatorMappings);
+            var poiResults = _adapter.FromOCPI(response, _dataProviderId, operatorMappings: OperatorMappings, defaultOperatorId: DefaultOperatorID);
 
             _unmappedOperators = _adapter.GetUnmappedOperators();
 
             return poiResults.ToList();
         }
 
-        public new bool LoadInputFromURL(string url)
+        public new async Task<bool> LoadInputFromURL(string url)
         {
             try
             {
-                if (!string.IsNullOrEmpty(_authHeaderKey))
+                if (!string.IsNullOrEmpty(_authHeaderValue))
                 {
-                    webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
+                    webClient.Headers.Add("Authorization", _authHeaderValue);
                 }
 
                 webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");

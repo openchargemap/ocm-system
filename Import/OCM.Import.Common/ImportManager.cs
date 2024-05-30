@@ -210,6 +210,9 @@ namespace OCM.Import
             providers.Add(new ImportProvider_GoEvio());
             providers.Add(new ImportProvider_Sitronics());
             providers.Add(new ImportProvider_Lakd());
+            providers.Add(new ImportProvider_Gaia());
+            providers.Add(new ImportProvider_Toger());
+            providers.Add(new ImportProvider_ElectricEra());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -243,6 +246,7 @@ namespace OCM.Import
 
                     Log(result.Log);
 
+                    
                     return result.IsSuccess;
 
                 }
@@ -846,15 +850,18 @@ namespace OCM.Import
             {
                 bool loadOK = false;
 
-                if (p is ImportProvider_GoEvio)
+                if (p is ImportProvider_OCPI ocpi)
                 {
-                    (p as ImportProvider_GoEvio).AuthHeaderValue = settings.Credentials["OCPI-EVIO"];
+                   if (ocpi.CredentialKey != null)
+                    {
+                        if (settings.Credentials.TryGetValue(ocpi.CredentialKey, out var cred))
+                        {
+                            ocpi.AuthHeaderValue = cred;
+                        }
+                        
+                    }
                 }
-                else if (p is ImportProvider_Sitronics)
-                {
-                    (p as ImportProvider_Sitronics).AuthHeaderValue = "Token";
-                }
-
+               
                 if (p.ImportInitialisationRequired && p is IImportProviderWithInit)
                 {
                     ((IImportProviderWithInit)provider).InitImportProvider();
@@ -1018,6 +1025,12 @@ namespace OCM.Import
                             var json = System.IO.File.ReadAllText(fileName);
                             await UploadPOIList(json);
                         }
+
+                        //  notify API of last date of import for each provider
+                        if (p.DataProviderID > 0)
+                        {
+                            await UpdateLastImportDate(p.DataProviderID);
+                        }
                     }
 
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
@@ -1037,6 +1050,13 @@ namespace OCM.Import
                                 numUpdated++;
                             }
                         }
+
+                        //  notify API of last date of import for each provider
+                        if (p.DataProviderID > 0)
+                        {
+                            await UpdateLastImportDate(p.DataProviderID);
+                        }
+
                     }
                     else
                     {

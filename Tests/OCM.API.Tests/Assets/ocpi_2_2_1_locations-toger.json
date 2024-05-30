@@ -1,0 +1,1996 @@
+{
+  "status_code": 1000,
+  "timestamp": "2024-05-20T04:45:42Z",
+  "status_message": "SUCCESS",
+  "data": [
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "6",
+      "type": "ON_STREET",
+      "address": "Veysel Karani Cd. 100 Yıl Mh. No:15 Automall",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.070691",
+        "longitude": "28.853607"
+      },
+      "evses": [
+        {
+          "uid": "1013",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "12",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 11,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:50Z"
+            }
+          ],
+          "evse_id": "12"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "AUTOMALL "
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "68",
+      "type": "ON_STREET",
+      "address": "kayaşehir mahallesi avrasya konutları başa",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.103608",
+        "longitude": "28.771192"
+      },
+      "evses": [
+        {
+          "uid": "1056",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "104",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:45Z"
+            }
+          ],
+          "evse_id": "118"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Avrasya Konutları 1"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "48",
+      "type": "ON_STREET",
+      "address": "Bahçeşehir 2. Kısım, Şelale Cd. No:3, 34",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.068259842477126",
+        "longitude": " 28.67736435772519"
+      },
+      "evses": [
+        {
+          "uid": "-",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "73",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "78"
+        },
+        {
+          "uid": "-",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "74",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "79"
+        },
+        {
+          "uid": "-",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "75",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "80"
+        },
+        {
+          "uid": "2ee",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "122"
+        },
+        {
+          "uid": "736456345",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "123"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "BAHÇEŞEHİR SPOR PARKI"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "29",
+      "type": "ON_STREET",
+      "address": "çırçır Mah sahrayolu Çad No 54 Eyüpsult",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.077046",
+        "longitude": "28.935744"
+      },
+      "evses": [],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "BALCI MOTOR "
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "70",
+      "type": "ON_STREET",
+      "address": "Kayabaşı, Kayaşehir Blv No:59, 34494 Başa",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.12596851241252",
+        "longitude": "28.771443370571948"
+      },
+      "evses": [],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Başakkent Merkez"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "17",
+      "type": "ON_STREET",
+      "address": "Başak, Yunus Emre Cd. 17/S, 34480 Başakşeh",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.110992",
+        "longitude": "28.809814"
+      },
+      "evses": [
+        {
+          "uid": "1038",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "33",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:25Z"
+            }
+          ],
+          "evse_id": "30"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "BAŞAKPAZAR"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "69",
+      "type": "ON_STREET",
+      "address": "Kayabaşı, Temmuz Sk No:2, 34480 Başakşehi",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.121216",
+        "longitude": "28.766457"
+      },
+      "evses": [
+        {
+          "uid": "3007",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "107",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 120,
+              "amperage": 0,
+              "last_updated": "2024-05-19T20:09:08Z"
+            },
+            {
+              "id": "108",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 120,
+              "amperage": 0,
+              "last_updated": "2024-05-19T20:09:08Z"
+            }
+          ],
+          "evse_id": "120"
+        },
+        {
+          "uid": "3005",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "105",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 120,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:43:47Z"
+            },
+            {
+              "id": "106",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 120,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:43:47Z"
+            }
+          ],
+          "evse_id": "121"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "BAŞAKŞEHİR BELEDİYESİ MERKEZ"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "2",
+      "type": "ON_STREET",
+      "address": "Başak Mahallesi Başak Mahallesi, 5.Etap, 2.",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.095572",
+        "longitude": "28.803287"
+      },
+      "evses": [
+        {
+          "uid": "3001",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "97"
+        },
+        {
+          "uid": "3002",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "96"
+        },
+        {
+          "uid": "9998",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "90",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 32,
+              "last_updated": "2024-05-15T14:30:11Z"
+            }
+          ],
+          "evse_id": "95"
+        },
+        {
+          "uid": "",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "40"
+        },
+        {
+          "uid": "8000",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "26"
+        },
+        {
+          "uid": "1004",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "6",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 11,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:45Z"
+            }
+          ],
+          "evse_id": "6"
+        },
+        {
+          "uid": "1005",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "7",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:43Z"
+            }
+          ],
+          "evse_id": "7"
+        },
+        {
+          "uid": "1006",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "8",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-04-17T13:36:11Z"
+            }
+          ],
+          "evse_id": "8"
+        },
+        {
+          "uid": "1008",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 11,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:39Z"
+            }
+          ],
+          "evse_id": "2"
+        },
+        {
+          "uid": "3019",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "95",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:31Z"
+            },
+            {
+              "id": "96",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:31Z"
+            }
+          ],
+          "evse_id": "102"
+        },
+        {
+          "uid": "SN10052307203281",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "51",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 11,
+              "amperage": 0,
+              "last_updated": "2024-03-21T09:20:50Z"
+            }
+          ],
+          "evse_id": "54"
+        },
+        {
+          "uid": "9995",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "97",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-02T07:25:06Z"
+            }
+          ],
+          "evse_id": "103"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Başakşehir LIVINGLAB"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "18",
+      "type": "ON_STREET",
+      "address": " Kayabaşı, Millet Bahçesi, 34494 Başakşe",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.110361",
+        "longitude": "28.772435"
+      },
+      "evses": [
+        {
+          "uid": "1034",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "34",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:58Z"
+            }
+          ],
+          "evse_id": "31"
+        },
+        {
+          "uid": "1046",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "35",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:54Z"
+            }
+          ],
+          "evse_id": "32"
+        },
+        {
+          "uid": "1045",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "36",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:29Z"
+            }
+          ],
+          "evse_id": "33"
+        },
+        {
+          "uid": "1044",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "37",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:29Z"
+            }
+          ],
+          "evse_id": "34"
+        },
+        {
+          "uid": "1035",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "38",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:10Z"
+            }
+          ],
+          "evse_id": "35"
+        },
+        {
+          "uid": "1043",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "39",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 7,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:02Z"
+            }
+          ],
+          "evse_id": "36"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "BAŞAKŞEHİR MİLLET BAHÇESİ"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "7",
+      "type": "ON_STREET",
+      "address": "41.0397896,28.4290988",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.039921",
+        "longitude": "28.429219"
+      },
+      "evses": [
+        {
+          "uid": "1014",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "13"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "BÜYÜKÇEKMECE HES HYBRID"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "45",
+      "type": "ON_STREET",
+      "address": "TAŞOLUK, DEĞİRMEN ARKASI CAD. NO:47, 34283",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.189039",
+        "longitude": "28.712181"
+      },
+      "evses": [
+        {
+          "uid": "1040",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "46",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "47"
+        },
+        {
+          "uid": "AE0022G1GNAC00620P",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "76"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Deniz Market"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "39",
+      "type": "ON_STREET",
+      "address": "null",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.089046",
+        "longitude": "28.729311"
+      },
+      "evses": [
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "73"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "58"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "60"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "62"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "63"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "64"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "65"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "66"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "67"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "68"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "69"
+        },
+        {
+          "uid": "1064",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "64",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "70"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "71"
+        },
+        {
+          "uid": "11",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "72"
+        },
+        {
+          "uid": "1052",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "52",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "56"
+        },
+        {
+          "uid": "1055",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "55",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "105"
+        },
+        {
+          "uid": "1054",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "54",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "57"
+        },
+        {
+          "uid": "1053",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "53",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "55"
+        },
+        {
+          "uid": "1067",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "67",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "112"
+        },
+        {
+          "uid": "1066",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "66",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "113"
+        },
+        {
+          "uid": "1065",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "65",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "114"
+        },
+        {
+          "uid": "1063",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "63",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-10T08:12:12Z"
+            }
+          ],
+          "evse_id": "115"
+        },
+        {
+          "uid": "1062",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "62",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-13T07:43:09Z"
+            }
+          ],
+          "evse_id": "116"
+        },
+        {
+          "uid": "0",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "56",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "117"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Depo Ürünleri"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "5",
+      "type": "ON_STREET",
+      "address": "Bahçeşehir 1. Kısım Mh., Doğa Parkı Cd ",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.067514",
+        "longitude": "28.690512"
+      },
+      "evses": [
+        {
+          "uid": "1011",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "10",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 11,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:19Z"
+            }
+          ],
+          "evse_id": "10"
+        },
+        {
+          "uid": "1012",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "11",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 11,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:31Z"
+            }
+          ],
+          "evse_id": "11"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "DOĞA PARK KAPALI OTOPARK"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "9",
+      "type": "ON_STREET",
+      "address": "Barış SB. 5003 Sok. No:2 / A Kadir HAs Bina",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "40.791103",
+        "longitude": "29.463100"
+      },
+      "evses": [
+        {
+          "uid": "1015",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "16",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:41Z"
+            }
+          ],
+          "evse_id": "16"
+        },
+        {
+          "uid": "1016",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "17",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:28Z"
+            }
+          ],
+          "evse_id": "23"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "GEBZE TEKNOPARK 1. BÖLGE"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "10",
+      "type": "ON_STREET",
+      "address": "Barış SB. 5003 Sok. No:2 / A Kadir HAs Bina",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "40.790274",
+        "longitude": "29.462256"
+      },
+      "evses": [
+        {
+          "uid": "1017",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "18",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-03-29T08:33:19Z"
+            }
+          ],
+          "evse_id": "17"
+        },
+        {
+          "uid": "1018",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "19",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:29Z"
+            }
+          ],
+          "evse_id": "24"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "GEBZE TEKNOPARK 2. BÖLGE"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "14",
+      "type": "ON_STREET",
+      "address": "Barış, Gebze/Kocaeli",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "40.789108",
+        "longitude": "29.459394"
+      },
+      "evses": [
+        {
+          "uid": "1036",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "27",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:19Z"
+            }
+          ],
+          "evse_id": "22"
+        },
+        {
+          "uid": "1037",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "28",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:04Z"
+            }
+          ],
+          "evse_id": "25"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "GEBZE TEKNOPARK 3. BÖLGE\t"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "40",
+      "type": "ON_STREET",
+      "address": "Kayabaşı, 34494 Başakşehir/İstanbul",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.143416",
+        "longitude": "28.789351"
+      },
+      "evses": [
+        {
+          "uid": "1041",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "71",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:07Z"
+            }
+          ],
+          "evse_id": "74"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Kayaşehir 11. bölge"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "58",
+      "type": "ON_STREET",
+      "address": "Ziya Gökalp, Süleyman Demirel Blv No:7, 344",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.062639",
+        "longitude": "28.807892"
+      },
+      "evses": [
+        {
+          "uid": "55",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "83",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 120,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "88"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Mall of İstanbul"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "59",
+      "type": "ON_STREET",
+      "address": "Ziya Gökalp, Süleyman Demirel Blv No:7, 344",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.062283",
+        "longitude": "28.806819"
+      },
+      "evses": [
+        {
+          "uid": "444",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "84",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 120,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "89"
+        },
+        {
+          "uid": "666",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "85",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "90"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Mall of İstanbul 2"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "22",
+      "type": "ON_STREET",
+      "address": "Başak, Mevlana Celaleddin Rumi Cd., 34306 Ba",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.093113",
+        "longitude": "28.803025"
+      },
+      "evses": [
+        {
+          "uid": "1049",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "42",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:46Z"
+            }
+          ],
+          "evse_id": "43"
+        },
+        {
+          "uid": "1050",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "44",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:57Z"
+            }
+          ],
+          "evse_id": "45"
+        },
+        {
+          "uid": "1010",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "45",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:53Z"
+            }
+          ],
+          "evse_id": "46"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "MİSS İSTANBUL 1. ADA"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "25",
+      "type": "ON_STREET",
+      "address": "Avrupa Yakası, Başak, 34480 Başakşehir/İ",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.093926",
+        "longitude": "28.805416"
+      },
+      "evses": [],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "MİSSİSTANBUL 2 ADA"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "24",
+      "type": "ON_STREET",
+      "address": "Avrupa Yakası, Başak, 34480 Başakşehir/İ",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.091770",
+        "longitude": "28.804419"
+      },
+      "evses": [],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "MİSSİSTANBUL 3. ADA ORTAK ALAN"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "23",
+      "type": "ON_STREET",
+      "address": "Başak, Misstanbul Evleri 3. Ada İçi Yolu 4",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.093075",
+        "longitude": "28.805300"
+      },
+      "evses": [],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "MİSSİSTANBUL 3.ADA E2 BLOK"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "71",
+      "type": "ON_STREET",
+      "address": "Başak, Ordu Caddesi No. 23, 34480 Başakşeh",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.124134772875664",
+        "longitude": " 28.806105529986816"
+      },
+      "evses": [],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "NECİP FAZIL KÜLTÜR MERKEZİ"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "13",
+      "type": "ON_STREET",
+      "address": "Mimar Kemalettin Bulvarı No:32 Onurkent Baş",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.105704",
+        "longitude": "28.780993"
+      },
+      "evses": [
+        {
+          "uid": "1023",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "23",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "21"
+        },
+        {
+          "uid": "1024",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "24",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:19Z"
+            }
+          ],
+          "evse_id": "37"
+        },
+        {
+          "uid": "1025",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "25",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:34Z"
+            }
+          ],
+          "evse_id": "38"
+        },
+        {
+          "uid": "1026",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "26",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:12Z"
+            }
+          ],
+          "evse_id": "39"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "OYAKKENT SPOR PARKI"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "31",
+      "type": "ON_STREET",
+      "address": "Bahçeşehir 2. Kısım, Turgut Özal Blv No:",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.089046",
+        "longitude": "28.729311"
+      },
+      "evses": [
+        {
+          "uid": "1033",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "49",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:01Z"
+            }
+          ],
+          "evse_id": "52"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "ÖZDEMİR BAYRAKTAR BİLİM VE KÜLTÜR MERKEZİ"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "61",
+      "type": "ON_STREET",
+      "address": "Bahçeşehir 2. Kısım, 34488 Başakşehir /",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.080349",
+        "longitude": "28.679812"
+      },
+      "evses": [
+        {
+          "uid": "1042",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "92",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:57Z"
+            }
+          ],
+          "evse_id": "99"
+        },
+        {
+          "uid": "1031",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "91",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:50Z"
+            }
+          ],
+          "evse_id": "98"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Pazartürk"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "62",
+      "type": "ON_STREET",
+      "address": "Bahçeşehir, Bahçeşehir 2. Kısım, 34488 ",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.070174",
+        "longitude": "28.681305"
+      },
+      "evses": [
+        {
+          "uid": "1029",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "93",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:52Z"
+            }
+          ],
+          "evse_id": "100"
+        },
+        {
+          "uid": "1030",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "94",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:10Z"
+            }
+          ],
+          "evse_id": "101"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Şelale Park sosyal Tesisler"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "65",
+      "type": "ON_STREET",
+      "address": "orhangazi mh. tunç cd. 1740sk. no 2 esenyurt",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.093105",
+        "longitude": "28.7155137"
+      },
+      "evses": [
+        {
+          "uid": "1057",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "98",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:13Z"
+            }
+          ],
+          "evse_id": "107"
+        },
+        {
+          "uid": "1061",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "61",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 0,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:24Z"
+            }
+          ],
+          "evse_id": "108"
+        },
+        {
+          "uid": "1059",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "100",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:45Z"
+            }
+          ],
+          "evse_id": "109"
+        },
+        {
+          "uid": "1060",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "101",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:00Z"
+            }
+          ],
+          "evse_id": "110"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Semt Bahçekent 2"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "21",
+      "type": "ON_STREET",
+      "address": "Topkapı mah şeyhülislam sk no 28 FATİH / ",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.022560",
+        "longitude": "28.929337"
+      },
+      "evses": [
+        {
+          "uid": "1048",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "41",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:11Z"
+            }
+          ],
+          "evse_id": "42"
+        },
+        {
+          "uid": "1047",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "40",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:42Z"
+            }
+          ],
+          "evse_id": "41"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "SINAV DERSHANESİ"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "47",
+      "type": "ON_STREET",
+      "address": "Deliklikaya, Deliklikaya Yolu, 34555 Arnavutk",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.111321",
+        "longitude": "28.675282"
+      },
+      "evses": [
+        {
+          "uid": "SN10052307203363",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "72",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:46Z"
+            }
+          ],
+          "evse_id": "77"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "Soyak Konforia"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "16",
+      "type": "ON_STREET",
+      "address": "Bahçeşehir 2.Kısım Mahalle, Şelale Cad, ",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.072133",
+        "longitude": "28.681554"
+      },
+      "evses": [
+        {
+          "uid": "1021",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "31",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:52Z"
+            }
+          ],
+          "evse_id": "28"
+        },
+        {
+          "uid": "1022",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "32",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:33Z"
+            }
+          ],
+          "evse_id": "29"
+        },
+        {
+          "uid": "AE0022G1GN6C00369X",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "evse_id": "75"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "TOGER DÜDEN SİTESİ"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "27",
+      "type": "ON_STREET",
+      "address": "SADETDERE MAH KAZIMKARABEKİR CD NO 7 ESENYUR",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "41.011256",
+        "longitude": "28.700919"
+      },
+      "evses": [
+        {
+          "uid": "1039",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "47",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:44:34Z"
+            }
+          ],
+          "evse_id": "48"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "TOGER-MEKTEBİM KOLEJİ ESENYURT"
+    },
+    {
+      "party_id": "TGR",
+      "country_code": "TR",
+      "publish": true,
+      "id": "12",
+      "type": "ON_STREET",
+      "address": "İçmeler, Yeşilyuva Sk. No: 1, 34947 Tuzla/",
+      "city": "Istanbul",
+      "postal_code": "34000",
+      "country": "TRY",
+      "coordinates": {
+        "latitude": "40.848756",
+        "longitude": "29.297693"
+      },
+      "evses": [
+        {
+          "uid": "1027",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "21",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "19"
+        },
+        {
+          "uid": "1028",
+          "status": "AVAILABLE",
+          "last_updated": "2024-05-20T04:45:42Z",
+          "connectors": [
+            {
+              "id": "22",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "voltage": 22,
+              "amperage": 0,
+              "last_updated": "2024-05-20T04:45:42Z"
+            }
+          ],
+          "evse_id": "20"
+        }
+      ],
+      "last_updated": "2024-05-20T04:45:42Z",
+      "name": "TUZLA VEMA AVM"
+    }
+  ]
+}

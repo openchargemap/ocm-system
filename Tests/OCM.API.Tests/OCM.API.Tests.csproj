@@ -14,7 +14,10 @@
     <None Remove="App.config" />
     <None Remove="Assets\ocpi_2_1_1_locations-fastned.json" />
     <None Remove="Assets\ocpi_2_2_1_locations-sitronics.json" />
+    <None Remove="Assets\ocpi_2_2_1_locations-toger.json" />
+    <None Remove="Assets\ocpi_2_2_locations-electricera.json" />
     <None Remove="Assets\ocpi_2_2_locations-evio.json" />
+    <None Remove="Assets\ocpi_2_2_locations-gaia.json" />
     <None Remove="Assets\ocpi_2_2_locations-lakd.lt.json" />
     <None Remove="Assets\ocpi_2_2_locations-mobie.pt.json" />
     <None Remove="Assets\ocpi_3_0_0_location_example.json" />
@@ -31,6 +34,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_2_2_1_locations-sitronics.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_2_locations-electricera.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_2_locations-gaia.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ocpi_2_2_1_locations-toger.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\ocpi_2_2_locations-evio.json">

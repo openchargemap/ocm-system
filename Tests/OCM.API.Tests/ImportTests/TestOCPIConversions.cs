@@ -108,6 +108,118 @@ namespace OCM.API.Tests
             System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
 
+
+        [Fact]
+        async Task CanConvertFromOCPI_Toger()
+        {
+
+            var parseErrors = 0;
+            var deserializeSettings = new JsonSerializerSettings
+            {
+                Error = (obj, args) =>
+                {
+                    var contextErrors = args.ErrorContext;
+                    contextErrors.Handled = true;
+
+                    System.Console.WriteLine($"Error parsing item {contextErrors.Error}");
+                    parseErrors++;
+                }
+            };
+
+
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-toger.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
+
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json, deserializeSettings);
+            var ocpiData = response.Data;
+            var poiResults = adapter.FromOCPI(ocpiData, 34);
+
+            Assert.Equal(34, poiResults.Count());
+
+            Assert.Equal(0, parseErrors);
+
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+        }
+
+
+        [Fact]
+        async Task CanConvertFromOCPI_Gaia()
+        {
+
+            var parseErrors = 0;
+            var deserializeSettings = new JsonSerializerSettings
+            {
+                Error = (obj, args) =>
+                {
+                    var contextErrors = args.ErrorContext;
+                    contextErrors.Handled = true;
+
+                    System.Diagnostics.Debug.WriteLine($"Error parsing item {contextErrors.Error}");
+                    parseErrors++;
+                }
+            };
+
+
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_locations-gaia.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
+
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json, deserializeSettings);
+            var ocpiData = response.Data;
+            var poiResults = adapter.FromOCPI(ocpiData, 33);
+
+            Assert.Equal(4, poiResults.Count());
+
+            Assert.Equal(0, parseErrors);
+
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+        }
+        [Fact]
+        async Task CanConvertFromOCPI_ElectricEra()
+        {
+
+            var parseErrors = 0;
+            var deserializeSettings = new JsonSerializerSettings
+            {
+                Error = (obj, args) =>
+                {
+                    var contextErrors = args.ErrorContext;
+                    contextErrors.Handled = true;
+
+                    System.Console.WriteLine($"Error parsing item {contextErrors.Error}");
+                    parseErrors++;
+                }
+            };
+
+
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_locations-electricera.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(coreRefData);
+
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json, deserializeSettings);
+            var ocpiData = response.Data;
+            var poiResults = adapter.FromOCPI(ocpiData, 35);
+
+            Assert.Equal(4, poiResults.Count());
+
+            Assert.Equal(0, parseErrors);
+
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+        }
+
         [Fact]
         async Task CanConvertFromOCPI_MobiePt()
         {
@@ -157,7 +269,7 @@ namespace OCM.API.Tests
 
             var poiResults = adapter.Process(coreRefData).ToList();
 
-            Assert.Equal(379, poiResults.Count());
+            Assert.Equal(587, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 
@@ -170,7 +282,9 @@ namespace OCM.API.Tests
 
 
             // ensure power KW does not exceed a reasonable value
-            Assert.Empty(poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000)));
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
         }
     }
 }

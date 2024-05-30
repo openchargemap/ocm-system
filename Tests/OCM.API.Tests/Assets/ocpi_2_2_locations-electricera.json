@@ -1,0 +1,555 @@
+{
+  "status_code": 1000,
+  "timestamp": "2024-05-30T04:40:23.733Z",
+  "data": [
+    {
+      "country_code": "US",
+      "party_id": "ALL",
+      "id": "0",
+      "publish": true,
+      "name": "Plaid Pantry PowerNode Charging Station",
+      "address": "6060 NE Columbia Blvd",
+      "city": "Portland",
+      "postal_code": "97218",
+      "state": "Oregon",
+      "country": "USA",
+      "coordinates": {
+        "latitude": "45.5682999",
+        "longitude": "-122.5996726"
+      },
+      "parking_type": "PARKING_LOT",
+      "evses": [
+        {
+          "uid": "2",
+          "evse_id": "US*ALL*E00000002",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 300,
+              "last_updated": "2023-06-26T16:39:55.947Z",
+              "max_electric_power": 150000,
+              "tariff_ids": [
+                "8"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 500,
+              "max_amperage": 200,
+              "last_updated": "2023-06-26T16:39:55.947Z",
+              "max_electric_power": 100000,
+              "tariff_ids": [
+                "8"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "45.56829990002",
+            "longitude": "-122.59967260002"
+          },
+          "physical_reference": "2",
+          "last_updated": "2024-05-30T04:40:18.950Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Plaid Pantry",
+        "phone_number": "(888) 409-2980",
+        "logo": {
+          "url": "https://electriceradev1.blob.core.windows.net/images/EE_Icon_PNG.png",
+          "category": "OWNER",
+          "type": "png",
+          "height": 512,
+          "width": 512
+        }
+      },
+      "time_zone": "America/Los_Angeles",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2024-05-30T04:40:18.950Z"
+    },
+    {
+      "country_code": "US",
+      "party_id": "ALL",
+      "id": "6",
+      "publish": true,
+      "name": "Quik Charge PowerNode Charging Station",
+      "address": "850 Washington Street",
+      "city": "Weymouth",
+      "postal_code": "02189",
+      "state": "Massachusetts",
+      "country": "USA",
+      "coordinates": {
+        "latitude": "42.2008076",
+        "longitude": "-70.942073"
+      },
+      "parking_type": "PARKING_LOT",
+      "evses": [
+        {
+          "uid": "13",
+          "evse_id": "US*ALL*E00000013",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "44"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "44"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.200807600013",
+            "longitude": "-70.94207300013"
+          },
+          "physical_reference": "13",
+          "last_updated": "2024-05-30T04:40:19.332Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Quik Charge",
+        "phone_number": "(888) 409-2980",
+        "logo": {
+          "url": "https://electriceradev1.blob.core.windows.net/images/EE_Icon_PNG.png",
+          "category": "OWNER",
+          "type": "png",
+          "height": 512,
+          "width": 512
+        }
+      },
+      "time_zone": "America/New_York",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2024-05-30T04:40:19.332Z"
+    },
+    {
+      "country_code": "US",
+      "party_id": "ALL",
+      "id": "48",
+      "publish": true,
+      "name": "Seven Feathers PowerNode Charging Station",
+      "address": "130 Creekside Rd",
+      "city": "Canyonville",
+      "postal_code": "97417",
+      "state": "Oregon",
+      "country": "USA",
+      "coordinates": {
+        "latitude": "42.9401233",
+        "longitude": "-123.2907758"
+      },
+      "parking_type": "PARKING_LOT",
+      "evses": [
+        {
+          "uid": "85",
+          "evse_id": "US*ALL*E00000085",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.940123300085",
+            "longitude": "-123.290775800085"
+          },
+          "physical_reference": "85",
+          "last_updated": "2024-05-30T04:40:19.368Z"
+        },
+        {
+          "uid": "86",
+          "evse_id": "US*ALL*E00000086",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.940123300086",
+            "longitude": "-123.290775800086"
+          },
+          "physical_reference": "86",
+          "last_updated": "2024-05-30T04:40:19.402Z"
+        },
+        {
+          "uid": "87",
+          "evse_id": "US*ALL*E00000087",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.940123300087",
+            "longitude": "-123.290775800087"
+          },
+          "physical_reference": "87",
+          "last_updated": "2024-05-30T04:40:19.440Z"
+        },
+        {
+          "uid": "88",
+          "evse_id": "US*ALL*E00000088",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.940123300088",
+            "longitude": "-123.290775800088"
+          },
+          "physical_reference": "88",
+          "last_updated": "2024-05-30T04:40:19.556Z"
+        },
+        {
+          "uid": "89",
+          "evse_id": "US*ALL*E00000089",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.940123300089",
+            "longitude": "-123.290775800089"
+          },
+          "physical_reference": "89",
+          "last_updated": "2024-05-30T04:40:19.512Z"
+        },
+        {
+          "uid": "90",
+          "evse_id": "US*ALL*E00000090",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 350,
+              "last_updated": "2024-01-29T22:12:54.714Z",
+              "max_electric_power": 200000,
+              "tariff_ids": [
+                "4"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "42.940123300090",
+            "longitude": "-123.290775800090"
+          },
+          "physical_reference": "90",
+          "last_updated": "2024-05-30T04:40:19.476Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Seven Feathers",
+        "phone_number": "(888) 409-2980",
+        "logo": {
+          "url": "https://electriceradev1.blob.core.windows.net/images/EE_Icon_PNG.png",
+          "category": "OWNER",
+          "type": "png",
+          "height": 512,
+          "width": 512
+        }
+      },
+      "time_zone": "America/Los_Angeles",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2024-05-30T04:40:19.556Z"
+    },
+    {
+      "country_code": "US",
+      "party_id": "ALL",
+      "id": "156",
+      "publish": false,
+      "name": "Electric Era PowerNode Charging Station",
+      "address": "3847 1st Ave S,Unit 1",
+      "city": "Seattle",
+      "postal_code": "98134",
+      "state": "Washington",
+      "country": "USA",
+      "coordinates": {
+        "latitude": "47.5689137",
+        "longitude": "-122.3361171"
+      },
+      "parking_type": "PARKING_LOT",
+      "evses": [
+        {
+          "uid": "103",
+          "evse_id": "US*ALL*E00000103",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "CHIP_CARD_SUPPORT",
+            "CONTACTLESS_CARD_SUPPORT",
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 1000,
+              "max_amperage": 300,
+              "last_updated": "2023-06-26T16:39:55.947Z",
+              "max_electric_power": 150000,
+              "tariff_ids": [
+                "121"
+              ]
+            },
+            {
+              "id": "2",
+              "standard": "CHADEMO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_voltage": 500,
+              "max_amperage": 200,
+              "last_updated": "2023-06-26T16:39:55.947Z",
+              "max_electric_power": 100000,
+              "tariff_ids": [
+                "121"
+              ]
+            }
+          ],
+          "coordinates": {
+            "latitude": "47.5689137000103",
+            "longitude": "-122.3361171000103"
+          },
+          "physical_reference": "103",
+          "last_updated": "2024-03-27T01:42:24.092Z"
+        }
+      ],
+      "directions": [],
+      "operator": {
+        "name": "Electric Era",
+        "phone_number": "(888) 409-2980",
+        "logo": {
+          "url": "https://electriceradev1.blob.core.windows.net/images/EE_Icon_PNG.png",
+          "category": "OWNER",
+          "type": "png",
+          "height": 512,
+          "width": 512
+        }
+      },
+      "time_zone": "America/Los_Angeles",
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "last_updated": "2024-03-28T19:52:52.257Z"
+    }
+  ]
+}

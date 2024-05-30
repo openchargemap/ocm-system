@@ -1,10 +1,5 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
-using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OCM.Import.Providers.OCPI
 {
@@ -19,8 +14,10 @@ namespace OCM.Import.Providers.OCPI
             IsProductionReady = true;
 
             DataProviderID = 7; // mobie.pt
-            AutoRefreshURL = "https://ocpi.mobinteli.com/2.2/locations";
 
+            CredentialKey = null; // no credentials
+
+            AutoRefreshURL = "https://ocpi.mobinteli.com/2.2/locations";
         }
 
         public override Dictionary<string, int> GetOperatorMappings()
@@ -55,13 +52,6 @@ namespace OCM.Import.Providers.OCPI
                     { "FAC",3685 },
                     { "EVC",3693 }
             };
-        }
-
-        List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
-        {
-            var outputList = Process(coreRefData);
-
-            return outputList;
         }
     }
 }

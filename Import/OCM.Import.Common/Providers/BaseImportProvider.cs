@@ -235,6 +235,7 @@ namespace OCM.Import.Providers
         public async Task<bool> LoadInputFromURL(string url)
         {
             HttpClient client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(1200);
             try
             {
                 if (String.IsNullOrEmpty(HTTPPostVariables))

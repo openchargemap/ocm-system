@@ -108,15 +108,6 @@ namespace OCM.Import.Worker
                         status.DateLastImport = DateTime.UtcNow;
                         status.ProcessingTimeSeconds = stopwatch.Elapsed.TotalSeconds;
 
-                        // update import date on provider
-                        var providers = importManager.GetImportProviders(new List<API.Common.Model.DataProvider>());
-                        var providerId = (providers.FirstOrDefault(p => p.GetProviderName() == status.LastImportedProvider) as BaseImportProvider)?.DataProviderID;
-                        if (providerId != null)
-                        {
-                            //  notify API of last date of import for each provider
-                            await importManager.UpdateLastImportDate((int)providerId);
-                        }
-
                     }
                     catch (Exception exp)
                     {
