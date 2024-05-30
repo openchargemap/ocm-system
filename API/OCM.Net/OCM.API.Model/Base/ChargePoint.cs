@@ -47,7 +47,7 @@ namespace OCM.API.Common.Model
         public List<ConnectionInfo> Connections { get; set; }
 
         [DisplayName("Number Of Stations/Bays")]
-        [Range(0, 100)]
+        [Range(0, 500)]
         public int? NumberOfPoints { get; set; }
 
         [DisplayName("General Comments"), DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]

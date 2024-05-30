@@ -37,7 +37,7 @@ namespace OCM.API.Common.Model
         [DisplayName("Supply Type")]
         public CurrentType CurrentType { get; set; }
 
-        [DisplayName("Quantity Available"), Range(0, 100)]
+        [DisplayName("Quantity Available"), Range(0, 500)]
         public int? Quantity { get; set; }
 
         [DisplayName("Additional Comments")]
