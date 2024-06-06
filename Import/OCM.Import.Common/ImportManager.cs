@@ -1224,7 +1224,7 @@ namespace OCM.Import
         public List<ChargePoint> PopulateLocationFromGeolocationCache(IEnumerable<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
             //OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
-            var spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "\\ne_10m_admin_0_countries.shp");
+            var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath,"ne_10m_admin_0_countries.shp"));
 
             List<ChargePoint> failedLookups = new List<ChargePoint>();
 

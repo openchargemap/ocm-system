@@ -1,10 +1,5 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
-using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OCM.Import.Providers.OCPI
 {
@@ -18,13 +13,11 @@ namespace OCM.Import.Providers.OCPI
             IsAutoRefreshed = true;
             IsProductionReady = true;
 
-            Init(dataProviderId: 30, "https://api.go-evio.com/locations", "apikey");
-        }
+            CredentialKey = "OCPI-EVIO";
 
-        List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
-        {
-            var outputList = Process(coreRefData);
-            return outputList;
+            DefaultOperatorID = 3792;
+
+            Init(dataProviderId: 30, "https://api.go-evio.com/locations","apikey");
         }
     }
 }

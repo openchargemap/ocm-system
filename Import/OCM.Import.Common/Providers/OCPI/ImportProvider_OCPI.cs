@@ -11,6 +11,7 @@ namespace OCM.Import.Providers.OCPI
 {
     public class ImportProvider_OCPI : BaseImportProvider, IImportProvider
     {
+        private string _authHeaderKey = "Authorization";
         private string _authHeaderValue = "";
 
         private int _dataProviderId = 1;
@@ -41,11 +42,16 @@ namespace OCM.Import.Providers.OCPI
         /// </summary>
         public string AuthHeaderValue { set { _authHeaderValue = value; } }
 
-        public void Init(int dataProviderId, string locationsEndpoint, string authHeaderValue = null)
+        public string AuthHeaderKey { set { _authHeaderKey = value; } }
+
+        public void Init(int dataProviderId, string locationsEndpoint, string authHeaderKey = null)
         {
             AutoRefreshURL = locationsEndpoint;
 
-            _authHeaderValue = authHeaderValue;
+            if (authHeaderKey != null)
+            {
+                _authHeaderKey = authHeaderKey;
+            }
 
             _dataProviderId = dataProviderId;
 
@@ -105,10 +111,12 @@ namespace OCM.Import.Providers.OCPI
             {
                 if (!string.IsNullOrEmpty(_authHeaderValue))
                 {
-                    webClient.Headers.Add("Authorization", _authHeaderValue);
+                    webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
                 }
 
                 webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
+                webClient.Headers.Remove("User-Agent");
+                webClient.Headers.Add("User-Agent", "openchargemap-OCPI-import/1.0"); 
 
                 InputData = webClient.DownloadString(url);
 

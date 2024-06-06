@@ -13,7 +13,7 @@
       "latitude": 40.63751253280673
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:18:37.752Z",
+    "last_updated": "2024-06-06T06:29:14.349Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -30,11 +30,8 @@
       {
         "uid": "5fdcd1c120855a00129ce1ed",
         "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:18:37.752Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:29:14.349Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcd1c120855a00129ce1ed-01",
@@ -43,18 +40,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:18:37.752Z"
+            "last_updated": "2024-06-06T06:29:14.349Z"
           }
         ]
       },
       {
         "uid": "5fdcd1c120855a00129ce1ff",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:18:37.752Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-06-06T06:29:14.349Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcd1c120855a00129ce1ff-02",
@@ -63,7 +57,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 240,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:18:37.752Z"
+            "last_updated": "2024-06-06T06:29:14.349Z"
           }
         ]
       }
@@ -83,7 +77,7 @@
       "latitude": 40.637538241385045
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:23:04.642Z",
+    "last_updated": "2024-06-06T06:28:19.225Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -99,12 +93,9 @@
     "evses": [
       {
         "uid": "5fdcd2b220855a00129ce2fd",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:23:04.642Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-06-06T06:28:19.225Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcd2b220855a00129ce2fd-01",
@@ -113,18 +104,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:23:04.642Z"
+            "last_updated": "2024-06-06T06:28:19.225Z"
           }
         ]
       },
       {
         "uid": "5fdcd2b320855a00129ce30f",
         "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:23:04.642Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:28:19.225Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcd2b320855a00129ce30f-02",
@@ -133,7 +121,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:23:04.642Z"
+            "last_updated": "2024-06-06T06:28:19.225Z"
           }
         ]
       }
@@ -153,7 +141,7 @@
       "latitude": 40.63760649434878
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:20:08.496Z",
+    "last_updated": "2024-05-31T20:19:21.592Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -169,12 +157,9 @@
     "evses": [
       {
         "uid": "5fdcd39420855a00129ce3e8",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:20:08.496Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-31T20:19:21.592Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcd39420855a00129ce3e8-01",
@@ -183,18 +168,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 260,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:20:08.496Z"
+            "last_updated": "2024-05-31T20:19:21.592Z"
           }
         ]
       },
       {
         "uid": "5fdcd39420855a00129ce3fa",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:20:08.496Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-31T20:19:21.592Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcd39420855a00129ce3fa-02",
@@ -203,7 +185,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:20:08.496Z"
+            "last_updated": "2024-05-31T20:19:21.592Z"
           }
         ]
       }
@@ -223,7 +205,7 @@
       "latitude": 40.637477806158216
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:19:21.298Z",
+    "last_updated": "2024-05-01T15:57:26.359Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -239,12 +221,9 @@
     "evses": [
       {
         "uid": "5fdcefda20855a00129cf67b",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:19:21.298Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-01T15:57:26.359Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcefda20855a00129cf67b-01",
@@ -253,18 +232,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 500,
             "max_amperage": 125,
-            "last_updated": "2022-06-14T02:19:21.298Z"
+            "last_updated": "2024-05-01T15:57:26.359Z"
           }
         ]
       },
       {
         "uid": "5fdcefda20855a00129cf68d",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:19:21.298Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-01T15:57:26.359Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcefda20855a00129cf68d-02",
@@ -273,18 +249,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 500,
             "max_amperage": 125,
-            "last_updated": "2022-06-14T02:19:21.298Z"
+            "last_updated": "2024-05-01T15:57:26.359Z"
           }
         ]
       },
       {
         "uid": "5fdcefda20855a00129cf69d",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:19:21.298Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-01T15:57:26.359Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "5fdcefda20855a00129cf69d-03",
@@ -293,77 +266,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 400,
             "max_amperage": 63,
-            "last_updated": "2022-06-14T02:19:21.298Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "country_code": "PT",
-    "party_id": "EVI",
-    "id": "EVI_CEI_MTS_00001",
-    "publish": true,
-    "name": "Circutor 2x7.4KW",
-    "address": "Av. Dom Afonso Henriques 1825",
-    "city": "Matosinhos",
-    "postal_code": "4450-017",
-    "coordinates": {
-      "longitude": -8.679398599999999,
-      "latitude": 41.172373
-    },
-    "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-13T22:12:42.727Z",
-    "operator": {
-      "name": "EVIO - Electrical Mobility",
-      "logo": {
-        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
-        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
-        "category": "NETWORK",
-        "type": "jpeg",
-        "width": 512,
-        "height": 512
-      },
-      "website": "https://go-evio.com"
-    },
-    "evses": [
-      {
-        "uid": "602e9e45da75070012e8308c",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-13T22:12:42.727Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "602e9e45da75070012e8308c-01",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
-            "max_amperage": 32,
-            "last_updated": "2022-06-13T22:12:42.727Z"
-          }
-        ]
-      },
-      {
-        "uid": "602e9e46da75070012e8309b",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-13T22:12:42.727Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "602e9e46da75070012e8309b-02",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
-            "max_amperage": 32,
-            "last_updated": "2022-06-13T22:12:42.727Z"
+            "last_updated": "2024-05-01T15:57:26.359Z"
           }
         ]
       }
@@ -383,7 +286,7 @@
       "latitude": 42.12063
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:19:28.304Z",
+    "last_updated": "2024-04-17T13:40:43.230Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -399,12 +302,9 @@
     "evses": [
       {
         "uid": "609e9c7799e6c500122f18f2",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:19:28.304Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-04-17T13:40:43.230Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "609e9c7799e6c500122f18f2-01",
@@ -413,7 +313,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:19:28.304Z"
+            "last_updated": "2024-04-17T13:40:43.230Z"
           }
         ]
       }
@@ -433,7 +333,7 @@
       "latitude": 42.1209005
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:20:20.127Z",
+    "last_updated": "2024-05-03T14:14:34.696Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -449,12 +349,9 @@
     "evses": [
       {
         "uid": "609e9c4299e6c500122f177b",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:20:20.127Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-03T14:14:34.696Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "609e9c4299e6c500122f177b-01",
@@ -463,7 +360,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:20:20.127Z"
+            "last_updated": "2024-05-03T14:14:34.696Z"
           }
         ]
       }
@@ -475,7 +372,7 @@
     "id": "EVI_ABC_AVR_00001",
     "publish": true,
     "name": "Posto_1 30a60kW",
-    "address": "R. da Igreja 79",
+    "address": "R. da Igreja, 79",
     "city": "",
     "postal_code": "3810-744",
     "coordinates": {
@@ -483,7 +380,7 @@
       "latitude": 40.579958
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:19:27.664Z",
+    "last_updated": "2024-05-28T22:00:01.171Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -499,12 +396,9 @@
     "evses": [
       {
         "uid": "6152f995fd30270012646c37",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:19:27.664Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-28T22:00:01.171Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "6152f995fd30270012646c37-01",
@@ -513,18 +407,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 400,
             "max_amperage": 150,
-            "last_updated": "2022-06-14T02:19:27.664Z"
+            "last_updated": "2024-05-28T22:00:01.171Z"
           }
         ]
       },
       {
         "uid": "6152e0e0fd30270012638296",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:19:27.664Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-28T22:00:01.171Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "6152e0e0fd30270012638296-02",
@@ -533,7 +424,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 950,
             "max_amperage": 63,
-            "last_updated": "2022-06-14T02:19:27.664Z"
+            "last_updated": "2024-05-28T22:00:01.171Z"
           }
         ]
       }
@@ -545,7 +436,7 @@
     "id": "EVI_ABC_AVR_00002",
     "publish": true,
     "name": "Posto_2 11a22kW",
-    "address": "R. da Igreja 79",
+    "address": "R. da Igreja, 79",
     "city": "",
     "postal_code": "3810-744",
     "coordinates": {
@@ -553,7 +444,7 @@
       "latitude": 40.579958
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:21:03.219Z",
+    "last_updated": "2024-06-06T06:31:15.868Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -569,12 +460,9 @@
     "evses": [
       {
         "uid": "6152ed67fd3027001263db63",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:21:03.219Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "CHARGING",
+        "last_updated": "2024-06-06T06:31:15.868Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "6152ed67fd3027001263db63-01",
@@ -583,18 +471,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 400,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:21:03.219Z"
+            "last_updated": "2024-06-06T06:31:15.868Z"
           }
         ]
       },
       {
         "uid": "6152ed68fd3027001263db86",
         "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:21:03.219Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:31:15.868Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "6152ed68fd3027001263db86-02",
@@ -603,247 +488,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 400,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:21:03.219Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "country_code": "PT",
-    "party_id": "EVI",
-    "id": "CAP_ADR_CAN_00001",
-    "publish": true,
-    "name": "ENSTO 2x22kW - Entrada",
-    "address": "R. São Caetano 125",
-    "city": "Vilar do Paraíso",
-    "postal_code": "4410",
-    "coordinates": {
-      "longitude": -8.6068919,
-      "latitude": 41.096136
-    },
-    "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:21:58.376Z",
-    "operator": {
-      "name": "EVIO - Electrical Mobility",
-      "logo": {
-        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
-        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
-        "category": "NETWORK",
-        "type": "jpeg",
-        "width": 512,
-        "height": 512
-      },
-      "website": "https://go-evio.com"
-    },
-    "evses": [
-      {
-        "uid": "618a4939f3c6920012552d1c",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:21:58.376Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "618a4939f3c6920012552d1c-01",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "last_updated": "2022-06-14T02:21:58.376Z"
-          }
-        ]
-      },
-      {
-        "uid": "618a4a1ff3c6920012553a22",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:21:58.376Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "618a4a1ff3c6920012553a22-02",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "last_updated": "2022-06-14T02:21:58.376Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "country_code": "PT",
-    "party_id": "EVI",
-    "id": "CAP_ADR_CAN_00002",
-    "publish": true,
-    "name": "ENSTO 2x22kW - Parque",
-    "address": "R. Lages 67",
-    "city": "Canelas",
-    "postal_code": "4410-272",
-    "coordinates": {
-      "longitude": -8.6077956,
-      "latitude": 41.095415
-    },
-    "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:22:49.116Z",
-    "operator": {
-      "name": "EVIO - Electrical Mobility",
-      "logo": {
-        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
-        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
-        "category": "NETWORK",
-        "type": "jpeg",
-        "width": 512,
-        "height": 512
-      },
-      "website": "https://go-evio.com"
-    },
-    "evses": [
-      {
-        "uid": "618a4e4ef3c6920012557333",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:22:49.116Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "618a4e4ef3c6920012557333-01",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:49.116Z"
-          }
-        ]
-      },
-      {
-        "uid": "618a4f00f3c692001255809f",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:22:49.116Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "618a4f00f3c692001255809f-02",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:49.116Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "country_code": "PT",
-    "party_id": "EVI",
-    "id": "EVI_EVI_OFF_00001",
-    "publish": true,
-    "name": "Go.Charge",
-    "address": "R. 62 534",
-    "city": "Espinho",
-    "postal_code": "4500-361",
-    "coordinates": {
-      "longitude": -8.634608100000001,
-      "latitude": 41.0126865
-    },
-    "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-05-25T09:59:15.878Z",
-    "operator": {
-      "name": "EVIO - Electrical Mobility",
-      "logo": {
-        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
-        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
-        "category": "NETWORK",
-        "type": "jpeg",
-        "width": 512,
-        "height": 512
-      },
-      "website": "https://go-evio.com"
-    },
-    "evses": [
-      {
-        "uid": "619df16d7ced6b00128da99f",
-        "status": "AVAILABLE",
-        "last_updated": "2022-05-25T09:59:15.878Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "619df16d7ced6b00128da99f-01",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
-            "max_amperage": 16,
-            "last_updated": "2022-05-25T09:59:15.878Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "country_code": "PT",
-    "party_id": "EVI",
-    "id": "EVA_EVA_PT_LSB_00001",
-    "publish": true,
-    "name": "EVA ETREL Teste 1",
-    "address": "R. Lino de Assunção 14",
-    "city": "Oeiras",
-    "postal_code": "2770-109",
-    "coordinates": {
-      "longitude": -9.293941196815013,
-      "latitude": 38.69711363870121
-    },
-    "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-05-06T10:54:39.525Z",
-    "operator": {
-      "name": "EVIO - Electrical Mobility",
-      "logo": {
-        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
-        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
-        "category": "NETWORK",
-        "type": "jpeg",
-        "width": 512,
-        "height": 512
-      },
-      "website": "https://go-evio.com"
-    },
-    "evses": [
-      {
-        "uid": "622771bbd7f35c0012b4e406",
-        "status": "AVAILABLE",
-        "last_updated": "2022-05-06T10:54:39.525Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "622771bbd7f35c0012b4e406-01",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
-            "max_amperage": 32,
-            "last_updated": "2022-05-06T10:54:39.525Z"
+            "last_updated": "2024-06-06T06:31:15.868Z"
           }
         ]
       }
@@ -855,7 +500,7 @@
     "id": "YRE_YRE_PT_VIS_00001",
     "publish": true,
     "name": "YourEnergy - Restaurante Quinta da Magarenha",
-    "address": "Recta Caçador 577",
+    "address": "Recta Caçador, 577",
     "city": "Viseu",
     "postal_code": "3505",
     "coordinates": {
@@ -863,7 +508,7 @@
       "latitude": 40.6392073
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:20:56.112Z",
+    "last_updated": "2023-07-12T09:47:11.711Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -879,12 +524,9 @@
     "evses": [
       {
         "uid": "6228a486228ee40012b06471",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:20:56.112Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2023-07-12T09:47:11.711Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "6228a486228ee40012b06471-01",
@@ -893,18 +535,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:20:56.112Z"
+            "last_updated": "2023-07-12T09:47:11.711Z"
           }
         ]
       },
       {
         "uid": "6228a486228ee40012b06496",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:20:56.112Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2023-07-12T09:47:11.711Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "6228a486228ee40012b06496-02",
@@ -913,7 +552,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:20:56.112Z"
+            "last_updated": "2023-07-12T09:47:11.711Z"
           }
         ]
       }
@@ -933,7 +572,7 @@
       "latitude": 41.0398264
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:22:12.932Z",
+    "last_updated": "2024-06-06T06:29:19.111Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -950,11 +589,8 @@
       {
         "uid": "62585ee8a828e50013136e9f",
         "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:22:12.932Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:29:19.111Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "62585ee8a828e50013136e9f-01",
@@ -963,7 +599,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 400,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:12.932Z"
+            "last_updated": "2024-06-06T06:29:19.111Z"
           }
         ]
       }
@@ -983,7 +619,7 @@
       "latitude": 41.0398264
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:20:39.211Z",
+    "last_updated": "2024-05-28T22:00:02.714Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -999,12 +635,9 @@
     "evses": [
       {
         "uid": "62585acfa828e50013131c21",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:20:39.211Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-28T22:00:02.714Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "62585acfa828e50013131c21-01",
@@ -1013,77 +646,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 400,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:20:39.211Z"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "country_code": "PT",
-    "party_id": "EVI",
-    "id": "EVI_ICH_PT_TST_00001",
-    "publish": true,
-    "name": "1 - I-Charging Testes",
-    "address": "R. Dr. Domingos da Silva Coelho Portugal",
-    "city": "",
-    "postal_code": "4520",
-    "coordinates": {
-      "longitude": -8.5086723,
-      "latitude": 40.9284118
-    },
-    "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-05-25T09:59:15.878Z",
-    "operator": {
-      "name": "EVIO - Electrical Mobility",
-      "logo": {
-        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
-        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
-        "category": "NETWORK",
-        "type": "jpeg",
-        "width": 512,
-        "height": 512
-      },
-      "website": "https://go-evio.com"
-    },
-    "evses": [
-      {
-        "uid": "625e9146dfa9a6001323e95a",
-        "status": "AVAILABLE",
-        "last_updated": "2022-05-25T09:59:15.878Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "625e9146dfa9a6001323e95a-01",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
-            "max_amperage": 32,
-            "last_updated": "2022-05-25T09:59:15.878Z"
-          }
-        ]
-      },
-      {
-        "uid": "625e9147dfa9a6001323e983",
-        "status": "AVAILABLE",
-        "last_updated": "2022-05-25T09:59:15.878Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
-        "connectors": [
-          {
-            "id": "625e9147dfa9a6001323e983-02",
-            "standard": "IEC_62196_T2",
-            "format": "SOCKET",
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
-            "max_amperage": 32,
-            "last_updated": "2022-05-25T09:59:15.878Z"
+            "last_updated": "2024-05-28T22:00:02.714Z"
           }
         ]
       }
@@ -1094,8 +657,8 @@
     "party_id": "EVI",
     "id": "EVI_MBY_PT_LSB_0001",
     "publish": true,
-    "name": "Mobify 1-2",
-    "address": "R. Bento de Jesus Caraça 11",
+    "name": "Posto 5 e 6",
+    "address": "R. Bento de Jesus Caraça, 11",
     "city": "Cruz Quebrada",
     "postal_code": "1495-699",
     "coordinates": {
@@ -1103,7 +666,7 @@
       "latitude": 38.7016269
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:22:39.470Z",
+    "last_updated": "2024-06-06T06:32:14.700Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -1120,11 +683,8 @@
       {
         "uid": "626a651ab1cfa5001383c033",
         "status": "CHARGING",
-        "last_updated": "2022-06-14T02:22:39.470Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:32:14.700Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "626a651ab1cfa5001383c033-01",
@@ -1133,18 +693,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:39.470Z"
+            "last_updated": "2024-06-06T06:32:14.700Z"
           }
         ]
       },
       {
         "uid": "626a651bb1cfa5001383c054",
-        "status": "CHARGING",
-        "last_updated": "2022-06-14T02:22:39.470Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "AVAILABLE",
+        "last_updated": "2024-06-06T06:32:14.700Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "626a651bb1cfa5001383c054-02",
@@ -1153,7 +710,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:39.470Z"
+            "last_updated": "2024-06-06T06:32:14.700Z"
           }
         ]
       }
@@ -1164,8 +721,8 @@
     "party_id": "EVI",
     "id": "EVI_MBY_PT_LSB_0002",
     "publish": true,
-    "name": "Mobify 3-4",
-    "address": "R. Bento de Jesus Caraça 11",
+    "name": "Posto 3 e 4",
+    "address": "R. Bento de Jesus Caraça, 11",
     "city": "Cruz Quebrada",
     "postal_code": "1495-699",
     "coordinates": {
@@ -1173,7 +730,7 @@
       "latitude": 38.7016269
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:22:59.134Z",
+    "last_updated": "2024-06-06T06:28:19.140Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -1190,11 +747,8 @@
       {
         "uid": "626badb8b1cfa500139f6dea",
         "status": "CHARGING",
-        "last_updated": "2022-06-14T02:22:59.134Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:28:19.140Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "626badb8b1cfa500139f6dea-01",
@@ -1203,18 +757,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:59.134Z"
+            "last_updated": "2024-06-06T06:28:19.140Z"
           }
         ]
       },
       {
         "uid": "626badb8b1cfa500139f6e0c",
         "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:22:59.134Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "last_updated": "2024-06-06T06:28:19.140Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "626badb8b1cfa500139f6e0c-02",
@@ -1223,7 +774,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:22:59.134Z"
+            "last_updated": "2024-06-06T06:28:19.140Z"
           }
         ]
       }
@@ -1234,8 +785,8 @@
     "party_id": "EVI",
     "id": "EVI_MBY_PT_LSB_0003",
     "publish": true,
-    "name": "Mobify 5-6",
-    "address": "R. Bento de Jesus Caraça 11",
+    "name": "Posto 1 e 2",
+    "address": "R. Bento de Jesus Caraça, 11",
     "city": "Cruz Quebrada",
     "postal_code": "1495-699",
     "coordinates": {
@@ -1243,7 +794,7 @@
       "latitude": 38.7016269
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-06-14T02:23:14.440Z",
+    "last_updated": "2024-06-06T06:28:17.045Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -1259,12 +810,9 @@
     "evses": [
       {
         "uid": "626bb5bcb1cfa50013a027ce",
-        "status": "AVAILABLE",
-        "last_updated": "2022-06-14T02:23:14.440Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "CHARGING",
+        "last_updated": "2024-06-06T06:28:17.045Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "626bb5bcb1cfa50013a027ce-02",
@@ -1273,18 +821,15 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:23:14.440Z"
+            "last_updated": "2024-06-06T06:28:17.045Z"
           }
         ]
       },
       {
         "uid": "626bb5bcb1cfa50013a027ef",
-        "status": "CHARGING",
-        "last_updated": "2022-06-14T02:23:14.440Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "status": "AVAILABLE",
+        "last_updated": "2024-06-06T06:28:17.045Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
             "id": "626bb5bcb1cfa50013a027ef-01",
@@ -1293,7 +838,7 @@
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-06-14T02:23:14.440Z"
+            "last_updated": "2024-06-06T06:28:17.045Z"
           }
         ]
       }
@@ -1302,18 +847,18 @@
   {
     "country_code": "PT",
     "party_id": "EVI",
-    "id": "EVI_STR_PT_TST_00001",
+    "id": "EVI_EVI_MTS_00004",
     "publish": true,
-    "name": "Star Charge Testes",
-    "address": "Praça de Mouzinho de Albuquerque 193",
-    "city": "Porto",
-    "postal_code": "4100-360",
+    "name": "Ricardo Barbosa",
+    "address": "",
+    "city": "",
+    "postal_code": "",
     "coordinates": {
-      "longitude": -8.6306925,
-      "latitude": 41.1575365
+      "longitude": -8.680059,
+      "latitude": 41.172707
     },
     "time_zone": "Europe/Lisbon",
-    "last_updated": "2022-05-25T09:59:15.878Z",
+    "last_updated": "2024-05-09T09:55:52.934Z",
     "operator": {
       "name": "EVIO - Electrical Mobility",
       "logo": {
@@ -1328,42 +873,113 @@
     },
     "evses": [
       {
-        "uid": "627384e9641d010013bfbc94",
-        "status": "AVAILABLE",
-        "last_updated": "2022-05-25T09:59:15.878Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "uid": "63be1e116f9b5b001335eef3",
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-09T09:55:52.934Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
-            "id": "627384e9641d010013bfbc94-01",
+            "id": "63be1e116f9b5b001335eef3-01",
             "standard": "IEC_62196_T2",
             "format": "SOCKET",
             "power_type": "AC_3_PHASE",
-            "max_voltage": 230,
+            "max_voltage": 400,
             "max_amperage": 32,
-            "last_updated": "2022-05-25T09:59:15.878Z"
+            "last_updated": "2024-05-09T09:55:52.934Z"
           }
         ]
+      }
+    ]
+  },
+  {
+    "country_code": "PT",
+    "party_id": "EVI",
+    "id": "EVI_EVI_PT_ETR_00001",
+    "publish": true,
+    "name": "Etrel 7kW",
+    "address": "R. Nova da Alfândega, 118",
+    "city": "Porto",
+    "postal_code": "4050-386",
+    "coordinates": {
+      "longitude": -8.620916843084615,
+      "latitude": 41.14257783359824
+    },
+    "time_zone": "Europe/Lisbon",
+    "last_updated": "2024-05-21T15:49:15.266Z",
+    "operator": {
+      "name": "EVIO - Electrical Mobility",
+      "logo": {
+        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
+        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
+        "category": "NETWORK",
+        "type": "jpeg",
+        "width": 512,
+        "height": 512
       },
+      "website": "https://go-evio.com"
+    },
+    "evses": [
       {
-        "uid": "627384ee641d010013bfbd09",
-        "status": "AVAILABLE",
-        "last_updated": "2022-05-25T09:59:15.878Z",
-        "capabilities": [
-          "RFID_READER",
-          "REMOTE_START_STOP_CAPABLE"
-        ],
+        "uid": "650db22730f214001871db61",
+        "status": "OUTOFORDER",
+        "last_updated": "2024-05-21T15:49:15.266Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
         "connectors": [
           {
-            "id": "627384ee641d010013bfbd09-02",
+            "id": "650db22730f214001871db61-01",
+            "standard": "IEC_62196_T2",
+            "format": "SOCKET",
+            "power_type": "AC_3_PHASE",
+            "max_voltage": 230,
+            "max_amperage": 16,
+            "last_updated": "2024-05-21T15:49:15.266Z"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PT",
+    "party_id": "EVI",
+    "id": "TACW742922G7370",
+    "publish": true,
+    "name": "Posto 1",
+    "address": "R. da Columbófila, 24",
+    "city": "Fânzeres",
+    "postal_code": "4510-533",
+    "coordinates": {
+      "longitude": -8.5396688,
+      "latitude": 41.16324729999999
+    },
+    "time_zone": "Europe/Lisbon",
+    "last_updated": "2024-04-10T09:33:23.921Z",
+    "operator": {
+      "name": "EVIO - Electrical Mobility",
+      "logo": {
+        "url": "https://filesapi.go-evio.com/logos/evio_logo.jpeg",
+        "thumbnail": "https://filesapi.go-evio.com/logos/evio_logo_thumb.jpeg",
+        "category": "NETWORK",
+        "type": "jpeg",
+        "width": 512,
+        "height": 512
+      },
+      "website": "https://go-evio.com"
+    },
+    "evses": [
+      {
+        "uid": "6570895422357200178131e4",
+        "status": "OUTOFORDER",
+        "last_updated": "2024-04-10T09:33:23.921Z",
+        "capabilities": [ "RFID_READER", "REMOTE_START_STOP_CAPABLE" ],
+        "connectors": [
+          {
+            "id": "6570895422357200178131e4-01",
             "standard": "IEC_62196_T2",
             "format": "SOCKET",
             "power_type": "AC_3_PHASE",
             "max_voltage": 230,
             "max_amperage": 32,
-            "last_updated": "2022-05-25T09:59:15.878Z"
+            "last_updated": "2024-04-10T09:33:23.921Z"
           }
         ]
       }

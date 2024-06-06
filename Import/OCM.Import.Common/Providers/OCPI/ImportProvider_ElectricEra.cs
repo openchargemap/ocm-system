@@ -14,6 +14,7 @@ namespace OCM.Import.Providers.OCPI
 
             CredentialKey = null; // no credentials
 
+            DefaultOperatorID = 3789;
             Init(dataProviderId: 35, "https://ocpi-http.app.electricera.tech/ocpi/2.2/locations");
         }
 

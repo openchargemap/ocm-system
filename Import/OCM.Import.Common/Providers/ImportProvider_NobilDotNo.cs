@@ -221,7 +221,7 @@ namespace OCM.Import.Providers
                             cinfo.Amps = 32;
                             cinfo.Voltage = 400;
                             cinfo.PowerKW = 22;
-                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.DC;
+                            cinfo.CurrentTypeID = (int)StandardCurrentTypes.ThreePhaseAC;
                             cinfo.LevelID = 3;
                         }
                         else if (connectorTypeVal == "12")

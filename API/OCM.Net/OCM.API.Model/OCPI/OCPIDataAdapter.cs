@@ -78,12 +78,12 @@ namespace OCM.API.Common.Model.OCPI
                             Latitude = double.Parse(i.Coordinates.Latitude),
                             Longitude = double.Parse(i.Coordinates.Longitude),
                             CountryID = _coreReferenceData.Countries.FirstOrDefault(c => c.ISOCode == iso2Code)?.ID,
-                            AccessComments = i.Directions?.Select(d => d.Text).ToString()
+                            AccessComments = i.Directions?.Any() == true ? string.Join(" ", i.Directions.Select(f => f.Text).ToArray()) : null
                         },
                         Connections = new List<ConnectionInfo>()
                     };
 
-                    List<OCM.Model.OCPI.Evse> evse = new();
+                    var evse = new List<Evse>();
 
                     if (i.Evses?.Any() == true)
                     {
@@ -118,8 +118,6 @@ namespace OCM.API.Common.Model.OCPI
                                     Quantity = 1
                                 };
 
-
-
                                 // calc power kw if not specified
                                 if (connectionInfo.PowerKW == 0 || connectionInfo.PowerKW == null)
                                 {
@@ -130,7 +128,6 @@ namespace OCM.API.Common.Model.OCPI
                                     // common mistake is to supply W figure for kW
                                     connectionInfo.PowerKW = connectionInfo.PowerKW / 1000;
                                 }
-
 
                                 // set status
                                 // set connector type
@@ -182,13 +179,13 @@ namespace OCM.API.Common.Model.OCPI
                             }
                         }
 
-                        // resort to default if no other operator identified
-                        if (cp.OperatorID == null && defaultOperatorId != null)
-                        {
-                            cp.OperatorID = defaultOperatorId;
-                        }
                     }
 
+                    // resort to default if no other operator identified
+                    if (cp.OperatorID == null && defaultOperatorId != null)
+                    {
+                        cp.OperatorID = defaultOperatorId;
+                    }
                 }
                 catch (Exception exp)
                 {

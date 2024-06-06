@@ -1,10 +1,5 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
-using System;
+﻿using OCM.API.Common.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OCM.Import.Providers.OCPI
 {
@@ -17,6 +12,8 @@ namespace OCM.Import.Providers.OCPI
 
             IsAutoRefreshed = true;
             IsProductionReady = true;
+
+            CredentialKey = null; // no credentials
 
             Init(dataProviderId: 32, "https://ev.lakd.lt/open_source/ocpi/locations");
         }
@@ -35,11 +32,12 @@ namespace OCM.Import.Providers.OCPI
             };
         }
 
-        List<ChargePoint> IImportProvider.Process(CoreReferenceData coreRefData)
+        public new List<ChargePoint> Process(CoreReferenceData coreRefData)
         {
-            InputData = InputData.Replace("\"location\"", "\"coordinates\"");
+            //InputData = InputData.Replace("\"Not_implemented\"", "null");
+            
 
-            var outputList = Process(coreRefData);
+            var outputList = base.Process(coreRefData);
 
             return outputList;
         }

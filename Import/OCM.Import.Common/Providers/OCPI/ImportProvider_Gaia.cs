@@ -14,6 +14,8 @@ namespace OCM.Import.Providers.OCPI
 
             CredentialKey = "OCPI-GAIA";
 
+            DefaultOperatorID = 3790;
+
             Init(dataProviderId: 33, "https://ocpi.longship.io/ocpi/2.2/locations");
         }
 

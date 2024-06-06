@@ -1,6 +1,6 @@
 {
   "status_code": 1000,
-  "timestamp": "2024-05-30T04:40:23.733Z",
+  "timestamp": "2024-06-06T02:27:16.775Z",
   "data": [
     {
       "country_code": "US",
@@ -62,10 +62,11 @@
             "longitude": "-122.59967260002"
           },
           "physical_reference": "2",
-          "last_updated": "2024-05-30T04:40:18.950Z"
+          "last_updated": "2024-06-06T02:27:09.353Z"
         }
       ],
-      "directions": [],
+      "directions": [
+      ],
       "operator": {
         "name": "Plaid Pantry",
         "phone_number": "(888) 409-2980",
@@ -81,7 +82,7 @@
       "opening_times": {
         "twentyfourseven": true
       },
-      "last_updated": "2024-05-30T04:40:18.950Z"
+      "last_updated": "2024-06-06T02:27:09.353Z"
     },
     {
       "country_code": "US",
@@ -143,10 +144,11 @@
             "longitude": "-70.94207300013"
           },
           "physical_reference": "13",
-          "last_updated": "2024-05-30T04:40:19.332Z"
+          "last_updated": "2024-06-06T02:27:09.818Z"
         }
       ],
-      "directions": [],
+      "directions": [
+      ],
       "operator": {
         "name": "Quik Charge",
         "phone_number": "(888) 409-2980",
@@ -162,7 +164,7 @@
       "opening_times": {
         "twentyfourseven": true
       },
-      "last_updated": "2024-05-30T04:40:19.332Z"
+      "last_updated": "2024-06-06T02:27:09.818Z"
     },
     {
       "country_code": "US",
@@ -224,7 +226,7 @@
             "longitude": "-123.290775800085"
           },
           "physical_reference": "85",
-          "last_updated": "2024-05-30T04:40:19.368Z"
+          "last_updated": "2024-06-06T02:27:09.312Z"
         },
         {
           "uid": "86",
@@ -269,7 +271,7 @@
             "longitude": "-123.290775800086"
           },
           "physical_reference": "86",
-          "last_updated": "2024-05-30T04:40:19.402Z"
+          "last_updated": "2024-06-06T02:27:09.145Z"
         },
         {
           "uid": "87",
@@ -314,7 +316,7 @@
             "longitude": "-123.290775800087"
           },
           "physical_reference": "87",
-          "last_updated": "2024-05-30T04:40:19.440Z"
+          "last_updated": "2024-06-06T02:27:09.177Z"
         },
         {
           "uid": "88",
@@ -359,7 +361,7 @@
             "longitude": "-123.290775800088"
           },
           "physical_reference": "88",
-          "last_updated": "2024-05-30T04:40:19.556Z"
+          "last_updated": "2024-06-06T02:27:09.236Z"
         },
         {
           "uid": "89",
@@ -404,7 +406,7 @@
             "longitude": "-123.290775800089"
           },
           "physical_reference": "89",
-          "last_updated": "2024-05-30T04:40:19.512Z"
+          "last_updated": "2024-06-06T02:27:09.279Z"
         },
         {
           "uid": "90",
@@ -449,10 +451,11 @@
             "longitude": "-123.290775800090"
           },
           "physical_reference": "90",
-          "last_updated": "2024-05-30T04:40:19.476Z"
+          "last_updated": "2024-06-06T02:27:09.207Z"
         }
       ],
-      "directions": [],
+      "directions": [
+      ],
       "operator": {
         "name": "Seven Feathers",
         "phone_number": "(888) 409-2980",
@@ -468,88 +471,7 @@
       "opening_times": {
         "twentyfourseven": true
       },
-      "last_updated": "2024-05-30T04:40:19.556Z"
-    },
-    {
-      "country_code": "US",
-      "party_id": "ALL",
-      "id": "156",
-      "publish": false,
-      "name": "Electric Era PowerNode Charging Station",
-      "address": "3847 1st Ave S,Unit 1",
-      "city": "Seattle",
-      "postal_code": "98134",
-      "state": "Washington",
-      "country": "USA",
-      "coordinates": {
-        "latitude": "47.5689137",
-        "longitude": "-122.3361171"
-      },
-      "parking_type": "PARKING_LOT",
-      "evses": [
-        {
-          "uid": "103",
-          "evse_id": "US*ALL*E00000103",
-          "status": "AVAILABLE",
-          "capabilities": [
-            "CHIP_CARD_SUPPORT",
-            "CONTACTLESS_CARD_SUPPORT",
-            "CREDIT_CARD_PAYABLE",
-            "DEBIT_CARD_PAYABLE"
-          ],
-          "connectors": [
-            {
-              "id": "1",
-              "standard": "IEC_62196_T1_COMBO",
-              "format": "CABLE",
-              "power_type": "DC",
-              "max_voltage": 1000,
-              "max_amperage": 300,
-              "last_updated": "2023-06-26T16:39:55.947Z",
-              "max_electric_power": 150000,
-              "tariff_ids": [
-                "121"
-              ]
-            },
-            {
-              "id": "2",
-              "standard": "CHADEMO",
-              "format": "CABLE",
-              "power_type": "DC",
-              "max_voltage": 500,
-              "max_amperage": 200,
-              "last_updated": "2023-06-26T16:39:55.947Z",
-              "max_electric_power": 100000,
-              "tariff_ids": [
-                "121"
-              ]
-            }
-          ],
-          "coordinates": {
-            "latitude": "47.5689137000103",
-            "longitude": "-122.3361171000103"
-          },
-          "physical_reference": "103",
-          "last_updated": "2024-03-27T01:42:24.092Z"
-        }
-      ],
-      "directions": [],
-      "operator": {
-        "name": "Electric Era",
-        "phone_number": "(888) 409-2980",
-        "logo": {
-          "url": "https://electriceradev1.blob.core.windows.net/images/EE_Icon_PNG.png",
-          "category": "OWNER",
-          "type": "png",
-          "height": 512,
-          "width": 512
-        }
-      },
-      "time_zone": "America/Los_Angeles",
-      "opening_times": {
-        "twentyfourseven": true
-      },
-      "last_updated": "2024-03-28T19:52:52.257Z"
+      "last_updated": "2024-06-06T02:27:09.312Z"
     }
   ]
 }

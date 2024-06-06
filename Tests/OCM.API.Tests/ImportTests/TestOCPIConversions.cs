@@ -139,7 +139,7 @@ namespace OCM.API.Tests
             var ocpiData = response.Data;
             var poiResults = adapter.FromOCPI(ocpiData, 34);
 
-            Assert.Equal(34, poiResults.Count());
+            Assert.Equal(41, poiResults.Count());
 
             Assert.Equal(0, parseErrors);
 
@@ -213,11 +213,21 @@ namespace OCM.API.Tests
             var ocpiData = response.Data;
             var poiResults = adapter.FromOCPI(ocpiData, 35);
 
-            Assert.Equal(4, poiResults.Count());
+            Assert.Equal(3, poiResults.Count());
 
             Assert.Equal(0, parseErrors);
 
-            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+            var importProvider = new ImportProvider_ElectricEra();
+            importProvider.InputData = json;
+
+            var importPreview = importProvider.Process(coreRefData);
+
+            Assert.Equal(poiResults.Count(), importPreview.Count());
+
+            Assert.True(importPreview.Any(p => p.DataProviderID != 35) == false);
+            Assert.True(importPreview.Any(p => p.OperatorID != 3789) == false);
+
+            System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(importPreview, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
 
         [Fact]
@@ -269,7 +279,7 @@ namespace OCM.API.Tests
 
             var poiResults = adapter.Process(coreRefData).ToList();
 
-            Assert.Equal(587, poiResults.Count());
+            Assert.Equal(591, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 

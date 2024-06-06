@@ -381,6 +381,7 @@ namespace OCM.Import.Providers
                             break;
                         case "shell recharge":
                         case "shell recharge solutions":
+                        case "ubitricity":
                             cp.OperatorID = 3392;
                             break;
                         case "silverstone green energy":
@@ -397,9 +398,6 @@ namespace OCM.Import.Providers
                             break;
                         case "trojan energy limited":
                             cp.OperatorID = 3738;
-                            break;
-                        case "ubitricity":
-                            cp.OperatorID = 2244;
                             break;
                         case "vendelectric":
                             cp.OperatorID = 3473;

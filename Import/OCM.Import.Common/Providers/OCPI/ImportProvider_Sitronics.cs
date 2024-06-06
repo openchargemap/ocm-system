@@ -16,7 +16,7 @@ namespace OCM.Import.Providers.OCPI
 
             DefaultOperatorID = 3656;
 
-            Init(dataProviderId: 31, "https://ezs.sitronics.com/ocpi/2.2.1/cpo/locations", "Authorization");
+            Init(dataProviderId: 31, "https://ezs.sitronics.com/ocpi/2.2.1/cpo/locations");
         }
 
         public override Dictionary<string, int> GetOperatorMappings()

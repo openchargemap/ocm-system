@@ -13,11 +13,9 @@ namespace OCM.Import.Providers.OCPI
             IsAutoRefreshed = true;
             IsProductionReady = true;
 
-            DataProviderID = 7; // mobie.pt
-
             CredentialKey = null; // no credentials
-
-            AutoRefreshURL = "https://ocpi.mobinteli.com/2.2/locations";
+            
+            Init(dataProviderId: 7, "https://ocpi.mobinteli.com/2.2/locations");
         }
 
         public override Dictionary<string, int> GetOperatorMappings()
