@@ -4,24 +4,32 @@
 @model OCM.API.Common.Model.DataSharingAgreement
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
-    //   ViewBag.Title = "Share Data with Open Charge Map";
+    ViewBag.Title = "Share Your Network Data with Open Charge Map";
 
     string username = HttpContextAccessor.HttpContext.Session.GetString("Username");
 
     string errorMsg = ViewBag.ErrorMessage ?? null;
     bool submitted = ViewBag.Submitted ?? false;
-
+   
+    
 }
 
 <div class="container">
-    <h1>Sharing Your Data with Open Charge Map</h1>
+    <h1>Share Network Data with Open Charge Map</h1>
     <div class="alert alert-info">
-        We invite all charging networks to promote their charging locations via <em>Open Charge Map</em> by directly supplying EVSE charging station location information to us for distribution. The benefits to your network of sharing your data with us include:
+        <p>
+            We invite all charging networks to promote their charging locations for free via <em>Open Charge Map</em> by directly supplying EVSE charging station location information to us as an OCPI data feed for import and redistribution.
+        </p>
+
+        <p>If you are a user of an existing charging network and want them to provide accurate data to <em>Open Charge Map</em>, please email them directly and ask them to provide us a data feed, including a link to this page.</p>
+
+        The benefits to charging networks include:
         <ul>
-            <li>Promoting your network via our API and shared dataset to thousands of apps and services, delivering information to millions of EV drivers.</li>
-            <li>Ensuring we can distribute the latest correct information.</li>
-            <li>Our project goal is to distributing accurate information as widely as possible. We are not commercially related to any charging networks. </li>
+            <li>Freely promoting your network via our API and shared dataset to thousands of apps and services, delivering information to millions of EV drivers.</li>
+            <li>Ensuring we can distribute the latest correct information for your network.</li>
         </ul>
+
+        Our project goal is to distribute accurate information as widely as possible. We are not commercially related to any charging networks.
     </div>
 
     @if (string.IsNullOrEmpty(username))
@@ -40,9 +48,10 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    @if(submitted){
+    @if (submitted)
+    {
         <div class="alert alert-success">
-            Thank you. We have received your data sharing agreement. We will contact you soon to confim when we can begin importing your data.
+            Thank you. We have received your data sharing agreement. We will contact you soon to confirm when we can begin importing your data.
         </div>
 
     }
@@ -58,7 +67,7 @@
 
                 <p>
                     Your company,
-                    <strong> @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new {  placeholder = "Your Company Name" } })</strong> agree to provide EVSE charging station related data to the Open Charge Map project under an Open Data license.
+                    <strong> @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { placeholder = "Your Company Name" } })</strong> agree to provide EVSE charging station related data to the Open Charge Map project under an Open Data license.
                 </p>
                 <p>
                     The
@@ -90,35 +99,35 @@
 
                     <li>You understand that once data has been distributed to data consumers by Open Charge Map, Open Charge Map (and its contributors) have no further control over the distributed data and that version of the data may be potentially be perpetually available on the public internet or within other data archives. </li>
 
-                    <li>You may revoke further access to your data feed at any time. You may also terminate this agreement on request, preventing future access to your data.</li>
+                    <li>You may revoke further access to your data feed at any time. You may also terminate this agreement on request, preventing future access to your data feed.</li>
 
                     <li>Bulk removal of data from the Open Charge Map data set is at the discretion of the Open Charge Map project administrators.</li>
 
                     <li>Open Charge Map will decide which parts of your data are used (if any). Your agreement to provide data to Open Charge Map <em>is not an agreement by Open Charge Map</em> to include any of your data (either in part or in full) in the data it distributes.</li>
-               
+
                 </ul>
 
-                <div class="form-group">
+                <div class="form-group d-none">
 
                     <div class="editor-field">
                         <input type="radio" name="limitations" value="" checked="checked" /> You do not require any of the data fields or information to be excluded from distribution.
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group d-none">
 
                     <div class="editor-field">
                         <input type="radio" name="limitations" value="yes" />
                         You require the following information to be omitted from distribution:  <br>
-                        @Html.TextAreaFor(model => model.DistributionLimitations, new {@class="form-control", htmlAttributes = new { placeholder = "Specify data to be excluded" } })
+                        @Html.TextAreaFor(model => model.DistributionLimitations, new { @class = "form-control", htmlAttributes = new { placeholder = "Specify data to be excluded" } })
                     </div>
                 </div>
 
                 <p>
-                    I, @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new { placeholder = "Your Name" } }), am authorised by the named company to make this agreement and hereby agree to these terms and conditions.
+                    I, @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new {placeholder = "Your Name" } }), am authorised by the named company to make this agreement and hereby agree to these terms and conditions.
                 </p>
                 <p>
-                    <em>This agreement text last revised : 2022/02/07</em>
+                    <em>This agreement text last revised : 2024/06/26</em>
                 </p>
 
                 <h3>Required Information</h3>
@@ -129,7 +138,7 @@
                                 @Html.LabelFor(model => model.CountryID, "Country")
                             </div>
                             <div>
-                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList)
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.CountryID)
                             </div>
                         </div>
@@ -170,7 +179,7 @@
                             <div class="editor-field">
                                 <select data-val="true" id="DataFeedType" name="DataFeedType" class="form-control">
                                     <option value="OCPI 2.2.x" selected="selected">OCPI 2.2.x</option>
-                                    <option value="OCPI 2.1.x" selected="selected">OCPI 2.1.x</option>
+                                    <option value="OCPI 2.1.x">OCPI 2.1.x</option>
                                     <option value="Other">Other (to be agreed)</option>
                                 </select>
                             </div>
@@ -179,7 +188,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="editor-label">
-                                Data Feed URL
+                                Data Feed URL (e.g. Your OCPI locations API endpoint)
                             </div>
                             <div class="editor-field">
                                 @Html.EditorFor(model => model.DataFeedURL)
@@ -190,7 +199,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="editor-label">
-                                Data Feed Credentials
+                                Data Feed Credentials (if required, e.g. a read-only OCPI access token)
                             </div>
                             <div class="editor-field">
                                 @Html.EditorFor(model => model.Credentials)
@@ -204,12 +213,12 @@
 
                 <!--@Html.HiddenFor(model => model.ID)-->
                 @if (!string.IsNullOrEmpty(username) && !submitted)
-                {
-                    <p>
-                        <input type="submit" value="Submit Agreement" class="btn btn-primary" />
-                    </p>
-                }
-            </fieldset>
+            {
+            <p>
+                <input type="submit" value="Submit Agreement" class="btn btn-primary" />
+            </p>
+            }
+        </fieldset>
 
         }
     </div>

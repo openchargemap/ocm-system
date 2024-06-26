@@ -51,7 +51,7 @@ namespace OCM.MVC.Controllers
         {
             var countryList = new ReferenceDataManager().GetCountries(false);
             ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countryList, "ID", "Title");
-            return View();
+            return View(new DataSharingAgreement {  CountryID=2});
         }
 
         [HttpPost]

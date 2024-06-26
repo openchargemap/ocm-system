@@ -18,9 +18,9 @@ var LocationEditor = /** @class */ (function () {
         var _this = this;
         mapboxgl.accessToken = apiToken;
         this.map = new mapboxgl.Map({
-            container: 'map-canvas',
-            style: 'mapbox://styles/mapbox/streets-v10',
-            center: [this.startLng, this.startLat],
+            container: 'map-canvas', // container id
+            style: 'mapbox://styles/mapbox/streets-v10', // stylesheet location
+            center: [this.startLng, this.startLat], // starting position [lng, lat]
             zoom: 20 // starting zoom
         });
         if (!this.poiPos)

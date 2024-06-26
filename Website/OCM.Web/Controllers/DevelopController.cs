@@ -18,7 +18,7 @@ namespace OCM.MVC.Controllers
         /// <returns></returns>
         public ActionResult Apps()
         {
-            return View();
+            return RedirectToActionPermanent("Index");
         }
 
         /// <summary>
