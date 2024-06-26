@@ -114,9 +114,8 @@ namespace OCM.MVC.Controllers
             {
                 var operatorInfoManager = new OperatorInfoManager();
 
-                operatorInfo = operatorInfoManager.UpdateOperatorInfo(operatorInfo);
-
-                CacheManager.RefreshCachedData();
+                operatorInfo = operatorInfoManager.UpdateOperatorInfo((int)UserID, operatorInfo);
+              
                 return RedirectToAction("Operators", "Admin");
             }
             return View(operatorInfo);

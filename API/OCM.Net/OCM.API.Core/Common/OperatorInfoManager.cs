@@ -14,13 +14,15 @@ namespace OCM.API.Common
             return Model.Extensions.OperatorInfo.FromDataModel(operatorInfo);
         }
 
-        public OperatorInfo UpdateOperatorInfo(OperatorInfo update)
+        public OperatorInfo UpdateOperatorInfo(int userId, OperatorInfo update)
         {
             var operatorInfo = new OCM.Core.Data.Operator();
+            bool isUpdate = false;
             if (update.ID > 1)
             {
                 //existing operator
                 operatorInfo = DataModel.Operators.FirstOrDefault(o => o.Id == update.ID);
+                isUpdate = true;
             }
 
             operatorInfo.Title = update.Title;
@@ -43,6 +45,9 @@ namespace OCM.API.Common
             DataModel.SaveChanges();
 
             update = Model.Extensions.OperatorInfo.FromDataModel(operatorInfo);
+
+            var user = new UserManager().GetUser(userId);
+            AuditLogManager.Log(user, isUpdate? AuditEventType.UpdatedItem: AuditEventType.CreatedItem, "{EntityType:\"Operator\",EntityID:" + update.ID + "}", $"User {(isUpdate?"updated":"added")} operator {update.ID} {operatorInfo.Title}");
 
             CacheManager.RefreshCachedData();
 
