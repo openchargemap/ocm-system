@@ -1,0 +1,2647 @@
+{
+  "data": [
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "d5a63710-66f0-4f92-b4ca-bf187f10d8de",
+      "publish": true,
+      "name": "ФОРА AC3 (test) 2",
+      "address": "Рязанская область г. Касимов, ул. Индустриальная д.3",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "41.4056",
+        "latitude": "54.958193"
+      },
+      "evses": [
+        {
+          "uid": "53ea25a6-e42b-4579-b6e3-35ac15dcdad1",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-08-31T14:28:53.235Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "41.4056",
+            "latitude": "54.958193"
+          },
+          "last_updated": "2022-10-18T09:17:07.732Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "33a3d739-8112-45d9-8d51-531b51fdd54b",
+      "publish": true,
+      "name": "НЭСК#23 Краснодар 150кВт (PSS) 23.12.00023",
+      "address": "Краснодар, Ставропольская ,185",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "39.040019",
+        "latitude": "45.017072"
+      },
+      "evses": [
+        {
+          "uid": "4cedda45-254f-4a02-8974-c4a494f20a86",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-08T08:55:34.239Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-08T08:55:34.239Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-08T08:55:34.239Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "39.040019",
+            "latitude": "45.017072"
+          },
+          "last_updated": "2023-02-08T08:55:34.239Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "83be1d6b-7b2c-4fb7-939a-8288e67fbeed",
+      "publish": true,
+      "name": "Станция 2 (тест)",
+      "address": "г.Самара, ул.Утевская 20А к1",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "50.105025",
+        "latitude": "53.130372"
+      },
+      "evses": [
+        {
+          "uid": "6c9f7b62-06ea-4cb9-af7e-48b0dac3d88d",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 160,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-04-24T08:47:23.817Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-04-24T08:47:23.817Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "50.105025",
+            "latitude": "53.130372"
+          },
+          "last_updated": "2024-04-24T08:47:23.804Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "47697fdc-96fb-4f41-9f04-d1c04b6cd48b",
+      "publish": true,
+      "name": "Teltonika-GazPromNeft AC22",
+      "address": "Russia, Moscow",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.619993",
+        "latitude": "55.728488"
+      },
+      "evses": [
+        {
+          "uid": "e07df68b-5a6a-4ad3-aadf-921c2bce16ff",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-09-01T10:57:15.972Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.619993",
+            "latitude": "55.728488"
+          },
+          "last_updated": "2023-08-24T06:22:37.519Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "64d71f9a-1cb3-4163-a891-c655d5f02524",
+      "publish": true,
+      "name": "S3XY Charger Смоленский пассаж DC40 (демонтирована)",
+      "address": "Москва, Смоленская площадь, д3 (паркинг, -1 этаж)",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.580373",
+        "latitude": "55.747314"
+      },
+      "evses": [
+        {
+          "uid": "d7eb8cfe-2a92-4612-9b8c-2852679903f0",
+          "evse_id": "1",
+          "status": "INOPERATIVE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 40,
+              "max_amperage": null,
+              "tariff_ids": "4668db08-7437-4245-9431-905842b2b58d",
+              "last_updated": "2024-05-31T06:12:02.440Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 40,
+              "max_amperage": null,
+              "tariff_ids": "4668db08-7437-4245-9431-905842b2b58d",
+              "last_updated": "2024-05-31T06:12:03.752Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.580373",
+            "latitude": "55.747314"
+          },
+          "last_updated": "2024-05-08T12:09:36.516Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "8de8a873-5177-4410-b41e-3480e74a6dfb",
+      "publish": true,
+      "name": "субсидия PSS-021122",
+      "address": "Пермь",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "56.269",
+        "latitude": "58.128"
+      },
+      "evses": [
+        {
+          "uid": "646e2cd7-3cf9-4e0d-80f3-feacefc1525b",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-11-02T11:14:50.103Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-11-02T11:11:12.818Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-11-02T03:37:43.613Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "56.269",
+            "latitude": "58.128"
+          },
+          "last_updated": "2022-11-02T03:37:43.613Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "997aee51-3330-4546-92dc-345140b98b7b",
+      "publish": true,
+      "name": "Duosida test 1",
+      "address": "Москва, ул. Коровий Вал, 5",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.620442",
+        "latitude": "55.728623"
+      },
+      "evses": [
+        {
+          "uid": "b129d40b-f9d7-477f-8489-915d4a56b333",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-09-28T08:04:18.064Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.620442",
+            "latitude": "55.728623"
+          },
+          "last_updated": "2023-09-05T20:15:06.066Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "b82c2715-34d2-4bb7-83cd-cac7ac789d21",
+      "publish": true,
+      "name": "ЗАРЯДКА.РФ №13 С-Петербург БЦ Ростра DC 24 ABB(перемещено)",
+      "address": "СПб, Заневский проспект, 30 (БЦ Ростра)",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "30.42031",
+        "latitude": "59.9323126"
+      },
+      "evses": [
+        {
+          "uid": "1ab5f53d-10fc-42a9-9d07-f330d8384877",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 24,
+              "max_amperage": null,
+              "tariff_ids": "3d6f151c-8ff1-40b5-9a20-d4a0a2ac8745",
+              "last_updated": "2024-07-07T01:56:26.308Z"
+            },
+            {
+              "id": "2",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 24,
+              "max_amperage": null,
+              "tariff_ids": "3d6f151c-8ff1-40b5-9a20-d4a0a2ac8745",
+              "last_updated": "2024-07-07T01:56:25.982Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "30.42031",
+            "latitude": "59.9323126"
+          },
+          "last_updated": "2023-07-03T08:40:49.652Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "opening_times": {
+        "twentyfourseven": false,
+        "regular_hours": [
+          {
+            "weekday": 0,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          },
+          {
+            "weekday": 1,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          },
+          {
+            "weekday": 2,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          },
+          {
+            "weekday": 3,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          },
+          {
+            "weekday": 4,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          },
+          {
+            "weekday": 5,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          },
+          {
+            "weekday": 6,
+            "period_begin": "07:00",
+            "period_end": "23:00"
+          }
+        ]
+      },
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "a321db80-44dd-4bee-a499-62b1a7a832e4",
+      "publish": true,
+      "name": "Sola-AC-new1222",
+      "address": "Минск",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "27.500386",
+        "latitude": "53.919214"
+      },
+      "evses": [
+        {
+          "uid": "562faaeb-f2ff-4749-b14d-92ced04ec51e",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-12-02T15:52:23.580Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "27.500386",
+            "latitude": "53.919214"
+          },
+          "last_updated": "2022-12-02T15:52:23.580Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "61551f42-32f9-42e7-936f-306a9bc40625",
+      "publish": true,
+      "name": "Россети-Химки 43 (в Москву)",
+      "address": "Химки",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.407858",
+        "latitude": "55.908507"
+      },
+      "evses": [
+        {
+          "uid": "93960ebb-39fe-47eb-9fc6-c422f63150f1",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-15T17:57:31.867Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-15T17:57:31.867Z"
+            },
+            {
+              "id": "3",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 90,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-15T17:57:31.867Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.407858",
+            "latitude": "55.908507"
+          },
+          "last_updated": "2023-03-15T17:57:31.867Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "7f926653-3cf4-49bc-93af-519edb987dc8",
+      "publish": true,
+      "name": "Тест Рома 3",
+      "address": "Тест локейшен",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.6203",
+        "latitude": "55.72845"
+      },
+      "evses": [
+        {
+          "uid": "fd9ba8a0-bff3-4947-97dd-02f971394811",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-08-08T02:14:51.979Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-08-08T02:14:52.006Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.6203",
+            "latitude": "55.72845"
+          },
+          "last_updated": "2024-08-07T10:43:46.211Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "a53ff002-821f-417c-bc74-1d3ca5f68e08",
+      "publish": true,
+      "name": "Test ParkCharge DC30",
+      "address": "СПб- Кантемировская ул 12 ",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "30.331139",
+        "latitude": "59.983999"
+      },
+      "evses": [
+        {
+          "uid": "a608b48c-c255-4894-8593-ee143aacaf4f",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 30,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-04-25T19:53:55.517Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "30.331139",
+            "latitude": "59.983999"
+          },
+          "last_updated": "2024-04-25T13:40:27.491Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "aa422c92-d0c8-4c97-b222-333bfa7152e9",
+      "publish": true,
+      "name": "Тест ПСС AC22",
+      "address": "Test",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "0",
+        "latitude": "0"
+      },
+      "evses": [
+        {
+          "uid": "a6416e11-b7a5-453d-a4e8-376f9868ae87",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-07-27T12:45:43.072Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "0",
+            "latitude": "0"
+          },
+          "last_updated": "2024-07-27T12:45:43.067Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "819a16bc-705a-4f03-bb91-65b75fd7095d",
+      "publish": true,
+      "name": "НЭСК#6 Анапа 150кВт (PSS) 23.03.00006",
+      "address": "Анапа, ул. Крепостная, 67",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.306204",
+        "latitude": "44.891805"
+      },
+      "evses": [
+        {
+          "uid": "a0ff5a4a-6cbb-4bae-bdf6-c73ad8684613",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:41:40.910Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:41:40.910Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:41:40.910Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.306204",
+            "latitude": "44.891805"
+          },
+          "last_updated": "2023-02-13T08:41:40.910Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "f3b99f13-c8e8-41e2-8432-21c9190dcdaf",
+      "publish": true,
+      "name": "Россети-Химки 42 (из Москвы)",
+      "address": "Химки",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.417593",
+        "latitude": "55.904012"
+      },
+      "evses": [
+        {
+          "uid": "88f8bb49-27e2-4026-a33f-6f1ad2d0fc65",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-15T17:57:51.365Z"
+            },
+            {
+              "id": "2",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-15T17:57:51.365Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-15T17:57:51.365Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.417593",
+            "latitude": "55.904012"
+          },
+          "last_updated": "2023-03-15T17:57:51.365Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "a158da56-80ec-4919-a316-80d94c7f2618",
+      "publish": true,
+      "name": "Тестовая для теста",
+      "address": "373, 32 Soi 2, Pattaya City, Amphoe Bang Lamung, Chon Buri 20150",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "100.87761490789876",
+        "latitude": "12.923432960722183"
+      },
+      "evses": [
+        {
+          "uid": "f6d5a1e6-aaf3-4631-a7d4-c463380484d9",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 12,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-01-30T09:47:30.402Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "100.87761490789876",
+            "latitude": "12.923432960722183"
+          },
+          "last_updated": "2024-01-30T09:47:30.389Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "1b151b9d-3b07-4f7c-95c5-9eaae5499bdf",
+      "publish": true,
+      "name": "НЭСК#7 Анапа 150кВт (PSS) 23.03.00007",
+      "address": "Анапа, ул. Терская, 213",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.33173",
+        "latitude": "44.90164"
+      },
+      "evses": [
+        {
+          "uid": "087e6b77-c5d0-41d9-bfaa-6551bc2e2fa6",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:41:46.825Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:41:46.825Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:41:46.825Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.33173",
+            "latitude": "44.90164"
+          },
+          "last_updated": "2023-02-13T08:41:46.825Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "d0fad8cb-4cee-4bed-b822-08f83b1f222b",
+      "publish": true,
+      "name": "Станция 1 (тест)",
+      "address": "г.Самара, ул.Утевская 20А к1",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "50.105025",
+        "latitude": "53.130372"
+      },
+      "evses": [
+        {
+          "uid": "6710d999-6abb-467a-a700-c108b9ca79cd",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-04-24T06:14:56.210Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "50.105025",
+            "latitude": "53.130372"
+          },
+          "last_updated": "2024-04-22T07:36:34.673Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "7be6c1e6-36c9-41ee-8ae1-b8fe50dbda5e",
+      "publish": true,
+      "name": "Noname test Рома",
+      "address": "ул. Айни, Курган-Тюбе, Таджикистан",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "68.770256",
+        "latitude": "37.829939"
+      },
+      "evses": [
+        {
+          "uid": "c8867256-3fe8-4a31-9cf1-01f3e07ab63d",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-06-21T12:14:34.761Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-06-21T12:14:34.787Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "68.770256",
+            "latitude": "37.829939"
+          },
+          "last_updated": "2024-06-21T12:05:05.525Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "71d5a17b-98e9-4952-888d-1d03e6aec58c",
+      "publish": true,
+      "name": "Pandora Wall-e (c OCPP) Test",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "36.254819",
+        "latitude": "54.54723"
+      },
+      "evses": [
+        {
+          "uid": "31f0cf40-a348-4ed8-9d52-44a2600d181b",
+          "evse_id": "1",
+          "status": "INOPERATIVE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-20T12:37:24.808Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "36.254819",
+            "latitude": "54.54723"
+          },
+          "last_updated": "2024-04-15T09:55:40.093Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "49ba0189-80fb-4c18-8f89-38a0a62abf62",
+      "publish": true,
+      "name": "Charge0001",
+      "address": "Тестовая локация ",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.620122",
+        "latitude": "55.728682"
+      },
+      "evses": [
+        {
+          "uid": "05da3bda-76f9-4397-b8e9-d5e3fea00221",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-16T20:02:46.461Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_AC",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-07T08:13:16.604Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.620122",
+            "latitude": "55.728682"
+          },
+          "last_updated": "2024-05-07T07:58:07.760Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "39d03619-c75b-4517-b402-12c1c1e992e7",
+      "publish": true,
+      "name": "ФОРА AC3 (test) 3",
+      "address": "Рязанская область г. Касимов, ул. Индустриальная д.3",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "41.404",
+        "latitude": "54.95818"
+      },
+      "evses": [
+        {
+          "uid": "d150dafe-8a3b-4414-a736-88ca890f7eb1",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-13T08:26:41.561Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "41.404",
+            "latitude": "54.95818"
+          },
+          "last_updated": "2023-01-30T09:49:36.300Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "66f3bf9c-27a4-45e7-90a6-c1d5eb5ee609",
+      "publish": true,
+      "name": "Элемоб AC test",
+      "address": "Белгород, Меловая, 22",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "36.608764",
+        "latitude": "50.608901"
+      },
+      "evses": [
+        {
+          "uid": "e76d33ef-a0f7-4d9f-a869-1888df28ce20",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-02-04T17:21:20.685Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "36.608764",
+            "latitude": "50.608901"
+          },
+          "last_updated": "2022-02-04T17:21:20.685Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "9e0bd274-be00-477d-9f02-3489b01257cf",
+      "publish": true,
+      "name": "Витязь ISKRA 22 kW стоянка",
+      "address": "Беларусь, Витебск, проспект Строителей, 13A/10",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "30.2299056",
+        "latitude": "55.1636063"
+      },
+      "evses": [
+        {
+          "uid": "4f491a93-2aea-4c19-9ab1-5dcc8c65a7e1",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-21T09:43:56.821Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "30.2299056",
+            "latitude": "55.1636063"
+          },
+          "last_updated": "2023-02-21T09:43:56.821Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "e27847a9-54ae-4943-98d3-e230f920bfb4",
+      "publish": true,
+      "name": "ЖК Культура",
+      "address": "Хабаровск, Комсомольская, 55",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "135.0635663",
+        "latitude": "48.4700969"
+      },
+      "evses": [
+        {
+          "uid": "ddf04a62-2f30-43d7-9917-dfeb1526419f",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": null,
+              "format": "CABLE",
+              "power_type": null,
+              "max_electric_power": 50,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-03-26T08:22:32.416Z"
+            },
+            {
+              "id": "2",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 50,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-03-26T08:22:32.781Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "135.0635663",
+            "latitude": "48.4700969"
+          },
+          "last_updated": "2022-03-17T22:10:57.398Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "1f58a6bf-73dd-4823-a824-9019db7ff326",
+      "publish": true,
+      "name": "JiangHao Tech. 60KW DC",
+      "address": "No.520 Xiangsang Road, Runzhou District, Zhenjiang City, Jiangsu Province",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "119.36441",
+        "latitude": "32.17865"
+      },
+      "evses": [
+        {
+          "uid": "e13e3f67-6e78-4beb-92b3-183e5e8554f1",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-06T09:13:37.067Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "119.36441",
+            "latitude": "32.17865"
+          },
+          "last_updated": "2023-01-31T05:59:42.003Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "664aae83-7c0f-4b37-addc-40edc7df6a87",
+      "publish": true,
+      "name": "Автомастер-Сервис DC120",
+      "address": "г.Тула ул.Пионерская д.10Б",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.575033",
+        "latitude": "54.13251"
+      },
+      "evses": [
+        {
+          "uid": "fe0b2969-7fdc-491b-8d90-80fb899d59e8",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": "def64be9-0e98-4a2e-8254-a52bb4b97298",
+              "last_updated": "2024-06-14T16:57:56.636Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": "def64be9-0e98-4a2e-8254-a52bb4b97298",
+              "last_updated": "2024-06-14T16:57:56.636Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.575033",
+            "latitude": "54.13251"
+          },
+          "last_updated": "2024-06-14T16:57:56.631Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "712a65db-2bb6-4ba1-bb2c-20a3af5a7964",
+      "publish": true,
+      "name": "Innotech 22kw (test Anonimous)",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "106.53326",
+        "latitude": "29.56946727365838"
+      },
+      "evses": [
+        {
+          "uid": "9fc930a1-903f-4d04-ae51-b65762176115",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-04-16T10:48:27.934Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "106.53326",
+            "latitude": "29.56946727365838"
+          },
+          "last_updated": "2024-04-15T11:13:30.806Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "9d2621a4-2f13-4c21-b88e-8800c3b22654",
+      "publish": true,
+      "name": "ET150KW-00-Test-Area",
+      "address": "Москва, Бережковская набережная, 20с73",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.545364",
+        "latitude": "55.733186"
+      },
+      "evses": [
+        {
+          "uid": "b94297bb-11e6-408b-b6c3-823822017c14",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-27T20:31:04.306Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-27T20:16:38.326Z"
+            },
+            {
+              "id": "3",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-27T20:17:49.891Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.545364",
+            "latitude": "55.733186"
+          },
+          "last_updated": "2024-05-23T17:31:59.310Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "c015dfd0-97a4-4cfe-a5e8-e0cd6594a1a5",
+      "publish": true,
+      "name": "Боровляны тест",
+      "address": "Боровляны",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "27.629579",
+        "latitude": "54.001699"
+      },
+      "evses": [
+        {
+          "uid": "755fc0eb-d5cd-49c9-a770-1a0518f8a069",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 30,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-12-27T21:03:02.826Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-12-27T21:03:02.826Z"
+            },
+            {
+              "id": "3",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-12-27T21:03:02.826Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "27.629579",
+            "latitude": "54.001699"
+          },
+          "last_updated": "2022-12-27T21:03:02.826Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "28f031eb-d4e4-4aa8-bb94-b4ce8f7508ab",
+      "publish": true,
+      "name": "Sola test stand",
+      "address": "Gorlice, ul. Biecka21A, Polska",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "21.186559",
+        "latitude": "49.673792"
+      },
+      "evses": [
+        {
+          "uid": "0e29f496-e0f8-4628-99f6-087b830ac1b5",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-06-24T07:27:07.739Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-06-24T07:27:08.242Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "21.186559",
+            "latitude": "49.673792"
+          },
+          "last_updated": "2022-06-07T11:16:20.668Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "7ec4e92e-bcb1-4758-9062-196ceb787957",
+      "publish": true,
+      "name": "Эко-ферма «ЛАНЬДИВО» ",
+      "address": "городской округ Серпухов, Московская область",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.293298",
+        "latitude": "54.847106"
+      },
+      "evses": [
+        {
+          "uid": "71aff26b-4cf9-4501-ae71-9d932f691f17",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 11,
+              "max_amperage": 16,
+              "tariff_ids": "def64be9-0e98-4a2e-8254-a52bb4b97298",
+              "last_updated": "2024-06-24T18:28:39.235Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.293298",
+            "latitude": "54.847106"
+          },
+          "last_updated": "2024-06-24T18:28:39.223Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "a36eeb2e-a07f-46a6-bcb9-f39e42c0e3ed",
+      "publish": true,
+      "name": "Станция 3 (тест)",
+      "address": "г.Самара, ул.Утевская 20А к1",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "50.105025",
+        "latitude": "53.130372"
+      },
+      "evses": [
+        {
+          "uid": "bba4501f-0161-4167-8188-63a78980a52a",
+          "evse_id": "1",
+          "status": "INOPERATIVE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-13T11:54:50.683Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 120,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-13T11:54:50.957Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "50.105025",
+            "latitude": "53.130372"
+          },
+          "last_updated": "2024-04-26T11:28:52.057Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "50f2fe42-f506-49b0-a520-fb037755aa6e",
+      "publish": true,
+      "name": "wallbox test",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.62033",
+        "latitude": "55.728854"
+      },
+      "evses": [
+        {
+          "uid": "26e3ad0b-2f2d-431d-9233-f40f0914c144",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-01-22T14:19:13.080Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.62033",
+            "latitude": "55.728854"
+          },
+          "last_updated": "2024-01-22T14:19:13.068Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "a1203d5e-da78-4c2a-828e-bbb701f97d7e",
+      "publish": true,
+      "name": "Baikal energy 30DC",
+      "address": "Иркутская область​,  Иркутский район, рп. Маркова, Изумрудный м-н,  ул. Зелёная, ​дом2",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "104.264552",
+        "latitude": "52.213615"
+      },
+      "evses": [
+        {
+          "uid": "c8a3d1bd-b2c7-4dbd-958d-7d80bc125aed",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 30,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-04-15T07:41:46.555Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "104.264552",
+            "latitude": "52.213615"
+          },
+          "last_updated": "2022-04-15T07:41:46.555Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "4f754a85-ddf7-4b9e-86af-1ea6c3cc7c47",
+      "publish": true,
+      "name": "Вологда DC150 #2",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.66",
+        "latitude": "55.66"
+      },
+      "evses": [
+        {
+          "uid": "889f972c-e696-4536-8afc-ac2f9efd69c6",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-09-01T11:34:09.683Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-09-01T11:34:09.683Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-09-01T11:34:09.683Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.66",
+            "latitude": "55.66"
+          },
+          "last_updated": "2023-09-01T11:34:09.676Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "43f49cf7-d14e-4d5d-97c4-636974bdd11e",
+      "publish": true,
+      "name": "Beny-test",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "120.704",
+        "latitude": "27.9945"
+      },
+      "evses": [
+        {
+          "uid": "0a0421b2-fa18-42b8-9e39-61fb32548011",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-10-30T22:17:44.292Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-10-30T22:17:44.292Z"
+            },
+            {
+              "id": "3",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-10-30T22:17:44.292Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "120.704",
+            "latitude": "27.9945"
+          },
+          "last_updated": "2023-10-20T12:49:15.048Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "9add5b22-a4f8-4be6-9520-e20278855ce3",
+      "publish": true,
+      "name": "AC-АЭ (E-Tiger v2)",
+      "address": "Крым, Симферополь",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "34.100318",
+        "latitude": "44.948237"
+      },
+      "evses": [
+        {
+          "uid": "cff85cf8-7790-4f8a-ad65-726e881c1653",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1",
+              "format": null,
+              "power_type": "AC_1_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-12-26T08:45:31.990Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-12-26T08:45:31.990Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "34.100318",
+            "latitude": "44.948237"
+          },
+          "last_updated": "2021-09-20T08:32:34.520Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "8b807dba-a4e4-407f-8646-c632f80559b1",
+      "publish": true,
+      "name": "Зарядная станция ABB (it.CHARGE testdrive)",
+      "address": "Москва, улица Лужники, 24с24",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.562542",
+        "latitude": "55.717366"
+      },
+      "evses": [
+        {
+          "uid": "513bcc5f-1a82-4fa8-9de6-0ba8b6d1a67e",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-12-26T08:45:31.990Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.562542",
+            "latitude": "55.717366"
+          },
+          "last_updated": "2022-04-12T17:20:42.171Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "4dbc44dd-927d-43b5-a19e-052de98e2467",
+      "publish": true,
+      "name": "RUN POWER DC (test China 24.05.24, 18.06.24, 02.06)",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.62033",
+        "latitude": "55.728854"
+      },
+      "evses": [
+        {
+          "uid": "b54d53a5-eaa4-45f0-bcb6-98bf7fa569f1",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-07-02T10:15:25.808Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-07-02T10:15:54.094Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.62033",
+            "latitude": "55.728854"
+          },
+          "last_updated": "2024-05-24T09:40:40.693Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "18ae343f-095b-43c3-9a95-9ab3070f9dbb",
+      "publish": true,
+      "name": " ЭМС (EV charging-station) тест",
+      "address": "Тестовая локация",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.620239",
+        "latitude": "55.728189"
+      },
+      "evses": [
+        {
+          "uid": "2e8de1e1-b93d-4e2e-b5b7-c1dfa82a748c",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_AC",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-14T17:16:21.343Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_AC",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-05-14T17:16:21.346Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.620239",
+            "latitude": "55.728189"
+          },
+          "last_updated": "2024-04-27T09:36:12.107Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "bf55ac92-bf09-482f-a4ef-2573a1389e9a",
+      "publish": true,
+      "name": "ABB-DC-Uchebniy centr",
+      "address": "Москва, Волгоградский проспект, 42к.35",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.721866",
+        "latitude": "55.70973"
+      },
+      "evses": [
+        {
+          "uid": "52428206-b89c-4ec0-b811-ee1211ba5034",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-01-20T06:12:51.505Z"
+            },
+            {
+              "id": "2",
+              "standard": "CHAOJI",
+              "format": null,
+              "power_type": "DC",
+              "max_electric_power": 50,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2025-01-15T16:39:39.368Z"
+            },
+            {
+              "id": "3",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": null,
+              "power_type": "DC",
+              "max_electric_power": 50,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-12-26T08:45:31.990Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.721866",
+            "latitude": "55.70973"
+          },
+          "last_updated": "2022-01-20T06:12:51.505Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "8b03f0b3-910b-41b9-a705-d3d529abe547",
+      "publish": true,
+      "name": "AC22-PEVC2107E (test)",
+      "address": "Zhuhai, Guangdong, China",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "113.537494",
+        "latitude": "22.258632"
+      },
+      "evses": [
+        {
+          "uid": "ae5b9923-9816-47da-a541-b4dc226ee11c",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-03-10T10:29:38.016Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "113.537494",
+            "latitude": "22.258632"
+          },
+          "last_updated": "2023-03-10T10:29:38.016Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "ab5c3b07-4a56-473b-811c-e9a4759a4e6f",
+      "publish": true,
+      "name": "Baikal energy 30DC",
+      "address": "Иркутская область, Иркутский район, рп. Маркова, Изумрудный м-н, ул. Зененая, дом2",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "104.2652349",
+        "latitude": "52.2138414"
+      },
+      "evses": [
+        {
+          "uid": "8ff7bf36-4a69-4635-a07f-22a67c32de9c",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 30,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2022-08-17T08:58:53.195Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "104.2652349",
+            "latitude": "52.2138414"
+          },
+          "last_updated": "2022-08-17T08:58:53.195Z"
+        }
+      ],
+      "time_zone": null,
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "982a9901-9ca1-47ef-b468-96f99577d76a",
+      "publish": true,
+      "name": "Витязь mode3 test ЕС-301-88",
+      "address": "Беларусь, Витебск, ул. П.Бровки, 13А",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "30.238298",
+        "latitude": "55.165578"
+      },
+      "evses": [
+        {
+          "uid": "80462532-c856-47e3-870d-e60324725dd5",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": "9f36f483-e107-480a-b43f-f3c64af4ec91",
+              "last_updated": "2023-02-21T09:43:46.542Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": "9f36f483-e107-480a-b43f-f3c64af4ec91",
+              "last_updated": "2023-02-21T09:43:46.542Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "30.238298",
+            "latitude": "55.165578"
+          },
+          "last_updated": "2023-02-21T09:43:46.542Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "6c3e3ba5-08dd-499c-b132-8c316f87b58d",
+      "publish": true,
+      "name": "Парус электро. ЭСЭМ-2-43К-2",
+      "address": "г. Москва, ул 6-я Радиальная 9",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.650145",
+        "latitude": "55.606578"
+      },
+      "evses": [
+        {
+          "uid": "5789213b-009b-474d-889c-fe3afd96c559",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-05-05T10:21:50.592Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-05-05T10:21:50.592Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.650145",
+            "latitude": "55.606578"
+          },
+          "last_updated": "2023-05-05T10:21:50.592Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "3af903c0-8ed1-42b6-b249-5bf6c580c964",
+      "publish": true,
+      "name": "FULLTONE-AC22 (type1)",
+      "address": "Екатеринбург",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "60.630685",
+        "latitude": "56.762663"
+      },
+      "evses": [
+        {
+          "uid": "3ff1a1f6-838b-48ef-aaba-befb0a218f89",
+          "evse_id": "1",
+          "status": "OUTOFORDER",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T1",
+              "format": "CABLE",
+              "power_type": "AC_1_PHASE",
+              "max_electric_power": 7,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-06-01T06:48:00.430Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "60.630685",
+            "latitude": "56.762663"
+          },
+          "last_updated": "2023-06-01T06:48:00.430Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "0ca4d60e-6f24-4c0d-a171-1b91b9299182",
+      "publish": true,
+      "name": "Run Power DC (China test 31.05.24)",
+      "address": "Тестовая локация ",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "37.455356",
+        "latitude": "55.8374747"
+      },
+      "evses": [
+        {
+          "uid": "cd65f28c-d785-488d-9350-aef9f4dfe1f8",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-06-03T00:21:29.531Z"
+            },
+            {
+              "id": "2",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2024-06-03T00:20:48.615Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "37.455356",
+            "latitude": "55.8374747"
+          },
+          "last_updated": "2024-05-31T07:29:25.113Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "6649d6c1-5791-4353-9006-df214b78bf4e",
+      "publish": true,
+      "name": "НЭСК#4 Геленджик 150кВт (PSS) 23.07.00004",
+      "address": "Геленджик, ул. Набережная, 12",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "38.0277",
+        "latitude": "44.56154"
+      },
+      "evses": [
+        {
+          "uid": "febfe1dc-3a68-43df-a27a-3387a80edfde",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "CHAOJI",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 60,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-21T06:29:20.288Z"
+            },
+            {
+              "id": "2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-21T06:29:20.288Z"
+            },
+            {
+              "id": "3",
+              "standard": "GBT_DC",
+              "format": "CABLE",
+              "power_type": "DC",
+              "max_electric_power": 150,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-02-21T06:29:20.288Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "38.0277",
+            "latitude": "44.56154"
+          },
+          "last_updated": "2023-02-21T06:29:20.288Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    },
+    {
+      "charging_when_closed": true,
+      "country_code": "RU",
+      "party_id": "ITC",
+      "id": "bc86faeb-5974-4e5a-a7ba-50c646693cb5",
+      "publish": true,
+      "name": "Абрикос AC22 #1 (KG)",
+      "address": "Бишкек, ул Ахунбаева 2Б",
+      "country": "RU",
+      "coordinates": {
+        "longitude": "74.632137",
+        "latitude": "42.841656"
+      },
+      "evses": [
+        {
+          "uid": "42aba57a-d279-484a-bb03-5783ac0608cd",
+          "evse_id": "1",
+          "status": "AVAILABLE",
+          "capabilities": [
+            "REMOTE_START_STOP_CAPABLE",
+            "RESERVABLE"
+          ],
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_electric_power": 22,
+              "max_amperage": null,
+              "tariff_ids": null,
+              "last_updated": "2023-09-11T13:02:52.585Z"
+            }
+          ],
+          "coordinates": {
+            "longitude": "74.632137",
+            "latitude": "42.841656"
+          },
+          "last_updated": "2023-09-11T13:02:52.585Z"
+        }
+      ],
+      "time_zone": "Europe/Moscow",
+      "last_updated": "2024-08-29T13:44:52.033Z"
+    }
+  ],
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2025-02-09T06:33:21.679Z"
+}

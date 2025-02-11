@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using DotNetProjects.IndexedLinq;
 using GeoCoordinatePortable;
 using KellermanSoftware.CompareNetObjects;
@@ -9,13 +15,6 @@ using OCM.API.Common.Model;
 using OCM.Import.Misc;
 using OCM.Import.Providers;
 using OCM.Import.Providers.OCPI;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OCM.Import
 {
@@ -213,6 +212,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_Gaia());
             providers.Add(new ImportProvider_Toger());
             providers.Add(new ImportProvider_ElectricEra());
+            providers.Add(new ImportProvider_ITCharge());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -246,7 +246,7 @@ namespace OCM.Import
 
                     Log(result.Log);
 
-                    
+
                     return result.IsSuccess;
 
                 }
@@ -852,16 +852,16 @@ namespace OCM.Import
 
                 if (p is ImportProvider_OCPI ocpi)
                 {
-                   if (ocpi.CredentialKey != null)
+                    if (ocpi.CredentialKey != null)
                     {
                         if (settings.Credentials.TryGetValue(ocpi.CredentialKey, out var cred))
                         {
                             ocpi.AuthHeaderValue = cred;
                         }
-                        
+
                     }
                 }
-               
+
                 if (p.ImportInitialisationRequired && p is IImportProviderWithInit)
                 {
                     ((IImportProviderWithInit)provider).InitImportProvider();
@@ -1224,7 +1224,7 @@ namespace OCM.Import
         public List<ChargePoint> PopulateLocationFromGeolocationCache(IEnumerable<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
             //OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
-            var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath,"ne_10m_admin_0_countries.shp"));
+            var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath, "ne_10m_admin_0_countries.shp"));
 
             List<ChargePoint> failedLookups = new List<ChargePoint>();
 

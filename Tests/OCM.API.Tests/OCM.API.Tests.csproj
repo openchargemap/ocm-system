@@ -48,6 +48,9 @@
     <Content Include="Assets\ocpi_2_2_locations-evio.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\ocpi_2_2_1_locations-itcharge.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\ocpi_2_2_locations-lakd.lt.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

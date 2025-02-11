@@ -320,7 +320,7 @@ namespace OCM.Core.Data
             if (updateStrategy == CacheUpdateStrategy.Modified)
             {
                 var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                var maxPOI = await poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate).FirstAsync();
+                var maxPOI = await poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate).FirstOrDefaultAsync();
 
                 DateTime? dateLastModified = null;
                 if (maxPOI != null) { dateLastModified = maxPOI.DateLastStatusUpdate.Value.AddMinutes(-10); }

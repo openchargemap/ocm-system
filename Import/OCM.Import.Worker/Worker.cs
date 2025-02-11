@@ -1,14 +1,12 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OCM.Import.Providers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace OCM.Import.Worker
 {
@@ -37,7 +35,7 @@ namespace OCM.Import.Worker
             _logger.LogInformation($"Import Worker Starting. Import syncing every {_settings.ImportRunFrequencyMinutes} minutes");
 
             // check for work to do every N minutes
-            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(_settings.ImportRunFrequencyMinutes*60));
+            _timer = new Timer(PerformTasks, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(_settings.ImportRunFrequencyMinutes * 60));
         }
 
         private async void PerformTasks(object? state)
