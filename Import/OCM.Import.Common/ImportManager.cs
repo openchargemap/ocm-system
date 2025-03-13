@@ -129,7 +129,7 @@ namespace OCM.Import
         private ImportSettings _settings;
         private Microsoft.Extensions.Logging.ILogger _log;
 
-        public ImportManager(ImportSettings settings, Microsoft.Extensions.Logging.ILogger log = null)
+        public ImportManager(ImportSettings settings, string apiKey = null, Microsoft.Extensions.Logging.ILogger log = null)
         {
             _settings = settings;
             _log = log;
@@ -137,7 +137,7 @@ namespace OCM.Import
             GeonamesAPIUserName = "openchargemap";
             TempFolder = _settings.TempFolderPath;
 
-            _client = new OCMClient(_settings.MasterAPIBaseUrl, _settings.ImportUserAPIKey, null, settings.ImportUserAgent);
+            _client = new OCMClient(_settings.MasterAPIBaseUrl,apiKey, log, settings.ImportUserAgent);
 
             geolocationCacheManager = new GeolocationCacheManager(TempFolder);
             geolocationCacheManager.GeonamesAPIUserName = GeonamesAPIUserName;
@@ -175,14 +175,14 @@ namespace OCM.Import
             Way to remove item (or log items) which no longer exist in data source?
          * */
 
-        public List<IImportProvider> GetImportProviders(List<OCM.API.Common.Model.DataProvider> AllDataProviders)
+        public List<IImportProvider> GetImportProviders(List<OCM.API.Common.Model.DataProvider> AllDataProviders, ImportProcessSettings importSettings)
         {
             List<IImportProvider> providers = new List<IImportProvider>();
 
             providers.Add(new ImportProvider_UKChargePointRegistry());
             providers.Add(new ImportProvider_Mobie());
 
-            if (_settings.ApiKeys.TryGetValue("afdc_energy_gov", out var afdcKey))
+            if (importSettings.Credentials.TryGetValue("IMPORT-adfc", out var afdcKey))
             {
                 providers.Add(new ImportProvider_AFDC(afdcKey));
             }
@@ -213,6 +213,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_Toger());
             providers.Add(new ImportProvider_ElectricEra());
             providers.Add(new ImportProvider_ITCharge());
+            providers.Add(new ImportProvider_Voltrelli());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -230,11 +231,11 @@ namespace OCM.Import
         public async Task<bool> PerformImportProcessing(ImportProcessSettings settings)
         {
 
-            var credentials = GetAPISessionCredentials("", settings.Credentials["IMPORT-ocm-system"]);
+            var credentials = GetAPISessionCredentials("System", settings.Credentials["IMPORT-ocm-system"]);
 
             var coreRefData = await _client.GetCoreReferenceDataAsync();
 
-            var providers = GetImportProviders(coreRefData.DataProviders);
+            var providers = GetImportProviders(coreRefData.DataProviders, settings);
 
             var providerMatched = false;
             foreach (var provider in providers)
@@ -1109,10 +1110,8 @@ namespace OCM.Import
 
         }
 
-        public async Task<string> UploadPOIList(string json, string apiIdentifier = null, string apiToken = null, string apiBaseUrl = null)
+        public async Task<string> UploadPOIList(string json)
         {
-            var credentials = GetAPISessionCredentials(apiIdentifier, apiToken);
-
             var poiList = JsonConvert.DeserializeObject<List<ChargePoint>>(json);
 
             Log("Publishing via API..");
@@ -1143,7 +1142,7 @@ namespace OCM.Import
                     Log($"[{DateTime.Now}] Publishing items {currentIndex} to {currentIndex + itemsRemaining}..");
                 }
 
-                _client.UpdateItems(subList.ToList(), credentials);
+                _client.UpdateItems(subList.ToList());
 
                 await Task.Delay(500);
                 pageIndex++;

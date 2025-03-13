@@ -83,6 +83,7 @@ namespace OCM.API.Common.Model
         Unknown = 0,
         J1772 = 1,
         CHAdeMO = 2,
+        CHAOJI = 1044,
         BS1363TypeG = 3,
         MennekesType2 = 25,
         MennekesType2Tethered = 1036,

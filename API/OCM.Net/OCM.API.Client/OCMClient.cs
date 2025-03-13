@@ -298,7 +298,7 @@ namespace OCM.API.Client
             }
         }
 
-        public bool UpdateItems(List<ChargePoint> list, APICredentials credentials)
+        public bool UpdateItems(List<ChargePoint> list)
         {
             //TODO: implement batch update based on item list?
             try

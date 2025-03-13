@@ -312,7 +312,40 @@ namespace OCM.API.Tests
 
             var poiResults = adapter.Process(coreRefData).ToList();
 
-            Assert.Equal(50, poiResults.Count());
+            Assert.Equal(1180, poiResults.Count());
+
+            var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
+
+            Assert.False(unmappedOperators.Any(o => o.Value > 50), $"Should not proceed if unknown operator has more than 50 POIs: [{unmappedOperators.FirstOrDefault(u => u.Value > 50).Key}]");
+
+
+            // ensure power KW does not exceed a reasonable value
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
+        }
+
+        [Fact]
+        async Task CanConvertFromOCPI_Voltrelli()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_locations-voltrelli.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new ImportProvider_Voltrelli();
+
+            adapter.InputData = json;
+
+            var poiResults = adapter.Process(coreRefData).ToList();
+
+            Assert.Equal(307, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 

@@ -1,8 +1,8 @@
-using OCM.Model.OCPI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using OCM.Model.OCPI;
 
 namespace OCM.API.Common.Model.OCPI
 {
@@ -33,7 +33,21 @@ namespace OCM.API.Common.Model.OCPI
 
         private string GetCountryCodeFromISO3(string srcISO)
         {
-            return _countries.FirstOrDefault(c => c.ThreeLetterISORegionName == srcISO).TwoLetterISORegionName;
+            var match = _countries.FirstOrDefault(c => c.ThreeLetterISORegionName == srcISO)?.TwoLetterISORegionName;
+
+            if (match == null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to match country code for {srcISO}, will try 2 character ISO");
+
+                match = _countries.FirstOrDefault(c => c.TwoLetterISORegionName == srcISO)?.TwoLetterISORegionName;
+
+                if (match == null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to match country code for {srcISO}");
+                }
+            }
+
+            return match;
         }
 
         /// <summary>
@@ -50,7 +64,14 @@ namespace OCM.API.Common.Model.OCPI
 
                 if (string.IsNullOrEmpty(iso2Code) && i.Country != null)
                 {
-                    iso2Code = GetCountryCodeFromISO3(i.Country);
+                    if (i.Country.Length == 2)
+                    {
+                        iso2Code = i.Country.ToUpper();
+                    }
+                    else
+                    {
+                        iso2Code = GetCountryCodeFromISO3(i.Country);
+                    }
                 }
 
                 if (iso2Code == "FR" && i.Country == "ESP")
@@ -69,6 +90,7 @@ namespace OCM.API.Common.Model.OCPI
                     {
                         DataProvidersReference = i.Id,
                         DataProviderID = dataProviderId,
+                        UsageTypeID = (int)StandardUsageTypes.Public_MembershipRequired,
                         AddressInfo = new AddressInfo
                         {
                             Title = i.Name ?? i.Address,
@@ -344,6 +366,7 @@ namespace OCM.API.Common.Model.OCPI
             {
                 { ConnectorStandard.UNKNOWN,(int)StandardConnectionTypes.Unknown }, // unknown is not an official part of the OCPI spec
                 { ConnectorStandard.CHADEMO, (int)StandardConnectionTypes.CHAdeMO },
+                { ConnectorStandard.CHAOJI, (int)StandardConnectionTypes.CHAOJI }, // CHAdeMO 3.0 etc
                 { ConnectorStandard.DOMESTIC_A, (int)StandardConnectionTypes.Unknown }, // NEMA 1-15, 2 pins
                 { ConnectorStandard.DOMESTIC_B, (int)StandardConnectionTypes.Nema5_15 },
                 { ConnectorStandard.DOMESTIC_C, (int)StandardConnectionTypes.Europlug },

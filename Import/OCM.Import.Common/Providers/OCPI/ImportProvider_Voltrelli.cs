@@ -3,28 +3,28 @@ using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers.OCPI
 {
-    public class ImportProvider_ITCharge : ImportProvider_OCPI, IImportProvider
+    public class ImportProvider_Voltrelli : ImportProvider_OCPI, IImportProvider
     {
-        public ImportProvider_ITCharge() : base()
+        public ImportProvider_Voltrelli() : base()
         {
-            ProviderName = "itcharge.ru";
-            OutputNamePrefix = "itcharge.ru";
+            ProviderName = "voltrelli";
+            OutputNamePrefix = "voltrelli";
 
             IsAutoRefreshed = true;
             IsProductionReady = true;
 
-            CredentialKey = "OCPI-ITCHARGE-CRED";
+            CredentialKey = "OCPI-VOLTRELLI";
 
-            DefaultOperatorID = 3650;
+            DefaultOperatorID = 3843;
 
-            Init(dataProviderId: 36, "https://ocpi.itcharge.ru/cpo/2.2.1/locations/");
+            Init(dataProviderId: 37, "https://api.evozone.app/api/ocpi/v1/charging-station/list");
         }
 
         public override Dictionary<string, int> GetOperatorMappings()
         {
             return new Dictionary<string, int>()
             {
-                { "ITC",3650 }
+                { "Voltrelli - Evconnect",3843 }
             };
         }
 
