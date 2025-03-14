@@ -274,12 +274,11 @@ namespace OCM.API.Tests
 
             var adapter = new ImportProvider_Lakd();
 
-            json = json.Replace("\"location\"", "\"coordinates\"");
             adapter.InputData = json;
 
             var poiResults = adapter.Process(coreRefData).ToList();
 
-            Assert.Equal(591, poiResults.Count());
+            Assert.Equal(1057, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 

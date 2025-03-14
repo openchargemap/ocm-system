@@ -1614,8 +1614,8 @@ namespace OCM.Model.OCPI
         /// <br/>
         /// <br/>OCM allows null here due to operators commonly leaving it blank
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("max_amperage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Max_amperage { get; set; }
+        [Newtonsoft.Json.JsonProperty("max_amperage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Max_amperage { get; set; }
 
         [Newtonsoft.Json.JsonProperty("max_electric_power", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Max_electric_power { get; set; }

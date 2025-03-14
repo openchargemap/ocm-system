@@ -17,6 +17,7 @@ namespace OCM.Import.Providers.OCPI
         private int _dataProviderId = 1;
 
         public Dictionary<string, int> OperatorMappings = new Dictionary<string, int>();
+        public HashSet<string> ExcludedLocations = new HashSet<string>();
         internal OCPIDataAdapter _adapter;
         public ImportProvider_OCPI()
         {
@@ -98,7 +99,7 @@ namespace OCM.Import.Providers.OCPI
 
             OperatorMappings = GetOperatorMappings();
 
-            var poiResults = _adapter.FromOCPI(response, _dataProviderId, operatorMappings: OperatorMappings, defaultOperatorId: DefaultOperatorID);
+            var poiResults = _adapter.FromOCPI(response, _dataProviderId, operatorMappings: OperatorMappings, defaultOperatorId: DefaultOperatorID, excludedLocations: ExcludedLocations);
 
             _unmappedOperators = _adapter.GetUnmappedOperators();
 

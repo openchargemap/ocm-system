@@ -28,7 +28,8 @@ namespace OCM.Import.Providers.OCPI
                 { "AB Lietuvos automobilių kelių direkcija",3691},
                 { "Eldrive Lithuania, UAB",3692},
                 { "IONITY GmbH",3299},
-                { "Lidl Lietuva",38}
+                { "Lidl Lietuva",38},
+                { "UAB Enefit",3862}
             };
         }
 

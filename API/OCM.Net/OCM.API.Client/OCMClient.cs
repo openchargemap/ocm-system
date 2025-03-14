@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,6 +8,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
 
 namespace OCM.API.Client
 {
@@ -75,7 +75,7 @@ namespace OCM.API.Client
         static OCMClient()
         {
             // init static properties
-            _client.Timeout = TimeSpan.FromMinutes(10);
+            _client.Timeout = TimeSpan.FromMinutes(20);
             _client.DefaultRequestHeaders.Add("User-Agent", "OCM-API-Client");
         }
 

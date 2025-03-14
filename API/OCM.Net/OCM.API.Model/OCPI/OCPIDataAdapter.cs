@@ -55,7 +55,7 @@ namespace OCM.API.Common.Model.OCPI
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId, Dictionary<string, int> operatorMappings = null, int? defaultOperatorId = null)
+        public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId, Dictionary<string, int> operatorMappings = null, int? defaultOperatorId = null, HashSet<string> excludedLocations = null)
         {
             foreach (var i in source)
             {
@@ -216,7 +216,14 @@ namespace OCM.API.Common.Model.OCPI
 
                 if (cp != null)
                 {
+                    if (excludedLocations?.Contains(cp.DataProvidersReference) == true)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Excluding location {cp.DataProvidersReference}");
+                        cp.StatusTypeID = (int)StandardStatusTypes.RemovedDuplicate;
+                    }
+                    
                     yield return cp;
+                    
                 }
             }
         }

@@ -137,7 +137,7 @@ namespace OCM.Import
             GeonamesAPIUserName = "openchargemap";
             TempFolder = _settings.TempFolderPath;
 
-            _client = new OCMClient(_settings.MasterAPIBaseUrl,apiKey, log, settings.ImportUserAgent);
+            _client = new OCMClient(_settings.MasterAPIBaseUrl, apiKey, log, settings.ImportUserAgent);
 
             geolocationCacheManager = new GeolocationCacheManager(TempFolder);
             geolocationCacheManager.GeonamesAPIUserName = GeonamesAPIUserName;
