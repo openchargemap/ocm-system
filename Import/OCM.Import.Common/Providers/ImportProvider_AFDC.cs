@@ -1,8 +1,8 @@
-using Newtonsoft.Json.Linq;
-using OCM.API.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers
 {
@@ -136,7 +136,7 @@ namespace OCM.Import.Providers
                                     cp.OperatorID = 3617; //3607 = Rivian Adventure
                                     break;
                                 case "rivian_adventure":
-                                    cp.OperatorID = 3607; 
+                                    cp.OperatorID = 3607;
                                     break;
                                 case "bchydro":
                                     cp.OperatorID = 3385;
@@ -188,6 +188,18 @@ namespace OCM.Import.Providers
                                     break;
                                 case "chargeup":
                                     cp.OperatorID = 3734;
+                                    break;
+                                case "in_charge":
+                                    cp.OperatorID = 3867;
+                                    break;
+                                case "chargesmart_ev":
+                                    cp.OperatorID = 3864;
+                                    break;
+                                case "vialynk":
+                                    cp.OperatorID = 3863;
+                                    break;
+                                case "turnongreen":
+                                    cp.OperatorID = 3865;
                                     break;
                                 default:
                                     this.Log("Unknown network operator:" + deviceController);
@@ -389,7 +401,7 @@ namespace OCM.Import.Providers
                             //assume basic level 2 power
                             Voltage = 230,
                             Amps = 16,
-                            Comments= "kW power is an estimate based on the connection type",
+                            Comments = "kW power is an estimate based on the connection type",
                             CurrentTypeID = 10 //AC
                         };
 
@@ -437,9 +449,9 @@ namespace OCM.Import.Providers
                                 LevelID = chrgLevel3.ID,
 
                                 //assume basic level 3 power
-                               // Voltage = 400,
-                               // Amps = 100,
-                                Comments="kW power is an estimate based on the connection type",
+                                // Voltage = 400,
+                                // Amps = 100,
+                                Comments = "kW power is an estimate based on the connection type",
                                 PowerKW = 50,
                                 CurrentTypeID = (int)StandardCurrentTypes.DC //DC
                             };

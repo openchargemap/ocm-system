@@ -1,24 +1,5 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/OCM.Web/site",
-      "sslPort": 0
-    },
-    "iisExpress": {
-      "applicationUrl": "http://localhost:52360",
-      "sslPort": 44322
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IIS",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "OCM.Web": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -38,6 +19,18 @@
         "ASPNETCORE_HTTPS_PORT": "44300",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/OCM.Web/site",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:52360",
+      "sslPort": 44322
     }
   }
 }

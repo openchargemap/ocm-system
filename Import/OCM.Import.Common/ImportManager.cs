@@ -282,6 +282,8 @@ namespace OCM.Import
                 masterList = await _client.GetPOIListAsync(new SearchFilters
                 {
                     CountryIDs = countryIds,
+                    IncludeUserComments = false,
+                    Verbose = false,
                     MaxResults = 1000000,
                     EnableCaching = true,
                     SubmissionStatusTypeIDs = new int[0]

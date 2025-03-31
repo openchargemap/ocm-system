@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -7,14 +12,6 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Utils;
 using OCM.Core.Data;
-using OCM.Import.Providers;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OCM.MVC.Controllers
 {
@@ -115,7 +112,7 @@ namespace OCM.MVC.Controllers
                 var operatorInfoManager = new OperatorInfoManager();
 
                 operatorInfo = operatorInfoManager.UpdateOperatorInfo((int)UserID, operatorInfo);
-              
+
                 return RedirectToAction("Operators", "Admin");
             }
             return View(operatorInfo);
@@ -311,7 +308,7 @@ namespace OCM.MVC.Controllers
                 {
                     if (poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_UnderReview || poi.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_UnderReview)
                     {
-           
+
                         if (poi.DateCreated < DateTime.UtcNow.AddDays(-autoApproveDays))
                         {
                             try
@@ -433,112 +430,6 @@ namespace OCM.MVC.Controllers
 
 
             return Json(status);
-        }
-
-        [Authorize(Roles = "Admin")]
-        public ActionResult ImportManager()
-        {
-            var tempPath = Path.GetTempPath();
-
-            var importManager = new Import.ImportManager(new OCM.Import.ImportSettings { TempFolderPath = tempPath });
-            using (var refDataManager = new ReferenceDataManager())
-            {
-                var providers = importManager.GetImportProviders(refDataManager.GetDataProviders());
-                var model = new Models.ImportManager() { ImportProviders = providers };
-
-                return View(model);
-            }
-        }
-
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Import(string providerName, bool fetchLiveData, bool performImport = false, bool includeResults = true)
-        {
-            GC.Collect();
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            var tempPath = Path.GetTempPath();
-
-            var importManager = new Import.ImportManager(new Import.ImportSettings { TempFolderPath = tempPath });
-
-            using (var refDataManager = new ReferenceDataManager())
-            {
-                var providers = importManager.GetImportProviders(refDataManager.GetDataProviders());
-                var provider = providers.FirstOrDefault(p => p.GetProviderName() == providerName);
-                var coreReferenceData = refDataManager.GetCoreReferenceData(new APIRequestParams());
-
-                ((BaseImportProvider)provider).InputPath = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
-                var result = await importManager.PerformImport(
-                    new Import.ImportProcessSettings
-                    {
-                        ExportType = OCM.Import.Providers.ExportType.POIModelList,
-                        FetchLiveData = fetchLiveData
-                    },
-                    new OCM.API.Client.APICredentials(), coreReferenceData, provider);
-
-                var systemUser = new UserManager().GetUser((int)StandardUsers.System);
-                if (performImport)
-                {
-                    //add/update/delist POIs
-                    await Task.Run(() =>
-                    {
-                        importManager.UpdateImportedPOIList(result, systemUser);
-                    });
-                }
-
-                if (!includeResults)
-                {
-                    result.Added = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                    result.Delisted = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                    result.Duplicates = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                    result.ImportItems = new System.Collections.Generic.List<Import.ImportItem>();
-                    result.LowDataQuality = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                    result.Unchanged = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                    result.Updated = new System.Collections.Generic.List<API.Common.Model.ChargePoint>();
-                }
-                stopwatch.Stop();
-                result.Log += "\r\nImport processing time (seconds): " + stopwatch.Elapsed.TotalSeconds;
-
-                return View(result);
-            }
-
-        }
-
-        [Authorize(Roles = "Admin"), HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> ImportUpload(FormCollection collection)
-        {
-            var providerName = Request.Form["providerName"];
-
-            var tempPath = Path.GetTempPath();
-
-            var importManager = new Import.ImportManager(new OCM.Import.ImportSettings { TempFolderPath = tempPath });
-
-            List<IImportProvider> providers;
-            using (var refDataManager = new ReferenceDataManager())
-            {
-                providers = importManager.GetImportProviders(refDataManager.GetDataProviders());
-            }
-
-            var provider = providers.FirstOrDefault(p => p.GetProviderName() == Request.Form["providerName"]);
-
-            var uploadFilename = importManager.TempFolder + "//cache_" + provider.GetProviderName() + ".dat";
-
-            var postedFile = Request.Form.Files[0];
-
-            if (postedFile != null && postedFile.Length > 0)
-            {
-                //store upload
-                using (var stream = System.IO.File.Create(uploadFilename))
-                {
-                    await postedFile.CopyToAsync(stream);
-                }
-
-                //redirect to import processing (cached file version)
-                return RedirectToAction("Import", new { providerName = providerName, fetchLiveData = false, performImport = false });
-            }
-
-            //faileds
-            return RedirectToAction("ImportManager");
         }
 
         [Authorize(Roles = "Admin")]
