@@ -10,8 +10,8 @@
 
     string errorMsg = ViewBag.ErrorMessage ?? null;
     bool submitted = ViewBag.Submitted ?? false;
-   
-    
+
+
 }
 
 <div class="container">
@@ -63,7 +63,7 @@
             @Html.ValidationSummary(true)
 
             <fieldset>
-                <legend>Data Sharing Agreement</legend>
+                <legend>Agreement Form</legend>
 
                 <p>
                     Your company,
@@ -82,7 +82,7 @@
                         <strong>Your company hereby licenses your data (limited to the data present in the provided data feed) under the following Open Data license, which you have <a href="https://creativecommons.org/about/cclicenses/" target="_blank">reviewed and understood</a>:</strong>
                         <select data-val="true" id="DataLicense" name="DataLicense" class="form-control" style="max-width:300px;">
                             <option value="CC-0" selected="selected">Creative Commons CC-0</option>
-                            <option value="CC-BY">Creative Commons CC-BY 4.0</option>
+
                         </select>
                         @Html.ValidationMessageFor(model => model.DataLicense)
                     </div>
@@ -107,24 +107,9 @@
 
                 </ul>
 
-                <div class="form-group d-none">
-
-                    <div class="editor-field">
-                        <input type="radio" name="limitations" value="" checked="checked" /> You do not require any of the data fields or information to be excluded from distribution.
-                    </div>
-                </div>
-
-                <div class="form-group d-none">
-
-                    <div class="editor-field">
-                        <input type="radio" name="limitations" value="yes" />
-                        You require the following information to be omitted from distribution:  <br>
-                        @Html.TextAreaFor(model => model.DistributionLimitations, new { @class = "form-control", htmlAttributes = new { placeholder = "Specify data to be excluded" } })
-                    </div>
-                </div>
 
                 <p>
-                    I, @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new {placeholder = "Your Name" } }), am authorised by the named company to make this agreement and hereby agree to these terms and conditions.
+                    I, @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new { placeholder = "Your Name" } }), am authorised by the named company to make this agreement and hereby agree to these terms and conditions.
                 </p>
                 <p>
                     <em>This agreement text last revised : 2024/06/26</em>
@@ -134,8 +119,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group" data-editormode="core">
-                            <div data-localize="ocm.details.location.country">
-                                @Html.LabelFor(model => model.CountryID, "Country")
+                            <div class="editor-label">
+                                Country
                             </div>
                             <div>
                                 @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, new { @class = "form-control" })
@@ -150,7 +135,7 @@
                                 Company Website URL
                             </div>
                             <div class="editor-field">
-                                @Html.EditorFor(model => model.WebsiteURL)
+                                @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.WebsiteURL)
                             </div>
                         </div>
@@ -161,7 +146,7 @@
                                 Contact Email
                             </div>
                             <div class="editor-field">
-                                @Html.EditorFor(model => model.ContactEmail)
+                                @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.ContactEmail)
                             </div>
                         </div>
@@ -188,22 +173,24 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="editor-label">
-                                Data Feed URL (e.g. Your OCPI locations API endpoint)
+                                Data Feed URL
                             </div>
                             <div class="editor-field">
-                                @Html.EditorFor(model => model.DataFeedURL)
+                                @Html.EditorFor(model => model.DataFeedURL, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.DataFeedURL)
+                                Your OCPI locations API endpoint
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="editor-label">
-                                Data Feed Credentials (if required, e.g. a read-only OCPI access token)
+                                Data Feed Credentials
                             </div>
                             <div class="editor-field">
-                                @Html.EditorFor(model => model.Credentials)
+                                @Html.EditorFor(model => model.Credentials, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Credentials)
+                                if required, e.g. read-only OCPI access CREDENTIAL_TOKEN_C
                             </div>
                         </div>
 
@@ -213,12 +200,12 @@
 
                 <!--@Html.HiddenFor(model => model.ID)-->
                 @if (!string.IsNullOrEmpty(username) && !submitted)
-            {
-            <p>
-                <input type="submit" value="Submit Agreement" class="btn btn-primary" />
-            </p>
-            }
-        </fieldset>
+                {
+                    <p>
+                        <input type="submit" value="Submit Agreement" class="btn btn-primary" />
+                    </p>
+                }
+            </fieldset>
 
         }
     </div>
