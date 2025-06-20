@@ -280,15 +280,58 @@ namespace OCM.Import
             if (fetchExistingFromAPI)
             {
                 // fetch from API
-                masterList = await _client.GetPOIListAsync(new SearchFilters
+                var modifiedSince = DateTime.MinValue;
+
+                // Fetch all POIs incrementally by ordering by ModifiedSince and updating the last max ModifiedSince
+                var allPOIs = new List<ChargePoint>();
+                DateTime? lastModified = null;
+                bool moreData = true;
+                const int pageSize = 1000; // adjust as needed for API limits
+
+                do
                 {
-                    CountryIDs = countryIds,
-                    IncludeUserComments = false,
-                    Verbose = false,
-                    MaxResults = 1000000,
-                    EnableCaching = true,
-                    SubmissionStatusTypeIDs = new int[0]
-                });
+                    var searchFilters = new SearchFilters
+                    {
+                        CountryIDs = countryIds,
+                        IncludeUserComments = false,
+                        Verbose = false,
+                        MaxResults = pageSize,
+                        EnableCaching = true,
+                        SubmissionStatusTypeIDs = new int[0],
+                        ModifiedSince = lastModified,
+                        SortBy = "modified_asc"
+                    };
+
+                    var page = (await _client.GetPOIListAsync(searchFilters)).OrderBy(cp => cp.DateLastStatusUpdate).ToList();
+
+                    if (page.Count == 0)
+                    {
+                        moreData = false;
+                    }
+                    else
+                    {
+                        foreach (var cp in page)
+                        {
+                            if (!allPOIs.Any(a => a.ID == cp.ID))
+                            {
+                                allPOIs.Add(cp);
+                            }
+                        }
+
+                        // Update lastModified to the max DateLastStatusUpdate in this page
+                        var maxModified = page.Max(cp => cp.DateLastStatusUpdate);
+                        if (maxModified == lastModified || maxModified == null)
+                        {
+                            moreData = false;
+                        }
+                        else
+                        {
+                            lastModified = maxModified;
+                        }
+                    }
+                } while (moreData);
+
+                masterList = allPOIs;
             }
             else
             {
