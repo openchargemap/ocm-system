@@ -221,9 +221,9 @@ namespace OCM.API.Common.Model.OCPI
                         System.Diagnostics.Debug.WriteLine($"Excluding location {cp.DataProvidersReference}");
                         cp.StatusTypeID = (int)StandardStatusTypes.RemovedDuplicate;
                     }
-                    
+
                     yield return cp;
-                    
+
                 }
             }
         }

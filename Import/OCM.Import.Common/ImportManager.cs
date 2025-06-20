@@ -214,6 +214,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_ElectricEra());
             providers.Add(new ImportProvider_ITCharge());
             providers.Add(new ImportProvider_Voltrelli());
+            providers.Add(new ImportProvider_PowerGo());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
