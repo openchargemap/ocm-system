@@ -1,5 +1,5 @@
-﻿using OCM.API.Common.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers.OCPI
 {
@@ -15,7 +15,7 @@ namespace OCM.Import.Providers.OCPI
 
             CredentialKey = null; // no credentials
 
-            Init(dataProviderId: 32, "https://ev.lakd.lt/open_source/ocpi/locations");
+            Init(dataProviderId: 32, "https://ev.lakd.lt/ocpi/2.2.1/locations");
         }
 
         public override Dictionary<string, int> GetOperatorMappings()
@@ -29,14 +29,15 @@ namespace OCM.Import.Providers.OCPI
                 { "Eldrive Lithuania, UAB",3692},
                 { "IONITY GmbH",3299},
                 { "Lidl Lietuva",38},
-                { "UAB Enefit",3862}
+                { "UAB Enefit",3862},
+                { "Stuart Energy",3877}
             };
         }
 
         public new List<ChargePoint> Process(CoreReferenceData coreRefData)
         {
             //InputData = InputData.Replace("\"Not_implemented\"", "null");
-            
+
 
             var outputList = base.Process(coreRefData);
 

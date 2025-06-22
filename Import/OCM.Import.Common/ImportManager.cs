@@ -215,6 +215,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_ITCharge());
             providers.Add(new ImportProvider_Voltrelli());
             providers.Add(new ImportProvider_PowerGo());
+            providers.Add(new ImportProvider_Punkt());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -284,7 +285,7 @@ namespace OCM.Import
 
                 // Fetch all POIs incrementally by ordering by ModifiedSince and updating the last max ModifiedSince
                 var allPOIs = new List<ChargePoint>();
-                DateTime? lastModified = null;
+                int? greaterThanId = null;
                 bool moreData = true;
                 const int pageSize = 1000; // adjust as needed for API limits
 
@@ -298,11 +299,11 @@ namespace OCM.Import
                         MaxResults = pageSize,
                         EnableCaching = true,
                         SubmissionStatusTypeIDs = new int[0],
-                        ModifiedSince = lastModified,
-                        SortBy = "modified_asc"
+                        GreaterThanId = greaterThanId,
+                        SortBy = "id_asc"
                     };
 
-                    var page = (await _client.GetPOIListAsync(searchFilters)).OrderBy(cp => cp.DateLastStatusUpdate).ToList();
+                    var page = (await _client.GetPOIListAsync(searchFilters)).OrderBy(cp => cp.ID).ToList();
 
                     if (page.Count == 0)
                     {
@@ -319,14 +320,14 @@ namespace OCM.Import
                         }
 
                         // Update lastModified to the max DateLastStatusUpdate in this page
-                        var maxModified = page.Max(cp => cp.DateLastStatusUpdate);
-                        if (maxModified == lastModified || maxModified == null)
+                        var maxId = page.Max(cp => cp.ID);
+                        if (maxId == greaterThanId || maxId == null)
                         {
                             moreData = false;
                         }
                         else
                         {
-                            lastModified = maxModified;
+                            greaterThanId = maxId;
                         }
                     }
                 } while (moreData);

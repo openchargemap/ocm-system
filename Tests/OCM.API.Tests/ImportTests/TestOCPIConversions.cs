@@ -278,7 +278,7 @@ namespace OCM.API.Tests
 
             var poiResults = adapter.Process(coreRefData).ToList();
 
-            Assert.Equal(1057, poiResults.Count());
+            Assert.Equal(1235, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 
@@ -378,6 +378,36 @@ namespace OCM.API.Tests
             var poiResults = adapter.Process(coreRefData).ToList();
 
             Assert.Equal(489, poiResults.Count());
+
+            var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
+
+            // ensure power KW does not exceed a reasonable value
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
+        }
+
+        [Fact]
+        async Task CanConvertFromOCPI_PUnkt()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-punkt.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new ImportProvider_PowerGo();
+
+            adapter.InputData = json;
+
+            var poiResults = adapter.Process(coreRefData).ToList();
+
+            Assert.Equal(100, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 
