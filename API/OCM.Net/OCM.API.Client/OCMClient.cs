@@ -66,7 +66,7 @@ namespace OCM.API.Client
         public string ServiceBaseURL { get; set; }
         public string APIKey { get; set; }
 
-        private static HttpClient _client = new HttpClient();
+        private static HttpClient _client;
         private ILogger _logger = null;
 
         private string _userAgent = null;
@@ -74,9 +74,17 @@ namespace OCM.API.Client
 
         static OCMClient()
         {
+            var handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.All
+            };
+
+            _client = new HttpClient(handler);
+
             // init static properties
             _client.Timeout = TimeSpan.FromMinutes(20);
             _client.DefaultRequestHeaders.Add("User-Agent", "OCM-API-Client");
+
         }
 
         public OCMClient(string baseUrl, string apiKey, ILogger logger = null, string userAgent = "OCM-API-Client")

@@ -1,15 +1,16 @@
-﻿using Newtonsoft.Json;
-using OCM.API.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OCM.API.Common.Model;
 
 
 namespace OCM.Import.Providers
@@ -234,8 +235,16 @@ namespace OCM.Import.Providers
 
         public async Task<bool> LoadInputFromURL(string url)
         {
-            HttpClient client = new HttpClient();
-            client.Timeout = TimeSpan.FromSeconds(1200);
+            var handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.All
+            };
+
+            var client = new HttpClient(handler)
+            {
+                Timeout = TimeSpan.FromSeconds(1200)
+            };
+
             try
             {
                 if (String.IsNullOrEmpty(HTTPPostVariables))

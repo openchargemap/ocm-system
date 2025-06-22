@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
-using OCM.API.Common.Model;
-using OCM.API.Common.Model.OCPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OCM.API.Common.Model;
+using OCM.API.Common.Model.OCPI;
 
 namespace OCM.Import.Providers.OCPI
 {
@@ -110,22 +112,121 @@ namespace OCM.Import.Providers.OCPI
         {
             try
             {
-                if (!string.IsNullOrEmpty(_authHeaderValue))
+                var handler = new HttpClientHandler()
                 {
-                    webClient.Headers.Add(_authHeaderKey, _authHeaderValue);
+                    AutomaticDecompression = DecompressionMethods.All
+                };
+
+                using (var httpClient = new HttpClient(handler))
+                {
+                    if (!string.IsNullOrEmpty(_authHeaderValue))
+                    {
+                        httpClient.DefaultRequestHeaders.Remove(_authHeaderKey);
+                        httpClient.DefaultRequestHeaders.Add(_authHeaderKey, _authHeaderValue);
+                    }
+                    httpClient.DefaultRequestHeaders.Remove("User-Agent");
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "openchargemap-OCPI-import/1.0");
+                    httpClient.DefaultRequestHeaders.Remove("Accept");
+                    httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
+
+                    int offset = 0;
+                    int limit = 100; // Default page size, can be adjusted
+                    bool supportsPaging = false;
+                    int? totalCount = null;
+                    var allItems = new List<object>();
+                    string baseUrl = url;
+                    bool wasWrappedObject = false;
+                    bool firstResponse = true;
+
+                    do
+                    {
+                        string pagedUrl = baseUrl;
+                        if (supportsPaging || offset > 0)
+                        {
+                            var uriBuilder = new UriBuilder(baseUrl);
+                            var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+                            query.Set("offset", offset.ToString());
+                            query.Set("limit", limit.ToString());
+                            uriBuilder.Query = query.ToString();
+                            pagedUrl = uriBuilder.ToString();
+                        }
+
+                        var response = await httpClient.GetAsync(pagedUrl);
+                        response.EnsureSuccessStatusCode();
+                        var responseContent = await response.Content.ReadAsStringAsync();
+
+                        if (!supportsPaging && response.Headers.Contains("X-Total-Count"))
+                        {
+                            supportsPaging = true;
+                            var headerValue = response.Headers.GetValues("X-Total-Count").FirstOrDefault();
+                            if (int.TryParse(headerValue, out int parsedTotal))
+                            {
+                                totalCount = parsedTotal;
+                            }
+                        }
+
+                        // Deserialize and aggregate results
+                        if (responseContent.TrimStart().StartsWith("{"))
+                        {
+                            if (firstResponse) wasWrappedObject = true;
+                            // OCPI response with data property
+                            var obj = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(responseContent);
+                            var dataToken = obj["data"];
+                            if (dataToken != null && dataToken.Type == Newtonsoft.Json.Linq.JTokenType.Array)
+                            {
+                                foreach (var item in dataToken)
+                                {
+                                    allItems.Add(item);
+                                }
+                            }
+                        }
+                        else if (responseContent.TrimStart().StartsWith("["))
+                        {
+                            if (firstResponse) wasWrappedObject = false;
+                            // Array response
+                            var arr = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JArray>(responseContent);
+                            foreach (var item in arr)
+                            {
+                                allItems.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            // Unexpected format, just assign
+                            InputData = responseContent;
+                            return true;
+                        }
+
+                        offset += limit;
+                        firstResponse = false;
+                    } while (supportsPaging && totalCount.HasValue && offset < totalCount.Value);
+
+                    // Compose aggregated result
+                    if (allItems.Count > 0)
+                    {
+                        // If original response was wrapped in { data: [...] }, wrap result similarly
+                        if (wasWrappedObject)
+                        {
+                            var resultObj = new Newtonsoft.Json.Linq.JObject();
+                            resultObj["data"] = new Newtonsoft.Json.Linq.JArray(allItems);
+                            InputData = resultObj.ToString();
+                        }
+                        else
+                        {
+                            InputData = JsonConvert.SerializeObject(allItems);
+                        }
+                    }
+                    else
+                    {
+                        InputData = "";
+                    }
+
+                    return true;
                 }
-
-                webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                webClient.Headers.Remove("User-Agent");
-                webClient.Headers.Add("User-Agent", "openchargemap-OCPI-import/1.0"); 
-
-                InputData = webClient.DownloadString(url);
-
-                return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Log(": Failed to fetch input from url :" + url);
+                Log($": Failed to fetch input from url :{url} Exception: {ex.Message}");
                 return false;
             }
         }
