@@ -12,19 +12,20 @@
             <section>
                 <h1>Guidance for Contributors</h1>
                 <h2 id="intro">Introduction</h2>
-                <p class="alert alert-warning">Note: this guidance is a working draft for comment and is not final. [Last Updated: Jan 12 2015] </p>
                 <p>
                     The aim of the Open Charge Map project is to provide a reliable and well respected Open Data set for EV charging equipment locations globally. Data in OCM comes from two types of source: User Contributions and <a href="#dataimports">3rd Party Data Imports</a>. We rely on our contributors to do their best to provide quality information when manually providing and improving information.
                 </p>
-                <p>This guidance exists to describe both optional and mandatory practises when contributing information to us.
+                <p>
+                    This guidance exists to describe both optional and mandatory practises when contributing information to us.
                 </p>
             </section>
             <section>
 
                 <h2 id="intro">Guidance For All Contributors</h2>
                 <h3 id="terms">Acceptance of Terms</h3>
-                <p>All information you submit (including charging equipment information, comments, check-ins and photos) to Open Charge Map is held by us and redistributed under an Open Data license. By submitting any information to us you are agreeing to these <a href="@Url.Action("Terms","About")">terms</a>.
-                <h3 id="commentsandphotos">Contributing Comments, Check-In and Photos</h3>
+                <p>
+                    All information you submit (including charging equipment information, comments, check-ins and photos) to Open Charge Map is held by us and redistributed under an Open Data license. By submitting any information to us you are agreeing to these <a href="@Url.Action("Terms", "About")">terms</a>.
+                    <h3 id="commentsandphotos">Contributing Comments, Check-In and Photos</h3>
                 <p>
                     Adding a Check-In, Comment (which is the same as a Check-In but with your own comment) or Photo can make a huge difference to other people who find a charging location using Open Charge Map data, especially if your comment can help them plan their journey or avoid problems.
                     Using this feature you can provide useful information to others:
@@ -39,6 +40,7 @@
                 </p>
 
                 <h3 id="edits">Submitting New Locations</h3>
+                <p><strong>If possible you should encourage local charging networks in your country to provide data to us an an OCPI data feed. They gain free promotion to consumers of our data set (thousands of apps and services) and you then don't need to manually provide information. To do so they can fill out our @Html.ActionLink("Data Sharing Agreement", "DataSharing", "About") form. </strong></p>
                 <p>
                     <ul>
                         <li>Ensure the location is not a duplicate of an existing listing.</li>
@@ -74,7 +76,7 @@
                 </p>
                 <p>If both listings are virtually identical with no comment/photos or other distinguishing features then you should delist the newest entry (with the highest OCM-ID reference).</p>
                 <h3 id="newadditions">New Locations Awaiting Approval</h3>
-                <p>The easiest way to review the locations awaiting approval is via the <a href="@Url.Action("Index", "POI", new { submissionstatustypeid=1})">New Locations Awaiting Approval</a> page. From there an editor can look at the details of the individual location, inspect the quality of the submission and approve it.</p>
+                <p>The easiest way to review the locations awaiting approval is via the <a href="@Url.Action("Index", "POI", new { submissionstatustypeid = 1 })">New Locations Awaiting Approval</a> page. From there an editor can look at the details of the individual location, inspect the quality of the submission and approve it.</p>
                 <h3 id="editqueue">The Edit Queue</h3>
                 <p>The Edit Queue is where changes to existing locations await approval by an editor for the relevant country. The edit queue can show both new locations and edits to existing locations but is best suited to managing edits.</p>
                 <h2 id="dataimports">3rd Party Data Imports</h2>
@@ -83,7 +85,8 @@
                 </p>
                 <p>Where an import process has been created for OCM we periodically import from each data source, adding new locations and updating existing ones. If you wish to change one of these listings, they can do so using the normal Edit function.</p>
                 <p>
-                    When you edit a location from a 3rd Party Data Import the following process is followed:<ul>
+                    When you edit a location from a 3rd Party Data Import the following process is followed:
+                    <ul>
                         <li>The old listing is archived for future reference as a superceded POI.</li>
                         <li>We link the old POI with your new version in the OCM database.</li>
                         <li>From then on users only see the edited OCM version of the listing.</li>
