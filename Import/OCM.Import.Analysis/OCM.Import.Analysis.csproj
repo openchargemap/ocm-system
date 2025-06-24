@@ -28,7 +28,7 @@
     <PackageReference Include="DotSpatial.Data" Version="3.0.1" />
     <PackageReference Include="DotSpatial.Projections" Version="3.0.1" />
     <PackageReference Include="NetTopologySuite" Version="2.6.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.5" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />
