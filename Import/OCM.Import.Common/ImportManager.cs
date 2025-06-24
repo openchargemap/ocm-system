@@ -287,7 +287,7 @@ namespace OCM.Import
                 var allPOIs = new List<ChargePoint>();
                 int? greaterThanId = null;
                 bool moreData = true;
-                const int pageSize = 1000; // adjust as needed for API limits
+                const int pageSize = 10000; // adjust as needed for API limits
 
                 do
                 {

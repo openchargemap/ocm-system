@@ -60,17 +60,20 @@ namespace OCM.API.Common.Model.OCPI
             foreach (var i in source)
             {
 
-                var iso2Code = i.Country_code;
+                // Country_Code is the CPO owner country code, not the location country code
+                // Country is the specified country code for the location but we fall back to the CPO owner country code if not specified
 
-                if (string.IsNullOrEmpty(iso2Code) && i.Country != null)
+                var iso2Code = GetCountryCodeFromISO3(i.Country);
+
+                if (string.IsNullOrEmpty(iso2Code) && i.Country_code != null)
                 {
-                    if (i.Country.Length == 2)
+                    if (i.Country_code.Length == 2)
                     {
-                        iso2Code = i.Country.ToUpper();
+                        iso2Code = i.Country_code.ToUpper();
                     }
                     else
                     {
-                        iso2Code = GetCountryCodeFromISO3(i.Country);
+                        iso2Code = GetCountryCodeFromISO3(i.Country_code);
                     }
                 }
 

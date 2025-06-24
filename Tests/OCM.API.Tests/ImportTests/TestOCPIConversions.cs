@@ -258,9 +258,6 @@ namespace OCM.API.Tests
             // ensure power KW does not exceed a reasonable value
             Assert.Empty(poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000)));
 
-            var output = JsonConvert.SerializeObject(poiResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
-            System.IO.File.WriteAllText("C:\\temp\\ocm\\ocpi.json", output);
         }
 
         [Fact]
@@ -379,6 +376,13 @@ namespace OCM.API.Tests
 
             Assert.Equal(489, poiResults.Count());
 
+
+            // check that we have POIs in both Norway and Netherlands
+            var countries = poiResults.Select(p => p.AddressInfo.CountryID).Distinct().ToList();
+
+            Assert.Contains(159, countries); // Netherlands
+            Assert.Contains(168, countries); // Norway
+
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 
             foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
@@ -407,7 +411,7 @@ namespace OCM.API.Tests
 
             var poiResults = adapter.Process(coreRefData).ToList();
 
-            Assert.Equal(100, poiResults.Count());
+            Assert.Equal(489, poiResults.Count());
 
             var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
 

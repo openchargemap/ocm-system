@@ -46,7 +46,7 @@ namespace OCM.Import.Worker
                 _logger.LogInformation("Checking import status..");
 
                 var tempPath = Path.GetTempPath();
-         
+
                 try
                 {
                     var status = new ImportStatus { DateLastImport = DateTime.UtcNow, LastImportedProvider = "", LastImportStatus = "Started" };
@@ -89,7 +89,7 @@ namespace OCM.Import.Worker
 
                         var apiKeys = _config.AsEnumerable().Where(k => k.Key.StartsWith("OCPI-") || k.Key.StartsWith("IMPORT-")).ToDictionary(k => k.Key, v => v.Value);
 
-                      
+
                         var importManager = new ImportManager(_settings, apiKeys["IMPORT-ocm-system"], _logger);
 
                         var importedOK = await importManager.PerformImportProcessing(
