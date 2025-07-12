@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using OCM.API.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
@@ -111,7 +111,7 @@ namespace OCM.API.Common
             data = new CoreReferenceData();
 
             //list of Levels (ChargerTypes)
-            data.ChargerTypes = new List<Model.ChargerType>();
+            data.ChargerTypes = [];
 
             await dataModel.ChargerTypes.ForEachAsync(cg => data.ChargerTypes.Add(Model.Extensions.ChargerType.FromDataModel(cg)));
 

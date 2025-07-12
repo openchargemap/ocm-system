@@ -425,5 +425,65 @@ namespace OCM.API.Tests
 
             Assert.Empty(powerfulPOIs);
         }
+
+        [Fact]
+        async Task CanConvertFromOCPI_EzVolt()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-ezvolt.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new ImportProvider_EzVolt();
+
+            adapter.InputData = json;
+
+            var poiResults = adapter.Process(coreRefData).ToList();
+
+            Assert.Equal(91, poiResults.Count());
+
+            var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
+
+            // ensure power KW does not exceed a reasonable value
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
+        }
+
+        [Fact]
+        async Task CanConvertFromOCPI_Chargesini()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_locations-chargesini.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new ImportProvider_EzVolt();
+
+            adapter.InputData = json;
+
+            var poiResults = adapter.Process(coreRefData).ToList();
+
+            Assert.Equal(448, poiResults.Count);
+
+            var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
+
+            // ensure power KW does not exceed a reasonable value
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
+        }
     }
 }

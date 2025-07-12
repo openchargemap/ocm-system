@@ -216,6 +216,8 @@ namespace OCM.Import
             providers.Add(new ImportProvider_Voltrelli());
             providers.Add(new ImportProvider_PowerGo());
             providers.Add(new ImportProvider_Punkt());
+            providers.Add(new ImportProvider_EzVolt());
+            providers.Add(new ImportProvider_Chargesini());
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)

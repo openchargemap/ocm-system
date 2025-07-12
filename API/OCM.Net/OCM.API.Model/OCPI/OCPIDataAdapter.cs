@@ -329,6 +329,16 @@ namespace OCM.API.Common.Model.OCPI
                     mappedStatusId = (int)StandardStatusTypes.Operational;
                 }
 
+                if (status == EvseStatus.INOPERATIVE || status == EvseStatus.OUTOFORDER)
+                {
+                    mappedStatusId = (int)StandardStatusTypes.NotOperational;
+                }
+
+                if (status == EvseStatus.PLANNED)
+                {
+                    mappedStatusId = (int)StandardStatusTypes.PlannedForFutureDate;
+                }
+
                 if (status == EvseStatus.REMOVED)
                 {
                     mappedStatusId = (int)StandardStatusTypes.RemovedDecomissioned;
