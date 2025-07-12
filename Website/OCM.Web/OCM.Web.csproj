@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <PackageReference Include="Ben.BlockingDetector" Version="0.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.6" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="9.0.7" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.8.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
