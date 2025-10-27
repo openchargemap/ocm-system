@@ -1,6 +1,13 @@
 ﻿# Adding an OCPI Provider
 
 To add a new OCPI Provider:
+- Add new DataProvider definition in database
+- Add/get operator id for the target network
+- Store credential in keyvault
+- Implement the OCPI import provider in OCM.Import.Common.Providers.OCPI
+
+
+Detail:
 - download and verify the OCPI feed manually to check credentials and data format
 - add a test with a copy of the json feed in OCM.API.Tests -ImportTests. Review test for data consistency and completeness.
 - Implement an OCPI provider with required settings in OCM.Import.Common.Providers.OCPI
@@ -11,4 +18,6 @@ To add a new OCPI Provider:
 - Add import provider to OCM.Import.Worker
     - appsettings.json EnabledImports
     - add provider to OCM.Import.Common.ImportManager - 
+    
+
     

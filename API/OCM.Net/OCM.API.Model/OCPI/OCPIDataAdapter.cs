@@ -63,7 +63,7 @@ namespace OCM.API.Common.Model.OCPI
                 // Country_Code is the CPO owner country code, not the location country code
                 // Country is the specified country code for the location but we fall back to the CPO owner country code if not specified
 
-                var iso2Code = GetCountryCodeFromISO3(i.Country);
+                var iso2Code = i.Country == null ? null : GetCountryCodeFromISO3(i.Country);
 
                 if (string.IsNullOrEmpty(iso2Code) && i.Country_code != null)
                 {

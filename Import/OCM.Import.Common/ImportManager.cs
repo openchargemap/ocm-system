@@ -746,36 +746,66 @@ namespace OCM.Import
         /// <returns>  </returns>
         public bool IsDuplicateLocation(ChargePoint current, ChargePoint previous, bool compareTitle)
         {
-            //is duplicate item if latlon is exact match for previous item or latlon is within few meters of previous item
-            if (
-                (GeoManager.IsClose(current.AddressInfo.Latitude, current.AddressInfo.Longitude, previous.AddressInfo.Latitude, previous.AddressInfo.Longitude) && new GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS) //meters distance apart
-                || (compareTitle && (previous.AddressInfo.Title == current.AddressInfo.Title))
-                //&& previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1
-                || (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
-                || (current.DataProvidersReference != null && current.DataProvidersReference.Length > 0 && previous.DataProvidersReference == current.DataProvidersReference)
-                || (previous.AddressInfo.ToString() == current.AddressInfo.ToString())
+            var duplicateReasons = new List<string>();
+            var currentAddr = current.AddressInfo;
+            var previousAddr = previous.AddressInfo;
 
-                )
+            // Early exit checks for exact matches (fastest checks first)
+
+            // Check 1: Exact lat/lon match
+            if (currentAddr.Latitude == previousAddr.Latitude && currentAddr.Longitude == previousAddr.Longitude)
             {
-                int dataProviderId = (previous.DataProvider != null ? previous.DataProvider.ID : (int)previous.DataProviderID);
-                if (previous.AddressInfo.Latitude == current.AddressInfo.Latitude && previous.AddressInfo.Longitude == current.AddressInfo.Longitude)
+                duplicateReasons.Add("exact lat/lon match");
+            }
+
+            // Check 2: Data provider reference match (if available)
+            if (!string.IsNullOrEmpty(current.DataProvidersReference) && current.DataProvidersReference == previous.DataProvidersReference)
+            {
+                duplicateReasons.Add($"matching data provider reference: {current.DataProvidersReference}");
+            }
+
+            // Check 3: Address string match
+            var currentAddrString = currentAddr.ToString();
+            var previousAddrString = previousAddr.ToString();
+            if (currentAddrString == previousAddrString)
+            {
+                duplicateReasons.Add("identical address string");
+            }
+
+            // Check 4: Title match (if requested and not already matched by address)
+            if (compareTitle &&
+                     !string.IsNullOrEmpty(previousAddr.Title) &&
+                   previousAddr.Title == currentAddr.Title &&
+            duplicateReasons.Count == 0)
+            {
+                duplicateReasons.Add($"matching title: {currentAddr.Title}");
+            }
+
+            // Check 5: Proximity check (most expensive - only if no matches yet)
+            if (duplicateReasons.Count == 0 &&
+ GeoManager.IsClose(currentAddr.Latitude, currentAddr.Longitude, previousAddr.Latitude, previousAddr.Longitude, 2))
+            {
+                var distance = new GeoCoordinate(currentAddr.Latitude, currentAddr.Longitude)
+                .GetDistanceTo(new GeoCoordinate(previousAddr.Latitude, previousAddr.Longitude));
+
+                if (distance < DUPLICATE_DISTANCE_METERS)
                 {
-                    Log(current.AddressInfo.ToString() + " is Duplicate in batch due to exact equal latlon to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
+                    duplicateReasons.Add($"close proximity: {distance:F1}m apart (threshold: {DUPLICATE_DISTANCE_METERS}m)");
                 }
-                else if (new GeoCoordinate(current.AddressInfo.Latitude, current.AddressInfo.Longitude).GetDistanceTo(new GeoCoordinate(previous.AddressInfo.Latitude, previous.AddressInfo.Longitude)) < DUPLICATE_DISTANCE_METERS)
-                {
-                    Log(current.AddressInfo.ToString() + " is Duplicate in batch due to close proximity to [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
-                }
-                else if (previous.AddressInfo.Title == current.AddressInfo.Title && previous.AddressInfo.AddressLine1 == current.AddressInfo.AddressLine1 && previous.AddressInfo.Postcode == current.AddressInfo.Postcode)
-                {
-                    Log(current.AddressInfo.ToString() + " is Duplicate in batch due to same Title and matching AddressLine1 and Postcode  [Data Provider " + dataProviderId + "]" + previous.AddressInfo.ToString());
-                }
+            }
+
+            // Log if duplicate found
+            if (duplicateReasons.Any())
+            {
+                int dataProviderId = previous.DataProvider != null ? previous.DataProvider.ID : (int)previous.DataProviderID;
+                var reasonsText = string.Join(", ", duplicateReasons);
+
+                Log($"{currentAddr} is duplicate in batch due to {reasonsText} [Data Provider {dataProviderId}] {previousAddr}");
+
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public bool MergeItemChanges(ChargePoint sourceItem, ChargePoint destItem, bool statusOnly)
