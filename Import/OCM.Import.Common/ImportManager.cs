@@ -220,6 +220,8 @@ namespace OCM.Import
             providers.Add(new ImportProvider_Chargesini());
             providers.Add(new ImportProvider_Otopriz());
             providers.Add(new ImportProvider_EV24());
+            providers.Add(new ImportProvider_Zepto());
+
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)

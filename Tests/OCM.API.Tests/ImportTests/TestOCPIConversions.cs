@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -514,6 +514,45 @@ namespace OCM.API.Tests.ImportTests
             var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
 
             Assert.Empty(powerfulPOIs);
+        }
+
+        [Fact]
+        async Task CanConvertFromOCPI_Zepto()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_locations-zepto.json");
+
+            var refDataManager = new ReferenceDataManager();
+            var coreRefData = await refDataManager.GetCoreReferenceDataAsync(new APIRequestParams());
+
+            var adapter = new ImportProvider_Zepto();
+
+            adapter.InputData = json;
+
+            var poiResults = adapter.Process(coreRefData).ToList();
+
+            Assert.Equal(10, poiResults.Count);
+
+            var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
+
+            // ensure power KW does not exceed a reasonable value
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
+
+            // Verify all POIs have correct data provider ID
+            Assert.True(poiResults.All(p => p.DataProviderID == 44));
+
+            // Verify all POIs have correct operator ID
+            Assert.True(poiResults.All(p => p.OperatorID == 3475));
+
+            // Verify all POIs are in Poland (Country ID 179)
+            Assert.True(poiResults.All(p => p.AddressInfo.CountryID == 179));
         }
     }
 }

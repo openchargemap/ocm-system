@@ -1,0 +1,612 @@
+[
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8832002",
+    "publish": true,
+    "name": "8832002",
+    "address": "Michelsona 3",
+    "city": "Strzelno",
+    "postal_code": "88-320",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "52.628328",
+      "longitude": "18.170598"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2021-03-29T16:05:03Z",
+    "evses": [
+      {
+        "uid": "8832002",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "CABLE",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8832002",
+            "last_updated": "2021-03-29T16:05:03Z",
+            "status": "OUTOFORDER"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8716201",
+    "publish": true,
+    "name": "8716201",
+    "address": " ",
+    "city": "Rogówko",
+    "postal_code": "87-162",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "53.064910",
+      "longitude": "18.739474"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2021-12-06T07:39:03Z",
+    "evses": [
+      {
+        "uid": "8716201",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8716201",
+            "last_updated": "2021-12-06T07:39:03Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8716201",
+            "last_updated": "2021-12-06T07:39:03Z",
+            "status": "OUTOFORDER"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8772001",
+    "publish": true,
+    "name": "8772001",
+    "address": " ",
+    "city": "Ciechocinek",
+    "postal_code": "87-720",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "52.8724791",
+      "longitude": "18.7575946"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2024-06-22T15:27:07Z",
+    "evses": [
+      {
+        "uid": "8772001",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8772001",
+            "last_updated": "2024-06-22T15:27:07Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8772001",
+            "last_updated": "2024-06-22T15:27:07Z",
+            "status": "CHARGING"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8772001",
+            "last_updated": "2024-06-22T15:27:07Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "4",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8772001",
+            "last_updated": "2024-06-22T15:27:07Z",
+            "status": "AVAILABLE"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8710002",
+    "publish": true,
+    "name": "8710002",
+    "address": "Łódzka 20",
+    "city": "Toruń",
+    "postal_code": "87-100",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "52.998302",
+      "longitude": "18.622285"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2024-10-12T13:05:05Z",
+    "evses": [
+      {
+        "uid": "8710002",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8710002",
+            "last_updated": "2024-10-12T13:05:05Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8710002",
+            "last_updated": "2024-10-12T13:05:05Z",
+            "status": "CHARGING"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8710002",
+            "last_updated": "2024-10-12T13:05:05Z",
+            "status": "OUTOFORDER"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8710001",
+    "publish": true,
+    "name": "8710001",
+    "address": "Grudziądzka 140",
+    "city": "Toruń",
+    "postal_code": "87-100",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "53.033151",
+      "longitude": "18.612144"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2024-11-08T10:07:08Z",
+    "evses": [
+      {
+        "uid": "8710001",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8710001",
+            "last_updated": "2024-11-08T10:07:08Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8710001",
+            "last_updated": "2024-11-08T10:07:08Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8710001",
+            "last_updated": "2024-11-08T10:07:08Z",
+            "status": "OUTOFORDER"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8730501",
+    "publish": true,
+    "name": "8730501",
+    "address": "Zbiczno  175",
+    "city": "Zbiczno",
+    "postal_code": "87-305",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "53.328781",
+      "longitude": "19.376197"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2025-06-22T14:42:04Z",
+    "evses": [
+      {
+        "uid": "8730501",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "CABLE",
+            "id": "1",
+            "standard": "IEC_62196_T2_COMBO",
+            "power_type": "DC",
+            "voltage": 230,
+            "amperage": 62.1,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8730501",
+            "last_updated": "2025-06-22T14:42:04Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "CABLE",
+            "id": "2",
+            "standard": "CHADEMO",
+            "power_type": "DC",
+            "voltage": 230,
+            "amperage": 0,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8730501",
+            "last_updated": "2025-06-22T14:42:04Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8730501",
+            "last_updated": "2025-06-22T14:42:04Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "4",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8730501",
+            "last_updated": "2025-06-22T14:42:04Z",
+            "status": "OUTOFORDER"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8764001",
+    "publish": true,
+    "name": "8764001",
+    "address": "Juliusza Słowackiego ",
+    "city": "Czernikowo",
+    "postal_code": "87-640",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "52.944881",
+      "longitude": "18.936956"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2025-09-07T10:55:08Z",
+    "evses": [
+      {
+        "uid": "8764001",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "OUTOFORDER",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8764001",
+            "last_updated": "2025-09-07T10:55:08Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8764001",
+            "last_updated": "2025-09-07T10:55:08Z",
+            "status": "OUTOFORDER"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8764001",
+            "last_updated": "2025-09-07T10:55:08Z",
+            "status": "OUTOFORDER"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8832001",
+    "publish": true,
+    "name": "8832001",
+    "address": "Michelsona 3",
+    "city": "Strzelno",
+    "postal_code": "88-320",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "52.628266",
+      "longitude": "18.171149"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2025-10-27T04:02:04Z",
+    "evses": [
+      {
+        "uid": "8832001",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "AVAILABLE",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8832001",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "IEC_60309_2_three_32",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8832001",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8832001",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "4",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8832001",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8573701",
+    "publish": true,
+    "name": "8573701",
+    "address": "Łęczycka 6",
+    "city": "Bydgoszcz",
+    "postal_code": "85-737",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "53.122540",
+      "longitude": "18.057242"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2025-10-27T04:02:04Z",
+    "evses": [
+      {
+        "uid": "8573701",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "AVAILABLE",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8573701",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8573701",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "3",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 32,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8573701",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "4",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8573701",
+            "last_updated": "2025-10-27T04:02:04Z",
+            "status": "AVAILABLE"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "country_code": "PL",
+    "party_id": "ZEP",
+    "id": "8830001",
+    "publish": true,
+    "name": "8830001",
+    "address": "Witosa ",
+    "city": "Mogilno",
+    "postal_code": "88-300",
+    "country": "POL",
+    "coordinates": {
+      "latitude": "52.648350",
+      "longitude": "17.963521"
+    },
+    "parking_type": "ON_STREET",
+    "time_zone": "Europe\/Warsaw",
+    "operator": { "name": "ZEPTO" },
+    "last_updated": "2025-10-27T04:02:07Z",
+    "evses": [
+      {
+        "uid": "8830001",
+        "capabilities": [ "REMOTE_START_STOP_CAPABLE", "RESERVABLE" ],
+        "status": "AVAILABLE",
+        "connectors": [
+          {
+            "format": "SOCKET",
+            "id": "1",
+            "standard": "IEC_62196_T2",
+            "power_type": "AC_3_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8830001",
+            "last_updated": "2025-10-27T04:02:07Z",
+            "status": "AVAILABLE"
+          },
+          {
+            "format": "SOCKET",
+            "id": "2",
+            "standard": "DOMESTIC_E",
+            "power_type": "AC_1_PHASE",
+            "voltage": 230,
+            "amperage": 16,
+            "terms_and_conditions": "https:\/\/zepto.pl\/info.php?numer_ladowarki=8830001",
+            "last_updated": "2025-10-27T04:02:07Z",
+            "status": "AVAILABLE"
+          }
+        ]
+      }
+    ]
+  }
+]
