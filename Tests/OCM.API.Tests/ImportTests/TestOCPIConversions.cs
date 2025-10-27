@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using OCM.API.Common;
 using OCM.Import.Providers.OCPI;
 using Xunit;
 
-namespace OCM.API.Tests
+namespace OCM.API.Tests.ImportTests
 {
     public class TestOCPIConversions
     {
