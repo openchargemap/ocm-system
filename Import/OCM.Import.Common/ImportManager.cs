@@ -221,6 +221,7 @@ namespace OCM.Import
             providers.Add(new ImportProvider_Otopriz());
             providers.Add(new ImportProvider_EV24());
             providers.Add(new ImportProvider_Zepto());
+            providers.Add(new ImportProvider_Greems());
 
 
             //populate full data provider details for each import provider
