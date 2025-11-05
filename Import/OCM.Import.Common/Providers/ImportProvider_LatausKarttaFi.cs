@@ -37,7 +37,6 @@ namespace OCM.Import.Providers
             {
 
                 System.Diagnostics.Debug.WriteLine("ERR: No valid response from latauskartta.fi");
-                throw new Exception("ERR: No valid response from latauskartta.fi");
                 return outputList;
             }
 
@@ -48,7 +47,6 @@ namespace OCM.Import.Providers
             if (!loadDefinitionsTask.Result)
             {
                 System.Diagnostics.Debug.WriteLine("ERR: Cannot load definiitons from latauskartta.fi!");
-                throw new Exception("ERR: Cannot load definiitons from latauskartta.fi!");
                 return outputList;
             }
             
@@ -60,7 +58,6 @@ namespace OCM.Import.Providers
             {
 
                 System.Diagnostics.Debug.WriteLine("ERR: No valid definitions response from latauskartta.fi!");
-                throw new Exception(InputData);
                 return outputList;
             }
 
