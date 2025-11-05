@@ -203,7 +203,8 @@ namespace OCM.Import
             {
                 providers.Add(new ImportProvider_NobilDotNo(nobil));
             }
-
+            
+            providers.Add(new ImportProvider_LatausKarttaFi());
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
             providers.Add(new ImportProvider_GoEvio());
