@@ -1,874 +1,1200 @@
-[
-  {
-    "id": "6F7E6EB1B1",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Kletno 6F",
-    "city": "Kletno",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "16.870743681259523",
-      "longitude": "50.26296179471058"
-    },
-    "evses": [
-      {
-        "uid": "PL-94597",
-        "evse_id": "PL-94597",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-94597-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-05-09T12:37:37"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "16.870743681259523",
-          "longitude": "50.26296179471058"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/bf35fb22-b93e-4241-b506-73a80c7f1804.jpg",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "jpg",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-05-09T12:37:37"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "Nad Stawami Spółka z ograniczoną odpowiedzialnością",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "57-550",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "B39E9C5FEA",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Gliwicka 15",
-    "city": "Legnica",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "16.173984776265257",
-      "longitude": "51.21569009308418"
-    },
-    "evses": [
-      {
-        "uid": "PL-00803",
-        "evse_id": "PL-00803",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-00803-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-06-30T13:38:56"
-          },
-          {
-            "id": "PL-00803-2",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-06-30T13:38:56"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "16.173984776265257",
-          "longitude": "51.21569009308418"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/4e023fb4-390f-49b8-8340-b8f8ab070013.png",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "png",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-06-30T13:38:56"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "Hotel Sękowski sp. z o.o.",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "59-200",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "A0979691B3",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Generała Władysława Sikorskiego 6",
-    "city": "Oława",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "17.302006645959377",
-      "longitude": "50.933394777464535"
-    },
-    "evses": [
-      {
-        "uid": "PL-47476",
-        "evse_id": "PL-47476",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-47476-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-10-15T11:41:09"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "17.302006645959377",
-          "longitude": "50.933394777464535"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/10e44f57-2950-4a42-98ed-c1087788cbe6.jpeg",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "jpeg",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-10-15T11:41:09"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "\"Oławian Hotel\" Teresa i Piotr Maraj Spółka Jawna",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "55-200",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "ACD158B6AF",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Słowackiego 197D",
-    "city": "Gdańsk",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "18.475103677555495",
-      "longitude": "54.38376549796162"
-    },
-    "evses": [
-      {
-        "uid": "PL-41542",
-        "evse_id": "PL-41542",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-41542-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-09-05T10:45:16"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "18.475103677555495",
-          "longitude": "54.38376549796162"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/260acd2c-ff0f-45e4-b52c-fb2f5d47f404.png",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "png",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-09-05T10:45:16"
+{
+  "data": [
+    {
+      "id": "DQOW9LNYYH",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "975 ",
+      "city": "Paleśnica",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "49.76997753844849",
+        "longitude": "20.83132265517432"
       },
-      {
-        "uid": "PL-46234",
-        "evse_id": "PL-46234",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-46234-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-09-05T10:49:48"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "18.474386161851626",
-          "longitude": "54.3830899084037"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/a3d938ea-59d3-4490-af5c-3e9eae42c0b8.png",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "png",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-09-05T10:49:48"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "OPTIMA POWER SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "80-298",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "B597917BC6",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Marymoncka 34",
-    "city": "Warszawa",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "20.95984766671963",
-      "longitude": "52.2827746013458"
-    },
-    "evses": [
-      {
-        "uid": "PL-50434",
-        "evse_id": "PL-50434",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-50434-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-03-11T10:46:24"
+      "evses": [
+        {
+          "uid": "PL-97453",
+          "evse_id": "PL-97453",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-97453-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": null,
+              "terms_and_conditions": null,
+              "last_updated": "2025-10-27T12:45:42"
+            },
+            {
+              "id": "PL-97453-2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": null,
+              "terms_and_conditions": null,
+              "last_updated": "2025-10-27T12:45:42"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "49.76997753844849",
+            "longitude": "20.83132265517432"
           },
-          {
-            "id": "PL-50434-2",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-03-11T10:46:24"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "20.95984766671963",
-          "longitude": "52.2827746013458"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": null,
-        "last_updated": "2025-03-11T10:46:24"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "Akademia Wychowania Fizycznego Józefa Piłsudskiego",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "00-968",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "A82A82F28B",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Walońska 17",
-    "city": "Wrocław",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "17.05221562647133",
-      "longitude": "51.10367902348401"
-    },
-    "evses": [
-      {
-        "uid": "PL-92355",
-        "evse_id": "PL-92355",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-92355-2",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-07-21T12:46:27"
-          },
-          {
-            "id": "PL-92355-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-07-21T12:46:27"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "17.05221562647133",
-          "longitude": "51.10367902348401"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/d41e79c9-719a-417d-9d76-efb9aea8627d.jpg",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "jpg",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-07-21T12:46:27"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "Wspólnota Mieszkaniowa Angel River",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "50-057",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "C32F35F448",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Zastań 301",
-    "city": "Zastań",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "14.691059022798953",
-      "longitude": "53.98719967983622"
-    },
-    "evses": [
-      {
-        "uid": "PL-29255",
-        "evse_id": "PL-29255",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-29255-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 22,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-04-30T10:03:34"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "14.691059022798953",
-          "longitude": "53.98719967983622"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": null,
-        "last_updated": "2025-04-30T10:03:34"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
-    },
-    "subOperator": null,
-    "owner": {
-      "name": "Jochen Strauss ",
-      "website": null,
-      "logo": null
-    },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "72-514",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
-    },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  },
-  {
-    "id": "D85F0805E4",
-    "publish": true,
-    "name": "EV24 Charging Station",
-    "address": "Wspólna 19",
-    "city": "Mierzęcice",
-    "state": null,
-    "country": null,
-    "coordinates": {
-      "latitude": "19.12960751181107",
-      "longitude": "50.4634704535159"
-    },
-    "evses": [
-      {
-        "uid": "PL-69470",
-        "evse_id": "PL-69470",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-69470-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 11,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-08-05T13:06:32"
-          },
-          {
-            "id": "PL-69470-2",
-            "standard": "IEC_62196_T2_COMBO",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 30,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-08-05T13:06:32"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "19.129605572463586",
-          "longitude": "50.46351183545094"
-        },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/0cd1746f-17d2-4a57-b88e-cd99aabe5e99.jpg",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "jpg",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-08-05T13:06:32"
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": null,
+          "last_updated": "2025-10-27T12:45:42"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
       },
-      {
-        "uid": "PL-66348",
-        "evse_id": "PL-66348",
-        "status": "AVAILABLE",
-        "status_schedule": null,
-        "capabilities": [
-          "CREDIT_CARD_PAYABLE",
-          "DEBIT_CARD_PAYABLE"
-        ],
-        "connectors": [
-          {
-            "id": "PL-66348-1",
-            "standard": "IEC_62196_T2",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 11,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-08-07T15:40:24"
+      "subOperator": null,
+      "owner": {
+        "name": "\"CESTOR\" SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "32-842",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-31T15:13:07"
+    },
+    {
+      "id": "QA2NERYGOD",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Tarnowska 9",
+      "city": "Ciężkowice",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "49.7944839",
+        "longitude": "20.9745383"
+      },
+      "evses": [
+        {
+          "uid": "PL-97882",
+          "evse_id": "PL-97882",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-97882-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-97882"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-10-17T11:23:24"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "49.7944839",
+            "longitude": "20.9745383"
           },
-          {
-            "id": "PL-66348-2",
-            "standard": "IEC_62196_T2_COMBO",
-            "format": null,
-            "power_type": "AC_3_PHASE",
-            "max_voltage": 400,
-            "max_amperage": 32,
-            "max_electric_power": 30,
-            "tariff_ids": null,
-            "terms_and_conditions": null,
-            "last_updated": "2025-08-07T15:40:24"
-          }
-        ],
-        "floor_level": null,
-        "coordinates": {
-          "latitude": "19.12960751181107",
-          "longitude": "50.4634704535159"
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": null,
+          "last_updated": "2025-10-17T11:23:24"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Gmina Ciężkowice",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "33-190",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-31T15:10:59"
+    },
+    {
+      "id": "HOXB8FTQ2Z",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Świętego Michała Archanioła 3",
+      "city": "Rzeszów",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "50.02712455442917",
+        "longitude": "22.025736340824885"
+      },
+      "evses": [
+        {
+          "uid": "ZH-50500",
+          "evse_id": "ZH-50500",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "ZH-50500-2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "ZH-50500"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-01-06T15:59:59"
+            },
+            {
+              "id": "ZH-50500-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "ZH-50500"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-01-06T15:59:59"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "50.02712455442917",
+            "longitude": "22.025736340824885"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/0ce04b7f-3f06-451c-b13d-0280f186fef3.png",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-01-06T15:59:59"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "EV24",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "35-332",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-31T14:53:04"
+    },
+    {
+      "id": "6F7E6EB1B1",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": " 6f",
+      "city": "Kletno",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "50.262543267519945",
+        "longitude": "16.87050996359832"
+      },
+      "evses": [
+        {
+          "uid": "PL-94597",
+          "evse_id": "PL-94597",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-94597-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-94597"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-05-09T12:37:37"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "50.262543267519945",
+            "longitude": "16.87050996359832"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/bf35fb22-b93e-4241-b506-73a80c7f1804.jpg",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "jpg",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-05-09T12:37:37"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Nad Stawami Spółka z ograniczoną odpowiedzialnością",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "57-550",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
+    },
+    {
+      "id": "B39E9C5FEA",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Ścinawska 4",
+      "city": "Legnica",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "51.215688012866735",
+        "longitude": "16.173961743804995"
+      },
+      "evses": [
+        {
+          "uid": "PL-00803",
+          "evse_id": "PL-00803",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-00803-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-00803"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-06-30T13:38:56"
+            },
+            {
+              "id": "PL-00803-2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-00803"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-06-30T13:38:56"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "51.215688012866735",
+            "longitude": "16.173961743804995"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/4e023fb4-390f-49b8-8340-b8f8ab070013.png",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-06-30T13:38:56"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Hotel Sękowski sp. z o.o.",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "59-220",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
+    },
+    {
+      "id": "A0979691B3",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Generała Władysława Sikorskiego 6",
+      "city": "Oława",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "50.93339877477726",
+        "longitude": "17.30203988389199"
+      },
+      "evses": [
+        {
+          "uid": "PL-47476",
+          "evse_id": "PL-47476",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-47476-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-47476"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-10-15T11:41:09"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "50.93339877477726",
+            "longitude": "17.30203988389199"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/10e44f57-2950-4a42-98ed-c1087788cbe6.jpeg",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "jpeg",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-10-15T11:41:09"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "\"Oławian Hotel\" Teresa i Piotr Maraj Spółka Jawna",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "55-200",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
+    },
+    {
+      "id": "ACD158B6AF",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Juliusza Słowackiego ",
+      "city": "Gdańsk",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "54.383434",
+        "longitude": "18.474832"
+      },
+      "evses": [
+        {
+          "uid": "PL-41542",
+          "evse_id": "PL-41542",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-41542-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-41542"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-09-05T10:45:16"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "54.383434",
+            "longitude": "18.474832"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/260acd2c-ff0f-45e4-b52c-fb2f5d47f404.png",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-09-05T10:45:16"
         },
-        "physical_reference": null,
-        "directions": null,
-        "parking_restrictions": null,
-        "images": [
-          {
-            "url": "https://app.ev24.cloud/dynamic-assets/photos/29405255-61cd-4afc-bae4-d8f3cbf1b55b.jpg",
-            "thumbnail": null,
-            "category": "CHARGER",
-            "type": "jpg",
-            "width": null,
-            "height": null
-          }
-        ],
-        "last_updated": "2025-08-07T15:40:24"
-      }
-    ],
-    "directions": null,
-    "operator": {
-      "name": "EV24",
-      "website": "https://ev24.cloud",
-      "logo": {
-        "url": "https://ev24.cloud/en/assets/images/logo.svg",
-        "thumbnail": null,
-        "category": "NETWORK",
-        "type": "svg",
-        "width": null,
-        "height": null
-      }
+        {
+          "uid": "PL-46234",
+          "evse_id": "PL-46234",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-46234-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-46234"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-09-05T10:49:48"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "54.383434",
+            "longitude": "18.474832"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/a3d938ea-59d3-4490-af5c-3e9eae42c0b8.png",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "png",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-09-05T10:49:48"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "OPTIMA POWER SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "80-298",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
     },
-    "subOperator": null,
-    "owner": {
-      "name": "Gmina Mierzęcice",
-      "website": null,
-      "logo": null
+    {
+      "id": "B597917BC6",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Marymoncka 34",
+      "city": "Warszawa",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "52.28282926276267",
+        "longitude": "20.95958589026648"
+      },
+      "evses": [
+        {
+          "uid": "PL-50434",
+          "evse_id": "PL-50434",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-50434-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-50434"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-03-11T10:46:24"
+            },
+            {
+              "id": "PL-50434-2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-50434"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-03-11T10:46:24"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "52.28282926276267",
+            "longitude": "20.95958589026648"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": null,
+          "last_updated": "2025-03-11T10:46:24"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Akademia Wychowania Fizycznego Józefa Piłsudskiego",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "01-813",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
     },
-    "facilities": null,
-    "images": null,
-    "country_code": "PL",
-    "party_id": null,
-    "postal_code": "42-100",
-    "parking_type": null,
-    "time_zone": "Europe/Warsaw",
-    "opening_times": {
-      "twentyfourseven": true,
-      "regular_hours": null,
-      "exceptional_openings": null,
-      "exceptional_closings": null
+    {
+      "id": "A82A82F28B",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Walońska 17",
+      "city": "Wrocław",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "51.10367688853152",
+        "longitude": "17.05226186269557"
+      },
+      "evses": [
+        {
+          "uid": "PL-92355",
+          "evse_id": "PL-92355",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-92355-2",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-92355"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-07-21T12:46:27"
+            },
+            {
+              "id": "PL-92355-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-92355"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-07-21T12:46:27"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "51.10367688853152",
+            "longitude": "17.05226186269557"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/d41e79c9-719a-417d-9d76-efb9aea8627d.jpg",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "jpg",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-07-21T12:46:27"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Wspólnota Mieszkaniowa Angel River",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "50-413",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
     },
-    "charging_when_closed": null,
-    "energy_mix": null,
-    "last_updated": "2025-10-22T12:09:08"
-  }
-]
+    {
+      "id": "C32F35F448",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": " 301",
+      "city": "Zastań",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "53.987218604406394",
+        "longitude": "14.691059589385988"
+      },
+      "evses": [
+        {
+          "uid": "PL-29255",
+          "evse_id": "PL-29255",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-29255-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 22,
+              "tariff_ids": [
+                "PL-29255"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-04-30T10:03:34"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "53.987218604406394",
+            "longitude": "14.691059589385988"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": null,
+          "last_updated": "2025-04-30T10:03:34"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Jochen Strauss ",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "72-514",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
+    },
+    {
+      "id": "D85F0805E4",
+      "publish": true,
+      "name": "EV24 Charging Station",
+      "address": "Wspólna ",
+      "city": "",
+      "state": null,
+      "country": "Polska",
+      "coordinates": {
+        "latitude": "50.46350424925565",
+        "longitude": "19.129375063854717"
+      },
+      "evses": [
+        {
+          "uid": "PL-69470",
+          "evse_id": "PL-69470",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-69470-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 11,
+              "tariff_ids": [
+                "PL-69470"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-08-05T13:06:32"
+            },
+            {
+              "id": "PL-69470-2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 30,
+              "tariff_ids": [
+                "PL-69470"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-08-05T13:06:32"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "50.46350424925565",
+            "longitude": "19.129375063854717"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/0cd1746f-17d2-4a57-b88e-cd99aabe5e99.jpg",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "jpg",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-08-05T13:06:32"
+        },
+        {
+          "uid": "PL-66348",
+          "evse_id": "PL-66348",
+          "status": "AVAILABLE",
+          "status_schedule": null,
+          "capabilities": [
+            "CREDIT_CARD_PAYABLE",
+            "DEBIT_CARD_PAYABLE"
+          ],
+          "connectors": [
+            {
+              "id": "PL-66348-1",
+              "standard": "IEC_62196_T2",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 11,
+              "tariff_ids": [
+                "PL-66348"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-08-07T15:40:24"
+            },
+            {
+              "id": "PL-66348-2",
+              "standard": "IEC_62196_T2_COMBO",
+              "format": null,
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 400,
+              "max_amperage": 32,
+              "max_electric_power": 30,
+              "tariff_ids": [
+                "PL-66348"
+              ],
+              "terms_and_conditions": null,
+              "last_updated": "2025-08-07T15:40:24"
+            }
+          ],
+          "floor_level": null,
+          "coordinates": {
+            "latitude": "50.46350424925565",
+            "longitude": "19.129375063854717"
+          },
+          "physical_reference": null,
+          "directions": null,
+          "parking_restrictions": null,
+          "images": [
+            {
+              "url": "https://app.ev24.cloud/dynamic-assets/photos/29405255-61cd-4afc-bae4-d8f3cbf1b55b.jpg",
+              "thumbnail": null,
+              "category": "CHARGER",
+              "type": "jpg",
+              "width": null,
+              "height": null
+            }
+          ],
+          "last_updated": "2025-08-07T15:40:24"
+        }
+      ],
+      "directions": null,
+      "operator": {
+        "name": "EV24",
+        "website": "https://ev24.cloud",
+        "logo": {
+          "url": "https://ev24.cloud/en/assets/images/logo.svg",
+          "thumbnail": null,
+          "category": "NETWORK",
+          "type": "svg",
+          "width": null,
+          "height": null
+        }
+      },
+      "subOperator": null,
+      "owner": {
+        "name": "Gmina Mierzęcice",
+        "website": null,
+        "logo": null
+      },
+      "facilities": null,
+      "images": null,
+      "country_code": "PL",
+      "party_id": null,
+      "postal_code": "42-460",
+      "parking_type": null,
+      "time_zone": "Europe/Warsaw",
+      "opening_times": {
+        "twentyfourseven": true,
+        "regular_hours": null,
+        "exceptional_openings": null,
+        "exceptional_closings": null
+      },
+      "charging_when_closed": null,
+      "energy_mix": null,
+      "last_updated": "2025-10-22T12:09:08"
+    }
+  ],
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2025-11-07T04:11:53.838579335Z"
+}

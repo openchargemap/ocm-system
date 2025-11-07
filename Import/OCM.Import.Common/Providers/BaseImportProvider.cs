@@ -186,9 +186,10 @@ namespace OCM.Import.Providers
 
         public void Log(string message)
         {
+#if DEBUG
             this.ProcessingLog += "\r\n[" + ProviderName + "]: " + message;
-
             System.Diagnostics.Debug.WriteLine(message);
+#endif
         }
 
         public string ConvertUppercaseToTitleCase(string val)

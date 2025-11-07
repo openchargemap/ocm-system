@@ -1,0 +1,60 @@
+services:
+  ocm-import-worker:
+    image: ocm-import-worker:latest
+    container_name: ocm-import-worker
+    build:
+      context: ../..
+      dockerfile: Import/OCM.Import.Worker/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Add your configuration here
+      # - ImportSettings__MasterAPIBaseUrl=https://api.openchargemap.io/v3
+      # - ImportSettings__TempFolderPath=/app/temp
+      # - ImportSettings__GeolocationShapefilePath=/app/Shapefiles/World
+    volumes:
+      # Mount temp folder for caching
+      - ocm-import-temp:/app/temp
+      # Mount logs
+      - ocm-import-logs:/app/logs
+    restart: unless-stopped
+    # Uncomment to use host network mode
+    # network_mode: host
+    
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Health check (uncomment and adjust if you have a health endpoint)
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    #   interval: 30s
+    #   timeout: 3s
+    #   retries: 3
+    #   start_period: 10s
+
+volumes:
+  ocm-import-temp:
+    driver: local
+  ocm-import-logs:
+    driver: local
+
+# Uncomment if you need to connect to a database or other services
+# networks:
+#   ocm-network:
+#     driver: bridge

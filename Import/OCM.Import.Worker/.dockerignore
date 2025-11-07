@@ -1,0 +1,95 @@
+# .dockerignore for OCM.Import.Worker
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/build/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+!**/packages/build/
+*.lock.json
+
+# MSTest
+*.testlog
+*.VisualState.xml
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Rider
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.bak
+*.cache
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+
+# Sensitive files
+appsettings.Development.json
+appsettings.Local.json
+*.pfx
+*.key
+secrets.json
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Documentation
+*.md
+LICENSE
+docs/
+documentation/
+
+# CI/CD
+.github/
+.azuredevops/
+azure-pipelines*.yml
+.gitlab-ci.yml
+
+# Temporary files
+*.tmp
+*.temp
+*~
