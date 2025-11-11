@@ -23,16 +23,6 @@ services:
     # Uncomment to use host network mode
     # network_mode: host
     
-    # Resource limits (adjust as needed)
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 4G
-        reservations:
-          cpus: '0.5'
-          memory: 1G
-    
     # Logging configuration
     logging:
       driver: "json-file"
