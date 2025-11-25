@@ -1,4 +1,3 @@
-using Ben.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -48,10 +47,6 @@ namespace OCM.API.Web.Standard
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-#if DEBUG
-            app.UseBlockingDetection();
-#endif
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -1,4 +1,3 @@
-using Ben.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -22,7 +21,14 @@ namespace OCM.Web
             var settings = new Core.Settings.CoreSettings();
             configuration.GetSection("CoreSettings").Bind(settings);
 
-            Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
+            try
+            {
+                Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to connect to MongoDB for caching: " + ex.Message);
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -88,10 +94,6 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-#if DEBUG
-            app.UseBlockingDetection();
-#endif
-
             app.UseSession();
 
             app.UseStatusCodePagesWithRedirects("~/Home/Error?code={0}");

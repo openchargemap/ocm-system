@@ -19,17 +19,10 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Ben.BlockingDetector" Version="0.0.4" />
+    
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="9.0.8" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.9.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.50">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+
   </ItemGroup>
 
   <ItemGroup>
