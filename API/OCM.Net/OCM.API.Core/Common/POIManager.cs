@@ -359,7 +359,7 @@ namespace OCM.API.Common
             // clone filter settings to remove mutation side effects in callers
             var filter = JsonConvert.DeserializeObject<APIRequestParams>(JsonConvert.SerializeObject(filterParams));
 
-       
+
             var stopwatch = Stopwatch.StartNew();
 
             filter.EnableCaching = false;
@@ -552,6 +552,7 @@ namespace OCM.API.Common
 
                 var additionalFilteredList = await filteredList
                     .Take(maxResults)
+                    .AsSingleQuery()
                     .ToListAsync();
 
                 stopwatch.Stop();
