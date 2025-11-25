@@ -184,6 +184,11 @@ namespace OCM.Import.Providers
             return ProviderName;
         }
 
+        public int GetProviderID()
+        {
+            return DataProviderID;
+        }
+
         public void Log(string message)
         {
 #if DEBUG

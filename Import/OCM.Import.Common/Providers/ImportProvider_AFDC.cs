@@ -164,6 +164,7 @@ namespace OCM.Import.Providers
                                     break;
                                 case "evrange":
                                     cp.OperatorID = 3526;
+                                    skipItem = true; // skip AFDC import for ev range due to misplaced locations on AFDC at request of operator
                                     break;
                                 case "zefnet":
                                     cp.OperatorID = 3454;

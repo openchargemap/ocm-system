@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OCM.API.Client;
 using OCM.API.Common.Model;
+using OCM.Import.Providers;
 
 namespace OCM.Import.Worker
 {
@@ -76,13 +78,12 @@ namespace OCM.Import.Worker
                 // Clean up old failed import records (older than threshold)
                 CleanupFailedImports();
 
-                // Fetch current data provider list from API
-                var coreRefData = await _client.GetCoreReferenceDataAsync();
-                var allDataProviders = coreRefData.DataProviders;
+                // Discover all IImportProvider implementations using reflection
+                var allImportProviders = GetAllImportProviders();
 
-                if (allDataProviders == null || !allDataProviders.Any())
+                if (!allImportProviders.Any())
                 {
-                    _logger.LogWarning("No data providers found from API");
+                    _logger.LogWarning("No import provider implementations found");
                     return;
                 }
 
@@ -95,28 +96,44 @@ namespace OCM.Import.Worker
                     return;
                 }
 
+                // Fetch core reference data (needed to check DateLastImported for each provider)
+                var coreRefData = await _client.GetCoreReferenceDataAsync();
+                var allDataProviders = coreRefData.DataProviders;
+
                 // Find providers that are due for import (last imported > 24 hours ago or never imported)
                 var now = DateTime.UtcNow;
-                var providersDue = allDataProviders
-                    .Where(dp => enabledProviderNames.Any(name => 
-                        string.Equals(dp.Title, name, StringComparison.OrdinalIgnoreCase)))
-                    .Where(dp => 
-                        !dp.DateLastImported.HasValue || 
-                        (now - dp.DateLastImported.Value).TotalHours >= IMPORT_DUE_THRESHOLD_HOURS)
-                    .Where(dp => !IsProviderRecentlyFailed(dp.Title, now)) // Exclude recently failed providers
-                    .OrderBy(dp => dp.DateLastImported ?? DateTime.MinValue) // Oldest first
+                var providersDue = allImportProviders
+                    .Where(ip => enabledProviderNames.Any(name => 
+                        string.Equals(ip.GetProviderName(), name, StringComparison.OrdinalIgnoreCase)))
+                    .Select(ip => new 
+                    {
+                        ImportProvider = ip,
+                        DataProvider = allDataProviders?.FirstOrDefault(dp => dp.ID== ip.GetProviderID())
+                    })
+                    .Where(p => 
+                        p.DataProvider == null || 
+                        !p.DataProvider.DateLastImported.HasValue || 
+                        (now - p.DataProvider.DateLastImported.Value).TotalHours >= IMPORT_DUE_THRESHOLD_HOURS)
+                    .Where(p => !IsProviderRecentlyFailed(p.ImportProvider.GetProviderName(), now)) // Exclude recently failed providers
+                    .OrderBy(p => p.DataProvider?.DateLastImported ?? DateTime.MinValue) // Oldest first
                     .ToList();
 
                 if (!providersDue.Any())
                 {
                     // Check if there are providers that would be due but are excluded due to recent failures
-                    var providersBlockedByFailure = allDataProviders
-                        .Where(dp => enabledProviderNames.Any(name => 
-                            string.Equals(dp.Title, name, StringComparison.OrdinalIgnoreCase)))
-                        .Where(dp => 
-                            !dp.DateLastImported.HasValue || 
-                            (now - dp.DateLastImported.Value).TotalHours >= IMPORT_DUE_THRESHOLD_HOURS)
-                        .Where(dp => IsProviderRecentlyFailed(dp.Title, now))
+                    var providersBlockedByFailure = allImportProviders
+                        .Where(ip => enabledProviderNames.Any(name => 
+                            string.Equals(ip.GetProviderName(), name, StringComparison.OrdinalIgnoreCase)))
+                        .Select(ip => new 
+                        {
+                            ImportProvider = ip,
+                            DataProvider = allDataProviders?.FirstOrDefault(dp => dp.ID == ip.GetProviderID())
+                        })
+                        .Where(p => 
+                            p.DataProvider == null || 
+                            !p.DataProvider.DateLastImported.HasValue || 
+                            (now - p.DataProvider.DateLastImported.Value).TotalHours >= IMPORT_DUE_THRESHOLD_HOURS)
+                        .Where(p => IsProviderRecentlyFailed(p.ImportProvider.GetProviderName(), now))
                         .ToList();
 
                     if (providersBlockedByFailure.Any())
@@ -128,21 +145,26 @@ namespace OCM.Import.Worker
                     }
 
                     // No providers due - calculate when the next one will be due
-                    var nextProviderDue = allDataProviders
-                        .Where(dp => enabledProviderNames.Any(name => 
-                            string.Equals(dp.Title, name, StringComparison.OrdinalIgnoreCase)))
-                        .Where(dp => dp.DateLastImported.HasValue)
-                        .Where(dp => !IsProviderRecentlyFailed(dp.Title, now))
-                        .OrderBy(dp => dp.DateLastImported.Value)
+                    var nextProviderDue = allImportProviders
+                        .Where(ip => enabledProviderNames.Any(name => 
+                            string.Equals(ip.GetProviderName(), name, StringComparison.OrdinalIgnoreCase)))
+                        .Select(ip => new 
+                        {
+                            ImportProvider = ip,
+                            DataProvider = allDataProviders?.FirstOrDefault(dp => dp.ID == ip.GetProviderID())
+                        })
+                        .Where(p => p.DataProvider?.DateLastImported != null)
+                        .Where(p => !IsProviderRecentlyFailed(p.ImportProvider.GetProviderName(), now))
+                        .OrderBy(p => p.DataProvider.DateLastImported.Value)
                         .FirstOrDefault();
 
-                    if (nextProviderDue != null && nextProviderDue.DateLastImported.HasValue)
+                    if (nextProviderDue != null && nextProviderDue.DataProvider?.DateLastImported != null)
                     {
-                        var nextDueTime = nextProviderDue.DateLastImported.Value.AddHours(IMPORT_DUE_THRESHOLD_HOURS);
+                        var nextDueTime = nextProviderDue.DataProvider.DateLastImported.Value.AddHours(IMPORT_DUE_THRESHOLD_HOURS);
                         var timeUntilDue = nextDueTime - now;
                         
                         _logger.LogInformation(
-                            $"No imports currently due. Next provider '{nextProviderDue.Title}' due in {timeUntilDue.TotalHours:F1} hours at {nextDueTime:yyyy-MM-dd HH:mm:ss} UTC"
+                            $"No imports currently due. Next provider '{nextProviderDue.ImportProvider.GetProviderName()}' due in {timeUntilDue.TotalHours:F1} hours at {nextDueTime:yyyy-MM-dd HH:mm:ss} UTC"
                         );
                     }
                     else
@@ -155,14 +177,16 @@ namespace OCM.Import.Worker
 
                 // Get the highest priority provider (oldest DateLastImported)
                 var providerToImport = providersDue.First();
-                var providerName = providerToImport.Title;
+                var providerName = providerToImport.ImportProvider.GetProviderName();
 
-                var lastImportAge = providerToImport.DateLastImported.HasValue 
-                    ? $"{(now - providerToImport.DateLastImported.Value).TotalHours:F1} hours ago"
+                var lastImportAge = providerToImport.DataProvider?.DateLastImported != null 
+                    ? $"{(now - providerToImport.DataProvider.DateLastImported.Value).TotalHours:F1} hours ago"
                     : "never";
 
+                var dataProviderId = providerToImport.DataProvider?.ID ?? 0;
+
                 _logger.LogInformation(
-                    $"Performing import for '{providerName}' (ID: {providerToImport.ID}, Last imported: {lastImportAge}). " +
+                    $"Performing import for '{providerName}' (ID: {dataProviderId}, Last imported: {lastImportAge}). " +
                     $"{providersDue.Count} provider(s) total are due for import."
                 );
 
@@ -197,7 +221,7 @@ namespace OCM.Import.Worker
                             PerformDeduplication = true,
                             ProviderName = providerName,
                             Credentials = apiKeys
-                        });
+                        }, providerToImport.ImportProvider);
 
                     stopwatch.Stop();
 
@@ -373,6 +397,53 @@ namespace OCM.Import.Worker
         {
             _timer?.Dispose();
             base.Dispose();
+        }
+
+        /// <summary>
+        /// Discovers all types in the OCM.Import.Common assembly that implement IImportProvider
+        /// and have a parameterless constructor
+        /// </summary>
+        private List<IImportProvider> GetAllImportProviders()
+        {
+            var providers = new List<IImportProvider>();
+
+            try
+            {
+
+                // Get the assembly containing IImportProvider implementations
+                var importAssembly = typeof(IImportProvider).Assembly;
+
+                // Find all types that implement IImportProvider
+                var providerTypes = importAssembly.GetTypes()
+                    .Where(t => typeof(IImportProvider).IsAssignableFrom(t) 
+                        && !t.IsInterface 
+                        && !t.IsAbstract
+                        && t.GetConstructor(Type.EmptyTypes) != null) // Has parameterless constructor
+                    .ToList();
+
+                _logger.LogInformation($"Found {providerTypes.Count} import provider implementation(s)");
+
+                // Instantiate each provider
+                foreach (var providerType in providerTypes)
+                {
+                    try
+                    {
+                        var provider = (IImportProvider)Activator.CreateInstance(providerType);
+                        providers.Add(provider);
+                        _logger.LogDebug($"Instantiated import provider: {provider.GetProviderName()}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, $"Failed to instantiate import provider {providerType.Name}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error discovering import providers");
+            }
+
+            return providers;
         }
     }
 

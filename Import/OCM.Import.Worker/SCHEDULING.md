@@ -26,14 +26,15 @@ Every cycle (configured via `ImportRunFrequencyMinutes`), the worker:
 
 The worker maintains an **in-memory cache** of failed imports:
 
-- When an import **fails** (exception or returns `false`):
+- When an import **fails with an exception**:
   - Provider is added to failed imports cache with timestamp
   - Provider will be **skipped** for the next 24 hours
   - Failure count is tracked for diagnostics
 
-- When an import **succeeds**:
+- When an import **completes successfully** (with or without changes):
   - Provider is removed from failed imports cache
   - Normal scheduling resumes
+  - Note: `importedOK = false` is NOT treated as a failure - it may just mean no changes were needed
 
 - **Automatic cleanup**:
   - Failed import records older than 24 hours are automatically removed
@@ -99,12 +100,20 @@ If no providers are due for import:
 [2025-01-15 10:05:23] Provider 'zepto.pl' removed from failed imports tracking after successful import
 ```
 
+### Import with No Changes
+```
+[2025-01-15 10:00:00] Performing import for 'powergo' (ID: 35, Last imported: 25.0 hours ago)
+[2025-01-15 10:01:15] Import for 'powergo' completed in 75.2 seconds (no changes or warnings)
+```
+**Note:** This is NOT treated as a failure - the provider will be imported again normally in 24 hours.
+
 ### Import Failure
 ```
 [2025-01-15 10:00:00] Performing import for 'afdc.energy.gov' (ID: 23, Last imported: 30.2 hours ago)
 [2025-01-15 10:02:15] Import failed for provider 'afdc.energy.gov': Connection timeout. Will not retry for 24 hours.
 [2025-01-15 10:02:15] Provider 'afdc.energy.gov' added to failed imports tracking
 ```
+**Note:** Only actual exceptions trigger failure tracking.
 
 ### Repeated Failure
 ```

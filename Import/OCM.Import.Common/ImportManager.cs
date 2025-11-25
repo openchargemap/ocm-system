@@ -237,34 +237,44 @@ namespace OCM.Import
             return providers;
         }
 
-        public async Task<bool> PerformImportProcessing(ImportProcessSettings settings)
+        public async Task<bool> PerformImportProcessing(ImportProcessSettings settings, IImportProvider importProvider = null)
         {
 
             var credentials = GetAPISessionCredentials("System", settings.Credentials["IMPORT-ocm-system"]);
 
             var coreRefData = await _client.GetCoreReferenceDataAsync();
 
-            var providers = GetImportProviders(coreRefData.DataProviders, settings);
-
-            var providerMatched = false;
-            foreach (var provider in providers)
+            if (importProvider != null)
             {
-                if (settings.ProviderName == null || settings.ProviderName.ToLower() == provider.GetProviderName().ToLower())
-                {
-                    providerMatched = true;
-                    var result = await PerformImport(settings, credentials, coreRefData, provider);
+                var result = await PerformImport(settings, credentials, coreRefData, importProvider);
 
-                    Log(result.Log);
+                Log(result.Log);
 
-
-                    return result.IsSuccess;
-
-                }
+                return result.IsSuccess;
             }
-
-            if (!string.IsNullOrEmpty(settings.ProviderName) && !providerMatched)
+            else
             {
-                Log($"No import provider was matched for {settings.ProviderName}");
+                var providers = GetImportProviders(coreRefData.DataProviders, settings);
+
+                var providerMatched = false;
+                foreach (var provider in providers)
+                {
+                    if (settings.ProviderName == null || settings.ProviderName.ToLower() == provider.GetProviderName().ToLower())
+                    {
+                        providerMatched = true;
+                        var result = await PerformImport(settings, credentials, coreRefData, provider);
+
+                        Log(result.Log);
+
+                        return result.IsSuccess;
+
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(settings.ProviderName) && !providerMatched)
+                {
+                    Log($"No import provider was matched for {settings.ProviderName}");
+                }
             }
 
             return false;
@@ -787,7 +797,7 @@ namespace OCM.Import
 
             // Check 5: Proximity check (most expensive - only if no matches yet)
             if (duplicateReasons.Count == 0 &&
- GeoManager.IsClose(currentAddr.Latitude, currentAddr.Longitude, previousAddr.Latitude, previousAddr.Longitude, 2))
+        GeoManager.IsClose(currentAddr.Latitude, currentAddr.Longitude, previousAddr.Latitude, previousAddr.Longitude, 2))
             {
                 var distance = new GeoCoordinate(currentAddr.Latitude, currentAddr.Longitude)
                 .GetDistanceTo(new GeoCoordinate(previousAddr.Latitude, previousAddr.Longitude));
@@ -930,6 +940,7 @@ namespace OCM.Import
 
             ImportReport resultReport = new ImportReport();
             resultReport.ProviderDetails = p;
+            resultReport.IsSuccess = true;
 
             try
             {
@@ -984,6 +995,7 @@ namespace OCM.Import
                 {
                     //failed to load
                     Log("Failed to load input data.");
+                    resultReport.IsSuccess = false;
                     throw new Exception("Failed to fetch input data");
                 }
                 else
@@ -1160,6 +1172,7 @@ namespace OCM.Import
             catch (Exception exp)
             {
                 Log("Import Failed:" + provider.GetProviderName() + " ::" + exp.ToString());
+                resultReport.IsSuccess = false;
             }
 
             resultReport.Log = "";
