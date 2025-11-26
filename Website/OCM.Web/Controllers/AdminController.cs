@@ -12,6 +12,7 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Utils;
 using OCM.Core.Data;
+using OCM.Web.Services;
 
 namespace OCM.MVC.Controllers
 {
@@ -19,11 +20,13 @@ namespace OCM.MVC.Controllers
     {
         private IHostEnvironment _host;
         private IMemoryCache _cache;
+        private IAdminTaskService _adminTaskService;
 
-        public AdminController(IHostEnvironment host, IMemoryCache memoryCache)
+        public AdminController(IHostEnvironment host, IMemoryCache memoryCache, IAdminTaskService adminTaskService)
         {
             _host = host;
             _cache = memoryCache;
+            _adminTaskService = adminTaskService;
         }
 
         // GET: /Admin/

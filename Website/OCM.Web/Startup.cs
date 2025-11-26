@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OCM.MVC;
+using OCM.Web.Services;
 using System;
 
 namespace OCM.Web
@@ -21,14 +22,7 @@ namespace OCM.Web
             var settings = new Core.Settings.CoreSettings();
             configuration.GetSection("CoreSettings").Bind(settings);
 
-            try
-            {
-                Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Failed to connect to MongoDB for caching: " + ex.Message);
-            }
+            Core.Data.CacheProviderMongoDB.CreateDefaultInstance(settings);
         }
 
         public IConfiguration Configuration { get; }
@@ -89,6 +83,13 @@ namespace OCM.Web
                 options.AddPolicy("IsAdmin",
                     policy => policy.Requirements.Add(new IsUserAdminRequirement()));
             });
+
+            // Register memory cache before admin task service
+            services.AddMemoryCache();
+
+            // Register admin task service and background worker
+            services.AddSingleton<IAdminTaskService, AdminTaskService>();
+            services.AddHostedService<AdminTaskBackgroundService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
