@@ -297,7 +297,9 @@ namespace OCM.Core.Data
             if (updateStrategy == CacheUpdateStrategy.Incremental)
             {
                 var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                var maxPOI = await poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate).FirstAsync();
+                var maxPOI = await MongoDB.Driver.Linq.MongoQueryable.FirstOrDefaultAsync(
+                    poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate)
+                );
 
                 int maxId = 0;
                 if (maxPOI != null) { maxId = maxPOI.ID; }
@@ -320,7 +322,9 @@ namespace OCM.Core.Data
             if (updateStrategy == CacheUpdateStrategy.Modified)
             {
                 var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                var maxPOI = await poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate).FirstOrDefaultAsync();
+                var maxPOI = await MongoDB.Driver.Linq.MongoQueryable.FirstOrDefaultAsync(
+                    poiCollection.AsQueryable().OrderByDescending(s => s.DateLastStatusUpdate)
+                );
 
                 DateTime? dateLastModified = null;
                 if (maxPOI != null) { dateLastModified = maxPOI.DateLastStatusUpdate.Value.AddMinutes(-10); }
@@ -352,7 +356,7 @@ namespace OCM.Core.Data
                 var stopwatch = Stopwatch.StartNew();
 
                 // get data list, include navigation properties to improve query performance
-                var list = await dataList.ToListAsync();
+                var list = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(dataList);
 
                 stopwatch.Stop();
 
@@ -760,7 +764,9 @@ namespace OCM.Core.Data
             try
             {
                 var statusCollection = database.GetCollection<MirrorStatus>("status");
-                var currentStatus = await statusCollection.AsQueryable().FirstOrDefaultAsync();
+                var currentStatus = await MongoDB.Driver.Linq.MongoQueryable.FirstOrDefaultAsync(
+                    statusCollection.AsQueryable()
+                );
 
                 if (currentStatus == null)
                 {
@@ -776,10 +782,10 @@ namespace OCM.Core.Data
                 {
                     using (var db = new OCMEntities())
                     {
-                        currentStatus.TotalPOIInDB = await db.ChargePoints.LongCountAsync();
-                        currentStatus.LastPOIUpdate = await db.ChargePoints.MaxAsync(i => i.DateLastStatusUpdate);
-                        currentStatus.LastPOICreated = await db.ChargePoints.MaxAsync(i => i.DateCreated);
-                        currentStatus.MaxPOIId = await db.ChargePoints.MaxAsync(i => i.Id);
+                        currentStatus.TotalPOIInDB = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LongCountAsync(db.ChargePoints);
+                        currentStatus.LastPOIUpdate = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.MaxAsync(db.ChargePoints, i => i.DateLastStatusUpdate);
+                        currentStatus.LastPOICreated = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.MaxAsync(db.ChargePoints, i => i.DateCreated);
+                        currentStatus.MaxPOIId = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.MaxAsync(db.ChargePoints, i => i.Id);
                     }
                 }
                 else
@@ -795,8 +801,9 @@ namespace OCM.Core.Data
                 {
                     //perform check to see if number of distinct ids!= number of pois
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
-                    currentStatus.NumDistinctPOIs = await poiCollection.AsQueryable().DistinctBy(d => d.ID).CountAsync();
-
+                    currentStatus.NumDistinctPOIs = await MongoDB.Driver.Linq.MongoQueryable.CountAsync(
+                        poiCollection.AsQueryable().DistinctBy(d => d.ID)
+                    );
                 }
 
                 var serverInfo = client.Settings.Servers.FirstOrDefault();
@@ -1359,7 +1366,7 @@ namespace OCM.Core.Data
                 throw new ArgumentNullException(nameof(source));
             if (!(source is IAsyncEnumerable<TSource>))
                 return Task.FromResult(source.ToList());
-            return source.ToListAsync();
+            return Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(source);
         }
     }
 }
