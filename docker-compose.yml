@@ -1,0 +1,67 @@
+services:
+  ocm-web:
+    container_name: ocm-web
+    build:
+      context: .
+      dockerfile: Website/OCM.Web/Dockerfile
+    image: ocm-web:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - OCM_SQL_CONNECTION_STRING=Server=ocm-sql,1433;Database=OCM;User Id=sa;Password=example;TrustServerCertificate=True
+      - OCM_MONGODB_CONNECTION_STRING=mongodb://mongodb:27017
+    ports:
+      - "8080:80"
+    depends_on:
+      - ocm-sql
+      - mongodb
+    restart: unless-stopped
+
+  ocm-api:
+    container_name: ocm-api
+    build:
+      context: .
+      dockerfile: API/OCM.Net/OCM.API.Web/Dockerfile
+    image: ocm-api:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - OCM_SQL_CONNECTION_STRING=Server=ocm-sql,1433;Database=OCM;User Id=sa;Password=example;TrustServerCertificate=True
+      - OCM_MONGODB_CONNECTION_STRING=mongodb://mongodb:27017
+    ports:
+      - "8081:80"
+    depends_on:
+      - ocm-sql
+      - mongodb
+    restart: unless-stopped
+
+  mongodb:
+      image: mongodb/mongodb-community-server:latest # Or a specific version like 6.0
+      container_name: mongodb
+      ports:
+        - "27018:27017" # Map host port 27017 to container port 27017
+      volumes:
+        - mongodb_data:/data/db # Persist data outside the container
+      restart: unless-stopped # Restart the container unless manually stopped
+
+  ocm-sql:
+     image: mcr.microsoft.com/mssql/server:2025-latest
+     container_name: ocm-sql
+     hostname: ocm-sql
+     
+     environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=example
+        - MSSQL_PID=Developer
+     ports:
+       - "14333:1433"
+     volumes:
+       - mssql_data:/var/opt/mssql
+       - /data:/data
+     restart: unless-stopped
+
+volumes:
+  mongodb_data:
+    driver: local
+  mssql_data:
+    driver: local
