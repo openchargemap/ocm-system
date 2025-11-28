@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -447,6 +448,86 @@ namespace OCM.MVC.Controllers
             var cache = new CacheProviderMongoDB();
             var results = await cache.PerformPOIQueryBenchmark(10, "bounding");
             return View(results);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> MediaItemsWithoutThumbnails()
+        {
+            var mediaManager = new MediaItemManager();
+            var items = await mediaManager.GetMediaItemsWithMissingThumbnails(100);
+            
+            ViewBag.TotalCount = items.Count;
+            return View(items);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<JsonResult> ReprocessMediaItem(int id)
+        {
+            var mediaManager = new MediaItemManager();
+            string tempFolder = Path.Combine(Path.GetTempPath(), "OCM_MediaReprocess");
+            
+            if (!Directory.Exists(tempFolder))
+            {
+                Directory.CreateDirectory(tempFolder);
+            }
+
+            var result = await mediaManager.ReprocessMediaItem(id, tempFolder);
+            
+            return Json(new
+            {
+                success = result.Success,
+                message = result.Message,
+                thumbnailUrl = result.ThumbnailUrl,
+                mediumUrl = result.MediumUrl
+            });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<JsonResult> ReprocessAllMissingThumbnails(int batchSize = 10)
+        {
+            var mediaManager = new MediaItemManager();
+            var items = await mediaManager.GetMediaItemsWithMissingThumbnails(batchSize);
+            
+            string tempFolder = Path.Combine(Path.GetTempPath(), "OCM_MediaReprocess");
+            if (!Directory.Exists(tempFolder))
+            {
+                Directory.CreateDirectory(tempFolder);
+            }
+
+            int successCount = 0;
+            int failureCount = 0;
+            var results = new List<object>();
+
+            foreach (var item in items)
+            {
+                var result = await mediaManager.ReprocessMediaItem(item.Id, tempFolder);
+                
+                if (result.Success)
+                {
+                    successCount++;
+                }
+                else
+                {
+                    failureCount++;
+                }
+
+                results.Add(new
+                {
+                    id = item.Id,
+                    success = result.Success,
+                    message = result.Message
+                });
+            }
+
+            return Json(new
+            {
+                totalProcessed = items.Count,
+                successCount = successCount,
+                failureCount = failureCount,
+                results = results
+            });
         }
     }
 }

@@ -222,5 +222,139 @@ namespace OCM.API.Common
                 AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\", EntityID:" + mediaItemId + ",ChargePointID:" + cpID + "}", "User deleted media item");
             }
         }
+
+        public async Task<List<MediaItem>> GetMediaItemsWithMissingThumbnails(int maxResults = 100)
+        {
+            var dataModel = new OCMEntities();
+
+            var items = dataModel.MediaItems
+                .Where(m => m.IsEnabled == true && 
+                            m.ItemUrl != null && 
+                            (m.ItemThumbnailUrl == null || m.ItemThumbnailUrl == "") &&
+                            !m.IsExternalResource &&
+                            !m.IsVideo)
+                .Take(maxResults)
+                .ToList();
+
+            return items;
+        }
+
+        public async Task<ReprocessMediaResult> ReprocessMediaItem(int mediaItemId, string tempFolderPath)
+        {
+            var result = new ReprocessMediaResult { MediaItemId = mediaItemId };
+            var dataModel = new OCMEntities();
+
+            var mediaItem = dataModel.MediaItems.FirstOrDefault(m => m.Id == mediaItemId);
+            
+            if (mediaItem == null)
+            {
+                result.Success = false;
+                result.Message = "Media item not found";
+                return result;
+            }
+
+            if (string.IsNullOrEmpty(mediaItem.ItemUrl))
+            {
+                result.Success = false;
+                result.Message = "No original image URL";
+                return result;
+            }
+
+            if (mediaItem.IsVideo || mediaItem.IsExternalResource)
+            {
+                result.Success = false;
+                result.Message = "Cannot reprocess video or external resources";
+                return result;
+            }
+
+            // Get POI info for metadata
+            var poi = await new POIManager().Get(mediaItem.ChargePointId);
+            if (poi == null)
+            {
+                result.Success = false;
+                result.Message = "Associated charging location not found";
+                return result;
+            }
+
+            try
+            {
+                // Download the original image
+                string extension = Path.GetExtension(mediaItem.ItemUrl).ToLower();
+                if (string.IsNullOrEmpty(extension))
+                {
+                    extension = ".jpg";
+                }
+
+                string tempOriginalFile = Path.Combine(tempFolderPath, $"temp_original_{mediaItemId}{extension}");
+                
+                using (var client = new System.Net.Http.HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromMinutes(2);
+                    var imageBytes = await client.GetByteArrayAsync(mediaItem.ItemUrl);
+                    await File.WriteAllBytesAsync(tempOriginalFile, imageBytes);
+                }
+
+                // Generate thumbnails
+                string destFolderPrefix = poi.AddressInfo.Country.ISOCode + "/" + "OCM" + poi.ID + "/";
+                string dateStamp = String.Format("{0:yyyyMMddHHmmssff}", DateTime.UtcNow);
+                string thumbFileName = "OCM-" + poi.ID + ".thmb." + dateStamp + extension;
+                string mediumFileName = "OCM-" + poi.ID + ".medi." + dateStamp + extension;
+
+                string thumbFilePath = Path.Combine(tempFolderPath, thumbFileName);
+                string mediumFilePath = Path.Combine(tempFolderPath, mediumFileName);
+
+                GenerateImageThumbnails(tempOriginalFile, thumbFilePath, 100);
+                GenerateImageThumbnails(tempOriginalFile, mediumFilePath, 400);
+
+                // Upload to storage
+                var storage = new StorageManager();
+                var metadataTags = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("OCM", poi.ID.ToString()),
+                    new KeyValuePair<string, string>("Latitude", poi.AddressInfo.Latitude.ToString()),
+                    new KeyValuePair<string, string>("Longitude", poi.AddressInfo.Longitude.ToString())
+                };
+
+                string thumbnailUrl = await storage.UploadImageAsync(thumbFilePath, destFolderPrefix + thumbFileName, metadataTags);
+                string mediumUrl = await storage.UploadImageAsync(mediumFilePath, destFolderPrefix + mediumFileName, metadataTags);
+
+                // Update database
+                mediaItem.ItemThumbnailUrl = thumbnailUrl;
+                await dataModel.SaveChangesAsync();
+
+                // Clean up temp files
+                try
+                {
+                    File.Delete(tempOriginalFile);
+                    File.Delete(thumbFilePath);
+                    File.Delete(mediumFilePath);
+                }
+                catch { }
+
+                result.Success = true;
+                result.Message = "Successfully reprocessed";
+                result.ThumbnailUrl = thumbnailUrl;
+                result.MediumUrl = mediumUrl;
+
+                AuditLogManager.Log(null, AuditEventType.UpdatedItem, $"Reprocessed media item {mediaItemId}, generated thumbnail: {thumbnailUrl}", "");
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = $"Error: {ex.Message}";
+                AuditLogManager.Log(null, AuditEventType.SystemErrorAPI, $"Failed to reprocess media item {mediaItemId}: {ex.Message}", ex.ToString());
+            }
+
+            return result;
+        }
+    }
+
+    public class ReprocessMediaResult
+    {
+        public int MediaItemId { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string ThumbnailUrl { get; set; }
+        public string MediumUrl { get; set; }
     }
 }

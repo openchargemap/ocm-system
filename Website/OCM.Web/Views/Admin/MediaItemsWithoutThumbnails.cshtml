@@ -1,0 +1,204 @@
+﻿@model IEnumerable<OCM.Core.Data.MediaItem>
+@{
+    ViewBag.Title = "Media Items Without Thumbnails - Admin";
+
+}
+
+<div class="container">
+    <h2>Media Items Without Thumbnails</h2>
+    
+    <div class="alert alert-info">
+        <strong>Total Items Missing Thumbnails:</strong> @ViewBag.TotalCount
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary" id="reprocessAllBtn">
+                <i class="glyphicon glyphicon-refresh"></i> Reprocess All (Batch of 10)
+            </button>
+            <button type="button" class="btn btn-secondary" id="refreshListBtn">
+                <i class="glyphicon glyphicon-list"></i> Refresh List
+            </button>
+        </div>
+    </div>
+
+    <div id="progressArea" class="alert alert-info" style="display:none;">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" id="progressBar" style="width: 0%">
+                <span id="progressText">0%</span>
+            </div>
+        </div>
+        <p id="statusText"></p>
+    </div>
+
+    <div id="resultArea" class="alert" style="display:none;">
+        <h4>Results:</h4>
+        <ul id="resultList"></ul>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Charge Point ID</th>
+                    <th>Original Image</th>
+                    <th>Date Created</th>
+                    <th>User</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row-@item.Id">
+                        <td>@item.Id</td>
+                        <td>
+                            <a href="@Url.Action("Details", "POI", new { id = item.ChargePointId })" target="_blank">
+                                OCM-@item.ChargePointId
+                            </a>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ItemUrl))
+                            {
+                                <a href="@item.ItemUrl" target="_blank">
+                                    <img src="@item.ItemUrl" alt="Original" style="max-width: 100px; max-height: 100px;" />
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No URL</span>
+                            }
+                        </td>
+                        <td>@item.DateCreated.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@(item.User?.Username ?? "Unknown")</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-success reprocess-btn" data-id="@item.Id">
+                                <i class="glyphicon glyphicon-refresh"></i> Reprocess
+                            </button>
+                            <span class="status-msg-@item.Id"></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            <strong>Great!</strong> All media items have thumbnails.
+        </div>
+    }
+</div>
+
+
+    <script>
+        $(document).ready(function () {
+            
+            // Reprocess single item
+            $('.reprocess-btn').click(function () {
+                var btn = $(this);
+                var mediaId = btn.data('id');
+                var statusSpan = $('.status-msg-' + mediaId);
+                
+                btn.prop('disabled', true);
+                btn.html('<i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Processing...');
+                statusSpan.html('');
+                
+                $.ajax({
+                    url: '@Url.Action("ReprocessMediaItem", "Admin")',
+                    type: 'POST',
+                    data: { id: mediaId },
+                    success: function (result) {
+                        if (result.success) {
+                            statusSpan.html('<span class="text-success">✓ Success</span>');
+                            btn.html('<i class="glyphicon glyphicon-ok"></i> Done');
+                            btn.removeClass('btn-success').addClass('btn-default');
+                            
+                            // Remove row after 2 seconds
+                            setTimeout(function() {
+                                $('#row-' + mediaId).fadeOut();
+                            }, 2000);
+                        } else {
+                            statusSpan.html('<span class="text-danger">✗ ' + result.message + '</span>');
+                            btn.prop('disabled', false);
+                            btn.html('<i class="glyphicon glyphicon-refresh"></i> Retry');
+                        }
+                    },
+                    error: function () {
+                        statusSpan.html('<span class="text-danger">✗ Error</span>');
+                        btn.prop('disabled', false);
+                        btn.html('<i class="glyphicon glyphicon-refresh"></i> Retry');
+                    }
+                });
+            });
+
+            // Reprocess all (batch)
+            $('#reprocessAllBtn').click(function () {
+                var btn = $(this);
+                
+                if (!confirm('Reprocess a batch of 10 media items? This may take a few minutes.')) {
+                    return;
+                }
+                
+                btn.prop('disabled', true);
+                $('#progressArea').show();
+                $('#resultArea').hide();
+                $('#progressBar').css('width', '0%');
+                $('#progressText').text('0%');
+                $('#statusText').text('Starting batch reprocessing...');
+                
+                $.ajax({
+                    url: '@Url.Action("ReprocessAllMissingThumbnails", "Admin")',
+                    type: 'POST',
+                    data: { batchSize: 10 },
+                    success: function (result) {
+                        $('#progressBar').css('width', '100%');
+                        $('#progressText').text('100%');
+                        $('#statusText').text('Completed: ' + result.successCount + ' successful, ' + result.failureCount + ' failed');
+                        
+                        // Show results
+                        $('#resultArea').removeClass('alert-danger alert-success');
+                        if (result.failureCount === 0) {
+                            $('#resultArea').addClass('alert-success');
+                        } else {
+                            $('#resultArea').addClass('alert-warning');
+                        }
+                        
+                        $('#resultList').empty();
+                        $.each(result.results, function(i, item) {
+                            var icon = item.success ? '✓' : '✗';
+                            var cssClass = item.success ? 'text-success' : 'text-danger';
+                            $('#resultList').append('<li class="' + cssClass + '">' + icon + ' Media Item ' + item.id + ': ' + item.message + '</li>');
+                            
+                            if (item.success) {
+                                $('#row-' + item.id).fadeOut();
+                            }
+                        });
+                        
+                        $('#resultArea').show();
+                        btn.prop('disabled', false);
+                        
+                        // Refresh after completion
+                        if (result.successCount > 0) {
+                            setTimeout(function() {
+                                location.reload();
+                            }, 3000);
+                        }
+                    },
+                    error: function () {
+                        $('#statusText').text('Error processing batch');
+                        $('#progressBar').removeClass('progress-bar-striped active').addClass('progress-bar-danger');
+                        btn.prop('disabled', false);
+                    }
+                });
+            });
+
+            // Refresh list
+            $('#refreshListBtn').click(function () {
+                location.reload();
+            });
+        });
+    </script>
+
