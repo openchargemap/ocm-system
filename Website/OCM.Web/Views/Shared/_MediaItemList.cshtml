@@ -10,10 +10,12 @@
 
     @foreach (var item in Model.Where(i => i.IsEnabled && i.ItemURL!=null))
     {
+        var imgUrl = string.IsNullOrWhiteSpace(item.ItemThumbnailURL) ? item.ItemURL : item.ItemThumbnailURL.Replace("thmb", "medi");
+
         <div class="col-sm-6 col-md-3">
             <div class="img-thumbnail">
 
-                <img class="img-fluid" src="@(item.ItemThumbnailURL!=null?item.ItemThumbnailURL.Replace("thmb", "medi"):item.ItemURL)" onclick="showLightBox('@item.ItemURL');" />
+                <img class="img-fluid" src="@(imgUrl)" onclick="showLightBox('@item.ItemURL');" />
 
                 <blockquote>
                     <p>@Html.DisplayFor(modelItem => item.Comment)</p>
