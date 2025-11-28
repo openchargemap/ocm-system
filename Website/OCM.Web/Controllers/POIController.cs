@@ -11,6 +11,7 @@ using OCM.Core.Settings;
 using OCM.MVC.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -77,7 +78,7 @@ namespace OCM.MVC.Controllers
             filter.StatusTypeIDs = this.ConvertNullableSelection(filter.StatusTypeIDs);
             filter.UsageTypeIDs = this.ConvertNullableSelection(filter.UsageTypeIDs);
             filter.DataProviderIDs = this.ConvertNullableSelection(filter.DataProviderIDs);
-            filter.SubmissionStatusTypeID= this.ConvertNullableSelection(filter.SubmissionStatusTypeID);
+            filter.SubmissionStatusTypeID = this.ConvertNullableSelection(filter.SubmissionStatusTypeID);
 
             filter.IncludeComments = true;
 
@@ -282,7 +283,7 @@ namespace OCM.MVC.Controllers
                 if (user != null)
                 {
                     var mediaItem = new MediaItem();
-                    var tempPath = System.IO.Path.GetTempPath() + "\\_ocm";
+                    var tempPath = Path.Join(System.IO.Path.GetTempPath(), "_ocm");
                     if (!System.IO.Directory.Exists(tempPath))
                     {
                         System.IO.Directory.CreateDirectory(tempPath);

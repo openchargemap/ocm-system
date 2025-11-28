@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,7 +47,7 @@ namespace OCM.API.Common
         {
             try
             {
-                string cachePath = path + "\\POI_" + id + ".json";
+                string cachePath = Path.Join(path, "POI_" + id + ".json");
                 if (System.IO.File.Exists(cachePath))
                 {
                     POIDetailsCache cachedPOI = JsonConvert.DeserializeObject<POIDetailsCache>(System.IO.File.ReadAllText(cachePath));
@@ -65,7 +66,7 @@ namespace OCM.API.Common
         {
             try
             {
-                string cachePath = path + "\\POI_" + poi.ID + ".json";
+                string cachePath = Path.Join(path, "POI_" + poi.ID + ".json");
                 if (!System.IO.File.Exists(cachePath))
                 {
                     POIDetailsCache cachedPOI = new POIDetailsCache { POI = poi, DateCached = DateTime.UtcNow, POIListNearby = nearbyPOI };

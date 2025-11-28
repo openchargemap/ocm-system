@@ -124,9 +124,9 @@ namespace OCM.API.Common
             }
             else
             {
-                templateFolder = GetAppPath() + "\\Templates\\Notifications";
+                templateFolder = Path.Join(GetAppPath(), "Templates", "Notifications");
             }
-            string BaseTemplate = System.IO.File.ReadAllText(templateFolder + "\\BaseTemplate.htm");
+            string BaseTemplate = System.IO.File.ReadAllText(Path.Join(templateFolder, "BaseTemplate.htm"));
 
             MessageBody = BaseTemplate;
 
@@ -135,7 +135,7 @@ namespace OCM.API.Common
             if (notificationSettings != null)
             {
                 //load message template and replace template placeholder keys with param values
-                string messageTemplate = System.IO.File.ReadAllText(templateFolder + "\\" + notificationSettings.TemplateFile);
+                string messageTemplate = System.IO.File.ReadAllText(Path.Join(templateFolder, notificationSettings.TemplateFile));
                 this.Subject = notificationSettings.Subject;
                 MessageBody = MessageBody.Replace("{MessageBody}", messageTemplate);
 
@@ -231,7 +231,7 @@ namespace OCM.API.Common
                         // failed to send
                         try
                         {
-                            System.IO.File.AppendAllText("C:\\Temp\\OCM_notifications_error.log", "Failed to send: " + exp.ToString()); ;
+                            System.IO.File.AppendAllText("OCM_notifications_error.log", "Failed to send: " + exp.ToString()); ;
                         }
                         catch { }
 
@@ -257,7 +257,7 @@ namespace OCM.API.Common
             {
                 if (bool.Parse(ConfigurationManager.AppSettings["EnableNotificationLogging"]) == true)
                 {
-                    string logPath = ConfigurationManager.AppSettings["CachePath"] + "\\notifications.log";
+                    string logPath = Path.Join(ConfigurationManager.AppSettings["CachePath"], "notifications.log");
                     System.IO.File.AppendAllText(logPath, content + "\r\n");
                 }
             }

@@ -45,7 +45,7 @@ namespace OCM.API.InputProviders
 
                     if (postedFile != null && postedFile.Length > 0)
                     {
-                        string tmpFile = uploadPath + "\\" + filePrefix + postedFile.FileName;
+                        string tmpFile = Path.Join(uploadPath, filePrefix + postedFile.FileName);
                         using (var stream = new FileStream(tmpFile, FileMode.Create))
                         {
                             await postedFile.CopyToAsync(stream);

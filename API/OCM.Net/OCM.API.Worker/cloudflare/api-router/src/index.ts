@@ -11,7 +11,7 @@ class OCMRouter {
 	enableAPIKeyRules = true;
 	enableMirrorChecks = false;
 	enableDebug = false;
-	enableLogging = true; // if true, API requests are logged to central log API
+	enableLogging = false; // if true, API requests are logged to central log API
 	enablePrimaryForReads = true; // if true, primary API server is skipped for reads
 	requireAPIKeyForAllRequests = true;
 	logTimeoutMS = 2000;
@@ -287,7 +287,7 @@ class OCMRouter {
 
 		let banned_ua: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_UA", "json");
 		let banned_ip: string[] = []; //await OCM_CONFIG_KV.get("API_BANNED_IP", "json");
-		let banned_keys: string[] = <string[]>await this.getConfigKVJson(env, "API_BANNED_KEYS");
+		let banned_keys: string[] = []; //<string[]>await this.getConfigKVJson(env, "API_BANNED_KEYS");
 
 		const clientIP = request.headers.get('cf-connecting-ip');
 		const userAgent = request.headers.get('user-agent');
@@ -316,12 +316,12 @@ class OCMRouter {
 		// check if we think this user is currently an editor (has posted)
 
 		let ip_key = clientIP != null ? "API_EDITOR_" + clientIP.replace(".", "_") : null;
-		let isEditor = false;
+		/*let isEditor = false;
 		if (ip_key != null) {
 			if (await this.getConfigKVText(env, ip_key) != null) {
 				isEditor = true;
 			}
-		}
+		}*/
 
 		// get list of mirrors from KV store and append to our working list
 		if (this.enableMirrorChecks) {

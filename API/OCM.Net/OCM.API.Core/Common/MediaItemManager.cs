@@ -142,12 +142,12 @@ namespace OCM.API.Common
 
                         if (urls[1] == null)
                         {
-                            urls[1] = await storage.UploadImageAsync(tempFolder + "\\" + thumbFileName, destFolderPrefix + thumbFileName, metadataTags);
+                            urls[1] = await storage.UploadImageAsync(Path.Join(tempFolder, thumbFileName), destFolderPrefix + thumbFileName, metadataTags);
                         }
 
                         if (urls[2] == null)
                         {
-                            urls[2] = await storage.UploadImageAsync(tempFolder + "\\" + mediumFileName, destFolderPrefix + mediumFileName, metadataTags);
+                            urls[2] = await storage.UploadImageAsync(Path.Join(tempFolder, mediumFileName), destFolderPrefix + mediumFileName, metadataTags);
                         }
                         if (urls[0] != null && urls[1] != null && urls[2] != null)
                         {
@@ -169,9 +169,9 @@ namespace OCM.API.Common
                 try
                 {
                     System.IO.File.Delete(sourceImageFile);
-                    System.IO.File.Delete(tempFolder + "\\" + thumbFileName);
-                    System.IO.File.Delete(tempFolder + "\\" + mediumFileName);
-                    System.IO.File.Delete(tempFolder + "\\" + largeFileName);
+                    System.IO.File.Delete(Path.Join(tempFolder, thumbFileName));
+                    System.IO.File.Delete(Path.Join(tempFolder, mediumFileName));
+                    System.IO.File.Delete(Path.Join(tempFolder, largeFileName));
                 }
                 catch (Exception)
                 {
