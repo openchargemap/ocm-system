@@ -24,6 +24,10 @@ ENV DOTNET_RUNNING_IN_CONTAINER=true
 # Copy published output from build stage
 COPY --from=build /app/publish ./
 
+# Copy Docker-specific configuration files to replace defaults
+COPY Website/OCM.Web/App.docker.config ./App.Config
+COPY Website/OCM.Web/appsettings.docker.json ./appsettings.json
+
 # Create a non-root user and give ownership of the app folder
 RUN groupadd -r appuser && useradd -r -g appuser appuser \
     && chown -R appuser:appuser /app

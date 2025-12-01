@@ -22,6 +22,10 @@ ENV ASPNETCORE_URLS="http://+:8080" \
 # Copy published output
 COPY --from=build /app/publish ./
 
+# Copy Docker-specific configuration files to replace defaults
+COPY API/OCM.Net/OCM.API.Web/App.docker.config ./App.Config
+COPY API/OCM.Net/OCM.API.Web/appsettings.docker.json ./appsettings.json
+
 # Create non-root user (compatible with Debian-based images)
 RUN groupadd -r appuser && useradd -r -g appuser appuser \
     && chown -R appuser:appuser /app

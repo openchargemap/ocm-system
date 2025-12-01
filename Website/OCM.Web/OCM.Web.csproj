@@ -36,6 +36,10 @@
   </ItemGroup>
 
     <ItemGroup>
+      <Content Update="App.docker.config">
+        <TransformOnBuild>true</TransformOnBuild>
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
       <Content Update="App.config">
         <TransformOnBuild>true</TransformOnBuild>
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>

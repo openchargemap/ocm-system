@@ -39,7 +39,7 @@ services:
       image: mongodb/mongodb-community-server:latest # Or a specific version like 6.0
       container_name: mongodb
       ports:
-        - "27018:27017" # Map host port 27017 to container port 27017
+        - "27017:27017" # Map host port 27017 to container port 27017
       volumes:
         - mongodb_data:/data/db # Persist data outside the container
       restart: unless-stopped # Restart the container unless manually stopped
