@@ -26,6 +26,10 @@ COPY --from=build /app/publish ./
 COPY API/OCM.Net/OCM.API.Web/App.docker.config ./App.Config
 COPY API/OCM.Net/OCM.API.Web/appsettings.docker.json ./appsettings.json
 
+# Install curl for health check (as root before switching to appuser)
+USER root
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Create non-root user (compatible with Debian-based images)
 RUN groupadd -r appuser && useradd -r -g appuser appuser \
     && chown -R appuser:appuser /app
@@ -34,5 +38,9 @@ USER appuser
 
 # Expose HTTP (adjust if you enable HTTPS)
 EXPOSE 8080
+
+# Health check - queries the system status endpoint
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8080/v3/system/status?key=statuscake || exit 1
 
 ENTRYPOINT ["dotnet", "OCM.API.Web.dll"]
