@@ -1,81 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <RootNamespace>OCM.Import</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RootNamespace>OCM.Import</RootNamespace>
     <AssemblyTitle>OCM.Import.Common</AssemblyTitle>
     <Company>http://openchargemap.org</Company>
     <Product>OCM.Import.Common</Product>
-    <AssemblyTitle>OCM.Import.Common</AssemblyTitle>
-    <Company>http://openchargemap.org</Company>
-    <Product>OCM.Import.Common</Product>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyTitle>OCM.Import.Common</AssemblyTitle>
-    <Company>http://openchargemap.org</Company>
-    <Product>OCM.Import.Common</Product>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <DefineConstants>$(DefineConstants);OPENXML</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <DefineConstants>TRACE;DEBUG;OPENXML</DefineConstants>
-    <NoWarn>1701;1702;NU1701;</NoWarn>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <DefineConstants>TRACE;OPENXML</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureMirror|AnyCPU'">
-    <DefineConstants>TRACE;OPENXML</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Remove="Service References\**" />
+    <Compile Remove="Providers\ImportProvider_CoulombChargepoint.cs" />
+    <Compile Remove="Providers\ImportProvider_PS.cs" />
+    <Compile Remove="Providers\ImportProvider_RWEMobility.cs" />
     <EmbeddedResource Remove="Service References\**" />
     <None Remove="Service References\**" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CompareNETObjects" Version="4.84.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="DotNetProjects.IndexedLinq" Version="2.0.18" />
     <PackageReference Include="GeoCoordinate.NetStandard1" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.1" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="i4o">
-      <HintPath>lib\i4o.dll</HintPath>
-    </Reference>
-    
- 
 
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Misc\CookieAwareWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Client\OCM.API.Client.csproj" />
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Core\OCM.API.Core.csproj" />
     <ProjectReference Include="..\..\API\OCM.Net\OCM.API.Model\OCM.API.Common.Model.csproj" />
     <ProjectReference Include="..\OCM.Import.Analysis\OCM.Import.Analysis.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Providers\ImportProvider_CoulombChargepoint.cs" />
-    <Compile Remove="Providers\ImportProvider_PS.cs" />
-    <Compile Remove="Providers\ImportProvider_RWEMobility.cs" />
-  </ItemGroup>
+
 </Project>

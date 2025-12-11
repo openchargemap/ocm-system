@@ -20,8 +20,8 @@
 
   <ItemGroup>
     
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.1" />
 
   </ItemGroup>
 
