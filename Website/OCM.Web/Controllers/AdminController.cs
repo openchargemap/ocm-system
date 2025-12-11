@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,6 +8,12 @@ using OCM.API.Common.Model;
 using OCM.API.Utils;
 using OCM.Core.Data;
 using OCM.Web.Services;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.MVC.Controllers
 {
@@ -455,7 +455,7 @@ namespace OCM.MVC.Controllers
         {
             var mediaManager = new MediaItemManager();
             var items = await mediaManager.GetMediaItemsWithMissingThumbnails(100);
-            
+
             ViewBag.TotalCount = items.Count;
             return View(items);
         }
@@ -466,14 +466,14 @@ namespace OCM.MVC.Controllers
         {
             var mediaManager = new MediaItemManager();
             string tempFolder = Path.Combine(Path.GetTempPath(), "OCM_MediaReprocess");
-            
+
             if (!Directory.Exists(tempFolder))
             {
                 Directory.CreateDirectory(tempFolder);
             }
 
             var result = await mediaManager.ReprocessMediaItem(id, tempFolder);
-            
+
             return Json(new
             {
                 success = result.Success,
@@ -489,7 +489,7 @@ namespace OCM.MVC.Controllers
         {
             var mediaManager = new MediaItemManager();
             var items = await mediaManager.GetMediaItemsWithMissingThumbnails(batchSize);
-            
+
             string tempFolder = Path.Combine(Path.GetTempPath(), "OCM_MediaReprocess");
             if (!Directory.Exists(tempFolder))
             {
@@ -503,7 +503,7 @@ namespace OCM.MVC.Controllers
             foreach (var item in items)
             {
                 var result = await mediaManager.ReprocessMediaItem(item.Id, tempFolder);
-                
+
                 if (result.Success)
                 {
                     successCount++;
