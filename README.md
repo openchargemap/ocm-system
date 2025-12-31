@@ -13,9 +13,9 @@ Developers can use our [API](https://openchargemap.org/site/develop/) to access 
 
 ### Basic build/dev prerequisites
 
-- dotnet 6.x sdk (windows/linux)
+- dotnet 10.x sdk (windows/linux)
 - SQL Server Express
-- MongoDB 5.x
+- MongoDB 
 
 ### Local Dev Setup
 - Restore SQL database clone https://github.com/openchargemap/ocm-docs/tree/master/Database/Clone
@@ -29,6 +29,9 @@ Developers can use our [API](https://openchargemap.org/site/develop/) to access 
  - Configure web.config
 
  To run an API mirror, see the OCM.API.Worker readme.
+ ### Updates
+ Run refresh-docker.bat to rebuild latest docker images and push the to the deployment registry
+ on the target docker host, `cd docker-config`, `docker compose pull`, `docker compose up -d`
 
 ### Contributing
 

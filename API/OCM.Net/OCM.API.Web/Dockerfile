@@ -15,7 +15,7 @@ RUN dotnet publish "API/OCM.Net/OCM.API.Web/OCM.API.Web.csproj" -c Release -o /a
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
-ENV ASPNETCORE_URLS="http://+:8080" \
+ENV ASPNETCORE_URLS="http://+:80" \
     ASPNETCORE_ENVIRONMENT=Production \
     DOTNET_RUNNING_IN_CONTAINER=true
 
@@ -37,10 +37,10 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser \
 USER appuser
 
 # Expose HTTP (adjust if you enable HTTPS)
-EXPOSE 8080
+EXPOSE 80
 
 # Health check - queries the system status endpoint
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8080/v3/system/status?key=statuscake || exit 1
+    CMD curl -f http://localhost:80/v3/system/status?key=statuscake || exit 1
 
 ENTRYPOINT ["dotnet", "OCM.API.Web.dll"]
