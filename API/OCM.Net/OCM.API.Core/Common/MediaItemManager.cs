@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Model = OCM.API.Common.Model;
 
 namespace OCM.API.Common
 {
@@ -222,42 +221,6 @@ namespace OCM.API.Common
                 var user = new UserManager().GetUser(userId);
                 AuditLogManager.Log(user, AuditEventType.DeletedItem, "{EntityType:\"Comment\", EntityID:" + mediaItemId + ",ChargePointID:" + cpID + "}", "User deleted media item");
             }
-        }
-
-        public bool SoftDeleteMediaItem(int userId, int mediaItemId)
-        {
-            var dataModel = new OCMEntities();
-
-            var item = dataModel.MediaItems.FirstOrDefault(c => c.Id == mediaItemId);
-            if (item == null)
-            {
-                return false;
-            }
-
-            var user = new UserManager().GetUser(userId);
-            if (user == null)
-            {
-                return false;
-            }
-
-            bool canModerate = UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, null, Model.PermissionLevel.Editor);
-            if (item.UserId != userId && !canModerate)
-            {
-                return false;
-            }
-
-            if (item.IsEnabled == false)
-            {
-                return true;
-            }
-
-            item.IsEnabled = false;
-            var cpID = item.ChargePointId;
-            dataModel.ChargePoints.Find(cpID).DateLastStatusUpdate = DateTime.UtcNow;
-            dataModel.SaveChanges();
-
-            AuditLogManager.Log(user, AuditEventType.UpdatedItem, "{EntityType:\"MediaItem\", EntityID:" + mediaItemId + ",ChargePointID:" + cpID + "}", "User soft deleted media item");
-            return true;
         }
 
         public async Task<List<MediaItem>> GetMediaItemsWithMissingThumbnails(int maxResults = 100)
