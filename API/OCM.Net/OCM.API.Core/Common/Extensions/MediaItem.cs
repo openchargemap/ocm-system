@@ -13,7 +13,7 @@
                 ItemURL = source.ItemUrl,
                 ItemThumbnailURL = source.ItemThumbnailUrl,
                 Comment = source.Comment,
-                IsEnabled = (bool)source.IsEnabled,
+                IsEnabled = source.IsEnabled ?? true,
                 IsVideo = source.IsVideo,
                 IsFeaturedItem = source.IsFeaturedItem,
                 IsExternalResource = source.IsExternalResource,
