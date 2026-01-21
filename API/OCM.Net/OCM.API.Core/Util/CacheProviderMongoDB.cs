@@ -913,12 +913,7 @@ namespace OCM.Core.Data
             if (await IsCacheReady())
             {
                 var poiCollection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi").AsQueryable();
-                var poi = poiCollection.FirstOrDefault(p => p.ID == id);
-                if (poi?.MediaItems != null)
-                {
-                    poi.MediaItems = poi.MediaItems.Where(mi => mi.IsEnabled != false).ToList();
-                }
-                return poi;
+                return poiCollection.FirstOrDefault(p => p.ID == id);
             }
             else
             {
@@ -1101,27 +1096,14 @@ namespace OCM.Core.Data
                     results = results.OrderBy(r => r.AddressInfo.Distance).Take(filter.MaxResults);
                 }
 
-                bool resultsMaterialized = results is Array;
-                if (!resultsMaterialized)
-                {
-                    results = results.ToArray().AsQueryable();
-                    resultsMaterialized = true;
-                }
-
-                foreach (var p in results)
-                {
-                    p.MediaItems = p.MediaItems?.Where(mi => mi.IsEnabled != false).ToList();
-                }
-
                 if (filter.IsCompactOutput)
                 {
                     System.Diagnostics.Debug.Print($"MongoDB begin conversion to compact output @ {stopwatch.ElapsedMilliseconds}ms");
 
                     // we will be mutating the results so need to convert to object we can update
-                    if (!resultsMaterialized)
+                    if (!(results is Array))
                     {
                         results = results.ToArray().AsQueryable();
-                        resultsMaterialized = true;
                     }
 
                     System.Diagnostics.Debug.Print($"MongoDB converted to array @ {stopwatch.ElapsedMilliseconds}ms");
