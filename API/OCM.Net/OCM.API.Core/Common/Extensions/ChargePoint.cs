@@ -117,9 +117,9 @@ namespace OCM.API.Common.Model.Extensions
                 }
             }
 
-            if (loadMediaItems)
+            if (loadMediaItems && source.MediaItems != null)
             {
-                foreach (var mediaItem in source.MediaItems.OrderByDescending(cm => cm.DateCreated))
+                foreach (var mediaItem in source.MediaItems.Where(mi => mi.IsEnabled != false).OrderByDescending(cm => cm.DateCreated))
                 {
                     if (poi.MediaItems == null) poi.MediaItems = new List<Model.MediaItem>();
                     poi.MediaItems.Add(MediaItem.FromDataModel(mediaItem));
