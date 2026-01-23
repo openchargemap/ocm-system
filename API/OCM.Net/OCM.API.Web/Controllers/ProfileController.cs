@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.Extended;
+using OCM.API.InputProviders;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace OCM.API.Web.Standard.Controllers
@@ -122,5 +125,31 @@ namespace OCM.API.Web.Standard.Controllers
                 return false;
             }
         }
+
+        [HttpDelete("/v4/profile/mediaitem/{id:int}")]
+        public IActionResult DeleteMediaItem(int id)
+        {
+            var apiKey = Request.Query["apikey"].FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(apiKey))
+                apiKey = Request.Headers["X-API-Key"].FirstOrDefault();
+
+            // Resolve authenticated user using the standard flow (apiKey → JWT → legacy session)
+            var user = new InputProviderBase().GetUserFromAPICall(HttpContext, apiKey);
+            if (user == null) return Unauthorized();
+            if (user.IsCurrentSessionTokenValid == false) return Unauthorized();
+
+            using (var dataModel = new OCM.Core.Data.OCMEntities())
+            {
+                var mediaItem = dataModel.MediaItems.FirstOrDefault(item => item.Id == id);
+                if (mediaItem == null) return NotFound();
+         
+                if (mediaItem.UserId != user.ID)
+                    return Forbid();
+            }
+
+            new MediaItemManager().DeleteMediaItem(user.ID, id);
+            return NoContent();
+        }
+
     }
 }
