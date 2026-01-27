@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OCM.API.Common;
 using OCM.API.Common.Model;
@@ -8,6 +9,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace OCM.API.Web.Standard.Controllers
 {
@@ -127,7 +129,7 @@ namespace OCM.API.Web.Standard.Controllers
         }
 
         [HttpDelete("/v4/profile/mediaitem/{id:int}")]
-        public IActionResult DeleteMediaItem(int id)
+        public async Task<IActionResult> DeleteMediaItem(int id)
         {
             var apiKey = Request.Query["apikey"].FirstOrDefault();
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -138,16 +140,31 @@ namespace OCM.API.Web.Standard.Controllers
             if (user == null) return Unauthorized();
             if (user.IsCurrentSessionTokenValid == false) return Unauthorized();
 
+            int chargePointId = 0;
             using (var dataModel = new OCM.Core.Data.OCMEntities())
             {
-                var mediaItem = dataModel.MediaItems.FirstOrDefault(item => item.Id == id);
+                var mediaItem = await dataModel.MediaItems.FirstOrDefaultAsync(item => item.Id == id);
                 if (mediaItem == null) return NotFound();
-         
+
                 if (mediaItem.UserId != user.ID)
                     return Forbid();
+
+                chargePointId = mediaItem.ChargePointId;
+                dataModel.MediaItems.Remove(mediaItem);
+                await dataModel.SaveChangesAsync();
             }
 
-            new MediaItemManager().DeleteMediaItem(user.ID, id);
+            if (chargePointId > 0)
+            {
+                try
+                {
+                    await OCM.Core.Data.CacheProviderMongoDB.DefaultInstance.RemoveMediaItemFromPOI(chargePointId, id);
+                }
+                catch (Exception exp)
+                {
+                    _logger.LogWarning(exp, "Failed to remove media item {MediaItemId} from cached POI {ChargePointId}.", id, chargePointId);
+                }
+            }
             return NoContent();
         }
 
