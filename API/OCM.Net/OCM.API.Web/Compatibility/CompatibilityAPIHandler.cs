@@ -350,19 +350,14 @@ namespace OCM.API
                         {
                             await context.Response.WriteAsync("OK");
                         }
+                        return true;
                     }
                     else
                     {
-                        if (filter.APIVersion >= 3)
-                        {
-                            await OutputBadRequestMessage(context, "Failed");
-                        }
-                        else
-                        {
-                            await context.Response.WriteAsync("Error");
-                        }
+                        await OutputBadRequestMessage(context, "Failed");
+                        return false;
                     }
-                    return true;
+
                 }
             }
 
