@@ -18,7 +18,7 @@ class OCMRouter {
 
 	corsHeaders = {
 
-		"Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+		"Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS,DELETE",
 		"Access-Control-Max-Age": "86400",
 	}
 

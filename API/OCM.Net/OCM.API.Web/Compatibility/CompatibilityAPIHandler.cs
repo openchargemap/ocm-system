@@ -887,7 +887,7 @@ namespace OCM.API
                 SetAllowCrossSiteRequestOrigin(context);
             }
 
-            context.Response.Headers.TryAdd("Allow", "POST,GET,PUT,OPTIONS");
+            context.Response.Headers.TryAdd("Allow", "POST,GET,PUT,OPTIONS,DELETE");
 
             if (!String.IsNullOrEmpty(context.Request.Headers["Access-Control-Request-Headers"]))
             {
