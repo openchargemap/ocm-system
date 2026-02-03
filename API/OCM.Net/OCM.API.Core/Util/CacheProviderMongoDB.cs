@@ -415,7 +415,20 @@ namespace OCM.Core.Data
             return await RefreshMirrorStatus(await poiCollection.EstimatedDocumentCountAsync(), 1, numPOIInMasterDB);
 
         }
+        public async Task RemoveMediaItemFromPOI(int poiId, int mediaItemId)
+        {
+            if (poiId <= 0 || mediaItemId <= 0) return;
 
+            var poiCollection = database.GetCollection<BsonDocument>("poi");
+            var filter = new BsonDocument("ID", poiId);
+
+            var update = new BsonDocument(
+                "$pull",
+                new BsonDocument("MediaItems", new BsonDocument("ID", mediaItemId))
+            );
+
+            await poiCollection.UpdateOneAsync(filter, update);
+        }
         /// <summary>
         /// Ensure all MongoDB indexes are being set up.
         /// </summary>
