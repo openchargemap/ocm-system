@@ -1310,6 +1310,41 @@ namespace OCM.Core.Data
             {
                 poiList = poiList.Where(c => c.Connections.Any(conn => conn.LevelID != null && filter.LevelIDs.Contains((int)conn.LevelID)));
             }
+            if (filter.HasMedia != null)
+            {
+                if (filter.HasMedia == true)
+                {
+                    poiList = poiList.Where(c => c.MediaItems != null && c.MediaItems.Any(m => m.IsEnabled));
+                }
+                else
+                {
+                    poiList = poiList.Where(c => c.MediaItems == null || !c.MediaItems.Any(m => m.IsEnabled));
+                }
+            }
+
+            if (filter.HasComment != null)
+            {
+                if (filter.HasComment == true)
+                {
+                    poiList = poiList.Where(c => c.UserComments != null && c.UserComments.Any());
+                }
+                else
+                {
+                    poiList = poiList.Where(c => c.UserComments == null || !c.UserComments.Any());
+                }
+            }
+
+            if (filter.HasCheckins != null)
+            {
+                if (filter.HasCheckins == true)
+                {
+                    poiList = poiList.Where(c => c.UserComments != null && c.UserComments.Any(comment => comment.CheckinStatusTypeID != null));
+                }
+                else
+                {
+                    poiList = poiList.Where(c => c.UserComments == null || !c.UserComments.Any(comment => comment.CheckinStatusTypeID != null));
+                }
+            }
 
             poiList = poiList.Where(c => c.AddressInfo != null);
             return poiList;
