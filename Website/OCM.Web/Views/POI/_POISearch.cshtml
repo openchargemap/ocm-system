@@ -128,6 +128,36 @@
                     @Html.DropDownList("submissionstatustypeid", Model.SubmissionTypeList, new { @class = "form-control" })
                 </div>
             </div>
+             <div class="form-group">
+                <label class="control-label col-md-4" for="hasmedia">Media</label>
+                <div class="col-md-8">
+                    <select id="hasmedia" name="HasMedia" class="form-control">
+                        <option value="" selected="@(Model.HasMedia == null ? "selected" : null)">Any</option>
+                        <option value="true" selected="@(Model.HasMedia == true ? "selected" : null)">Has media</option>
+                        <option value="false" selected="@(Model.HasMedia == false ? "selected" : null)">No media</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4" for="hascomment">Comments</label>
+                <div class="col-md-8">
+                    <select id="hascomment" name="HasComment" class="form-control">
+                        <option value="" selected="@(Model.HasComment == null ? "selected" : null)">Any</option>
+                        <option value="true" selected="@(Model.HasComment == true ? "selected" : null)">Has comments</option>
+                        <option value="false" selected="@(Model.HasComment == false ? "selected" : null)">No comments</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4" for="hascheckins">Check-ins</label>
+                <div class="col-md-8">
+                    <select id="hascheckins" name="HasCheckins" class="form-control">
+                        <option value="" selected="@(Model.HasCheckins == null ? "selected" : null)">Any</option>
+                        <option value="true" selected="@(Model.HasCheckins == true ? "selected" : null)">Has check-ins</option>
+                        <option value="false" selected="@(Model.HasCheckins == false ? "selected" : null)">No check-ins</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-7">

@@ -90,7 +90,9 @@ namespace OCM.API.Common
 
         public double? MinPowerKW { get; set; }
         public double? MaxPowerKW { get; set; }
-
+         public bool? HasMedia { get; set; }
+        public bool? HasComment { get; set; }
+        public bool? HasCheckins { get; set; }
         /// <summary>
         /// list of (lat,lng) points to search along (route etc)
         /// </summary>
@@ -219,7 +221,9 @@ namespace OCM.API.Common
                 settings.MaxPowerKW = ParseDouble(requestParams["maxpowerkw"]);
                 if (settings.MaxPowerKW < 1) settings.MaxPowerKW = null;
             }
-
+            if (!String.IsNullOrEmpty(requestParams["hasmedia"])) settings.HasMedia = ParseBoolNullable(requestParams["hasmedia"]);
+            if (!String.IsNullOrEmpty(requestParams["hascomment"])) settings.HasComment = ParseBoolNullable(requestParams["hascomment"]);
+            if (!String.IsNullOrEmpty(requestParams["hascheckins"])) settings.HasCheckins = ParseBoolNullable(requestParams["hascheckins"]);
             if (!String.IsNullOrEmpty(requestParams["dataprovidername"])) settings.DataProviderName = ParseString(requestParams["dataprovidername"]);
             if (!String.IsNullOrEmpty(requestParams["locationtitle"])) settings.LocationTitle = ParseString(requestParams["locationtitle"]);
             if (!String.IsNullOrEmpty(requestParams["address"])) settings.Address = ParseString(requestParams["address"]);
@@ -332,6 +336,9 @@ namespace OCM.API.Common
                 if (DataProviderIDs != null) key += ":prov_id:" + IntArrayToString(DataProviderIDs);
                 if (IsOpenData != null) key += ":opendata:" + IsOpenData.ToString();
                 if (MinPowerKW != null) key += ":minpowerkw:" + MinPowerKW.ToString();
+                if (HasMedia != null) key += ":hasmedia:" + HasMedia.ToString();
+                if (HasComment != null) key += ":hascomment:" + HasComment.ToString();
+                if (HasCheckins != null) key += ":hascheckins:" + HasCheckins.ToString();
                 if (Polyline != null) key += ":polyline:" + Polyline.GetHashCode().ToString();
                 if (Polygon != null) key += ":polygon:" + Polygon.GetHashCode().ToString();
                 if (BoundingBox != null) key += ":boundingbox:" + BoundingBox.GetHashCode().ToString();

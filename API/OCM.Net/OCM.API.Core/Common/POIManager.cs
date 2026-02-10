@@ -344,6 +344,42 @@ namespace OCM.API.Common
                 poiList = poiList.Where(c => c.ConnectionInfos.Any(conn => conn.LevelTypeId != null && filter.LevelIDs.Contains((int)conn.LevelTypeId)));
             }
 
+            if (filter.HasMedia != null)
+            {
+                if (filter.HasMedia == true)
+                {
+                    poiList = poiList.Where(c => c.MediaItems.Any(m => m.IsEnabled == true));
+                }
+                else
+                {
+                    poiList = poiList.Where(c => !c.MediaItems.Any(m => m.IsEnabled == true));
+                }
+            }
+
+            if (filter.HasComment != null)
+            {
+                if (filter.HasComment == true)
+                {
+                    poiList = poiList.Where(c => c.UserComments.Any());
+                }
+                else
+                {
+                    poiList = poiList.Where(c => !c.UserComments.Any());
+                }
+            }
+
+            if (filter.HasCheckins != null)
+            {
+                if (filter.HasCheckins == true)
+                {
+                    poiList = poiList.Where(c => c.UserComments.Any(comment => comment.CheckinStatusTypeId != null));
+                }
+                else
+                {
+                    poiList = poiList.Where(c => !c.UserComments.Any(comment => comment.CheckinStatusTypeId != null));
+                }
+            }
+
             poiList = poiList.Where(c => c.AddressInfo != null);
             return poiList;
         }
