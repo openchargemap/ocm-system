@@ -20,6 +20,12 @@ namespace OCM.Import
         public string KeyVaultTenantId { get; set; }
         public string KeyVaultClientId { get; set; }
         public string KeyVaultSecret { get; set; }
+
+        /// <summary>
+        /// Path to the JSON configuration file for OCPI providers.
+        /// If specified, providers will be loaded from this configuration file.
+        /// </summary>
+        public string OCPIProvidersConfigPath { get; set; }
     }
 
     public class ImportStatus

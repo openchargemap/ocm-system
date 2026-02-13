@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using OCM.API.Client;
 using OCM.API.Common.Model;
 using OCM.Import.Providers;
+using OCM.Import.Providers.OCPI;
 
 namespace OCM.Import.Worker
 {
@@ -88,8 +89,20 @@ namespace OCM.Import.Worker
                 }
 
                 // Filter to enabled providers only
-                var enabledProviderNames = _settings.EnabledImports ?? new List<string>();
-                
+                // For OCPI config-based providers, IsEnabled in ocpi-providers.json takes priority
+                // For other providers, EnabledImports in appsettings.json is the gate
+                var enabledProviderNames = new HashSet<string>(
+                    _settings.EnabledImports ?? new List<string>(),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+                // Config-loaded OCPI providers are already filtered to IsEnabled=true by the loader,
+                // so add their names to the enabled set automatically
+                foreach (var provider in allImportProviders.OfType<ImportProvider_OCPIConfigurable>())
+                {
+                    enabledProviderNames.Add(provider.GetProviderName());
+                }
+
                 if (!enabledProviderNames.Any())
                 {
                     _logger.LogWarning("No enabled imports configured in settings");
@@ -103,8 +116,7 @@ namespace OCM.Import.Worker
                 // Find providers that are due for import (last imported > 24 hours ago or never imported)
                 var now = DateTime.UtcNow;
                 var providersDue = allImportProviders
-                    .Where(ip => enabledProviderNames.Any(name => 
-                        string.Equals(ip.GetProviderName(), name, StringComparison.OrdinalIgnoreCase)))
+                    .Where(ip => enabledProviderNames.Contains(ip.GetProviderName()))
                     .Select(ip => new 
                     {
                         ImportProvider = ip,
@@ -122,8 +134,7 @@ namespace OCM.Import.Worker
                 {
                     // Check if there are providers that would be due but are excluded due to recent failures
                     var providersBlockedByFailure = allImportProviders
-                        .Where(ip => enabledProviderNames.Any(name => 
-                            string.Equals(ip.GetProviderName(), name, StringComparison.OrdinalIgnoreCase)))
+                        .Where(ip => enabledProviderNames.Contains(ip.GetProviderName()))
                         .Select(ip => new 
                         {
                             ImportProvider = ip,
@@ -146,8 +157,7 @@ namespace OCM.Import.Worker
 
                     // No providers due - calculate when the next one will be due
                     var nextProviderDue = allImportProviders
-                        .Where(ip => enabledProviderNames.Any(name => 
-                            string.Equals(ip.GetProviderName(), name, StringComparison.OrdinalIgnoreCase)))
+                        .Where(ip => enabledProviderNames.Contains(ip.GetProviderName()))
                         .Select(ip => new 
                         {
                             ImportProvider = ip,
@@ -435,6 +445,29 @@ namespace OCM.Import.Worker
                     catch (Exception ex)
                     {
                         _logger.LogWarning(ex, $"Failed to instantiate import provider {providerType.Name}");
+                    }
+                }
+
+                // Load configuration-based OCPI providers from config file
+                if (!string.IsNullOrEmpty(_settings.OCPIProvidersConfigPath))
+                {
+                    var ocpiLoader = new OCPIProviderLoader(_logger);
+                    if (ocpiLoader.LoadFromFile(_settings.OCPIProvidersConfigPath))
+                    {
+                        var configuredProviders = ocpiLoader.CreateProviders(enabledOnly: true);
+                        foreach (var configuredProvider in configuredProviders)
+                        {
+                            var providerName = configuredProvider.GetProviderName();
+                            if (!providers.Any(p => p.GetProviderName().Equals(providerName, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                providers.Add(configuredProvider);
+                                _logger.LogInformation($"Added configured OCPI provider: {providerName}");
+                            }
+                            else
+                            {
+                                _logger.LogDebug($"Skipping configured OCPI provider {providerName} - already exists as a discovered provider");
+                            }
+                        }
                     }
                 }
             }

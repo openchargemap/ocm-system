@@ -180,7 +180,6 @@ namespace OCM.Import
             List<IImportProvider> providers = new List<IImportProvider>();
 
             providers.Add(new ImportProvider_UKChargePointRegistry());
-            providers.Add(new ImportProvider_Mobie());
 
             if (importSettings.Credentials.TryGetValue("IMPORT-adfc", out var afdcKey))
             {
@@ -206,23 +205,32 @@ namespace OCM.Import
 
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
-            providers.Add(new ImportProvider_GoEvio());
-            providers.Add(new ImportProvider_Sitronics());
-            providers.Add(new ImportProvider_Lakd());
-            providers.Add(new ImportProvider_Gaia());
-            providers.Add(new ImportProvider_Toger());
-            providers.Add(new ImportProvider_ElectricEra());
-            providers.Add(new ImportProvider_ITCharge());
-            providers.Add(new ImportProvider_Voltrelli());
-            providers.Add(new ImportProvider_PowerGo());
-            providers.Add(new ImportProvider_Punkt());
-            providers.Add(new ImportProvider_EzVolt());
             providers.Add(new ImportProvider_Chargesini());
-            providers.Add(new ImportProvider_Otopriz());
             providers.Add(new ImportProvider_EV24());
-            providers.Add(new ImportProvider_Zepto());
-            providers.Add(new ImportProvider_Greems());
 
+            // Load configurable OCPI providers from configuration file
+            if (!string.IsNullOrEmpty(_settings.OCPIProvidersConfigPath))
+            {
+                var ocpiLoader = new OCPIProviderLoader(_log);
+                if (ocpiLoader.LoadFromFile(_settings.OCPIProvidersConfigPath))
+                {
+                    var configuredProviders = ocpiLoader.CreateProviders(enabledOnly: true);
+                    foreach (var configuredProvider in configuredProviders)
+                    {
+                        // Only add if not already present (avoid duplicates with hardcoded providers)
+                        var providerName = configuredProvider.GetProviderName();
+                        if (!providers.Any(p => p.GetProviderName().Equals(providerName, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            providers.Add(configuredProvider);
+                            Log($"Added configured OCPI provider: {providerName}");
+                        }
+                        else
+                        {
+                            Log($"Skipping configured provider {providerName} - already exists as hardcoded provider");
+                        }
+                    }
+                }
+            }
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)

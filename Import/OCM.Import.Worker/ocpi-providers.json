@@ -1,0 +1,307 @@
+{
+  "Providers": [
+    {
+      "ProviderName": "zepto.pl",
+      "OutputNamePrefix": "zepto.pl",
+      "Description": "Zepto EV charging network - Poland [currently disabled as content is not valid OCPI]",
+      "DataProviderId": 44,
+      "LocationsEndpointUrl": "https://zepto.pl/ocpi/cpo/2.2/",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": 3475,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": false,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "ZEPTO": 3475
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "mobie.pt",
+      "OutputNamePrefix": "mobie",
+      "Description": "Mobie EV charging network - Portugal",
+      "DataProviderId": 7,
+      "LocationsEndpointUrl": "https://ocpi.mobinteli.com/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": null,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": false,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "EDP": 3276,
+        "GLP": 3557,
+        "HRZ": 3550,
+        "GLG": 3557,
+        "MAK": 3649,
+        "MLT": 3557,
+        "REP": 91,
+        "IBD": 2247,
+        "PIR": 200,
+        "PRI": 200,
+        "HLX": 3645,
+        "EML": 2247,
+        "ION": 3299,
+        "MOO": 3644,
+        "EVP": 3643,
+        "GRC": 3648,
+        "MOB": 21,
+        "KLS": 3588,
+        "KLC": 3588,
+        "CPS": 3584,
+        "NRG": 3646,
+        "ECI": 3647,
+        "MOT": 3684,
+        "FAC": 3685,
+        "EVC": 3693
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "go-evio",
+      "OutputNamePrefix": "go-evio",
+      "Description": "Go-Evio EV charging network",
+      "DataProviderId": 30,
+      "LocationsEndpointUrl": "https://api.go-evio.com/locations",
+      "AuthHeaderKey": "apikey",
+      "CredentialKey": "OCPI-EVIO",
+      "DefaultOperatorId": 3792,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {},
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "sitronics",
+      "OutputNamePrefix": "sitronics",
+      "Description": "Sitronics EV charging network - Russia",
+      "DataProviderId": 31,
+      "LocationsEndpointUrl": "https://ezs.sitronics.com/ocpi/2.2.1/cpo/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-SITRONICS",
+      "DefaultOperatorId": 3656,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "SIT": 3656
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "lakd.lt",
+      "OutputNamePrefix": "lakd.lt",
+      "Description": "LAKD EV charging network - Lithuania",
+      "DataProviderId": 32,
+      "LocationsEndpointUrl": "https://ev.lakd.lt/ocpi/2.2.1/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": null,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "Ignitis UAB": 3688,
+        "UAB \u201EStova\u201C": 3689,
+        "In Balance grid, UAB": 3690,
+        "AB Lietuvos automobili\u0173 keli\u0173 direkcija": 3691,
+        "Eldrive Lithuania, UAB": 3692,
+        "IONITY GmbH": 3299,
+        "Lidl Lietuva": 38,
+        "UAB Enefit": 3862,
+        "Stuart Energy": 3877
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "gaia",
+      "OutputNamePrefix": "gaia",
+      "Description": "Gaia Charge EV charging network - currently no data available",
+      "DataProviderId": 33,
+      "LocationsEndpointUrl": "https://ocpi.longship.io/ocpi/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-GAIA",
+      "DefaultOperatorId": 3790,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "Gaia Charge": 3790
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "toger",
+      "OutputNamePrefix": "toger",
+      "Description": "Toger EV charging network",
+      "DataProviderId": 34,
+      "LocationsEndpointUrl": "https://app.toger.co/ocpi/cpo/2.2.1/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-TOGER",
+      "DefaultOperatorId": 3784,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {},
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "electricera",
+      "OutputNamePrefix": "electricera",
+      "Description": "Electric Era EV charging network",
+      "DataProviderId": 35,
+      "LocationsEndpointUrl": "https://ocpi-http.app.electricera.tech/ocpi/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": 3789,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "Electric Era": 3789
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "itcharge.ru",
+      "OutputNamePrefix": "itcharge.ru",
+      "Description": "ITCharge EV charging network - Russia",
+      "DataProviderId": 36,
+      "LocationsEndpointUrl": "https://ocpi.itcharge.ru/cpo/2.2.1/locations/",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-ITCHARGE-CRED",
+      "DefaultOperatorId": 3650,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "ITC": 3650
+      },
+      "ExcludedLocationIds": [
+        "c007dc86-07e1-449e-add9-efa44e9e46e8",
+        "2a46e8c0-432d-41e2-810a-b0d3a348861e",
+        "41c38115-4bdf-4ad9-8e1c-3863e13a9cff",
+        "03c7019c-7e0e-4c40-8d45-3199e9d954d4"
+      ]
+    },
+    {
+      "ProviderName": "voltrelli",
+      "OutputNamePrefix": "voltrelli",
+      "Description": "Voltrelli EV charging network (currently erroring 404)",
+      "DataProviderId": 37,
+      "LocationsEndpointUrl": "https://api.evozone.app/api/ocpi/v1/charging-station/list",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-VOLTRELLI",
+      "DefaultOperatorId": 3843,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "Voltrelli - Evconnect": 3843
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "powergo",
+      "OutputNamePrefix": "powergo",
+      "Description": "PowerGo EV charging network - Netherlands",
+      "DataProviderId": 38,
+      "LocationsEndpointUrl": "https://powerops.powerfield.nl/ocpi/cpo/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-POWERGO",
+      "DefaultOperatorId": 3632,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "PFG": 3632
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "punkt-e",
+      "OutputNamePrefix": "punkt-e",
+      "Description": "Punkt-E EV charging network",
+      "DataProviderId": 39,
+      "LocationsEndpointUrl": "https://io.api.punkt-e.io/2.2.1/cpo/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-PUNKT",
+      "DefaultOperatorId": 3636,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "TBM": 3634
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "ezvolt.com.br",
+      "OutputNamePrefix": "ezvolt.com.br",
+      "Description": "EZVolt EV charging network - Brazil",
+      "DataProviderId": 40,
+      "LocationsEndpointUrl": "https://api3.mycharge.com.br/ocpi/2.2.1/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-EZVOLT",
+      "DefaultOperatorId": 3564,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "EZVolt": 3564
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "otopriz.com.tr",
+      "OutputNamePrefix": "otopriz.com.tr",
+      "Description": "Otopriz EV charging network - Turkey",
+      "DataProviderId": 42,
+      "LocationsEndpointUrl": "https://otopriz.mapcontentpartners.service.electroop.io/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": 3807,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "OTO": 3807
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "greems.io",
+      "OutputNamePrefix": "greems.io",
+      "Description": "Greems EV charging network",
+      "DataProviderId": 45,
+      "LocationsEndpointUrl": "https://cpo.ocpi.cpo.greems.io/ocpi/cpo/2.2.1/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-GREEMS",
+      "DefaultOperatorId": 3899,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": true,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "GRE": 3899
+      },
+      "ExcludedLocationIds": []
+    }
+  ]
+}
