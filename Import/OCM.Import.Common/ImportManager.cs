@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DotNetProjects.IndexedLinq;
 using GeoCoordinatePortable;
 using KellermanSoftware.CompareNetObjects;
@@ -15,6 +9,12 @@ using OCM.API.Common.Model;
 using OCM.Import.Misc;
 using OCM.Import.Providers;
 using OCM.Import.Providers.OCPI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.Import
 {
@@ -1328,62 +1328,71 @@ namespace OCM.Import
         public List<ChargePoint> PopulateLocationFromGeolocationCache(IEnumerable<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
             //OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
-            var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath, "ne_10m_admin_0_countries.shp"));
-
-            List<ChargePoint> failedLookups = new List<ChargePoint>();
-
-            //process list of locations, populating country refreshing cache where required
-            foreach (var item in itemList)
+            List<ChargePoint> failedLookups = [];
+            try
             {
-                if (item.AddressInfo.Country == null && item.AddressInfo.CountryID == null)
+                var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath, "ne_10m_admin_0_countries.shp"));
+
+
+
+                //process list of locations, populating country refreshing cache where required
+                foreach (var item in itemList)
                 {
-                    Country country = null;
-
-                    var test = spatialAnalysis.ClassifyPoint((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude);
-                    if (test != null)
+                    if (item.AddressInfo.Country == null && item.AddressInfo.CountryID == null)
                     {
-                        country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == test.CountryCode || c.Title == test.CountryName);
-                    }
+                        Country country = null;
 
-                    if (country == null)
-                    {
-                        var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
-                        if (geoLookup != null)
+                        var test = spatialAnalysis.ClassifyPoint((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude);
+                        if (test != null)
                         {
-                            country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
+                            country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == test.CountryCode || c.Title == test.CountryName);
                         }
-                    }
 
-                    if (country != null)
-                    {
-                        item.AddressInfo.Country = country;
-
-                        //remove country name from address line 1 if present
-                        if (item.AddressInfo.AddressLine1 != null)
+                        if (country == null)
                         {
-                            if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
+                            var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
+                            if (geoLookup != null)
                             {
-                                item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
+                                country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
                             }
                         }
-                    }
 
-                    if (item.AddressInfo.Country == null)
-                    {
-                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title + " OCM-" + item.ID);
+                        if (country != null)
+                        {
+                            item.AddressInfo.Country = country;
 
-                        failedLookups.Add(item);
-                    }
-                    else
-                    {
-                        item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
+                            //remove country name from address line 1 if present
+                            if (item.AddressInfo.AddressLine1 != null)
+                            {
+                                if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
+                                {
+                                    item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
+                                }
+                            }
+                        }
+
+                        if (item.AddressInfo.Country == null)
+                        {
+                            LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title + " OCM-" + item.ID);
+
+                            failedLookups.Add(item);
+                        }
+                        else
+                        {
+                            item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
+                        }
                     }
                 }
-            }
 
-            //cache may have updates, save for next time
-            geolocationCacheManager.SaveCache();
-            return failedLookups;
+                //cache may have updates, save for next time
+                geolocationCacheManager.SaveCache();
+                return failedLookups;
+            }
+            catch (Exception exp)
+            {
+                LogHelper.Log("Failed to PoplateLocationFromGeolocationCache" + exp.Message);
+                return failedLookups;
+            }
         }
 
         public APICredentials GetAPISessionCredentials(string identifier, string sessionToken)
