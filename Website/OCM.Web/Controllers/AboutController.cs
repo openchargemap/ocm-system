@@ -49,38 +49,14 @@ namespace OCM.MVC.Controllers
 
         public ActionResult DataSharing()
         {
-            var countryList = new ReferenceDataManager().GetCountries(false);
-            ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countryList, "ID", "Title");
-            return View(new DataSharingAgreement {  CountryID=2});
+            return RedirectToAction("SubmitOCPI", "Profile");
         }
 
         [HttpPost]
         [Authorize(Roles = "StandardUser")]
         public ActionResult DataSharing(DataSharingAgreement agreement)
         {
-
-            var countryList = new ReferenceDataManager().GetCountries(false);
-            ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countryList, "ID", "Title");
-
-            if (ModelState.IsValid)
-            {
-
-                var submissionManager = new SubmissionManager();
-                bool savedOK = submissionManager.SubmitDataAgreement(agreement, (int)UserID);
-
-                if (!savedOK)
-                {
-                    ViewBag.ErrorMessage = "Please check you have filled out all of the fields. All information is required.";
-                }
-                else
-                {
-                    ViewBag.Submitted = true;
-                }
-
-
-            }
-
-            return View(agreement);
+            return RedirectToAction("SubmitOCPI", "Profile");
         }
 
 

@@ -39,6 +39,12 @@ namespace OCM.Import.Providers.OCPI
         public string CredentialKey { get; set; }
 
         /// <summary>
+        /// Optional prefix to prepend to the credential value when sending the Authorization header.
+        /// Defaults to "Token " for Authorization headers. Set to empty string when the raw credential should be used.
+        /// </summary>
+        public string AuthHeaderValuePrefix { get; set; }
+
+        /// <summary>
         /// Default OCM Operator ID to use when operator cannot be determined from OCPI data
         /// </summary>
         public int? DefaultOperatorId { get; set; }

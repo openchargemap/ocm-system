@@ -1,0 +1,112 @@
+@model OCM.Web.Models.OCPISubmitModel
+
+@{
+    ViewBag.Title = "Submit OCPI Feed";
+}
+
+<h2>Submit OCPI Feed</h2>
+<p class="lead">Share your EV charging network data with Open Charge Map via OCPI.</p>
+
+<div class="alert alert-info">
+    <strong>How it works:</strong>
+    <ol class="mb-0">
+        <li>Enter your OCPI locations endpoint URL below</li>
+        <li>We'll validate the feed and show you what data is available</li>
+        <li>You'll map operators to our database and agree to data sharing terms</li>
+        <li>An admin will review and approve your import</li>
+    </ol>
+</div>
+
+@using (Html.BeginForm("ValidateOCPI", "Profile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <fieldset>
+        <legend>Agreement Details</legend>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CompanyName)
+                    @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control", placeholder = "Your Company Name" })
+                    @Html.ValidationMessageFor(m => m.CompanyName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.RepresentativeName)
+                    @Html.TextBoxFor(m => m.RepresentativeName, new { @class = "form-control", placeholder = "Your Name" })
+                    @Html.ValidationMessageFor(m => m.RepresentativeName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ContactEmail)
+                    @Html.TextBoxFor(m => m.ContactEmail, new { @class = "form-control", placeholder = "name@example.com" })
+                    @Html.ValidationMessageFor(m => m.ContactEmail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CountryID)
+                    @Html.DropDownListFor(m => m.CountryID, (SelectList)ViewBag.CountryList, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.CountryID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.DataFeedType)
+
+        <legend>Provider Details</legend>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ProviderName)
+            @Html.TextBoxFor(m => m.ProviderName, new { @class = "form-control", placeholder = "e.g. My Charging Network" })
+            @Html.ValidationMessageFor(m => m.ProviderName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.WebsiteUrl)
+            @Html.TextBoxFor(m => m.WebsiteUrl, new { @class = "form-control", placeholder = "https://www.example.com" })
+            @Html.ValidationMessageFor(m => m.WebsiteUrl, "", new { @class = "text-danger" })
+        </div>
+
+        <legend>OCPI Endpoint</legend>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.LocationsEndpointUrl)
+            @Html.TextBoxFor(m => m.LocationsEndpointUrl, new { @class = "form-control", placeholder = "https://api.example.com/ocpi/2.2/locations" })
+            @Html.ValidationMessageFor(m => m.LocationsEndpointUrl, "", new { @class = "text-danger" })
+            <small class="form-text text-muted">The full URL to your OCPI 2.x locations endpoint</small>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.AuthorizationHeaderKey)
+            @Html.TextBoxFor(m => m.AuthorizationHeaderKey, new { @class = "form-control", placeholder = "Authorization (default)" })
+            <small class="form-text text-muted">Leave blank to use the standard "Authorization" header</small>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.AuthorizationHeaderValue)
+            @Html.TextBoxFor(m => m.AuthorizationHeaderValue, new { @class = "form-control", placeholder = "Token abc123..." })
+            <small class="form-text text-muted">If your endpoint requires authentication, enter the header value here</small>
+        </div>
+
+        <legend>Licensing</legend>
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(m => m.AcceptedOpenDataLicense, new { @class = "form-check-input" })
+            @Html.LabelFor(m => m.AcceptedOpenDataLicense, new { @class = "form-check-label" })
+            @Html.ValidationMessageFor(m => m.AcceptedOpenDataLicense, "", new { @class = "text-danger d-block" })
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-check"></i> Validate Feed
+        </button>
+        <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary">Cancel</a>
+    </fieldset>
+}

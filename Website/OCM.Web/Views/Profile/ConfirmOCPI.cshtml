@@ -1,0 +1,107 @@
+@model OCM.Web.Models.OCPIConfirmModel
+
+@{
+    ViewBag.Title = "Confirm OCPI Submission";
+}
+
+<h2>Confirm OCPI Feed Submission</h2>
+
+<div class="card mb-3">
+    <div class="card-header"><strong>Submission Summary</strong></div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Provider</dt>
+            <dd class="col-sm-9">@Model.SubmitDetails.ProviderName</dd>
+
+            <dt class="col-sm-3">Endpoint</dt>
+            <dd class="col-sm-9"><code>@Model.SubmitDetails.LocationsEndpointUrl</code></dd>
+
+            @if (!string.IsNullOrEmpty(Model.SubmitDetails.WebsiteUrl))
+            {
+                <dt class="col-sm-3">Website</dt>
+                <dd class="col-sm-9"><a href="@Model.SubmitDetails.WebsiteUrl" target="_blank">@Model.SubmitDetails.WebsiteUrl</a></dd>
+            }
+
+            <dt class="col-sm-3">Locations</dt>
+            <dd class="col-sm-9">@Model.ValidationResult.LocationCount</dd>
+
+            <dt class="col-sm-3">EVSEs</dt>
+            <dd class="col-sm-9">@Model.ValidationResult.EvseCount</dd>
+
+            @if (Model.ValidationResult.DiscoveredCountries.Any())
+            {
+                <dt class="col-sm-3">Countries</dt>
+                <dd class="col-sm-9">@string.Join(", ", Model.ValidationResult.DiscoveredCountries)</dd>
+            }
+
+            <dt class="col-sm-3">Authentication</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.SubmitDetails.AuthorizationHeaderValue) ? "None" : "Configured")</dd>
+        </dl>
+    </div>
+</div>
+
+@if (Model.OperatorMappings.Any())
+{
+    <div class="card mb-3">
+        <div class="card-header"><strong>Operator Mappings</strong></div>
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>OCPI Operator</th>
+                    <th>Mapped To</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var mapping in Model.OperatorMappings)
+                {
+                    <tr>
+                        <td>@mapping.Key</td>
+                        <td>
+                            @if (mapping.Value > 0)
+                            {
+                                <span class="badge badge-success">OCM Operator #@mapping.Value</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">New Operator Required</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="card mb-3">
+    <div class="card-header"><strong>Data Sharing Agreement</strong></div>
+    <div class="card-body">
+        <p>By submitting your OCPI feed to Open Charge Map, you agree to the following:</p>
+        <ul>
+            <li>The data you provide will be published on Open Charge Map and made available under the <strong>CC-0</strong> license for open data.</li>
+            <li>Open Charge Map will periodically fetch data from your OCPI endpoint to keep the listing up to date.</li>
+            <li>You confirm that you have the authority to share this data and that it does not infringe on any third-party rights.</li>
+            <li>You understand that the data will be combined with other sources and may be redistributed by Open Charge Map users.</li>
+            <li>You can request removal of your data at any time by contacting the Open Charge Map team.</li>
+        </ul>
+    </div>
+</div>
+
+@using (Html.BeginForm("CompleteOCPI", "Profile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-check mb-3">
+        @Html.CheckBoxFor(m => m.AcceptedDataSharingAgreement, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.AcceptedDataSharingAgreement, new { @class = "form-check-label" })
+        @Html.ValidationMessageFor(m => m.AcceptedDataSharingAgreement, "", new { @class = "text-danger d-block" })
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        <i class="fa fa-paper-plane"></i> Submit for Review
+    </button>
+    <a href="@Url.Action("SubmitOCPI")" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Start Over
+    </a>
+}

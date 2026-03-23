@@ -54,7 +54,34 @@ namespace OCM.Import.Providers.OCPI
         {
             try
             {
-                _configuration = JsonConvert.DeserializeObject<OCPIProvidersConfiguration>(json);
+                var token = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(json);
+
+                if (token == null)
+                {
+                    Log("OCPI provider configuration is empty or invalid");
+                    return false;
+                }
+
+                if (token.Type == Newtonsoft.Json.Linq.JTokenType.Array)
+                {
+                    _configuration = new OCPIProvidersConfiguration
+                    {
+                        Providers = token.ToObject<List<OCPIProviderConfiguration>>() ?? new List<OCPIProviderConfiguration>()
+                    };
+                }
+                else if (token.Type == Newtonsoft.Json.Linq.JTokenType.Object && token["Providers"] != null)
+                {
+                    _configuration = token.ToObject<OCPIProvidersConfiguration>();
+                }
+                else
+                {
+                    var provider = token.ToObject<OCPIProviderConfiguration>();
+                    _configuration = new OCPIProvidersConfiguration();
+                    if (provider != null)
+                    {
+                        _configuration.Providers.Add(provider);
+                    }
+                }
 
                 if (_configuration?.Providers == null)
                 {

@@ -179,6 +179,23 @@ namespace OCM.Import
         {
             List<IImportProvider> providers = new List<IImportProvider>();
 
+            void AddConfiguredProviders(IEnumerable<IImportProvider> configuredProviders)
+            {
+                foreach (var configuredProvider in configuredProviders)
+                {
+                    var providerName = configuredProvider.GetProviderName();
+                    if (!providers.Any(p => p.GetProviderName().Equals(providerName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        providers.Add(configuredProvider);
+                        Log($"Added configured OCPI provider: {providerName}");
+                    }
+                    else
+                    {
+                        Log($"Skipping configured provider {providerName} - already exists as hardcoded provider");
+                    }
+                }
+            }
+
             providers.Add(new ImportProvider_UKChargePointRegistry());
 
             if (importSettings.Credentials.TryGetValue("IMPORT-adfc", out var afdcKey))
@@ -214,20 +231,18 @@ namespace OCM.Import
                 var ocpiLoader = new OCPIProviderLoader(_log);
                 if (ocpiLoader.LoadFromFile(_settings.OCPIProvidersConfigPath))
                 {
-                    var configuredProviders = ocpiLoader.CreateProviders(enabledOnly: true);
-                    foreach (var configuredProvider in configuredProviders)
+                    AddConfiguredProviders(ocpiLoader.CreateProviders(enabledOnly: true));
+                }
+            }
+
+            using (var dataProviderManager = new DataProviderManager())
+            {
+                foreach (var storedConfig in dataProviderManager.GetApprovedImportConfigs())
+                {
+                    var ocpiLoader = new OCPIProviderLoader(_log);
+                    if (ocpiLoader.LoadFromJson(storedConfig))
                     {
-                        // Only add if not already present (avoid duplicates with hardcoded providers)
-                        var providerName = configuredProvider.GetProviderName();
-                        if (!providers.Any(p => p.GetProviderName().Equals(providerName, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            providers.Add(configuredProvider);
-                            Log($"Added configured OCPI provider: {providerName}");
-                        }
-                        else
-                        {
-                            Log($"Skipping configured provider {providerName} - already exists as hardcoded provider");
-                        }
+                        AddConfiguredProviders(ocpiLoader.CreateProviders(enabledOnly: true));
                     }
                 }
             }

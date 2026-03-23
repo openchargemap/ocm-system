@@ -1,0 +1,168 @@
+@model OCM.Web.Models.OCPIValidateModel
+
+@{
+    ViewBag.Title = "Validate OCPI Feed";
+}
+
+<h2>OCPI Feed Validation Results</h2>
+<p>Provider: <strong>@Model.SubmitDetails.ProviderName</strong></p>
+<p>Endpoint: <code>@Model.SubmitDetails.LocationsEndpointUrl</code></p>
+
+@if (Model.ValidationResult.Errors.Any())
+{
+    <div class="alert alert-danger">
+        <h5><i class="fa fa-exclamation-triangle"></i> Validation Failed</h5>
+        <ul class="mb-0">
+            @foreach (var error in Model.ValidationResult.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+
+    @if (Model.ValidationResult.DiscoveryLog.Any())
+    {
+        <div class="card mb-3">
+            <div class="card-header">Discovery Log</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var message in Model.ValidationResult.DiscoveryLog)
+                {
+                    <li class="list-group-item">@message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <a href="@Url.Action("SubmitOCPI")" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Go Back and Fix
+    </a>
+}
+else
+{
+    <div class="alert alert-success">
+        <h5><i class="fa fa-check-circle"></i> Feed Valid</h5>
+        <p class="mb-0">
+            Found <strong>@Model.ValidationResult.LocationCount</strong> location(s) with
+            <strong>@Model.ValidationResult.EvseCount</strong> EVSE(s)
+            @if (Model.ValidationResult.DiscoveredCountries.Any())
+            {
+                <span>in @string.Join(", ", Model.ValidationResult.DiscoveredCountries)</span>
+            }
+        </p>
+    </div>
+
+    @if (Model.ValidationResult.Warnings.Any())
+    {
+        <div class="alert alert-warning">
+            <h5>Warnings</h5>
+            <ul class="mb-0">
+                @foreach (var warning in Model.ValidationResult.Warnings)
+                {
+                    <li>@warning</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="card mb-3">
+        <div class="card-header">Discovered Import Settings</div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Locations endpoint</dt>
+                <dd class="col-sm-8"><code>@(Model.ValidationResult.ResolvedLocationsEndpointUrl ?? Model.SubmitDetails.LocationsEndpointUrl)</code></dd>
+
+                <dt class="col-sm-4">Authorization header</dt>
+                <dd class="col-sm-8">@(Model.ValidationResult.ResolvedAuthHeaderDisplayValue ?? "None")</dd>
+            </dl>
+        </div>
+    </div>
+
+    @if (Model.ValidationResult.DiscoveryLog.Any())
+    {
+        <div class="card mb-3">
+            <div class="card-header">Discovery Log</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var message in Model.ValidationResult.DiscoveryLog)
+                {
+                    <li class="list-group-item">@message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (Model.ValidationResult.SampleLocations.Any())
+    {
+        <div class="card mb-3">
+            <div class="card-header">Sample Locations</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var name in Model.ValidationResult.SampleLocations)
+                {
+                    <li class="list-group-item">@name</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <h3>Operator Mapping</h3>
+    <p>Map the operators found in your feed to existing Open Charge Map operators. Select "(New Operator Required)" for operators that don't exist yet — they will be flagged for admin creation.</p>
+
+    using (Html.BeginForm("ConfirmOCPI", "Profile", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @if (Model.ValidationResult.DiscoveredOperators.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>OCPI Operator</th>
+                        <th>Locations</th>
+                        <th>Map to OCM Operator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var op in Model.ValidationResult.DiscoveredOperators)
+                    {
+                        <tr>
+                            <td><strong>@op.Name</strong></td>
+                            <td>@op.LocationCount</td>
+                            <td>
+                                <select name="OperatorMappings[@op.Name]" class="form-control">
+                                    <option value="0">(New Operator Required)</option>
+                                    @foreach (var ocmOp in Model.AvailableOperators)
+                                    {
+                                        var selected = op.MappedOperatorId == ocmOp.ID ? "selected" : "";
+                                        <option value="@ocmOp.ID"
+                                               >@ocmOp.Title (ID: @ocmOp.ID)</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                No operator information found in the feed. You can set a default operator after admin review.
+            </div>
+        }
+
+        @if (Model.ValidationResult.DiscoveredOperators.Count == 1)
+        {
+            <div class="form-group">
+                <label>Default Operator</label>
+                <p class="form-text text-muted">Since there is only one operator, it will be set as the default.</p>
+                <input type="hidden" name="DefaultOperatorId" value="@(Model.ValidationResult.DiscoveredOperators.First().MappedOperatorId ?? 0)" />
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-arrow-right"></i> Continue to Confirmation
+        </button>
+        <a href="@Url.Action("SubmitOCPI")" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> Start Over
+        </a>
+    }
+}
