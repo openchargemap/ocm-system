@@ -22,14 +22,53 @@ class OCMRouter {
 		"Access-Control-Max-Age": "86400",
 	}
 
+	appendVaryHeader(headers: Headers, value: string) {
+		const existing = headers.get("Vary");
+		if (!existing) {
+			headers.set("Vary", value);
+			return;
+		}
+
+		const varyValues = existing.split(",").map(v => v.trim().toLowerCase());
+		if (!varyValues.includes(value.toLowerCase())) {
+			headers.set("Vary", `${existing}, ${value}`);
+		}
+	}
+
+	applyCORSHeaders(request: Request, response: Response) {
+		const origin = request.headers.get("Origin");
+		const corsResponse = new Response(response.body, response);
+
+		if (origin) {
+			corsResponse.headers.set("Access-Control-Allow-Origin", origin);
+			corsResponse.headers.set("Access-Control-Allow-Credentials", "true");
+			this.appendVaryHeader(corsResponse.headers, "Origin");
+		} else {
+			if (corsResponse.headers.get("Access-Control-Allow-Origin") === null) {
+				corsResponse.headers.set("Access-Control-Allow-Origin", "*");
+			}
+			corsResponse.headers.delete("Access-Control-Allow-Credentials");
+		}
+
+		return corsResponse;
+	}
+
+	buildProxyRequest(request: Request, url: URL) {
+		return new Request(url, {
+			method: request.method,
+			headers: request.headers,
+			body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
+			redirect: "manual"
+		});
+	}
+
 	handleOptions(request: Request) {
 		// Make sure the necessary headers are present
 		// for this to be a valid pre-flight request
 		let headers = request.headers
 		if (
 			headers.get("Origin") !== null &&
-			headers.get("Access-Control-Request-Method") !== null &&
-			headers.get("Access-Control-Request-Headers") !== null
+			headers.get("Access-Control-Request-Method") !== null
 		) {
 			// Handle CORS pre-flight request.
 			// If you want to check or reject the requested method + headers
@@ -40,6 +79,7 @@ class OCMRouter {
 				"Access-Control-Allow-Credentials": "true",
 
 			});
+			this.appendVaryHeader(respHeaders, "Origin");
 			if (request.headers.get("Access-Control-Request-Headers")) {
 				// Allow all future content Request headers to go back to browser
 				// such as Authorization (Bearer) or X-Client-Name-Version
@@ -81,11 +121,11 @@ class OCMRouter {
 
 		// disallow robots
 		if (request.url.toString().indexOf("/robots.txt") > -1) {
-			return new Response("user-agent: * \r\ndisallow: /", {
+			return this.applyCORSHeaders(request, new Response("user-agent: * \r\ndisallow: /", {
 				headers: {
 					"content-type": "text/plain"
 				}
-			});
+			}));
 
 		}
 
@@ -102,7 +142,7 @@ class OCMRouter {
 				headers: request.headers
 			});
 
-			return fetch(modifiedRequest);
+			return this.applyCORSHeaders(request, await fetch(modifiedRequest));
 		}
 
 		// check for banned IPs or banned User Agents
@@ -110,7 +150,7 @@ class OCMRouter {
 		const userAgent = request.headers.get('user-agent');
 
 		if (userAgent && userAgent.indexOf("FME/2020") > -1) {
-			return await this.rejectRequest("Blocked for API Abuse. Callers spamming API with repeated duplicate calls may be auto banned.");
+			return await this.rejectRequest(request, "Blocked for API Abuse. Callers spamming API with repeated duplicate calls may be auto banned.");
 		}
 
 		// check API key
@@ -127,12 +167,12 @@ class OCMRouter {
 			if (apiKey == null && this.requireAPIKeyForAllRequests == true && request.method != "OPTIONS") {
 				status = "REJECTED_APIKEY_MISSING";
 				logKeyUsage = false;
-				response = this.rejectRequest(status);
+				response = this.rejectRequest(request, status);
 			}
 			else if (apiKey == null && maxresults != null && parseInt(maxresults) > 250) {
 				status = "REJECTED_APIKEY_MISSING";
 				logKeyUsage = false;
-				response = this.rejectRequest(status);
+				response = this.rejectRequest(request, status);
 			} else {
 				if (this.enableDebug) console.log("Passing request with API Key or key not required:" + apiKey);
 
@@ -142,7 +182,7 @@ class OCMRouter {
 				} else {
 					status = "REJECTED_APIKEY_INVALID";
 					logKeyUsage = false;
-					response = this.rejectRequest(status);
+					response = this.rejectRequest(request, status);
 				}
 			}
 
@@ -273,14 +313,14 @@ class OCMRouter {
 
 	}
 
-	rejectRequest(reason: string) {
+	rejectRequest(request: Request, reason: string) {
 		if (!reason || reason == null) {
 			reason = "You must specify an API Key, either in an X-API-Key header or key= query string parameter.";
 		}
 
-		return new Response(reason, {
+		return this.applyCORSHeaders(request, new Response(reason, {
 			status: 403,
-		});
+		}));
 	}
 
 	async fetchAndApply(request: Request, env: Env, context: ExecutionContext, apiKey: string | null, status: string) {
@@ -296,22 +336,23 @@ class OCMRouter {
 
 		if (userAgent != null && banned_ua.includes(userAgent)) {
 			status = "BANNED_UA";
-			return this.rejectRequest(abuseMsg)
+			return this.rejectRequest(request, abuseMsg)
 		}
 
 		if (clientIP != null && banned_ip?.includes(clientIP)) {
 			status = "BANNED_IP";
-			return this.rejectRequest(abuseMsg)
+			return this.rejectRequest(request, abuseMsg)
 		}
 
 		if (apiKey != null && banned_keys?.includes(apiKey)) {
 			status = "BANNED_KEY";
-			return this.rejectRequest(abuseMsg)
+			return this.rejectRequest(request, abuseMsg)
 		}
 
 		let mirrorHosts = [
 			"api-01.openchargemap.io"
 		];
+		const primaryHost = mirrorHosts[0];
 
 		// check if we think this user is currently an editor (has posted)
 
@@ -388,29 +429,18 @@ class OCMRouter {
 			if (enableCache) response = await cache.match(request);
 
 			if (!response) {
-				let modifiedRequest = new Request(url, {
-					method: request.method,
-					headers: request.headers
-				});
+				let modifiedRequest = this.buildProxyRequest(request, url);
 
 				try {
 					response = await fetch(modifiedRequest);
 
-					// Make the headers mutable by re-constructing the Response.
-
-					response = new Response(response.body, response);
 					if (!response.ok && response.status >= 500) {
 						console.log("Forwarded request failed. " + response.status);
 						throw "Mirror response status failed:" + response.status;
 					}
 
+					response = this.applyCORSHeaders(request, response);
 					response.headers.set('x-forwarded-host', url.hostname);
-					if (response.headers.get('Access-Control-Allow-Origin') === null) {
-						response.headers.append("Access-Control-Allow-Origin", "*");
-					}
-					if (response.headers.get('Access-Control-Allow-Credentials') === null) {
-						response.headers.append("Access-Control-Allow-Credentials", "true");
-					}
 					if (enableCache) context.waitUntil(cache.put(request, response.clone()));
 
 					return response;
@@ -424,7 +454,10 @@ class OCMRouter {
 						await env.OCM_CONFIG_KV.put("API_SKIPPED_MIRRORS", JSON.stringify([mirrorHosts[mirrorIndex]]), { expirationTtl: 60 * 15 });
 					}
 
-					response = await fetch(request);
+					url.hostname = primaryHost;
+					url.protocol = "https";
+					url.port = "443";
+					response = this.applyCORSHeaders(request, await fetch(this.buildProxyRequest(request, url)));
 
 					if (enableCache) context.waitUntil(cache.put(request, response.clone()));
 
@@ -433,7 +466,7 @@ class OCMRouter {
 
 			} else {
 				console.log("Using cached response");
-				return response;
+				return this.applyCORSHeaders(request, response);
 			}
 
 		} else {
@@ -449,8 +482,12 @@ class OCMRouter {
 				}
 			}
 
-			let response = await fetch(request);
-			return response
+			url.hostname = primaryHost;
+			url.protocol = "https";
+			url.port = "443";
+
+			let response = await fetch(this.buildProxyRequest(request, url));
+			return this.applyCORSHeaders(request, response)
 		}
 	}
 
