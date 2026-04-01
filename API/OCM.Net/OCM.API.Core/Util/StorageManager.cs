@@ -24,8 +24,8 @@ namespace OCM.Core.Util
             }
             else
             {
-                string r2Url = "";
-                string s3Url = "";
+                string r2Url = null;
+                string s3Url = null;
                 // upload to s3
                 try
                 {
@@ -48,7 +48,18 @@ namespace OCM.Core.Util
                     System.Diagnostics.Debug.WriteLine(ex);
                 }
 
-                return r2Url ?? s3Url;
+
+                if (!string.IsNullOrWhiteSpace(r2Url))
+                {
+                    return r2Url;
+                }
+
+                if (!string.IsNullOrWhiteSpace(s3Url))
+                {
+                    return s3Url;
+                }
+
+                return null;
 
             }
         }
