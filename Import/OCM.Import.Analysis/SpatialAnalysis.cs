@@ -2,6 +2,7 @@
 using DotSpatial.Projections;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -35,6 +36,12 @@ namespace OCM.Import.Analysis
             System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string dataPath = globalShapeFileDataPath;
+
+            if (!File.Exists(dataPath))
+            {
+                dataPath = Path.Join(Directory.GetCurrentDirectory(), dataPath);
+            }
+
             fsWorldCountries = FeatureSet.Open(dataPath);
             fsWorldCountries.Reproject(DotSpatial.Projections.KnownCoordinateSystems.Geographic.World.WGS1984);
             countryCodes = GetCountryCodeMappings();

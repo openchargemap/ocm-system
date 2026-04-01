@@ -7,6 +7,8 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.API.Utils;
 using OCM.Core.Data;
+using OCM.Import.Providers.OCPI;
+using OCM.Web.Models;
 using OCM.Web.Services;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,8 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AgreementModel = OCM.API.Common.Model.DataSharingAgreement;
+using ProviderModel = OCM.API.Common.Model.DataProvider;
 
 namespace OCM.MVC.Controllers
 {
@@ -28,6 +32,198 @@ namespace OCM.MVC.Controllers
             _host = host;
             _cache = memoryCache;
             _adminTaskService = adminTaskService;
+        }
+
+        private void PopulateCountryList(int selectedCountryId)
+        {
+            var countryList = new ReferenceDataManager().GetCountries(false);
+            ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countryList, "ID", "Title", selectedCountryId);
+        }
+
+        private static OCPIProviderConfiguration GetStoredProviderConfiguration(string importConfig)
+        {
+            if (string.IsNullOrWhiteSpace(importConfig))
+            {
+                return null;
+            }
+
+            try
+            {
+                var token = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(importConfig);
+                if (token == null)
+                {
+                    return null;
+                }
+
+                if (token.Type == Newtonsoft.Json.Linq.JTokenType.Object && token["Providers"] is Newtonsoft.Json.Linq.JArray providersArray)
+                {
+                    return providersArray.FirstOrDefault()?.ToObject<OCPIProviderConfiguration>();
+                }
+
+                if (token.Type == Newtonsoft.Json.Linq.JTokenType.Array)
+                {
+                    return token.FirstOrDefault()?.ToObject<OCPIProviderConfiguration>();
+                }
+
+                return token.ToObject<OCPIProviderConfiguration>();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static string FormatOperatorMappings(Dictionary<string, int> operatorMappings)
+        {
+            if (operatorMappings == null || operatorMappings.Count == 0)
+            {
+                return null;
+            }
+
+            return string.Join(Environment.NewLine, operatorMappings
+                .OrderBy(m => m.Key)
+                .Select(m => $"{m.Key}={m.Value}"));
+        }
+
+        private static string FormatExcludedLocationIds(List<string> excludedLocationIds)
+        {
+            if (excludedLocationIds == null || excludedLocationIds.Count == 0)
+            {
+                return null;
+            }
+
+            return string.Join(Environment.NewLine, excludedLocationIds.OrderBy(i => i));
+        }
+
+        private AdminDataSharingAgreementEditModel BuildReviewEditModel(AgreementModel agreement, ProviderModel dataProvider, string importConfig, OCPIValidationResult validationPreview)
+        {
+            var existingConfig = GetStoredProviderConfiguration(importConfig);
+            var providerName = existingConfig?.ProviderName;
+
+            if (string.IsNullOrWhiteSpace(providerName))
+            {
+                providerName = ((agreement.CompanyName ?? string.Empty).Trim().ToLowerInvariant().Replace(" ", "-").Replace("_", "-"));
+            }
+
+            return new AdminDataSharingAgreementEditModel
+            {
+                AgreementId = agreement.ID,
+                DataProviderId = dataProvider?.ID,
+                CompanyName = agreement.CompanyName,
+                CountryId = agreement.CountryID,
+                RepresentativeName = agreement.RepresentativeName,
+                ContactEmail = agreement.ContactEmail,
+                WebsiteUrl = agreement.WebsiteURL,
+                DataFeedType = agreement.DataFeedType,
+                SubmittedFeedUrl = agreement.DataFeedURL,
+                SubmittedCredentials = agreement.Credentials,
+                ProviderName = providerName,
+                OutputNamePrefix = existingConfig?.OutputNamePrefix,
+                DataProviderOcpiId = dataProvider?.ID ?? 0,
+                LocationsEndpointUrl = existingConfig?.LocationsEndpointUrl ?? validationPreview?.ResolvedLocationsEndpointUrl ?? agreement.DataFeedURL,
+                AuthHeaderKey = existingConfig?.AuthHeaderKey ?? validationPreview?.ResolvedAuthHeaderKey,
+                AuthHeaderValuePrefix = existingConfig?.AuthHeaderValuePrefix ?? validationPreview?.ResolvedAuthHeaderValuePrefix ?? "Token ",
+                CredentialKey = existingConfig?.CredentialKey,
+                DefaultOperatorId = existingConfig?.DefaultOperatorId,
+                IsEnabled = existingConfig?.IsEnabled ?? true,
+                IsAutoRefreshed = existingConfig?.IsAutoRefreshed ?? true,
+                IsProductionReady = existingConfig?.IsProductionReady ?? false,
+                AllowDuplicatePOIWithDifferentOperator = existingConfig?.AllowDuplicatePOIWithDifferentOperator ?? true,
+                Description = existingConfig?.Description,
+                OperatorMappingsText = FormatOperatorMappings(existingConfig?.OperatorMappings),
+                ExcludedLocationIdsText = FormatExcludedLocationIds(existingConfig?.ExcludedLocationIds),
+                ApproveImport = dataProvider?.IsApprovedImport == true
+            };
+        }
+
+        private AdminDataSharingAgreementReviewModel BuildReviewModel(AgreementModel agreement, ProviderModel dataProvider, string importConfig, OCPIValidationResult validationPreview, AdminDataSharingAgreementEditModel review = null)
+        {
+            return new AdminDataSharingAgreementReviewModel
+            {
+                Agreement = agreement,
+                DataProvider = dataProvider,
+                ImportConfig = importConfig,
+                ValidationPreview = validationPreview,
+                AvailableOperators = new OperatorInfoManager().GetOperators(),
+                Review = review ?? BuildReviewEditModel(agreement, dataProvider, importConfig, validationPreview)
+            };
+        }
+
+        private static Dictionary<string, int> ParseOperatorMappings(string operatorMappingsText)
+        {
+            var mappings = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            if (string.IsNullOrWhiteSpace(operatorMappingsText))
+            {
+                return mappings;
+            }
+
+            var lines = operatorMappingsText
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => l.Trim())
+                .Where(l => !string.IsNullOrWhiteSpace(l));
+
+            foreach (var line in lines)
+            {
+                var separatorIndex = line.IndexOf('=');
+                if (separatorIndex <= 0)
+                {
+                    continue;
+                }
+
+                var key = line.Substring(0, separatorIndex).Trim();
+                var valueText = line.Substring(separatorIndex + 1).Trim();
+                if (!string.IsNullOrWhiteSpace(key) && int.TryParse(valueText, out var value) && value > 0)
+                {
+                    mappings[key] = value;
+                }
+            }
+
+            return mappings;
+        }
+
+        private static List<string> ParseExcludedLocationIds(string excludedLocationIdsText)
+        {
+            if (string.IsNullOrWhiteSpace(excludedLocationIdsText))
+            {
+                return new List<string>();
+            }
+
+            return excludedLocationIdsText
+                .Split(new[] { '\r', '\n', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(i => i.Trim())
+                .Where(i => !string.IsNullOrWhiteSpace(i))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private static OCPIProviderConfiguration BuildProviderConfiguration(AdminDataSharingAgreementEditModel review, int dataProviderId)
+        {
+            return new OCPIProviderConfiguration
+            {
+                ProviderName = review.ProviderName?.Trim(),
+                OutputNamePrefix = string.IsNullOrWhiteSpace(review.OutputNamePrefix) ? review.ProviderName?.Trim() : review.OutputNamePrefix.Trim(),
+                Description = review.Description,
+                DataProviderId = dataProviderId,
+                LocationsEndpointUrl = review.LocationsEndpointUrl?.Trim(),
+                AuthHeaderKey = string.IsNullOrWhiteSpace(review.AuthHeaderKey) ? null : review.AuthHeaderKey.Trim(),
+                CredentialKey = string.IsNullOrWhiteSpace(review.CredentialKey) ? null : review.CredentialKey.Trim(),
+                AuthHeaderValuePrefix = string.IsNullOrWhiteSpace(review.AuthHeaderValuePrefix) ? null : review.AuthHeaderValuePrefix,
+                DefaultOperatorId = review.DefaultOperatorId,
+                IsAutoRefreshed = review.IsAutoRefreshed,
+                IsProductionReady = review.IsProductionReady,
+                AllowDuplicatePOIWithDifferentOperator = review.AllowDuplicatePOIWithDifferentOperator,
+                OperatorMappings = ParseOperatorMappings(review.OperatorMappingsText),
+                ExcludedLocationIds = ParseExcludedLocationIds(review.ExcludedLocationIdsText),
+                IsEnabled = review.IsEnabled
+            };
+        }
+
+        private async Task<OCPIValidationResult> BuildValidationPreviewAsync(AdminDataSharingAgreementEditModel review)
+        {
+            var validator = new OCPIFeedValidator();
+            var authHeaderKey = string.IsNullOrWhiteSpace(review.AuthHeaderKey) ? null : review.AuthHeaderKey;
+            var submittedCredentials = string.IsNullOrWhiteSpace(review.SubmittedCredentials) ? null : review.SubmittedCredentials;
+            return await validator.ValidateFeedAsync(review.LocationsEndpointUrl, authHeaderKey, submittedCredentials);
         }
 
         // GET: /Admin/
@@ -96,6 +292,159 @@ namespace OCM.MVC.Controllers
             var operatorInfoManager = new OperatorInfoManager();
 
             return View(operatorInfoManager.GetOperators());
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult DataSharingAgreements()
+        {
+            using var agreementManager = new DataSharingAgreementManager();
+            using var dataProviderManager = new DataProviderManager();
+
+            var model = agreementManager.GetAgreements()
+                .Select(a => new AdminDataSharingAgreementListItem
+                {
+                    Agreement = a,
+                    DataProvider = dataProviderManager.GetDataProviderByAgreementId(a.ID)
+                })
+                .ToList();
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> ReviewDataSharingAgreement(int id)
+        {
+            using var agreementManager = new DataSharingAgreementManager();
+            using var dataProviderManager = new DataProviderManager();
+
+            var agreement = agreementManager.GetAgreement(id);
+            if (agreement == null)
+            {
+                return RedirectToAction("DataSharingAgreements");
+            }
+
+            var dataProvider = dataProviderManager.GetDataProviderByAgreementId(id);
+            var importConfig = dataProviderManager.GetImportConfigByAgreementId(id);
+
+            var existingConfig = GetStoredProviderConfiguration(importConfig);
+            var validationPreview = await new OCPIFeedValidator().ValidateFeedAsync(
+                existingConfig?.LocationsEndpointUrl ?? agreement.DataFeedURL,
+                existingConfig?.AuthHeaderKey,
+                agreement.Credentials);
+
+            PopulateCountryList(agreement.CountryID);
+
+            var model = BuildReviewModel(agreement, dataProvider, importConfig, validationPreview);
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReviewDataSharingAgreement([Bind(Prefix = "Review")] AdminDataSharingAgreementEditModel review)
+        {
+            review ??= new AdminDataSharingAgreementEditModel();
+
+            using var agreementManager = new DataSharingAgreementManager();
+            using var dataProviderManager = new DataProviderManager();
+
+            var agreement = agreementManager.GetAgreement(review.AgreementId);
+            if (agreement == null)
+            {
+                return RedirectToAction("DataSharingAgreements");
+            }
+
+            var dataProvider = dataProviderManager.GetDataProviderByAgreementId(review.AgreementId);
+
+            PopulateCountryList(review.CountryId);
+
+            OCPIValidationResult validationPreview = null;
+            if (ModelState.IsValid)
+            {
+                validationPreview = await BuildValidationPreviewAsync(review);
+            }
+
+            if (string.IsNullOrWhiteSpace(review.CredentialKey) && string.IsNullOrWhiteSpace(review.SubmittedCredentials))
+            {
+                ModelState.AddModelError(nameof(review.CredentialKey), "Provide a key vault secret name or keep the submitted credentials for validation and import setup.");
+            }
+
+            if (review.DefaultOperatorId.HasValue && review.DefaultOperatorId <= 0)
+            {
+                ModelState.AddModelError(nameof(review.DefaultOperatorId), "Default operator must be a valid operator ID.");
+            }
+
+            if (review.DataProviderId.HasValue && review.DataProviderOcpiId.HasValue && review.DataProviderOcpiId.Value > 0 && review.DataProviderId.Value != review.DataProviderOcpiId.Value)
+            {
+                ModelState.AddModelError(nameof(review.DataProviderOcpiId), "Configured OCPI data provider ID must match the linked data provider.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                agreement.CompanyName = review.CompanyName;
+                agreement.CountryID = review.CountryId;
+                agreement.RepresentativeName = review.RepresentativeName;
+                agreement.ContactEmail = review.ContactEmail;
+                agreement.WebsiteURL = review.WebsiteUrl;
+                agreement.DataFeedType = review.DataFeedType;
+                agreement.DataFeedURL = review.SubmittedFeedUrl;
+                agreement.Credentials = review.SubmittedCredentials;
+
+                agreement = agreementManager.UpdateAgreement(agreement);
+
+                if (dataProvider == null)
+                {
+                    dataProvider = dataProviderManager.CreateOCPIDataProvider(
+                        title: review.CompanyName,
+                        websiteUrl: review.WebsiteUrl,
+                        license: agreement.DataLicense,
+                        isOpenDataLicensed: true,
+                        ocpiConfigJson: string.Empty,
+                        submittedByUserId: (int)UserID,
+                        dataSharingAgreementId: review.AgreementId);
+                }
+
+                review.DataProviderId = dataProvider.ID;
+                review.DataProviderOcpiId = dataProvider.ID;
+
+                var providerConfig = BuildProviderConfiguration(review, dataProvider.ID);
+                var importConfig = JsonConvert.SerializeObject(providerConfig, Formatting.Indented);
+
+                dataProvider = dataProviderManager.UpdateOCPIDataProvider(
+                    dataProviderId: dataProvider.ID,
+                    title: review.CompanyName,
+                    websiteUrl: review.WebsiteUrl,
+                    license: agreement.DataLicense,
+                    isOpenDataLicensed: true,
+                    ocpiConfigJson: importConfig,
+                    updatedByUserId: (int)UserID);
+
+                dataProviderManager.SetImportApprovalStatus(dataProvider.ID, review.ApproveImport);
+
+                TempData["StatusMessage"] = "OCPI review details saved.";
+
+                return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id = review.AgreementId });
+            }
+
+            var importConfigForDisplay = dataProviderManager.GetImportConfigByAgreementId(review.AgreementId);
+            var viewModel = BuildReviewModel(agreement, dataProvider, importConfigForDisplay, validationPreview ?? new OCPIValidationResult(), review);
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ApproveDataSharingAgreement(int id)
+        {
+            using var dataProviderManager = new DataProviderManager();
+            var dataProvider = dataProviderManager.GetDataProviderByAgreementId(id);
+            if (dataProvider != null)
+            {
+                dataProviderManager.SetImportApprovalStatus(dataProvider.ID, true);
+            }
+
+            return RedirectToAction("ReviewDataSharingAgreement", new { id });
         }
 
         [Authorize(Roles = "Admin")]

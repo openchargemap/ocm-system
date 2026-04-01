@@ -1,0 +1,319 @@
+@model OCM.Web.Models.AdminDataSharingAgreementReviewModel
+
+@{
+    ViewBag.Title = "Review Data Sharing Agreement";
+    var statusMessage = TempData["StatusMessage"] as string;
+}
+
+<h2>Review Data Sharing Agreement</h2>
+
+@if (!string.IsNullOrWhiteSpace(statusMessage))
+{
+    <div class="alert alert-success">@statusMessage</div>
+}
+
+@Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+
+<div class="row">
+    <div class="col-md-7">
+        @using (Html.BeginForm("ReviewDataSharingAgreement", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Review.AgreementId)
+            @Html.HiddenFor(m => m.Review.DataProviderId)
+
+            <div class="panel panel-default mb-3">
+                <div class="panel-heading"><strong>Agreement Details</strong></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Company</label>
+                                @Html.TextBoxFor(m => m.Review.CompanyName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.CompanyName)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Representative</label>
+                                @Html.TextBoxFor(m => m.Review.RepresentativeName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.RepresentativeName)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                @Html.TextBoxFor(m => m.Review.ContactEmail, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.ContactEmail)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Country</label>
+                                @Html.DropDownListFor(m => m.Review.CountryId, (SelectList)ViewBag.CountryList, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.CountryId)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        @Html.TextBoxFor(m => m.Review.WebsiteUrl, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Review.WebsiteUrl)
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Data Feed Type</label>
+                                @Html.TextBoxFor(m => m.Review.DataFeedType, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.DataFeedType)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="checkbox" style="margin-top:30px;">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.Review.ApproveImport) Approve import after saving
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Submitted Feed URL</label>
+                        @Html.TextBoxFor(m => m.Review.SubmittedFeedUrl, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Review.SubmittedFeedUrl)
+                    </div>
+                    <div class="form-group">
+                        <label>Submitted Credentials</label>
+                        @Html.TextBoxFor(m => m.Review.SubmittedCredentials, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Review.SubmittedCredentials)
+                        <span class="help-block">Keep this only if you want the review step to validate with the submitted secret value.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default mb-3">
+                <div class="panel-heading"><strong>Final Stored OCPI Import Configuration</strong></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Provider Name</label>
+                                @Html.TextBoxFor(m => m.Review.ProviderName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.ProviderName)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Output Prefix</label>
+                                @Html.TextBoxFor(m => m.Review.OutputNamePrefix, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.OutputNamePrefix)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Linked Data Provider ID</label>
+                                @Html.TextBoxFor(m => m.Review.DataProviderOcpiId, new { @class = "form-control", @readonly = "readonly" })
+                                <span class="help-block">Created automatically when a linked data provider does not already exist.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Default Operator ID</label>
+                                @Html.TextBoxFor(m => m.Review.DefaultOperatorId, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.DefaultOperatorId)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Locations Endpoint URL</label>
+                        @Html.TextBoxFor(m => m.Review.LocationsEndpointUrl, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Review.LocationsEndpointUrl)
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Auth Header Key</label>
+                                @Html.TextBoxFor(m => m.Review.AuthHeaderKey, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.AuthHeaderKey)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Auth Header Prefix</label>
+                                @Html.TextBoxFor(m => m.Review.AuthHeaderValuePrefix, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.AuthHeaderValuePrefix)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Key Vault Secret Name</label>
+                                @Html.TextBoxFor(m => m.Review.CredentialKey, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.CredentialKey)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        @Html.TextAreaFor(m => m.Review.Description, 3, 1, new { @class = "form-control" })
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="checkbox">
+                                <label>@Html.CheckBoxFor(m => m.Review.IsEnabled) Enabled</label>
+                            </div>
+                            <div class="checkbox">
+                                <label>@Html.CheckBoxFor(m => m.Review.IsAutoRefreshed) Auto refreshed</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="checkbox">
+                                <label>@Html.CheckBoxFor(m => m.Review.IsProductionReady) Production ready</label>
+                            </div>
+                            <div class="checkbox">
+                                <label>@Html.CheckBoxFor(m => m.Review.AllowDuplicatePOIWithDifferentOperator) Allow duplicate POI with different operator</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Operator Mappings</label>
+                        @Html.TextAreaFor(m => m.Review.OperatorMappingsText, 8, 1, new { @class = "form-control", placeholder = "Operator Name=1234" })
+                        <span class="help-block">One mapping per line in the format <code>Operator Name=OperatorId</code>.</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Excluded Location IDs</label>
+                        @Html.TextAreaFor(m => m.Review.ExcludedLocationIdsText, 5, 1, new { @class = "form-control", placeholder = "LOC001" })
+                        <span class="help-block">One location ID per line.</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Review and Stored Config</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-5">
+        <div class="panel panel-default mb-3">
+            <div class="panel-heading"><strong>Linked Data Provider</strong></div>
+            <div class="panel-body">
+                @if (Model.DataProvider != null)
+                {
+                    <dl class="dl-horizontal">
+                        <dt>Title</dt>
+                        <dd>@Model.DataProvider.Title</dd>
+                        <dt>ID</dt>
+                        <dd>@Model.DataProvider.ID</dd>
+                        <dt>Status</dt>
+                        <dd>
+                            @if (Model.IsApproved)
+                            {
+                                <span class="label label-success">Approved</span>
+                            }
+                            else
+                            {
+                                <span class="label label-warning">Pending Review</span>
+                            }
+                        </dd>
+                    </dl>
+                }
+                else
+                {
+                    <div class="alert alert-warning">A linked data provider will be created when the review is saved.</div>
+                }
+            </div>
+        </div>
+
+        <div class="panel panel-default mb-3">
+            <div class="panel-heading"><strong>OCPI Feed Preview</strong></div>
+            <div class="panel-body">
+                @if (Model.ValidationPreview != null && Model.ValidationPreview.Errors.Any())
+                {
+                    <div class="alert alert-danger">
+                        <strong>Preview failed</strong>
+                        <ul class="mb-0">
+                            @foreach (var error in Model.ValidationPreview.Errors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </div>
+                }
+                else if (Model.ValidationPreview != null)
+                {
+                    <p><strong>Locations:</strong> @Model.ValidationPreview.LocationCount</p>
+                    <p><strong>EVSEs:</strong> @Model.ValidationPreview.EvseCount</p>
+                    <p><strong>Resolved endpoint:</strong> <code>@(Model.ValidationPreview.ResolvedLocationsEndpointUrl ?? Model.Review.LocationsEndpointUrl ?? Model.Agreement.DataFeedURL)</code></p>
+                    <p><strong>Authorization:</strong> @(Model.ValidationPreview.ResolvedAuthHeaderDisplayValue ?? "None")</p>
+
+                    if (Model.ValidationPreview.Warnings.Any())
+                    {
+                        <div class="alert alert-warning">
+                            <ul class="mb-0">
+                                @foreach (var warning in Model.ValidationPreview.Warnings)
+                                {
+                                    <li>@warning</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    if (Model.ValidationPreview.SampleLocations.Any())
+                    {
+                        <h5>Sample Locations</h5>
+                        <ul>
+                            @foreach (var name in Model.ValidationPreview.SampleLocations)
+                            {
+                                <li>@name</li>
+                            }
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+
+        @if (Model.ValidationPreview != null && Model.ValidationPreview.DiscoveredOperators.Any())
+        {
+            <div class="panel panel-default mb-3">
+                <div class="panel-heading"><strong>Discovered Operators</strong></div>
+                <div class="panel-body">
+                    <ul>
+                        @foreach (var item in Model.ValidationPreview.DiscoveredOperators)
+                        {
+                            <li>@item.Name (@item.LocationCount location(s))</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+
+        @if (Model.ValidationPreview != null && Model.ValidationPreview.DiscoveryLog.Any())
+        {
+            <div class="panel panel-default mb-3">
+                <div class="panel-heading"><strong>Discovery Log</strong></div>
+                <div class="panel-body">
+                    <ul class="small">
+                        @foreach (var message in Model.ValidationPreview.DiscoveryLog)
+                        {
+                            <li>@message</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Stored Import Config</strong></div>
+            <div class="panel-body">
+                @if (string.IsNullOrWhiteSpace(Model.ImportConfig))
+                {
+                    <p class="text-muted">No stored OCPI config yet.</p>
+                }
+                else
+                {
+                    <pre class="small mb-0">@Model.ImportConfig</pre>
+                }
+            </div>
+        </div>
+    </div>
+</div>

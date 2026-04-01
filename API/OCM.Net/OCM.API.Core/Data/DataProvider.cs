@@ -15,6 +15,8 @@ namespace OCM.Core.Data
         public string Title { get; set; }
         public string WebsiteUrl { get; set; }
         public string Comments { get; set; }
+        public string ImportConfig { get; set; }
+        public int? DataSharingAgreementId { get; set; }
         public int? DataProviderStatusTypeId { get; set; }
         public bool IsRestrictedEdit { get; set; }
         public bool? IsOpenDataLicensed { get; set; }

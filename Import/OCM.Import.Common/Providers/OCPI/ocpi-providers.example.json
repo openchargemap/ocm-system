@@ -1,0 +1,120 @@
+{
+  "Providers": [
+    {
+      "ProviderName": "example-newprovider",
+      "OutputNamePrefix": "newprovider",
+      "Description": "Example: A new OCPI provider that can be added via configuration",
+      "DataProviderId": 99,
+      "LocationsEndpointUrl": "https://api.example.com/ocpi/2.2/locations",
+      "AuthHeaderKey": "Authorization",
+      "CredentialKey": "OCPI-EXAMPLE",
+      "DefaultOperatorId": 1234,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": false,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "Example Operator": 1234,
+        "Another Operator": 5678
+      },
+      "ExcludedLocationIds": [
+        "LOC001",
+        "LOC002"
+      ]
+    },
+    {
+      "ProviderName": "electricera-config",
+      "OutputNamePrefix": "electricera",
+      "Description": "Electric Era - Example of configuring an existing provider via JSON instead of code",
+      "DataProviderId": 35,
+      "LocationsEndpointUrl": "https://ocpi-http.app.electricera.tech/ocpi/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": 3789,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "Electric Era": 3789
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "mobie-config",
+      "OutputNamePrefix": "mobie",
+      "Description": "Mobie Portugal - Example with extensive operator mappings",
+      "DataProviderId": 7,
+      "LocationsEndpointUrl": "https://ocpi.mobinteli.com/2.2/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": null,
+      "DefaultOperatorId": null,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "EDP": 3276,
+        "GLP": 3557,
+        "HRZ": 3550,
+        "GLG": 3557,
+        "MAK": 3649,
+        "MLT": 3557,
+        "REP": 91,
+        "IBD": 2247,
+        "PIR": 200,
+        "PRI": 200,
+        "HLX": 3645,
+        "EML": 2247,
+        "ION": 3299,
+        "MOO": 3644,
+        "EVP": 3643,
+        "GRC": 3648,
+        "MOB": 21,
+        "KLS": 3588,
+        "KLC": 3588,
+        "CPS": 3584,
+        "NRG": 3646,
+        "ECI": 3647,
+        "MOT": 3684,
+        "FAC": 3685,
+        "EVC": 3693
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "sitronics-config",
+      "OutputNamePrefix": "sitronics",
+      "Description": "Sitronics - Example with credential key for authenticated API",
+      "DataProviderId": 31,
+      "LocationsEndpointUrl": "https://ezs.sitronics.com/ocpi/2.2.1/cpo/locations",
+      "AuthHeaderKey": null,
+      "CredentialKey": "OCPI-SITRONICS",
+      "DefaultOperatorId": 3656,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {
+        "SIT": 3656
+      },
+      "ExcludedLocationIds": []
+    },
+    {
+      "ProviderName": "go-evio-config",
+      "OutputNamePrefix": "go-evio",
+      "Description": "Go Evio - Example with custom auth header key",
+      "DataProviderId": 30,
+      "LocationsEndpointUrl": "https://api.go-evio.com/locations",
+      "AuthHeaderKey": "apikey",
+      "CredentialKey": "OCPI-EVIO",
+      "DefaultOperatorId": 3792,
+      "IsAutoRefreshed": true,
+      "IsProductionReady": true,
+      "IsEnabled": false,
+      "AllowDuplicatePOIWithDifferentOperator": true,
+      "OperatorMappings": {},
+      "ExcludedLocationIds": []
+    }
+  ]
+}

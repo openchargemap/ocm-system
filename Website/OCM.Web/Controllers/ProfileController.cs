@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using OCM.API.Common;
 using OCM.API.Common.Model;
+using OCM.Web.Models;
+using OCM.Web.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -303,5 +307,274 @@ namespace OCM.MVC.Controllers
             return View(app);
         }
 
+        #region OCPI Feed Submission
+
+        /// <summary>
+        /// Step 1: Show the OCPI feed submission form
+        /// </summary>
+        [Authorize(Roles = "StandardUser")]
+        public ActionResult SubmitOCPI()
+        {
+            PopulateCountryList();
+
+            // Restore form data if returning from a failed validation
+            if (TempData["OCPISubmitDetails"] != null)
+            {
+                var model = JsonConvert.DeserializeObject<OCPISubmitModel>(TempData["OCPISubmitDetails"].ToString());
+                return View(model);
+            }
+
+            return View(new OCPISubmitModel { CountryID = 2 });
+        }
+
+        /// <summary>
+        /// Step 2: Validate the submitted OCPI feed and show results with operator mapping
+        /// </summary>
+        [Authorize(Roles = "StandardUser")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ValidateOCPI(OCPISubmitModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                PopulateCountryList();
+                return View("SubmitOCPI", model);
+            }
+
+            var validator = new OCPIFeedValidator();
+            var validationResult = await validator.ValidateFeedAsync(
+                model.LocationsEndpointUrl,
+                model.AuthorizationHeaderKey,
+                model.AuthorizationHeaderValue
+            );
+
+            // Apply discovered endpoint and auth settings to the model so later steps store the working configuration.
+            if (!string.IsNullOrEmpty(validationResult.ResolvedLocationsEndpointUrl))
+            {
+                model.LocationsEndpointUrl = validationResult.ResolvedLocationsEndpointUrl;
+            }
+
+            if (!string.IsNullOrEmpty(validationResult.ResolvedAuthHeaderKey))
+            {
+                model.AuthorizationHeaderKey = validationResult.ResolvedAuthHeaderKey;
+            }
+
+            model.AuthorizationHeaderValuePrefix = validationResult.ResolvedAuthHeaderValuePrefix;
+
+            // Fetch available operators for the mapping dropdown
+            var operators = new OperatorInfoManager().GetOperators();
+
+            // Try to auto-match discovered operators to existing OCM operators
+            foreach (var discovered in validationResult.DiscoveredOperators)
+            {
+                var match = operators.FirstOrDefault(o =>
+                    o.Title != null &&
+                    (o.Title.Equals(discovered.Name, StringComparison.OrdinalIgnoreCase)
+                    || o.Title.Replace(" ", "").Equals(discovered.Name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)));
+
+                if (match != null)
+                {
+                    discovered.MappedOperatorId = match.ID;
+                }
+                else
+                {
+                    discovered.IsNewOperator = true;
+                }
+            }
+
+            var validateModel = new OCPIValidateModel
+            {
+                SubmitDetails = model,
+                ValidationResult = validationResult,
+                AvailableOperators = operators,
+                OperatorMappings = validationResult.DiscoveredOperators
+                    .ToDictionary(o => o.Name, o => o.MappedOperatorId ?? 0)
+            };
+
+            // Store submit details in TempData for the next step
+            TempData["OCPISubmitDetails"] = JsonConvert.SerializeObject(model);
+            TempData["OCPIValidationResult"] = JsonConvert.SerializeObject(validationResult);
+
+            return View(validateModel);
+        }
+
+        /// <summary>
+        /// Step 3: Show the confirmation page with data sharing agreement
+        /// </summary>
+        [Authorize(Roles = "StandardUser")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmOCPI(OCPIValidateModel model)
+        {
+            // Recover submit details from TempData
+            OCPISubmitModel submitDetails;
+            OCPIValidationResult validationResult;
+
+            if (TempData["OCPISubmitDetails"] != null)
+            {
+                submitDetails = JsonConvert.DeserializeObject<OCPISubmitModel>(TempData["OCPISubmitDetails"].ToString());
+                validationResult = JsonConvert.DeserializeObject<OCPIValidationResult>(TempData["OCPIValidationResult"].ToString());
+            }
+            else
+            {
+                return RedirectToAction("SubmitOCPI");
+            }
+
+            var confirmModel = new OCPIConfirmModel
+            {
+                SubmitDetails = submitDetails,
+                ValidationResult = validationResult,
+                OperatorMappings = model.OperatorMappings ?? new Dictionary<string, int>(),
+                DefaultOperatorId = model.DefaultOperatorId
+            };
+
+            // Persist for the final submit
+            TempData["OCPISubmitDetails"] = JsonConvert.SerializeObject(submitDetails);
+            TempData["OCPIValidationResult"] = JsonConvert.SerializeObject(validationResult);
+            TempData["OCPIOperatorMappings"] = JsonConvert.SerializeObject(confirmModel.OperatorMappings);
+            TempData["OCPIDefaultOperatorId"] = confirmModel.DefaultOperatorId;
+
+            return View(confirmModel);
+        }
+
+        /// <summary>
+        /// Final step: create the DataProvider and OCPI config
+        /// </summary>
+        [Authorize(Roles = "StandardUser")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CompleteOCPI(OCPIConfirmModel model)
+        {
+            if (!model.AcceptedDataSharingAgreement)
+            {
+                ModelState.AddModelError(nameof(model.AcceptedDataSharingAgreement), "You must accept the data sharing agreement.");
+            }
+
+            // Recover state from TempData
+            OCPISubmitModel submitDetails;
+            OCPIValidationResult validationResult;
+            Dictionary<string, int> operatorMappings;
+            int? defaultOperatorId;
+
+            try
+            {
+                submitDetails = JsonConvert.DeserializeObject<OCPISubmitModel>(TempData["OCPISubmitDetails"]?.ToString());
+                validationResult = JsonConvert.DeserializeObject<OCPIValidationResult>(TempData["OCPIValidationResult"]?.ToString());
+                operatorMappings = JsonConvert.DeserializeObject<Dictionary<string, int>>(TempData["OCPIOperatorMappings"]?.ToString());
+                defaultOperatorId = TempData["OCPIDefaultOperatorId"] as int?;
+            }
+            catch
+            {
+                return RedirectToAction("SubmitOCPI");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var confirmModel = new OCPIConfirmModel
+                {
+                    SubmitDetails = submitDetails,
+                    ValidationResult = validationResult,
+                    OperatorMappings = operatorMappings,
+                    DefaultOperatorId = defaultOperatorId
+                };
+                // Re-persist for retry
+                TempData["OCPISubmitDetails"] = JsonConvert.SerializeObject(submitDetails);
+                TempData["OCPIValidationResult"] = JsonConvert.SerializeObject(validationResult);
+                TempData["OCPIOperatorMappings"] = JsonConvert.SerializeObject(operatorMappings);
+                TempData["OCPIDefaultOperatorId"] = defaultOperatorId;
+                return View("ConfirmOCPI", confirmModel);
+            }
+
+            // Build OCPI provider config JSON
+            var providerConfig = new
+            {
+                ProviderName = submitDetails.ProviderName.ToLower().Replace(" ", "-"),
+                OutputNamePrefix = submitDetails.ProviderName.ToLower().Replace(" ", "-"),
+                Description = $"User-submitted OCPI feed: {submitDetails.ProviderName}",
+                DataProviderId = 0, // will be updated after DataProvider is created
+                LocationsEndpointUrl = submitDetails.LocationsEndpointUrl,
+                AuthHeaderKey = submitDetails.AuthorizationHeaderKey,
+                AuthHeaderValuePrefix = submitDetails.AuthorizationHeaderValuePrefix,
+                CredentialKey = !string.IsNullOrEmpty(submitDetails.AuthorizationHeaderValue)
+                    ? $"OCPI-{submitDetails.ProviderName.ToUpper().Replace(" ", "-")}"
+                    : (string)null,
+                DefaultOperatorId = defaultOperatorId,
+                IsAutoRefreshed = true,
+                IsProductionReady = false, // pending admin approval
+                IsEnabled = false, // pending admin approval
+                AllowDuplicatePOIWithDifferentOperator = true,
+                OperatorMappings = operatorMappings?.Where(m => m.Value > 0).ToDictionary(m => m.Key, m => m.Value) ?? new Dictionary<string, int>(),
+                ExcludedLocationIds = new List<string>(),
+                // Track new operators that need to be created
+                NewOperatorsRequired = operatorMappings?.Where(m => m.Value == 0).Select(m => m.Key).ToList() ?? new List<string>(),
+                SubmittedByUserId = (int)UserID,
+                SubmittedDate = DateTime.UtcNow,
+                ValidationSummary = new
+                {
+                    validationResult.LocationCount,
+                    validationResult.EvseCount,
+                    validationResult.DiscoveredCountries
+                }
+            };
+
+            var configJson = JsonConvert.SerializeObject(providerConfig, Formatting.Indented);
+
+            // Create the DataProvider
+            try
+            {
+                using var agreementManager = new DataSharingAgreementManager();
+                var agreement = agreementManager.CreateAgreement(new DataSharingAgreement
+                {
+                    CompanyName = submitDetails.CompanyName,
+                    CountryID = submitDetails.CountryID,
+                    RepresentativeName = submitDetails.RepresentativeName,
+                    ContactEmail = submitDetails.ContactEmail,
+                    WebsiteURL = submitDetails.WebsiteUrl,
+                    DataFeedType = submitDetails.DataFeedType,
+                    DataFeedURL = submitDetails.LocationsEndpointUrl,
+                    DataLicense = "CC-0",
+                    Credentials = submitDetails.AuthorizationHeaderValue,
+                    Comments = $"OCPI feed submission for provider '{submitDetails.ProviderName}'"
+                }, (int)UserID);
+
+                using var dpManager = new DataProviderManager();
+                var dataProvider = dpManager.CreateOCPIDataProvider(
+                    title: submitDetails.ProviderName,
+                    websiteUrl: submitDetails.WebsiteUrl,
+                    license: "Licensed under CC0 by data sharing agreement",
+                    isOpenDataLicensed: true,
+                    ocpiConfigJson: configJson,
+                    submittedByUserId: (int)UserID,
+                    dataSharingAgreementId: agreement.ID
+                );
+
+                return View("OCPISubmissionResult", new OCPISubmissionResultModel
+                {
+                    IsSuccess = true,
+                    DataProviderId = dataProvider.ID,
+                    ProviderName = submitDetails.ProviderName,
+                    Message = "Your OCPI feed has been submitted successfully and is pending admin review."
+                });
+            }
+            catch (Exception ex)
+            {
+                return View("OCPISubmissionResult", new OCPISubmissionResultModel
+                {
+                    IsSuccess = false,
+                    ProviderName = submitDetails.ProviderName,
+                    Message = $"An error occurred while creating your submission: {ex.Message}"
+                });
+            }
+        }
+
+        private void PopulateCountryList()
+        {
+            using (var refDataManager = new ReferenceDataManager())
+            {
+                ViewBag.CountryList = new SelectList(refDataManager.GetCountries(false), "ID", "Title");
+            }
+        }
+
+        #endregion
     }
 }

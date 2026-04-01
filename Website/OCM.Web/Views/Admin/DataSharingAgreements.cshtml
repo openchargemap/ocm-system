@@ -1,0 +1,57 @@
+@model List<OCM.Web.Models.AdminDataSharingAgreementListItem>
+
+@{
+    ViewBag.Title = "Data Sharing Agreements";
+}
+
+<h2>Data Sharing Agreements</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Company</th>
+            <th>Contact</th>
+            <th>Feed</th>
+            <th>Comments</th>
+            <th>Data Provider</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Agreement.DateCreated.ToString("yyyy-MM-dd")</td>
+                <td>@item.Agreement.CompanyName</td>
+                <td>@item.Agreement.ContactEmail</td>
+                <td>@item.Agreement.DataFeedType</td>
+                <td>@item.Agreement.Comments</td>
+                <td>
+                    @if (item.DataProvider != null)
+                    {
+                        <span>@item.DataProvider.Title (#@item.DataProvider.ID)</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Not created</span>
+                    }
+                </td>
+                <td>
+                    @if (item.IsApproved)
+                    {
+                        <span class="badge badge-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning">Pending Review</span>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Review", "ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID }, new { @class = "btn btn-sm btn-primary" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

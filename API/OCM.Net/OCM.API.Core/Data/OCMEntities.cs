@@ -389,6 +389,8 @@ namespace OCM.Core.Data
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.DataSharingAgreementId).HasColumnName("DataSharingAgreementID");
+
                 entity.Property(e => e.DataProviderStatusTypeId).HasColumnName("DataProviderStatusTypeID");
 
                 entity.Property(e => e.DateLastImported).HasColumnType("datetime");

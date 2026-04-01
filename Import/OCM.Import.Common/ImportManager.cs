@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DotNetProjects.IndexedLinq;
 using GeoCoordinatePortable;
 using KellermanSoftware.CompareNetObjects;
@@ -15,6 +9,12 @@ using OCM.API.Common.Model;
 using OCM.Import.Misc;
 using OCM.Import.Providers;
 using OCM.Import.Providers.OCPI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OCM.Import
 {
@@ -179,8 +179,24 @@ namespace OCM.Import
         {
             List<IImportProvider> providers = new List<IImportProvider>();
 
+            void AddConfiguredProviders(IEnumerable<IImportProvider> configuredProviders)
+            {
+                foreach (var configuredProvider in configuredProviders)
+                {
+                    var providerName = configuredProvider.GetProviderName();
+                    if (!providers.Any(p => p.GetProviderName().Equals(providerName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        providers.Add(configuredProvider);
+                        Log($"Added configured OCPI provider: {providerName}");
+                    }
+                    else
+                    {
+                        Log($"Skipping configured provider {providerName} - already exists as hardcoded provider");
+                    }
+                }
+            }
+
             providers.Add(new ImportProvider_UKChargePointRegistry());
-            providers.Add(new ImportProvider_Mobie());
 
             if (importSettings.Credentials.TryGetValue("IMPORT-adfc", out var afdcKey))
             {
@@ -206,23 +222,30 @@ namespace OCM.Import
 
             providers.Add(new ImportProvider_ICAEN());
             providers.Add(new ImportProvider_GenericExcel());
-            providers.Add(new ImportProvider_GoEvio());
-            providers.Add(new ImportProvider_Sitronics());
-            providers.Add(new ImportProvider_Lakd());
-            providers.Add(new ImportProvider_Gaia());
-            providers.Add(new ImportProvider_Toger());
-            providers.Add(new ImportProvider_ElectricEra());
-            providers.Add(new ImportProvider_ITCharge());
-            providers.Add(new ImportProvider_Voltrelli());
-            providers.Add(new ImportProvider_PowerGo());
-            providers.Add(new ImportProvider_Punkt());
-            providers.Add(new ImportProvider_EzVolt());
             providers.Add(new ImportProvider_Chargesini());
-            providers.Add(new ImportProvider_Otopriz());
             providers.Add(new ImportProvider_EV24());
-            providers.Add(new ImportProvider_Zepto());
-            providers.Add(new ImportProvider_Greems());
 
+            // Load configurable OCPI providers from configuration file
+            if (!string.IsNullOrEmpty(_settings.OCPIProvidersConfigPath))
+            {
+                var ocpiLoader = new OCPIProviderLoader(_log);
+                if (ocpiLoader.LoadFromFile(_settings.OCPIProvidersConfigPath))
+                {
+                    AddConfiguredProviders(ocpiLoader.CreateProviders(enabledOnly: true));
+                }
+            }
+
+            using (var dataProviderManager = new DataProviderManager())
+            {
+                foreach (var storedConfig in dataProviderManager.GetApprovedImportConfigs())
+                {
+                    var ocpiLoader = new OCPIProviderLoader(_log);
+                    if (ocpiLoader.LoadFromJson(storedConfig))
+                    {
+                        AddConfiguredProviders(ocpiLoader.CreateProviders(enabledOnly: true));
+                    }
+                }
+            }
 
             //populate full data provider details for each import provider
             foreach (var provider in providers)
@@ -1320,62 +1343,71 @@ namespace OCM.Import
         public List<ChargePoint> PopulateLocationFromGeolocationCache(IEnumerable<ChargePoint> itemList, CoreReferenceData coreRefData)
         {
             //OCM.Import.Analysis.SpatialAnalysis spatialAnalysis = new Analysis.SpatialAnalysis(_settings.GeolocationShapefilePath + "/ne_10m_admin_0_map_units.shp");
-            var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath, "ne_10m_admin_0_countries.shp"));
-
-            List<ChargePoint> failedLookups = new List<ChargePoint>();
-
-            //process list of locations, populating country refreshing cache where required
-            foreach (var item in itemList)
+            List<ChargePoint> failedLookups = [];
+            try
             {
-                if (item.AddressInfo.Country == null && item.AddressInfo.CountryID == null)
+                var spatialAnalysis = new Analysis.SpatialAnalysis(Path.Join(_settings.GeolocationShapefilePath, "ne_10m_admin_0_countries.shp"));
+
+
+
+                //process list of locations, populating country refreshing cache where required
+                foreach (var item in itemList)
                 {
-                    Country country = null;
-
-                    var test = spatialAnalysis.ClassifyPoint((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude);
-                    if (test != null)
+                    if (item.AddressInfo.Country == null && item.AddressInfo.CountryID == null)
                     {
-                        country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == test.CountryCode || c.Title == test.CountryName);
-                    }
+                        Country country = null;
 
-                    if (country == null)
-                    {
-                        var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
-                        if (geoLookup != null)
+                        var test = spatialAnalysis.ClassifyPoint((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude);
+                        if (test != null)
                         {
-                            country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
+                            country = coreRefData.Countries.FirstOrDefault(c => c.ISOCode == test.CountryCode || c.Title == test.CountryName);
                         }
-                    }
 
-                    if (country != null)
-                    {
-                        item.AddressInfo.Country = country;
-
-                        //remove country name from address line 1 if present
-                        if (item.AddressInfo.AddressLine1 != null)
+                        if (country == null)
                         {
-                            if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
+                            var geoLookup = geolocationCacheManager.PerformLocationLookup((double)item.AddressInfo.Latitude, (double)item.AddressInfo.Longitude, coreRefData.Countries);
+                            if (geoLookup != null)
                             {
-                                item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
+                                country = coreRefData.Countries.FirstOrDefault(c => c.ID == geoLookup.CountryID || c.ISOCode == geoLookup.CountryCode || c.Title == geoLookup.CountryName);
                             }
                         }
-                    }
 
-                    if (item.AddressInfo.Country == null)
-                    {
-                        LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title + " OCM-" + item.ID);
+                        if (country != null)
+                        {
+                            item.AddressInfo.Country = country;
 
-                        failedLookups.Add(item);
-                    }
-                    else
-                    {
-                        item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
+                            //remove country name from address line 1 if present
+                            if (item.AddressInfo.AddressLine1 != null)
+                            {
+                                if (item.AddressInfo.AddressLine1.ToLower().Contains(country.Title.ToLower()))
+                                {
+                                    item.AddressInfo.AddressLine1 = item.AddressInfo.AddressLine1.Replace(country.Title, "").Trim();
+                                }
+                            }
+                        }
+
+                        if (item.AddressInfo.Country == null)
+                        {
+                            LogHelper.Log("Failed to resolve country for item:" + item.AddressInfo.Title + " OCM-" + item.ID);
+
+                            failedLookups.Add(item);
+                        }
+                        else
+                        {
+                            item.AddressInfo.CountryID = item.AddressInfo.Country.ID;
+                        }
                     }
                 }
-            }
 
-            //cache may have updates, save for next time
-            geolocationCacheManager.SaveCache();
-            return failedLookups;
+                //cache may have updates, save for next time
+                geolocationCacheManager.SaveCache();
+                return failedLookups;
+            }
+            catch (Exception exp)
+            {
+                LogHelper.Log("Failed to PoplateLocationFromGeolocationCache" + exp.Message);
+                return failedLookups;
+            }
         }
 
         public APICredentials GetAPISessionCredentials(string identifier, string sessionToken)

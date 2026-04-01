@@ -15,6 +15,7 @@ namespace OCM.Import.Providers.OCPI
     {
         private string _authHeaderKey = "Authorization";
         private string _authHeaderValue = "";
+        private string _authHeaderValuePrefix = "Token ";
 
         private int _dataProviderId = 1;
 
@@ -42,10 +43,37 @@ namespace OCM.Import.Providers.OCPI
         public int? DefaultOperatorID { get; set; }
         /// <summary>
         /// Optional value for the Authorization header if required.
+        /// When using the default Authorization header key, values without a recognized
+        /// prefix (Token, Bearer, Basic) will automatically have "Token " prepended.
         /// </summary>
-        public string AuthHeaderValue { set { _authHeaderValue = value; } }
+        public string AuthHeaderValue
+        {
+            get { return _authHeaderValue; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value) && string.Equals(_authHeaderKey, "Authorization", StringComparison.OrdinalIgnoreCase))
+                {
+                    // If the value doesn't already have a recognized auth prefix, prepend "Token "
+                    if (!value.StartsWith("Token ", StringComparison.OrdinalIgnoreCase)
+                        && !value.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+                        && !value.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _authHeaderValue = (_authHeaderValuePrefix ?? string.Empty) + value;
+                        return;
+                    }
+                }
+
+                _authHeaderValue = value;
+            }
+        }
 
         public string AuthHeaderKey { set { _authHeaderKey = value; } }
+
+        public string AuthHeaderValuePrefix
+        {
+            get { return _authHeaderValuePrefix; }
+            set { _authHeaderValuePrefix = value; }
+        }
 
         public void Init(int dataProviderId, string locationsEndpoint, string authHeaderKey = null)
         {
@@ -138,6 +166,9 @@ namespace OCM.Import.Providers.OCPI
                     bool wasWrappedObject = false;
                     bool firstResponse = true;
 
+                    // Check if the URL is an OCPI versions endpoint and resolve to locations if so
+                    baseUrl = await ResolveVersionsEndpointIfNeeded(httpClient, baseUrl);
+
                     do
                     {
                         string pagedUrl = baseUrl;
@@ -152,6 +183,16 @@ namespace OCM.Import.Providers.OCPI
                         }
 
                         var response = await httpClient.GetAsync(pagedUrl);
+
+                        if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+                        {
+                            var maskedValue = !string.IsNullOrEmpty(_authHeaderValue) && _authHeaderValue.Length > 10
+                                ? _authHeaderValue.Substring(0, 10) + "..."
+                                : _authHeaderValue ?? "(none)";
+
+                            Log($"Authorization failed ({(int)response.StatusCode} {response.StatusCode}). Header used: {_authHeaderKey}: {maskedValue}");
+                        }
+
                         response.EnsureSuccessStatusCode();
                         var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -228,6 +269,107 @@ namespace OCM.Import.Providers.OCPI
             {
                 Log($": Failed to fetch input from url :{url} Exception: {ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Preferred OCPI versions in priority order (highest first)
+        /// </summary>
+        private static readonly string[] PreferredVersions = ["2.2.1", "2.2", "2.1.1"];
+
+        /// <summary>
+        /// If the given URL is an OCPI versions endpoint, resolves and returns the locations endpoint URL.
+        /// Otherwise returns the original URL unchanged.
+        /// </summary>
+        private async Task<string> ResolveVersionsEndpointIfNeeded(HttpClient httpClient, string url)
+        {
+            try
+            {
+                var response = await httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return url; // let the main fetch handle the error
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(content) || !content.TrimStart().StartsWith("{"))
+                {
+                    return url;
+                }
+
+                var obj = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(content);
+                var dataToken = obj?["data"];
+                if (dataToken == null || dataToken.Type != Newtonsoft.Json.Linq.JTokenType.Array)
+                {
+                    return url;
+                }
+
+                // Check if this looks like a versions list (items have "version" and "url" but not location properties)
+                var firstItem = dataToken.First;
+                if (firstItem == null || firstItem["version"] == null || firstItem["url"] == null
+                    || firstItem["evses"] != null || firstItem["coordinates"] != null)
+                {
+                    return url;
+                }
+
+                // It's a versions endpoint - pick the highest supported version
+                var versions = dataToken
+                    .Select(v => new { Version = (string)v["version"], Url = (string)v["url"] })
+                    .Where(v => !string.IsNullOrEmpty(v.Version) && !string.IsNullOrEmpty(v.Url))
+                    .ToList();
+
+                if (!versions.Any())
+                {
+                    return url;
+                }
+
+                var selectedVersion = versions.FirstOrDefault(v => PreferredVersions.Contains(v.Version))
+                    ?? versions.OrderByDescending(v => v.Version).First();
+
+                Log($"Detected OCPI versions endpoint. Resolving version {selectedVersion.Version} from {selectedVersion.Url}");
+
+                // Fetch the version detail to find the locations endpoint
+                var versionDetailResponse = await httpClient.GetAsync(selectedVersion.Url);
+                if (!versionDetailResponse.IsSuccessStatusCode)
+                {
+                    Log($"Failed to fetch version detail: HTTP {(int)versionDetailResponse.StatusCode}");
+                    return url;
+                }
+
+                var versionDetailContent = await versionDetailResponse.Content.ReadAsStringAsync();
+                var versionDetailObj = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(versionDetailContent);
+                var endpoints = versionDetailObj?["data"]?["endpoints"];
+
+                if (endpoints == null || endpoints.Type != Newtonsoft.Json.Linq.JTokenType.Array)
+                {
+                    Log("Version detail does not contain an 'endpoints' array");
+                    return url;
+                }
+
+                var locationsEndpoint = endpoints.FirstOrDefault(e =>
+                    string.Equals((string)e["identifier"], "locations", StringComparison.OrdinalIgnoreCase));
+
+                if (locationsEndpoint == null)
+                {
+                    Log("No 'locations' endpoint found in version detail. Available: "
+                        + string.Join(", ", endpoints.Select(e => (string)e["identifier"])));
+                    return url;
+                }
+
+                var locationsUrl = (string)locationsEndpoint["url"];
+                if (string.IsNullOrEmpty(locationsUrl))
+                {
+                    Log("The 'locations' endpoint has an empty URL");
+                    return url;
+                }
+
+                Log($"Resolved locations endpoint: {locationsUrl}");
+                return locationsUrl;
+            }
+            catch (Exception ex)
+            {
+                Log($"Failed to check for versions endpoint: {ex.Message}");
+                return url; // fall through to normal fetch
             }
         }
     }

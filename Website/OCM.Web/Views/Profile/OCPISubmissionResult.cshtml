@@ -1,0 +1,47 @@
+@model OCM.Web.Models.OCPISubmissionResultModel
+
+@{
+    ViewBag.Title = "OCPI Submission Result";
+}
+
+<h2>OCPI Feed Submission</h2>
+
+@if (Model.IsSuccess)
+{
+    <div class="alert alert-success">
+        <h4><i class="fa fa-check-circle"></i> Submission Successful</h4>
+        <p>@Model.Message</p>
+        <hr />
+        <p class="mb-0">
+            <strong>Provider:</strong> @Model.ProviderName<br />
+            <strong>Data Provider ID:</strong> @Model.DataProviderId
+        </p>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">What happens next?</div>
+        <div class="card-body">
+            <ol>
+                <li>An administrator will review your submission.</li>
+                <li>If any new operators were flagged, they will be created in our system.</li>
+                <li>Once approved, your OCPI feed will be added to the automatic import schedule.</li>
+                <li>Your charging locations will start appearing on Open Charge Map within 24 hours of approval.</li>
+            </ol>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <h4><i class="fa fa-exclamation-triangle"></i> Submission Failed</h4>
+        <p>@Model.Message</p>
+    </div>
+
+    <a href="@Url.Action("SubmitOCPI")" class="btn btn-primary">
+        <i class="fa fa-arrow-left"></i> Try Again
+    </a>
+}
+
+<a href="@Url.Action("Index", "Profile")" class="btn btn-secondary">
+    <i class="fa fa-home"></i> Back to Profile
+</a>
