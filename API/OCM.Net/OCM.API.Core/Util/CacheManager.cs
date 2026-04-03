@@ -97,6 +97,24 @@ namespace OCM.Core.Data
             }
         }
 
+
+        public async static Task<MirrorStatus> RefreshCachedPOIById(int poiId)
+        {
+            if (poiId == 0)
+            {
+                return await RefreshCachedData();
+            }
+
+            try
+            {
+                return await CacheProviderMongoDB.DefaultInstance.RefreshCachedPOI(poiId);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public static List<CountryExtendedInfo> GetExtendedCountryInfo()
         {
             return CacheProviderMongoDB.DefaultInstance.GetExtendedCountryInfo();

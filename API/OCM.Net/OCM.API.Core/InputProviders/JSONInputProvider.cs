@@ -123,7 +123,7 @@ namespace OCM.API.InputProviders
                 string jsonContent = await sr.ReadToEndAsync();
                 var submission = JsonConvert.DeserializeObject<Common.Model.Submissions.MediaItemSubmission>(jsonContent);
                 if (submission.ImageDataBase64 == null) return false;
-                string filePrefix = DateTime.UtcNow.Millisecond.ToString() + "_";
+                string filePrefix = DateTime.UtcNow.Ticks.ToString() + "_" + Guid.NewGuid().ToString("N") + "_";
 
                 var tempFiles = new List<string>();
 
@@ -139,15 +139,16 @@ namespace OCM.API.InputProviders
 
                 tempFiles.Add(tmpFileName);
 
-                var task = Task.Factory.StartNew(() =>
-                {
-                    var mediaManager = new MediaItemManager();
+                var mediaManager = new MediaItemManager();
 
-                    foreach (var tmpFile in tempFiles)
+                foreach (var tmpFile in tempFiles)
+                {
+                    var photoAdded = await mediaManager.AddPOIMediaItem(tempFolder, tmpFile, submission.ChargePointID, submission.Comment, false, userId);
+                    if (photoAdded == null)
                     {
-                        var photoAdded = mediaManager.AddPOIMediaItem(tempFolder, tmpFile, submission.ChargePointID, submission.Comment, false, userId);
+                        return false;
                     }
-                }, TaskCreationOptions.LongRunning);
+                }
 
                 return true;
             }

@@ -26,7 +26,7 @@ namespace OCM.API.Common
                 return null;
             }
             string[] urls = await UploadPOIImageToStorage(tempFolder, sourceImageFile, poi);
-            if (urls == null)
+            if (urls == null || urls.Length < 2 || string.IsNullOrWhiteSpace(urls[0]) || string.IsNullOrWhiteSpace(urls[1]))
             {
                 //failed to upload, preserve submission data
                 var outputPath = Path.Join(tempFolder, "OCM_" + chargePointId + "_" + (DateTime.Now.ToFileTimeUtc().ToString()) + ".json");
@@ -55,10 +55,41 @@ namespace OCM.API.Common
 
                 try
                 {
-                    //fire and forget cache update
-                    CacheManager.RefreshCachedPOI(poi.ID);
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var cacheStatus = await CacheManager.RefreshCachedPOIById(poi.ID);
+                            if (cacheStatus == null)
+                            {
+                                AuditLogManager.Log(
+                                    null,
+                                    AuditEventType.SystemErrorAPI,
+                                    "Failed to refresh cached POI after media upload: OCM-" + poi.ID,
+                                    ""
+                                );
+                            }
+                        }
+                        catch (Exception exp)
+                        {
+                            AuditLogManager.Log(
+                                null,
+                                AuditEventType.SystemErrorAPI,
+                                "Exception refreshing cached POI after media upload: OCM-" + poi.ID,
+                                exp.ToString()
+                            );
+                        }
+                    });
                 }
-                catch { }
+                catch (Exception exp)
+                {
+                    AuditLogManager.Log(
+                        null,
+                        AuditEventType.SystemErrorAPI,
+                        "Failed to schedule cache refresh after media upload: OCM-" + poi.ID,
+                        exp.ToString()
+                    );
+                }
 
                 return mediaItem;
             }
@@ -98,9 +129,10 @@ namespace OCM.API.Common
                 //TODO: allocate sequences properly
                 string destFolderPrefix = poi.AddressInfo.Country.ISOCode + "/" + "OCM" + poi.ID + "/";
                 string dateStamp = String.Format("{0:yyyyMMddHHmmssff}", DateTime.UtcNow);
-                string largeFileName = "OCM-" + poi.ID + ".orig." + dateStamp + extension;
-                string thumbFileName = "OCM-" + poi.ID + ".thmb." + dateStamp + extension;
-                string mediumFileName = "OCM-" + poi.ID + ".medi." + dateStamp + extension;
+                string uniqueSuffix = Guid.NewGuid().ToString("N");
+                string largeFileName = "OCM-" + poi.ID + ".orig." + dateStamp + "." + uniqueSuffix + extension;
+                string thumbFileName = "OCM-" + poi.ID + ".thmb." + dateStamp + "." + uniqueSuffix + extension;
+                string mediumFileName = "OCM-" + poi.ID + ".medi." + dateStamp + "." + uniqueSuffix + extension;
 
                 var metadataTags = new List<KeyValuePair<string, string>>();
                 metadataTags.Add(new KeyValuePair<string, string>("OCM", poi.ID.ToString()));
@@ -164,7 +196,10 @@ namespace OCM.API.Common
                     attemptCount++;
 
                 }
-
+                if (!success)
+                {
+                    return null;
+                }
                 //attempt to delete temp files
                 try
                 {
@@ -228,8 +263,8 @@ namespace OCM.API.Common
             var dataModel = new OCMEntities();
 
             var items = dataModel.MediaItems
-                .Where(m => m.IsEnabled == true && 
-                            m.ItemUrl != null && 
+                .Where(m => m.IsEnabled == true &&
+                            m.ItemUrl != null &&
                             (m.ItemThumbnailUrl == null || m.ItemThumbnailUrl == "") &&
                             !m.IsExternalResource &&
                             !m.IsVideo)
@@ -245,7 +280,7 @@ namespace OCM.API.Common
             var dataModel = new OCMEntities();
 
             var mediaItem = dataModel.MediaItems.FirstOrDefault(m => m.Id == mediaItemId);
-            
+
             if (mediaItem == null)
             {
                 result.Success = false;
@@ -286,7 +321,7 @@ namespace OCM.API.Common
                 }
 
                 string tempOriginalFile = Path.Combine(tempFolderPath, $"temp_original_{mediaItemId}{extension}");
-                
+
                 using (var client = new System.Net.Http.HttpClient())
                 {
                     client.Timeout = TimeSpan.FromMinutes(2);
