@@ -50,7 +50,7 @@ namespace OCM.Web.Models
         public string DataFeedType { get; set; } = "OCPI";
 
         [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the open data license")]
-        [Display(Name = "I agree to license this data for re-distribution under the CC-0 license for open data.")]
+        [Display(Name = "I agree to license this data for re-distribution under the CC0 license for open data.")]
         public bool AcceptedOpenDataLicense { get; set; }
     }
 

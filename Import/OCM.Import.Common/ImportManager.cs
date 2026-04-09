@@ -59,6 +59,14 @@ namespace OCM.Import
     {
         public BaseImportProvider ProviderDetails { get; set; }
 
+        public bool IsPreviewMode { get; set; }
+
+        public int SourceItemCount { get; set; }
+
+        public int ProcessedSourceItemCount { get; set; }
+
+        public int PreviewItemLimit { get; set; }
+
         public List<ImportItem> ImportItems { get; set; }
 
         public List<ChargePoint> Added { get; set; }
@@ -101,6 +109,10 @@ namespace OCM.Import
         public bool FetchExistingFromAPI { get; set; } = false;
         public bool PerformDeduplication { get; set; } = true;
         public string ProviderName { get; set; }
+
+        public bool IsPreviewMode { get; set; } = false;
+
+        public int PreviewItemLimit { get; set; } = 100;
 
         public Dictionary<string, string> Credentials { get; set; }
     }
@@ -262,6 +274,12 @@ namespace OCM.Import
 
         public async Task<bool> PerformImportProcessing(ImportProcessSettings settings, IImportProvider importProvider = null)
         {
+            var result = await PerformImportProcessingWithReport(settings, importProvider);
+            return result?.IsSuccess == true;
+        }
+
+        public async Task<ImportReport> PerformImportProcessingWithReport(ImportProcessSettings settings, IImportProvider importProvider = null)
+        {
 
             var credentials = GetAPISessionCredentials("System", settings.Credentials["IMPORT-ocm-system"]);
 
@@ -273,7 +291,7 @@ namespace OCM.Import
 
                 Log(result.Log);
 
-                return result.IsSuccess;
+                return result;
             }
             else
             {
@@ -289,7 +307,7 @@ namespace OCM.Import
 
                         Log(result.Log);
 
-                        return result.IsSuccess;
+                        return result;
 
                     }
                 }
@@ -300,7 +318,11 @@ namespace OCM.Import
                 }
             }
 
-            return false;
+            return new ImportReport
+            {
+                IsSuccess = false,
+                Log = ImportLog
+            };
         }
 
         public async Task<List<ChargePoint>> DeDuplicateList(List<ChargePoint> cpList, bool updateDuplicate, CoreReferenceData coreRefData, ImportReport report, bool allowDupeWithDifferentOperator = false, bool fetchExistingFromAPI = false, int dupeDistance = DUPLICATE_DISTANCE_METERS)
@@ -964,6 +986,8 @@ namespace OCM.Import
             ImportReport resultReport = new ImportReport();
             resultReport.ProviderDetails = p;
             resultReport.IsSuccess = true;
+            resultReport.IsPreviewMode = settings.IsPreviewMode;
+            resultReport.PreviewItemLimit = settings.PreviewItemLimit;
 
             try
             {
@@ -1035,6 +1059,23 @@ namespace OCM.Import
                 Log("Processing input..");
 
                 var list = provider.Process(coreRefData);
+                resultReport.SourceItemCount = list.Count;
+
+                if (settings.IsPreviewMode)
+                {
+                    var previewLimit = settings.PreviewItemLimit > 0 ? settings.PreviewItemLimit : 100;
+                    if (list.Count > previewLimit)
+                    {
+                        Log($"Preview mode enabled. Limiting import processing to the first {previewLimit} items out of {list.Count} source items.");
+                        list = list.Take(previewLimit).ToList();
+                    }
+                    else
+                    {
+                        Log($"Preview mode enabled. Processing all {list.Count} source items because the source contains fewer than the preview limit of {previewLimit} items.");
+                    }
+                }
+
+                resultReport.ProcessedSourceItemCount = list.Count;
 
                 int numAdded = 0;
                 int numUpdated = 0;
@@ -1116,6 +1157,9 @@ namespace OCM.Import
                         finalList = finalList.Where(l => l.ID > 0).ToList();
                     }
 
+                    numAdded = finalList.Count(p => p.ID == 0);
+                    numUpdated = finalList.Count(p => p.ID > 0);
+
                     GC.Collect();
 
                     if (p.ExportType == ExportType.CSV)
@@ -1134,54 +1178,55 @@ namespace OCM.Import
 
                     if (p.ExportType == ExportType.JSONAPI)
                     {
-                        Log("Exporting JSON..");
-                        //output json
-                        var fileName = outputPath + "processed_" + p.OutputNamePrefix + ".json";
-                        p.ExportJSONFile(finalList, fileName);
-
-                        Log("Uploading JSON to API..");
-                        if (System.IO.File.Exists(fileName))
+                        if (settings.IsPreviewMode)
                         {
-                            var json = System.IO.File.ReadAllText(fileName);
-                            await UploadPOIList(json);
+                            Log("Preview mode enabled. Skipping JSON export upload and import timestamp update.");
                         }
-
-                        //  notify API of last date of import for each provider
-                        if (p.DataProviderID > 0)
+                        else
                         {
-                            await UpdateLastImportDate(p.DataProviderID);
+                            Log("Exporting JSON..");
+                            //output json
+                            var fileName = outputPath + "processed_" + p.OutputNamePrefix + ".json";
+                            p.ExportJSONFile(finalList, fileName);
+
+                            Log("Uploading JSON to API..");
+                            if (System.IO.File.Exists(fileName))
+                            {
+                                var json = System.IO.File.ReadAllText(fileName);
+                                await UploadPOIList(json);
+                            }
+
+                            //  notify API of last date of import for each provider
+                            if (p.DataProviderID > 0)
+                            {
+                                await UpdateLastImportDate(p.DataProviderID);
+                            }
                         }
                     }
 
                     if (p.ExportType == ExportType.API && p.IsProductionReady)
                     {
-                        //publish list of locations to OCM via API
-
-                        Log("Publishing via API..");
-                        foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.CountryID != null))
+                        if (settings.IsPreviewMode)
                         {
-                            _client.UpdatePOI(cp, credentials);
-                            if (cp.ID == 0)
+                            Log("Preview mode enabled. Skipping API publish and import timestamp update.");
+                        }
+                        else
+                        {
+                            //publish list of locations to OCM via API
+
+                            Log("Publishing via API..");
+                            foreach (ChargePoint cp in finalList.Where(l => l.AddressInfo.CountryID != null))
                             {
-                                numAdded++;
+                                _client.UpdatePOI(cp, credentials);
                             }
-                            else
+
+                            //  notify API of last date of import for each provider
+                            if (p.DataProviderID > 0)
                             {
-                                numUpdated++;
+                                await UpdateLastImportDate(p.DataProviderID);
                             }
                         }
 
-                        //  notify API of last date of import for each provider
-                        if (p.DataProviderID > 0)
-                        {
-                            await UpdateLastImportDate(p.DataProviderID);
-                        }
-
-                    }
-                    else
-                    {
-                        numAdded = finalList.Count(p => p.ID == 0);
-                        numUpdated = finalList.Count(p => p.ID > 0);
                     }
 
                     if (p.ExportType == ExportType.POIModelList)

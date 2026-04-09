@@ -8,6 +8,7 @@ namespace OCM.Web.Models
     {
         public DataSharingAgreement Agreement { get; set; }
         public DataProvider DataProvider { get; set; }
+        public ImportJobViewModel CurrentImportJob { get; set; }
         public bool IsApproved => DataProvider?.IsApprovedImport == true;
     }
 
@@ -19,7 +20,9 @@ namespace OCM.Web.Models
         public AdminDataSharingAgreementEditModel Review { get; set; } = new AdminDataSharingAgreementEditModel();
         public string ImportConfig { get; set; }
         public OCPIValidationResult ValidationPreview { get; set; }
+        public List<DataProviderStatusType> AvailableDataProviderStatuses { get; set; } = new List<DataProviderStatusType>();
         public List<OperatorInfo> AvailableOperators { get; set; } = new List<OperatorInfo>();
+        public ImportJobViewModel CurrentImportJob { get; set; }
     }
 
     public class AdminDataSharingAgreementEditModel
@@ -55,8 +58,12 @@ namespace OCM.Web.Models
 
         public string SubmittedCredentials { get; set; }
 
+        public string AgreementComments { get; set; }
+
         [Required]
         public string ProviderName { get; set; }
+
+        public int? DataProviderStatusTypeId { get; set; }
 
         public string OutputNamePrefix { get; set; }
 

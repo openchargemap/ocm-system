@@ -89,7 +89,10 @@ namespace OCM.Web
 
             // Register admin task service and background worker
             services.AddSingleton<IAdminTaskService, AdminTaskService>();
+            services.AddSingleton<IImportQueueService, ImportQueueService>();
             services.AddHostedService<AdminTaskBackgroundService>();
+            services.AddHostedService<ImportBackgroundService>();
+            services.AddHostedService<ApprovedImportBackgroundService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

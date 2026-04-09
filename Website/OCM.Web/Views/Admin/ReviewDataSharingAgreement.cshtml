@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "Review Data Sharing Agreement";
     var statusMessage = TempData["StatusMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var currentImportJob = Model.CurrentImportJob;
+    var importLogText = currentImportJob != null && currentImportJob.Logs.Any()
+        ? string.Join(Environment.NewLine, currentImportJob.Logs.Select(log => $"[{log.TimestampUtc:HH:mm:ss}] {log.Level}: {log.Message}"))
+        : "No log output yet.";
 }
 
 <h2>Review Data Sharing Agreement</h2>
@@ -10,6 +15,11 @@
 @if (!string.IsNullOrWhiteSpace(statusMessage))
 {
     <div class="alert alert-success">@statusMessage</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
 }
 
 @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
@@ -89,6 +99,11 @@
                         @Html.ValidationMessageFor(m => m.Review.SubmittedCredentials)
                         <span class="help-block">Keep this only if you want the review step to validate with the submitted secret value.</span>
                     </div>
+                    <div class="form-group">
+                        <label>Agreement Comment</label>
+                        @Html.TextAreaFor(m => m.Review.AgreementComments, 3, 1, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Review.AgreementComments)
+                    </div>
                 </div>
             </div>
 
@@ -128,6 +143,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label>Data Provider Status</label>
+                        @Html.DropDownListFor(
+                            m => m.Review.DataProviderStatusTypeId,
+                            new SelectList(Model.AvailableDataProviderStatuses, "ID", "Title", Model.Review.DataProviderStatusTypeId),
+                            "Select status",
+                            new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Review.DataProviderStatusTypeId)
+                    </div>
+                    <div class="form-group">
                         <label>Locations Endpoint URL</label>
                         @Html.TextBoxFor(m => m.Review.LocationsEndpointUrl, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Review.LocationsEndpointUrl)
@@ -152,6 +176,7 @@
                                 <label>Key Vault Secret Name</label>
                                 @Html.TextBoxFor(m => m.Review.CredentialKey, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Review.CredentialKey)
+                                <span class="help-block">Optional unless the feed requires an authorization header.</span>
                             </div>
                         </div>
                     </div>
@@ -187,7 +212,21 @@
                         @Html.TextAreaFor(m => m.Review.ExcludedLocationIdsText, 5, 1, new { @class = "form-control", placeholder = "LOC001" })
                         <span class="help-block">One location ID per line.</span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Review and Stored Config</button>
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-primary">Save Review and Stored Config</button>
+
+                        <button type="submit"
+                                class="btn btn-danger"
+                                style="float:right;"
+                                formaction="@Url.Action("DeleteDataSharingAgreement", "Admin")"
+                                formmethod="post"
+                                formnovalidate="formnovalidate"
+                                name="id"
+                                value="@Model.Agreement.ID"
+                                onclick="return confirm('Delete this data sharing agreement? Linked data providers will be unlinked, but not deleted.');">
+                            Delete Agreement
+                        </button>
+                    </div>
                 </div>
             </div>
         }
@@ -206,6 +245,17 @@
                         <dd>@Model.DataProvider.ID</dd>
                         <dt>Status</dt>
                         <dd>
+                            @if (!string.IsNullOrWhiteSpace(Model.DataProvider.DataProviderStatusType?.Title))
+                            {
+                                @Model.DataProvider.DataProviderStatusType.Title
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not set</span>
+                            }
+                        </dd>
+                        <dt>Approval</dt>
+                        <dd>
                             @if (Model.IsApproved)
                             {
                                 <span class="label label-success">Approved</span>
@@ -215,6 +265,8 @@
                                 <span class="label label-warning">Pending Review</span>
                             }
                         </dd>
+                        <dt>Last Import</dt>
+                        <dd>@(Model.DataProvider.DateLastImported?.ToString("yyyy-MM-dd HH:mm") ?? "Never")</dd>
                     </dl>
                 }
                 else
@@ -272,6 +324,127 @@
             </div>
         </div>
 
+        <div id="agreement-import-monitor" class="panel panel-default mb-3">
+            <div class="panel-heading"><strong>Manual Import</strong></div>
+            <div class="panel-body">
+                <p class="text-muted">Queue the stored import configuration for this agreement and monitor progress live here.</p>
+
+                @using (Html.BeginForm("QueueDataSharingAgreementImport", "Admin", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id", Model.Agreement.ID)
+                    <button type="submit" class="btn btn-success">Queue Import</button>
+                }
+
+                @using (Html.BeginForm("PreviewDataSharingAgreementImport", "Admin", FormMethod.Post, new { style = "display:inline-block; margin-left:10px;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id", Model.Agreement.ID)
+                    <button type="submit" class="btn btn-default">Queue Preview</button>
+                }
+
+                @if (currentImportJob != null)
+                {
+                    <p>
+                        <a href="@(Url.Action("ReviewDataSharingAgreement", "Admin", new { id = Model.Agreement.ID, jobId = currentImportJob.JobId }) + "#agreement-import-monitor")" class="btn btn-link btn-sm" style="padding-left:0;">Direct link to this job monitor</a>
+                    </p>
+
+                    <hr />
+                    <dl class="dl-horizontal small">
+                        <dt>Job</dt>
+                        <dd><code>@currentImportJob.JobId</code></dd>
+                        <dt>Mode</dt>
+                        <dd>@currentImportJob.ModeText</dd>
+                        <dt>Provider</dt>
+                        <dd>@(currentImportJob.ProviderName ?? Model.Review.ProviderName ?? "Pending")</dd>
+                        <dt>Status</dt>
+                        <dd><span id="agreement-import-status" class="label @(currentImportJob.Status == OCM.Web.Models.ImportJobStatus.Completed ? "label-success" : currentImportJob.Status == OCM.Web.Models.ImportJobStatus.Failed ? "label-danger" : "label-info")">@currentImportJob.StatusText</span></dd>
+                        <dt>Message</dt>
+                        <dd id="agreement-import-status-message">@currentImportJob.StatusMessage</dd>
+                        <dt>Queued</dt>
+                        <dd>@currentImportJob.QueuedUtc.ToString("yyyy-MM-dd HH:mm:ss") UTC</dd>
+                        @if (currentImportJob.StartedUtc.HasValue)
+                        {
+                            <dt>Started</dt>
+                            <dd>@currentImportJob.StartedUtc.Value.ToString("yyyy-MM-dd HH:mm:ss") UTC</dd>
+                        }
+                        @if (currentImportJob.CompletedUtc.HasValue)
+                        {
+                            <dt>Completed</dt>
+                            <dd>@currentImportJob.CompletedUtc.Value.ToString("yyyy-MM-dd HH:mm:ss") UTC</dd>
+                        }
+                    </dl>
+
+                    if (!string.IsNullOrWhiteSpace(currentImportJob.LastError))
+                    {
+                        <div id="agreement-import-error" class="alert alert-danger small">@currentImportJob.LastError</div>
+                    }
+                    else
+                    {
+                        <div id="agreement-import-error" class="alert alert-danger small" style="display:none;"></div>
+                    }
+
+                    <pre id="agreement-import-log" class="small" style="max-height:320px; overflow:auto; white-space:pre-wrap;">@importLogText</pre>
+
+                    @if (currentImportJob.Mode == OCM.Web.Models.ImportJobMode.Preview && currentImportJob.PreviewSummary != null)
+                    {
+                        <div id="agreement-import-preview-summary" class="panel panel-info" style="margin-top:15px;">
+                            <div class="panel-heading"><strong>Preview Summary</strong></div>
+                            <div class="panel-body small">
+                                <p><strong>Source items:</strong> @currentImportJob.PreviewSummary.SourceItemCount</p>
+                                <p><strong>Preview processed:</strong> @currentImportJob.PreviewSummary.PreviewItemCount / @currentImportJob.PreviewSummary.PreviewItemLimit</p>
+                                <ul>
+                                    <li>Added: @currentImportJob.PreviewSummary.AddedCount</li>
+                                    <li>Updated: @currentImportJob.PreviewSummary.UpdatedCount</li>
+                                    <li>Unchanged: @currentImportJob.PreviewSummary.UnchangedCount</li>
+                                    <li>Duplicates: @currentImportJob.PreviewSummary.DuplicateCount</li>
+                                    <li>Low quality: @currentImportJob.PreviewSummary.LowDataQualityCount</li>
+                                    <li>Delisted: @currentImportJob.PreviewSummary.DelistedCount</li>
+                                </ul>
+
+                                @if (currentImportJob.PreviewSummary.AddedItems.Any())
+                                {
+                                    <h5>Sample Added Items</h5>
+                                    <ul>
+                                        @foreach (var item in currentImportJob.PreviewSummary.AddedItems)
+                                        {
+                                            <li>@(item.Title ?? item.Reference ?? "Untitled") @if (!string.IsNullOrWhiteSpace(item.Address)) { <span class="text-muted">- @item.Address</span> } @if (!string.IsNullOrWhiteSpace(item.Reference)) { <span class="text-muted">(@item.Reference)</span> }</li>
+                                        }
+                                    </ul>
+                                }
+
+                                @if (currentImportJob.PreviewSummary.UpdatedItems.Any())
+                                {
+                                    <h5>Sample Updated Items</h5>
+                                    <ul>
+                                        @foreach (var item in currentImportJob.PreviewSummary.UpdatedItems)
+                                        {
+                                            <li>@(item.OcmId.HasValue ? $"OCM-{item.OcmId.Value}: " : string.Empty)@(item.Title ?? item.Reference ?? "Untitled") @if (!string.IsNullOrWhiteSpace(item.Address)) { <span class="text-muted">- @item.Address</span> } @if (!string.IsNullOrWhiteSpace(item.Reference)) { <span class="text-muted">(@item.Reference)</span> }</li>
+                                        }
+                                    </ul>
+                                }
+
+                                @if (currentImportJob.PreviewSummary.DelistedItems.Any())
+                                {
+                                    <h5>Sample Delisted Items</h5>
+                                    <ul>
+                                        @foreach (var item in currentImportJob.PreviewSummary.DelistedItems)
+                                        {
+                                            <li>@(item.OcmId.HasValue ? $"OCM-{item.OcmId.Value}: " : string.Empty)@(item.Title ?? item.Reference ?? "Untitled") @if (!string.IsNullOrWhiteSpace(item.Address)) { <span class="text-muted">- @item.Address</span> }</li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No manual imports have been queued for this agreement yet.</p>
+                }
+            </div>
+        </div>
+
         @if (Model.ValidationPreview != null && Model.ValidationPreview.DiscoveredOperators.Any())
         {
             <div class="panel panel-default mb-3">
@@ -316,4 +489,90 @@
             </div>
         </div>
     </div>
+
+@if (currentImportJob != null && currentImportJob.IsActive)
+{
+    <script>
+        (function () {
+            var logElement = document.getElementById('agreement-import-log');
+            var statusElement = document.getElementById('agreement-import-status');
+            var statusMessageElement = document.getElementById('agreement-import-status-message');
+            var errorElement = document.getElementById('agreement-import-error');
+
+            if (!logElement || !window.EventSource) {
+                return;
+            }
+
+            logElement.textContent = '';
+
+            function getStatusClass(status) {
+                if (status === 'Completed') {
+                    return 'label label-success';
+                }
+
+                if (status === 'Failed') {
+                    return 'label label-danger';
+                }
+
+                return 'label label-info';
+            }
+
+            function appendLogLine(line) {
+                if (logElement.textContent && logElement.textContent !== 'No log output yet.') {
+                    logElement.textContent += '\n';
+                }
+
+                logElement.textContent += line;
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+
+            var eventSource = new EventSource('@Url.Action("StreamDataSharingAgreementImportLogs", "Admin", new { jobId = currentImportJob.JobId })');
+
+            eventSource.addEventListener('log', function (event) {
+                var payload = JSON.parse(event.data);
+                if (!payload.logEntry) {
+                    return;
+                }
+
+                appendLogLine('[' + payload.logEntry.timestampUtc.substring(11, 19) + '] ' + payload.logEntry.level + ': ' + payload.logEntry.message);
+            });
+
+            eventSource.addEventListener('status', function (event) {
+                var payload = JSON.parse(event.data);
+
+                if (statusElement && payload.status) {
+                    statusElement.textContent = payload.status;
+                    statusElement.className = getStatusClass(payload.status);
+                }
+
+                if (statusMessageElement) {
+                    statusMessageElement.textContent = payload.statusMessage || '';
+                }
+
+                if (errorElement) {
+                    if (payload.lastError) {
+                        errorElement.style.display = 'block';
+                        errorElement.textContent = payload.lastError;
+                    } else {
+                        errorElement.style.display = 'none';
+                        errorElement.textContent = '';
+                    }
+                }
+
+                if ((payload.status === 'Completed' || payload.status === 'Failed') && payload.mode === 'Preview' && payload.previewSummary) {
+                    window.location.reload();
+                    return;
+                }
+
+                if (payload.status === 'Completed' || payload.status === 'Failed') {
+                    eventSource.close();
+                }
+            });
+
+            eventSource.onerror = function () {
+                eventSource.close();
+            };
+        })();
+    </script>
+}
 </div>

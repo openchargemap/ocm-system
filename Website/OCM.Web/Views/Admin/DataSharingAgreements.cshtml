@@ -2,56 +2,253 @@
 
 @{
     ViewBag.Title = "Data Sharing Agreements";
+    var statusMessage = TempData["StatusMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var approvedItems = Model.Where(item => item.IsApproved).ToList();
+    var pendingItems = Model.Where(item => !item.IsApproved).ToList();
+    var selectedTab = string.Equals(Context.Request.Query["tab"], "approved", StringComparison.OrdinalIgnoreCase)
+        ? "approved"
+        : "pending";
 }
 
 <h2>Data Sharing Agreements</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Company</th>
-            <th>Contact</th>
-            <th>Feed</th>
-            <th>Comments</th>
-            <th>Data Provider</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Agreement.DateCreated.ToString("yyyy-MM-dd")</td>
-                <td>@item.Agreement.CompanyName</td>
-                <td>@item.Agreement.ContactEmail</td>
-                <td>@item.Agreement.DataFeedType</td>
-                <td>@item.Agreement.Comments</td>
-                <td>
-                    @if (item.DataProvider != null)
-                    {
-                        <span>@item.DataProvider.Title (#@item.DataProvider.ID)</span>
-                    }
-                    else
-                    {
-                        <span class="text-muted">Not created</span>
-                    }
-                </td>
-                <td>
-                    @if (item.IsApproved)
-                    {
-                        <span class="badge badge-success">Approved</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-warning">Pending Review</span>
-                    }
-                </td>
-                <td>
-                    @Html.ActionLink("Review", "ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID }, new { @class = "btn btn-sm btn-primary" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div style="margin-bottom:15px;">
+    @using (Html.BeginForm("QueueApprovedDataSharingAgreementImports", "Admin", FormMethod.Post, new { style = "display:inline-block;" }))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success">Queue All Approved Imports</button>
+    }
+</div>
+
+@if (!string.IsNullOrWhiteSpace(statusMessage))
+{
+    <div class="alert alert-success">@statusMessage</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<style>
+    .agreement-tabs {
+        margin: 0 0 15px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .agreement-tab-link {
+        display: inline-block;
+        margin: 0 6px -1px 0;
+        padding: 10px 16px;
+        border: 1px solid transparent;
+        border-radius: 4px 4px 0 0;
+        color: #337ab7;
+        text-decoration: none;
+    }
+
+    .agreement-tab-link:hover,
+    .agreement-tab-link:focus {
+        color: #23527c;
+        text-decoration: none;
+        background-color: #f5f5f5;
+    }
+
+    .agreement-tab-link.active {
+        color: #555;
+        background-color: #fff;
+        border-color: #ddd #ddd #fff;
+    }
+</style>
+
+<div class="agreement-tabs">
+    <a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "pending" })" class="agreement-tab-link @(selectedTab == "pending" ? "active" : string.Empty)">Not Approved (@pendingItems.Count)</a>
+    <a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "approved" })" class="agreement-tab-link @(selectedTab == "approved" ? "active" : string.Empty)">Approved (@approvedItems.Count)</a>
+</div>
+
+@if (selectedTab == "pending")
+{
+    <div id="pending-agreements">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Feed</th>
+                    <th>Comments</th>
+                    <th>Data Provider</th>
+                    <th>Provider Status</th>
+                    <th>Last Import</th>
+                    <th>Approval</th>
+                    <th>Import Job</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in pendingItems)
+                {
+                    <tr>
+                        <td>@item.Agreement.DateCreated.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Agreement.CompanyName</td>
+                        <td>@item.Agreement.ContactEmail</td>
+                        <td>@item.Agreement.DataFeedURL</td>
+                        <td>@item.Agreement.Comments</td>
+                        <td>
+                            @if (item.DataProvider != null)
+                            {
+                                <span>@item.DataProvider.Title (#@item.DataProvider.ID)</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not created</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(item.DataProvider?.DataProviderStatusType?.Title))
+                            {
+                                <span>@item.DataProvider.DataProviderStatusType.Title</span>
+                            }
+                            else if (item.DataProvider != null)
+                            {
+                                <span class="text-muted">Not set</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not created</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.DataProvider?.DateLastImported != null)
+                            {
+                                <span>@item.DataProvider.DateLastImported.Value.ToString("yyyy-MM-dd HH:mm") UTC</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Never</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge badge-warning">Pending Review</span>
+                        </td>
+                        <td>
+                            @if (item.CurrentImportJob != null)
+                            {
+                                <div>
+                                    <span class="label @(item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Completed ? "label-success" : item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Failed ? "label-danger" : "label-info")">@item.CurrentImportJob.ModeText @item.CurrentImportJob.StatusText</span>
+                                </div>
+                                <div class="small text-muted">@item.CurrentImportJob.QueuedUtc.ToString("yyyy-MM-dd HH:mm") UTC</div>
+                                <div><a href="@(Url.Action("ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID, jobId = item.CurrentImportJob.JobId }) + "#agreement-import-monitor")">View Progress</a></div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No jobs</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Review", "ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID }, new { @class = "btn btn-sm btn-primary" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div id="approved-agreements">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Feed</th>
+                    <th>Comments</th>
+                    <th>Data Provider</th>
+                    <th>Provider Status</th>
+                    <th>Last Import</th>
+                    <th>Approval</th>
+                    <th>Import Job</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in approvedItems)
+                {
+                    <tr>
+                        <td>@item.Agreement.DateCreated.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Agreement.CompanyName</td>
+                        <td>@item.Agreement.ContactEmail</td>
+                        <td>@item.Agreement.DataFeedURL</td>
+                        <td>@item.Agreement.Comments</td>
+                        <td>
+                            @if (item.DataProvider != null)
+                            {
+                                <span>@item.DataProvider.Title (#@item.DataProvider.ID)</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not created</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(item.DataProvider?.DataProviderStatusType?.Title))
+                            {
+                                <span>@item.DataProvider.DataProviderStatusType.Title</span>
+                            }
+                            else if (item.DataProvider != null)
+                            {
+                                <span class="text-muted">Not set</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not created</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.DataProvider?.DateLastImported != null)
+                            {
+                                <span>@item.DataProvider.DateLastImported.Value.ToString("yyyy-MM-dd HH:mm") UTC</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Never</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge badge-success">Approved</span>
+                        </td>
+                        <td>
+                            @if (item.CurrentImportJob != null)
+                            {
+                                <div>
+                                    <span class="label @(item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Completed ? "label-success" : item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Failed ? "label-danger" : "label-info")">@item.CurrentImportJob.ModeText @item.CurrentImportJob.StatusText</span>
+                                </div>
+                                <div class="small text-muted">@item.CurrentImportJob.QueuedUtc.ToString("yyyy-MM-dd HH:mm") UTC</div>
+                                <div><a href="@(Url.Action("ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID, jobId = item.CurrentImportJob.JobId }) + "#agreement-import-monitor")">View Progress</a></div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No jobs</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Review", "ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID }, new { @class = "btn btn-sm btn-primary" })
+
+                            @if (item.DataProvider != null)
+                            {
+                                @using (Html.BeginForm("QueueDataSharingAgreementImport", "Admin", FormMethod.Post, new { style = "display:inline-block; margin-left:5px;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("id", item.Agreement.ID)
+                                    <button type="submit" class="btn btn-sm btn-success">Queue Import</button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

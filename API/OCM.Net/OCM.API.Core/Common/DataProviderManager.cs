@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace OCM.API.Common
 {
@@ -46,8 +47,19 @@ namespace OCM.API.Common
 
         public Model.DataProvider GetDataProviderByAgreementId(int agreementId)
         {
-            var dataProvider = dataModel.DataProviders.FirstOrDefault(dp => dp.DataSharingAgreementId == agreementId);
+            var dataProvider = dataModel.DataProviders
+                .Include(dp => dp.DataProviderStatusType)
+                .FirstOrDefault(dp => dp.DataSharingAgreementId == agreementId);
             return Model.Extensions.DataProvider.FromDataModel(dataProvider);
+        }
+
+        public System.Collections.Generic.List<Model.DataProviderStatusType> GetDataProviderStatusTypes()
+        {
+            return dataModel.DataProviderStatusTypes
+                .OrderBy(status => status.Title)
+                .ToList()
+                .Select(Model.Extensions.DataProviderStatusType.FromDataModel)
+                .ToList();
         }
 
         public string GetImportConfigByAgreementId(int agreementId)
@@ -58,9 +70,22 @@ namespace OCM.API.Common
                 .FirstOrDefault();
         }
 
+        public System.Collections.Generic.List<int> GetApprovedImportAgreementIds()
+        {
+            return dataModel.DataProviders
+                .Where(dp => dp.IsApprovedImport == true
+                    && dp.DataSharingAgreementId.HasValue
+                    && !string.IsNullOrWhiteSpace(dp.ImportConfig))
+                .Select(dp => dp.DataSharingAgreementId.Value)
+                .Distinct()
+                .ToList();
+        }
+
         public void SetImportApprovalStatus(int dataProviderId, bool isApproved)
         {
-            var dataProvider = dataModel.DataProviders.FirstOrDefault(dp => dp.Id == dataProviderId);
+            var dataProvider = dataModel.DataProviders
+                .Include(dp => dp.DataProviderStatusType)
+                .FirstOrDefault(dp => dp.Id == dataProviderId);
             if (dataProvider == null)
             {
                 return;
@@ -70,7 +95,7 @@ namespace OCM.API.Common
             dataModel.SaveChanges();
         }
 
-        public Model.DataProvider UpdateOCPIDataProvider(int dataProviderId, string title, string websiteUrl, string license, bool isOpenDataLicensed, string ocpiConfigJson, int updatedByUserId)
+        public Model.DataProvider UpdateOCPIDataProvider(int dataProviderId, string title, string websiteUrl, string license, bool isOpenDataLicensed, string ocpiConfigJson, int? dataProviderStatusTypeId, int updatedByUserId)
         {
             var dataProvider = dataModel.DataProviders.FirstOrDefault(dp => dp.Id == dataProviderId);
             if (dataProvider == null)
@@ -84,6 +109,7 @@ namespace OCM.API.Common
             dataProvider.IsOpenDataLicensed = isOpenDataLicensed;
             dataProvider.ImportConfig = ocpiConfigJson;
             dataProvider.Comments = "OCPI with Data Sharing Agreement";
+            dataProvider.DataProviderStatusTypeId = dataProviderStatusTypeId;
 
             dataModel.SaveChanges();
 

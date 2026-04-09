@@ -79,5 +79,30 @@ namespace OCM.API.Common
 
             return Model.Extensions.DataSharingAgreement.FromDataModel(item);
         }
+
+        public bool DeleteAgreement(int id, int deletedByUserId)
+        {
+            var item = dataModel.DataSharingAgreements.FirstOrDefault(a => a.Id == id);
+            if (item == null)
+            {
+                return false;
+            }
+
+            var linkedProviders = dataModel.DataProviders.Where(dp => dp.DataSharingAgreementId == id).ToList();
+            foreach (var provider in linkedProviders)
+            {
+                provider.DataSharingAgreementId = null;
+            }
+
+            dataModel.DataSharingAgreements.Remove(item);
+            dataModel.SaveChanges();
+
+            var user = new UserManager().GetUser(deletedByUserId);
+            AuditLogManager.Log(user, AuditEventType.DeletedItem,
+                "{EntityType:\"DataSharingAgreement\",EntityID:" + id + "}",
+                $"Deleted data sharing agreement for {item.CompanyName}");
+
+            return true;
+        }
     }
 }

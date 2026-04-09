@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -6,10 +10,6 @@ using OCM.API.Common;
 using OCM.API.Common.Model;
 using OCM.Web.Models;
 using OCM.Web.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OCM.MVC.Controllers
 {
@@ -532,7 +532,7 @@ namespace OCM.MVC.Controllers
                     WebsiteURL = submitDetails.WebsiteUrl,
                     DataFeedType = submitDetails.DataFeedType,
                     DataFeedURL = submitDetails.LocationsEndpointUrl,
-                    DataLicense = "CC-0",
+                    DataLicense = "CC0",
                     Credentials = submitDetails.AuthorizationHeaderValue,
                     Comments = $"OCPI feed submission for provider '{submitDetails.ProviderName}'"
                 }, (int)UserID);

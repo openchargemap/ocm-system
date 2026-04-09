@@ -15,8 +15,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AgreementModel = OCM.API.Common.Model.DataSharingAgreement;
+using ModelDataProviderStatusType = OCM.API.Common.Model.DataProviderStatusType;
 using ProviderModel = OCM.API.Common.Model.DataProvider;
 
 namespace OCM.MVC.Controllers
@@ -26,18 +29,26 @@ namespace OCM.MVC.Controllers
         private IHostEnvironment _host;
         private IMemoryCache _cache;
         private IAdminTaskService _adminTaskService;
+        private IImportQueueService _importQueueService;
 
-        public AdminController(IHostEnvironment host, IMemoryCache memoryCache, IAdminTaskService adminTaskService)
+        public AdminController(IHostEnvironment host, IMemoryCache memoryCache, IAdminTaskService adminTaskService, IImportQueueService importQueueService)
         {
             _host = host;
             _cache = memoryCache;
             _adminTaskService = adminTaskService;
+            _importQueueService = importQueueService;
         }
 
         private void PopulateCountryList(int selectedCountryId)
         {
             var countryList = new ReferenceDataManager().GetCountries(false);
             ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countryList, "ID", "Title", selectedCountryId);
+        }
+
+        private static List<ModelDataProviderStatusType> GetDataProviderStatusTypes()
+        {
+            using var dataProviderManager = new DataProviderManager();
+            return dataProviderManager.GetDataProviderStatusTypes();
         }
 
         private static OCPIProviderConfiguration GetStoredProviderConfiguration(string importConfig)
@@ -117,7 +128,9 @@ namespace OCM.MVC.Controllers
                 DataFeedType = agreement.DataFeedType,
                 SubmittedFeedUrl = agreement.DataFeedURL,
                 SubmittedCredentials = agreement.Credentials,
+                AgreementComments = agreement.Comments,
                 ProviderName = providerName,
+                DataProviderStatusTypeId = dataProvider?.DataProviderStatusType?.ID,
                 OutputNamePrefix = existingConfig?.OutputNamePrefix,
                 DataProviderOcpiId = dataProvider?.ID ?? 0,
                 LocationsEndpointUrl = existingConfig?.LocationsEndpointUrl ?? validationPreview?.ResolvedLocationsEndpointUrl ?? agreement.DataFeedURL,
@@ -136,7 +149,7 @@ namespace OCM.MVC.Controllers
             };
         }
 
-        private AdminDataSharingAgreementReviewModel BuildReviewModel(AgreementModel agreement, ProviderModel dataProvider, string importConfig, OCPIValidationResult validationPreview, AdminDataSharingAgreementEditModel review = null)
+        private AdminDataSharingAgreementReviewModel BuildReviewModel(AgreementModel agreement, ProviderModel dataProvider, string importConfig, OCPIValidationResult validationPreview, AdminDataSharingAgreementEditModel review = null, ImportJobViewModel currentImportJob = null)
         {
             return new AdminDataSharingAgreementReviewModel
             {
@@ -144,9 +157,35 @@ namespace OCM.MVC.Controllers
                 DataProvider = dataProvider,
                 ImportConfig = importConfig,
                 ValidationPreview = validationPreview,
+                AvailableDataProviderStatuses = GetDataProviderStatusTypes(),
                 AvailableOperators = new OperatorInfoManager().GetOperators(),
+                CurrentImportJob = currentImportJob ?? _importQueueService.GetLatestJobForAgreement(agreement.ID),
                 Review = review ?? BuildReviewEditModel(agreement, dataProvider, importConfig, validationPreview)
             };
+        }
+
+        private async Task WriteServerSentEventAsync(string eventType, string data, CancellationToken cancellationToken)
+        {
+            var payload = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(eventType))
+            {
+                payload.Append("event: ").Append(eventType).Append('\n');
+            }
+
+            var lines = (data ?? string.Empty)
+                .Replace("\r", string.Empty)
+                .Split('\n');
+
+            foreach (var line in lines)
+            {
+                payload.Append("data: ").Append(line).Append('\n');
+            }
+
+            payload.Append('\n');
+
+            await Response.WriteAsync(payload.ToString(), cancellationToken);
+            await Response.Body.FlushAsync(cancellationToken);
         }
 
         private static Dictionary<string, int> ParseOperatorMappings(string operatorMappingsText)
@@ -295,6 +334,20 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        public ActionResult DataProviders(string sortBy = "title")
+        {
+            var providers = new ReferenceDataManager().GetDataProviders();
+
+            providers = string.Equals(sortBy, "lastimported", StringComparison.OrdinalIgnoreCase)
+                ? providers.OrderByDescending(p => p.DateLastImported ?? DateTime.MinValue).ThenBy(p => p.Title).ToList()
+                : providers.OrderBy(p => p.Title).ToList();
+
+            ViewBag.SortBy = sortBy;
+
+            return View(providers);
+        }
+
+        [Authorize(Roles = "Admin")]
         public ActionResult DataSharingAgreements()
         {
             using var agreementManager = new DataSharingAgreementManager();
@@ -304,7 +357,8 @@ namespace OCM.MVC.Controllers
                 .Select(a => new AdminDataSharingAgreementListItem
                 {
                     Agreement = a,
-                    DataProvider = dataProviderManager.GetDataProviderByAgreementId(a.ID)
+                    DataProvider = dataProviderManager.GetDataProviderByAgreementId(a.ID),
+                    CurrentImportJob = _importQueueService.GetLatestJobForAgreement(a.ID)
                 })
                 .ToList();
 
@@ -312,7 +366,7 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> ReviewDataSharingAgreement(int id)
+        public async Task<ActionResult> ReviewDataSharingAgreement(int id, Guid? jobId = null)
         {
             using var agreementManager = new DataSharingAgreementManager();
             using var dataProviderManager = new DataProviderManager();
@@ -334,7 +388,16 @@ namespace OCM.MVC.Controllers
 
             PopulateCountryList(agreement.CountryID);
 
-            var model = BuildReviewModel(agreement, dataProvider, importConfig, validationPreview);
+            var currentImportJob = jobId.HasValue
+                ? _importQueueService.GetJob(jobId.Value)
+                : _importQueueService.GetLatestJobForAgreement(agreement.ID);
+
+            if (currentImportJob != null && currentImportJob.AgreementId != agreement.ID)
+            {
+                currentImportJob = _importQueueService.GetLatestJobForAgreement(agreement.ID);
+            }
+
+            var model = BuildReviewModel(agreement, dataProvider, importConfig, validationPreview, currentImportJob: currentImportJob);
 
             return View(model);
         }
@@ -365,14 +428,21 @@ namespace OCM.MVC.Controllers
                 validationPreview = await BuildValidationPreviewAsync(review);
             }
 
-            if (string.IsNullOrWhiteSpace(review.CredentialKey) && string.IsNullOrWhiteSpace(review.SubmittedCredentials))
+            if (!string.IsNullOrWhiteSpace(review.AuthHeaderKey)
+                && string.IsNullOrWhiteSpace(review.CredentialKey)
+                && string.IsNullOrWhiteSpace(review.SubmittedCredentials))
             {
-                ModelState.AddModelError(nameof(review.CredentialKey), "Provide a key vault secret name or keep the submitted credentials for validation and import setup.");
+                ModelState.AddModelError(nameof(review.CredentialKey), "Provide a key vault secret name or keep the submitted credentials when the feed requires an authorization header.");
             }
 
             if (review.DefaultOperatorId.HasValue && review.DefaultOperatorId <= 0)
             {
                 ModelState.AddModelError(nameof(review.DefaultOperatorId), "Default operator must be a valid operator ID.");
+            }
+
+            if (review.DataProviderStatusTypeId.HasValue && review.DataProviderStatusTypeId <= 0)
+            {
+                ModelState.AddModelError(nameof(review.DataProviderStatusTypeId), "Data provider status must be a valid status type.");
             }
 
             if (review.DataProviderId.HasValue && review.DataProviderOcpiId.HasValue && review.DataProviderOcpiId.Value > 0 && review.DataProviderId.Value != review.DataProviderOcpiId.Value)
@@ -390,6 +460,7 @@ namespace OCM.MVC.Controllers
                 agreement.DataFeedType = review.DataFeedType;
                 agreement.DataFeedURL = review.SubmittedFeedUrl;
                 agreement.Credentials = review.SubmittedCredentials;
+                agreement.Comments = review.AgreementComments;
 
                 agreement = agreementManager.UpdateAgreement(agreement);
 
@@ -418,6 +489,7 @@ namespace OCM.MVC.Controllers
                     license: agreement.DataLicense,
                     isOpenDataLicensed: true,
                     ocpiConfigJson: importConfig,
+                    dataProviderStatusTypeId: review.DataProviderStatusTypeId,
                     updatedByUserId: (int)UserID);
 
                 dataProviderManager.SetImportApprovalStatus(dataProvider.ID, review.ApproveImport);
@@ -445,6 +517,98 @@ namespace OCM.MVC.Controllers
             }
 
             return RedirectToAction("ReviewDataSharingAgreement", new { id });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteDataSharingAgreement(int id)
+        {
+            using var agreementManager = new DataSharingAgreementManager();
+
+            if (agreementManager.DeleteAgreement(id, (int)UserID))
+            {
+                TempData["StatusMessage"] = $"Data sharing agreement #{id} deleted.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = $"Data sharing agreement #{id} was not found.";
+            }
+
+            return RedirectToAction(nameof(DataSharingAgreements));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult QueueDataSharingAgreementImport(int id)
+        {
+            return QueueDataSharingAgreementJob(id, ImportJobMode.Import);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult QueueApprovedDataSharingAgreementImports()
+        {
+            var jobs = _importQueueService.QueueApprovedImports((int)UserID, ImportJobMode.Import);
+            TempData["StatusMessage"] = jobs.Count == 1
+                ? "Queued 1 approved import."
+                : $"Queued {jobs.Count} approved imports.";
+
+            return RedirectToAction(nameof(DataSharingAgreements));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PreviewDataSharingAgreementImport(int id)
+        {
+            return QueueDataSharingAgreementJob(id, ImportJobMode.Preview);
+        }
+
+        private ActionResult QueueDataSharingAgreementJob(int id, ImportJobMode mode)
+        {
+            using var agreementManager = new DataSharingAgreementManager();
+            using var dataProviderManager = new DataProviderManager();
+
+            var agreement = agreementManager.GetAgreement(id);
+            if (agreement == null)
+            {
+                return RedirectToAction(nameof(DataSharingAgreements));
+            }
+
+            var importConfig = dataProviderManager.GetImportConfigByAgreementId(id);
+            if (string.IsNullOrWhiteSpace(importConfig))
+            {
+                TempData["ErrorMessage"] = "Save a stored OCPI import configuration before queueing an import.";
+                return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
+            }
+
+            var importJob = _importQueueService.QueueImport(id, (int)UserID, mode);
+            TempData["StatusMessage"] = $"Queued {mode.ToString().ToLowerInvariant()} job {importJob.JobId} for agreement #{id}.";
+
+            return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task StreamDataSharingAgreementImportLogs(Guid jobId, CancellationToken cancellationToken)
+        {
+            var importJob = _importQueueService.GetJob(jobId);
+            if (importJob == null)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                return;
+            }
+
+            Response.Headers["Content-Type"] = "text/event-stream";
+            Response.Headers["Cache-Control"] = "no-cache";
+            Response.Headers["X-Accel-Buffering"] = "no";
+
+            await foreach (var message in _importQueueService.StreamJobEventsAsync(jobId, cancellationToken))
+            {
+                await WriteServerSentEventAsync(message.EventType, JsonConvert.SerializeObject(message), cancellationToken);
+            }
         }
 
         [Authorize(Roles = "Admin")]

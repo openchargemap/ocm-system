@@ -1,0 +1,59 @@
+@model IEnumerable<OCM.API.Common.Model.DataProvider>
+
+@{
+    ViewBag.Title = $"Data Providers ({Model.Count()})";
+    var currentSort = (ViewBag.SortBy as string ?? "title").ToLowerInvariant();
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    Sort by:
+    @if (currentSort == "lastimported")
+    {
+        <strong>Date Last Imported</strong>
+        <span> | </span>
+        <a href="@Url.Action("DataProviders", "Admin", new { sortBy = "title" })">Title</a>
+    }
+    else
+    {
+        <strong>Title</strong>
+        <span> | </span>
+        <a href="@Url.Action("DataProviders", "Admin", new { sortBy = "lastimported" })">Date Last Imported</a>
+    }
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Website</th>
+            <th>Approved</th>
+            <th>Restricted</th>
+            <th>Last Imported</th>
+            <th>License</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ID</td>
+            <td>@item.Title</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(item.WebsiteURL))
+                {
+                    <a href="@item.WebsiteURL" target="_blank" rel="noopener">@item.WebsiteURL</a>
+                }
+            </td>
+            <td>@(item.IsApprovedImport == true ? "Yes" : "No")</td>
+            <td>@(item.IsRestrictedEdit ? "Yes" : "No")</td>
+            <td>@(item.DateLastImported?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+            <td>@item.License</td>
+            <td>@item.Comments</td>
+        </tr>
+    }
+    </tbody>
+</table>
