@@ -235,11 +235,10 @@ namespace OCM.API.Common.DataSummary
                         group p by new { month = p.DateSubmitted.Month, year = p.DateSubmitted.Year } into d
                         select new UserEditStats { Month = d.Key.month, Year = d.Key.year, NumberOfAdditions = d.Count() };
 
-            var list = stats.Where(s => s.NumberOfAdditions > 1).OrderBy(s => s.Year).ThenBy(s => s.Month).ToList();
-
-            if (list.Any()) list.RemoveAt(0); //remove first result as will only be partial month
-
-            return list;
+            return stats
+                .OrderBy(s => s.Year)
+                .ThenBy(s => s.Month)
+                .ToList();
         }
 
         public List<GeneralStats> GetUserCommentStats(DateTime dateFrom, DateTime dateTo)

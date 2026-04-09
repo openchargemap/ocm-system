@@ -17,7 +17,7 @@ namespace OCM.MVC.Controllers
                 StatsModel model = new StatsModel();
 
                 var dateTo = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddDays(-1);
-                var dateFrom = dateTo.AddYears(-1);
+                var dateFrom = new DateTime(dateTo.Year, dateTo.Month, 1).AddMonths(-11);
 
                 model.TopContributors = dataSummary.GetTopNStats("UserPOIChangesLast90Days", 10, null);
                 model.TopCommentators = dataSummary.GetTopNStats("UserCommentsLast90Days", 10, null);
