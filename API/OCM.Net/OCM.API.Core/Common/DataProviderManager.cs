@@ -72,9 +72,12 @@ namespace OCM.API.Common
 
         public System.Collections.Generic.List<int> GetApprovedImportAgreementIds()
         {
+            var minimumNextImportUtc = DateTime.UtcNow.AddHours(-1);
+
             return dataModel.DataProviders
                 .Where(dp => dp.IsApprovedImport == true
                     && dp.DataSharingAgreementId.HasValue
+                    && (!dp.DateLastImported.HasValue || dp.DateLastImported.Value <= minimumNextImportUtc)
                     && !string.IsNullOrWhiteSpace(dp.ImportConfig))
                 .Select(dp => dp.DataSharingAgreementId.Value)
                 .Distinct()
