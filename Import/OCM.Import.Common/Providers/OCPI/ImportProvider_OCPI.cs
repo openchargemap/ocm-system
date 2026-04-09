@@ -151,6 +151,8 @@ namespace OCM.Import.Providers.OCPI
                     {
                         httpClient.DefaultRequestHeaders.Remove(_authHeaderKey);
                         httpClient.DefaultRequestHeaders.Add(_authHeaderKey, _authHeaderValue);
+
+                        Log($"Auth Header Used {_authHeaderKey}:{_authHeaderValue}");
                     }
                     httpClient.DefaultRequestHeaders.Remove("User-Agent");
                     httpClient.DefaultRequestHeaders.Add("User-Agent", "openchargemap-OCPI-import/1.0");

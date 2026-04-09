@@ -246,7 +246,7 @@ namespace OCM.MVC.Controllers
                 LocationsEndpointUrl = review.LocationsEndpointUrl?.Trim(),
                 AuthHeaderKey = string.IsNullOrWhiteSpace(review.AuthHeaderKey) ? null : review.AuthHeaderKey.Trim(),
                 CredentialKey = string.IsNullOrWhiteSpace(review.CredentialKey) ? null : review.CredentialKey.Trim(),
-                AuthHeaderValuePrefix = string.IsNullOrWhiteSpace(review.AuthHeaderValuePrefix) ? null : review.AuthHeaderValuePrefix,
+                AuthHeaderValuePrefix = review.AuthHeaderValuePrefix == null ? null : review.AuthHeaderValuePrefix.Trim(),
                 DefaultOperatorId = review.DefaultOperatorId,
                 IsAutoRefreshed = review.IsAutoRefreshed,
                 IsProductionReady = review.IsProductionReady,

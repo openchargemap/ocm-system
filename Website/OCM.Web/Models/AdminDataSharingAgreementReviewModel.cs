@@ -75,6 +75,7 @@ namespace OCM.Web.Models
 
         public string AuthHeaderKey { get; set; }
 
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string AuthHeaderValuePrefix { get; set; }
 
         public string CredentialKey { get; set; }
