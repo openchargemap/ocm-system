@@ -42,7 +42,7 @@ namespace OCM.Import.Providers.AFDC
             var chrgLevel2 = coreRefData.ChargerTypes.First(c => c.ID == 2);
             var chrgLevel3 = coreRefData.ChargerTypes.First(c => c.ID == 3);
             
-            var idMapper = OperatorIdMapper.Create();
+            var operatorIdMapper = OperatorIdMapper.Create();
 
             int itemCount = 0;
             int plannedItems = 0;
@@ -84,29 +84,8 @@ namespace OCM.Import.Providers.AFDC
                     }
                     if (item["station_phone"] != null) cp.AddressInfo.ContactTelephone1 = item["station_phone"].ToString();
 
-                    if (item["country"] != null)
-                    {
-                        if (item["country"].ToString() == "US")
-                        {
-                            cp.AddressInfo.CountryID = 2;
-                        }
-                        else if (item["country"].ToString() == "CA")
-                        {
-                            cp.AddressInfo.CountryID = 44;
-                        }
-                    }
-                    else
-                    {
-                        this.Log("Unknown country code:" + item["country"]);
-                    }
-
-                    //operator from ev_network
-                    string deviceController = item["ev_network"].ToString();
-
-                    cp.OperatorID = idMapper.GetValueOrDefault(deviceController, UnknownOperator);
-                    if (cp.OperatorID == UnknownOperator) {
-                        this.Log("Unknown network operator:" + deviceController);
-                    }
+                    MapCountry(item, cp);
+                    MapOperator(item, cp, operatorIdMapper);
 
                     //determine most likely usage type
                     cp.UsageTypeID = usageTypePrivate.ID;
@@ -173,9 +152,7 @@ namespace OCM.Import.Providers.AFDC
                                 cp.AddressInfo.AccessComments += item["groups_with_access_code"]?.ToString();
                                 cp.UsageTypeID = usageTypePublicNoticeRequired.ID;
                             }
-
                         }
-
                     }
 
                     string status_code = item["status_code"]?.ToString().ToLower();
@@ -209,39 +186,6 @@ namespace OCM.Import.Providers.AFDC
                             plannedItems++;
                         }
                     }
-                    /*
-
-                    else if (accessDesc.StartsWith("private access only") || accessDesc.Contains("(private)"))
-                    {
-                        cp.UsageTypeID = usageTypePrivate.ID;
-                    }
-                    else if (accessDesc.StartsWith("public - card key at all times"))
-                    {
-                        cp.UsageTypeID = usageTypePublicMembershipRequired.ID;
-                    }
-                    else if (accessDesc.Contains("public - call ahead"))
-                    {
-                        cp.UsageTypeID = usageTypePublicNoticeRequired.ID;
-                    }
-                    else if (accessDesc.Contains("public - credit card at all times"))
-                    {
-                        cp.UsageTypeID = usageTypePublicPayAtLocation.ID;
-                    }
-                    else if (accessDesc.StartsWith("private"))
-                    {
-                        cp.UsageTypeID = usageTypePrivate.ID;
-                    }
-                    else if (accessDesc.StartsWith("planned"))
-                    {
-                        cp.UsageTypeID = usageTypePrivate.ID;
-                        cp.StatusTypeID = nonoperationalStatus.ID;
-                        skipItem = true;
-                    }
-                    else
-                    {
-                        this.Log("Unknown usage type:" + item["groups_with_access_code"].ToString());
-                    }
-                    }*/
 
                     string ev_other_evse = null;
                     if (item["ev_other_evse"] != null) ev_other_evse = item["ev_other_evse"].ToString();
@@ -404,6 +348,34 @@ namespace OCM.Import.Providers.AFDC
             Log($"Items Parsed:{outputList.Count} PlannedItems: {plannedItems}");
 
             return outputList.ToList();
+        }
+
+        private void MapOperator(JToken item, ChargePoint cp, Dictionary<string, int> operatorIdMapper)
+        {
+            string evNetwork = item["ev_network"].ToString();
+            cp.OperatorID = operatorIdMapper.GetValueOrDefault(evNetwork, UnknownOperator);
+            if (cp.OperatorID == UnknownOperator) {
+                this.Log("Unknown network operator:" + evNetwork);
+            }
+        }
+
+        private void MapCountry(JToken item, ChargePoint cp)
+        {
+            if (item["country"] != null)
+            {
+                if (item["country"].ToString() == "US")
+                {
+                    cp.AddressInfo.CountryID = 2;
+                }
+                else if (item["country"].ToString() == "CA")
+                {
+                    cp.AddressInfo.CountryID = 44;
+                }
+            }
+            else
+            {
+                this.Log("Unknown country code:" + item["country"]);
+            }
         }
     }
 }
