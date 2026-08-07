@@ -4,10 +4,12 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using OCM.API.Common.Model;
 
-namespace OCM.Import.Providers
+namespace OCM.Import.Providers.AFDC
 {
     public class ImportProvider_AFDC : BaseImportProvider, IImportProvider
     {
+        private const int UnknownOperator = 1;
+        
         public ImportProvider_AFDC(string apiKey)
         {
             ProviderName = "afdc.energy.gov";
@@ -31,19 +33,16 @@ namespace OCM.Import.Providers
             var dataList = o["fuel_stations"].ToArray();
 
             var submissionStatus = coreRefData.SubmissionStatusTypes.First(s => s.ID == 100);//imported and published
-            var submissionStatusDelistedDupe = coreRefData.SubmissionStatusTypes.First(s => s.ID == 1001); //delisted duplicate
-            var operationalStatus = coreRefData.StatusTypes.First(os => os.ID == 50);
-            var nonoperationalStatus = coreRefData.StatusTypes.First(os => os.ID == 100);
-            var unknownStatus = coreRefData.StatusTypes.First(os => os.ID == 0);
             var usageTypePublic = coreRefData.UsageTypes.First(u => u.ID == 1);
             var usageTypePrivate = coreRefData.UsageTypes.First(u => u.ID == 2);
             var usageTypePublicPayAtLocation = coreRefData.UsageTypes.First(u => u.ID == 5);
             var usageTypePublicMembershipRequired = coreRefData.UsageTypes.First(u => u.ID == 4);
             var usageTypePublicNoticeRequired = coreRefData.UsageTypes.First(u => u.ID == 7);
-            var operatorUnknown = coreRefData.Operators.First(opUnknown => opUnknown.ID == 1);
             var chrgLevel1 = coreRefData.ChargerTypes.First(c => c.ID == 1);
             var chrgLevel2 = coreRefData.ChargerTypes.First(c => c.ID == 2);
             var chrgLevel3 = coreRefData.ChargerTypes.First(c => c.ID == 3);
+            
+            var idMapper = OperatorIdMapper.Create();
 
             int itemCount = 0;
             int plannedItems = 0;
@@ -104,110 +103,9 @@ namespace OCM.Import.Providers
                     //operator from ev_network
                     string deviceController = item["ev_network"].ToString();
 
-                    if (!String.IsNullOrEmpty(deviceController))
-                    {
-                        deviceController = deviceController.ToLower().Replace(" network", "");
-                        if (deviceController == "circuit ã©lectrique" || deviceController == "circuit électrique")
-                        {
-                            deviceController = "circuit electrique";
-                        }
-                        else if (deviceController == "petrocan")
-                        {
-                            deviceController = "petro canada";
-                        }
-
-                        var deviceOperatorInfo = coreRefData.Operators.FirstOrDefault(devOp => devOp.Title.ToLower().Contains(deviceController) == true);
-                        if (deviceOperatorInfo != null)
-                        {
-                            cp.OperatorID = deviceOperatorInfo.ID;
-                        }
-                        else if (deviceController != "non-networked")
-                        {
-
-                            switch (deviceController)
-                            {
-                                case "tesla destination":
-                                    cp.OperatorID = (int)StandardOperators.Tesla;
-                                    break;
-                                case "shell_recharge":
-                                    cp.OperatorID = 59;
-                                    break;
-                                case "rivian_waypoints":
-                                    cp.OperatorID = 3617; //3607 = Rivian Adventure
-                                    break;
-                                case "rivian_adventure":
-                                    cp.OperatorID = 3607;
-                                    break;
-                                case "bchydro":
-                                    cp.OperatorID = 3385;
-                                    break;
-                                case "powerflex":
-                                    cp.OperatorID = 3618;
-                                    break;
-                                case "semacharge": // now Blink
-                                    cp.OperatorID = 9;
-                                    break;
-                                case "ampup":
-                                    cp.OperatorID = 3619;
-                                    break;
-                                case "livingston":
-                                    cp.OperatorID = 3620;
-                                    break;
-                                case "chargelab":
-                                    cp.OperatorID = 3621;
-                                    break;
-                                case "universal":
-                                    cp.OperatorID = 3694;
-                                    break;
-                                case "graviti_energy":
-                                    cp.OperatorID = 3695;
-                                    break;
-                                case "evrange":
-                                    cp.OperatorID = 3526;
-                                    skipItem = true; // skip AFDC import for ev range due to misplaced locations on AFDC at request of operator
-                                    break;
-                                case "zefnet":
-                                    cp.OperatorID = 3454;
-                                    break;
-                                case "red_e":
-                                    cp.OperatorID = 3696;
-                                    break;
-                                case "7charge":
-                                    cp.OperatorID = 3697;
-                                    break;
-                                case "wave":
-                                    cp.OperatorID = 3724;
-                                    break;
-                                case "flash":
-                                    cp.OperatorID = 3723;
-                                    break;
-                                case "evmatch":
-                                    cp.OperatorID = 3725;
-                                    break;
-                                case "circle_k":
-                                    cp.OperatorID = 3510;
-                                    break;
-                                case "chargeup":
-                                    cp.OperatorID = 3734;
-                                    break;
-                                case "in_charge":
-                                    cp.OperatorID = 3867;
-                                    break;
-                                case "chargesmart_ev":
-                                    cp.OperatorID = 3864;
-                                    break;
-                                case "vialynk":
-                                    cp.OperatorID = 3863;
-                                    break;
-                                case "turnongreen":
-                                    cp.OperatorID = 3865;
-                                    break;
-                                default:
-                                    this.Log("Unknown network operator:" + deviceController);
-                                    break;
-
-                            }
-                        }
+                    cp.OperatorID = idMapper.GetValueOrDefault(deviceController, UnknownOperator);
+                    if (cp.OperatorID == UnknownOperator) {
+                        this.Log("Unknown network operator:" + deviceController);
                     }
 
                     //determine most likely usage type

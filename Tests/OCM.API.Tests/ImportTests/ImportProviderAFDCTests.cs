@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using OCM.API.Common.Model;
-using OCM.Import.Providers;
+using OCM.Import.Providers.AFDC;
 using Xunit;
 
 namespace OCM.API.Tests.ImportTests
@@ -38,7 +37,7 @@ namespace OCM.API.Tests.ImportTests
             var station = Assert.Single(results);
             Assert.Equal("384109", station.DataProvidersReference);
             Assert.Equal(2, station.DataProviderID);
-            Assert.Null(station.OperatorID); // FIXME: Should be 90
+            Assert.Equal(90, station.OperatorID);
             Assert.Equal((int)StandardStatusTypes.Operational, station.StatusTypeID);
             Assert.Equal(1, station.UsageTypeID); // public
             Assert.Equal(44, station.AddressInfo.CountryID); // CA
@@ -65,7 +64,7 @@ namespace OCM.API.Tests.ImportTests
             var station = Assert.Single(results);
             Assert.Equal("434008", station.DataProvidersReference);
             Assert.Equal(2, station.DataProviderID);
-            Assert.Null(station.OperatorID); // FIXME: FLO network is not in the switch cases
+            Assert.Equal(89, station.OperatorID);
             Assert.Equal((int)StandardStatusTypes.Operational, station.StatusTypeID);
             Assert.Equal(1, station.UsageTypeID); // public
             Assert.Equal(44, station.AddressInfo.CountryID); // CA
