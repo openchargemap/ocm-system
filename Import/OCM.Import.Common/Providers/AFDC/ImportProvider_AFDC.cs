@@ -15,7 +15,7 @@ namespace OCM.Import.Providers.AFDC
             ProviderName = "afdc.energy.gov";
             OutputNamePrefix = "afdc";
             ApiKey = apiKey;
-            AutoRefreshURL = $"https://developer.nrel.gov/api/alt-fuel-stations/v1.json?access=all&api_key={apiKey}&download=true&fuel_type=ELEC&status=all&country=US,CA";
+            AutoRefreshURL = $"https://developer.nlr.gov/api/alt-fuel-stations/v1.json?access=all&api_key={apiKey}&download=true&fuel_type=ELEC&status=all&country=US,CA";
             IsAutoRefreshed = true;
             IsProductionReady = true;
             DataProviderID = 2; //ADFC
