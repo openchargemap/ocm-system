@@ -1,0 +1,288 @@
+{
+  "station_locator_url": "https://afdc.energy.gov/stations/",
+  "total_results": 104427,
+  "station_counts": {
+    "total": 333765,
+    "fuels": {
+      "BD": {
+        "total": 0
+      },
+      "E85": {
+        "total": 0
+      },
+      "ELEC": {
+        "total": 333765,
+        "stations": {
+          "total": 104427
+        }
+      },
+      "HY": {
+        "total": 0
+      },
+      "LNG": {
+        "total": 0
+      },
+      "CNG": {
+        "total": 0
+      },
+      "LPG": {
+        "total": 0
+      },
+      "RD": {
+        "total": 0
+      }
+    }
+  },
+  "fuel_stations": [
+    {
+      "access_code": "public",
+      "access_days_time": null,
+      "access_detail_code": null,
+      "cards_accepted": null,
+      "date_last_confirmed": "2026-08-04",
+      "expected_date": null,
+      "fuel_type_code": "ELEC",
+      "groups_with_access_code": "Public",
+      "id": 384109,
+      "maximum_vehicle_class": null,
+      "open_date": "2025-02-12",
+      "owner_type_code": null,
+      "related_stations": [],
+      "restricted_access": false,
+      "status_code": "E",
+      "funding_sources": null,
+      "facility_type": null,
+      "station_name": "Québec - Piscine Lebourgneuf",
+      "station_phone": "855-999-8378",
+      "updated_at": "2026-08-04T05:05:03Z",
+      "geocode_status": "GPS",
+      "latitude": 46.8424922,
+      "longitude": -71.3055291,
+      "city": "Québec",
+      "country": "CA",
+      "intersection_directions": null,
+      "plus4": null,
+      "state": "QC",
+      "street_address": "1640, Boulevard la Morille",
+      "zip": "G2K 2E6",
+      "bd_blends": null,
+      "cng_dispenser_num": null,
+      "cng_fill_type_code": null,
+      "cng_has_rng": null,
+      "cng_psi": null,
+      "cng_renewable_source": null,
+      "cng_total_compression": null,
+      "cng_total_storage": null,
+      "cng_vehicle_class": null,
+      "e85_blender_pump": null,
+      "e85_other_ethanol_blends": null,
+      "ev_connector_types": [
+        "J1772"
+      ],
+      "ev_dc_fast_num": null,
+      "ev_level1_evse_num": null,
+      "ev_level2_evse_num": 4,
+      "ev_network": "Circuit électrique",
+      "ev_network_web": "https://lecircuitelectrique.com",
+      "ev_other_evse": null,
+      "ev_pricing": null,
+      "ev_renewable_source": null,
+      "ev_workplace_charging": false,
+      "hy_is_retail": null,
+      "hy_pressures": null,
+      "hy_standards": null,
+      "hy_status_link": null,
+      "lng_has_rng": null,
+      "lng_renewable_source": null,
+      "lng_vehicle_class": null,
+      "lpg_nozzle_types": null,
+      "lpg_primary": null,
+      "ng_fill_type_code": null,
+      "ng_psi": null,
+      "ng_vehicle_class": null,
+      "rd_blended_with_biodiesel": null,
+      "rd_blends": null,
+      "rd_blends_fr": null,
+      "rd_max_biodiesel_level": null,
+      "nps_unit_name": null,
+      "access_days_time_fr": null,
+      "intersection_directions_fr": null,
+      "bd_blends_fr": null,
+      "groups_with_access_code_fr": "Public",
+      "ev_pricing_fr": null,
+      "ev_charging_units": [
+        {
+          "network": "Circuit électrique",
+          "connectors": {
+            "J1772": {
+              "power_kw": 6.2,
+              "port_count": 1
+            },
+            "J3271": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "TESLA": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "CHADEMO": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA515": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA520": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA1450": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "J1772COMBO": {
+              "power_kw": null,
+              "port_count": 0
+            }
+          },
+          "port_count": 1,
+          "charging_level": "2",
+          "funding_sources": []
+        },
+        {
+          "network": "Circuit électrique",
+          "connectors": {
+            "J1772": {
+              "power_kw": 6.2,
+              "port_count": 1
+            },
+            "J3271": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "TESLA": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "CHADEMO": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA515": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA520": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA1450": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "J1772COMBO": {
+              "power_kw": null,
+              "port_count": 0
+            }
+          },
+          "port_count": 1,
+          "charging_level": "2",
+          "funding_sources": []
+        },
+        {
+          "network": "Circuit électrique",
+          "connectors": {
+            "J1772": {
+              "power_kw": 6.2,
+              "port_count": 1
+            },
+            "J3271": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "TESLA": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "CHADEMO": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA515": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA520": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA1450": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "J1772COMBO": {
+              "power_kw": null,
+              "port_count": 0
+            }
+          },
+          "port_count": 1,
+          "charging_level": "2",
+          "funding_sources": []
+        },
+        {
+          "network": "Circuit électrique",
+          "connectors": {
+            "J1772": {
+              "power_kw": 6.2,
+              "port_count": 1
+            },
+            "J3271": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "TESLA": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "CHADEMO": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA515": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA520": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "NEMA1450": {
+              "power_kw": null,
+              "port_count": 0
+            },
+            "J1772COMBO": {
+              "power_kw": null,
+              "port_count": 0
+            }
+          },
+          "port_count": 1,
+          "charging_level": "2",
+          "funding_sources": []
+        }
+      ],
+      "ev_network_ids": {
+        "station": [
+          "67ab91ded13f2b8241b3aadb"
+        ],
+        "posts": [
+          "8sdCp7_gmfNlND4n78atg",
+          "A1l2Gzybxa-XtDdP5wFc9",
+          "dE4_Ky5G1XnnzJ6jMe2q8",
+          "PwN2a6xQ4cjxQ6JBhmwS-"
+        ]
+      }
+    }
+  ]
+}
