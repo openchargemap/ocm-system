@@ -44,8 +44,9 @@ namespace OCM.API.Tests.ImportTests
             Assert.Equal("Québec - Piscine Lebourgneuf", station.AddressInfo.Title);
             Assert.Equal("1640, Boulevard la Morille", station.AddressInfo.AddressLine1);
             Assert.All(station.Connections, c => Assert.Equal(2, c.LevelID));
-            Assert.All(station.Connections, c => Assert.Equal(3.7, c.PowerKW)); // FIXME: Should be 6.2
-            Assert.Equal(1, station.Connections.Count(c => c.ConnectionTypeID == (int)StandardConnectionTypes.J1772)); // FIXME: Should be 4
+            Assert.All(station.Connections, c => Assert.Equal(6.2, c.PowerKW));
+            Assert.All(station.Connections, c => Assert.Equal(4, c.Quantity));
+            Assert.Equal(1, station.Connections.Count(c => c.ConnectionTypeID == (int)StandardConnectionTypes.J1772));
             Assert.Equal(100, station.SubmissionStatus.ID);
         }
 
@@ -71,10 +72,10 @@ namespace OCM.API.Tests.ImportTests
             Assert.Equal("Canadian Tire - Lebourgneuf", station.AddressInfo.Title);
             Assert.Equal("5500 Boulevard des Gradins", station.AddressInfo.AddressLine1);
             Assert.All(station.Connections, c => Assert.Equal(3, c.LevelID));
-            Assert.All(station.Connections, c => Assert.Equal(50.0, c.PowerKW));
+            Assert.All(station.Connections, c => Assert.Equal(100.0, c.PowerKW));
             Assert.Equal(2, station.Connections.Count);
             Assert.Contains(station.Connections, c => c.ConnectionTypeID == (int)StandardConnectionTypes.CHAdeMO && c.Quantity == 1);
-            Assert.Contains(station.Connections, c => c.ConnectionTypeID == (int)StandardConnectionTypes.CCSComboType1 && c.Quantity == 1); // FIXME: Should be 4
+            Assert.Contains(station.Connections, c => c.ConnectionTypeID == (int)StandardConnectionTypes.CCSComboType1 && c.Quantity == 4);
             Assert.Equal(100, station.SubmissionStatus.ID);
         }
 
