@@ -355,7 +355,8 @@ namespace OCM.API.Common.Model.OCPI
             var mappedConnectorId = mapping[standard];
 
             // distinguish between mennekes socket vs tethered
-            if (mappedConnectorId == (int)StandardConnectionTypes.MennekesType2 && format == ConnectorFormat.SOCKET)
+            // OCPI CABLE means an attached cable, which is our tethered variant. SOCKET keeps the default socket type.
+            if (mappedConnectorId == (int)StandardConnectionTypes.MennekesType2 && format == ConnectorFormat.CABLE)
             {
                 mappedConnectorId = (int)StandardConnectionTypes.MennekesType2Tethered;
             }
