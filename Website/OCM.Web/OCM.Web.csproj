@@ -19,10 +19,10 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.0" />
-    <PackageReference Include="Azure.Identity" Version="1.20.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.5" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.1" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.9" />
 
   </ItemGroup>
 
