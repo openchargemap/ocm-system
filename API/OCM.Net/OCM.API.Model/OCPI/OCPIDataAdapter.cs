@@ -57,8 +57,18 @@ namespace OCM.API.Common.Model.OCPI
         /// <returns></returns>
         public IEnumerable<OCM.API.Common.Model.ChargePoint> FromOCPI(IEnumerable<OCM.Model.OCPI.Location> source, int dataProviderId, Dictionary<string, int> operatorMappings = null, int? defaultOperatorId = null, HashSet<string> excludedLocations = null)
         {
+            if (source == null)
+            {
+                yield break;
+            }
+
             foreach (var i in source)
             {
+                if (i == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Skipping null OCPI location entry.");
+                    continue;
+                }
 
                 // Country_Code is the CPO owner country code, not the location country code
                 // Country is the specified country code for the location but we fall back to the CPO owner country code if not specified
@@ -100,8 +110,8 @@ namespace OCM.API.Common.Model.OCPI
                             AddressLine1 = i.Address,
                             Town = i.City,
                             Postcode = i.Postal_code,
-                            Latitude = double.Parse(i.Coordinates.Latitude),
-                            Longitude = double.Parse(i.Coordinates.Longitude),
+                            Latitude = double.Parse(i.Coordinates?.Latitude ?? throw new InvalidOperationException("Location coordinates latitude is missing."), CultureInfo.InvariantCulture),
+                            Longitude = double.Parse(i.Coordinates?.Longitude ?? throw new InvalidOperationException("Location coordinates longitude is missing."), CultureInfo.InvariantCulture),
                             CountryID = _coreReferenceData.Countries.FirstOrDefault(c => c.ISOCode == iso2Code)?.ID,
                             AccessComments = i.Directions?.Any() == true ? string.Join(" ", i.Directions.Select(f => f.Text).ToArray()) : null
                         },
@@ -114,7 +124,7 @@ namespace OCM.API.Common.Model.OCPI
                     {
                         evse = new List<Evse>(i.Evses);
                     }
-                    else if (i.AdditionalProperties.ContainsKey("evses"))
+                    else if (i.AdditionalProperties?.ContainsKey("evses") == true)
                     {
                         // Older OCPI has EVSE list as an additional property
                         evse = (List<OCM.Model.OCPI.Evse>)(i.AdditionalProperties["evses"]);
@@ -124,12 +134,21 @@ namespace OCM.API.Common.Model.OCPI
 
                     foreach (var e in evse)
                     {
+                        if (e == null)
+                        {
+                            continue;
+                        }
+
                         cp.StatusTypeID = MapOCMStatusTypeFromStatus(e.Status, _useLiveStatus);
 
                         if (cp.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned)
                         {
-                            foreach (var c in e.Connectors)
+                            foreach (var c in e.Connectors ?? Enumerable.Empty<Connector>())
                             {
+                                if (c == null)
+                                {
+                                    continue;
+                                }
 
                                 var connectionInfo = new ConnectionInfo
                                 {
