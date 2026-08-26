@@ -90,6 +90,7 @@ namespace OCM.Web
             // Register admin task service and background worker
             services.AddSingleton<IAdminTaskService, AdminTaskService>();
             services.AddSingleton<IImportQueueService, ImportQueueService>();
+            services.AddSingleton<IOCPICredentialService, OCPICredentialService>();
             services.AddHostedService<AdminTaskBackgroundService>();
             services.AddHostedService<ImportBackgroundService>();
             services.AddHostedService<ApprovedImportBackgroundService>();

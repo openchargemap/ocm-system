@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -30,13 +31,15 @@ namespace OCM.MVC.Controllers
         private IMemoryCache _cache;
         private IAdminTaskService _adminTaskService;
         private IImportQueueService _importQueueService;
+        private IOCPICredentialService _credentialService;
 
-        public AdminController(IHostEnvironment host, IMemoryCache memoryCache, IAdminTaskService adminTaskService, IImportQueueService importQueueService)
+        public AdminController(IHostEnvironment host, IMemoryCache memoryCache, IAdminTaskService adminTaskService, IImportQueueService importQueueService, IOCPICredentialService credentialService)
         {
             _host = host;
             _cache = memoryCache;
             _adminTaskService = adminTaskService;
             _importQueueService = importQueueService;
+            _credentialService = credentialService;
         }
 
         private void PopulateCountryList(int selectedCountryId)
@@ -257,6 +260,32 @@ namespace OCM.MVC.Controllers
             };
         }
 
+        /// <summary>
+        /// Verifies the feed against the configuration being approved and, when it works, stores the credential
+        /// in the key vault under the OCPI- secret name recorded in the stored import config.
+        /// </summary>
+        private Task<OCPICredentialProvisioningResult> ProvisionApprovalCredentialAsync(AdminDataSharingAgreementEditModel review)
+        {
+            return _credentialService.ProvisionCredentialAsync(new OCPICredentialProvisioningRequest
+            {
+                AgreementId = review.AgreementId,
+                ProviderName = review.ProviderName,
+                CredentialKey = review.CredentialKey,
+                LocationsEndpointUrl = review.LocationsEndpointUrl,
+                AuthHeaderKey = review.AuthHeaderKey,
+                AuthHeaderValuePrefix = review.AuthHeaderValuePrefix,
+                SubmittedCredential = review.SubmittedCredentials
+            });
+        }
+
+        private static void SetProvisioningWarnings(ITempDataDictionary tempData, OCPICredentialProvisioningResult provisioning)
+        {
+            if (provisioning?.Warnings?.Any() == true)
+            {
+                tempData["WarningMessage"] = string.Join(" ", provisioning.Warnings);
+            }
+        }
+
         private async Task<OCPIValidationResult> BuildValidationPreviewAsync(AdminDataSharingAgreementEditModel review)
         {
             var validator = new OCPIFeedValidator();
@@ -398,6 +427,7 @@ namespace OCM.MVC.Controllers
             }
 
             var model = BuildReviewModel(agreement, dataProvider, importConfig, validationPreview, currentImportJob: currentImportJob);
+            model.CredentialStatus = await _credentialService.GetCredentialStatusAsync(model.Review.CredentialKey);
 
             return View(model);
         }
@@ -428,10 +458,12 @@ namespace OCM.MVC.Controllers
                 validationPreview = await BuildValidationPreviewAsync(review);
             }
 
-            if (!string.IsNullOrWhiteSpace(review.AuthHeaderKey)
+            if (!review.ApproveImport
+                && !string.IsNullOrWhiteSpace(review.AuthHeaderKey)
                 && string.IsNullOrWhiteSpace(review.CredentialKey)
                 && string.IsNullOrWhiteSpace(review.SubmittedCredentials))
             {
+                // when approving, the credential is resolved and reported on below instead
                 ModelState.AddModelError(nameof(review.CredentialKey), "Provide a key vault secret name or keep the submitted credentials when the feed requires an authorization header.");
             }
 
@@ -450,6 +482,29 @@ namespace OCM.MVC.Controllers
                 ModelState.AddModelError(nameof(review.DataProviderOcpiId), "Configured OCPI data provider ID must match the linked data provider.");
             }
 
+            // Approving an import must leave behind a credential verified working against the feed. Do this once
+            // everything else has validated, and block the save when a working credential cannot be established.
+            OCPICredentialProvisioningResult credentialProvisioning = null;
+            if (ModelState.IsValid && review.ApproveImport)
+            {
+                credentialProvisioning = await ProvisionApprovalCredentialAsync(review);
+
+                if (credentialProvisioning.IsSuccess)
+                {
+                    if (!credentialProvisioning.CredentialNotRequired)
+                    {
+                        review.CredentialKey = credentialProvisioning.CredentialKey;
+                    }
+                }
+                else
+                {
+                    foreach (var error in credentialProvisioning.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 agreement.CompanyName = review.CompanyName;
@@ -459,6 +514,13 @@ namespace OCM.MVC.Controllers
                 agreement.WebsiteURL = review.WebsiteUrl;
                 agreement.DataFeedType = review.DataFeedType;
                 agreement.DataFeedURL = review.SubmittedFeedUrl;
+
+                // once the credential lives in the key vault we no longer keep the plaintext copy on the agreement
+                if (credentialProvisioning?.SecretWritten == true)
+                {
+                    review.SubmittedCredentials = null;
+                }
+
                 agreement.Credentials = review.SubmittedCredentials;
                 agreement.Comments = review.AgreementComments;
 
@@ -494,29 +556,82 @@ namespace OCM.MVC.Controllers
 
                 dataProviderManager.SetImportApprovalStatus(dataProvider.ID, review.ApproveImport);
 
-                TempData["StatusMessage"] = "OCPI review details saved.";
+                TempData["StatusMessage"] = credentialProvisioning != null
+                    ? $"OCPI review details saved. {credentialProvisioning.Summary}"
+                    : "OCPI review details saved.";
+                SetProvisioningWarnings(TempData, credentialProvisioning);
 
                 return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id = review.AgreementId });
             }
 
             var importConfigForDisplay = dataProviderManager.GetImportConfigByAgreementId(review.AgreementId);
             var viewModel = BuildReviewModel(agreement, dataProvider, importConfigForDisplay, validationPreview ?? new OCPIValidationResult(), review);
+            viewModel.CredentialStatus = await _credentialService.GetCredentialStatusAsync(review.CredentialKey);
             return View(viewModel);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ApproveDataSharingAgreement(int id)
+        public async Task<ActionResult> ApproveDataSharingAgreement(int id)
         {
+            using var agreementManager = new DataSharingAgreementManager();
             using var dataProviderManager = new DataProviderManager();
+
+            var agreement = agreementManager.GetAgreement(id);
             var dataProvider = dataProviderManager.GetDataProviderByAgreementId(id);
-            if (dataProvider != null)
+
+            if (agreement == null || dataProvider == null)
             {
-                dataProviderManager.SetImportApprovalStatus(dataProvider.ID, true);
+                TempData["ErrorMessage"] = "Save the review details before approving this import.";
+                return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
             }
 
-            return RedirectToAction("ReviewDataSharingAgreement", new { id });
+            var storedConfig = GetStoredProviderConfiguration(dataProviderManager.GetImportConfigByAgreementId(id));
+            if (storedConfig == null)
+            {
+                TempData["ErrorMessage"] = "Save a stored OCPI import configuration before approving this import.";
+                return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
+            }
+
+            var provisioning = await _credentialService.ProvisionCredentialAsync(new OCPICredentialProvisioningRequest
+            {
+                AgreementId = id,
+                ProviderName = storedConfig.ProviderName,
+                CredentialKey = storedConfig.CredentialKey,
+                LocationsEndpointUrl = storedConfig.LocationsEndpointUrl,
+                AuthHeaderKey = storedConfig.AuthHeaderKey,
+                AuthHeaderValuePrefix = storedConfig.AuthHeaderValuePrefix,
+                SubmittedCredential = agreement.Credentials
+            });
+
+            SetProvisioningWarnings(TempData, provisioning);
+
+            if (!provisioning.IsSuccess)
+            {
+                TempData["ErrorMessage"] = $"Import not approved. {string.Join(" ", provisioning.Errors)}";
+                return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
+            }
+
+            if (!provisioning.CredentialNotRequired
+                && !string.Equals(storedConfig.CredentialKey, provisioning.CredentialKey, StringComparison.Ordinal))
+            {
+                storedConfig.CredentialKey = provisioning.CredentialKey;
+                dataProviderManager.UpdateImportConfig(dataProvider.ID, JsonConvert.SerializeObject(storedConfig, Formatting.Indented));
+            }
+
+            if (provisioning.SecretWritten && !string.IsNullOrWhiteSpace(agreement.Credentials))
+            {
+                // the credential now lives in the key vault, so drop the plaintext copy from the agreement
+                agreement.Credentials = null;
+                agreementManager.UpdateAgreement(agreement);
+            }
+
+            dataProviderManager.SetImportApprovalStatus(dataProvider.ID, true);
+
+            TempData["StatusMessage"] = $"Import approved. {provisioning.Summary}";
+
+            return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
         }
 
         [Authorize(Roles = "Admin")]

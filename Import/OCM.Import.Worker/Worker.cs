@@ -62,6 +62,26 @@ namespace OCM.Import.Worker
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
 
+        /// <summary>
+        /// Re-reads all configuration sources, including the key vault, so credentials added since startup are visible.
+        /// </summary>
+        private void RefreshConfiguration()
+        {
+            if (_config is not IConfigurationRoot configurationRoot)
+            {
+                return;
+            }
+
+            try
+            {
+                configurationRoot.Reload();
+            }
+            catch (Exception exp)
+            {
+                _logger.LogWarning(exp, "Could not refresh configuration, continuing with the values loaded at startup.");
+            }
+        }
+
         private async Task PerformTasks(object? state)
         {
             if (_isImportInProgress)
@@ -75,6 +95,10 @@ namespace OCM.Import.Worker
             try
             {
                 _logger.LogInformation("Checking for imports due..");
+
+                // Credentials for newly approved imports are created in the key vault after this process started,
+                // so refresh configuration each cycle to pick them up without a restart.
+                RefreshConfiguration();
 
                 // Clean up old failed import records (older than threshold)
                 CleanupFailedImports();

@@ -4,6 +4,8 @@
     ViewBag.Title = "Review Data Sharing Agreement";
     var statusMessage = TempData["StatusMessage"] as string;
     var errorMessage = TempData["ErrorMessage"] as string;
+    var warningMessage = TempData["WarningMessage"] as string;
+    var credentialStatus = Model.CredentialStatus;
     var currentImportJob = Model.CurrentImportJob;
     var importLogText = currentImportJob != null && currentImportJob.Logs.Any()
         ? string.Join(Environment.NewLine, currentImportJob.Logs.Select(log => $"[{log.TimestampUtc:HH:mm:ss}] {log.Level}: {log.Message}"))
@@ -20,6 +22,11 @@
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(warningMessage))
+{
+    <div class="alert alert-warning">@warningMessage</div>
 }
 
 @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
@@ -84,6 +91,7 @@
                             <div class="checkbox" style="margin-top:30px;">
                                 <label>
                                     @Html.CheckBoxFor(m => m.Review.ApproveImport) Approve import after saving
+                                <span class="help-block">On approval the feed is checked live and the credential is stored in the key vault automatically.</span>
                                 </label>
                             </div>
                         </div>
@@ -97,7 +105,7 @@
                         <label>Submitted Credentials</label>
                         @Html.TextBoxFor(m => m.Review.SubmittedCredentials, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Review.SubmittedCredentials)
-                        <span class="help-block">Keep this only if you want the review step to validate with the submitted secret value.</span>
+                        <span class="help-block">Used to validate the feed and to seed the key vault secret on approval. It is cleared from the agreement record once stored in the vault.</span>
                     </div>
                     <div class="form-group">
                         <label>Agreement Comment</label>
@@ -272,6 +280,68 @@
                 else
                 {
                     <div class="alert alert-warning">A linked data provider will be created when the review is saved.</div>
+                }
+            </div>
+        </div>
+
+        <div class="panel panel-default mb-3">
+            <div class="panel-heading"><strong>Key Vault Credential</strong></div>
+            <div class="panel-body">
+                @if (credentialStatus == null || !credentialStatus.VaultAvailable)
+                {
+                    <div class="alert alert-warning mb-0">
+                        The key vault is not configured for this environment, so credentials cannot be created automatically.
+                    </div>
+                }
+                else if (string.IsNullOrWhiteSpace(credentialStatus.CredentialKey))
+                {
+                    <p class="text-muted">
+                        No secret name is set yet. A name of the form <code>OCPI-PROVIDER-NAME</code> is derived and created
+                        automatically when the import is approved.
+                    </p>
+                }
+                else
+                {
+                    <dl class="dl-horizontal">
+                        <dt>Secret</dt>
+                        <dd><code>@credentialStatus.CredentialKey</code></dd>
+                        <dt>Status</dt>
+                        <dd>
+                            @if (!string.IsNullOrWhiteSpace(credentialStatus.Error))
+                            {
+                                <span class="label label-danger">Error</span> <span class="text-danger">@credentialStatus.Error</span>
+                            }
+                            else if (credentialStatus.Exists && credentialStatus.IsEnabled)
+                            {
+                                <span class="label label-success">Stored</span>
+                            }
+                            else if (credentialStatus.Exists)
+                            {
+                                <span class="label label-warning">Stored but disabled</span>
+                            }
+                            else
+                            {
+                                <span class="label label-default">Not created yet</span>
+                            }
+                        </dd>
+                        @if (credentialStatus.UpdatedOn.HasValue)
+                        {
+                            <dt>Updated</dt>
+                            <dd>@credentialStatus.UpdatedOn.Value.UtcDateTime.ToString("yyyy-MM-dd HH:mm")</dd>
+                        }
+                    </dl>
+                }
+
+                @if (!Model.IsApproved && Model.DataProvider != null)
+                {
+                    using (Html.BeginForm("ApproveDataSharingAgreement", "Admin", new { id = Model.Agreement.ID }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success">Verify Feed and Approve Import</button>
+                        <span class="help-block">
+                            Checks the feed with the stored configuration, creates or reuses the key vault secret, then approves the import.
+                        </span>
+                    }
                 }
             </div>
         </div>

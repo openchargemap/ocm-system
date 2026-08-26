@@ -98,6 +98,23 @@ namespace OCM.API.Common
             dataModel.SaveChanges();
         }
 
+        /// <summary>
+        /// Updates only the stored import configuration for a data provider, leaving all other details untouched.
+        /// </summary>
+        public bool UpdateImportConfig(int dataProviderId, string ocpiConfigJson)
+        {
+            var dataProvider = dataModel.DataProviders.FirstOrDefault(dp => dp.Id == dataProviderId);
+            if (dataProvider == null)
+            {
+                return false;
+            }
+
+            dataProvider.ImportConfig = ocpiConfigJson;
+            dataModel.SaveChanges();
+
+            return true;
+        }
+
         public Model.DataProvider UpdateOCPIDataProvider(int dataProviderId, string title, string websiteUrl, string license, bool isOpenDataLicensed, string ocpiConfigJson, int? dataProviderStatusTypeId, int updatedByUserId)
         {
             var dataProvider = dataModel.DataProviders.FirstOrDefault(dp => dp.Id == dataProviderId);

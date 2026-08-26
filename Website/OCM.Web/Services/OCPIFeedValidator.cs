@@ -26,7 +26,25 @@ namespace OCM.Web.Services
         /// <summary>
         /// Fetches and validates an OCPI endpoint, discovering the correct auth/header/url settings as needed.
         /// </summary>
-        public async Task<OCPIValidationResult> ValidateFeedAsync(string locationsEndpointUrl, string authHeaderKey = null, string authHeaderValue = null)
+        public Task<OCPIValidationResult> ValidateFeedAsync(string locationsEndpointUrl, string authHeaderKey = null, string authHeaderValue = null)
+        {
+            return RunDiscoveryAsync(locationsEndpointUrl, BuildAuthOptions(authHeaderKey, authHeaderValue));
+        }
+
+        /// <summary>
+        /// Verifies a feed using exactly the header an import run would send for a stored credential, with no
+        /// fallback attempts. Use this to confirm that a stored configuration plus vault secret really works.
+        /// </summary>
+        /// <param name="locationsEndpointUrl">The configured locations endpoint.</param>
+        /// <param name="authHeaderKey">The configured auth header key, defaults to Authorization.</param>
+        /// <param name="authHeaderValuePrefix">The configured prefix applied to unprefixed credentials.</param>
+        /// <param name="credentialValue">The raw credential value as stored in the vault, or null for an open feed.</param>
+        public Task<OCPIValidationResult> VerifyFeedWithStoredCredentialAsync(string locationsEndpointUrl, string authHeaderKey, string authHeaderValuePrefix, string credentialValue)
+        {
+            return RunDiscoveryAsync(locationsEndpointUrl, new[] { BuildStoredCredentialAuthOption(authHeaderKey, authHeaderValuePrefix, credentialValue) });
+        }
+
+        private async Task<OCPIValidationResult> RunDiscoveryAsync(string locationsEndpointUrl, IEnumerable<AuthOption> authOptions)
         {
             var result = new OCPIValidationResult();
 
@@ -46,7 +64,7 @@ namespace OCM.Web.Services
                 using var httpClient = CreateHttpClient();
 
                 DiscoveryResult discoveryResult = null;
-                foreach (var authOption in BuildAuthOptions(authHeaderKey, authHeaderValue))
+                foreach (var authOption in authOptions)
                 {
                     discoveryResult = await DiscoverFeedAsync(httpClient, locationsEndpointUrl, authOption);
                     result.DiscoveryLog.AddRange(discoveryResult.Log);
@@ -441,6 +459,32 @@ namespace OCM.Web.Services
             }
 
             return (true, content);
+        }
+
+        /// <summary>
+        /// Builds the single auth option matching what <see cref="OCM.Import.Providers.OCPI.ImportProvider_OCPI"/>
+        /// will send at import time, so verification exercises the real request rather than a discovered variant.
+        /// </summary>
+        private static AuthOption BuildStoredCredentialAuthOption(string authHeaderKey, string authHeaderValuePrefix, string credentialValue)
+        {
+            if (string.IsNullOrWhiteSpace(credentialValue))
+            {
+                return new AuthOption(null, null, null, "no authorization header", "(none)");
+            }
+
+            var headerKey = string.IsNullOrWhiteSpace(authHeaderKey) ? "Authorization" : authHeaderKey.Trim();
+            var headerValue = OCM.Import.Providers.OCPI.ImportProvider_OCPI.ComposeAuthHeaderValue(headerKey, authHeaderValuePrefix, credentialValue.Trim());
+
+            var displayPrefix = headerValue.Length > credentialValue.Trim().Length
+                ? headerValue.Substring(0, headerValue.Length - credentialValue.Trim().Length)
+                : string.Empty;
+
+            return new AuthOption(
+                headerKey,
+                headerValue,
+                authHeaderValuePrefix,
+                $"the stored credential exactly as an import will send it ({headerKey} header)",
+                $"{headerKey}: {displayPrefix}<credential>");
         }
 
         private IEnumerable<AuthOption> BuildAuthOptions(string authHeaderKey, string authHeaderValue)

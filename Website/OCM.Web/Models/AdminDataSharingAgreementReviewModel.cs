@@ -23,6 +23,11 @@ namespace OCM.Web.Models
         public List<DataProviderStatusType> AvailableDataProviderStatuses { get; set; } = new List<DataProviderStatusType>();
         public List<OperatorInfo> AvailableOperators { get; set; } = new List<OperatorInfo>();
         public ImportJobViewModel CurrentImportJob { get; set; }
+
+        /// <summary>
+        /// Current state of this import's credential in the secrets vault.
+        /// </summary>
+        public Services.OCPICredentialStatus CredentialStatus { get; set; }
     }
 
     public class AdminDataSharingAgreementEditModel

@@ -49,22 +49,37 @@ namespace OCM.Import.Providers.OCPI
         public string AuthHeaderValue
         {
             get { return _authHeaderValue; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value) && string.Equals(_authHeaderKey, "Authorization", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If the value doesn't already have a recognized auth prefix, prepend "Token "
-                    if (!value.StartsWith("Token ", StringComparison.OrdinalIgnoreCase)
-                        && !value.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
-                        && !value.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _authHeaderValue = (_authHeaderValuePrefix ?? string.Empty) + value;
-                        return;
-                    }
-                }
+            set { _authHeaderValue = ComposeAuthHeaderValue(_authHeaderKey, _authHeaderValuePrefix, value); }
+        }
 
-                _authHeaderValue = value;
+        /// <summary>
+        /// Builds the authorization header value this provider will send for a given stored credential.
+        /// Shared so that credential verification can send exactly the same header as a real import.
+        /// </summary>
+        /// <param name="authHeaderKey">Header name, defaults to Authorization when not supplied.</param>
+        /// <param name="authHeaderValuePrefix">Prefix applied to unprefixed credentials, e.g. "Token ".</param>
+        /// <param name="credentialValue">The raw credential as stored in the secrets vault.</param>
+        public static string ComposeAuthHeaderValue(string authHeaderKey, string authHeaderValuePrefix, string credentialValue)
+        {
+            if (string.IsNullOrEmpty(credentialValue))
+            {
+                return credentialValue;
             }
+
+            var headerKey = string.IsNullOrWhiteSpace(authHeaderKey) ? "Authorization" : authHeaderKey;
+
+            if (string.Equals(headerKey, "Authorization", StringComparison.OrdinalIgnoreCase))
+            {
+                // If the value doesn't already have a recognized auth prefix, prepend the configured prefix
+                if (!credentialValue.StartsWith("Token ", StringComparison.OrdinalIgnoreCase)
+                    && !credentialValue.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+                    && !credentialValue.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
+                {
+                    return (authHeaderValuePrefix ?? string.Empty) + credentialValue;
+                }
+            }
+
+            return credentialValue;
         }
 
         public string AuthHeaderKey { set { _authHeaderKey = value; } }
