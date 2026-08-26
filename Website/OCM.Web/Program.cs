@@ -1,9 +1,9 @@
+using System;
 using Azure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using OCM.Import;
-using System;
 
 namespace OCM.Web
 {
@@ -27,12 +27,19 @@ namespace OCM.Web
                         && !string.IsNullOrWhiteSpace(importSettings.KeyVaultClientId)
                         && !string.IsNullOrWhiteSpace(importSettings.KeyVaultSecret))
                     {
-                        configurationBuilder.AddAzureKeyVault(
-                            new Uri(importSettings.KeyVaultUri),
-                            new ClientSecretCredential(
-                                importSettings.KeyVaultTenantId,
-                                importSettings.KeyVaultClientId,
-                                importSettings.KeyVaultSecret));
+                        try
+                        {
+                            configurationBuilder.AddAzureKeyVault(
+                                new Uri(importSettings.KeyVaultUri),
+                                new ClientSecretCredential(
+                                    importSettings.KeyVaultTenantId,
+                                    importSettings.KeyVaultClientId,
+                                    importSettings.KeyVaultSecret));
+                        }
+                        catch (Exception)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Exception adding keyvault. Azure credential may have expired");
+                        }
                     }
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
