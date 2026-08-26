@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common.Model;
+using OCM.API.Common.Model.OCPI;
 using OCM.Import.Providers.OCPI;
+using OCM.Model.OCPI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -903,6 +905,23 @@ namespace OCM.API.Tests.ImportTests
 
             // Verify all POIs have correct operator ID
             Assert.True(poiResults.All(p => p.OperatorID == 3899));
+        }
+
+        /// <summary>
+        /// OCPI ConnectorFormat.SOCKET means the EV user brings their own cable, so it maps to
+        /// our socketed Type 2. ConnectorFormat.CABLE means an attached cable, i.e. tethered.
+        /// Other standards are unaffected by format.
+        /// </summary>
+        [Theory]
+        [InlineData(ConnectorStandard.IEC_62196_T2, ConnectorFormat.SOCKET, (int)StandardConnectionTypes.MennekesType2)]
+        [InlineData(ConnectorStandard.IEC_62196_T2, ConnectorFormat.CABLE, (int)StandardConnectionTypes.MennekesType2Tethered)]
+        [InlineData(ConnectorStandard.IEC_62196_T2_COMBO, ConnectorFormat.CABLE, (int)StandardConnectionTypes.CCSComboType2)]
+        [InlineData(ConnectorStandard.IEC_62196_T2_COMBO, ConnectorFormat.SOCKET, (int)StandardConnectionTypes.CCSComboType2)]
+        [InlineData(ConnectorStandard.IEC_62196_T1, ConnectorFormat.CABLE, (int)StandardConnectionTypes.J1772)]
+        [InlineData(ConnectorStandard.CHADEMO, ConnectorFormat.CABLE, (int)StandardConnectionTypes.CHAdeMO)]
+        public void MapsConnectorFormatToCorrectType2Variant(ConnectorStandard standard, ConnectorFormat format, int expected)
+        {
+            Assert.Equal(expected, OCPIDataAdapter.MapOCMConnectionTypeFromStandard(standard, format));
         }
     }
 }
