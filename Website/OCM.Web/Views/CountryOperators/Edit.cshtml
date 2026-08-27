@@ -5,13 +5,14 @@
 @{
     ViewBag.Title = Model.ID > 1 ? "Edit Country Operator" : "Add Country Operator";
     var possibleDuplicates = ViewBag.PotentialDuplicates as IEnumerable<OCM.API.Common.Model.OperatorInfo>;
+    var isEditing = Model.ID > 1;
 }
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-lg-10 col-xl-8">
             <h2 class="mb-2">@ViewBag.Title</h2>
-            <p class="text-muted mb-4">Add or update the operator name shown for charging locations in this country.</p>
+            <p class="text-muted mb-4">@(isEditing ? "Update this operator’s details for the selected country." : "Create an operator label for charging locations in the selected country.")</p>
 
             @if (TempData["StatusMessage"] != null)
             {
@@ -119,7 +120,7 @@
                 </div>
 
                 <div class="d-flex flex-wrap mb-4">
-                    <input type="submit" value="Save operator" class="btn btn-primary mr-2 mb-2" />
+                    <input type="submit" value="@(isEditing ? "Save changes" : "Create operator")" class="btn btn-primary mr-2 mb-2" />
                     <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mb-2">Cancel</a>
                 </div>
             }
