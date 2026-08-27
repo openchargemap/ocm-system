@@ -9,7 +9,7 @@ using OCM.Web.Models;
 
 namespace OCM.MVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "StandardUser")]
     public class CountryOperatorsController : BaseController
     {
         private User GetCurrentUser()
