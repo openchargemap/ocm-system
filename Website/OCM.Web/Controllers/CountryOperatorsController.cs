@@ -115,6 +115,7 @@ namespace OCM.MVC.Controllers
                     FaultReportEmail = model.FaultReportEmail
                 }, model.ConfirmWebsiteMatch);
 
+                TempData["StatusMessage"] = $"Saved operator {saved.Title}.";
                 return RedirectToAction(nameof(Edit), new { id = saved.ID, countryId = model.CountryID });
             }
             catch (InvalidOperationException ex)

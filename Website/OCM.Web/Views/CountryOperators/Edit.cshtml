@@ -13,6 +13,11 @@
             <h2 class="mb-2">@ViewBag.Title</h2>
             <p class="text-muted mb-4">Add or update the operator name shown for charging locations in this country.</p>
 
+            @if (TempData["StatusMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["StatusMessage"]</div>
+            }
+
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
