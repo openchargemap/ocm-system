@@ -44,7 +44,7 @@ namespace OCM.API.Common
         public bool HasWebsiteMatch(string websiteUrl, int? excludedId = null)
         {
             var websiteHost = GetWebsiteHost(websiteUrl);
-            return !string.IsNullOrEmpty(websiteHost) && dataModel.Operators.Any(o =>
+            return !string.IsNullOrEmpty(websiteHost) && dataModel.Operators.AsEnumerable().Any(o =>
                 (!excludedId.HasValue || o.Id != excludedId.Value) && GetWebsiteHost(o.WebsiteUrl) == websiteHost);
         }
 
@@ -75,11 +75,11 @@ namespace OCM.API.Common
             }
             var title = $"{name} ({country.Isocode.ToUpperInvariant()})";
             var existing = update.ID > 1 ? dataModel.Operators.FirstOrDefault(o => o.Id == update.ID) : null;
-            var duplicateTitle = dataModel.Operators.Any(o => (existing == null || o.Id != existing.Id) && NormalizeTitle(o.Title) == NormalizeTitle(title));
+            var duplicateTitle = dataModel.Operators.AsEnumerable().Any(o => (existing == null || o.Id != existing.Id) && NormalizeTitle(o.Title) == NormalizeTitle(title));
             if (duplicateTitle) throw new InvalidOperationException("An operator with this title already exists.");
 
             var websiteHost = GetWebsiteHost(update.WebsiteURL);
-            var websiteMatch = !string.IsNullOrEmpty(websiteHost) && dataModel.Operators.Any(o => (existing == null || o.Id != existing.Id) && GetWebsiteHost(o.WebsiteUrl) == websiteHost);
+            var websiteMatch = !string.IsNullOrEmpty(websiteHost) && dataModel.Operators.AsEnumerable().Any(o => (existing == null || o.Id != existing.Id) && GetWebsiteHost(o.WebsiteUrl) == websiteHost);
             if (websiteMatch && !confirmWebsiteMatch) throw new InvalidOperationException("An operator with the same website already exists. Confirm this is not a duplicate.");
 
             var isUpdate = existing != null;
