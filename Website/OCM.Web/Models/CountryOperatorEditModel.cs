@@ -7,6 +7,7 @@ namespace OCM.Web.Models
         public int ID { get; set; }
 
         [Required]
+        [Display(Name = "Country")]
         public int CountryID { get; set; }
 
         [Required, StringLength(200)]
@@ -14,25 +15,33 @@ namespace OCM.Web.Models
         public string OperatorName { get; set; }
 
         [DataType(DataType.Url)]
+        [Display(Name = "Website")]
         public string WebsiteURL { get; set; }
 
+        [Display(Name = "Notes")]
         public string Comments { get; set; }
 
         [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Primary phone")]
         public string PhonePrimaryContact { get; set; }
 
         [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Secondary phone")]
         public string PhoneSecondaryContact { get; set; }
 
         [DataType(DataType.Url)]
+        [Display(Name = "Booking URL")]
         public string BookingURL { get; set; }
 
         [DataType(DataType.EmailAddress)]
+        [Display(Name = "Contact email")]
         public string ContactEmail { get; set; }
 
         [DataType(DataType.EmailAddress)]
+        [Display(Name = "Fault-report email")]
         public string FaultReportEmail { get; set; }
 
+        [Display(Name = "Confirm website match")]
         public bool ConfirmWebsiteMatch { get; set; }
     }
 }

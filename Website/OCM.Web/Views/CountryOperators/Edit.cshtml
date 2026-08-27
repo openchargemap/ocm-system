@@ -19,8 +19,8 @@
                 @Html.ValidationSummary(true, "Please correct the following:", new { @class = "alert alert-danger" })
                 @Html.HiddenFor(model => model.ID)
 
-                <fieldset class="card mb-4">
-                    <legend class="card-header h5 mb-0">Identity</legend>
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Identity</div>
                     <div class="card-body">
                         <div class="form-group">
                             @Html.LabelFor(model => model.CountryID)
@@ -34,10 +34,10 @@
                             @Html.ValidationMessageFor(model => model.OperatorName)
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <fieldset class="card mb-4">
-                    <legend class="card-header h5 mb-0">Public links</legend>
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Public links</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 form-group">
@@ -52,10 +52,10 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <fieldset class="card mb-4">
-                    <legend class="card-header h5 mb-0">Contact details</legend>
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Contact details</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 form-group">
@@ -80,10 +80,10 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <fieldset class="card mb-4">
-                    <legend class="card-header h5 mb-0">Notes and validation</legend>
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Notes and validation</div>
                     <div class="card-body">
                         <div class="form-group">
                             @Html.LabelFor(model => model.Comments)
@@ -108,7 +108,7 @@
                             @Html.LabelFor(model => model.ConfirmWebsiteMatch, "Confirm this is not a duplicate when the website matches an existing operator", new { @class = "custom-control-label" })
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
                 <div class="d-flex flex-wrap mb-4">
                     <input type="submit" value="Save operator" class="btn btn-primary mr-2 mb-2" />
