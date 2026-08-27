@@ -3,12 +3,12 @@ using Xunit;
 
 namespace OCM.API.Tests
 {
-    public class OperatorInfoManagerTests
+    public class CountryOperatorTests
     {
         [Theory]
         [InlineData(" Example Charge (ES) ", "examplechargees")]
         [InlineData("Example-Charge", "examplecharge")]
-        public void NormalizeTitle_is_case_and_punctuation_insensitive(string title, string expected)
+        public void Duplicate_title_normalization_is_case_and_punctuation_insensitive(string title, string expected)
         {
             Assert.Equal(expected, OperatorInfoManager.NormalizeTitle(title));
         }
@@ -16,9 +16,10 @@ namespace OCM.API.Tests
         [Theory]
         [InlineData("https://www.example.com/path", "example.com")]
         [InlineData("example.com", "example.com")]
-        public void GetWebsiteHost_returns_normalized_host(string url, string expected)
+        public void Duplicate_website_matching_uses_the_normalized_host(string url, string expected)
         {
             Assert.Equal(expected, OperatorInfoManager.GetWebsiteHost(url));
         }
+
     }
 }
