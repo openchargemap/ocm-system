@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             @Html.LabelFor(model => model.CountryID)
-                            @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "form-control" })
+                            @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" })
                             @Html.ValidationMessageFor(model => model.CountryID)
                             <small class="form-text text-muted">The country code is added to the saved operator title automatically.</small>
                         </div>
