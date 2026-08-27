@@ -103,10 +103,13 @@
                             </div>
                         }
 
-                        <div class="custom-control custom-checkbox">
-                            @Html.CheckBoxFor(model => model.ConfirmWebsiteMatch, new { @class = "custom-control-input" })
-                            @Html.LabelFor(model => model.ConfirmWebsiteMatch, "Confirm this is not a duplicate when the website matches an existing operator", new { @class = "custom-control-label" })
-                        </div>
+                        @if (ViewBag.HasWebsiteMatch == true)
+                        {
+                            <div class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(model => model.ConfirmWebsiteMatch, new { @class = "custom-control-input" })
+                                @Html.LabelFor(model => model.ConfirmWebsiteMatch, "I reviewed the website match and this is a separate operator", new { @class = "custom-control-label" })
+                            </div>
+                        }
                     </div>
                 </div>
 

@@ -41,6 +41,13 @@ namespace OCM.API.Common
                  SimilarTitle(o.Title, title))).ToList();
         }
 
+        public bool HasWebsiteMatch(string websiteUrl, int? excludedId = null)
+        {
+            var websiteHost = GetWebsiteHost(websiteUrl);
+            return !string.IsNullOrEmpty(websiteHost) && dataModel.Operators.Any(o =>
+                (!excludedId.HasValue || o.Id != excludedId.Value) && GetWebsiteHost(o.WebsiteUrl) == websiteHost);
+        }
+
         private static string GetEmailDomain(string email)
         {
             if (string.IsNullOrWhiteSpace(email)) return null;

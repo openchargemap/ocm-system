@@ -44,6 +44,9 @@ namespace OCM.MVC.Controllers
                 model.WebsiteURL,
                 model.ContactEmail,
                 model.ID > 1 ? model.ID : (int?)null);
+            ViewBag.HasWebsiteMatch = manager.HasWebsiteMatch(
+                model.WebsiteURL,
+                model.ID > 1 ? model.ID : (int?)null);
         }
 
         [HttpGet]
