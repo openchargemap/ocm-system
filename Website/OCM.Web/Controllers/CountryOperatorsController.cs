@@ -21,7 +21,10 @@ namespace OCM.MVC.Controllers
         {
             if (user == null) return new List<Country>();
 
-            return new ReferenceDataManager().GetCountries(false)
+            var countries = new ReferenceDataManager().GetCountries(false);
+            if (UserManager.IsUserAdministrator(user)) return countries;
+
+            return countries
                 .Where(c => UserManager.HasUserPermission(user, c.ID, PermissionLevel.Editor))
                 .OrderBy(c => c.Title)
                 .ToList();
