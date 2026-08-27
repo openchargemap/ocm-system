@@ -4,71 +4,117 @@
 
 @{
     ViewBag.Title = Model.ID > 1 ? "Edit Country Operator" : "Add Country Operator";
+    var possibleDuplicates = ViewBag.PotentialDuplicates as IEnumerable<OCM.API.Common.Model.OperatorInfo>;
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <h2 class="mb-2">@ViewBag.Title</h2>
+            <p class="text-muted mb-4">Maintain the operator label used for charging locations in the selected country.</p>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
-    @Html.HiddenFor(model => model.ID)
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "Please correct the following:", new { @class = "alert alert-danger" })
+                @Html.HiddenFor(model => model.ID)
 
-    @if (ViewBag.PotentialDuplicates != null && ((IEnumerable<OCM.API.Common.Model.OperatorInfo>)ViewBag.PotentialDuplicates).Any())
-    {
-        <div class="alert alert-warning">
-            <strong>Possible existing operators</strong>
-            <ul>
-                @foreach (var duplicate in (IEnumerable<OCM.API.Common.Model.OperatorInfo>)ViewBag.PotentialDuplicates)
-                {
-                    <li>@duplicate.Title</li>
-                }
-            </ul>
+                <fieldset class="card mb-4">
+                    <legend class="card-header h5 mb-0">Identity</legend>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CountryID)
+                            @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CountryID)
+                            <small class="form-text text-muted">The country code is added to the saved operator title automatically.</small>
+                        </div>
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(model => model.OperatorName)
+                            @Html.EditorFor(model => model.OperatorName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.OperatorName)
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="card mb-4">
+                    <legend class="card-header h5 mb-0">Public links</legend>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.WebsiteURL)
+                                @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.WebsiteURL)
+                            </div>
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(model => model.BookingURL)
+                                @Html.EditorFor(model => model.BookingURL, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BookingURL)
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="card mb-4">
+                    <legend class="card-header h5 mb-0">Contact details</legend>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.PhonePrimaryContact)
+                                @Html.EditorFor(model => model.PhonePrimaryContact, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(model => model.PhoneSecondaryContact)
+                                @Html.EditorFor(model => model.PhoneSecondaryContact, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.ContactEmail)
+                                @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ContactEmail)
+                            </div>
+                            <div class="col-md-6 form-group mb-0">
+                                @Html.LabelFor(model => model.FaultReportEmail)
+                                @Html.EditorFor(model => model.FaultReportEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.FaultReportEmail)
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="card mb-4">
+                    <legend class="card-header h5 mb-0">Notes and validation</legend>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Comments)
+                            @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", rows = 4 })
+                        </div>
+
+                        @if (possibleDuplicates != null && possibleDuplicates.Any())
+                        {
+                            <div class="alert alert-warning mb-3">
+                                <strong>Possible existing operators</strong>
+                                <ul class="mb-0">
+                                    @foreach (var duplicate in possibleDuplicates)
+                                    {
+                                        <li>@duplicate.Title</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <div class="custom-control custom-checkbox">
+                            @Html.CheckBoxFor(model => model.ConfirmWebsiteMatch, new { @class = "custom-control-input" })
+                            @Html.LabelFor(model => model.ConfirmWebsiteMatch, "Confirm this is not a duplicate when the website matches an existing operator", new { @class = "custom-control-label" })
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="d-flex flex-wrap mb-4">
+                    <input type="submit" value="Save operator" class="btn btn-primary mr-2 mb-2" />
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mb-2">Cancel</a>
+                </div>
+            }
         </div>
-    }
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.CountryID)
-        @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.CountryID)
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.OperatorName)
-        @Html.EditorFor(model => model.OperatorName, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.OperatorName)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.WebsiteURL)
-        @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.WebsiteURL)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Comments)
-        @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.PhonePrimaryContact)
-        @Html.EditorFor(model => model.PhonePrimaryContact, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.PhoneSecondaryContact)
-        @Html.EditorFor(model => model.PhoneSecondaryContact, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.BookingURL)
-        @Html.EditorFor(model => model.BookingURL, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.ContactEmail)
-        @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.FaultReportEmail)
-        @Html.EditorFor(model => model.FaultReportEmail, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="checkbox">
-        @Html.CheckBoxFor(model => model.ConfirmWebsiteMatch)
-        @Html.LabelFor(model => model.ConfirmWebsiteMatch, "Confirm this is not a duplicate when the website matches an existing operator")
-    </div>
-    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
-}
+</div>
