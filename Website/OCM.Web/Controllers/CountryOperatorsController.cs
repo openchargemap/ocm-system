@@ -40,16 +40,18 @@ namespace OCM.MVC.Controllers
             ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countries, "ID", "Title", selectedCountryId);
         }
 
-        private void PopulateDuplicateWarnings(OperatorInfoManager manager, CountryOperatorEditModel model)
+        private void PopulateDuplicateWarnings(OperatorInfoManager manager, IEnumerable<Country> countries, CountryOperatorEditModel model)
         {
-            ViewBag.PotentialDuplicates = manager.FindPotentialDuplicates(
+            var matches = manager.FindPotentialDuplicates(
                 model.OperatorName,
+                countries.FirstOrDefault(c => c.ID == model.CountryID)?.ISOCode,
                 model.WebsiteURL,
                 model.ContactEmail,
                 model.ID > 1 ? model.ID : (int?)null);
-            ViewBag.HasWebsiteMatch = manager.HasWebsiteMatch(
-                model.WebsiteURL,
-                model.ID > 1 ? model.ID : (int?)null);
+
+            ViewBag.DuplicateTitleMatch = matches.FirstOrDefault(m => m.MatchType == OperatorMatchType.DuplicateTitle);
+            ViewBag.PossibleDuplicates = matches.Where(m => m.RequiresConfirmation).ToList();
+            ViewBag.OtherCountryMatches = matches.Where(m => m.MatchType == OperatorMatchType.OtherCountry).ToList();
         }
 
         [HttpGet]
@@ -73,7 +75,6 @@ namespace OCM.MVC.Controllers
                 model.Comments = operatorInfo.Comments;
                 model.PhonePrimaryContact = operatorInfo.PhonePrimaryContact;
                 model.PhoneSecondaryContact = operatorInfo.PhoneSecondaryContact;
-                model.BookingURL = operatorInfo.BookingURL;
                 model.ContactEmail = operatorInfo.ContactEmail;
                 model.FaultReportEmail = operatorInfo.FaultReportEmail;
             }
@@ -90,7 +91,7 @@ namespace OCM.MVC.Controllers
             if (countries.Count == 0 || !CanEditCountry(user, model.CountryID)) return Forbid();
 
             PopulateCountries(countries, model.CountryID);
-            PopulateDuplicateWarnings(new OperatorInfoManager(), model);
+            PopulateDuplicateWarnings(new OperatorInfoManager(), countries, model);
             if (!ModelState.IsValid) return View(model);
 
             if (model.ID > 1)
@@ -104,7 +105,6 @@ namespace OCM.MVC.Controllers
             try
             {
                 var manager = new OperatorInfoManager();
-                PopulateDuplicateWarnings(manager, model);
                 var saved = manager.SaveCountryOperator((int)UserID, model.CountryID, new OperatorInfo
                 {
                     ID = model.ID,
@@ -113,10 +113,9 @@ namespace OCM.MVC.Controllers
                     Comments = model.Comments,
                     PhonePrimaryContact = model.PhonePrimaryContact,
                     PhoneSecondaryContact = model.PhoneSecondaryContact,
-                    BookingURL = model.BookingURL,
                     ContactEmail = model.ContactEmail,
                     FaultReportEmail = model.FaultReportEmail
-                }, model.ConfirmWebsiteMatch);
+                }, model.ConfirmNotDuplicate);
 
                 TempData["StatusMessage"] = model.ID > 1
                     ? $"Updated operator {saved.Title}."
