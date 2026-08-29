@@ -1,0 +1,374 @@
+@model OCM.Web.Models.OperatorProposalEditModel
+
+@{
+    var isCorrection = Model.ProposalType == OCM.API.Common.Model.OperatorProposalType.Correction;
+    var restrictProposalScopeToGlobal = ViewBag.RestrictProposalScopeToGlobal == true;
+    ViewBag.Title = isCorrection ? "Suggest a Correction" : "Propose a New Operator";
+    var operatorSearchHasError = ViewData.ModelState[nameof(Model.OperatorID)]?.Errors.Any() == true;
+    var countryHasError = ViewData.ModelState[nameof(Model.CountryID)]?.Errors.Any() == true;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <h2 class="mb-2">@(isCorrection ? "Suggest a Correction" : "Propose a New Operator")</h2>
+            <p class="text-muted mb-4">Your submission will be reviewed before it changes public data.</p>
+
+            @using (Html.BeginForm(isCorrection ? "Edit" : "Add", "OperatorProposals", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "Please correct the following:", new { @class = "alert alert-danger" })
+
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Operator proposal</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Scope, "Proposal scope (required)")
+                            @if (restrictProposalScopeToGlobal)
+                            {
+                                <div class="form-control-plaintext">Global / multinational</div>
+                                @Html.HiddenFor(m => m.Scope, new { id = "proposal-scope" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(m => m.Scope, (SelectList)ViewBag.ScopeList, new { @class = "custom-select", id = "proposal-scope" })
+                            }
+                            @Html.ValidationMessageFor(m => m.Scope, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">@(restrictProposalScopeToGlobal ? "Country editors can submit multinational operators for admin review." : "Choose whether this operator applies to one country or is global/multinational.")</small>
+                        </div>
+                        <div class="form-group" id="country-field">
+                            @Html.LabelFor(m => m.CountryID, "Country (required)")
+                            @Html.DropDownListFor(m => m.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" + (countryHasError ? " is-invalid" : "") })
+                            @Html.ValidationMessageFor(m => m.CountryID, "", new { @class = "text-danger" })
+                            <div id="country-search-error" class="text-danger mt-2" style="display:none;"></div>
+                            <small class="form-text text-muted">The country code is added to country-specific operator titles automatically.</small>
+                        </div>
+                        @Html.HiddenFor(m => m.ProposalType, new { id = "proposal-type" })
+                        <div class="form-group" id="operator-field">
+                            @Html.LabelFor(m => m.OperatorID, "Operator name (required)")
+                            <div class="input-group">
+                                <input type="text" id="operator-search" class="form-control@(operatorSearchHasError ? " is-invalid" : "")" placeholder="Search by operator name" autocomplete="off" value="@(ViewBag.SelectedOperatorTitle ?? "")" />
+                                <div class="input-group-append">
+                                    <button type="button" id="operator-search-button" class="btn btn-outline-secondary">Search</button>
+                                </div>
+                            </div>
+                            @Html.HiddenFor(m => m.OperatorID)
+                            <div id="operator-search-results" class="list-group mt-2" style="display:none;"></div>
+                            <div id="operator-search-guidance" class="form-text text-muted mt-2">Select a country before searching for an operator to correct.</div>
+                            @Html.ValidationMessageFor(m => m.OperatorID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-0" id="operator-name-field">
+                            @Html.LabelFor(m => m.OperatorName, "Operator name (required)")
+                            @Html.EditorFor(m => m.OperatorName, new { htmlAttributes = new { @class = "form-control", placeholder = "ExampleEV" } })
+                            @Html.ValidationMessageFor(m => m.OperatorName, "", new { @class = "text-danger" })
+                            <div id="duplicate-warning" class="alert alert-warning mt-3" style="display:none;">
+                                <strong>Possible existing operator</strong>
+                                <p class="mb-2">Please check whether this is the same operator or a separate brand.</p>
+                                <ul id="duplicate-matches" class="mb-0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4" id="operator-links-field">
+                    <div class="card-header h5 mb-0">Operator public links</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(m => m.WebsiteURL, "Website (optional)")
+                                @Html.EditorFor(m => m.WebsiteURL, new { htmlAttributes = new { @class = "form-control", placeholder = "https://example.com" } })
+                                @Html.ValidationMessageFor(m => m.WebsiteURL, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(m => m.BookingURL, "Booking URL (optional)")
+                                @Html.EditorFor(m => m.BookingURL, new { htmlAttributes = new { @class = "form-control", placeholder = "https://example.com/booking" } })
+                                @Html.ValidationMessageFor(m => m.BookingURL, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4" id="operator-contact-field">
+                    <div class="card-header h5 mb-0">Operator contact details</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(m => m.PhonePrimaryContact, "Primary phone (optional)")
+                                @Html.EditorFor(m => m.PhonePrimaryContact, new { htmlAttributes = new { @class = "form-control", placeholder = "+1 555 123 4567" } })
+                            </div>
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(m => m.PhoneSecondaryContact, "Secondary phone (optional)")
+                                @Html.EditorFor(m => m.PhoneSecondaryContact, new { htmlAttributes = new { @class = "form-control", placeholder = "+1 555 987 6543" } })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(m => m.ContactEmail, "Contact email (optional)")
+                                @Html.EditorFor(m => m.ContactEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "contact@example.com" } })
+                                @Html.ValidationMessageFor(m => m.ContactEmail, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 form-group mb-0">
+                                @Html.LabelFor(m => m.FaultReportEmail, "Fault-report email (optional)")
+                                @Html.EditorFor(m => m.FaultReportEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "faults@example.com" } })
+                                @Html.ValidationMessageFor(m => m.FaultReportEmail, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4" id="operator-notes-field">
+                    <div class="card-header h5 mb-0">Notes and validation</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Comments, "Operator comments (optional)")
+                            @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", rows = 3, placeholder = "e.g. Formerly known as EasyEV." })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.SubmitterComment, "Proposal rationale (optional)")
+                            @Html.TextAreaFor(m => m.SubmitterComment, new { @class = "form-control", rows = 3, placeholder = "Explain why this operator should be added or corrected." })
+                        </div>
+                        @if (ViewBag.HasWebsiteMatch == true)
+                        {
+                            <div class="alert alert-warning mb-3">
+                                An operator with the same website already exists. Review the website carefully before submitting this proposal.
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(m => m.ConfirmWebsiteMatch, new { @class = "custom-control-input" })
+                                @Html.LabelFor(m => m.ConfirmWebsiteMatch, "I reviewed the website match and this is a separate operator", new { @class = "custom-control-label" })
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap mb-4">
+                    <input type="submit" value="Submit proposal" class="btn btn-primary mr-2 mb-2" />
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mb-2">Cancel</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var scope = document.getElementById('proposal-scope');
+        var type = document.getElementById('proposal-type');
+        var form = document.querySelector('form');
+        var duplicateWarning = document.getElementById('duplicate-warning');
+        var duplicateMatches = document.getElementById('duplicate-matches');
+        var operatorSearch = document.getElementById('operator-search');
+        var operatorSearchButton = document.getElementById('operator-search-button');
+        var operatorSearchGuidance = document.getElementById('operator-search-guidance');
+        var country = document.getElementById('CountryID');
+        var operatorSearchResults = document.getElementById('operator-search-results');
+        var newProposalType = '@OCM.API.Common.Model.OperatorProposalType.New';
+        var correctionProposalType = '@OCM.API.Common.Model.OperatorProposalType.Correction';
+        var duplicateRequest = 0;
+        var duplicateTimer;
+        var operatorSearchTimer;
+        var detailSections = ['operator-name-field', 'operator-links-field', 'operator-contact-field', 'operator-notes-field'];
+        function update() {
+            document.getElementById('country-field').style.display = scope.value === '2' ? 'none' : '';
+            document.getElementById('operator-field').style.display = type.value === correctionProposalType ? '' : 'none';
+            var showDetails = type.value === newProposalType || document.querySelector('[name="OperatorID"]').value !== '';
+            detailSections.forEach(function (id) {
+                document.getElementById(id).style.display = showDetails ? '' : 'none';
+            });
+            var canSearch = type.value === correctionProposalType && (scope.value === '2' || country.value !== '');
+            operatorSearch.disabled = type.value !== correctionProposalType;
+            operatorSearchButton.disabled = type.value !== correctionProposalType;
+            operatorSearchGuidance.className = 'form-text text-muted';
+            operatorSearchGuidance.textContent = canSearch
+                ? 'Search for the operator you want to correct. Its current details will be loaded below.'
+                : 'Select a country before searching for an operator to correct.';
+        }
+        function renderDuplicateMatches(matches) {
+            duplicateMatches.innerHTML = '';
+            if (!matches || matches.length === 0) {
+                duplicateWarning.style.display = 'none';
+                return;
+            }
+            matches.forEach(function (match) {
+                var matchId = match.id || match.ID;
+                var title = match.title || match.Title;
+                var reason = match.matchReason || match.MatchReason;
+                var viewUrl = match.viewURL || match.ViewURL;
+                var item = document.createElement('li');
+                item.className = 'mb-2 d-flex align-items-center flex-wrap';
+                var details = document.createElement('span');
+                details.className = 'mr-3';
+                details.innerHTML = '<strong>' + $('<div>').text(title).html() + '</strong> ' +
+                    '<small class="text-muted">(' + $('<div>').text(reason).html() + ')</small> ';
+                item.appendChild(details);
+
+                var actions = document.createElement('span');
+                actions.className = 'ml-auto';
+                var view = document.createElement('a');
+                view.href = viewUrl;
+                view.className = 'btn btn-sm btn-outline-secondary ml-2';
+                view.textContent = 'View operator';
+                actions.appendChild(view);
+
+                var correction = document.createElement('button');
+                correction.type = 'button';
+                correction.className = 'btn btn-sm btn-outline-primary ml-1';
+                correction.textContent = 'Propose a correction';
+                correction.addEventListener('click', function () {
+                    type.value = correctionProposalType;
+                    document.querySelector('[name="OperatorID"]').value = matchId;
+                    update();
+                    document.getElementById('operator-field').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+                actions.appendChild(correction);
+                item.appendChild(actions);
+                duplicateMatches.appendChild(item);
+            });
+            duplicateWarning.style.display = '';
+        }
+        function checkDuplicates() {
+            var name = document.getElementById('OperatorName').value;
+            var website = document.getElementById('WebsiteURL').value;
+            var contactEmail = document.getElementById('ContactEmail').value;
+            if (name.trim().length < 2 && website.trim().length === 0 && contactEmail.trim().length === 0) {
+                renderDuplicateMatches([]);
+                return;
+            }
+            var requestId = ++duplicateRequest;
+            $.ajax({
+                url: '@Url.Action("CheckDuplicates", "OperatorProposals")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: form.querySelector('input[name="__RequestVerificationToken"]').value,
+                    operatorName: name,
+                    websiteUrl: website,
+                    contactEmail: contactEmail,
+                    scope: scope.value,
+                    countryId: document.getElementById('CountryID').value,
+                    operatorId: document.querySelector('[name="OperatorID"]').value
+                }
+            }).done(function (result) {
+                if (requestId === duplicateRequest) renderDuplicateMatches(result.matches);
+            });
+        }
+        function scheduleDuplicateCheck() {
+            clearTimeout(duplicateTimer);
+            duplicateTimer = setTimeout(checkDuplicates, 400);
+        }
+        function renderOperatorResults(matches) {
+            operatorSearchResults.innerHTML = '';
+            if (!matches || matches.length === 0) {
+                operatorSearchResults.style.display = 'none';
+                return;
+            }
+            matches.forEach(function (operator) {
+                var result = document.createElement('button');
+                result.type = 'button';
+                result.className = 'list-group-item list-group-item-action';
+                result.innerHTML = '<strong>' + $('<div>').text(operator.title).html() + '</strong>' +
+                    (operator.websiteURL ? '<br><small class="text-muted">' + $('<div>').text(operator.websiteURL).html() + '</small>' : '');
+                result.addEventListener('click', function () {
+                    document.querySelector('[name="OperatorID"]').value = operator.id;
+                    operatorSearch.value = operator.title;
+                    document.getElementById('OperatorName').value = operator.title;
+                    document.getElementById('WebsiteURL').value = operator.websiteURL || '';
+                    document.getElementById('BookingURL').value = operator.bookingURL || '';
+                    document.getElementById('ContactEmail').value = operator.contactEmail || '';
+                    document.getElementById('FaultReportEmail').value = operator.faultReportEmail || '';
+                    document.getElementById('PhonePrimaryContact').value = operator.phonePrimaryContact || '';
+                    document.getElementById('PhoneSecondaryContact').value = operator.phoneSecondaryContact || '';
+                    document.getElementById('Comments').value = operator.comments || '';
+                    operatorSearchResults.innerHTML = '';
+                    operatorSearchResults.style.display = 'none';
+                    update();
+                });
+                operatorSearchResults.appendChild(result);
+            });
+            operatorSearchResults.style.display = '';
+        }
+        function renderSearchState(result, showAll) {
+            renderOperatorResults(result.matches);
+            if (result.total > result.matches.length && !showAll) {
+                var notice = document.createElement('div');
+                notice.className = 'list-group-item text-muted';
+                notice.textContent = 'Too many matches found. Try a more specific search.';
+                operatorSearchResults.appendChild(notice);
+                var showAllButton = document.createElement('button');
+                showAllButton.type = 'button';
+                showAllButton.className = 'list-group-item list-group-item-action font-weight-bold';
+                showAllButton.textContent = 'Show all matching operators';
+                showAllButton.addEventListener('click', function () { searchOperators(true); });
+                operatorSearchResults.appendChild(showAllButton);
+            }
+            if (showAll) {
+                operatorSearchGuidance.className = 'form-text text-muted mt-2';
+                operatorSearchGuidance.textContent = result.total + ' matching operator' + (result.total === 1 ? '' : 's') + '.';
+            }
+        }
+        function searchOperators(showAll) {
+            var term = operatorSearch.value.trim();
+            if (scope.value !== '2' && country.value === '') {
+                renderOperatorResults([]);
+                country.classList.add('is-invalid');
+                var countryError = document.getElementById('country-search-error');
+                countryError.textContent = 'Please select a country before searching.';
+                countryError.style.display = '';
+                operatorSearchGuidance.className = 'form-text text-danger mt-2';
+                operatorSearchGuidance.textContent = 'Select a country before searching for an operator to correct.';
+                country.focus();
+                return;
+            }
+            if (term.length === 0) {
+                renderOperatorResults([]);
+                operatorSearchGuidance.className = 'form-text text-danger mt-2';
+                operatorSearchGuidance.textContent = 'Enter an operator name to search.';
+                return;
+            }
+            if (term.length < 2) {
+                renderOperatorResults([]);
+                operatorSearchGuidance.className = 'form-text text-danger mt-2';
+                operatorSearchGuidance.textContent = 'Enter at least 2 characters to search.';
+                return;
+            }
+            $.getJSON('@Url.Action("SearchOperators", "OperatorProposals")', {
+                term: term,
+                scope: scope.value,
+                countryId: country.value,
+                showAll: showAll === true
+            }).done(function (result) {
+                renderSearchState(result, showAll === true);
+                if (!result.matches || result.matches.length === 0) {
+                    operatorSearchGuidance.className = 'form-text text-muted mt-2';
+                    operatorSearchGuidance.textContent = 'No matching operators found.';
+                }
+            });
+        }
+        scope.addEventListener('change', function () {
+            if (type.value === correctionProposalType) {
+                document.querySelector('[name="OperatorID"]').value = '';
+                operatorSearch.value = '';
+                renderOperatorResults([]);
+            }
+            update();
+        });
+        country.addEventListener('change', function () {
+            country.classList.remove('is-invalid');
+            document.getElementById('country-search-error').style.display = 'none';
+            if (type.value === correctionProposalType) {
+                document.querySelector('[name="OperatorID"]').value = '';
+                operatorSearch.value = '';
+                renderOperatorResults([]);
+            }
+            update();
+        });
+        operatorSearch.addEventListener('input', function () {
+            clearTimeout(operatorSearchTimer);
+            operatorSearchTimer = setTimeout(function () { searchOperators(false); }, 250);
+        });
+        operatorSearchButton.addEventListener('click', function () { searchOperators(true); });
+        operatorSearch.addEventListener('focus', function () { searchOperators(false); });
+        document.getElementById('OperatorName').addEventListener('blur', checkDuplicates);
+        document.getElementById('WebsiteURL').addEventListener('blur', checkDuplicates);
+        document.getElementById('ContactEmail').addEventListener('blur', scheduleDuplicateCheck);
+        update();
+    })();
+</script>

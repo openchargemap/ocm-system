@@ -1,0 +1,117 @@
+@model OCM.Web.Models.OperatorProposalReviewModel
+@{ ViewBag.Title = "Review Operator Proposal"; }
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <h2 class="mb-2">Review operator proposal</h2>
+            <p class="text-muted mb-4">Review the submitted details before approving or rejecting this proposal.</p>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            @if (Model.PotentialDuplicates.Any())
+            {
+                <div class="alert alert-warning">
+                    <strong>Possible existing operator</strong>
+                    <p>Please verify that this proposal is not a duplicate.</p>
+                    <ul class="mb-0">
+                        @foreach (var match in Model.PotentialDuplicates)
+                        {
+                            <li class="mb-2">
+                                <strong>@match.Title</strong>
+                                <small class="text-muted">(@match.MatchReason)</small>
+                                <a class="btn btn-sm btn-outline-secondary ml-2" href="@match.ViewURL">View operator</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="card mb-4">
+                <div class="card-header h5 mb-0">Proposal details</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 form-group"><strong>Scope</strong><div>@(Model.Proposal.Scope == OCM.API.Common.Model.OperatorProposalScope.Global ? "Global / multinational" : Model.CountryTitle)</div></div>
+                        <div class="col-md-6 form-group"><strong>Proposal type</strong><div>@Model.Proposal.ProposalType</div></div>
+                        <div class="col-md-6 form-group mb-md-0"><strong>Submitted by</strong><div>@Model.SubmitterName</div></div>
+                        <div class="col-md-6 form-group mb-0"><strong>Submitter rationale (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.Proposal.SubmitterComment) ? "—" : Model.Proposal.SubmitterComment)</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header h5 mb-0">Proposed operator</div>
+                <div class="card-body">
+                    <div class="form-group mb-0">
+                        <label>Operator name (required)</label>
+                        <div class="form-control-plaintext">@Model.ProposedOperator.Title</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header h5 mb-0">Operator public links</div>
+                <div class="card-body">
+                    <div class="row mb-0">
+                        <div class="col-md-6"><strong>Website (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.WebsiteURL) ? "—" : Model.ProposedOperator.WebsiteURL)</div></div>
+                        <div class="col-md-6"><strong>Booking URL (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.BookingURL) ? "—" : Model.ProposedOperator.BookingURL)</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header h5 mb-0">Operator contact details</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 form-group"><strong>Primary phone (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.PhonePrimaryContact) ? "—" : Model.ProposedOperator.PhonePrimaryContact)</div></div>
+                        <div class="col-md-6 form-group"><strong>Secondary phone (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.PhoneSecondaryContact) ? "—" : Model.ProposedOperator.PhoneSecondaryContact)</div></div>
+                        <div class="col-md-6 form-group mb-md-0"><strong>Contact email (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.ContactEmail) ? "—" : Model.ProposedOperator.ContactEmail)</div></div>
+                        <div class="col-md-6 form-group mb-0"><strong>Fault-report email (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.FaultReportEmail) ? "—" : Model.ProposedOperator.FaultReportEmail)</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header h5 mb-0">Notes</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Operator comments (optional)</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.ProposedOperator.Comments) ? "—" : Model.ProposedOperator.Comments)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            @if (Model.CurrentOperator != null)
+            {
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Current operator</div>
+                    <div class="card-body">
+                        <div class="row mb-0">
+                            <div class="col-md-6"><strong>Operator name</strong><div>@Model.CurrentOperator.Title</div></div>
+                            <div class="col-md-6"><strong>Website</strong><div>@(string.IsNullOrWhiteSpace(Model.CurrentOperator.WebsiteURL) ? "—" : Model.CurrentOperator.WebsiteURL)</div></div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <form method="post" class="mb-4">
+                @Html.AntiForgeryToken()
+                <div class="card mb-3">
+                    <div class="card-header h5 mb-0">Decision</div>
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            <label for="decisionComment">Decision comment (required when rejecting)</label>
+                            <textarea id="decisionComment" name="decisionComment" class="form-control" rows="3" placeholder="Explain the decision, especially if rejecting the proposal."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button formaction="@Url.Action("Approve", new { id = Model.Proposal.ID })" class="btn btn-success mr-2">Approve</button>
+                <button formaction="@Url.Action("Reject", new { id = Model.Proposal.ID })" class="btn btn-danger mr-2">Reject</button>
+                <a href="@Url.Action("Review")" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

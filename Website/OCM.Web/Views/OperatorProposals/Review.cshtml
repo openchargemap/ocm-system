@@ -1,0 +1,29 @@
+@model IEnumerable<OCM.Web.Models.OperatorProposalListItem>
+@{ ViewBag.Title = "Operator Proposals"; }
+
+<div class="container-fluid">
+    <h2>Operator Proposals</h2>
+    @if (TempData["StatusMessage"] != null) { <div class="alert alert-success">@TempData["StatusMessage"]</div> }
+    @if (!Model.Any())
+    {
+        <p>There are no pending operator proposals for your permissions.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead><tr><th>Submitted</th><th>Operator</th><th>Country / scope</th><th>Type</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Proposal.DateSubmitted</td>
+                    <td>@item.OperatorName</td>
+                    <td>@item.CountryTitle</td>
+                    <td>@item.Proposal.ProposalType</td>
+                    <td><a class="btn btn-sm btn-primary" href="@Url.Action("Details", new { id = item.Proposal.ID })">Review</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
