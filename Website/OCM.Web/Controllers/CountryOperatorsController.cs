@@ -37,7 +37,66 @@ namespace OCM.MVC.Controllers
 
         private void PopulateCountries(IEnumerable<Country> countries, int selectedCountryId)
         {
-            ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countries, "ID", "Title", selectedCountryId);
+            var countryList = countries.ToList();
+            ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countryList, "ID", "Title", selectedCountryId);
+            ViewBag.SingleEditableCountry = countryList.Count == 1 ? countryList[0] : null;
+        }
+
+        [HttpGet]
+        public ActionResult Index(int? countryId, string searchTerm, int page = 1)
+        {
+            var user = GetCurrentUser();
+            var countries = GetEditableCountries(user);
+            if (countries.Count == 0) return Forbid();
+
+            var model = new CountryOperatorIndexModel
+            {
+                CountryID = countryId ?? (countries.Count == 1 ? countries[0].ID : (int?)null),
+                SearchTerm = searchTerm?.Trim(),
+                Page = Math.Max(1, page)
+            };
+            PopulateCountries(countries, model.CountryID ?? 0);
+
+            if (!model.CountryID.HasValue)
+                return View(model);
+
+            if (!CanEditCountry(user, model.CountryID.Value)) return Forbid();
+
+            if (!string.IsNullOrWhiteSpace(model.SearchTerm) && model.SearchTerm.Length < 2)
+            {
+                ViewBag.SearchTooShort = true;
+                return View(model);
+            }
+
+            var country = countries.First(c => c.ID == model.CountryID.Value);
+            var suffix = " (" + country.ISOCode + ")";
+            var matches = new OperatorInfoManager().GetOperators()
+                .Where(operatorInfo => operatorInfo.ID > 1 &&
+                    operatorInfo.Title.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrWhiteSpace(model.SearchTerm))
+                matches = matches.Where(operatorInfo =>
+                    operatorInfo.Title.IndexOf(model.SearchTerm, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            var orderedMatches = matches
+                .OrderBy(operatorInfo => operatorInfo.Title)
+                .ToList();
+
+            model.TotalResults = orderedMatches.Count;
+            if (model.Page > model.TotalPages && model.TotalPages > 0) model.Page = model.TotalPages;
+            model.Operators = orderedMatches
+                .Skip((model.Page - 1) * model.PageSize)
+                .Take(model.PageSize)
+                .Select(operatorInfo => new CountryOperatorListItem
+                {
+                    ID = operatorInfo.ID,
+                    Title = operatorInfo.Title,
+                    CountryTitle = country.Title,
+                    WebsiteURL = operatorInfo.WebsiteURL
+                })
+                .ToList();
+
+            return View(model);
         }
 
         private void PopulateDuplicateWarnings(OperatorInfoManager manager, IEnumerable<Country> countries, CountryOperatorEditModel model)
@@ -55,36 +114,61 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? id, int? countryId)
+        public ActionResult Add(int? countryId)
         {
             var user = GetCurrentUser();
             var countries = GetEditableCountries(user);
             if (countries.Count == 0) return Forbid();
 
             var model = new CountryOperatorEditModel { CountryID = countryId ?? countries[0].ID };
-            if (id.HasValue)
-            {
-                var operatorInfo = new OperatorInfoManager().GetOperatorInfo(id.Value);
-                var country = countries.FirstOrDefault(c => operatorInfo != null && operatorInfo.Title.EndsWith(" (" + c.ISOCode + ")", StringComparison.OrdinalIgnoreCase));
-                if (country == null) return Forbid();
+            PopulateCountries(countries, model.CountryID);
+            return View("Edit", model);
+        }
 
-                model.ID = operatorInfo.ID;
-                model.CountryID = country.ID;
-                model.OperatorName = operatorInfo.Title.Substring(0, operatorInfo.Title.Length - country.ISOCode.Length - 3);
-                model.WebsiteURL = operatorInfo.WebsiteURL;
-                model.Comments = operatorInfo.Comments;
-                model.PhonePrimaryContact = operatorInfo.PhonePrimaryContact;
-                model.PhoneSecondaryContact = operatorInfo.PhoneSecondaryContact;
-                model.ContactEmail = operatorInfo.ContactEmail;
-                model.FaultReportEmail = operatorInfo.FaultReportEmail;
-            }
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Add(CountryOperatorEditModel model)
+        {
+            model.ID = 0;
+            return Save(model);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var user = GetCurrentUser();
+            var countries = GetEditableCountries(user);
+            if (countries.Count == 0) return Forbid();
+
+            var operatorInfo = new OperatorInfoManager().GetOperatorInfo(id);
+            var country = countries.FirstOrDefault(c => operatorInfo != null &&
+                operatorInfo.Title.EndsWith(" (" + c.ISOCode + ")", StringComparison.OrdinalIgnoreCase));
+            if (country == null) return Forbid();
+
+            var model = new CountryOperatorEditModel
+            {
+                ID = operatorInfo.ID,
+                CountryID = country.ID,
+                OperatorName = operatorInfo.Title.Substring(0, operatorInfo.Title.Length - country.ISOCode.Length - 3),
+                WebsiteURL = operatorInfo.WebsiteURL,
+                Comments = operatorInfo.Comments,
+                PhonePrimaryContact = operatorInfo.PhonePrimaryContact,
+                PhoneSecondaryContact = operatorInfo.PhoneSecondaryContact,
+                ContactEmail = operatorInfo.ContactEmail,
+                FaultReportEmail = operatorInfo.FaultReportEmail
+            };
 
             PopulateCountries(countries, model.CountryID);
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Edit(CountryOperatorEditModel model)
+        public ActionResult Edit(int id, CountryOperatorEditModel model)
+        {
+            if (id != model.ID) return BadRequest();
+            return Save(model);
+        }
+
+        private ActionResult Save(CountryOperatorEditModel model)
         {
             var user = GetCurrentUser();
             var countries = GetEditableCountries(user);
@@ -92,7 +176,7 @@ namespace OCM.MVC.Controllers
 
             PopulateCountries(countries, model.CountryID);
             PopulateDuplicateWarnings(new OperatorInfoManager(), countries, model);
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View("Edit", model);
 
             if (model.ID > 1)
             {
@@ -125,7 +209,7 @@ namespace OCM.MVC.Controllers
             catch (InvalidOperationException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View(model);
+                return View("Edit", model);
             }
         }
     }

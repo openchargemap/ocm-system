@@ -8,6 +8,7 @@
     var duplicateTitleMatch = ViewBag.DuplicateTitleMatch as OperatorMatch;
     var possibleDuplicates = ViewBag.PossibleDuplicates as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
     var otherCountryMatches = ViewBag.OtherCountryMatches as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
+    var singleEditableCountry = ViewBag.SingleEditableCountry as OCM.API.Common.Model.Country;
     var isEditing = Model.ID > 1;
 }
 
@@ -33,7 +34,15 @@
                     <div class="card-body">
                         <div class="form-group">
                             @Html.LabelFor(model => model.CountryID)
-                            @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" })
+                            @if (singleEditableCountry != null)
+                            {
+                                <div class="form-control-plaintext">@singleEditableCountry.Title</div>
+                                @Html.HiddenFor(model => model.CountryID)
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" })
+                            }
                             @Html.ValidationMessageFor(model => model.CountryID)
                             <small class="form-text text-muted">The country code is added to the saved operator title automatically.</small>
                         </div>
@@ -135,6 +144,8 @@
                     </div>
                 }
 
+                <div id="client-duplicate-warning" class="alert alert-warning" style="display:none;"></div>
+
                 <div class="d-flex flex-wrap mb-4">
                     <input type="submit" value="@(isEditing ? "Save changes" : "Create operator")" class="btn btn-primary mr-2 mb-2" />
                     <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mb-2">Cancel</a>
@@ -143,3 +154,80 @@
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        var form = document.querySelector('form');
+        var country = document.getElementById('CountryID');
+        var name = document.getElementById('OperatorName');
+        var website = document.getElementById('WebsiteURL');
+        var contactEmail = document.getElementById('ContactEmail');
+        var warning = document.getElementById('client-duplicate-warning');
+        var requestId = 0;
+        var timer;
+        var hasServerWarning = @((duplicateTitleMatch != null || possibleDuplicates.Any()).ToString().ToLowerInvariant());
+
+        function escapeHtml(value) {
+            return $('<div>').text(value || '').html();
+        }
+
+        function render(matches) {
+            if (!matches || matches.length === 0) {
+                warning.style.display = 'none';
+                warning.innerHTML = '';
+                return;
+            }
+
+            var exact = matches.some(function (match) { return match.matchType === 0; });
+            var html = '<strong>' + (exact ? 'This operator is already listed' : 'This may already exist') + '</strong>';
+            html += '<p>Check these operators before continuing.' + (exact ? ' Edit the existing operator instead of adding a new one.' : ' If yours is genuinely a different company, confirm below and save.') + '</p><ul>';
+            matches.forEach(function (match) {
+                html += '<li><strong>' + escapeHtml(match.title) + '</strong> — ' + escapeHtml(match.matchReason) + '</li>';
+            });
+            html += '</ul>';
+            if (!exact) {
+                html += '<div class="custom-control custom-checkbox">' +
+                    '<input type="checkbox" name="ConfirmNotDuplicate" value="true" class="custom-control-input" id="client-confirm-not-duplicate">' +
+                    '<label class="custom-control-label" for="client-confirm-not-duplicate">I have checked these and this is a separate operator</label>' +
+                    '</div>';
+            }
+            warning.className = exact ? 'alert alert-danger' : 'alert alert-warning';
+            warning.innerHTML = html;
+            warning.style.display = '';
+        }
+
+        function checkDuplicates() {
+            if (hasServerWarning) return;
+            if (name.value.trim().length < 2 || country.value === '') {
+                render([]);
+                return;
+            }
+            var currentRequest = ++requestId;
+            $.ajax({
+                url: '@Url.Action("CheckDuplicates", "OperatorProposals")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: form.querySelector('input[name="__RequestVerificationToken"]').value,
+                    operatorName: name.value,
+                    websiteUrl: website.value,
+                    contactEmail: contactEmail.value,
+                    scope: 1,
+                    countryId: country.value,
+                    operatorId: document.getElementById('ID').value
+                }
+            }).done(function (result) {
+                if (currentRequest === requestId) render(result.matches);
+            });
+        }
+
+        function scheduleCheck() {
+            clearTimeout(timer);
+            timer = setTimeout(checkDuplicates, 350);
+        }
+
+        [country, name, website, contactEmail].forEach(function (field) {
+            field.addEventListener('change', scheduleCheck);
+            field.addEventListener('blur', scheduleCheck);
+        });
+    })();
+</script>

@@ -1,7 +1,29 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace OCM.Web.Models
 {
+    public class CountryOperatorListItem
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+        public string CountryTitle { get; set; }
+        public string WebsiteURL { get; set; }
+    }
+
+    public class CountryOperatorIndexModel
+    {
+        public int? CountryID { get; set; }
+        public string SearchTerm { get; set; }
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 25;
+        public int TotalResults { get; set; }
+        public List<CountryOperatorListItem> Operators { get; set; } = new List<CountryOperatorListItem>();
+
+        public bool HasCountry => CountryID.HasValue;
+        public int TotalPages => TotalResults == 0 ? 0 : (TotalResults + PageSize - 1) / PageSize;
+    }
+
     public class CountryOperatorEditModel
     {
         public int ID { get; set; }
