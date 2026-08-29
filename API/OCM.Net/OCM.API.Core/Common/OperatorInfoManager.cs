@@ -171,7 +171,9 @@ namespace OCM.API.Common
         public List<OperatorMatch> FindPotentialDuplicates(string operatorName, string countryIsoCode, string websiteUrl, string contactEmail, int? excludedId = null)
         {
             var isoCode = (countryIsoCode ?? string.Empty).Trim().ToUpperInvariant();
-            var targetTitle = NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
+            var targetTitle = string.IsNullOrEmpty(isoCode)
+                ? NormalizeTitle(RemoveCountryCode(operatorName))
+                : NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
             var websiteHost = GetWebsiteHost(websiteUrl);
 
             var emailDomain = GetEmailDomain(contactEmail);
@@ -268,7 +270,7 @@ namespace OCM.API.Common
             return Model.Extensions.OperatorInfo.FromDataModel(operatorInfo);
         }
 
-        public OperatorInfo UpdateOperatorInfo(int userId, OperatorInfo update)
+        public OperatorInfo UpdateOperatorInfo(int userId, OperatorInfo update, bool confirmNotDuplicate = false)
         {
             var operatorInfo = new OCM.Core.Data.Operator();
             bool isUpdate = false;
@@ -278,6 +280,16 @@ namespace OCM.API.Common
                 operatorInfo = DataModel.Operators.FirstOrDefault(o => o.Id == update.ID);
                 isUpdate = true;
             }
+
+            var matches = FindPotentialDuplicates(update.Title, GetCountryCodeFromTitle(update.Title), update.WebsiteURL,
+                update.ContactEmail, isUpdate ? update.ID : (int?)null);
+            var duplicateTitle = matches.FirstOrDefault(match => match.MatchType == OperatorMatchType.DuplicateTitle);
+            if (duplicateTitle != null)
+                throw new InvalidOperationException($"\"{duplicateTitle.Operator.Title}\" already exists. Edit that operator instead of creating a duplicate.");
+
+            var needsConfirmation = matches.Where(match => match.RequiresConfirmation).ToList();
+            if (needsConfirmation.Any() && !confirmNotDuplicate)
+                throw new InvalidOperationException($"This may be a duplicate of {string.Join(", ", needsConfirmation.Select(match => match.Operator.Title))}. Confirm this is a separate operator to save it.");
 
             operatorInfo.Title = update.Title;
             operatorInfo.WebsiteUrl = update.WebsiteURL;
