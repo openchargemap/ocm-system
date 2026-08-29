@@ -1,8 +1,9 @@
 @model OCM.API.Common.Model.OperatorInfo
+@using Microsoft.AspNetCore.Http;
 
 @{
     ViewBag.Title = Model.Title;
-    var isSignedIn = User.Identity?.IsAuthenticated == true;
+    var isSignedIn = Context.Session.GetInt32("UserID").HasValue;
 }
 
 <div class="container-fluid">
