@@ -38,6 +38,7 @@ namespace OCM.Core.Data
         public virtual DbSet<MetadataGroup> MetadataGroups { get; set; }
         public virtual DbSet<MetadataValue> MetadataValues { get; set; }
         public virtual DbSet<Operator> Operators { get; set; }
+        public virtual DbSet<OperatorProposal> OperatorProposals { get; set; }
         public virtual DbSet<RegisteredApplication> RegisteredApplications { get; set; }
         public virtual DbSet<RegisteredApplicationUser> RegisteredApplicationUsers { get; set; }
         public virtual DbSet<SessionState> SessionStates { get; set; }
@@ -777,6 +778,27 @@ namespace OCM.Core.Data
                     .WithMany(p => p.Operators)
                     .HasForeignKey(d => d.AddressInfoId)
                     .HasConstraintName("FK_Operator_AddressInfo");
+            });
+
+            modelBuilder.Entity<OperatorProposal>(entity =>
+            {
+                entity.ToTable("OperatorProposal");
+
+                entity.HasIndex(e => new { e.Status, e.Scope, e.CountryId }, "IX_OperatorProposal_Review")
+                    .HasFillFactor(100);
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.SubmittedByUserId).HasColumnName("SubmittedByUserID");
+                entity.Property(e => e.ReviewedByUserId).HasColumnName("ReviewedByUserID");
+                entity.Property(e => e.OperatorId).HasColumnName("OperatorID");
+                entity.Property(e => e.CountryId).HasColumnName("CountryID");
+                entity.Property(e => e.Scope).HasColumnName("Scope");
+                entity.Property(e => e.ProposalType).HasColumnName("ProposalType");
+                entity.Property(e => e.Status).HasColumnName("Status");
+                entity.Property(e => e.DateSubmitted)
+                    .HasColumnType("smalldatetime")
+                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DateReviewed).HasColumnType("smalldatetime");
             });
 
             modelBuilder.Entity<RegisteredApplication>(entity =>
