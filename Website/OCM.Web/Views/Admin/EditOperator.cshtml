@@ -1,119 +1,224 @@
-﻿@model OCM.API.Common.Model.OperatorInfo
+@model OCM.API.Common.Model.OperatorInfo
+@using System.Collections.Generic
+@using System.Linq
+@using OCM.API.Common
 
 @{
-    ViewBag.Title = "EditOperator";
+    var isEditing = Model.ID > 1;
+    ViewBag.Title = isEditing ? "Edit Operator" : "Create Operator";
+    var yesNoOptions = new[]
+    {
+        new { Value = "", Text = "Not specified" },
+        new { Value = "true", Text = "Yes" },
+        new { Value = "false", Text = "No" }
+    };
+    var duplicateTitleMatch = ViewBag.DuplicateTitleMatch as OperatorMatch;
+    var possibleDuplicates = ViewBag.PossibleDuplicates as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
+    var hasServerWarning = duplicateTitleMatch != null || possibleDuplicates.Any();
 }
 
-<h2>Edit Operator</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <h2 class="mb-2">@ViewBag.Title</h2>
+            <p class="text-muted mb-4">@(isEditing ? "Update this operator’s details." : "Create a global or multinational operator record.")</p>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+            <form action="@(isEditing ? Url.RouteUrl("AdminOperatorEdit", new { id = Model.ID }) : Url.RouteUrl("AdminOperatorCreate"))" method="post">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "Please correct the following:", new { @class = "alert alert-danger" })
+                @Html.HiddenFor(model => model.ID)
 
-    <fieldset>
-        <legend>OperatorInfo</legend>
-
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Title)
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Title)
-                        @Html.ValidationMessageFor(model => model.Title)
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Operator identity</div>
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(model => model.Title, "Operator name (required)")
+                            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                </div>
 
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.WebsiteURL)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.WebsiteURL)
-                @Html.ValidationMessageFor(model => model.WebsiteURL)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Comments)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Comments)
-                @Html.ValidationMessageFor(model => model.Comments)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.PhonePrimaryContact)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.PhonePrimaryContact)
-                @Html.ValidationMessageFor(model => model.PhonePrimaryContact)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.PhoneSecondaryContact)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.PhoneSecondaryContact)
-                @Html.ValidationMessageFor(model => model.PhoneSecondaryContact)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.IsPrivateIndividual)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.IsPrivateIndividual)
-                @Html.ValidationMessageFor(model => model.IsPrivateIndividual)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.BookingURL)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.BookingURL)
-                @Html.ValidationMessageFor(model => model.BookingURL)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.ContactEmail)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.ContactEmail)
-                @Html.ValidationMessageFor(model => model.ContactEmail)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.FaultReportEmail)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.FaultReportEmail)
-                @Html.ValidationMessageFor(model => model.FaultReportEmail)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="editor-label">
-                @Html.LabelFor(model => model.IsRestrictedEdit)
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.IsRestrictedEdit)
-                @Html.ValidationMessageFor(model => model.IsRestrictedEdit)
-            </div>
-        </div>
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Operator public links</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.WebsiteURL, "Website (optional)")
+                                @Html.TextBoxFor(model => model.WebsiteURL, new { @class = "form-control", type = "url", placeholder = "https://example.com" })
+                                @Html.ValidationMessageFor(model => model.WebsiteURL, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(model => model.BookingURL, "Booking URL (optional)")
+                                @Html.TextBoxFor(model => model.BookingURL, new { @class = "form-control", type = "url", placeholder = "https://example.com/booking" })
+                                @Html.ValidationMessageFor(model => model.BookingURL, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        @Html.HiddenFor(model => model.ID)
-    
-        <p>
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </p>
-    </fieldset>
-}
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Contact details</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.PhonePrimaryContact, "Primary phone (optional)")
+                                @Html.TextBoxFor(model => model.PhonePrimaryContact, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PhonePrimaryContact, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(model => model.PhoneSecondaryContact, "Secondary phone (optional)")
+                                @Html.TextBoxFor(model => model.PhoneSecondaryContact, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PhoneSecondaryContact, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.ContactEmail, "Contact email (optional)")
+                                @Html.TextBoxFor(model => model.ContactEmail, new { @class = "form-control", type = "email" })
+                                @Html.ValidationMessageFor(model => model.ContactEmail, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 form-group mb-0">
+                                @Html.LabelFor(model => model.FaultReportEmail, "Fault-report email (optional)")
+                                @Html.TextBoxFor(model => model.FaultReportEmail, new { @class = "form-control", type = "email" })
+                                @Html.ValidationMessageFor(model => model.FaultReportEmail, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Notes</div>
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(model => model.Comments, "Operator comments (optional)")
+                            @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", rows = 4 })
+                            @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header h5 mb-0">Administration</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-md-0">
+                                @Html.LabelFor(model => model.IsPrivateIndividual, "Private individual (optional)")
+                                @Html.DropDownListFor(model => model.IsPrivateIndividual, new SelectList(yesNoOptions, "Value", "Text", Model.IsPrivateIndividual?.ToString().ToLowerInvariant()), new { @class = "custom-select" })
+                                @Html.ValidationMessageFor(model => model.IsPrivateIndividual, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 form-group mb-0">
+                                @Html.LabelFor(model => model.IsRestrictedEdit, "Restrict editing (optional)")
+                                @Html.DropDownListFor(model => model.IsRestrictedEdit, new SelectList(yesNoOptions, "Value", "Text", Model.IsRestrictedEdit?.ToString().ToLowerInvariant()), new { @class = "custom-select" })
+                                @Html.ValidationMessageFor(model => model.IsRestrictedEdit, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (duplicateTitleMatch != null)
+                {
+                    <div class="alert alert-danger">
+                        <strong>@duplicateTitleMatch.Operator.Title is already listed.</strong>
+                        <p class="mb-0">Edit that operator instead of creating a duplicate.</p>
+                    </div>
+                }
+
+                @if (possibleDuplicates.Any())
+                {
+                    <div class="alert alert-warning">
+                        <strong>This may already exist</strong>
+                        <p>Check these operators before continuing. If yours is genuinely a different company, confirm below and save.</p>
+                        <ul>
+                            @foreach (var match in possibleDuplicates)
+                            {
+                                <li><strong>@match.Operator.Title</strong> — @match.Reason</li>
+                            }
+                        </ul>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="confirmNotDuplicate" value="true" class="custom-control-input" id="confirm-not-duplicate" @(ViewBag.ConfirmNotDuplicate == true ? "checked" : null) />
+                            <label class="custom-control-label" for="confirm-not-duplicate">I have checked these and this is a separate operator</label>
+                        </div>
+                    </div>
+                }
+
+                <div id="client-duplicate-warning" class="alert alert-warning" style="display:none;"></div>
+
+                <div class="d-flex flex-wrap mb-4">
+                    <input type="submit" value="@(isEditing ? "Save changes" : "Create operator")" class="btn btn-primary mr-2 mb-2" />
+                    <a href="@Url.Action("Operators", "Admin")" class="btn btn-outline-secondary mb-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+    (function () {
+        var form = document.querySelector('form');
+        var title = document.getElementById('Title');
+        var website = document.getElementById('WebsiteURL');
+        var contactEmail = document.getElementById('ContactEmail');
+        var warning = document.getElementById('client-duplicate-warning');
+        var requestId = 0;
+        var timer;
+        var hasServerWarning = @hasServerWarning.ToString().ToLowerInvariant();
+
+        function escapeHtml(value) {
+            return $('<div>').text(value || '').html();
+        }
+
+        function render(matches) {
+            if (!matches || matches.length === 0) {
+                warning.style.display = 'none';
+                warning.innerHTML = '';
+                return;
+            }
+
+            var exact = matches.some(function (match) { return match.matchType === 0; });
+            var html = '<strong>' + (exact ? 'This operator is already listed' : 'This may already exist') + '</strong>';
+            html += '<p>Check these operators before continuing.' + (exact ? ' Edit the existing operator instead of creating a duplicate.' : ' If yours is genuinely a different company, confirm below and save.') + '</p><ul>';
+            matches.forEach(function (match) {
+                html += '<li><strong>' + escapeHtml(match.title) + '</strong> — ' + escapeHtml(match.matchReason) + '</li>';
+            });
+            html += '</ul>';
+            if (!exact) {
+                html += '<div class="custom-control custom-checkbox"><input type="checkbox" name="confirmNotDuplicate" value="true" class="custom-control-input" id="client-confirm-not-duplicate"><label class="custom-control-label" for="client-confirm-not-duplicate">I have checked these and this is a separate operator</label></div>';
+            }
+            warning.className = exact ? 'alert alert-danger' : 'alert alert-warning';
+            warning.innerHTML = html;
+            warning.style.display = '';
+        }
+
+        function checkDuplicates() {
+            if (hasServerWarning || title.value.trim().length < 2) {
+                if (title.value.trim().length < 2) render([]);
+                return;
+            }
+            var currentRequest = ++requestId;
+            $.ajax({
+                url: '@Url.Action("CheckOperatorDuplicates", "Admin")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: form.querySelector('input[name="__RequestVerificationToken"]').value,
+                    title: title.value,
+                    websiteUrl: website.value,
+                    contactEmail: contactEmail.value,
+                    operatorId: document.getElementById('ID').value
+                }
+            }).done(function (result) {
+                if (currentRequest === requestId) render(result.matches);
+            });
+        }
+
+        function scheduleCheck() {
+            clearTimeout(timer);
+            timer = setTimeout(checkDuplicates, 350);
+        }
+
+        [title, website, contactEmail].forEach(function (field) {
+            field.addEventListener('change', scheduleCheck);
+            field.addEventListener('blur', scheduleCheck);
+        });
+    })();
+</script>

@@ -355,11 +355,85 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult Operators()
+        public ActionResult Operators(string keyword, int? countryId, int pageIndex = 1)
         {
-            var operatorInfoManager = new OperatorInfoManager();
+            const int pageSize = 50;
+            keyword = keyword?.Trim();
+            ViewData["keyword"] = keyword;
+            ViewData["countryId"] = countryId;
 
-            return View(operatorInfoManager.GetOperators());
+            var countries = new ReferenceDataManager().GetCountries(false);
+            var countryOptions = countries
+                .OrderBy(country => country.Title)
+                .Select(country => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Value = country.ID.ToString(),
+                    Text = country.Title,
+                    Selected = countryId == country.ID
+                })
+                .ToList();
+            countryOptions.Insert(0, new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "", Text = "All countries and global operators", Selected = !countryId.HasValue });
+            countryOptions.Insert(1, new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "-1", Text = "Global / multinational", Selected = countryId == -1 });
+            ViewBag.CountryList = countryOptions;
+
+            if (!string.IsNullOrWhiteSpace(keyword) && keyword.Length < 2)
+            {
+                ViewBag.SearchTooShort = true;
+                return View(new PaginatedCollection<OperatorInfo>(new List<OperatorInfo>(), 0, 1, pageSize));
+            }
+
+            var operators = new OperatorInfoManager().GetOperators().Where(operatorInfo => operatorInfo.ID > 1);
+            if (!string.IsNullOrWhiteSpace(keyword))
+                operators = operators.Where(operatorInfo => operatorInfo.Title.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            if (countryId == -1)
+            {
+                operators = operators.Where(operatorInfo => !countries.Any(country =>
+                    operatorInfo.Title.EndsWith(" (" + country.ISOCode + ")", StringComparison.OrdinalIgnoreCase)));
+            }
+            else if (countryId.HasValue)
+            {
+                var country = countries.FirstOrDefault(item => item.ID == countryId.Value);
+                if (country == null) return BadRequest();
+                var suffix = " (" + country.ISOCode + ")";
+                operators = operators.Where(operatorInfo => operatorInfo.Title.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var matches = operators.OrderBy(operatorInfo => operatorInfo.Title).ToList();
+
+            var totalPages = (int)Math.Ceiling(matches.Count / (double)pageSize);
+            pageIndex = Math.Max(1, pageIndex);
+            if (totalPages > 0) pageIndex = Math.Min(pageIndex, totalPages);
+
+            var page = matches.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            return View(new PaginatedCollection<OperatorInfo>(page, matches.Count, pageIndex, pageSize));
+        }
+
+        private void PopulateOperatorDuplicateWarnings(OperatorInfo operatorInfo)
+        {
+            var matches = new OperatorInfoManager().FindPotentialDuplicates(operatorInfo.Title,
+                OperatorInfoManager.GetCountryCodeFromTitle(operatorInfo.Title), operatorInfo.WebsiteURL,
+                operatorInfo.ContactEmail, operatorInfo.ID > 1 ? operatorInfo.ID : (int?)null);
+            ViewBag.DuplicateTitleMatch = matches.FirstOrDefault(match => match.MatchType == OperatorMatchType.DuplicateTitle);
+            ViewBag.PossibleDuplicates = matches.Where(match => match.RequiresConfirmation).ToList();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ValidateAntiForgeryToken]
+        public JsonResult CheckOperatorDuplicates(string title, string websiteUrl, string contactEmail, int? operatorId)
+        {
+            var matches = new OperatorInfoManager().FindPotentialDuplicates(title,
+                OperatorInfoManager.GetCountryCodeFromTitle(title), websiteUrl, contactEmail, operatorId);
+            return Json(new
+            {
+                matches = matches.Take(5).Select(match => new
+                {
+                    id = match.Operator.ID,
+                    title = match.Operator.Title,
+                    matchReason = match.Reason,
+                    matchType = match.MatchType
+                })
+            });
         }
 
         [Authorize(Roles = "Admin")]
@@ -727,27 +801,86 @@ namespace OCM.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult EditOperator(int? id)
+        [HttpGet("/admin/operators/create", Name = "AdminOperatorCreate")]
+        public ActionResult CreateOperator()
         {
-            var operatorInfo = new OperatorInfo();
-
-            if (id != null) operatorInfo = new OperatorInfoManager().GetOperatorInfo((int)id);
-            return View(operatorInfo);
+            return OperatorEditorView(new OperatorInfo());
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult EditOperator(OperatorInfo operatorInfo)
+        [HttpGet("/admin/operators/{id:int}/edit", Name = "AdminOperatorEdit")]
+        public ActionResult EditOperatorById(int id)
         {
+            return OperatorEditorView(new OperatorInfoManager().GetOperatorInfo(id));
+        }
+
+        // Retain existing bookmarks and links while directing users to the clearer routes.
+        [Authorize(Roles = "Admin")]
+        [HttpGet("/admin/editoperator/{id?}")]
+        public ActionResult EditOperator(int? id)
+        {
+            return id.HasValue
+                ? RedirectToRoute("AdminOperatorEdit", new { id = id.Value })
+                : RedirectToRoute("AdminOperatorCreate");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("/admin/operators/create")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateOperator(OperatorInfo operatorInfo, bool confirmNotDuplicate)
+        {
+            return SaveOperator(operatorInfo, confirmNotDuplicate);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("/admin/operators/{id:int}/edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditOperatorById(int id, OperatorInfo operatorInfo, bool confirmNotDuplicate)
+        {
+            if (operatorInfo.ID != id)
+            {
+                return BadRequest();
+            }
+
+            return SaveOperator(operatorInfo, confirmNotDuplicate);
+        }
+
+        // Retain compatibility with existing posted forms using /admin/editoperator.
+        [Authorize(Roles = "Admin")]
+        [HttpPost("/admin/editoperator")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditOperator(OperatorInfo operatorInfo, bool confirmNotDuplicate)
+        {
+            return SaveOperator(operatorInfo, confirmNotDuplicate);
+        }
+
+        private ActionResult SaveOperator(OperatorInfo operatorInfo, bool confirmNotDuplicate)
+        {
+            ViewBag.ConfirmNotDuplicate = confirmNotDuplicate;
+            PopulateOperatorDuplicateWarnings(operatorInfo);
             if (ModelState.IsValid)
             {
-                var operatorInfoManager = new OperatorInfoManager();
+                try
+                {
+                    var operatorInfoManager = new OperatorInfoManager();
 
-                operatorInfo = operatorInfoManager.UpdateOperatorInfo((int)UserID, operatorInfo);
+                    operatorInfo = operatorInfoManager.UpdateOperatorInfo((int)UserID, operatorInfo, confirmNotDuplicate);
 
-                return RedirectToAction("Operators", "Admin");
+                    return RedirectToAction("Operators", "Admin");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    ModelState.AddModelError(nameof(operatorInfo.Title), ex.Message);
+                }
             }
-            return View(operatorInfo);
+            return View("EditOperator", operatorInfo);
+        }
+
+        private ActionResult OperatorEditorView(OperatorInfo operatorInfo)
+        {
+            PopulateOperatorDuplicateWarnings(operatorInfo);
+            return View("EditOperator", operatorInfo);
         }
 
         [Authorize(Roles = "Admin")]
