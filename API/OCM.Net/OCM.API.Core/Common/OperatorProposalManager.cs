@@ -104,7 +104,6 @@ namespace OCM.API.Common
             ValidateDuplicates(proposed, proposal.OperatorId, proposal.ConfirmWebsiteMatch,
                 (OperatorProposalScope)proposal.Scope, proposal.CountryId, proposal.Id);
 
-            using var transaction = dataModel.Database.BeginTransaction();
             if (target == null)
             {
                 target = new Core.Data.Operator();
@@ -116,7 +115,6 @@ namespace OCM.API.Common
             proposal.DateReviewed = DateTime.UtcNow;
             proposal.DecisionComment = decisionComment;
             dataModel.SaveChanges();
-            transaction.Commit();
 
             AuditLogManager.Log(reviewer, AuditEventType.UpdatedItem,
                 "{EntityType:\"OperatorProposal\",EntityID:" + proposal.Id + ",OperatorID:" + target.Id + "}",
