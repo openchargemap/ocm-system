@@ -1,5 +1,7 @@
 ﻿@using OCM.API.Common.Model
 @using OCM.MVC
+@using OCM.API.Common
+@using System.Linq
 @using Microsoft.AspNetCore.Http;
 @using Microsoft.AspNetCore.Html;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
@@ -10,6 +12,10 @@
     string username = HttpContextAccessor.HttpContext.Session.GetString("Username");
 
     bool isAdministrator = bool.Parse(HttpContextAccessor.HttpContext.Session.GetString("IsAdministrator") ?? "false");
+    int? currentUserId = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
+    var currentUser = currentUserId.HasValue ? new UserManager().GetUser(currentUserId.Value) : null;
+    bool canManageCountryOperators = isAdministrator || (currentUser != null &&
+        new ReferenceDataManager().GetCountries(false).Any(country => UserManager.HasUserPermission(currentUser, country.ID, PermissionLevel.Editor)));
 }
 <!DOCTYPE html>
 <html>
@@ -96,6 +102,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Operators")">operator directory</a>
                         <!-- <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>-->
 
 
@@ -117,6 +124,24 @@
                         <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">new locations awaiting approval</a>
                         <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">imported locations awaiting approval</a>
                         <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edits awaiting approval</a>
+                        @if (canManageCountryOperators)
+                        {
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="@Url.Action("Review", "OperatorProposals")">operator proposals awaiting review</a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "CountryOperators")">manage country operators</a>
+                        }
+                        @if (!isAdministrator)
+                        {
+                            if (canManageCountryOperators)
+                            {
+                                <a class="dropdown-item" href="@Url.Action("Add", "OperatorProposals", new { scope = OperatorProposalScope.Global })">suggest a multinational operator</a>
+                            }
+                            else
+                            {
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("Index", "OperatorProposals")">suggest an operator</a>
+                            }
+                        }
                     </div>
                 </li>
 
@@ -147,6 +172,7 @@
                             @Html.ActionLink("my apps", "Applications", "Profile", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("my comments", "Comments", "Profile", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("my uploads", "Media", "Profile", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("my operator submissions", "MySubmissions", "OperatorProposals", null, new { @class = "dropdown-item" })
                             <div class="nav-divider"></div>
                             <a class="dropdown-item" href="@Url.Action("SignOut", "Profile")" data-localize="ocm.general.signOut">sign out</a>
                         </div>

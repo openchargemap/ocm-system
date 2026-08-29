@@ -60,12 +60,9 @@ namespace OCM.MVC.Controllers
                 var country = refDataManager.GetCountryByName(countryname);
                 if (country != null)
                 {
-                    //int[] genericOperatorIds = { 1, 44, 45 };
-                    var operators = refDataManager.GetOperators(country.ID).Where(o => o.ID != 1 && o.ID != 44 && o.ID != 45).ToList();
-                    ViewBag.Country = country;
-                    return View(operators);
+                    return RedirectToAction("Index", "Operators", new { countryId = country.ID });
                 }
-                return View();
+                return NotFound();
             }
         }
     }

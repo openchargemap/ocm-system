@@ -1,0 +1,63 @@
+@model OCM.API.Common.Model.OperatorInfo
+
+@{
+    ViewBag.Title = Model.Title;
+    var isSignedIn = User.Identity?.IsAuthenticated == true;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <h2 class="mb-2">@Model.Title</h2>
+            <p class="text-muted mb-4">Operator details</p>
+
+            <div class="card">
+                <div class="card-header h5 mb-0">Operator information</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Country</dt>
+                        <dd class="col-sm-8">@ViewBag.CountryTitle</dd>
+                        @if (!string.IsNullOrWhiteSpace(Model.WebsiteURL))
+                        {
+                            <dt class="col-sm-4">Website</dt>
+                            <dd class="col-sm-8"><a href="@Model.WebsiteURL" rel="noopener noreferrer">@Model.WebsiteURL</a></dd>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.BookingURL))
+                        {
+                            <dt class="col-sm-4">Booking URL</dt>
+                            <dd class="col-sm-8"><a href="@Model.BookingURL" rel="noopener noreferrer">@Model.BookingURL</a></dd>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.PhonePrimaryContact))
+                        {
+                            <dt class="col-sm-4">Primary phone</dt>
+                            <dd class="col-sm-8">@Model.PhonePrimaryContact</dd>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.ContactEmail))
+                        {
+                            <dt class="col-sm-4">Contact email</dt>
+                            <dd class="col-sm-8">@Model.ContactEmail</dd>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.FaultReportEmail))
+                        {
+                            <dt class="col-sm-4">Fault-report email</dt>
+                            <dd class="col-sm-8">@Model.FaultReportEmail</dd>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.Comments))
+                        {
+                            <dt class="col-sm-4">Notes</dt>
+                            <dd class="col-sm-8">@Model.Comments</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap mt-3">
+                @if (isSignedIn)
+                {
+                    <a class="btn btn-primary mr-2 mb-2" href="@Url.Action("Edit", "OperatorProposals", new { operatorId = Model.ID })">Suggest a correction</a>
+                }
+                <a class="btn btn-outline-secondary mb-2" href="@Url.Action("Index", "Operators")">Back to operator directory</a>
+            </div>
+        </div>
+    </div>
+</div>
