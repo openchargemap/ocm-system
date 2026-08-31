@@ -1177,6 +1177,16 @@ namespace OCM.Import
                         }
                     }
 
+                    // Never add a POI which is already decommissioned, such as an OCPI location the
+                    // operator has flagged publish:false. Existing POIs are left in the list so the
+                    // update delists them.
+                    var skippedNewDecommissioned = finalList.RemoveAll(l => l.ID == 0 && l.StatusTypeID == (int)StandardStatusTypes.RemovedDecomissioned);
+
+                    if (skippedNewDecommissioned > 0)
+                    {
+                        Log($"Skipped {skippedNewDecommissioned} new POI(s) which are decommissioned or not published by the operator.");
+                    }
+
                     if (ImportUpdatesOnly)
                     {
                         finalList = finalList.Where(l => l.ID > 0).ToList();

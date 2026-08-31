@@ -943,6 +943,64 @@ namespace OCM.API.Tests.ImportTests
         }
 
         /// <summary>
+        /// OCPI publish:false means the operator does not want the location shown publicly, so it
+        /// must be marked decommissioned rather than imported as a live POI.
+        /// </summary>
+        [Fact]
+        public void PublishFalseLocationsAreMarkedDecommissioned()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-ev24.json");
+
+            // ev24 sends "format": null on every connector, which the import tolerates
+            var tolerantSettings = new JsonSerializerSettings
+            {
+                Error = (obj, args) => { args.ErrorContext.Handled = true; }
+            };
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(CoreRefData);
+            var ocpiData = JsonConvert.DeserializeObject<OCM.Model.OCPI.OcpiResponseLocationList>(json, tolerantSettings).Data.ToList();
+
+            var poiResults = adapter.FromOCPI(ocpiData, 43).ToList();
+
+            var unpublishedReferences = ocpiData.Where(l => !l.Publish).Select(l => l.Id).ToHashSet();
+
+            // the sample carries a mix, so the test distinguishes rather than blanket asserting
+            Assert.NotEmpty(unpublishedReferences);
+            Assert.NotEqual(ocpiData.Count, unpublishedReferences.Count);
+
+            Assert.All(poiResults, poi => Assert.Equal(
+                unpublishedReferences.Contains(poi.DataProvidersReference)
+                    ? (int)StandardStatusTypes.RemovedDecomissioned
+                    : (int)StandardStatusTypes.Operational,
+                poi.StatusTypeID));
+        }
+
+        /// <summary>
+        /// OCPI 2.1.1 has no publish field. The generated model exposes it as a non-nullable bool,
+        /// so an absent field must not be read as publish:false.
+        /// </summary>
+        [Fact]
+        public void LocationsWithoutPublishFieldAreTreatedAsPublished()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_1_1_locations-fastned.json");
+
+            // the asset must not carry the field, otherwise this proves nothing
+            Assert.DoesNotContain("\"publish\"", json);
+
+            var adapter = new Common.Model.OCPI.OCPIDataAdapter(CoreRefData);
+            var ocpiData = JsonConvert.DeserializeObject<OCM.Model.OCPI.LocationsResponse>(json).Data;
+
+            Assert.All(ocpiData, location => Assert.True(location.Publish));
+
+            var poiResults = adapter.FromOCPI(ocpiData, 0).ToList();
+
+            Assert.NotEmpty(poiResults);
+            Assert.DoesNotContain(poiResults, p => p.StatusTypeID == (int)StandardStatusTypes.RemovedDecomissioned);
+        }
+
+        /// <summary>
         /// A placeholder name repeated across every location carries no information, so it is
         /// discarded and the title rebuilt from the address and town.
         /// </summary>

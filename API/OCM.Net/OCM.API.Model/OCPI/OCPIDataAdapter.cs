@@ -244,6 +244,16 @@ namespace OCM.API.Common.Model.OCPI
                         cp.StatusTypeID = (int)StandardStatusTypes.RemovedDuplicate;
                     }
 
+                    // OCPI publish:false means the location must not be shown publicly, so mark it
+                    // decommissioned. Any POI we already list gets delisted on update, and import
+                    // processing skips adding it as a new POI. This takes precedence over the
+                    // exclusion status above because it is the operator's own instruction.
+                    if (!i.Publish)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Location {cp.DataProvidersReference} is not published by the operator");
+                        cp.StatusTypeID = (int)StandardStatusTypes.RemovedDecomissioned;
+                    }
+
                     yield return cp;
 
                 }
@@ -270,6 +280,7 @@ namespace OCM.API.Common.Model.OCPI
 
                 var poi = new Location
                 {
+                    Publish = true,
                     Id = i.ID.ToString(),
                     City = i.AddressInfo.Town,
                     Address = i.AddressInfo.AddressLine1,
