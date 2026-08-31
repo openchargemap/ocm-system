@@ -86,6 +86,18 @@ namespace OCM.API.Common
         }
 
         /// <summary>
+        /// True when an operator title matches a name search. The country code suffix, case and punctuation are all
+        /// ignored, so "charge point" matches "ChargePoint (US)". An empty search term matches everything.
+        /// </summary>
+        public static bool MatchesNameSearch(string title, string searchTerm)
+        {
+            var term = NormalizeTitle(searchTerm);
+            if (term.Length == 0) return true;
+
+            return NormalizeTitle(RemoveCountryCode(title)).Contains(term, StringComparison.Ordinal);
+        }
+
+        /// <summary>
         /// The comparison key for an operator name: its distinctive words only, in a stable order.
         /// </summary>
         public static string GetComparisonName(string title)

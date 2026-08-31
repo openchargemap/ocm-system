@@ -16,6 +16,16 @@ namespace OCM.Web.Models
         public bool CanAddOperator { get; set; }
 
         /// <summary>
+        /// The operator name being searched for, or null when the list is filtered by country instead.
+        /// </summary>
+        public string SearchTerm { get; set; }
+
+        /// <summary>
+        /// True when a name search is being shown, which covers every country rather than the selected one.
+        /// </summary>
+        public bool IsSearch => !string.IsNullOrWhiteSpace(SearchTerm);
+
+        /// <summary>
         /// The country to preselect when adding, or null to let the user pick one.
         /// </summary>
         public int? AddForCountryID { get; set; }
@@ -31,6 +41,11 @@ namespace OCM.Web.Models
         /// The ISO country code taken from the operator title, or null for operators which are not country specific.
         /// </summary>
         public string CountryCode { get; set; }
+
+        /// <summary>
+        /// The country name for CountryCode, or null when the operator is not country specific.
+        /// </summary>
+        public string CountryName { get; set; }
 
         /// <summary>
         /// The operator website as a link target, or null when it is not a usable http(s) address.

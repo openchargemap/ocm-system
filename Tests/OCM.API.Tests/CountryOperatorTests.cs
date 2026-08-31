@@ -74,5 +74,23 @@ namespace OCM.API.Tests
         {
             Assert.False(OperatorInfoManager.IsSimilarName(existingTitle, submittedName));
         }
+
+        [Theory]
+        [InlineData("ChargePoint (US)", "charge point")]      // punctuation and spacing are ignored
+        [InlineData("ChargePoint (US)", "CHARGEPOINT")]       // case is ignored
+        [InlineData("Electrify America (US)", "america")]     // matches anywhere in the name
+        [InlineData("Ionity (DE)", "")]                       // an empty search matches everything
+        public void Name_search_matches_on_the_operator_name(string title, string searchTerm)
+        {
+            Assert.True(OperatorInfoManager.MatchesNameSearch(title, searchTerm));
+        }
+
+        [Theory]
+        [InlineData("Ionity (DE)", "fastned")]
+        [InlineData("Ionity (DE)", "DE")]                     // the country code suffix is not searched
+        public void Name_search_ignores_non_matching_names_and_the_country_suffix(string title, string searchTerm)
+        {
+            Assert.False(OperatorInfoManager.MatchesNameSearch(title, searchTerm));
+        }
     }
 }

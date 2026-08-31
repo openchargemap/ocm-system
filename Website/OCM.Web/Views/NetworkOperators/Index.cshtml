@@ -4,7 +4,9 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    ViewBag.Title = Model.Country != null ? $"Network Operators in {Model.Country.Title}" : "Network Operators";
+    ViewBag.Title = Model.IsSearch
+        ? $"Network Operators matching “{Model.SearchTerm}”"
+        : Model.Country != null ? $"Network Operators in {Model.Country.Title}" : "Network Operators";
 }
 
 <div class="container-fluid">
@@ -18,9 +20,12 @@
                 <div class="alert alert-success">@TempData["StatusMessage"]</div>
             }
 
-            <div class="d-flex flex-wrap align-items-center mb-4">
+            <div class="d-flex flex-wrap align-items-center mb-3">
                 @using (Html.BeginForm("Index", "NetworkOperators", FormMethod.Get, new { @class = "form-inline mr-auto" }))
                 {
+                    <label class="mr-2 mb-2" for="search">Search by name</label>
+                    <input type="search" id="search" name="search" value="@Model.SearchTerm" placeholder="operator name" class="form-control mr-3 mb-2" />
+
                     <label class="mr-2 mb-2" for="countryId">Country</label>
                     @Html.DropDownList("countryId", (List<SelectListItem>)ViewBag.CountryFilterList, new { @class = "custom-select mr-2 mb-2" })
                     <button type="submit" class="btn btn-outline-secondary mb-2">Show</button>
@@ -32,10 +37,25 @@
                 }
             </div>
 
+            @if (Model.IsSearch)
+            {
+                <p class="text-muted">
+                    Searching every country for “<strong>@Model.SearchTerm</strong>”, so the country filter does not apply.
+                    <a href="@Url.Action("Index", new { countryId = Model.AddForCountryID })">Clear search</a>
+                </p>
+            }
+
             @if (!Model.Operators.Any())
             {
                 <div class="alert alert-info">
-                    No operators are listed@(Model.Country != null ? " for " + Model.Country.Title : "") yet.
+                    @if (Model.IsSearch)
+                    {
+                        <text>No operators match “@Model.SearchTerm” in any country.</text>
+                    }
+                    else
+                    {
+                        <text>No operators are listed@(Model.Country != null ? " for " + Model.Country.Title : "") yet.</text>
+                    }
                 </div>
             }
             else
@@ -46,8 +66,8 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Operator</th>
                                 <th>Country</th>
+                                <th>Operator</th>
                                 <th>Website</th>
                                 <th>Contact email</th>
                             </tr>
@@ -56,8 +76,8 @@
                             @foreach (var item in Model.Operators)
                             {
                                 <tr>
+                                    <td>@(item.CountryName ?? item.CountryCode ?? "—")</td>
                                     <td><a href="@Url.Action("Index", "POI", new { operatorids = item.Operator.ID })">@item.Operator.Title</a></td>
-                                    <td>@(item.CountryCode ?? "—")</td>
                                     <td>
                                         @if (item.WebsiteLink != null)
                                         {

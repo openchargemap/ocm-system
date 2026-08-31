@@ -88,37 +88,56 @@ namespace OCM.MVC.Controllers
         }
 
         /// <summary>
-        /// Lists operators, filtered to one country. Countries are matched on the code in the operator title, so
-        /// operators which are not country specific only appear when no country is selected.
+        /// Lists operators, either filtered to one country or searched by name across every country. Countries are
+        /// matched on the code in the operator title, so operators which are not country specific only appear when
+        /// no country is selected, and sort last in a search.
         /// </summary>
-        /// <param name="countryId">The country to list. Omitted on the first visit, which defaults to the United States, or zero to list every country.</param>
+        /// <param name="countryId">The country to list. Omitted on the first visit, which defaults to the United States, or zero to list every country. Ignored while searching.</param>
+        /// <param name="search">An operator name to search for across all countries. Takes precedence over countryId.</param>
         [HttpGet]
-        public ActionResult Index(int? countryId)
+        public ActionResult Index(int? countryId, string search)
         {
             var user = GetCurrentUser();
             var allCountries = new ReferenceDataManager().GetCountries(false);
             var editableISOCodes = new HashSet<string>(GetEditableCountries(user).Select(c => NormalizeISOCode(c.ISOCode)), StringComparer.Ordinal);
+            var countryNamesByISOCode = allCountries
+                .GroupBy(c => NormalizeISOCode(c.ISOCode))
+                .ToDictionary(g => g.Key, g => g.First().Title, StringComparer.Ordinal);
 
             var selectedCountry = countryId.HasValue
                 ? allCountries.FirstOrDefault(c => c.ID == countryId.Value)
                 : allCountries.FirstOrDefault(c => NormalizeISOCode(c.ISOCode) == DefaultCountryISOCode);
             var selectedISOCode = selectedCountry != null ? NormalizeISOCode(selectedCountry.ISOCode) : null;
 
+            // a name search covers every country, so the country filter only applies when nothing is being searched for
+            var isSearch = !string.IsNullOrWhiteSpace(search);
+
             var operators = new OperatorInfoManager().GetOperators()
-                .Select(o => new NetworkOperatorListItem
+                .Where(o => isSearch
+                    ? OperatorInfoManager.MatchesNameSearch(o.Title, search)
+                    : selectedISOCode == null || OperatorInfoManager.GetCountryCodeFromTitle(o.Title) == selectedISOCode)
+                .Select(o =>
                 {
-                    Operator = o,
-                    CountryCode = OperatorInfoManager.GetCountryCodeFromTitle(o.Title),
-                    WebsiteLink = GetWebsiteLink(o.WebsiteURL)
+                    var countryCode = OperatorInfoManager.GetCountryCodeFromTitle(o.Title);
+                    return new NetworkOperatorListItem
+                    {
+                        Operator = o,
+                        CountryCode = countryCode,
+                        CountryName = countryCode != null && countryNamesByISOCode.TryGetValue(countryCode, out var countryName) ? countryName : null,
+                        WebsiteLink = GetWebsiteLink(o.WebsiteURL)
+                    };
                 })
-                .Where(o => selectedISOCode == null || o.CountryCode == selectedISOCode)
+                .OrderBy(o => o.CountryName == null)
+                .ThenBy(o => o.CountryName, StringComparer.CurrentCultureIgnoreCase)
+                .ThenBy(o => o.Operator.Title, StringComparer.CurrentCultureIgnoreCase)
                 .ToList();
 
             PopulateCountryFilter(allCountries, selectedCountry?.ID ?? 0);
 
             return View(new NetworkOperatorListModel
             {
-                Country = selectedCountry,
+                Country = isSearch ? null : selectedCountry,
+                SearchTerm = isSearch ? search.Trim() : null,
                 CanAddOperator = editableISOCodes.Count > 0,
                 AddForCountryID = selectedISOCode != null && editableISOCodes.Contains(selectedISOCode) ? selectedCountry.ID : (int?)null,
                 Operators = operators
