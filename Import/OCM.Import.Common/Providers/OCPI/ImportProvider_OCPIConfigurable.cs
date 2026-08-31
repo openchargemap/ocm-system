@@ -52,6 +52,18 @@ namespace OCM.Import.Providers.OCPI
                 }
             }
 
+            // Copy placeholder titles to discard
+            if (config.IgnoredLocationTitles != null)
+            {
+                foreach (var title in config.IgnoredLocationTitles)
+                {
+                    if (!string.IsNullOrWhiteSpace(title))
+                    {
+                        IgnoredLocationTitles.Add(title.Trim());
+                    }
+                }
+            }
+
             // Initialize the provider with endpoint URL
             Init(
                 dataProviderId: config.DataProviderId,

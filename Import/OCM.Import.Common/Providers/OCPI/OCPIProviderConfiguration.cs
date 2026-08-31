@@ -72,6 +72,13 @@ namespace OCM.Import.Providers.OCPI
         public bool AppendAddressToTitle { get; set; }
 
         /// <summary>
+        /// Placeholder location names which carry no useful information (e.g. "Acme Charging Station"
+        /// repeated for every location). A location matching one of these is treated as having no name
+        /// and its title is built from the address and town instead. Matched case-insensitively.
+        /// </summary>
+        public List<string> IgnoredLocationTitles { get; set; } = new List<string>();
+
+        /// <summary>
         /// Mapping of OCPI operator names/codes to OCM Operator IDs
         /// Key: Operator name as it appears in OCPI data
         /// Value: OCM Operator ID

@@ -940,12 +940,51 @@ namespace OCM.API.Tests.ImportTests
 
             Assert.Equal(withFlag.Count, withFlag.Select(p => p.AddressInfo.Title).Distinct().Count());
             Assert.Contains(withFlag, p => p.AddressInfo.Title == "EV24 Charging Station, Piękna 3");
+        }
 
-            // the hardcoded provider must stay equivalent to the configured one
+        /// <summary>
+        /// A placeholder name repeated across every location carries no information, so it is
+        /// discarded and the title rebuilt from the address and town.
+        /// </summary>
+        [Fact]
+        public void IgnoredLocationTitles_ReplacesPlaceholderTitleWithAddress()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-ev24.json");
+
+            var provider = new ImportProvider_OCPIConfigurable(new OCPIProviderConfiguration
+            {
+                ProviderName = "ev24.cloud",
+                DataProviderId = 43,
+                LocationsEndpointUrl = "https://api.ev24.cloud/ocpi/2.2.1/locations",
+                CredentialKey = "OCPI-EV24",
+                DefaultOperatorId = 3898,
+                IsProductionReady = true,
+                // deliberately differing in case, matching is case-insensitive
+                IgnoredLocationTitles = new List<string> { "ev24 charging station" },
+                OperatorMappings = new Dictionary<string, int> { { "EV24", 3898 } }
+            })
+            { InputData = json };
+
+            var poiResults = provider.Process(CoreRefData);
+
+            // the placeholder is gone and every POI is distinguishable
+            Assert.DoesNotContain(poiResults, p => p.AddressInfo.Title == "EV24 Charging Station");
+            Assert.Equal(poiResults.Count, poiResults.Select(p => p.AddressInfo.Title).Distinct().Count());
+            Assert.Contains(poiResults, p => p.AddressInfo.Title == "Piękna 3, Kluszkowce");
+
+            // location LC6VNLJOFA has a whitespace-only address, so the town alone forms the title
+            var blankAddress = poiResults.Single(p => p.DataProvidersReference == "LC6VNLJOFA");
+            Assert.Equal("Iwkowa", blankAddress.AddressInfo.Title);
+
+            // no POI may be left without a title, that would fail import validation
+            Assert.All(poiResults, p => Assert.False(string.IsNullOrWhiteSpace(p.AddressInfo.Title)));
+
+            // the hardcoded EV24 provider must stay equivalent to the configured one
             var hardcoded = new ImportProvider_EV24 { InputData = json }.Process(CoreRefData);
 
             Assert.Equal(
-                withFlag.Select(p => p.AddressInfo.Title).OrderBy(t => t),
+                poiResults.Select(p => p.AddressInfo.Title).OrderBy(t => t),
                 hardcoded.Select(p => p.AddressInfo.Title).OrderBy(t => t));
         }
 

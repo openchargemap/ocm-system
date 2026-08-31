@@ -16,9 +16,9 @@ namespace OCM.Import.Providers.OCPI
 
             DefaultOperatorID = 3898;
 
-            // every EV24 location is named "EV24 Charging Station", so the address has to be
-            // appended or deduplication discards all but the first POI on matching title
-            AppendAddressToTitle = true;
+            // every EV24 location carries the same placeholder name, so discard it and build the
+            // title from the address, otherwise deduplication discards all but the first POI
+            IgnoredLocationTitles.Add("EV24 Charging Station");
 
             Init(dataProviderId: 43, "https://api.ev24.cloud/ocpi/2.2.1/locations");
         }

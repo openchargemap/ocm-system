@@ -122,6 +122,14 @@ namespace OCM.Import
     {
         public const int DUPLICATE_DISTANCE_METERS = 50;
 
+        /// <summary>
+        /// Distance within which POIs sharing an identical title are treated as the same physical
+        /// location. Wider than <see cref="DUPLICATE_DISTANCE_METERS"/> because a matching title is
+        /// corroborating evidence, but still bounded so that networks naming every site identically
+        /// are not collapsed into a single POI.
+        /// </summary>
+        public const int DUPLICATE_TITLE_DISTANCE_METERS = 250;
+
         public bool ImportUpdatesOnly { get; set; }
 
         public bool IsSandboxedAPIMode { get; set; }
@@ -832,21 +840,28 @@ namespace OCM.Import
                 duplicateReasons.Add("identical address string");
             }
 
-            // Check 4: Title match (if requested and not already matched by address)
+            // Check 4: Title match (if requested and not already matched by address).
+            // A shared title only indicates a duplicate when the two POIs are also at the same
+            // physical location. Networks which name every site identically (e.g. "Acme Charging
+            // Station") would otherwise collapse to a single POI for the whole import.
             if (compareTitle &&
                      !string.IsNullOrEmpty(previousAddr.Title) &&
                    previousAddr.Title == currentAddr.Title &&
             duplicateReasons.Count == 0)
             {
-                duplicateReasons.Add($"matching title: {currentAddr.Title}");
+                var titleMatchDistance = GetDistanceBetween(currentAddr, previousAddr);
+
+                if (titleMatchDistance < DUPLICATE_TITLE_DISTANCE_METERS)
+                {
+                    duplicateReasons.Add($"matching title: {currentAddr.Title} ({titleMatchDistance:F1}m apart, threshold: {DUPLICATE_TITLE_DISTANCE_METERS}m)");
+                }
             }
 
             // Check 5: Proximity check (most expensive - only if no matches yet)
             if (duplicateReasons.Count == 0 &&
         GeoManager.IsClose(currentAddr.Latitude, currentAddr.Longitude, previousAddr.Latitude, previousAddr.Longitude, 2))
             {
-                var distance = new GeoCoordinate(currentAddr.Latitude, currentAddr.Longitude)
-                .GetDistanceTo(new GeoCoordinate(previousAddr.Latitude, previousAddr.Longitude));
+                var distance = GetDistanceBetween(currentAddr, previousAddr);
 
                 if (distance < DUPLICATE_DISTANCE_METERS)
                 {
@@ -866,6 +881,15 @@ namespace OCM.Import
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Distance in meters between two addresses.
+        /// </summary>
+        private static double GetDistanceBetween(AddressInfo a, AddressInfo b)
+        {
+            return new GeoCoordinate(a.Latitude, a.Longitude)
+                .GetDistanceTo(new GeoCoordinate(b.Latitude, b.Longitude));
         }
 
         public bool MergeItemChanges(ChargePoint sourceItem, ChargePoint destItem, bool statusOnly)
