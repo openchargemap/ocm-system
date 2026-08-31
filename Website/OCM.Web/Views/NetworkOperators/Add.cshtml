@@ -1,32 +1,25 @@
-@model OCM.Web.Models.CountryOperatorEditModel
+@model OCM.Web.Models.NetworkOperatorAddModel
 @using System.Collections.Generic
 @using System.Linq
 @using OCM.API.Common
 
 @{
-    ViewBag.Title = Model.ID > 1 ? "Edit Country Operator" : "Add Country Operator";
+    ViewBag.Title = "Add Network Operator";
     var duplicateTitleMatch = ViewBag.DuplicateTitleMatch as OperatorMatch;
     var possibleDuplicates = ViewBag.PossibleDuplicates as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
     var otherCountryMatches = ViewBag.OtherCountryMatches as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
-    var isEditing = Model.ID > 1;
 }
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-lg-10 col-xl-8">
             <h2 class="mb-2">@ViewBag.Title</h2>
-            <p class="text-muted mb-4">@(isEditing ? "Update this operator’s details for the selected country." : "Create an operator label for charging locations in the selected country.")</p>
-
-            @if (TempData["StatusMessage"] != null)
-            {
-                <div class="alert alert-success">@TempData["StatusMessage"]</div>
-            }
+            <p class="text-muted mb-4">Create an operator label for charging locations in the selected country. To change an operator which already exists, ask an administrator.</p>
 
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "Please correct the following:", new { @class = "alert alert-danger" })
-                @Html.HiddenFor(model => model.ID)
 
                 <div class="card mb-4">
                     <div class="card-header h5 mb-0">Identity</div>
@@ -52,7 +45,7 @@
                             @Html.LabelFor(model => model.WebsiteURL)
                             @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.WebsiteURL)
-                            <small class="form-text text-muted">Required. The operator’s public website is used to check for existing operators.</small>
+                            <small class="form-text text-muted">Required. If the operator does not have a valid website, do not add them.</small>
                         </div>
                     </div>
                 </div>
@@ -99,7 +92,7 @@
                 {
                     <div class="alert alert-danger">
                         <strong>@duplicateTitleMatch.Operator.Title is already listed for this country.</strong>
-                        <p class="mb-0">Each operator name can only be used once per country. Edit the existing operator instead of adding a new one.</p>
+                        <p class="mb-0">Each operator name can only be used once per country, so this one cannot be added again.</p>
                     </div>
                 }
 
@@ -136,8 +129,8 @@
                 }
 
                 <div class="d-flex flex-wrap mb-4">
-                    <input type="submit" value="@(isEditing ? "Save changes" : "Create operator")" class="btn btn-primary mr-2 mb-2" />
-                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mb-2">Cancel</a>
+                    <input type="submit" value="Create operator" class="btn btn-primary mr-2 mb-2" />
+                    <a href="@Url.Action("Index", new { countryId = Model.CountryID })" class="btn btn-outline-secondary mb-2">Cancel</a>
                 </div>
             }
         </div>

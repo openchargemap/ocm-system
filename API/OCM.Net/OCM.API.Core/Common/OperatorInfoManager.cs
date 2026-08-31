@@ -168,7 +168,7 @@ namespace OCM.API.Common
         /// duplicate each one is. Matches in other countries are advisory only: an international network is expected
         /// to have one operator per country, all sharing a name and a website.
         /// </summary>
-        public List<OperatorMatch> FindPotentialDuplicates(string operatorName, string countryIsoCode, string websiteUrl, string contactEmail, int? excludedId = null)
+        public List<OperatorMatch> FindPotentialDuplicates(string operatorName, string countryIsoCode, string websiteUrl, string contactEmail)
         {
             var isoCode = (countryIsoCode ?? string.Empty).Trim().ToUpperInvariant();
             var targetTitle = NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
@@ -181,8 +181,6 @@ namespace OCM.API.Common
 
             foreach (var candidate in GetOperators())
             {
-                if (excludedId.HasValue && candidate.ID == excludedId.Value) continue;
-
                 var isSameTitle = NormalizeTitle(candidate.Title) == targetTitle;
 
                 var reasons = new List<string>();
@@ -210,27 +208,30 @@ namespace OCM.API.Common
             return matches.OrderBy(m => m.MatchType).ThenBy(m => m.Operator.Title).ToList();
         }
 
-        public OperatorInfo SaveCountryOperator(int userId, int countryId, OperatorInfo update, bool confirmNotDuplicate)
+        /// <summary>
+        /// Adds a new operator for a country. Country editors can only add operators, so existing ones are never
+        /// changed here: amending an operator is an administrator action through <see cref="UpdateOperatorInfo"/>.
+        /// </summary>
+        public OperatorInfo AddCountryOperator(int userId, int countryId, OperatorInfo addition, bool confirmNotDuplicate)
         {
             var country = dataModel.Countries.FirstOrDefault(c => c.Id == countryId);
             if (country == null) throw new ArgumentException("Unknown country", nameof(countryId));
-            if (string.IsNullOrWhiteSpace(update.WebsiteURL)) throw new InvalidOperationException("A website URL is required.");
+            if (string.IsNullOrWhiteSpace(addition.WebsiteURL)) throw new InvalidOperationException("A website URL is required.");
 
             var isoCode = country.Isocode.Trim().ToUpperInvariant();
-            var name = (update.Title ?? string.Empty).Trim();
+            var name = (addition.Title ?? string.Empty).Trim();
             var countrySuffix = " (" + isoCode + ")";
             if (name.EndsWith(countrySuffix, StringComparison.OrdinalIgnoreCase))
             {
                 name = name.Substring(0, name.Length - countrySuffix.Length).Trim();
             }
             var title = name + countrySuffix;
-            var existing = update.ID > 1 ? dataModel.Operators.FirstOrDefault(o => o.Id == update.ID) : null;
 
             // check against the same matches the editor was shown, so what is warned about is what is enforced
-            var matches = FindPotentialDuplicates(name, isoCode, update.WebsiteURL, update.ContactEmail, existing?.Id);
+            var matches = FindPotentialDuplicates(name, isoCode, addition.WebsiteURL, addition.ContactEmail);
 
             var duplicateTitle = matches.FirstOrDefault(m => m.MatchType == OperatorMatchType.DuplicateTitle);
-            if (duplicateTitle != null) throw new InvalidOperationException($"\"{duplicateTitle.Operator.Title}\" already exists. Edit that operator instead of adding a new one.");
+            if (duplicateTitle != null) throw new InvalidOperationException($"\"{duplicateTitle.Operator.Title}\" already exists, so it cannot be added again.");
 
             var needsConfirmation = matches.Where(m => m.RequiresConfirmation).ToList();
             if (needsConfirmation.Any() && !confirmNotDuplicate)
@@ -238,25 +239,22 @@ namespace OCM.API.Common
                 throw new InvalidOperationException($"This may be a duplicate of {string.Join(", ", needsConfirmation.Select(m => m.Operator.Title))}. Confirm this is a separate operator to save it.");
             }
 
-            var isUpdate = existing != null;
-            if (existing == null)
+            var added = new OCM.Core.Data.Operator
             {
-                existing = new OCM.Core.Data.Operator();
-                dataModel.Operators.Add(existing);
-            }
-
-            existing.Title = title;
-            existing.WebsiteUrl = update.WebsiteURL;
-            existing.Comments = update.Comments;
-            existing.PhonePrimaryContact = update.PhonePrimaryContact;
-            existing.PhoneSecondaryContact = update.PhoneSecondaryContact;
-            existing.ContactEmail = update.ContactEmail;
-            existing.FaultReportEmail = update.FaultReportEmail;
+                Title = title,
+                WebsiteUrl = addition.WebsiteURL,
+                Comments = addition.Comments,
+                PhonePrimaryContact = addition.PhonePrimaryContact,
+                PhoneSecondaryContact = addition.PhoneSecondaryContact,
+                ContactEmail = addition.ContactEmail,
+                FaultReportEmail = addition.FaultReportEmail
+            };
+            dataModel.Operators.Add(added);
 
             dataModel.SaveChanges();
-            var result = Model.Extensions.OperatorInfo.FromDataModel(existing);
+            var result = Model.Extensions.OperatorInfo.FromDataModel(added);
             var user = new UserManager().GetUser(userId);
-            AuditLogManager.Log(user, isUpdate ? AuditEventType.UpdatedItem : AuditEventType.CreatedItem, "{EntityType:\"Operator\",EntityID:" + result.ID + "}", $"User {(isUpdate ? "updated" : "added")} country operator {result.ID} {result.Title}");
+            AuditLogManager.Log(user, AuditEventType.CreatedItem, "{EntityType:\"Operator\",EntityID:" + result.ID + "}", $"User added country operator {result.ID} {result.Title}");
             CacheManager.RefreshCachedData();
             return result;
         }

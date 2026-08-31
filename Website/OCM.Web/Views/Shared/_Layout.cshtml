@@ -96,6 +96,10 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a>
                         <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a>
+                        @if (username != null)
+                        {
+                            <a class="dropdown-item" href="@Url.Action("Index", "NetworkOperators")">network operators</a>
+                        }
                         <!-- <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>-->
 
 

@@ -1,0 +1,80 @@
+@model OCM.Web.Models.NetworkOperatorListModel
+@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewBag.Title = Model.Country != null ? $"Network Operators in {Model.Country.Title}" : "Network Operators";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-xl-10">
+            <h2 class="mb-2">@ViewBag.Title</h2>
+            <p class="text-muted mb-4">Networks and operators used to label charging locations. Operators belong to a single country, so an international network has a separate entry for each country it covers.</p>
+
+            @if (TempData["StatusMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["StatusMessage"]</div>
+            }
+
+            <div class="d-flex flex-wrap align-items-center mb-4">
+                @using (Html.BeginForm("Index", "NetworkOperators", FormMethod.Get, new { @class = "form-inline mr-auto" }))
+                {
+                    <label class="mr-2 mb-2" for="countryId">Country</label>
+                    @Html.DropDownList("countryId", (List<SelectListItem>)ViewBag.CountryFilterList, new { @class = "custom-select mr-2 mb-2" })
+                    <button type="submit" class="btn btn-outline-secondary mb-2">Show</button>
+                }
+
+                @if (Model.CanAddOperator)
+                {
+                    <a href="@Url.Action("Add", new { countryId = Model.AddForCountryID })" class="btn btn-primary mb-2">Add Operator</a>
+                }
+            </div>
+
+            @if (!Model.Operators.Any())
+            {
+                <div class="alert alert-info">
+                    No operators are listed@(Model.Country != null ? " for " + Model.Country.Title : "") yet.
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">@Model.Operators.Count operator(s).</p>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Country</th>
+                                <th>Website</th>
+                                <th>Contact email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Operators)
+                            {
+                                <tr>
+                                    <td><a href="@Url.Action("Index", "POI", new { operatorids = item.Operator.ID })">@item.Operator.Title</a></td>
+                                    <td>@(item.CountryCode ?? "—")</td>
+                                    <td>
+                                        @if (item.WebsiteLink != null)
+                                        {
+                                            <a href="@item.WebsiteLink" target="_blank" rel="noopener noreferrer">@item.Operator.WebsiteURL</a>
+                                        }
+                                        else
+                                        {
+                                            @item.Operator.WebsiteURL
+                                        }
+                                    </td>
+                                    <td>@item.Operator.ContactEmail</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

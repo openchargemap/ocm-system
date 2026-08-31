@@ -10,8 +10,13 @@ using OCM.Web.Models;
 namespace OCM.MVC.Controllers
 {
     [Authorize(Roles = "StandardUser")]
-    public class CountryOperatorsController : BaseController
+    public class NetworkOperatorsController : BaseController
     {
+        /// <summary>
+        /// The country the list is filtered by when it is first opened.
+        /// </summary>
+        private const string DefaultCountryISOCode = "US";
+
         private User GetCurrentUser()
         {
             return UserID.HasValue ? new UserManager().GetUser(UserID.Value) : null;
@@ -35,56 +40,106 @@ namespace OCM.MVC.Controllers
             return GetEditableCountries(user).Any(c => c.ID == countryId);
         }
 
+        private static string NormalizeISOCode(string isoCode)
+        {
+            return (isoCode ?? string.Empty).Trim().ToUpperInvariant();
+        }
+
+        private static string GetWebsiteLink(string websiteUrl)
+        {
+            return Uri.TryCreate(websiteUrl, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+                ? uri.AbsoluteUri
+                : null;
+        }
+
         private void PopulateCountries(IEnumerable<Country> countries, int selectedCountryId)
         {
             ViewBag.CountryList = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(countries, "ID", "Title", selectedCountryId);
         }
 
-        private void PopulateDuplicateWarnings(OperatorInfoManager manager, IEnumerable<Country> countries, CountryOperatorEditModel model)
+        private void PopulateCountryFilter(IEnumerable<Country> countries, int selectedCountryId)
+        {
+            var options = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+            {
+                new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "0", Text = "All countries", Selected = selectedCountryId == 0 }
+            };
+
+            options.AddRange(countries.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = c.Title,
+                Selected = c.ID == selectedCountryId
+            }));
+
+            ViewBag.CountryFilterList = options;
+        }
+
+        private void PopulateDuplicateWarnings(OperatorInfoManager manager, IEnumerable<Country> countries, NetworkOperatorAddModel model)
         {
             var matches = manager.FindPotentialDuplicates(
                 model.OperatorName,
                 countries.FirstOrDefault(c => c.ID == model.CountryID)?.ISOCode,
                 model.WebsiteURL,
-                model.ContactEmail,
-                model.ID > 1 ? model.ID : (int?)null);
+                model.ContactEmail);
 
             ViewBag.DuplicateTitleMatch = matches.FirstOrDefault(m => m.MatchType == OperatorMatchType.DuplicateTitle);
             ViewBag.PossibleDuplicates = matches.Where(m => m.RequiresConfirmation).ToList();
             ViewBag.OtherCountryMatches = matches.Where(m => m.MatchType == OperatorMatchType.OtherCountry).ToList();
         }
 
+        /// <summary>
+        /// Lists operators, filtered to one country. Countries are matched on the code in the operator title, so
+        /// operators which are not country specific only appear when no country is selected.
+        /// </summary>
+        /// <param name="countryId">The country to list. Omitted on the first visit, which defaults to the United States, or zero to list every country.</param>
         [HttpGet]
-        public ActionResult Edit(int? id, int? countryId)
+        public ActionResult Index(int? countryId)
+        {
+            var user = GetCurrentUser();
+            var allCountries = new ReferenceDataManager().GetCountries(false);
+            var editableISOCodes = new HashSet<string>(GetEditableCountries(user).Select(c => NormalizeISOCode(c.ISOCode)), StringComparer.Ordinal);
+
+            var selectedCountry = countryId.HasValue
+                ? allCountries.FirstOrDefault(c => c.ID == countryId.Value)
+                : allCountries.FirstOrDefault(c => NormalizeISOCode(c.ISOCode) == DefaultCountryISOCode);
+            var selectedISOCode = selectedCountry != null ? NormalizeISOCode(selectedCountry.ISOCode) : null;
+
+            var operators = new OperatorInfoManager().GetOperators()
+                .Select(o => new NetworkOperatorListItem
+                {
+                    Operator = o,
+                    CountryCode = OperatorInfoManager.GetCountryCodeFromTitle(o.Title),
+                    WebsiteLink = GetWebsiteLink(o.WebsiteURL)
+                })
+                .Where(o => selectedISOCode == null || o.CountryCode == selectedISOCode)
+                .ToList();
+
+            PopulateCountryFilter(allCountries, selectedCountry?.ID ?? 0);
+
+            return View(new NetworkOperatorListModel
+            {
+                Country = selectedCountry,
+                CanAddOperator = editableISOCodes.Count > 0,
+                AddForCountryID = selectedISOCode != null && editableISOCodes.Contains(selectedISOCode) ? selectedCountry.ID : (int?)null,
+                Operators = operators
+            });
+        }
+
+        [HttpGet]
+        public ActionResult Add(int? countryId)
         {
             var user = GetCurrentUser();
             var countries = GetEditableCountries(user);
             if (countries.Count == 0) return Forbid();
 
-            var model = new CountryOperatorEditModel { CountryID = countryId ?? countries[0].ID };
-            if (id.HasValue)
-            {
-                var operatorInfo = new OperatorInfoManager().GetOperatorInfo(id.Value);
-                var country = countries.FirstOrDefault(c => operatorInfo != null && operatorInfo.Title.EndsWith(" (" + c.ISOCode + ")", StringComparison.OrdinalIgnoreCase));
-                if (country == null) return Forbid();
-
-                model.ID = operatorInfo.ID;
-                model.CountryID = country.ID;
-                model.OperatorName = operatorInfo.Title.Substring(0, operatorInfo.Title.Length - country.ISOCode.Length - 3);
-                model.WebsiteURL = operatorInfo.WebsiteURL;
-                model.Comments = operatorInfo.Comments;
-                model.PhonePrimaryContact = operatorInfo.PhonePrimaryContact;
-                model.PhoneSecondaryContact = operatorInfo.PhoneSecondaryContact;
-                model.ContactEmail = operatorInfo.ContactEmail;
-                model.FaultReportEmail = operatorInfo.FaultReportEmail;
-            }
+            var model = new NetworkOperatorAddModel { CountryID = countryId ?? countries[0].ID };
 
             PopulateCountries(countries, model.CountryID);
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Edit(CountryOperatorEditModel model)
+        public ActionResult Add(NetworkOperatorAddModel model)
         {
             var user = GetCurrentUser();
             var countries = GetEditableCountries(user);
@@ -94,20 +149,10 @@ namespace OCM.MVC.Controllers
             PopulateDuplicateWarnings(new OperatorInfoManager(), countries, model);
             if (!ModelState.IsValid) return View(model);
 
-            if (model.ID > 1)
-            {
-                var existing = new OperatorInfoManager().GetOperatorInfo(model.ID);
-                if (existing == null) return NotFound();
-                var suffix = " (" + countries.First(c => c.ID == model.CountryID).ISOCode + ")";
-                if (!existing.Title.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) return Forbid();
-            }
-
             try
             {
-                var manager = new OperatorInfoManager();
-                var saved = manager.SaveCountryOperator((int)UserID, model.CountryID, new OperatorInfo
+                var added = new OperatorInfoManager().AddCountryOperator((int)UserID, model.CountryID, new OperatorInfo
                 {
-                    ID = model.ID,
                     Title = model.OperatorName,
                     WebsiteURL = model.WebsiteURL,
                     Comments = model.Comments,
@@ -117,10 +162,8 @@ namespace OCM.MVC.Controllers
                     FaultReportEmail = model.FaultReportEmail
                 }, model.ConfirmNotDuplicate);
 
-                TempData["StatusMessage"] = model.ID > 1
-                    ? $"Updated operator {saved.Title}."
-                    : $"Created operator {saved.Title}.";
-                return RedirectToAction(nameof(Edit), new { id = saved.ID, countryId = model.CountryID });
+                TempData["StatusMessage"] = $"Added operator {added.Title}.";
+                return RedirectToAction(nameof(Index), new { countryId = model.CountryID });
             }
             catch (InvalidOperationException ex)
             {
