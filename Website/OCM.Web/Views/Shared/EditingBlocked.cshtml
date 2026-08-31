@@ -1,0 +1,12 @@
+@{
+    ViewBag.Title = "Editing Not Available";
+}
+
+<h2>Editing Not Available</h2>
+
+@Html.Partial("_EditingBlockedNotice")
+
+<p>
+    You can still browse and search charging locations while your account is blocked.
+    @Html.ActionLink("Browse Locations", "Index", "POI", null, new { @class = "btn btn-primary" })
+</p>

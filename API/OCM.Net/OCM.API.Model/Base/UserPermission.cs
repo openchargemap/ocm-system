@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OCM.API.Common.Model
 {
@@ -39,5 +40,20 @@ namespace OCM.API.Common.Model
         public List<UserPermission> Permissions { get; set; }
 
         public string LegacyPermissions { get; set; }
+
+        /// <summary>
+        /// If true the user is blocked from contributing edits, comments and media. Stored as part of the existing user permissions metadata so no schema change is required.
+        /// </summary>
+        public bool? IsEditingBlocked { get; set; }
+
+        /// <summary>
+        /// Optional administrator note recording why editing was blocked for this user
+        /// </summary>
+        public string EditingBlockedReason { get; set; }
+
+        /// <summary>
+        /// Date editing was last blocked for this user
+        /// </summary>
+        public DateTime? DateEditingBlocked { get; set; }
     }
 }

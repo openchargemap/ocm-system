@@ -140,6 +140,9 @@ namespace OCM.API.Web.Standard.Controllers
             if (user == null) return Unauthorized();
             if (user.IsCurrentSessionTokenValid == false) return Unauthorized();
 
+            //users blocked from editing by an administrator cannot modify content
+            if (UserManager.IsUserEditingBlocked(user)) return StatusCode(403, new { status = "error", description = UserManager.EditingBlockedMessage });
+
             int chargePointId = 0;
             using (var dataModel = new OCM.Core.Data.OCMEntities())
             {

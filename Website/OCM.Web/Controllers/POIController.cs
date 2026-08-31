@@ -237,9 +237,17 @@ namespace OCM.MVC.Controllers
                     //}
 
                     ViewBag.UserCanEditPOI = false;
+                    ViewBag.IsUserEditingBlocked = false;
                     if (IsUserSignedIn)
                     {
                         var user = new UserManager().GetUser((int)UserID);
+
+                        if (IsUserEditingBlocked(user))
+                        {
+                            ViewBag.IsUserEditingBlocked = true;
+                            ViewBag.EditingBlockedReason = UserManager.GetEditingBlockedReason(user);
+                        }
+
                         if (POIManager.CanUserEditPOI(poi, user))
                         {
                             ViewBag.UserCanEditPOI = true;
@@ -261,6 +269,9 @@ namespace OCM.MVC.Controllers
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
 
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             var cpManager = new API.Common.POIManager();
             var poi = await cpManager.Get(id, true);
 
@@ -278,6 +289,9 @@ namespace OCM.MVC.Controllers
             {
 
                 var user = new UserManager().GetUser((int)UserID);
+
+                if (IsUserEditingBlocked(user)) return EditingBlockedView(user);
+
                 var htmlInputProvider = new OCM.API.InputProviders.HTMLFormInputProvider();
 
                 if (user != null)
@@ -305,6 +319,9 @@ namespace OCM.MVC.Controllers
         [Authorize(Roles = "StandardUser")]
         public async Task<ActionResult> Add()
         {
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             var refData = new POIBrowseModel(GetCoreReferenceData());
             refData.AllowOptionalCountrySelection = false;
 
@@ -330,6 +347,9 @@ namespace OCM.MVC.Controllers
         public async Task<ActionResult> Edit(int? id, bool createCopy = false)
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
+
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
 
             if (id > 0)
             {
@@ -384,6 +404,9 @@ namespace OCM.MVC.Controllers
         {
             CheckForReadOnly();
 
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             // if poi is awaiting review, publish now
             var poiManager = new POIManager();
 
@@ -408,6 +431,9 @@ namespace OCM.MVC.Controllers
         public async Task<ActionResult> Edit(ChargePoint poi)
         {
             CheckForReadOnly();
+
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
 
             var refData = new POIBrowseModel(GetCoreReferenceData());
             refData.AllowOptionalCountrySelection = false;
@@ -613,6 +639,9 @@ namespace OCM.MVC.Controllers
         {
             ViewBag.IsReadOnlyMode = this.IsReadOnlyMode;
 
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             var cpManager = new API.Common.POIManager();
             var poi = await cpManager.Get(id, true);
 
@@ -630,6 +659,9 @@ namespace OCM.MVC.Controllers
         public async Task<ActionResult> CommentActioned(int poiId, int commentId)
         {
             CheckForReadOnly();
+
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
 
             // if poi is awaiting review, publish now
             var poiManager = new POIManager();
@@ -658,6 +690,9 @@ namespace OCM.MVC.Controllers
         public async Task<ActionResult> Comment(POIViewModel model)
         {
             CheckForReadOnly();
+
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
 
             var comment = model.NewComment;
             if (ModelState.IsValid)

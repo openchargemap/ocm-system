@@ -43,7 +43,11 @@ else
 
     if (ViewBag.EnablePreviewMode != true)
     {
-        if (userId != null)
+        if (userId != null && ViewBag.IsUserEditingBlocked == true)
+        {
+            @Html.Partial("_EditingBlockedNotice")
+        }
+        else if (userId != null)
         {
 
             <div class="well">
@@ -334,7 +338,11 @@ else
                                 {
                                     <p><span data-localize="ocm.details.commentsAndRatings.addPrompt">Add your own comment/check-in for this location</span>:</p>
 
-                                    if (userId != null)
+                                    if (userId != null && ViewBag.IsUserEditingBlocked == true)
+                                    {
+                                        @Html.Partial("_EditingBlockedNotice")
+                                    }
+                                    else if (userId != null)
                                     {
                                         @Html.EditorFor(m => m.NewComment)
                                     }
@@ -358,7 +366,11 @@ else
                     <div id="tab-media" class="tab-pane">
                         <p>
                             <span data-localize="ocm.details.mediaItems.addPrompt">Upload your own photos for this location</span>:
-                            @if (userId != null)
+                            @if (userId != null && ViewBag.IsUserEditingBlocked == true)
+                            {
+                                @Html.Partial("_EditingBlockedNotice")
+                            }
+                            else if (userId != null)
                             {
                                 @Html.ActionLink("Upload", "AddMediaItem", "POI", new { id = Model.POI.ID }, new { @class = "btn btn-primary" })
                             }

@@ -14,6 +14,38 @@
 {
     <a asp-action="Cleanup" class="btn btn-outline-primary">Auto Cleanup</a>
 }
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@if (ViewBag.RevertResults != null)
+{
+    var revertResults = (List<EditQueueRevertResult>)ViewBag.RevertResults;
+    var revertedCount = revertResults.Count(r => r.IsSuccess);
+
+    <div class="alert @(revertedCount == revertResults.Count ? "alert-success" : "alert-warning")">
+        <p><strong>Reverted @revertedCount of @revertResults.Count selected edit(s).</strong></p>
+        <ul>
+            @foreach (var revertResult in revertResults)
+            {
+                <li>
+                    Edit @revertResult.EditQueueItemID:
+                    @if (revertResult.IsSuccess)
+                    {
+                        <span class="text-success">@revertResult.Message</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">@revertResult.Message</span>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
+
 @Html.Partial("_EditQueueFilter", (EditQueueFilter)ViewBag.EditFilter)
 
 <p>Note: A maximum of 200 results will be shown:</p>

@@ -27,22 +27,81 @@
 
     if (isAdministrator)
     {
+        var userPermissions = OCM.API.Common.UserManager.GetUserPermissions(Model);
+        var isEditingBlocked = userPermissions.IsEditingBlocked == true;
+
         <div class="well well-lg">
             <h2>Admin Options</h2>
+
+            @if (TempData["StatusMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["StatusMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
             <a class="btn btn-danger" href="@Url.Action("EditUser", "Admin", new { id=Model.ID})">Edit User Details</a>
 
+            <h3>Edit Permissions</h3>
+            @if (isEditingBlocked)
+            {
+                <div class="alert alert-danger">
+                    <p>
+                        <strong>This user is blocked from making edits.</strong>
+                        They cannot submit new locations, edits, comments or photos and are directed to
+                        <a href="@OCM.API.Common.UserManager.CommunityDiscussionURL" class="alert-link" target="_blank" rel="noopener">@OCM.API.Common.UserManager.CommunityDiscussionURL</a>
+                        to discuss reinstatement.
+                    </p>
+                    @if (!String.IsNullOrWhiteSpace(userPermissions.EditingBlockedReason))
+                    {
+                        <p><strong>Reason:</strong> @userPermissions.EditingBlockedReason</p>
+                    }
+                    @if (userPermissions.DateEditingBlocked != null)
+                    {
+                        <p><strong>Blocked on:</strong> @userPermissions.DateEditingBlocked.Value.ToString("u")</p>
+                    }
+                </div>
+
+                <form method="post" action="@Url.Action("SetUserEditingBlocked", "Admin")" class="form-inline" style="padding-bottom:1em;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="userId" value="@Model.ID" />
+                    <input type="hidden" name="isBlocked" value="false" />
+                    <button type="submit" class="btn btn-success">Reinstate Edit Permissions</button>
+                </form>
+            }
+            else
+            {
+                <p>
+                    Blocking a user prevents them submitting new locations, edits, comments and photos via the website and the API. They are told to discuss their intent at
+                    <a href="@OCM.API.Common.UserManager.CommunityDiscussionURL" target="_blank" rel="noopener">@OCM.API.Common.UserManager.CommunityDiscussionURL</a>
+                    in order to have their edit permissions reinstated.
+                </p>
+
+                <form method="post" action="@Url.Action("SetUserEditingBlocked", "Admin")" style="padding-bottom:1em;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="userId" value="@Model.ID" />
+                    <input type="hidden" name="isBlocked" value="true" />
+                    <div class="form-group">
+                        <label for="editingBlockedReason">Reason (optional, shown to the user):</label>
+                        <input type="text" class="form-control" id="editingBlockedReason" name="reason" maxlength="500" placeholder="e.g. repeated submission of inaccurate data" />
+                    </div>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Block this user from making any edits?');">Block User From Editing</button>
+                </form>
+            }
+
+            <h3>Country Editor Permissions</h3>
             <p>
                 You can assign country editor permissions here. Assigning Country Editor permissions will automatically create a country subscription for that user - this is not deleted if the permission is removed.
             </p>
             <div class="text-info">
                 Current Permissions:
                 <ul>
-                    @if (!String.IsNullOrEmpty(Model.Permissions))
+                    @if (userPermissions.Permissions != null && userPermissions.Permissions.Any())
                     {
-
-                        var permissions = Newtonsoft.Json.JsonConvert.DeserializeObject<OCM.API.Common.Model.UserPermissionsContainer>(Model.Permissions);
                         var allCountries = (SelectList)ViewBag.CountryList;
-                        foreach (var permission in permissions.Permissions)
+                        foreach (var permission in userPermissions.Permissions)
                         {
                             if (permission.CountryID != null)
                             {

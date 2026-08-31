@@ -6,6 +6,11 @@
 
 <h2>Your Profile and Stats</h2>
 
+@if (ViewBag.IsUserEditingBlocked == true)
+{
+    @Html.Partial("_EditingBlockedNotice")
+}
+
 <div>
         <fieldset>
             <legend>Your Profile</legend>

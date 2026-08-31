@@ -118,6 +118,41 @@ namespace OCM.MVC.Controllers
         }
 
         /// <summary>
+        /// Get the full profile of the currently signed in user, or null if the user is not signed in
+        /// </summary>
+        /// <returns></returns>
+        public OCM.API.Common.Model.User GetCurrentUserProfile()
+        {
+            if (!IsUserSignedIn) return null;
+
+            return new UserManager().GetUser((int)UserID);
+        }
+
+        /// <summary>
+        /// True if an administrator has blocked the given user from contributing edits, comments and media
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool IsUserEditingBlocked(OCM.API.Common.Model.User user)
+        {
+            return UserManager.IsUserEditingBlocked(user);
+        }
+
+        /// <summary>
+        /// Standard response shown to a user who has been blocked from editing, explaining how they can request that their edit permissions are reinstated
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ViewResult EditingBlockedView(OCM.API.Common.Model.User user)
+        {
+            Response.StatusCode = 403;
+
+            ViewBag.EditingBlockedReason = UserManager.GetEditingBlockedReason(user);
+
+            return View("EditingBlocked");
+        }
+
+        /// <summary>
         /// Returns new or cached location guess based on client IP address
         /// </summary>
         /// <returns></returns>

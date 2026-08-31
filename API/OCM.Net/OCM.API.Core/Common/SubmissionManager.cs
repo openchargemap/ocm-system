@@ -14,6 +14,11 @@ namespace OCM.API.Common
     /// </summary>
     public class SubmissionManager
     {
+        /// <summary>
+        /// Result code returned by comment submissions when the users account has been blocked from editing by an administrator
+        /// </summary>
+        public const int SubmissionResult_EditingBlocked = -3;
+
         public bool AllowUpdates = false;
         public bool RequireSubmissionReview = true;
 
@@ -109,6 +114,12 @@ namespace OCM.API.Common
                 if (user != null)
                 {
                     if (user.ID == (int)StandardUsers.System) isSystemUser = true;
+
+                    //users blocked from editing by an administrator cannot submit new POIs or edits (the system user performs imports and is never blocked)
+                    if (!isSystemUser && UserManager.IsUserEditingBlocked(user))
+                    {
+                        return new ValidationResult { IsValid = false, Message = UserManager.EditingBlockedMessage };
+                    }
 
                     //if user is system user, edits/updates are not recorded in edit queue
                     if (isSystemUser)
@@ -411,11 +422,14 @@ namespace OCM.API.Common
         /// Submit a new comment against a given charge equipment id
         /// </summary>
         /// <param name="comment"></param>
-        /// <returns>ID of new comment, -1 for invalid cp, -2 for general error saving comment</returns>
+        /// <returns>ID of new comment, -1 for invalid cp, -2 for general error saving comment, -3 if the users account is blocked from editing</returns>
         public async Task<int> PerformSubmission(Common.Model.UserComment comment, Model.User user)
         {
             //TODO: move all to UserCommentManager
             //populate data model comment from simple comment object
+
+            //users blocked from editing by an administrator cannot submit comments
+            if (UserManager.IsUserEditingBlocked(user)) return SubmissionResult_EditingBlocked;
 
             var dataModel = new Core.Data.OCMEntities();
             int cpID = comment.ChargePointID;

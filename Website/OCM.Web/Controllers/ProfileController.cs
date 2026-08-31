@@ -39,6 +39,9 @@ namespace OCM.MVC.Controllers
             var userManager = new UserManager();
             var user = userManager.GetUser((int)UserID);
 
+            ViewBag.IsUserEditingBlocked = IsUserEditingBlocked(user);
+            ViewBag.EditingBlockedReason = UserManager.GetEditingBlockedReason(user);
+
             return View(user);
         }
 
@@ -183,6 +186,9 @@ namespace OCM.MVC.Controllers
         public ActionResult CommentDelete(int id)
         {
             var user = new UserManager().GetUser((int)UserID);
+
+            if (IsUserEditingBlocked(user)) return EditingBlockedView(user);
+
             using (var commentManager = new UserCommentManager())
             {
                 var list = commentManager.GetUserComments(user.ID);
@@ -211,6 +217,9 @@ namespace OCM.MVC.Controllers
         public ActionResult MediaDelete(int id)
         {
             var user = new UserManager().GetUser((int)UserID);
+
+            if (IsUserEditingBlocked(user)) return EditingBlockedView(user);
+
             var itemManager = new MediaItemManager();
             var list = itemManager.GetUserMediaItems(user.ID);
 
@@ -315,6 +324,9 @@ namespace OCM.MVC.Controllers
         [Authorize(Roles = "StandardUser")]
         public ActionResult SubmitOCPI()
         {
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             PopulateCountryList();
 
             // Restore form data if returning from a failed validation
@@ -335,6 +347,9 @@ namespace OCM.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ValidateOCPI(OCPISubmitModel model)
         {
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             if (!ModelState.IsValid)
             {
                 PopulateCountryList();
@@ -406,6 +421,9 @@ namespace OCM.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConfirmOCPI(OCPIValidateModel model)
         {
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             // Recover submit details from TempData
             OCPISubmitModel submitDetails;
             OCPIValidationResult validationResult;
@@ -445,6 +463,9 @@ namespace OCM.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CompleteOCPI(OCPIConfirmModel model)
         {
+            var currentUser = GetCurrentUserProfile();
+            if (IsUserEditingBlocked(currentUser)) return EditingBlockedView(currentUser);
+
             if (!model.AcceptedDataSharingAgreement)
             {
                 ModelState.AddModelError(nameof(model.AcceptedDataSharingAgreement), "You must accept the data sharing agreement.");

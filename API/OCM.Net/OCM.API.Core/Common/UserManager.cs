@@ -19,6 +19,16 @@ namespace OCM.API.Common
 
     public class UserManager : ManagerBase
     {
+        /// <summary>
+        /// Community forum users are directed to in order to discuss reinstatement of their edit permissions
+        /// </summary>
+        public const string CommunityDiscussionURL = "https://community.openchargemap.org/";
+
+        /// <summary>
+        /// Message presented to users (and API clients) when the account has been blocked from editing by an administrator
+        /// </summary>
+        public const string EditingBlockedMessage = "Your account is currently blocked from making edits or contributions to Open Charge Map. To discuss your intent and request that your edit permissions are reinstated please visit " + CommunityDiscussionURL;
+
         public class PasswordNotSetException : Exception { }
 
         public Model.User GetUser(OCM.API.Common.Model.LoginModel loginModel)
@@ -430,6 +440,51 @@ namespace OCM.API.Common
             return false;
         }
 
+        /// <summary>
+        /// Get the structured permissions metadata for a user, returning an empty container if the user has no permissions or the permissions are in the older non-JSON format
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static UserPermissionsContainer GetUserPermissions(User user)
+        {
+            if (user == null || String.IsNullOrEmpty(user.Permissions)) return new UserPermissionsContainer();
+
+            try
+            {
+                return JsonConvert.DeserializeObject<UserPermissionsContainer>(user.Permissions) ?? new UserPermissionsContainer();
+            }
+            catch (JsonException)
+            {
+                //permissions are in the older semicolon separated format, no structured permissions available
+                return new UserPermissionsContainer { LegacyPermissions = user.Permissions };
+            }
+        }
+
+        /// <summary>
+        /// Returns true if an administrator has blocked this user from contributing edits, comments or media
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static bool IsUserEditingBlocked(User user)
+        {
+            if (user == null) return false;
+
+            return GetUserPermissions(user).IsEditingBlocked == true;
+        }
+
+        /// <summary>
+        /// Optional administrator note recording why the user was blocked from editing, null if the user is not blocked
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static string GetEditingBlockedReason(User user)
+        {
+            if (user == null) return null;
+
+            var permissions = GetUserPermissions(user);
+            return permissions.IsEditingBlocked == true ? permissions.EditingBlockedReason : null;
+        }
+
         public static bool HasUserPermission(User user, int? CountryID, PermissionLevel requiredLevel, UserPermissionsContainer userPermissions = null)
         {
             if (user != null)
@@ -438,7 +493,7 @@ namespace OCM.API.Common
                 {
                     if (userPermissions == null)
                     {
-                        userPermissions = JsonConvert.DeserializeObject<UserPermissionsContainer>(user.Permissions);
+                        userPermissions = GetUserPermissions(user);
                     }
 
                     if (userPermissions.Permissions != null)
@@ -470,17 +525,57 @@ namespace OCM.API.Common
             return HasUserPermission(user, StandardPermissionAttributes.Administrator, "true");
         }
 
+        /// <summary>
+        /// Block or unblock a user from contributing edits, comments and media. The block is stored in the users permission metadata so no schema change is required.
+        /// </summary>
+        /// <param name="userId">user to block/unblock</param>
+        /// <param name="isBlocked">true to block editing, false to reinstate editing</param>
+        /// <param name="reason">optional administrator note recording why editing was blocked</param>
+        /// <param name="administrator">administrator performing the change</param>
+        /// <returns>true if the change was applied</returns>
+        public bool SetUserEditingBlocked(int userId, bool isBlocked, string reason, User administrator)
+        {
+            //only an administrator can block/unblock editing
+            if (!IsUserAdministrator(administrator)) return false;
+
+            //the system user performs imports and must never be blocked, administrators also cannot block themselves (which would leave them unable to reinstate)
+            if (userId == (int)StandardUsers.System) return false;
+            if (isBlocked && administrator.ID == userId) return false;
+
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.Id == userId);
+            if (userDetails == null) return false;
+
+            var userPermissions = GetUserPermissions(Model.Extensions.User.FromDataModel(userDetails));
+
+            if (isBlocked)
+            {
+                userPermissions.IsEditingBlocked = true;
+                userPermissions.EditingBlockedReason = String.IsNullOrWhiteSpace(reason) ? null : reason.Trim();
+                userPermissions.DateEditingBlocked = DateTime.UtcNow;
+            }
+            else
+            {
+                //clear the block entirely so the metadata returns to its previous state
+                userPermissions.IsEditingBlocked = null;
+                userPermissions.EditingBlockedReason = null;
+                userPermissions.DateEditingBlocked = null;
+            }
+
+            userDetails.Permissions = JsonConvert.SerializeObject(userPermissions, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            dataModel.SaveChanges();
+
+            AuditLogManager.Log(administrator, isBlocked ? AuditEventType.EditingBlocked : AuditEventType.EditingUnblocked, "User: " + userId + (String.IsNullOrWhiteSpace(reason) ? "" : "; Reason: " + reason.Trim()), null);
+
+            return true;
+        }
+
         public bool GrantPermission(User user, StandardPermissionAttributes permissionAttribute, string attributeValue, bool removeOnly, User administrator)
         {
             //to apply permissions we add or remove from the permissions list attached to the user details, we also maintain a string in the legacy semicolon seperated format for apps/code which still requires the older format.
             var userDetails = dataModel.Users.FirstOrDefault(u => u.Id == user.ID);
             if (userDetails != null)
             {
-                UserPermissionsContainer userPermissions = new UserPermissionsContainer();
-                if (!String.IsNullOrEmpty(user.Permissions))
-                {
-                    userPermissions = JsonConvert.DeserializeObject<UserPermissionsContainer>(user.Permissions);
-                }
+                UserPermissionsContainer userPermissions = GetUserPermissions(user);
 
                 //apply permission to legacypermission tag of user details
                 string attributeTag = "[" + permissionAttribute.ToString() + "=" + attributeValue + "];";

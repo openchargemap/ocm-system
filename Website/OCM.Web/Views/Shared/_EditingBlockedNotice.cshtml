@@ -1,0 +1,19 @@
+@{
+    var blockedReason = ViewBag.EditingBlockedReason as string;
+}
+
+<div class="alert alert-danger" role="alert">
+    <p>
+        Your account is currently blocked from making edits or contributions to Open Charge Map.
+    </p>
+    @if (!String.IsNullOrWhiteSpace(blockedReason))
+    {
+        <p>
+            <strong>Reason given:</strong> @blockedReason
+        </p>
+    }
+    <p>
+        To discuss your intent and request that your edit permissions are reinstated please visit
+        <a href="@OCM.API.Common.UserManager.CommunityDiscussionURL" class="alert-link" target="_blank" rel="noopener">@OCM.API.Common.UserManager.CommunityDiscussionURL</a>.
+    </p>
+</div>

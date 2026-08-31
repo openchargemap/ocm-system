@@ -20,9 +20,49 @@
 }
 else
 {
+    var filter = (EditQueueFilter)ViewBag.EditFilter ?? new EditQueueFilter();
+    var revertableCount = isUserAdmin == true ? Model.Count(i => OCM.API.Common.EditQueueManager.CanItemBeReverted(i)) : 0;
+
+    @* the form tag helper adds the antiforgery token required by the RevertSelected action *@
+    <form method="post" asp-action="RevertSelected" asp-controller="EditQueue" id="editqueue-revert-form">
+
+    <input type="hidden" name="ShowEditsOnly" value="@filter.ShowEditsOnly" />
+    <input type="hidden" name="ShowProcessed" value="@filter.ShowProcessed" />
+    <input type="hidden" name="DateFrom" value="@(filter.DateFrom?.ToString("yyyy-MM-dd"))" />
+    <input type="hidden" name="DateTo" value="@(filter.DateTo?.ToString("yyyy-MM-dd"))" />
+    <input type="hidden" name="ID" value="@filter.ID" />
+    <input type="hidden" name="UserId" value="@filter.UserId" />
+    <input type="hidden" name="MinimumDifferences" value="@filter.MinimumDifferences" />
+    <input type="hidden" name="MaxResults" value="@filter.MaxResults" />
+
+    @if (isUserAdmin == true)
+    {
+        <div class="well well-sm">
+            @if (revertableCount > 0)
+            {
+                <p>
+                    As an administrator you can undo an approved edit, restoring the content it replaced. Select the edits to undo then choose <em>Revert Selected</em>.
+                    The revert is recorded as a new approved edit, so it can be undone in turn.
+                </p>
+                <button type="submit" class="btn btn-warning" onclick="return confirmRevertSelected();">Revert Selected</button>
+            }
+            else
+            {
+                <p class="text-muted">
+                    No approved edits are shown. Tick <em>Show Processed Items</em> above to find approved edits which can be reverted.
+                </p>
+            }
+        </div>
+    }
 
     <table class="table table-condensed">
         <tr>
+            @if (revertableCount > 0)
+            {
+                <th>
+                    <input type="checkbox" id="revert-select-all" title="Select all revertable edits" />
+                </th>
+            }
             <th>
                 Submitter
             </th>
@@ -38,6 +78,15 @@ else
             var editPOI = OCM.API.Common.EditQueueManager.DeserializePOIFromJSON(item.EditData);
 
             <tr>
+                @if (revertableCount > 0)
+                {
+                    <td rowspan="2">
+                        @if (OCM.API.Common.EditQueueManager.CanItemBeReverted(item))
+                        {
+                            <input type="checkbox" class="revert-select" name="selectedItems" value="@item.ID" />
+                        }
+                    </td>
+                }
                 <td rowspan="2">
                     @if (item.User == null)
                     {
@@ -101,6 +150,13 @@ else
                         else
                         {
                             <span class="text-success">Edit Processed @(item.ProcessedByUser != null ? "by " + item.ProcessedByUser.Username : "") @item.DateProcessed</span>
+
+                            if (OCM.API.Common.EditQueueManager.IsItemReverted(item))
+                            {
+                                <br />
+                                <span class="label label-warning">Reverted</span>
+                                <span class="text-muted">@item.Comment</span>
+                            }
                         }
                     }
                     
@@ -116,4 +172,31 @@ else
             </tr>
         }
     </table>
+
+    @if (revertableCount > 0)
+    {
+        <button type="submit" class="btn btn-warning" onclick="return confirmRevertSelected();">Revert Selected</button>
+
+        <script>
+            function confirmRevertSelected() {
+                var selected = document.querySelectorAll('#editqueue-revert-form .revert-select:checked').length;
+                if (selected === 0) {
+                    alert('Select one or more approved edits to revert.');
+                    return false;
+                }
+                return confirm('Revert ' + selected + ' approved edit(s)? The content each edit replaced will be restored.');
+            }
+
+            (function () {
+                var selectAll = document.getElementById('revert-select-all');
+                if (selectAll) {
+                    selectAll.addEventListener('change', function () {
+                        var boxes = document.querySelectorAll('#editqueue-revert-form .revert-select');
+                        for (var i = 0; i < boxes.length; i++) { boxes[i].checked = selectAll.checked; }
+                    });
+                }
+            })();
+        </script>
+    }
+    </form>
 }

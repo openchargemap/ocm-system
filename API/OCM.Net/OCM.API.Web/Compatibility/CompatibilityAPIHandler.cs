@@ -198,6 +198,13 @@ namespace OCM.API
                     return true;
                 }
 
+                //if an administrator has blocked this user from editing, reject all contributions and explain how to request reinstatement
+                if (UserManager.IsUserEditingBlocked(user))
+                {
+                    await OutputBadRequestMessage(context, UserManager.EditingBlockedMessage, 403);
+                    return true;
+                }
+
                 //gather input variables
                 if (context.Request.Query["action"] == "cp_submission" || filter.Action == "poi")
                 {

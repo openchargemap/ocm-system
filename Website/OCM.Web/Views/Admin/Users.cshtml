@@ -94,6 +94,11 @@ Page @Model.PageIndex of @Model.TotalPages  - Total Results: @Model.TotalResults
                 @Html.DisplayFor(modelItem => item.ReputationPoints)
             </td>
             <td>
+                @if (OCM.API.Common.UserManager.IsUserEditingBlocked(item))
+                {
+                    <span class="label label-danger">Blocked from editing</span>
+                    <br />
+                }
                 @Html.DisplayFor(modelItem => item.Permissions)
             </td>
             <td>

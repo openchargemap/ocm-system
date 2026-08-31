@@ -339,6 +339,31 @@ namespace OCM.MVC.Controllers
             return View(userDetails);
         }
 
+        /// <summary>
+        /// Block or reinstate a users ability to contribute edits, comments and media. The block is held in the users permission metadata.
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SetUserEditingBlocked(int userId, bool isBlocked, string reason)
+        {
+            var userManager = new UserManager();
+            var administrator = userManager.GetUser((int)UserID);
+
+            if (userManager.SetUserEditingBlocked(userId, isBlocked, reason, administrator))
+            {
+                TempData["StatusMessage"] = isBlocked
+                    ? "User is now blocked from making edits."
+                    : "User edit permissions have been reinstated.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Could not change the edit block for this user. The system user cannot be blocked and administrators cannot block their own account.";
+            }
+
+            return RedirectToAction("View", "Profile", new { id = userId });
+        }
+
         [Authorize(Roles = "Admin")]
         public ActionResult PromoteUserToEditor(int userId, int countryId, bool autoCreateSubscriptions, bool removePermission)
         {

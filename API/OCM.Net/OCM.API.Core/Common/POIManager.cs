@@ -179,6 +179,9 @@ namespace OCM.API.Common
         {
             if (user == null || poi == null) return false;
 
+            //users blocked from editing by an administrator cannot edit or approve any POI
+            if (UserManager.IsUserEditingBlocked(user)) return false;
+
             int? countryId = (poi.AddressInfo != null && poi.AddressInfo.Country != null) ? (int?)poi.AddressInfo.Country.ID : null;
 
             if (UserManager.IsUserAdministrator(user) || UserManager.HasUserPermission(user, null, PermissionLevel.Editor) || (countryId != null && UserManager.HasUserPermission(user, countryId, PermissionLevel.Editor)))
