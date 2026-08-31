@@ -65,6 +65,13 @@ namespace OCM.Import.Providers.OCPI
         public bool AllowDuplicatePOIWithDifferentOperator { get; set; } = true;
 
         /// <summary>
+        /// If true, the location address is appended to the POI title.
+        /// Use this for feeds which give every location the same name (e.g. "Acme Charging Station"),
+        /// otherwise deduplication discards all but the first POI on matching title.
+        /// </summary>
+        public bool AppendAddressToTitle { get; set; }
+
+        /// <summary>
         /// Mapping of OCPI operator names/codes to OCM Operator IDs
         /// Key: Operator name as it appears in OCPI data
         /// Value: OCM Operator ID

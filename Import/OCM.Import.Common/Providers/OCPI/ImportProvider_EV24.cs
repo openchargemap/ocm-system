@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using OCM.API.Common.Model;
 
 namespace OCM.Import.Providers.OCPI
 {
@@ -17,6 +16,10 @@ namespace OCM.Import.Providers.OCPI
 
             DefaultOperatorID = 3898;
 
+            // every EV24 location is named "EV24 Charging Station", so the address has to be
+            // appended or deduplication discards all but the first POI on matching title
+            AppendAddressToTitle = true;
+
             Init(dataProviderId: 43, "https://api.ev24.cloud/ocpi/2.2.1/locations");
         }
 
@@ -26,21 +29,6 @@ namespace OCM.Import.Providers.OCPI
             {
                 { "EV24", 3898 }
             };
-        }
-
-        public new List<ChargePoint> Process(CoreReferenceData coreRefData)
-        {
-            var outputList = base.Process(coreRefData);
-
-            // update title to include street name for reach item, otherwise deduplicate will discard on duplicate title
-            foreach (var cp in outputList)
-            {
-                if (!string.IsNullOrEmpty(cp.AddressInfo?.Title) && !string.IsNullOrEmpty(cp.AddressInfo?.AddressLine1))
-                {
-                    cp.AddressInfo.Title = $"{cp.AddressInfo.Title}, {cp.AddressInfo.AddressLine1}";
-                }
-            }
-            return outputList;
         }
     }
 }

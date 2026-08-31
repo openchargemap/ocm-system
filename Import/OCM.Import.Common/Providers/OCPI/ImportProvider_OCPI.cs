@@ -41,6 +41,14 @@ namespace OCM.Import.Providers.OCPI
         /// If operator not specified in OCPI, default operator to use.
         /// </summary>
         public int? DefaultOperatorID { get; set; }
+
+        /// <summary>
+        /// If true, the location address is appended to the POI title after conversion.
+        /// Required for feeds which name every location identically, otherwise deduplication
+        /// discards all but the first POI because the titles match.
+        /// </summary>
+        public bool AppendAddressToTitle { get; set; }
+
         /// <summary>
         /// Optional value for the Authorization header if required.
         /// When using the default Authorization header key, values without a recognized
@@ -144,11 +152,42 @@ namespace OCM.Import.Providers.OCPI
 
             OperatorMappings = GetOperatorMappings();
 
-            var poiResults = _adapter.FromOCPI(response, _dataProviderId, operatorMappings: OperatorMappings, defaultOperatorId: DefaultOperatorID, excludedLocations: ExcludedLocations);
+            var poiResults = _adapter.FromOCPI(response, _dataProviderId, operatorMappings: OperatorMappings, defaultOperatorId: DefaultOperatorID, excludedLocations: ExcludedLocations).ToList();
 
             _unmappedOperators = _adapter.GetUnmappedOperators();
 
-            return poiResults.ToList();
+            if (AppendAddressToTitle)
+            {
+                ApplyAddressToTitle(poiResults);
+            }
+
+            return poiResults;
+        }
+
+        /// <summary>
+        /// Append the address to each POI title so that locations sharing a common name remain
+        /// distinguishable during deduplication.
+        /// </summary>
+        private static void ApplyAddressToTitle(List<ChargePoint> poiList)
+        {
+            foreach (var cp in poiList)
+            {
+                var address = cp.AddressInfo?.AddressLine1;
+                var title = cp.AddressInfo?.Title;
+
+                if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(address))
+                {
+                    continue;
+                }
+
+                // the title already falls back to the address when the location has no name
+                if (title.Contains(address))
+                {
+                    continue;
+                }
+
+                cp.AddressInfo.Title = $"{title}, {address}";
+            }
         }
 
         public new async Task<bool> LoadInputFromURL(string url)

@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using OCM.API.Client;
 using OCM.API.Common.Model;
 using OCM.API.Common.Model.OCPI;
 using OCM.Import.Providers.OCPI;
 using OCM.Model.OCPI;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace OCM.API.Tests.ImportTests
@@ -863,6 +863,90 @@ namespace OCM.API.Tests.ImportTests
 
             // Verify all POIs are in Poland (Country ID 179)
             Assert.True(poiResults.All(p => p.AddressInfo.CountryID == 179));
+        }
+
+        [Fact]
+        public void CanConvertFromOCPI_EV24()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-ev24.json");
+
+            var adapter = new ImportProvider_OCPIConfigurable(new OCPIProviderConfiguration
+            {
+                ProviderName = "ev24",
+                DataProviderId = 45,
+                LocationsEndpointUrl = "https://cpo.ocpi.cpo.ev24.io/ocpi/cpo/2.2.1/locations",
+                CredentialKey = "OCPI-EV24",
+                DefaultOperatorId = 3898,
+                IsProductionReady = true
+            });
+
+            adapter.InputData = json;
+
+            var poiResults = adapter.Process(CoreRefData).ToList();
+
+            Assert.Equal(80, poiResults.Count);
+
+            var unmappedOperators = adapter.GetPostProcessingUnmappedOperators();
+
+            foreach (var o in unmappedOperators.OrderByDescending(i => i.Value))
+            {
+                System.Diagnostics.Debug.WriteLine($"Unmapped Operator: {o.Key} {o.Value}");
+            }
+
+            // ensure power KW does not exceed a reasonable value
+            var powerfulPOIs = poiResults.Where(p => p.Connections.Any(c => c.PowerKW > 2000));
+
+            Assert.Empty(powerfulPOIs);
+
+            // Verify all POIs have correct data provider ID
+            Assert.True(poiResults.All(p => p.DataProviderID == 45));
+
+            // Verify all POIs have correct operator ID
+            Assert.True(poiResults.All(p => p.OperatorID == 3898));
+        }
+
+        /// <summary>
+        /// EV24 names every location "EV24 Charging Station". Without AppendAddressToTitle the
+        /// titles are identical and deduplication discards all but the first POI.
+        /// </summary>
+        [Fact]
+        public void AppendAddressToTitle_MakesCommonlyNamedLocationsDistinct()
+        {
+            var path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var json = System.IO.File.ReadAllText(path + "\\Assets\\ocpi_2_2_1_locations-ev24.json");
+
+            OCPIProviderConfiguration BuildConfig(bool appendAddressToTitle) => new OCPIProviderConfiguration
+            {
+                ProviderName = "ev24.cloud",
+                DataProviderId = 43,
+                LocationsEndpointUrl = "https://api.ev24.cloud/ocpi/2.2.1/locations",
+                CredentialKey = "OCPI-EV24",
+                DefaultOperatorId = 3898,
+                IsProductionReady = true,
+                AppendAddressToTitle = appendAddressToTitle,
+                OperatorMappings = new Dictionary<string, int> { { "EV24", 3898 } }
+            };
+
+            // without the flag, every POI carries the same title
+            var withoutFlag = new ImportProvider_OCPIConfigurable(BuildConfig(false)) { InputData = json }
+                .Process(CoreRefData);
+
+            Assert.Single(withoutFlag.Select(p => p.AddressInfo.Title).Distinct());
+
+            // with the flag, the address disambiguates each POI
+            var withFlag = new ImportProvider_OCPIConfigurable(BuildConfig(true)) { InputData = json }
+                .Process(CoreRefData);
+
+            Assert.Equal(withFlag.Count, withFlag.Select(p => p.AddressInfo.Title).Distinct().Count());
+            Assert.Contains(withFlag, p => p.AddressInfo.Title == "EV24 Charging Station, Piękna 3");
+
+            // the hardcoded provider must stay equivalent to the configured one
+            var hardcoded = new ImportProvider_EV24 { InputData = json }.Process(CoreRefData);
+
+            Assert.Equal(
+                withFlag.Select(p => p.AddressInfo.Title).OrderBy(t => t),
+                hardcoded.Select(p => p.AddressInfo.Title).OrderBy(t => t));
         }
 
         [Fact]

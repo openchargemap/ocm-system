@@ -13,6 +13,7 @@
       "IsProductionReady": false,
       "IsEnabled": false,
       "AllowDuplicatePOIWithDifferentOperator": true,
+      "AppendAddressToTitle": false,
       "OperatorMappings": {
         "Example Operator": 1234,
         "Another Operator": 5678

@@ -28,6 +28,7 @@ namespace OCM.Import.Providers.OCPI
             IsAutoRefreshed = config.IsAutoRefreshed;
             IsProductionReady = config.IsProductionReady;
             AllowDuplicatePOIWithDifferentOperator = config.AllowDuplicatePOIWithDifferentOperator;
+            AppendAddressToTitle = config.AppendAddressToTitle;
 
             // Set credential key if specified
             CredentialKey = config.CredentialKey;
