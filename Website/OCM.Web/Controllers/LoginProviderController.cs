@@ -7,6 +7,7 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OCM.MVC.Controllers
 {
@@ -188,8 +189,14 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Register(OCM.API.Common.Model.RegistrationModel model)
+        public async Task<ActionResult> Register(OCM.API.Common.Model.RegistrationModel model)
         {
+            // reject automated signups before we attempt to create the account
+            if (!await IsTurnstileTokenValid())
+            {
+                ModelState.AddModelError(OCM.Web.Services.TurnstileValidator.TokenFieldName, "Please complete the human verification check, then try again.");
+            }
+
             if (ModelState.IsValid)
             {
                 //register as new user, check email is valid first
@@ -207,6 +214,32 @@ namespace OCM.MVC.Controllers
             }
 
             return View(model);
+        }
+
+        /// <summary>
+        /// Validates the Cloudflare Turnstile token posted with the current form, if Turnstile is configured.
+        /// </summary>
+        private async Task<bool> IsTurnstileTokenValid()
+        {
+            var token = Request.HasFormContentType
+                ? Request.Form[OCM.Web.Services.TurnstileValidator.TokenFieldName].ToString()
+                : null;
+
+            return await new OCM.Web.Services.TurnstileValidator().IsTokenValidAsync(token, GetClientIPAddress());
+        }
+
+        /// <summary>
+        /// The originating client address. Requests reaching this app are proxied, so prefer the address
+        /// supplied by the CDN and fall back to the direct connection address.
+        /// </summary>
+        private string GetClientIPAddress()
+        {
+            if (Request.Headers.TryGetValue("CF-Connecting-IP", out var forwardedFor) && !string.IsNullOrWhiteSpace(forwardedFor))
+            {
+                return forwardedFor.ToString();
+            }
+
+            return HttpContext.Connection.RemoteIpAddress?.ToString();
         }
 
         public ActionResult LoginFailed()

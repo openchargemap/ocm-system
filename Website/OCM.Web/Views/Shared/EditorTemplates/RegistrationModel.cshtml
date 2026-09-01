@@ -48,6 +48,20 @@
         </div>
 
         <p class="alert alert-info">By registering as a user you agree to our <a class="alert-link" target="_blank" href="@Url.Action("Terms","About")">terms, conditions and privacy policy</a>. Information you submit to us will become public under an Open Data license.</p>
+
+        @if (OCM.Web.Services.TurnstileValidator.IsEnabled)
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="cf-turnstile"
+                         data-sitekey="@OCM.Web.Services.TurnstileValidator.SiteKey"
+                         data-action="turnstile-spin-v1"></div>
+                    @Html.ValidationMessage("cf-turnstile-response", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Register" class="btn btn-primary" />
