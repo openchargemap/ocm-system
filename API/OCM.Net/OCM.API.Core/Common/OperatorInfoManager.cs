@@ -183,7 +183,9 @@ namespace OCM.API.Common
         public List<OperatorMatch> FindPotentialDuplicates(string operatorName, string countryIsoCode, string websiteUrl, string contactEmail)
         {
             var isoCode = (countryIsoCode ?? string.Empty).Trim().ToUpperInvariant();
-            var targetTitle = NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
+            var targetTitle = string.IsNullOrEmpty(isoCode)
+                ? NormalizeTitle(RemoveCountryCode(operatorName))
+                : NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
             var websiteHost = GetWebsiteHost(websiteUrl);
 
             var emailDomain = GetEmailDomain(contactEmail);
