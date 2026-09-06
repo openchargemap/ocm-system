@@ -5,6 +5,8 @@
 
 @{
     ViewBag.Title = "Add Network Operator";
+    var isEdit = ViewBag.IsEdit == true;
+    if (isEdit) ViewBag.Title = "Edit Network Operator";
     var duplicateTitleMatch = ViewBag.DuplicateTitleMatch as OperatorMatch;
     var possibleDuplicates = ViewBag.PossibleDuplicates as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
     var otherCountryMatches = ViewBag.OtherCountryMatches as IEnumerable<OperatorMatch> ?? Enumerable.Empty<OperatorMatch>();
@@ -14,7 +16,7 @@
     <div class="row">
         <div class="col-12 col-lg-10 col-xl-8">
             <h2 class="mb-2">@ViewBag.Title</h2>
-            <p class="text-muted mb-4">Create an operator label for charging locations in the selected country. To change an operator which already exists, ask an administrator.</p>
+            <p class="text-muted mb-4">@(isEdit ? "Update the operator details. The operator's country cannot be changed here." : "Create an operator label for charging locations in the selected country.")</p>
 
             @using (Html.BeginForm())
             {
@@ -26,7 +28,15 @@
                     <div class="card-body">
                         <div class="form-group">
                             @Html.LabelFor(model => model.CountryID)
-                            @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" })
+                            @if (isEdit)
+                            {
+                                @Html.HiddenFor(model => model.CountryID)
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select", disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" })
+                            }
                             @Html.ValidationMessageFor(model => model.CountryID)
                             <small class="form-text text-muted">The country code is added to the saved operator title automatically.</small>
                         </div>
@@ -129,7 +139,11 @@
                 }
 
                 <div class="d-flex flex-wrap mb-4">
-                    <input type="submit" value="Create operator" class="btn btn-primary mr-2 mb-2" />
+                    @if (isEdit)
+                    {
+                        @Html.HiddenFor(model => model.ID)
+                    }
+                    <input type="submit" value="@(isEdit ? "Save changes" : "Create operator")" class="btn btn-primary mr-2 mb-2" />
                     <a href="@Url.Action("Index", new { countryId = Model.CountryID })" class="btn btn-outline-secondary mb-2">Cancel</a>
                 </div>
             }

@@ -16,6 +16,7 @@ namespace OCM.MVC.Controllers
         /// The country the list is filtered by when it is first opened.
         /// </summary>
         private const string DefaultCountryISOCode = "US";
+        private const int PageSize = 25;
 
         private User GetCurrentUser()
         {
@@ -38,6 +39,25 @@ namespace OCM.MVC.Controllers
         private bool CanEditCountry(User user, int countryId)
         {
             return GetEditableCountries(user).Any(c => c.ID == countryId);
+        }
+
+        private bool CanEditOperator(User user, OperatorInfo operatorInfo, IEnumerable<Country> countries)
+        {
+            if (user == null || operatorInfo == null || operatorInfo.ID <= 1) return false;
+            if (UserManager.IsUserAdministrator(user)) return true;
+
+            var countryCode = OperatorInfoManager.GetCountryCodeFromTitle(operatorInfo.Title);
+            var country = countries.FirstOrDefault(c => string.Equals(
+                NormalizeISOCode(c.ISOCode), NormalizeISOCode(countryCode), StringComparison.Ordinal));
+            return country != null && CanEditCountry(user, country.ID);
+        }
+
+        private static string GetOperatorName(string title, string isoCode)
+        {
+            var suffix = " (" + NormalizeISOCode(isoCode) + ")";
+            return title != null && title.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)
+                ? title.Substring(0, title.Length - suffix.Length).Trim()
+                : title;
         }
 
         private static string NormalizeISOCode(string isoCode)
@@ -95,7 +115,7 @@ namespace OCM.MVC.Controllers
         /// <param name="countryId">The country to list. Omitted on the first visit, which defaults to the United States, or zero to list every country. Ignored while searching.</param>
         /// <param name="search">An operator name to search for across all countries. Takes precedence over countryId.</param>
         [HttpGet]
-        public ActionResult Index(int? countryId, string search)
+        public ActionResult Index(int? countryId, string search, int page = 1)
         {
             var user = GetCurrentUser();
             var allCountries = new ReferenceDataManager().GetCountries(false);
@@ -132,6 +152,17 @@ namespace OCM.MVC.Controllers
                 .ThenBy(o => o.Operator.Title, StringComparer.CurrentCultureIgnoreCase)
                 .ToList();
 
+            page = Math.Max(1, page);
+            var totalResults = operators.Count;
+            var totalPages = (int)Math.Ceiling(totalResults / (double)PageSize);
+            if (totalPages > 0) page = Math.Min(page, totalPages);
+            var pagedOperators = operators
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+            foreach (var item in pagedOperators)
+                item.CanEdit = CanEditOperator(user, item.Operator, allCountries);
+
             PopulateCountryFilter(allCountries, selectedCountry?.ID ?? 0);
 
             return View(new NetworkOperatorListModel
@@ -140,7 +171,10 @@ namespace OCM.MVC.Controllers
                 SearchTerm = isSearch ? search.Trim() : null,
                 CanAddOperator = editableISOCodes.Count > 0,
                 AddForCountryID = selectedISOCode != null && editableISOCodes.Contains(selectedISOCode) ? selectedCountry.ID : (int?)null,
-                Operators = operators
+                Operators = pagedOperators,
+                Page = page,
+                PageSize = PageSize,
+                TotalResults = totalResults
             });
         }
 
@@ -155,6 +189,36 @@ namespace OCM.MVC.Controllers
 
             PopulateCountries(countries, model.CountryID);
             return View(model);
+        }
+
+        [HttpGet("/NetworkOperators/Edit/{id:int}")]
+        public ActionResult Edit(int id)
+        {
+            var user = GetCurrentUser();
+            var allCountries = new ReferenceDataManager().GetCountries(false);
+            var operatorInfo = new OperatorInfoManager().GetOperatorInfo(id);
+            if (operatorInfo == null || operatorInfo.ID <= 1) return NotFound();
+            if (!CanEditOperator(user, operatorInfo, allCountries)) return Forbid();
+
+            var countryCode = OperatorInfoManager.GetCountryCodeFromTitle(operatorInfo.Title);
+            var country = allCountries.FirstOrDefault(c => string.Equals(
+                NormalizeISOCode(c.ISOCode), NormalizeISOCode(countryCode), StringComparison.Ordinal));
+            var model = new NetworkOperatorAddModel
+            {
+                ID = operatorInfo.ID,
+                CountryID = country?.ID ?? 0,
+                OperatorName = GetOperatorName(operatorInfo.Title, countryCode),
+                WebsiteURL = operatorInfo.WebsiteURL,
+                Comments = operatorInfo.Comments,
+                PhonePrimaryContact = operatorInfo.PhonePrimaryContact,
+                PhoneSecondaryContact = operatorInfo.PhoneSecondaryContact,
+                ContactEmail = operatorInfo.ContactEmail,
+                FaultReportEmail = operatorInfo.FaultReportEmail
+            };
+
+            ViewBag.IsEdit = true;
+            PopulateCountries(GetEditableCountries(user), model.CountryID);
+            return View("Add", model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -188,6 +252,51 @@ namespace OCM.MVC.Controllers
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(model);
+            }
+        }
+
+        [HttpPost("/NetworkOperators/Edit/{id:int}"), ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, NetworkOperatorAddModel model)
+        {
+            var user = GetCurrentUser();
+            var allCountries = new ReferenceDataManager().GetCountries(false);
+            var operatorInfo = new OperatorInfoManager().GetOperatorInfo(id);
+            if (operatorInfo == null || operatorInfo.ID <= 1) return NotFound();
+            if (!CanEditOperator(user, operatorInfo, allCountries)) return Forbid();
+
+            var countryCode = OperatorInfoManager.GetCountryCodeFromTitle(operatorInfo.Title);
+            var country = allCountries.FirstOrDefault(c => string.Equals(
+                NormalizeISOCode(c.ISOCode), NormalizeISOCode(countryCode), StringComparison.Ordinal));
+            model.ID = id;
+            model.CountryID = country?.ID ?? 0;
+            ViewBag.IsEdit = true;
+            PopulateCountries(GetEditableCountries(user), model.CountryID);
+            if (!ModelState.IsValid) return View("Add", model);
+
+            try
+            {
+                var title = country == null
+                    ? model.OperatorName?.Trim()
+                    : model.OperatorName?.Trim() + " (" + NormalizeISOCode(country.ISOCode) + ")";
+                new OperatorInfoManager().UpdateOperatorInfo((int)UserID, new OperatorInfo
+                {
+                    ID = id,
+                    Title = title,
+                    WebsiteURL = model.WebsiteURL,
+                    Comments = model.Comments,
+                    PhonePrimaryContact = model.PhonePrimaryContact,
+                    PhoneSecondaryContact = model.PhoneSecondaryContact,
+                    ContactEmail = model.ContactEmail,
+                    FaultReportEmail = model.FaultReportEmail
+                });
+
+                TempData["StatusMessage"] = $"Updated operator {title}.";
+                return RedirectToAction(nameof(Index), new { countryId = model.CountryID == 0 ? (int?)null : model.CountryID });
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View("Add", model);
             }
         }
     }

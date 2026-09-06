@@ -4,6 +4,8 @@ namespace OCM.Web.Models
 {
     public class NetworkOperatorAddModel
     {
+        public int ID { get; set; }
+
         [Required]
         [Display(Name = "Country")]
         public int CountryID { get; set; }

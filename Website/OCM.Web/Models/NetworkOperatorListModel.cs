@@ -30,6 +30,18 @@ namespace OCM.Web.Models
         /// </summary>
         public int? AddForCountryID { get; set; }
 
+        public int Page { get; set; } = 1;
+
+        public int PageSize { get; set; } = 25;
+
+        public int TotalResults { get; set; }
+
+        public int TotalPages => (int)System.Math.Ceiling(TotalResults / (double)PageSize);
+
+        public bool HasPreviousPage => Page > 1;
+
+        public bool HasNextPage => Page < TotalPages;
+
         public List<NetworkOperatorListItem> Operators { get; set; } = new List<NetworkOperatorListItem>();
     }
 
@@ -51,5 +63,7 @@ namespace OCM.Web.Models
         /// The operator website as a link target, or null when it is not a usable http(s) address.
         /// </summary>
         public string WebsiteLink { get; set; }
+
+        public bool CanEdit { get; set; }
     }
 }

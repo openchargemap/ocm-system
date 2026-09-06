@@ -60,7 +60,7 @@
             }
             else
             {
-                <p class="text-muted">@Model.Operators.Count operator(s).</p>
+                <p class="text-muted">@Model.TotalResults operator(s).</p>
 
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -70,6 +70,7 @@
                                 <th>Operator</th>
                                 <th>Website</th>
                                 <th>Contact email</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,11 +90,32 @@
                                         }
                                     </td>
                                     <td>@item.Operator.ContactEmail</td>
+                                    <td>
+                                        @if (item.CanEdit)
+                                        {
+                                            <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Edit", new { id = item.Operator.ID })">Edit</a>
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mt-3" aria-label="Network operator pages">
+                        <ul class="pagination">
+                            <li class="page-item@(!Model.HasPreviousPage ? " disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { countryId = ViewContext.HttpContext.Request.Query["countryId"], search = Model.SearchTerm, page = Model.Page - 1 })">Previous</a>
+                            </li>
+                            <li class="page-item disabled"><span class="page-link">Page @Model.Page of @Model.TotalPages</span></li>
+                            <li class="page-item@(!Model.HasNextPage ? " disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { countryId = ViewContext.HttpContext.Request.Query["countryId"], search = Model.SearchTerm, page = Model.Page + 1 })">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
             }
         </div>
     </div>
