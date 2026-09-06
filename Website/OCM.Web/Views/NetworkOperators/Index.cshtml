@@ -104,14 +104,28 @@
 
                 @if (Model.TotalPages > 1)
                 {
-                    <nav class="mt-3" aria-label="Network operator pages">
-                        <ul class="pagination">
+                    <nav class="mt-3 d-flex justify-content-center justify-content-md-end" aria-label="Network operator pages">
+                        <ul class="pagination mb-0">
                             <li class="page-item@(!Model.HasPreviousPage ? " disabled" : "")">
-                                <a class="page-link" href="@Url.Action("Index", new { countryId = ViewContext.HttpContext.Request.Query["countryId"], search = Model.SearchTerm, page = Model.Page - 1 })">Previous</a>
+                                @if (Model.HasPreviousPage)
+                                {
+                                    <a class="page-link" rel="prev" href="@Url.Action("Index", new { countryId = ViewContext.HttpContext.Request.Query["countryId"], search = Model.SearchTerm, page = Model.Page - 1 })">Previous</a>
+                                }
+                                else
+                                {
+                                    <span class="page-link">Previous</span>
+                                }
                             </li>
-                            <li class="page-item disabled"><span class="page-link">Page @Model.Page of @Model.TotalPages</span></li>
+                            <li class="page-item disabled" aria-current="page"><span class="page-link">Page @Model.Page of @Model.TotalPages</span></li>
                             <li class="page-item@(!Model.HasNextPage ? " disabled" : "")">
-                                <a class="page-link" href="@Url.Action("Index", new { countryId = ViewContext.HttpContext.Request.Query["countryId"], search = Model.SearchTerm, page = Model.Page + 1 })">Next</a>
+                                @if (Model.HasNextPage)
+                                {
+                                    <a class="page-link" rel="next" href="@Url.Action("Index", new { countryId = ViewContext.HttpContext.Request.Query["countryId"], search = Model.SearchTerm, page = Model.Page + 1 })">Next</a>
+                                }
+                                else
+                                {
+                                    <span class="page-link">Next</span>
+                                }
                             </li>
                         </ul>
                     </nav>
