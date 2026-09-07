@@ -94,13 +94,14 @@ namespace OCM.MVC.Controllers
             ViewBag.CountryFilterList = options;
         }
 
-        private void PopulateDuplicateWarnings(OperatorInfoManager manager, IEnumerable<Country> countries, NetworkOperatorAddModel model)
+        private void PopulateDuplicateWarnings(OperatorInfoManager manager, IEnumerable<Country> countries, NetworkOperatorAddModel model, int? excludedOperatorId = null)
         {
             var matches = manager.FindPotentialDuplicates(
                 model.OperatorName,
                 countries.FirstOrDefault(c => c.ID == model.CountryID)?.ISOCode,
                 model.WebsiteURL,
-                model.ContactEmail);
+                model.ContactEmail,
+                excludedOperatorId);
 
             ViewBag.DuplicateTitleMatch = matches.FirstOrDefault(m => m.MatchType == OperatorMatchType.DuplicateTitle);
             ViewBag.PossibleDuplicates = matches.Where(m => m.RequiresConfirmation).ToList();
@@ -271,6 +272,12 @@ namespace OCM.MVC.Controllers
             model.CountryID = country?.ID ?? 0;
             ViewBag.IsEdit = true;
             PopulateCountries(GetEditableCountries(user), model.CountryID);
+            PopulateDuplicateWarnings(new OperatorInfoManager(), allCountries, model, id);
+            var duplicateTitleMatch = ViewBag.DuplicateTitleMatch as OperatorMatch;
+            if (duplicateTitleMatch != null)
+            {
+                ModelState.AddModelError(string.Empty, $"\"{duplicateTitleMatch.Operator.Title}\" already exists, so the operator name cannot be used again for this country.");
+            }
             if (!ModelState.IsValid) return View("Add", model);
 
             try

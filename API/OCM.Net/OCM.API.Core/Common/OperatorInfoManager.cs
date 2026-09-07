@@ -180,7 +180,7 @@ namespace OCM.API.Common
         /// duplicate each one is. Matches in other countries are advisory only: an international network is expected
         /// to have one operator per country, all sharing a name and a website.
         /// </summary>
-        public List<OperatorMatch> FindPotentialDuplicates(string operatorName, string countryIsoCode, string websiteUrl, string contactEmail)
+        public List<OperatorMatch> FindPotentialDuplicates(string operatorName, string countryIsoCode, string websiteUrl, string contactEmail, int? excludedOperatorId = null)
         {
             var isoCode = (countryIsoCode ?? string.Empty).Trim().ToUpperInvariant();
             var targetTitle = NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
@@ -193,6 +193,7 @@ namespace OCM.API.Common
 
             foreach (var candidate in GetOperators())
             {
+                if (excludedOperatorId.HasValue && candidate.ID == excludedOperatorId.Value) continue;
                 var isSameTitle = NormalizeTitle(candidate.Title) == targetTitle;
 
                 var reasons = new List<string>();
