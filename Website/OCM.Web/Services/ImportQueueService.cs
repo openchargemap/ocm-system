@@ -81,6 +81,194 @@ namespace OCM.Web.Services
             return _jobs.TryGetValue(jobId, out var job) ? CreateSnapshot(job) : null;
         }
 
+        /// <summary>
+        /// Reports each condition the scheduled queue applies, in the order it applies them: first the
+        /// DataProvider row filters from <see cref="DataProviderManager.GetApprovedImportAgreementIds"/>,
+        /// then the queue de-duplication, then the checks a job makes as it starts.
+        /// </summary>
+        public ImportEligibility GetImportEligibility(int agreementId)
+        {
+            var eligibility = new ImportEligibility();
+
+            using var dataProviderManager = new DataProviderManager();
+            var dataProvider = dataProviderManager.GetDataProviderByAgreementId(agreementId);
+
+            if (dataProvider == null)
+            {
+                eligibility.Checks.Add(new ImportEligibilityCheck
+                {
+                    Title = "Linked data provider",
+                    IsSatisfied = false,
+                    Detail = "No data provider is linked to this agreement. Save the review details to create one."
+                });
+
+                return eligibility;
+            }
+
+            var isApproved = dataProvider.IsApprovedImport == true;
+
+            eligibility.Checks.Add(new ImportEligibilityCheck
+            {
+                Title = "Import approved",
+                IsSatisfied = isApproved,
+                Detail = isApproved
+                    ? "The data provider is approved for import."
+                    : "The data provider is not approved for import. Use the Verify Feed and Approve Import button."
+            });
+
+            var importConfig = dataProviderManager.GetImportConfigByAgreementId(agreementId);
+            var hasImportConfig = !string.IsNullOrWhiteSpace(importConfig);
+
+            eligibility.Checks.Add(new ImportEligibilityCheck
+            {
+                Title = "Stored import config",
+                IsSatisfied = hasImportConfig,
+                Detail = hasImportConfig
+                    ? "An OCPI import configuration is stored against the data provider."
+                    : "No OCPI import configuration is stored. Save the review details first."
+            });
+
+            AddScheduleCheck(eligibility, dataProvider);
+            AddActiveJobCheck(eligibility, agreementId);
+            AddConfigurationChecks(eligibility, importConfig);
+            AddSystemCredentialCheck(eligibility);
+
+            return eligibility;
+        }
+
+        /// <summary>
+        /// A provider imported within the minimum interval is skipped until it next falls due. That delays
+        /// an import rather than preventing it, so it is reported without counting as a blocker.
+        /// </summary>
+        private static void AddScheduleCheck(ImportEligibility eligibility, OCM.API.Common.Model.DataProvider dataProvider)
+        {
+            var lastImported = dataProvider.DateLastImported;
+
+            if (!lastImported.HasValue)
+            {
+                eligibility.Checks.Add(new ImportEligibilityCheck
+                {
+                    Title = "Due for import",
+                    IsSatisfied = true,
+                    IsBlocking = false,
+                    Detail = "Never imported, so it is due on the next scheduled run."
+                });
+
+                return;
+            }
+
+            var nextDueUtc = lastImported.Value.Add(DataProviderManager.MinimumImportInterval);
+            var isDue = nextDueUtc <= DateTime.UtcNow;
+
+            if (!isDue)
+            {
+                eligibility.NextDueUtc = nextDueUtc;
+            }
+
+            eligibility.Checks.Add(new ImportEligibilityCheck
+            {
+                Title = "Due for import",
+                IsSatisfied = isDue,
+                IsBlocking = false,
+                Detail = isDue
+                    ? $"Last imported {lastImported.Value:yyyy-MM-dd HH:mm} UTC, so it is due on the next scheduled run."
+                    : $"Last imported {lastImported.Value:yyyy-MM-dd HH:mm} UTC. Not due again until {nextDueUtc:yyyy-MM-dd HH:mm} UTC."
+            });
+        }
+
+        private void AddActiveJobCheck(ImportEligibility eligibility, int agreementId)
+        {
+            var hasActiveJob = _activeAgreementJobs.TryGetValue(agreementId, out var activeJobId)
+                && _jobs.TryGetValue(activeJobId, out var activeJob)
+                && (activeJob.Status == ImportJobStatus.Queued || activeJob.Status == ImportJobStatus.Running);
+
+            eligibility.Checks.Add(new ImportEligibilityCheck
+            {
+                Title = "No job already running",
+                IsSatisfied = !hasActiveJob,
+                IsBlocking = false,
+                Detail = hasActiveJob
+                    ? "A job for this agreement is already queued or running, so another will not be started."
+                    : "No job for this agreement is currently queued or running."
+            });
+        }
+
+        /// <summary>
+        /// The stored config has to parse and pass the same validation the provider loader applies,
+        /// otherwise no import provider can be created when the job starts.
+        /// </summary>
+        private static void AddConfigurationChecks(ImportEligibility eligibility, string importConfig)
+        {
+            if (string.IsNullOrWhiteSpace(importConfig))
+            {
+                return;
+            }
+
+            OCPIProviderConfiguration config = null;
+            string parseError = null;
+
+            try
+            {
+                config = Newtonsoft.Json.JsonConvert.DeserializeObject<OCPIProviderConfiguration>(importConfig);
+            }
+            catch (Exception ex)
+            {
+                parseError = ex.Message;
+            }
+
+            if (config == null)
+            {
+                eligibility.Checks.Add(new ImportEligibilityCheck
+                {
+                    Title = "Import config is usable",
+                    IsSatisfied = false,
+                    Detail = parseError == null
+                        ? "The stored import configuration could not be read."
+                        : $"The stored import configuration could not be read: {parseError}"
+                });
+
+                return;
+            }
+
+            var configErrors = OCPIProviderLoader.GetConfigurationErrors(config);
+
+            eligibility.Checks.Add(new ImportEligibilityCheck
+            {
+                Title = "Import config is usable",
+                IsSatisfied = configErrors.Count == 0,
+                Detail = configErrors.Count == 0
+                    ? $"Provider {config.ProviderName} targets data provider {config.DataProviderId}."
+                    : string.Join(" ", configErrors)
+            });
+
+            // scheduled website imports create providers with enabledOnly false, so IsEnabled does not
+            // stop an import here even though the standalone import worker would skip it
+            if (!config.IsEnabled)
+            {
+                eligibility.Checks.Add(new ImportEligibilityCheck
+                {
+                    Title = "Config marked enabled",
+                    IsSatisfied = false,
+                    IsBlocking = false,
+                    Detail = "The stored config has IsEnabled false. Scheduled website imports run regardless, but the standalone import worker would skip it."
+                });
+            }
+        }
+
+        private void AddSystemCredentialCheck(ImportEligibility eligibility)
+        {
+            var hasSystemKey = !string.IsNullOrWhiteSpace(_configuration["IMPORT-ocm-system"]);
+
+            eligibility.Checks.Add(new ImportEligibilityCheck
+            {
+                Title = "System API credential",
+                IsSatisfied = hasSystemKey,
+                Detail = hasSystemKey
+                    ? "The IMPORT-ocm-system credential is available to the website."
+                    : "The IMPORT-ocm-system credential is not configured, so no import job can run."
+            });
+        }
+
         public ImportJobViewModel GetLatestJobForAgreement(int agreementId)
         {
             var job = _jobs.Values

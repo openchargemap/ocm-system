@@ -163,6 +163,7 @@ namespace OCM.MVC.Controllers
                 AvailableDataProviderStatuses = GetDataProviderStatusTypes(),
                 AvailableOperators = new OperatorInfoManager().GetOperators(),
                 CurrentImportJob = currentImportJob ?? _importQueueService.GetLatestJobForAgreement(agreement.ID),
+                ImportEligibility = _importQueueService.GetImportEligibility(agreement.ID),
                 Review = review ?? BuildReviewEditModel(agreement, dataProvider, importConfig, validationPreview)
             };
         }
@@ -440,7 +441,8 @@ namespace OCM.MVC.Controllers
                 {
                     Agreement = a,
                     DataProvider = dataProviderManager.GetDataProviderByAgreementId(a.ID),
-                    CurrentImportJob = _importQueueService.GetLatestJobForAgreement(a.ID)
+                    CurrentImportJob = _importQueueService.GetLatestJobForAgreement(a.ID),
+                    IsImportEnabled = GetStoredProviderConfiguration(dataProviderManager.GetImportConfigByAgreementId(a.ID))?.IsEnabled ?? true
                 })
                 .ToList();
 

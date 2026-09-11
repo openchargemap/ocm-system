@@ -10,6 +10,13 @@ namespace OCM.Web.Models
         public DataProvider DataProvider { get; set; }
         public ImportJobViewModel CurrentImportJob { get; set; }
         public bool IsApproved => DataProvider?.IsApprovedImport == true;
+
+        /// <summary>
+        /// IsEnabled from the stored import config. False means an admin has parked this config, which
+        /// keeps it out of the review tabs. Defaults to true when there is no config to read it from, so
+        /// an incomplete submission still shows as awaiting review.
+        /// </summary>
+        public bool IsImportEnabled { get; set; } = true;
     }
 
     public class AdminDataSharingAgreementReviewModel
@@ -28,6 +35,11 @@ namespace OCM.Web.Models
         /// Current state of this import's credential in the secrets vault.
         /// </summary>
         public Services.OCPICredentialStatus CredentialStatus { get; set; }
+
+        /// <summary>
+        /// Why the scheduled import queue will or will not attempt this import automatically.
+        /// </summary>
+        public ImportEligibility ImportEligibility { get; set; }
     }
 
     public class AdminDataSharingAgreementEditModel

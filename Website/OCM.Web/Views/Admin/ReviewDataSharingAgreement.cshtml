@@ -286,6 +286,76 @@
         </div>
 
         <div class="panel panel-default mb-3">
+            <div class="panel-heading"><strong>Automatic Import</strong></div>
+            <div class="panel-body">
+                @if (Model.ImportEligibility == null)
+                {
+                    <p class="text-muted">Eligibility could not be determined.</p>
+                }
+                else
+                {
+                    var eligibility = Model.ImportEligibility;
+
+                    if (eligibility.WillBeAttempted && eligibility.NextDueUtc == null)
+                    {
+                        <div class="alert alert-success">
+                            This import will be attempted on the next scheduled run.
+                        </div>
+                    }
+                    else if (eligibility.WillBeAttempted)
+                    {
+                        <div class="alert alert-info">
+                            Nothing blocks this import, but it was imported too recently to be queued again yet.
+                            Next due @eligibility.NextDueUtc.Value.ToString("yyyy-MM-dd HH:mm") UTC.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <strong>This import will not be attempted automatically.</strong>
+                            <ul class="mb-0">
+                                @foreach (var blocker in eligibility.Blockers)
+                                {
+                                    <li>@blocker.Detail</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <table class="table table-condensed small mb-0">
+                        <tbody>
+                            @foreach (var check in eligibility.Checks)
+                            {
+                                <tr>
+                                    <td style="width:1%; white-space:nowrap;">
+                                        @if (check.IsSatisfied)
+                                        {
+                                            <span class="label label-success">OK</span>
+                                        }
+                                        else if (check.IsBlocking)
+                                        {
+                                            <span class="label label-danger">Blocked</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-warning">Note</span>
+                                        }
+                                    </td>
+                                    <td style="width:1%; white-space:nowrap;"><strong>@check.Title</strong></td>
+                                    <td>@check.Detail</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <p class="help-block mb-0">
+                        Scheduled imports run about 1 minute after the site starts and every 12 hours after that.
+                    </p>
+                }
+            </div>
+        </div>
+
+        <div class="panel panel-default mb-3">
             <div class="panel-heading"><strong>Key Vault Credential</strong></div>
             <div class="panel-body">
                 @if (credentialStatus == null || !credentialStatus.VaultAvailable)

@@ -522,7 +522,9 @@ namespace OCM.MVC.Controllers
                 DefaultOperatorId = defaultOperatorId,
                 IsAutoRefreshed = true,
                 IsProductionReady = false, // pending admin approval
-                IsEnabled = false, // pending admin approval
+                // IsApprovedImport on the data provider is the approval gate, so a new submission is left
+                // enabled. IsEnabled is the admin switch for parking a config which should not be used.
+                IsEnabled = true,
                 AllowDuplicatePOIWithDifferentOperator = true,
                 OperatorMappings = operatorMappings?.Where(m => m.Value > 0).ToDictionary(m => m.Key, m => m.Value) ?? new Dictionary<string, int>(),
                 ExcludedLocationIds = new List<string>(),

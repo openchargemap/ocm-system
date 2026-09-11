@@ -31,7 +31,10 @@ namespace OCM.API.Common
                 ImportConfig = ocpiConfigJson,
                 Comments = "OCPI with Data Sharing Agreement",
                 DataSharingAgreementId = dataSharingAgreementId,
-                DataProviderStatusTypeId = 1 // manual entry
+
+                // a feed submitted under a data sharing agreement is imported automatically once approved,
+                // so it should not be labelled as manually maintained data
+                DataProviderStatusTypeId = GetAutomatedImportStatusTypeId() ?? ManualDataEntryStatusTypeId
             };
 
             dataModel.DataProviders.Add(dp);
@@ -53,6 +56,25 @@ namespace OCM.API.Common
             return Model.Extensions.DataProvider.FromDataModel(dataProvider);
         }
 
+        /// <summary>
+        /// Reference data id for manually maintained providers, used as a fallback when the automated
+        /// import status cannot be found.
+        /// </summary>
+        private const int ManualDataEntryStatusTypeId = 1;
+
+        /// <summary>
+        /// Resolves the "Automated Import" status from reference data by title, so the id does not have to
+        /// be hard coded here. Returns null when no matching status exists.
+        /// </summary>
+        private int? GetAutomatedImportStatusTypeId()
+        {
+            return dataModel.DataProviderStatusTypes
+                .Where(s => s.Title.Contains("Automated"))
+                .OrderBy(s => s.Id)
+                .Select(s => (int?)s.Id)
+                .FirstOrDefault();
+        }
+
         public System.Collections.Generic.List<Model.DataProviderStatusType> GetDataProviderStatusTypes()
         {
             return dataModel.DataProviderStatusTypes
@@ -70,9 +92,15 @@ namespace OCM.API.Common
                 .FirstOrDefault();
         }
 
+        /// <summary>
+        /// Minimum time between automatic import attempts for the same data provider. A provider imported
+        /// more recently than this is skipped when approved imports are queued.
+        /// </summary>
+        public static readonly TimeSpan MinimumImportInterval = TimeSpan.FromHours(1);
+
         public System.Collections.Generic.List<int> GetApprovedImportAgreementIds()
         {
-            var minimumNextImportUtc = DateTime.UtcNow.AddHours(-1);
+            var minimumNextImportUtc = DateTime.UtcNow.Subtract(MinimumImportInterval);
 
             return dataModel.DataProviders
                 .Where(dp => dp.IsApprovedImport == true

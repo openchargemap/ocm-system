@@ -192,35 +192,54 @@ namespace OCM.Import.Providers.OCPI
         }
 
         /// <summary>
-        /// Validates a provider configuration
+        /// Returns the reasons a provider configuration cannot be used, empty when it is usable.
+        /// Exposed so callers can report why an import will not run without duplicating these rules.
         /// </summary>
-        private bool ValidateConfiguration(OCPIProviderConfiguration config)
+        public static List<string> GetConfigurationErrors(OCPIProviderConfiguration config)
         {
+            var errors = new List<string>();
+
+            if (config == null)
+            {
+                errors.Add("No provider configuration was supplied.");
+                return errors;
+            }
+
             if (string.IsNullOrWhiteSpace(config.ProviderName))
             {
-                Log("Provider configuration missing ProviderName");
-                return false;
+                errors.Add("Provider configuration is missing ProviderName.");
             }
 
             if (config.DataProviderId <= 0)
             {
-                Log($"Provider {config.ProviderName} has invalid DataProviderId");
-                return false;
+                errors.Add("Provider configuration has an invalid DataProviderId, it must be the linked data provider ID.");
             }
 
             if (string.IsNullOrWhiteSpace(config.LocationsEndpointUrl))
             {
-                Log($"Provider {config.ProviderName} missing LocationsEndpointUrl");
-                return false;
+                errors.Add("Provider configuration is missing LocationsEndpointUrl.");
             }
-
-            if (!Uri.TryCreate(config.LocationsEndpointUrl, UriKind.Absolute, out _))
+            else if (!Uri.TryCreate(config.LocationsEndpointUrl, UriKind.Absolute, out _))
             {
-                Log($"Provider {config.ProviderName} has invalid LocationsEndpointUrl");
-                return false;
+                errors.Add("Provider configuration has an invalid LocationsEndpointUrl, it must be an absolute URL.");
             }
 
-            return true;
+            return errors;
+        }
+
+        /// <summary>
+        /// Validates a provider configuration
+        /// </summary>
+        private bool ValidateConfiguration(OCPIProviderConfiguration config)
+        {
+            var errors = GetConfigurationErrors(config);
+
+            foreach (var error in errors)
+            {
+                Log($"Provider {config?.ProviderName}: {error}");
+            }
+
+            return errors.Count == 0;
         }
 
         private void Log(string message)

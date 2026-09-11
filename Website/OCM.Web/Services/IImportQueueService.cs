@@ -12,6 +12,12 @@ namespace OCM.Web.Services
         IReadOnlyCollection<ImportJobViewModel> QueueApprovedImports(int requestedByUserId, ImportJobMode mode = ImportJobMode.Import);
         ImportJobViewModel GetJob(Guid jobId);
         ImportJobViewModel GetLatestJobForAgreement(int agreementId);
+
+        /// <summary>
+        /// Reports each condition the scheduled queue applies to this agreement, so an admin can see why
+        /// an approved import is not being attempted automatically.
+        /// </summary>
+        ImportEligibility GetImportEligibility(int agreementId);
         IAsyncEnumerable<ImportStreamMessage> StreamJobEventsAsync(Guid jobId, CancellationToken cancellationToken);
         Task ProcessQueueAsync(CancellationToken cancellationToken);
     }

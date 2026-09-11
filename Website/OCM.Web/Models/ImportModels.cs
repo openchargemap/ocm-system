@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OCM.Web.Models
 {
@@ -48,6 +49,49 @@ namespace OCM.Web.Models
         public List<ImportPreviewItemViewModel> UpdatedItems { get; set; } = new List<ImportPreviewItemViewModel>();
         public List<ImportPreviewItemViewModel> DelistedItems { get; set; } = new List<ImportPreviewItemViewModel>();
         public List<ImportPreviewItemViewModel> LowDataQualityItems { get; set; } = new List<ImportPreviewItemViewModel>();
+    }
+
+    /// <summary>
+    /// One condition the scheduled import queue applies before it will attempt an import.
+    /// </summary>
+    public class ImportEligibilityCheck
+    {
+        public string Title { get; set; }
+
+        public bool IsSatisfied { get; set; }
+
+        /// <summary>
+        /// What was found, and where to change it when the check is not satisfied.
+        /// </summary>
+        public string Detail { get; set; }
+
+        /// <summary>
+        /// False for conditions which only delay the next attempt, or which are advisory, rather than
+        /// preventing the import from ever being attempted.
+        /// </summary>
+        public bool IsBlocking { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Why the scheduled import queue will or will not pick up a given agreement, for admin display.
+    /// </summary>
+    public class ImportEligibility
+    {
+        public List<ImportEligibilityCheck> Checks { get; set; } = new List<ImportEligibilityCheck>();
+
+        /// <summary>
+        /// True when nothing blocks the import from being attempted on the next scheduled run.
+        /// </summary>
+        public bool WillBeAttempted => Checks.All(c => c.IsSatisfied || !c.IsBlocking);
+
+        public List<ImportEligibilityCheck> Blockers => Checks.Where(c => c.IsBlocking && !c.IsSatisfied).ToList();
+
+        public List<ImportEligibilityCheck> Advisories => Checks.Where(c => !c.IsBlocking && !c.IsSatisfied).ToList();
+
+        /// <summary>
+        /// When the provider next becomes due, if it was imported too recently to be queued now.
+        /// </summary>
+        public DateTime? NextDueUtc { get; set; }
     }
 
     public class ImportJobViewModel
