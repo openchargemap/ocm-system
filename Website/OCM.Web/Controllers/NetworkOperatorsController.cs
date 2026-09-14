@@ -116,7 +116,7 @@ namespace OCM.MVC.Controllers
         /// <param name="countryId">The country to list. Omitted on the first visit, which defaults to the United States, or zero to list every country. Ignored while searching.</param>
         /// <param name="search">An operator name to search for across all countries. Takes precedence over countryId.</param>
         [HttpGet]
-        public ActionResult Index(int? countryId, string search, int page = 1)
+        public ActionResult Index(int? countryId, string search, int? operatorId, int page = 1)
         {
             var user = GetCurrentUser();
             var allCountries = new ReferenceDataManager().GetCountries(false);
@@ -134,7 +134,9 @@ namespace OCM.MVC.Controllers
             var isSearch = !string.IsNullOrWhiteSpace(search);
 
             var operators = new OperatorInfoManager().GetOperators()
-                .Where(o => isSearch
+                .Where(o => operatorId.HasValue
+                    ? o.ID == operatorId.Value
+                    : isSearch
                     ? OperatorInfoManager.MatchesNameSearch(o.Title, search)
                     : selectedISOCode == null || OperatorInfoManager.GetCountryCodeFromTitle(o.Title) == selectedISOCode)
                 .Select(o =>
@@ -168,7 +170,7 @@ namespace OCM.MVC.Controllers
 
             return View(new NetworkOperatorListModel
             {
-                Country = isSearch ? null : selectedCountry,
+                Country = isSearch || operatorId.HasValue ? null : selectedCountry,
                 SearchTerm = isSearch ? search.Trim() : null,
                 CanAddOperator = editableISOCodes.Count > 0,
                 AddForCountryID = selectedISOCode != null && editableISOCodes.Contains(selectedISOCode) ? selectedCountry.ID : (int?)null,

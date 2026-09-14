@@ -1,0 +1,43 @@
+@model IEnumerable<OCM.Web.Models.OperatorProposalListItem>
+@{ ViewBag.Title = "My Operator Submissions"; }
+
+<div class="container-fluid">
+    <h2>My Operator Submissions</h2>
+    @if (ViewBag.StatusMessage != null) { <div class="alert alert-success">@ViewBag.StatusMessage</div> }
+    @if (TempData["ErrorMessage"] != null) { <div class="alert alert-danger">@TempData["ErrorMessage"]</div> }
+    @if (!Model.Any())
+    {
+        <p>You have not submitted any operator proposals yet.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead><tr><th>Submitted</th><th>Operator</th><th>Country / scope</th><th>Type</th><th>Status</th><th>Reviewed</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Proposal.DateSubmitted</td>
+                    <td>@item.OperatorName</td>
+                    <td>@item.CountryTitle</td>
+                    <td>@item.Proposal.ProposalType</td>
+                <td>@item.Proposal.Status</td>
+                <td>@(item.Proposal.DateReviewed?.ToString() ?? "—")</td>
+                <td>
+                    @if (item.Proposal.Status == OCM.API.Common.Model.OperatorProposalStatus.Pending)
+                    {
+                        @using (Html.BeginForm("Withdraw", "OperatorProposals", FormMethod.Post, new { @class = "d-inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.Proposal.ID" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Withdraw this operator proposal?');">Withdraw</button>
+                        }
+                    }
+                </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    <a class="btn btn-primary" href="@Url.Action("Index")">Suggest an operator or correction</a>
+</div>

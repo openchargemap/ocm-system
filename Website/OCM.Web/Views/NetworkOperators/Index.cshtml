@@ -95,6 +95,10 @@
                                         {
                                             <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Edit", new { id = item.Operator.ID })">Edit</a>
                                         }
+                                        else
+                                        {
+                                            <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Edit", "OperatorProposals", new { operatorId = item.Operator.ID })">Suggest a correction</a>
+                                        }
                                     </td>
                                 </tr>
                             }
