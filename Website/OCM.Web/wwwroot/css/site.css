@@ -48,6 +48,9 @@ h3 > small, h2 > small, h1 > small {
     width: 100%;
 }
 
+.site-content {
+    margin-top: 120px;
+}
 
 footer {
     color:gainsboro;

@@ -37,7 +37,8 @@
     <!--fav and touch icons -->
     <link rel="shortcut icon" href="/images/AppIcon_36x36.png">
     <link href="https://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/v4-shims.min.css">
 
 
     <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
@@ -83,7 +84,7 @@
         gtag('config', 'G-Z72QN2CCLC');
     </script>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" role="navigation">
         <a class="navbar-brand" href="@Url.Action("Index", "Home")">open charge map</a>
@@ -248,7 +249,7 @@
     }
     else
     {
-        <div class="container-fluid" style="margin-top: 120px;">
+        <main class="site-content container-fluid flex-grow-1">
             <div class="content">
                 @{
                     if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
@@ -260,14 +261,14 @@
                 }
                 @RenderBody()
             </div>
-        </div>
+        </main>
 
 
         <footer class="footer mt-auto py-3">
             <div class="container-fluid">
-                <a href="https://www.facebook.com/openchargemap" title="Like us on Facebook"><i class="fa fa-facebook"></i></a>
-                <a href="https://twitter.com/#!/open_charge_map" title="Follow us on Twitter"><i class="fa fa-twitter"></i></a>
-                <a href="https://github.com/openchargemap/" title="Get involved on Github"><i class="fa fa-github"></i></a>
+                <a href="https://www.facebook.com/openchargemap" title="Like us on Facebook" aria-label="Like us on Facebook" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="https://x.com/open_charge_map" title="Follow us on X" aria-label="Follow us on X" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                <a href="https://github.com/openchargemap/" title="Get involved on Github" aria-label="Get involved on Github" target="_blank" rel="noopener noreferrer"><i class="fa fa-github" aria-hidden="true"></i></a>
                 <a href="@Url.Action("Contact", "About")" title="Contact Us"><i class="fa fa-comments"></i></a>
                 <br />
                 <span data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</span>
