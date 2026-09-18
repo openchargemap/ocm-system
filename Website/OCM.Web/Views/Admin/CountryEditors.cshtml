@@ -1,0 +1,203 @@
+@model CountryEditorsModel
+@using OCM.API.Common.Model
+@using OCM.API.Common
+
+@functions {
+    string FormatDate(DateTime? date)
+    {
+        return date?.ToString("yyyy-MM-dd") ?? "-";
+    }
+
+    string DescribeAge(DateTime? date)
+    {
+        if (date == null) return null;
+
+        var days = (int)(Model.Report.DateGenerated - date.Value).TotalDays;
+        if (days < 1) return "today";
+        if (days == 1) return "yesterday";
+        if (days < 60) return days + " days ago";
+        if (days < 730) return (days / 30) + " months ago";
+        return (days / 365) + " years ago";
+    }
+
+    string GetStatusBadgeClass(EditorActivityStatus status)
+    {
+        switch (status)
+        {
+            case EditorActivityStatus.Active: return "badge-success";
+            case EditorActivityStatus.Occasional: return "badge-warning";
+            default: return "badge-secondary";
+        }
+    }
+}
+
+@{
+    ViewBag.Title = "Country Editors";
+
+    var report = Model.Report;
+    var filteredCountries = Model.FilteredCountries;
+    var shownEditors = filteredCountries.SelectMany(c => c.Editors).GroupBy(e => e.UserID).Select(g => g.First()).ToList();
+}
+
+<h2>Country Editors</h2>
+
+@if (TempData["StatusMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["StatusMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<p>
+    Editors are listed under each country they have editor permission for. Activity counts cover
+    <strong>edits</strong> made, <strong>reviews</strong> of other users' edits and operator proposals, and <strong>comments &amp; photos</strong> added
+    since @FormatDate(report.ActivityPeriodStart).
+</p>
+<p>
+    <span class="badge badge-success">Active</span> contributed in the last @EditorActivityManager.RecentActivityDays days &nbsp;
+    <span class="badge badge-warning">Occasional</span> contributed in the last @EditorActivityManager.ActivityPeriodMonths months &nbsp;
+    <span class="badge badge-secondary">Inactive</span> no contributions in the last @EditorActivityManager.ActivityPeriodMonths months.
+    Signing in without contributing does not count as activity.
+</p>
+
+<form asp-action="CountryEditors" method="get" class="form-inline mb-3">
+    <label class="mr-2" for="countryId">Country</label>
+    <select class="form-control mr-3" id="countryId" name="countryId">
+        <option value="">All countries</option>
+        @foreach (var country in Model.CountriesWithEditors)
+        {
+            <option value="@country.CountryID" selected="@(country.CountryID == Model.CountryID)">@country.CountryTitle (@country.Editors.Count)</option>
+        }
+    </select>
+
+    <label class="mr-2" for="status">Status</label>
+    <select class="form-control mr-3" id="status" name="status">
+        <option value="">Any</option>
+        @foreach (var status in Enum.GetValues<EditorActivityStatus>())
+        {
+            <option value="@status" selected="@(status == Model.Status)">@status</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary mr-2">Filter</button>
+    @if (Model.IsFiltered)
+    {
+        <a class="btn btn-outline-secondary" href="@Url.Action("CountryEditors", "Admin")">Clear</a>
+    }
+</form>
+
+<p>
+    <strong>@shownEditors.Count</strong> editors shown:
+    @shownEditors.Count(e => e.ActivityStatus == EditorActivityStatus.Active) active,
+    @shownEditors.Count(e => e.ActivityStatus == EditorActivityStatus.Occasional) occasional,
+    @shownEditors.Count(e => e.ActivityStatus == EditorActivityStatus.Inactive) inactive.
+    <small class="text-muted">
+        Generated @report.DateGenerated.ToString("yyyy-MM-dd HH:mm") UTC ·
+        <a href="@Url.Action("CountryEditors", "Admin", new { countryId = Model.CountryID, status = Model.Status, refresh = true })">Refresh</a>
+    </small>
+</p>
+
+@if (!filteredCountries.Any())
+{
+    <div class="alert alert-info">No editors match the selected filters.</div>
+}
+else
+{
+    foreach (var group in filteredCountries)
+    {
+        <h3 class="mt-4">
+            @group.CountryTitle
+            @if (!string.IsNullOrEmpty(group.CountryISOCode))
+            {
+                <small class="text-muted">(@group.CountryISOCode)</small>
+            }
+        </h3>
+
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Editor</th>
+                    <th>Status</th>
+                    <th>Last Sign In</th>
+                    <th>Last Activity</th>
+                    <th title="POI edits made since @FormatDate(report.ActivityPeriodStart)">Edits</th>
+                    <th title="Other users' edits and operator proposals reviewed since @FormatDate(report.ActivityPeriodStart)">Reviews</th>
+                    <th title="Comments and photos added since @FormatDate(report.ActivityPeriodStart)">Comments &amp; Photos</th>
+                    <th>Joined</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var editor in group.Editors)
+                {
+                    var otherCountries = editor.CountryIDs.Where(c => c != group.CountryID).Select(c => Model.GetCountryTitle(c)).OrderBy(t => t).ToList();
+                    var editorName = string.IsNullOrWhiteSpace(editor.Username) ? "User " + editor.UserID : editor.Username;
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("View", "Profile", new { id = editor.UserID })">@editorName</a>
+                            @if (editor.IsAdministrator)
+                            {
+                                <span class="badge badge-info">Admin</span>
+                            }
+                            @if (editor.IsEditingBlocked)
+                            {
+                                <span class="badge badge-danger">Blocked from editing</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(editor.EmailAddress))
+                            {
+                                <div><small class="text-muted">@editor.EmailAddress</small></div>
+                            }
+                            @if (group.CountryID != null && editor.IsAllCountriesEditor)
+                            {
+                                <div><small class="text-muted">Also editor for all countries</small></div>
+                            }
+                            else if (otherCountries.Any())
+                            {
+                                <div><small class="text-muted" title="@(string.Join(", ", otherCountries))">Also editor for @otherCountries.Count other @(otherCountries.Count == 1 ? "country" : "countries")</small></div>
+                            }
+                        </td>
+                        <td><span class="badge @GetStatusBadgeClass(editor.ActivityStatus)">@editor.ActivityStatus</span></td>
+                        <td>
+                            @if (editor.DateLastLogin != null)
+                            {
+                                <div>@FormatDate(editor.DateLastLogin)</div>
+                                <small class="text-muted">@DescribeAge(editor.DateLastLogin)</small>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not recorded</span>
+                            }
+                        </td>
+                        <td>
+                            @if (editor.DateLastActivity != null)
+                            {
+                                <div>@FormatDate(editor.DateLastActivity)</div>
+                                <small class="text-muted">@DescribeAge(editor.DateLastActivity)</small>
+                            }
+                            else
+                            {
+                                <span class="text-muted">None recorded</span>
+                            }
+                        </td>
+                        <td title="Last edit: @FormatDate(editor.DateLastEdit)">@editor.EditsInPeriod</td>
+                        <td title="Last review: @FormatDate(editor.DateLastReview)">@editor.ReviewsInPeriod</td>
+                        <td title="Last comment or photo: @FormatDate(editor.DateLastComment)">@editor.CommentsInPeriod</td>
+                        <td>@FormatDate(editor.DateCreated)</td>
+                        <td>
+                            <form asp-action="RemoveEditorPermissions" method="post"
+                                  data-confirm="Remove all editor permissions from @(editorName)? This removes their editor access for every country they can edit. Their country subscriptions are kept."
+                                  onsubmit="return confirm(this.dataset.confirm);">
+                                <input type="hidden" name="userId" value="@editor.UserID" />
+                                <input type="hidden" name="countryId" value="@Model.CountryID" />
+                                <input type="hidden" name="status" value="@Model.Status" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove all editor permissions</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

@@ -27,6 +27,8 @@ namespace OCM.MVC.Controllers
 {
     public class AdminController : BaseController
     {
+        private const string EditorActivityCacheKey = "admin_country_editor_activity";
+
         private IHostEnvironment _host;
         private IMemoryCache _cache;
         private IAdminTaskService _adminTaskService;
@@ -398,6 +400,54 @@ namespace OCM.MVC.Controllers
         {
             new UserManager().PromoteUserToCountryEditor((int)HttpContext.Session.GetInt32("UserID"), userId, countryId, autoCreateSubscriptions, removePermission);
             return RedirectToAction("View", "Profile", new { id = userId });
+        }
+
+        /// <summary>
+        /// Review editors by country, with their last sign in and recent contribution activity
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> CountryEditors(int? countryId, EditorActivityStatus? status, bool refresh = false)
+        {
+            if (refresh)
+            {
+                _cache.Remove(EditorActivityCacheKey);
+                return RedirectToAction("CountryEditors", new { countryId, status });
+            }
+
+            var report = await _cache.GetOrCreateAsync(EditorActivityCacheKey, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15);
+
+                using var editorActivityManager = new EditorActivityManager();
+                return await editorActivityManager.GetEditorActivityReport(DateTime.UtcNow);
+            });
+
+            return View(new CountryEditorsModel { Report = report, CountryID = countryId, Status = status });
+        }
+
+        /// <summary>
+        /// Remove editor permission for every country the user can edit, then return to the country editors list with the same filters
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveEditorPermissions(int userId, int? countryId, EditorActivityStatus? status)
+        {
+            var userManager = new UserManager();
+            var administrator = userManager.GetUser((int)UserID);
+            var user = userManager.GetUser(userId);
+
+            if (user != null && userManager.RemoveAllEditorPermissions(userId, administrator))
+            {
+                _cache.Remove(EditorActivityCacheKey);
+                TempData["StatusMessage"] = $"All editor permissions have been removed from {user.Username}.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Could not remove editor permissions, the user no longer has any editor permissions.";
+            }
+
+            return RedirectToAction("CountryEditors", new { countryId, status });
         }
 
         [Authorize(Roles = "Admin")]
