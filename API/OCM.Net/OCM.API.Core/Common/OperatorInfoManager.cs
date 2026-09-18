@@ -224,8 +224,8 @@ namespace OCM.API.Common
         }
 
         /// <summary>
-        /// Adds a new operator for a country. Country editors can only add operators, so existing ones are never
-        /// changed here: amending an operator is an administrator action through <see cref="UpdateOperatorInfo"/>.
+        /// Adds a new operator for a country, adding the country code to the title and enforcing the duplicate checks.
+        /// Existing operators are never changed here: edits go through <see cref="UpdateOperatorInfo"/>.
         /// </summary>
         public OperatorInfo AddCountryOperator(int userId, int countryId, OperatorInfo addition, bool confirmNotDuplicate)
         {

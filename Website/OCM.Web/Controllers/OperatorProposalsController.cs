@@ -52,7 +52,6 @@ namespace OCM.MVC.Controllers
         private void PopulateLists(OperatorProposalEditModel model)
         {
             var isCountryEditor = IsCountryEditor();
-            ViewBag.RestrictProposalScopeToGlobal = false;
             ViewBag.IsCountryEditor = isCountryEditor;
             ViewBag.ScopeList = new SelectList(new[]
             {
@@ -158,12 +157,6 @@ namespace OCM.MVC.Controllers
             return RenderSubmit(OperatorProposalType.Correction, operatorId: operatorId);
         }
 
-        [HttpGet]
-        public ActionResult Submit(OperatorProposalType? proposalType)
-        {
-            return RedirectToAction(proposalType == OperatorProposalType.Correction ? nameof(Edit) : nameof(Add));
-        }
-
         private ActionResult RenderSubmit(OperatorProposalType proposalType, OperatorProposalScope? scope = null,
             int? countryId = null, string operatorName = null, int? operatorId = null)
         {
@@ -215,12 +208,6 @@ namespace OCM.MVC.Controllers
         public ActionResult Edit(OperatorProposalEditModel model)
         {
             model.ProposalType = OperatorProposalType.Correction;
-            return ProcessSubmit(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Submit(OperatorProposalEditModel model)
-        {
             return ProcessSubmit(model);
         }
 
@@ -345,24 +332,12 @@ namespace OCM.MVC.Controllers
         }
 
         [HttpGet]
-        public ActionResult Operator(int id)
-        {
-            return RedirectToAction("Index", "NetworkOperators", new { operatorId = id });
-        }
-
-        [HttpGet]
         public ActionResult MySubmissions()
         {
             using var manager = new OperatorProposalManager();
             var proposals = BuildListItems(manager.GetSubmittedByUser((int)UserID));
             ViewBag.StatusMessage = TempData["StatusMessage"];
             return View("MyProposals", proposals);
-        }
-
-        [HttpGet]
-        public ActionResult MyProposals()
-        {
-            return RedirectToAction(nameof(MySubmissions));
         }
 
         [HttpPost, ValidateAntiForgeryToken]

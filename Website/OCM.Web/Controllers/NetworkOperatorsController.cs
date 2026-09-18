@@ -296,7 +296,11 @@ namespace OCM.MVC.Controllers
                     PhonePrimaryContact = model.PhonePrimaryContact,
                     PhoneSecondaryContact = model.PhoneSecondaryContact,
                     ContactEmail = model.ContactEmail,
-                    FaultReportEmail = model.FaultReportEmail
+                    FaultReportEmail = model.FaultReportEmail,
+                    // not on this form, so keep the stored values rather than clearing them
+                    BookingURL = operatorInfo.BookingURL,
+                    IsPrivateIndividual = operatorInfo.IsPrivateIndividual,
+                    IsRestrictedEdit = operatorInfo.IsRestrictedEdit
                 });
 
                 TempData["StatusMessage"] = $"Updated operator {title}.";
