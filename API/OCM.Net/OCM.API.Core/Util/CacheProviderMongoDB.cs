@@ -442,6 +442,14 @@ namespace OCM.Core.Data
             poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Descending(x => x.DateLastStatusUpdate));
             poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Descending(x => x.DateCreated));
             poiCollection.Indexes.CreateOne(Builders<POIMongoDB>.IndexKeys.Descending(x => x.ID));
+
+            // common query filters, combined with ID to support the default sort order (newest first)
+            poiCollection.Indexes.CreateMany(new[]
+            {
+                new CreateIndexModel<POIMongoDB>(Builders<POIMongoDB>.IndexKeys.Ascending(x => x.AddressInfo.CountryID).Descending(x => x.ID)),
+                new CreateIndexModel<POIMongoDB>(Builders<POIMongoDB>.IndexKeys.Ascending(x => x.OperatorID).Descending(x => x.ID)),
+                new CreateIndexModel<POIMongoDB>(Builders<POIMongoDB>.IndexKeys.Ascending(x => x.DataProviderID).Descending(x => x.ID)),
+            });
         }
 
         /// <summary>
@@ -594,10 +602,7 @@ namespace OCM.Core.Data
                         }
                         else
                         {
-                            var queryablePOICollection = poiCollection.AsQueryable();
-                            lastUpdated = queryablePOICollection.Max(i => i.DateLastStatusUpdate);
-                            lastCreated = queryablePOICollection.Max(i => i.DateCreated);
-                            maxIdCached = queryablePOICollection.Max(i => i.ID);
+                            (lastUpdated, lastCreated, maxIdCached) = await GetLatestPOIValues(poiCollection);
 
                             if (maxIdCached < syncStatus.MaxPOIId)
                             {
@@ -746,6 +751,21 @@ namespace OCM.Core.Data
             return status;
         }
 
+        /// <summary>
+        /// Get the most recent modified/created dates and highest ID in the POI cache.
+        /// Sort + limit is answered from the descending indexes on these fields, whereas LINQ Max() becomes a $group which scans every document.
+        /// </summary>
+        private static async Task<(DateTime? LastUpdated, DateTime? LastCreated, int MaxId)> GetLatestPOIValues(IMongoCollection<POIMongoDB> poiCollection)
+        {
+            var all = FilterDefinition<POIMongoDB>.Empty;
+
+            var lastUpdated = await poiCollection.Find(all).SortByDescending(p => p.DateLastStatusUpdate).Limit(1).Project(p => p.DateLastStatusUpdate).FirstOrDefaultAsync();
+            var lastCreated = await poiCollection.Find(all).SortByDescending(p => p.DateCreated).Limit(1).Project(p => p.DateCreated).FirstOrDefaultAsync();
+            var maxId = await poiCollection.Find(all).SortByDescending(p => p.ID).Limit(1).Project(p => p.ID).FirstOrDefaultAsync();
+
+            return (lastUpdated, lastCreated, maxId);
+        }
+
         private string GetCacheContentHash()
         {
             var cols = new string[] { "poi", "reference", "countryinfo" };
@@ -805,9 +825,7 @@ namespace OCM.Core.Data
                 {
                     var poiCollection = database.GetCollection<POIMongoDB>("poi");
                     currentStatus.TotalPOIInDB = await poiCollection.EstimatedDocumentCountAsync();
-                    currentStatus.LastPOIUpdate = poiCollection.AsQueryable().Max(p => p.DateLastStatusUpdate);
-                    currentStatus.LastPOICreated = poiCollection.AsQueryable().Max(p => p.DateCreated);
-                    currentStatus.MaxPOIId = poiCollection.AsQueryable().Max(p => p.ID);
+                    (currentStatus.LastPOIUpdate, currentStatus.LastPOICreated, currentStatus.MaxPOIId) = await GetLatestPOIValues(poiCollection);
                 }
 
                 if (includeDupeCheck)
@@ -925,8 +943,8 @@ namespace OCM.Core.Data
         {
             if (await IsCacheReady())
             {
-                var poiCollection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi").AsQueryable();
-                return poiCollection.FirstOrDefault(p => p.ID == id);
+                var poiCollection = database.GetCollection<OCM.API.Common.Model.ChargePoint>("poi");
+                return await poiCollection.Find(p => p.ID == id).FirstOrDefaultAsync();
             }
             else
             {
@@ -993,9 +1011,7 @@ namespace OCM.Core.Data
 
                 var collection = database.GetCollection<POIMongoDB>("poi");
 
-                IQueryable<POIMongoDB> poiList = collection.AsQueryable();
-
-                System.Diagnostics.Debug.Print($"MongoDB got poiList as Queryable @ {stopwatch.ElapsedMilliseconds}ms");
+                FilterDefinition<POIMongoDB> geoFilter = null;
 
                 //filter by points along polyline, bounding box or polygon
 
@@ -1047,79 +1063,81 @@ namespace OCM.Core.Data
 
                     // var geoFilter = Builders<POIMongoDB>.Filter.GeoWithin(x => x.SpatialPosition, polygonQueryBson);
                     var geoQuery = "{\"SpatialPosition\": {\"$geoWithin\": {\"$geometry\": " + geoJson + " } } }";
-                    var geoBson = BsonDocument.Parse(geoQuery);
-                    poiList = (await collection.FindAsync(geoBson)).ToEnumerable().AsQueryable();
-
+                    geoFilter = new BsonDocumentFilterDefinition<POIMongoDB>(BsonDocument.Parse(geoQuery));
                 }
                 else if (requiresDistance)
                 {
                     //filter by distance from lat/lon first
                     if (filter.Distance == null) filter.Distance = DefaultLatLngSearchDistanceKM;
 
-                    var geoFilter = Builders<POIMongoDB>.Filter.NearSphere(p => p.SpatialPosition, searchPoint, (double)filter.Distance * 1000);
-
-                    poiList = (await collection.FindAsync(geoFilter)).ToEnumerable().AsQueryable();
+                    geoFilter = Builders<POIMongoDB>.Filter.NearSphere(p => p.SpatialPosition, searchPoint, (double)filter.Distance * 1000);
                 }
 
-                poiList = ApplyQueryFilters(filter, poiList);
-
-                System.Diagnostics.Debug.Print($"MongoDB executing query @ {stopwatch.ElapsedMilliseconds}ms");
-
-                IQueryable<API.Common.Model.ChargePoint> results = null;
-                if (!requiresDistance || (filter.Latitude == null || filter.Longitude == null))
+                // spatial and attribute filters, sorting and limit are all evaluated by MongoDB so only the requested page of results is transferred
+                var queryFilter = BuildQueryFilter(filter);
+                if (geoFilter != null)
                 {
-                    //distance is not required or can't be provided
-                    System.Diagnostics.Debug.Print($"MongoDB starting query to list @ {stopwatch.ElapsedMilliseconds}ms");
+                    queryFilter = Builders<POIMongoDB>.Filter.And(geoFilter, queryFilter);
+                }
 
+                // polyline/bounding box/polygon searches clear lat/lon above, so distance is only computed for a plain distance search
+                bool isDistanceSearch = requiresDistance && filter.Latitude != null && filter.Longitude != null;
+
+                SortDefinition<POIMongoDB> sort = null;
+                if (!isDistanceSearch)
+                {
                     if (filter.SortBy == "created_asc")
                     {
-                        results = poiList.OrderBy(p => p.DateCreated).Take(filter.MaxResults).AsQueryable();
+                        sort = Builders<POIMongoDB>.Sort.Ascending(p => p.DateCreated);
                     }
                     else if (filter.SortBy == "modified_asc")
                     {
-                        results = poiList.OrderBy(p => p.DateLastStatusUpdate).Take(filter.MaxResults).AsQueryable();
+                        sort = Builders<POIMongoDB>.Sort.Ascending(p => p.DateLastStatusUpdate);
                     }
                     else if (filter.SortBy == "id_asc")
                     {
-                        results = poiList.OrderBy(p => p.ID).Take(filter.MaxResults).AsQueryable();
+                        sort = Builders<POIMongoDB>.Sort.Ascending(p => p.ID);
                     }
-                    else
+                    else if (filter.BoundingBox == null || !filter.BoundingBox.Any())
                     {
-                        if (filter.BoundingBox == null || !filter.BoundingBox.Any())
-                        {
-                            poiList = poiList.OrderByDescending(p => p.ID);
-                        }
-                        // In boundingbox more, if no sorting was requested by the user,
-                        // do not perform any sorting for performance reasons.
-                        results = poiList.Take(filter.MaxResults);
+                        sort = Builders<POIMongoDB>.Sort.Descending(p => p.ID);
                     }
-
-                    System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
+                    // In boundingbox mode, if no sorting was requested by the user,
+                    // do not perform any sorting for performance reasons.
                 }
-                else
+                // for a distance search $nearSphere already returns the nearest results first
+
+                if (filter.MaxResults <= 0)
                 {
-                    //distance is required, calculate and populate in results, mutate result set with distance unit
-                    results = poiList.ToArray().AsQueryable();
-                    //populate distance
+                    return new List<API.Common.Model.ChargePoint>();
+                }
+
+                System.Diagnostics.Debug.Print($"MongoDB executing query @ {stopwatch.ElapsedMilliseconds}ms");
+
+                var query = collection.Find(queryFilter, new FindOptions { BatchSize = filter.MaxResults });
+                if (sort != null)
+                {
+                    query = query.Sort(sort);
+                }
+
+                var results = await query.Limit(filter.MaxResults).ToListAsync();
+
+                System.Diagnostics.Debug.Print($"MongoDB finished query to list @ {stopwatch.ElapsedMilliseconds}ms");
+
+                if (isDistanceSearch)
+                {
+                    //populate distance in results, mutate result set with distance unit
                     foreach (var p in results)
                     {
                         p.AddressInfo.Distance = GeoManager.CalcDistance((double)filter.Latitude, (double)filter.Longitude, p.AddressInfo.Latitude, p.AddressInfo.Longitude, filter.DistanceUnit);
                         p.AddressInfo.DistanceUnit = filter.DistanceUnit;
                     }
-                    results = results.OrderBy(r => r.AddressInfo.Distance).Take(filter.MaxResults);
+                    results = results.OrderBy(r => r.AddressInfo.Distance).ToList();
                 }
 
                 if (filter.IsCompactOutput)
                 {
                     System.Diagnostics.Debug.Print($"MongoDB begin conversion to compact output @ {stopwatch.ElapsedMilliseconds}ms");
-
-                    // we will be mutating the results so need to convert to object we can update
-                    if (!(results is Array))
-                    {
-                        results = results.ToArray().AsQueryable();
-                    }
-
-                    System.Diagnostics.Debug.Print($"MongoDB converted to array @ {stopwatch.ElapsedMilliseconds}ms");
 
                     // dehydrate POI object by removing navigation properties which are based on reference data. Client can then rehydrate using reference data, saving on data transfer KB
                     // TODO: find faster method or replace with custom serialization
@@ -1163,8 +1181,7 @@ namespace OCM.Core.Data
                 stopwatch.Stop();
                 System.Diagnostics.Debug.WriteLine("Cache Provider POI Total Query Time:" + stopwatch.ElapsedMilliseconds + "ms");
 
-                var output = results.AsEnumerable();
-                return output;
+                return results;
             }
             else
             {
@@ -1172,101 +1189,107 @@ namespace OCM.Core.Data
             }
         }
 
-        public static IQueryable<POIMongoDB> ApplyQueryFilters(APIRequestParams filter, IQueryable<POIMongoDB> poiList)
+        /// <summary>
+        /// Build the (non-spatial) query filters for a POI search, to be evaluated by MongoDB
+        /// </summary>
+        public static FilterDefinition<POIMongoDB> BuildQueryFilter(APIRequestParams filter)
         {
+            var query = Builders<POIMongoDB>.Filter;
+            var filters = new List<FilterDefinition<POIMongoDB>>();
+
             int greaterThanId = 0;
             // workaround mongodb linq conversion bug
             if (filter.GreaterThanId.HasValue) greaterThanId = filter.GreaterThanId.Value;
 
             if (filter.OperatorIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.OperatorID != null && filter.OperatorIDs.Contains((int)c.OperatorID));
+                filters.Add(query.Where(c => c.OperatorID != null && filter.OperatorIDs.Contains((int)c.OperatorID)));
             }
 
 
             if (filter.SubmissionStatusTypeID?.Any(t => t > 0) == true)
             {
                 //specific submission status
-                poiList = poiList.Where(c => c.SubmissionStatusTypeID != null && filter.SubmissionStatusTypeID.Contains((int)c.SubmissionStatusTypeID));
+                filters.Add(query.Where(c => c.SubmissionStatusTypeID != null && filter.SubmissionStatusTypeID.Contains((int)c.SubmissionStatusTypeID)));
             }
             else
             {
                 // default to published submissions
-                poiList = poiList.Where(c => c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published);
+                filters.Add(query.Where(c => c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Imported_Published || c.SubmissionStatusTypeID == (int)StandardSubmissionStatusTypes.Submitted_Published));
             }
 
             // exclude any delisted POIs
-            poiList = poiList.Where(c => c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation);
+            filters.Add(query.Where(c => c.SubmissionStatusTypeID != (int)StandardSubmissionStatusTypes.Delisted_NotPublicInformation));
 
 
             // deprecated filter by operator name
             if (filter.OperatorName != null)
             {
-                poiList = poiList.Where(c => c.OperatorInfo.Title == filter.OperatorName);
+                filters.Add(query.Where(c => c.OperatorInfo.Title == filter.OperatorName));
             }
 
 
             if (filter.IsOpenData != null)
             {
-                poiList = poiList.Where(c => (filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true));
+                filters.Add(query.Where(c => (filter.IsOpenData == true && c.DataProvider.IsOpenDataLicensed == true) || (filter.IsOpenData == false && c.DataProvider.IsOpenDataLicensed != true)));
             }
 
 
             if (filter.GreaterThanId.HasValue == true)
             {
-                poiList = poiList.Where(c => filter.GreaterThanId.HasValue && c.ID > greaterThanId);
+                filters.Add(query.Where(c => filter.GreaterThanId.HasValue && c.ID > greaterThanId));
             }
 
             // deprecated filter by dataprovider name
             if (filter.DataProviderName != null)
             {
-                poiList = poiList.Where(c => c.DataProvider.Title == filter.DataProviderName);
+                filters.Add(query.Where(c => c.DataProvider.Title == filter.DataProviderName));
             }
 
             if (filter.CountryIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.AddressInfo.CountryID != null && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID));
+                filters.Add(query.Where(c => c.AddressInfo.CountryID != null && filter.CountryIDs.Contains((int)c.AddressInfo.CountryID)));
             }
 
 
             if (filter.ChargePointIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.ChargePointIDs.Contains((int)c.ID));
+                filters.Add(query.Where(c => filter.ChargePointIDs.Contains((int)c.ID)));
             }
 
             if (filter.UsageTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.UsageTypeID != null && filter.UsageTypeIDs.Contains((int)c.UsageTypeID));
+                filters.Add(query.Where(c => c.UsageTypeID != null && filter.UsageTypeIDs.Contains((int)c.UsageTypeID)));
             }
 
 
             if (filter.StatusTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.StatusTypeID != null && filter.StatusTypeIDs.Contains((int)c.StatusTypeID));
+                filters.Add(query.Where(c => c.StatusTypeID != null && filter.StatusTypeIDs.Contains((int)c.StatusTypeID)));
             }
 
             // exclude any decomissioned items
-            poiList = poiList.Where(c => c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned && c.StatusTypeID != (int)StandardStatusTypes.RemovedDuplicate);
+            filters.Add(query.Where(c => c.StatusTypeID != (int)StandardStatusTypes.RemovedDecomissioned && c.StatusTypeID != (int)StandardStatusTypes.RemovedDuplicate));
 
             if (filter.DataProviderIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.DataProviderID != null && filter.DataProviderIDs.Contains((int)c.DataProviderID));
+                filters.Add(query.Where(c => c.DataProviderID != null && filter.DataProviderIDs.Contains((int)c.DataProviderID)));
             }
 
             if (filter.Postcodes?.Any() == true)
             {
-                poiList = poiList.Where(c => filter.Postcodes.Contains(c.AddressInfo.Postcode));
+                filters.Add(query.Where(c => filter.Postcodes.Contains(c.AddressInfo.Postcode)));
             }
 
 
             if (filter.ChangesFromDate != null)
             {
-                poiList = poiList.Where(c => c.DateLastStatusUpdate >= filter.ChangesFromDate.Value);
+                filters.Add(query.Where(c => c.DateLastStatusUpdate >= filter.ChangesFromDate.Value));
             }
 
             if (filter.CreatedFromDate != null)
             {
-                poiList = poiList.Where(c => c.DateCreated >= filter.CreatedFromDate.Value);
+                filters.Add(query.Where(c => c.DateCreated >= filter.CreatedFromDate.Value));
             }
 
             //where level of detail is greater than 1 we decide how much to return based on the given level of detail (1-10) Level 10 will return the least amount of data and is suitable for a global overview
@@ -1282,43 +1305,43 @@ namespace OCM.Core.Data
                 {
                     filter.LevelOfDetail = 2; //include next level priority items
                 }
-                poiList = poiList.Where(c => c.LevelOfDetail <= filter.LevelOfDetail);
+                filters.Add(query.Where(c => c.LevelOfDetail <= filter.LevelOfDetail));
             }
 
             //apply connectionInfo filters, all filters must match a distinct connection within the charge point, rather than any filter matching any connectioninfo
             if (filter.ConnectionType != null)
             {
-                poiList = poiList.Where(c => c.Connections.Any(conn => conn.ConnectionType.Title == filter.ConnectionType));
+                filters.Add(query.Where(c => c.Connections.Any(conn => conn.ConnectionType.Title == filter.ConnectionType)));
             }
 
             if (filter.MinPowerKW != null)
             {
-                poiList = poiList.Where(c => c.Connections.Any(conn => conn.PowerKW >= filter.MinPowerKW));
+                filters.Add(query.Where(c => c.Connections.Any(conn => conn.PowerKW >= filter.MinPowerKW)));
             }
 
             if (filter.MaxPowerKW != null)
             {
-                poiList = poiList.Where(c => c.Connections.Any(conn => conn.PowerKW <= filter.MaxPowerKW));
+                filters.Add(query.Where(c => c.Connections.Any(conn => conn.PowerKW <= filter.MaxPowerKW)));
             }
 
             if (filter.ConnectionTypeIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.Connections.Any(conn => conn.ConnectionTypeID != null && filter.ConnectionTypeIDs.Contains((int)conn.ConnectionTypeID)));
+                filters.Add(query.Where(c => c.Connections.Any(conn => conn.ConnectionTypeID != null && filter.ConnectionTypeIDs.Contains((int)conn.ConnectionTypeID))));
             }
 
             if (filter.LevelIDs?.Any() == true)
             {
-                poiList = poiList.Where(c => c.Connections.Any(conn => conn.LevelID != null && filter.LevelIDs.Contains((int)conn.LevelID)));
+                filters.Add(query.Where(c => c.Connections.Any(conn => conn.LevelID != null && filter.LevelIDs.Contains((int)conn.LevelID))));
             }
             if (filter.HasMedia != null)
             {
                 if (filter.HasMedia == true)
                 {
-                    poiList = poiList.Where(c => c.MediaItems != null && c.MediaItems.Any(m => m.IsEnabled));
+                    filters.Add(query.Where(c => c.MediaItems != null && c.MediaItems.Any(m => m.IsEnabled)));
                 }
                 else
                 {
-                    poiList = poiList.Where(c => c.MediaItems == null || !c.MediaItems.Any(m => m.IsEnabled));
+                    filters.Add(query.Where(c => c.MediaItems == null || !c.MediaItems.Any(m => m.IsEnabled)));
                 }
             }
 
@@ -1326,11 +1349,11 @@ namespace OCM.Core.Data
             {
                 if (filter.HasComment == true)
                 {
-                    poiList = poiList.Where(c => c.UserComments != null && c.UserComments.Any());
+                    filters.Add(query.Where(c => c.UserComments != null && c.UserComments.Any()));
                 }
                 else
                 {
-                    poiList = poiList.Where(c => c.UserComments == null || !c.UserComments.Any());
+                    filters.Add(query.Where(c => c.UserComments == null || !c.UserComments.Any()));
                 }
             }
 
@@ -1338,16 +1361,16 @@ namespace OCM.Core.Data
             {
                 if (filter.HasCheckins == true)
                 {
-                    poiList = poiList.Where(c => c.UserComments != null && c.UserComments.Any(comment => comment.CheckinStatusTypeID != null));
+                    filters.Add(query.Where(c => c.UserComments != null && c.UserComments.Any(comment => comment.CheckinStatusTypeID != null)));
                 }
                 else
                 {
-                    poiList = poiList.Where(c => c.UserComments == null || !c.UserComments.Any(comment => comment.CheckinStatusTypeID != null));
+                    filters.Add(query.Where(c => c.UserComments == null || !c.UserComments.Any(comment => comment.CheckinStatusTypeID != null)));
                 }
             }
 
-            poiList = poiList.Where(c => c.AddressInfo != null);
-            return poiList;
+            filters.Add(query.Where(c => c.AddressInfo != null));
+            return query.And(filters);
         }
 
 
