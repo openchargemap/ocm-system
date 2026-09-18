@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OCM.API.Common
@@ -645,6 +646,52 @@ namespace OCM.API.Common
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Remove every editor permission (all countries and specific countries) from the permissions, including the legacy format tags. Other permissions such as administrator are kept.
+        /// </summary>
+        /// <param name="userPermissions"></param>
+        /// <returns>true if any editor permission was removed</returns>
+        public static bool RemoveEditorPermissions(UserPermissionsContainer userPermissions)
+        {
+            var removedCount = userPermissions.Permissions?.RemoveAll(p => p.Level == PermissionLevel.Editor) ?? 0;
+
+            if (!String.IsNullOrEmpty(userPermissions.LegacyPermissions))
+            {
+                var legacyPermissions = Regex.Replace(userPermissions.LegacyPermissions, @"\[" + StandardPermissionAttributes.CountryLevel_Editor + @"=[^\]]*\];?", "");
+                if (legacyPermissions != userPermissions.LegacyPermissions)
+                {
+                    userPermissions.LegacyPermissions = legacyPermissions;
+                    removedCount++;
+                }
+            }
+
+            return removedCount > 0;
+        }
+
+        /// <summary>
+        /// Remove all editor permissions from a user, for every country they can edit. Existing country subscriptions are not removed.
+        /// </summary>
+        /// <param name="userId">user to remove editor permissions from</param>
+        /// <param name="administrator">administrator performing the change</param>
+        /// <returns>true if the user had editor permissions which were removed</returns>
+        public bool RemoveAllEditorPermissions(int userId, User administrator)
+        {
+            if (!IsUserAdministrator(administrator)) return false;
+
+            var userDetails = dataModel.Users.FirstOrDefault(u => u.Id == userId);
+            if (userDetails == null) return false;
+
+            var userPermissions = GetUserPermissions(Model.Extensions.User.FromDataModel(userDetails));
+            if (!RemoveEditorPermissions(userPermissions)) return false;
+
+            userDetails.Permissions = JsonConvert.SerializeObject(userPermissions, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            dataModel.SaveChanges();
+
+            AuditLogManager.Log(administrator, AuditEventType.PermissionRemoved, "User: " + userId + "; Permission:" + StandardPermissionAttributes.CountryLevel_Editor + " (all countries)", null);
+
+            return true;
         }
 
         public void ConvertUserPermissions()
