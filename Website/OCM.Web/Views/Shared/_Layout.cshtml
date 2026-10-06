@@ -103,6 +103,16 @@
 
     <a class="visually-hidden-focusable ocm-skip-link" href="#main-content">Skip to content</a>
 
+    @if (isHome)
+    {
+        @* the embedded map app has its own navigation, so the home page only gets a minimal bar *@
+        <nav class="ocm-home-bar" aria-label="Site links">
+            <a class="btn btn-sm ocm-btn-cta" href="@Url.Action("DataSharing", "About")"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>Promote your <span class="d-none d-sm-inline">charging </span>network</a>
+            <a class="btn btn-sm ocm-home-bar-link" href="@Url.Action("Index", "POI")">Project Details<i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i></a>
+        </nav>
+    }
+    else
+    {
     <nav class="navbar navbar-expand-lg ocm-navbar sticky-top" aria-label="Main navigation">
         <div class="container-fluid ocm-navbar-inner">
             <a class="navbar-brand" href="@Url.Action("Index", "Home")">
@@ -186,7 +196,7 @@
 
                 <ul class="navbar-nav align-items-lg-center gap-lg-1">
                     <li class="nav-item d-flex align-items-center">
-                        <a class="btn btn-sm ocm-btn-cta my-2 my-lg-0 me-lg-2" href="@Url.Action("DataSharing", "About")"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>Promote your charging network</a>
+                        <a class="btn btn-sm ocm-btn-cta my-2 my-lg-0 me-lg-2" href="@Url.Action("DataSharing", "About")"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>Promote your <span class="d-none d-sm-inline">charging </span>network</a>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -227,6 +237,7 @@
             </div>
         </div>
     </nav>
+    }
 
     @if (isHome)
     {
