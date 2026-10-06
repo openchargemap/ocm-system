@@ -1,41 +1,64 @@
-﻿@{
+@{
     ViewBag.Title = "Index";
 }
 
-<h2>Admin Dashboard</h2>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <h3>Manage Edits</h3>
-        <ul>
-            <li>@Html.ActionLink("View Edit Queue", "Index", "EditQueue")</li>
-        </ul>
-        <h3>Users</h3>
-        <ul>
-            <li>@Html.ActionLink("Users", "Users", "Admin")</li>
-            <li>@Html.ActionLink("Country Editors", "CountryEditors", "Admin")</li>
-        </ul>
-        <h3>Caching</h3>
-        <ul>
-            <li>@Html.ActionLink("Check POI Cache Status", "CheckPOIMirrorStatus", "Admin")</li>
-            <li>@Html.ActionLink("Benchmark Tests", "Benchmarks", "Admin")</li>
+<h1>Admin Dashboard</h1>
 
-            <li>@Html.ActionLink("Fix Media Item Thumbnails", "MediaItemsWithoutThumbnails", "Admin")</li>
-        </ul>
-
-        <h3>Data Import</h3>
-        <ul>
-            <li>@Html.ActionLink("Data Sharing Agreements", "DataSharingAgreements", "Admin")</li>
-            <li>@Html.ActionLink("Data Providers", "DataProviders", "Admin")</li>
-        </ul>
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+    <div class="col">
+        <div class="card h-100 mb-0">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-list-check fa-fw me-2 text-body-secondary" aria-hidden="true"></i>Manage Edits</h2>
+                <ul class="list-unstyled mb-0 d-grid gap-1">
+                    <li>@Html.ActionLink("View Edit Queue", "Index", "EditQueue")</li>
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <div class="col-md-6">
-        <h3>Review Suggested Duplicates</h3>
-        <div class="alert alert-warning">Note: preparing the list of suggested duplicates can take around 1 minute to complete:</div>
-        <ul>
-            <li>@Html.ActionLink("Review Duplicates: UK", "ReviewDuplicates", "POI", new { countryId = 1 }, null)</li>
-            <li>@Html.ActionLink("Review Duplicates: US", "ReviewDuplicates", "POI", new { countryId = 2 }, null)</li>
-        </ul>
+    <div class="col">
+        <div class="card h-100 mb-0">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-users fa-fw me-2 text-body-secondary" aria-hidden="true"></i>Users</h2>
+                <ul class="list-unstyled mb-0 d-grid gap-1">
+                    <li>@Html.ActionLink("Users", "Users", "Admin")</li>
+                    <li>@Html.ActionLink("Country Editors", "CountryEditors", "Admin")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 mb-0">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-database fa-fw me-2 text-body-secondary" aria-hidden="true"></i>Caching</h2>
+                <ul class="list-unstyled mb-0 d-grid gap-1">
+                    <li>@Html.ActionLink("Check POI Cache Status", "CheckPOIMirrorStatus", "Admin")</li>
+                    <li>@Html.ActionLink("Benchmark Tests", "Benchmarks", "Admin")</li>
+                    <li>@Html.ActionLink("Fix Media Item Thumbnails", "MediaItemsWithoutThumbnails", "Admin")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 mb-0">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-file-import fa-fw me-2 text-body-secondary" aria-hidden="true"></i>Data Import</h2>
+                <ul class="list-unstyled mb-0 d-grid gap-1">
+                    <li>@Html.ActionLink("Data Sharing Agreements", "DataSharingAgreements", "Admin")</li>
+                    <li>@Html.ActionLink("Data Providers", "DataProviders", "Admin")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 mb-0">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-clone fa-fw me-2 text-body-secondary" aria-hidden="true"></i>Review Suggested Duplicates</h2>
+                <p class="small text-body-secondary">Note: preparing the list of suggested duplicates can take around 1 minute to complete.</p>
+                <ul class="list-unstyled mb-0 d-grid gap-1">
+                    <li>@Html.ActionLink("Review Duplicates: UK", "ReviewDuplicates", "POI", new { countryId = 1 }, null)</li>
+                    <li>@Html.ActionLink("Review Duplicates: US", "ReviewDuplicates", "POI", new { countryId = 2 }, null)</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

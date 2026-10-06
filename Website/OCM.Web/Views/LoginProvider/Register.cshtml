@@ -4,6 +4,9 @@
     ViewBag.Title = "Register";
 }
 
-<h2>Register as New User</h2>
+<div class="ocm-auth">
+    <h1 class="h3 mb-1">Register as New User</h1>
+    <p class="text-body-secondary mb-4">Already registered? <a href="@Url.Action("SignIn", "Profile")">Sign in</a></p>
 
-@Html.EditorFor(m => m)
+    @Html.EditorFor(m => m)
+</div>

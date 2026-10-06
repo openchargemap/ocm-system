@@ -14,7 +14,7 @@
 {
 
     ViewBag.Title = "OCM User Profile - " + Model.Username;
-    <h2>@Model.Username - Profile and Stats</h2>
+    <h1 class="mb-4">@Model.Username <small>profile and stats</small></h1>
 
     if (Model.IsProfilePublic == true)
     {
@@ -30,7 +30,7 @@
         var userPermissions = OCM.API.Common.UserManager.GetUserPermissions(Model);
         var isEditingBlocked = userPermissions.IsEditingBlocked == true;
 
-        <div class="well well-lg">
+        <div class="card card-body bg-body-tertiary p-4 mt-4">
             <h2>Admin Options</h2>
 
             @if (TempData["StatusMessage"] != null)
@@ -64,7 +64,7 @@
                     }
                 </div>
 
-                <form method="post" action="@Url.Action("SetUserEditingBlocked", "Admin")" class="form-inline" style="padding-bottom:1em;">
+                <form method="post" action="@Url.Action("SetUserEditingBlocked", "Admin")" class="d-flex flex-wrap align-items-center gap-2 pb-3">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="userId" value="@Model.ID" />
                     <input type="hidden" name="isBlocked" value="false" />
@@ -83,8 +83,8 @@
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="userId" value="@Model.ID" />
                     <input type="hidden" name="isBlocked" value="true" />
-                    <div class="form-group">
-                        <label for="editingBlockedReason">Reason (optional, shown to the user):</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editingBlockedReason">Reason (optional, shown to the user):</label>
                         <input type="text" class="form-control" id="editingBlockedReason" name="reason" maxlength="500" placeholder="e.g. repeated submission of inaccurate data" />
                     </div>
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Block this user from making any edits?');">Block User From Editing</button>
@@ -122,17 +122,17 @@
                 </ul>
             </div>
 
-            <div class="form-group" style="padding:1em;">
+            <div class="mb-3" style="padding:1em;">
 
                 <div class="col-md-6">
-                    @Html.DropDownList("CountryCode", (SelectList)ViewBag.CountryList, new { @class = "form-control" })
+                    @Html.DropDownList("CountryCode", (SelectList)ViewBag.CountryList, new { @class = "form-select" })
                 </div>
 
                 <div class="col-md-2">
                     <button type="button" class="btn btn-primary" onclick="toggleCountryEditor(false);">Assign Country Editor</button>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-default" onclick="toggleCountryEditor(true);">Remove Country Editor</button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="toggleCountryEditor(true);">Remove Country Editor</button>
                 </div>
                 <script>
                     function toggleCountryEditor(removePermission) {

@@ -127,7 +127,7 @@ else
                             <td><strong>@op.Name</strong></td>
                             <td>@op.LocationCount</td>
                             <td>
-                                <select name="OperatorMappings[@op.Name]" class="form-control">
+                                <select name="OperatorMappings[@op.Name]" class="form-select">
                                     <option value="0">(New Operator Required)</option>
                                     @foreach (var ocmOp in Model.AvailableOperators)
                                     {
@@ -151,8 +151,8 @@ else
 
         @if (Model.ValidationResult.DiscoveredOperators.Count == 1)
         {
-            <div class="form-group">
-                <label>Default Operator</label>
+            <div class="mb-3">
+                <label class="form-label">Default Operator</label>
                 <p class="form-text text-muted">Since there is only one operator, it will be set as the default.</p>
                 <input type="hidden" name="DefaultOperatorId" value="@(Model.ValidationResult.DiscoveredOperators.First().MappedOperatorId ?? 0)" />
             </div>

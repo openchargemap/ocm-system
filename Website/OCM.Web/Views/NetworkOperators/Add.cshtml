@@ -26,22 +26,22 @@
                 <div class="card mb-4">
                     <div class="card-header h5 mb-0">Identity</div>
                     <div class="card-body">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.CountryID)
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.CountryID, new { @class = "form-label" })
                             @if (isEdit)
                             {
                                 @Html.HiddenFor(model => model.CountryID)
-                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select", disabled = "disabled" })
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "form-select", disabled = "disabled" })
                             }
                             else
                             {
-                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "custom-select" })
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, "Select a country", new { @class = "form-select" })
                             }
                             @Html.ValidationMessageFor(model => model.CountryID)
                             <small class="form-text text-muted">The country code is added to the saved operator title automatically.</small>
                         </div>
-                        <div class="form-group mb-0">
-                            @Html.LabelFor(model => model.OperatorName)
+                        <div class="mb-0">
+                            @Html.LabelFor(model => model.OperatorName, new { @class = "form-label" })
                             @Html.EditorFor(model => model.OperatorName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.OperatorName)
                         </div>
@@ -51,8 +51,8 @@
                 <div class="card mb-4">
                     <div class="card-header h5 mb-0">Website</div>
                     <div class="card-body">
-                        <div class="form-group mb-0">
-                            @Html.LabelFor(model => model.WebsiteURL)
+                        <div class="mb-0">
+                            @Html.LabelFor(model => model.WebsiteURL, new { @class = "form-label" })
                             @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.WebsiteURL)
                             <small class="form-text text-muted">Required. If the operator does not have a valid website, do not add them.</small>
@@ -64,23 +64,23 @@
                     <div class="card-header h5 mb-0">Contact details</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 form-group">
-                                @Html.LabelFor(model => model.PhonePrimaryContact)
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(model => model.PhonePrimaryContact, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.PhonePrimaryContact, new { htmlAttributes = new { @class = "form-control" } })
                             </div>
-                            <div class="col-md-6 form-group mb-md-0">
-                                @Html.LabelFor(model => model.PhoneSecondaryContact)
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                @Html.LabelFor(model => model.PhoneSecondaryContact, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.PhoneSecondaryContact, new { htmlAttributes = new { @class = "form-control" } })
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 form-group">
-                                @Html.LabelFor(model => model.ContactEmail)
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(model => model.ContactEmail, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.ContactEmail)
                             </div>
-                            <div class="col-md-6 form-group mb-0">
-                                @Html.LabelFor(model => model.FaultReportEmail)
+                            <div class="col-md-6 mb-0">
+                                @Html.LabelFor(model => model.FaultReportEmail, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.FaultReportEmail, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.FaultReportEmail)
                             </div>
@@ -91,8 +91,8 @@
                 <div class="card mb-4">
                     <div class="card-header h5 mb-0">Notes</div>
                     <div class="card-body">
-                        <div class="form-group mb-0">
-                            @Html.LabelFor(model => model.Comments)
+                        <div class="mb-0">
+                            @Html.LabelFor(model => model.Comments, new { @class = "form-label" })
                             @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", rows = 4 })
                         </div>
                     </div>
@@ -117,9 +117,9 @@
                                 <li><strong>@match.Operator.Title</strong> — @match.Reason</li>
                             }
                         </ul>
-                        <div class="custom-control custom-checkbox">
-                            @Html.CheckBoxFor(model => model.ConfirmNotDuplicate, new { @class = "custom-control-input" })
-                            @Html.LabelFor(model => model.ConfirmNotDuplicate, "I have checked these and this is a separate operator", new { @class = "custom-control-label" })
+                        <div class="form-check">
+                            @Html.CheckBoxFor(model => model.ConfirmNotDuplicate, new { @class = "form-check-input" })
+                            @Html.LabelFor(model => model.ConfirmNotDuplicate, "I have checked these and this is a separate operator", new { @class = "form-check-label" })
                         </div>
                     </div>
                 }
@@ -143,7 +143,7 @@
                     {
                         @Html.HiddenFor(model => model.ID)
                     }
-                    <input type="submit" value="@(isEdit ? "Save changes" : "Create operator")" class="btn btn-primary mr-2 mb-2" />
+                    <input type="submit" value="@(isEdit ? "Save changes" : "Create operator")" class="btn btn-primary me-2 mb-2" />
                     <a href="@Url.Action("Index", new { countryId = Model.CountryID })" class="btn btn-outline-secondary mb-2">Cancel</a>
                 </div>
             }

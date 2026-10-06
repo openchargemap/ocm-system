@@ -375,7 +375,7 @@ class LocationEditor {
             var poi = poiList[i];
             var url = "https://openchargemap.org/site/poi/details/" + poi.ID;
             if (poi.ID === poiId) {
-                output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title + " <span class='label label-info'>Being Edited</span></li>";
+                output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title + " <span class='badge text-bg-info'>Being Edited</span></li>";
             } else {
                 output += "<li><a target='_blank' href=\"" + url + "\">OCM-" + poi.ID + " : " + poi.AddressInfo.Title + "</a> (" + (Math.round(poi.AddressInfo.Distance * 10) / 10) + " Miles)</li>";
             }

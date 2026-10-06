@@ -4,9 +4,9 @@
 
 <div class="row">
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.ConnectionType)
+                @Html.LabelFor(model => model.ConnectionType, new { @class = "form-label" })
             </div>
             <div>
                 @Html.DropDownListFor(model => model.ConnectionType.ID, (SelectList)ViewBag.ReferenceData.ConnectionTypeList, new { data_localize = "ocm.reference.connectionType" })
@@ -15,9 +15,9 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Amps)
+                @Html.LabelFor(model => model.Amps, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.Amps)
@@ -26,9 +26,9 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Voltage)
+                @Html.LabelFor(model => model.Voltage, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.Voltage)
@@ -41,9 +41,9 @@
 
 <div class="row">
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.PowerKW)
+                @Html.LabelFor(model => model.PowerKW, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.PowerKW)
@@ -53,9 +53,9 @@
     </div>
 
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Quantity)
+                @Html.LabelFor(model => model.Quantity, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.Quantity)
@@ -64,9 +64,9 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Level)
+                @Html.LabelFor(model => model.Level, new { @class = "form-label" })
             </div>
             <div>
                 @Html.DropDownListFor(model => model.Level.ID, (SelectList)ViewBag.ReferenceData.LevelList, new { data_localize = "ocm.reference.levelType" })
@@ -77,9 +77,9 @@
 </div>
 <div class="row">
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.StatusType)
+                @Html.LabelFor(model => model.StatusType, new { @class = "form-label" })
             </div>
             <div>
                 @Html.DropDownListFor(model => model.StatusType.ID, (SelectList)ViewBag.ReferenceData.StatusTypeList, new { data_localize = "ocm.reference.statusType" })
@@ -88,9 +88,9 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.CurrentType)
+                @Html.LabelFor(model => model.CurrentType, new { @class = "form-label" })
             </div>
             <div>
                 @Html.DropDownListFor(model => model.CurrentType.ID, (SelectList)ViewBag.ReferenceData.CurrentTypeList, new { data_localize = "ocm.reference.supplyType" })
@@ -99,9 +99,9 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Reference)
+                @Html.LabelFor(model => model.Reference, new { @class = "form-label" })
             </div>
             <div>
 
@@ -113,9 +113,9 @@
 </div>
 
 
-<div class="form-group" data-editormode="core">
+<div class="mb-3" data-editormode="core">
     <div>
-        @Html.LabelFor(model => model.Comments)
+        @Html.LabelFor(model => model.Comments, new { @class = "form-label" })
     </div>
     <div>
         @Html.TextAreaFor(model => model.Comments)

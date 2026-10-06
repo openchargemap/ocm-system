@@ -1,7 +1,7 @@
 ﻿function prepareTableOfContents() {
     // from http://css-tricks.com/automatic-table-of-contents/
     var ToC = "<nav role='navigation'>" +
-        "<h2>Contents:</h2>" +
+        "<h2 class='ocm-toc-heading'>On this page</h2>" +
         "<ul class='nav nav-pills flex-column'>";
 
     var newLine, el, title, link;

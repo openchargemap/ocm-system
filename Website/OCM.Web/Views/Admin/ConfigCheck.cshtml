@@ -6,18 +6,18 @@
 <h2>Config Check</h2>
 
 <h3>Notifications</h3>
-<dl class="dl-horizontal">
-    <dt>Debug Email</dt>
-    <dd><code>@ConfigurationManager.AppSettings["DebugEmailAddress"]</code></dd>
+<dl class="row">
+    <dt class="col-sm-4 col-lg-3">Debug Email</dt>
+    <dd class="col-sm-8 col-lg-9"><code>@ConfigurationManager.AppSettings["DebugEmailAddress"]</code></dd>
     
-    <dt>Default Sender</dt>
-    <dd><code>@ConfigurationManager.AppSettings["DefaultSenderEmailAddress"]</code></dd>
-    <dt>Email API Key</dt>
-    <dd><code>@ConfigurationManager.AppSettings["MandrillAPIKey"]</code></dd>
-    <dt>Using Email API</dt>
-    <dd>@ConfigurationManager.AppSettings["Notifications_SendViaAPI"]</dd>
-    <dt>Notification Logging</dt>
-    <dd>@ConfigurationManager.AppSettings["EnableNotificationLogging"]</dd>
+    <dt class="col-sm-4 col-lg-3">Default Sender</dt>
+    <dd class="col-sm-8 col-lg-9"><code>@ConfigurationManager.AppSettings["DefaultSenderEmailAddress"]</code></dd>
+    <dt class="col-sm-4 col-lg-3">Email API Key</dt>
+    <dd class="col-sm-8 col-lg-9"><code>@ConfigurationManager.AppSettings["MandrillAPIKey"]</code></dd>
+    <dt class="col-sm-4 col-lg-3">Using Email API</dt>
+    <dd class="col-sm-8 col-lg-9">@ConfigurationManager.AppSettings["Notifications_SendViaAPI"]</dd>
+    <dt class="col-sm-4 col-lg-3">Notification Logging</dt>
+    <dd class="col-sm-8 col-lg-9">@ConfigurationManager.AppSettings["EnableNotificationLogging"]</dd>
     
 </dl>
 
@@ -32,10 +32,10 @@
 
 </script>
 
-<div id="translation-test" class="well" >
+<div id="translation-test" class="card card-body bg-body-tertiary" >
     
 
-    <i class="fa fa-cloud-download pull-left home-icons"></i>
+    <i class="fa fa-cloud-download float-start home-icons"></i>
     <div data-localize="ocm.infoText.translationTest.p1">
         <p >
             <em>Vehicle Manufacturers, Sat Nav vendors, App Developers, Website Owners:</em>
@@ -48,7 +48,7 @@
         </p>
     </div>
 
-    <select data-localize="ocm.reference.operationalStatus" data-val="true" data-val-number="The field ID must be a number." data-val-required="The ID field is required." id="StatusType_ID" name="StatusType.ID" class="form-control valid" aria-required="true" aria-invalid="false" aria-describedby="StatusType_ID-error">
+    <select data-localize="ocm.reference.operationalStatus" data-val="true" data-val-number="The field ID must be a number." data-val-required="The ID field is required." id="StatusType_ID" name="StatusType.ID" class="form-select valid" aria-required="true" aria-invalid="false" aria-describedby="StatusType_ID-error">
         <option value="-1">(None Selected)</option>
         <option value="0">Unknown</option>
         <option value="30">Temporarily Unavailable</option>

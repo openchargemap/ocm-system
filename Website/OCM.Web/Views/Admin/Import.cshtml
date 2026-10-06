@@ -12,12 +12,12 @@ else
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#added" aria-controls="added" role="tab" data-toggle="tab"> Added: @Model.Added.Count</a></li>
-        <li role="presentation"><a href="#updated" aria-controls="updated" role="tab" data-toggle="tab">Updated: @Model.Updated.Count</a></li>
-        <li role="presentation"><a href="#unchanged" aria-controls="unchanged" role="tab" data-toggle="tab">Unchanged: @Model.Unchanged.Count</a></li>
-        <li role="presentation"><a href="#duplicates" aria-controls="duplicates" role="tab" data-toggle="tab">Duplicates: @Model.Duplicates.Count</a></li>
-        <li role="presentation"><a href="#deleted" aria-controls="deleted" role="tab" data-toggle="tab"> Deleted: @Model.Delisted.Count</a></li>
-        <li role="presentation"><a href="#log" aria-controls="log" role="tab" data-toggle="tab"> Log</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link active" href="#added" aria-controls="added" role="tab" data-bs-toggle="tab"> Added: @Model.Added.Count</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" href="#updated" aria-controls="updated" role="tab" data-bs-toggle="tab">Updated: @Model.Updated.Count</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" href="#unchanged" aria-controls="unchanged" role="tab" data-bs-toggle="tab">Unchanged: @Model.Unchanged.Count</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" href="#duplicates" aria-controls="duplicates" role="tab" data-bs-toggle="tab">Duplicates: @Model.Duplicates.Count</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" href="#deleted" aria-controls="deleted" role="tab" data-bs-toggle="tab"> Deleted: @Model.Delisted.Count</a></li>
+        <li class="nav-item" role="presentation"><a class="nav-link" href="#log" aria-controls="log" role="tab" data-bs-toggle="tab"> Log</a></li>
     </ul>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="added">

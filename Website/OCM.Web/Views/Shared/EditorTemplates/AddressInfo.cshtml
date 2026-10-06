@@ -16,11 +16,11 @@
                 }
                 else
                 {
-                    <input type="button" class="btn btn-primary" id="positionMarkerAtUserLocation" value="Use my current location" data-toggle="popover" data-content="Map Marker has been positioned at your current location" />
+                    <input type="button" class="btn btn-primary" id="positionMarkerAtUserLocation" value="Use my current location" data-bs-toggle="popover" data-bs-content="Map Marker has been positioned at your current location" />
                 }
             </div>
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="text" class="form-control" id="text-location" placeholder="or find a place e.g. Bond Street, London, UK" />
                     <button type="button" class="btn btn-outline-primary" id="positionMarkerAtTextLocation">
                         Find Place
@@ -36,18 +36,18 @@
     <div class="col-md-12">
         <div id="map-canvas" class="map-box" style="width: 100%; height: 300px; margin-bottom: 1em;"></div>
 
-        <p class="well well-sm">
+        <p class="card card-body bg-body-tertiary py-2">
             <span id="nearest-address"></span>
-            <input type="button" class="btn btn-success" id="copyAddress" value="Use this as the Nearest Address &gt;&gt;" data-toggle="popover" data-content="Address has been copied to Nearest Address details" />
+            <input type="button" class="btn btn-success" id="copyAddress" value="Use this as the Nearest Address &gt;&gt;" data-bs-toggle="popover" data-bs-content="Address has been copied to Nearest Address details" />
         </p>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-6">
 
-        <div class="form-group" data-editormode="core">
+        <div class="row mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Latitude, new { @class = "control-label col-sm-2" })
+                @Html.LabelFor(model => model.Latitude, new { @class = "col-form-label col-sm-2" })
             </div>
             <div class="col-sm-6">
                 @Html.EditorFor(model => model.Latitude)
@@ -56,9 +56,9 @@
         </div>
     </div>
     <div class="col-sm-6">
-        <div class="form-group" data-editormode="core">
+        <div class="row mb-3" data-editormode="core">
             <div>
-                @Html.LabelFor(model => model.Longitude, new { @class = "control-label col-sm-2" })
+                @Html.LabelFor(model => model.Longitude, new { @class = "col-form-label col-sm-2" })
             </div>
             <div class="col-sm-6">
                 @Html.EditorFor(model => model.Longitude)
@@ -80,16 +80,16 @@
         <p class="text-info">
             Please verify the nearest address details which will appear to users who are not using the map view.
         </p>
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div data-localize="ocm.details.location.title">
-                @Html.LabelFor(model => model.Title)
+                @Html.LabelFor(model => model.Title, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "General location name e.g. High Street Car Park" } })
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div data-localize="ocm.details.location.addressLine1">
                 @Html.LabelFor(model => model.AddressLine1)
             </div>
@@ -98,7 +98,7 @@
                 @Html.ValidationMessageFor(model => model.AddressLine1)
             </div>
         </div>
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div data-localize="ocm.details.location.addressLine2">
                 @Html.LabelFor(model => model.AddressLine2)
             </div>
@@ -109,9 +109,9 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
+                <div class="mb-3" data-editormode="core">
                     <div data-localize="ocm.details.location.town">
-                        @Html.LabelFor(model => model.Town)
+                        @Html.LabelFor(model => model.Town, new { @class = "form-label" })
                     </div>
                     <div>
                         @Html.EditorFor(model => model.Town, new { htmlAttributes = new { @class = "form-control", placeholder = "City or Town Name" } })
@@ -120,9 +120,9 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
+                <div class="mb-3" data-editormode="core">
                     <div data-localize="ocm.details.location.stateOrProvince">
-                        @Html.LabelFor(model => model.StateOrProvince)
+                        @Html.LabelFor(model => model.StateOrProvince, new { @class = "form-label" })
                     </div>
                     <div>
                         @Html.EditorFor(model => model.StateOrProvince, new { htmlAttributes = new { @class = "form-control", placeholder = "State, Province or Region" } })
@@ -133,9 +133,9 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
+                <div class="mb-3" data-editormode="core">
                     <div data-localize="ocm.details.location.postcode">
-                        @Html.LabelFor(model => model.Postcode)
+                        @Html.LabelFor(model => model.Postcode, new { @class = "form-label" })
                     </div>
                     <div>
                         @Html.EditorFor(model => model.Postcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Zip/Postal Code (if applicable)" } })
@@ -144,9 +144,9 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
+                <div class="mb-3" data-editormode="core">
                     <div data-localize="ocm.details.location.country">
-                        @Html.LabelFor(model => model.Country)
+                        @Html.LabelFor(model => model.Country, new { @class = "form-label" })
                     </div>
                     <div>
                         @Html.DropDownListFor(model => model.Country.ID, (SelectList)ViewBag.ReferenceData.CountryList)
@@ -155,15 +155,15 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <input type="button" class="btn btn-warning" value="&lt;&lt; Position map marker at this address" id="positionMarkerFromAddress" data-toggle="popover" data-content="Marker has been moved to this address" />
+        <div class="mb-3">
+            <input type="button" class="btn btn-warning" value="&lt;&lt; Position map marker at this address" id="positionMarkerFromAddress" data-bs-toggle="popover" data-bs-content="Marker has been moved to this address" />
         </div>
         <!--end nearest address details -->
         <!--begin additional location details-->
         <h3>Additional Location Details</h3>
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div data-localize="ocm.details.accessComments">
-                @Html.LabelFor(model => model.AccessComments)
+                @Html.LabelFor(model => model.AccessComments, new { @class = "form-label" })
             </div>
             <div>
                 @Html.TextAreaFor(model => model.AccessComments)
@@ -172,7 +172,7 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
+                <div class="mb-3" data-editormode="core">
                     <div data-localize="ocm.details.location.contactTelephone1">
                         @Html.LabelFor(model => model.ContactTelephone1)
                     </div>
@@ -183,7 +183,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="form-group" data-editormode="core">
+                <div class="mb-3" data-editormode="core">
                     <div data-localize="ocm.details.location.contactTelephone2">
                         @Html.LabelFor(model => model.ContactTelephone2)
                     </div>
@@ -195,9 +195,9 @@
             </div>
         </div>
 
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div data-localize="ocm.details.location.contactEmail">
-                @Html.LabelFor(model => model.ContactEmail)
+                @Html.LabelFor(model => model.ContactEmail, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.ContactEmail)
@@ -205,9 +205,9 @@
             </div>
         </div>
 
-        <div class="form-group" data-editormode="core">
+        <div class="mb-3" data-editormode="core">
             <div data-localize="ocm.details.location.addressRelatedURL">
-                @Html.LabelFor(model => model.RelatedURL)
+                @Html.LabelFor(model => model.RelatedURL, new { @class = "form-label" })
             </div>
             <div>
                 @Html.EditorFor(model => model.RelatedURL)

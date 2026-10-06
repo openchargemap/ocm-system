@@ -23,7 +23,7 @@
                             <li class="mb-2">
                                 <strong>@match.Title</strong>
                                 <small class="text-muted">(@match.MatchReason)</small>
-                                <a class="btn btn-sm btn-outline-secondary ml-2" href="@match.ViewURL">View operator</a>
+                                <a class="btn btn-sm btn-outline-secondary ms-2" href="@match.ViewURL">View operator</a>
                             </li>
                         }
                     </ul>
@@ -34,10 +34,10 @@
                 <div class="card-header h5 mb-0">Proposal details</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 form-group"><strong>Scope</strong><div>@(Model.Proposal.Scope == OCM.API.Common.Model.OperatorProposalScope.Global ? "Global / multinational" : Model.CountryTitle)</div></div>
-                        <div class="col-md-6 form-group"><strong>Proposal type</strong><div>@Model.Proposal.ProposalType</div></div>
-                        <div class="col-md-6 form-group mb-md-0"><strong>Submitted by</strong><div>@Model.SubmitterName</div></div>
-                        <div class="col-md-6 form-group mb-0"><strong>Submitter rationale (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.Proposal.SubmitterComment) ? "—" : Model.Proposal.SubmitterComment)</div></div>
+                        <div class="col-md-6 mb-3"><strong>Scope</strong><div>@(Model.Proposal.Scope == OCM.API.Common.Model.OperatorProposalScope.Global ? "Global / multinational" : Model.CountryTitle)</div></div>
+                        <div class="col-md-6 mb-3"><strong>Proposal type</strong><div>@Model.Proposal.ProposalType</div></div>
+                        <div class="col-md-6 mb-3 mb-md-0"><strong>Submitted by</strong><div>@Model.SubmitterName</div></div>
+                        <div class="col-md-6 mb-0"><strong>Submitter rationale (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.Proposal.SubmitterComment) ? "—" : Model.Proposal.SubmitterComment)</div></div>
                     </div>
                 </div>
             </div>
@@ -79,8 +79,8 @@
                 <div class="card mb-4">
                     <div class="card-header h5 mb-0">Proposed operator</div>
                     <div class="card-body">
-                        <div class="form-group mb-0">
-                            <label>Operator name (required)</label>
+                        <div class="mb-0">
+                            <label class="form-label">Operator name (required)</label>
                             <div class="form-control-plaintext">@Model.ProposedOperator.Title</div>
                         </div>
                     </div>
@@ -100,10 +100,10 @@
                     <div class="card-header h5 mb-0">Operator contact details</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 form-group"><strong>Primary phone (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.PhonePrimaryContact) ? "—" : Model.ProposedOperator.PhonePrimaryContact)</div></div>
-                            <div class="col-md-6 form-group"><strong>Secondary phone (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.PhoneSecondaryContact) ? "—" : Model.ProposedOperator.PhoneSecondaryContact)</div></div>
-                            <div class="col-md-6 form-group mb-md-0"><strong>Contact email (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.ContactEmail) ? "—" : Model.ProposedOperator.ContactEmail)</div></div>
-                            <div class="col-md-6 form-group mb-0"><strong>Fault-report email (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.FaultReportEmail) ? "—" : Model.ProposedOperator.FaultReportEmail)</div></div>
+                            <div class="col-md-6 mb-3"><strong>Primary phone (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.PhonePrimaryContact) ? "—" : Model.ProposedOperator.PhonePrimaryContact)</div></div>
+                            <div class="col-md-6 mb-3"><strong>Secondary phone (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.PhoneSecondaryContact) ? "—" : Model.ProposedOperator.PhoneSecondaryContact)</div></div>
+                            <div class="col-md-6 mb-3 mb-md-0"><strong>Contact email (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.ContactEmail) ? "—" : Model.ProposedOperator.ContactEmail)</div></div>
+                            <div class="col-md-6 mb-0"><strong>Fault-report email (optional)</strong><div>@(string.IsNullOrWhiteSpace(Model.ProposedOperator.FaultReportEmail) ? "—" : Model.ProposedOperator.FaultReportEmail)</div></div>
                         </div>
                     </div>
                 </div>
@@ -124,14 +124,14 @@
                 <div class="card mb-3">
                     <div class="card-header h5 mb-0">Decision</div>
                     <div class="card-body">
-                        <div class="form-group mb-0">
+                        <div class="mb-0">
                             <label for="decisionComment">Decision comment (required when rejecting)</label>
                             <textarea id="decisionComment" name="decisionComment" class="form-control" rows="3" placeholder="Explain the decision, especially if rejecting the proposal."></textarea>
                         </div>
                     </div>
                 </div>
-                <button formaction="@Url.Action("Approve", new { id = Model.Proposal.ID })" class="btn btn-success mr-2">Approve</button>
-                <button formaction="@Url.Action("Reject", new { id = Model.Proposal.ID })" class="btn btn-danger mr-2">Reject</button>
+                <button formaction="@Url.Action("Approve", new { id = Model.Proposal.ID })" class="btn btn-success me-2">Approve</button>
+                <button formaction="@Url.Action("Reject", new { id = Model.Proposal.ID })" class="btn btn-danger me-2">Reject</button>
                 <a href="@Url.Action("Review")" class="btn btn-outline-secondary">Cancel</a>
             </form>
         </div>

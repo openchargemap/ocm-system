@@ -4,8 +4,8 @@
     ViewBag.Title = "Edit Your Profile";
 }
 
-<link rel="stylesheet" href="~/scripts/leafletjs/leaflet.min.css" />
-<script src="~/scripts/leafletjs/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <h2>Edit Your Profile</h2>
 
@@ -28,36 +28,36 @@
                     The following profile information is visible to everyone if Show Profile To Public is set to Yes. All information on your profile is optional.
                     <input type="submit" value="Save Changes" class="btn btn-success" />
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
 
-                    @Html.LabelFor(model => model.Username)
+                    @Html.LabelFor(model => model.Username, new { @class = "form-label" })
 
                     @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Name or Screen Name" } })
                     @Html.ValidationMessageFor(model => model.Username)
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
 
-                    @Html.LabelFor(model => model.Profile)
+                    @Html.LabelFor(model => model.Profile, new { @class = "form-label" })
                     @Html.TextAreaFor(model => model.Profile, new { @class = "form-control", placeholder = "About you (optional)" })
                     @Html.ValidationMessageFor(model => model.Profile)
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
 
-                    @Html.LabelFor(model => model.Location)
+                    @Html.LabelFor(model => model.Location, new { @class = "form-label" })
 
                     @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", placeholder = "Your Country, Town or City" } })
                     @Html.ValidationMessageFor(model => model.Location)
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
 
-                    @Html.LabelFor(model => model.WebsiteURL)
+                    @Html.LabelFor(model => model.WebsiteURL, new { @class = "form-label" })
 
                     @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control", placeholder = "Your website" } })
                     @Html.ValidationMessageFor(model => model.WebsiteURL)
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
 
-                    @Html.LabelFor(model => model.IsProfilePublic)
+                    @Html.LabelFor(model => model.IsProfilePublic, new { @class = "form-label" })
 
                     @Html.EditorFor(model => model.IsProfilePublic, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.IsProfilePublic)
@@ -72,9 +72,9 @@
             <fieldset>
                 <legend>Your Private Info</legend>
                 <div class="alert alert-info">The following information is not shared with other users or displayed to the public. Your email address is only used if we need to contact you or if you want to use a <a target="_new" href="https://www.gravatar.com" class="alert-link">Gravatar</a> profile image.</div>
-                <div class="form-group">
+                <div class="mb-3">
 
-                    @Html.LabelFor(model => model.EmailAddress)
+                    @Html.LabelFor(model => model.EmailAddress, new { @class = "form-label" })
 
                     @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.EmailAddress)

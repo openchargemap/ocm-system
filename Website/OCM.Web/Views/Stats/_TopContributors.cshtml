@@ -4,7 +4,7 @@
     var positionCount = 1;
 
 }
-<table class="table table-striped">
+<table class="table table-sm align-middle">
    
 
 
@@ -14,8 +14,8 @@
         var item = stat.User;
 
         <tr>
-            <td style="font-size:2em;color:#c0c0c0;">@positionCount</td><td>
-                                       @Html.Raw("<img class='img-thumbnail' title='Profile Image' src=\"" + item.ProfileImageURL + "\" />")
+            <td class="ocm-rank">@positionCount</td><td>
+                                       <img class="ocm-avatar" alt="" title="Profile Image" src="@item.ProfileImageURL" />
             </td>
             <td>
                  @if (item.IsProfilePublic != false)
@@ -44,7 +44,7 @@
                 </td>
             <td>
 
-                @stat.Quantity 
+                <span class="fw-semibold">@stat.Quantity</span>
             </td>
         </tr>
 

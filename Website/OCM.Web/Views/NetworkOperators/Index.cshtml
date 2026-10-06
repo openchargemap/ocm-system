@@ -21,13 +21,13 @@
             }
 
             <div class="d-flex flex-wrap align-items-center mb-3">
-                @using (Html.BeginForm("Index", "NetworkOperators", FormMethod.Get, new { @class = "form-inline mr-auto" }))
+                @using (Html.BeginForm("Index", "NetworkOperators", FormMethod.Get, new { @class = "d-flex flex-wrap align-items-center gap-2 me-auto" }))
                 {
-                    <label class="mr-2 mb-2" for="search">Search by name</label>
-                    <input type="search" id="search" name="search" value="@Model.SearchTerm" placeholder="operator name" class="form-control mr-3 mb-2" />
+                    <label class="me-2 mb-2" for="search">Search by name</label>
+                    <input type="search" id="search" name="search" value="@Model.SearchTerm" placeholder="operator name" class="form-control w-auto me-3 mb-2" />
 
-                    <label class="mr-2 mb-2" for="countryId">Country</label>
-                    @Html.DropDownList("countryId", (List<SelectListItem>)ViewBag.CountryFilterList, new { @class = "custom-select mr-2 mb-2" })
+                    <label class="me-2 mb-2" for="countryId">Country</label>
+                    @Html.DropDownList("countryId", (List<SelectListItem>)ViewBag.CountryFilterList, new { @class = "form-select w-auto me-2 mb-2" })
                     <button type="submit" class="btn btn-outline-secondary mb-2">Show</button>
                 }
 

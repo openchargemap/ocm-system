@@ -4,71 +4,71 @@
     <h4>POI Mirror Status</h4>
     <p>The following is a summary of the MongoDB POI Cache maintained on this server. This cache is used to service read only API requests in order to minimise SQL database queries.</p>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
+    <dl class="row">
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.StatusCode)
         </dt>
 
-        <dd>
+        <dd class="col-sm-8 col-lg-9">
             @Html.DisplayFor(model => model.StatusCode)
         </dd>
 
 
-        <dt>
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
-        <dd>
+        <dd class="col-sm-8 col-lg-9">
             @Html.DisplayFor(model => model.Description)
         </dd>
 
-        <dt>
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.TotalPOIInCache)
         </dt>
 
-        <dd>
-            <span class="@(Model.TotalPOIInCache!=Model.TotalPOIInDB?"badge badge-danger":"")">
+        <dd class="col-sm-8 col-lg-9">
+            <span class="@(Model.TotalPOIInCache!=Model.TotalPOIInDB?"badge text-bg-danger":"")">
                 @Html.DisplayFor(model => model.TotalPOIInCache)
             </span>
         </dd>
-        <dt>
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.TotalPOIInDB)
         </dt>
 
-        <dd>
+        <dd class="col-sm-8 col-lg-9">
             @Html.DisplayFor(model => model.TotalPOIInDB)
         </dd>
 
         @if (Model.NumDistinctPOIs > 0)
         {
-        <dt>
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.NumDistinctPOIs)
         </dt>
 
-        <dd>
-            <span class="@(Model.TotalPOIInCache!=Model.NumDistinctPOIs?"badge badge-danger":"")">
+        <dd class="col-sm-8 col-lg-9">
+            <span class="@(Model.TotalPOIInCache!=Model.NumDistinctPOIs?"badge text-bg-danger":"")">
                 @Html.DisplayFor(model => model.NumDistinctPOIs)
             </span>
         </dd>
         }
 
-        <dt>
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.LastUpdated)
         </dt>
 
-        <dd>
+        <dd class="col-sm-8 col-lg-9">
             @Html.DisplayFor(model => model.LastUpdated)
         </dd>
 
-        <dt>
+        <dt class="col-sm-4 col-lg-3">
             @Html.DisplayNameFor(model => model.Server)
         </dt>
 
-        <dd>
+        <dd class="col-sm-8 col-lg-9">
             @Html.DisplayFor(model => model.Server)
         </dd>
-        <dt>Mirror Enabled in Config</dt>
-        <dd>
+        <dt class="col-sm-4 col-lg-3">Mirror Enabled in Config</dt>
+        <dd class="col-sm-8 col-lg-9">
             @if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableNoSQLCaching"]))
             {
             <text>Yes</text>

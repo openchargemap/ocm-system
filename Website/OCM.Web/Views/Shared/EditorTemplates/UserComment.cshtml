@@ -1,4 +1,4 @@
-﻿@model OCM.API.Common.Model.UserComment
+@model OCM.API.Common.Model.UserComment
 
 @using (Html.BeginForm("Comment", "POI"))
 {
@@ -8,63 +8,33 @@
     @Html.HiddenFor(model => model.ID)
     @Html.HiddenFor(model => model.ChargePointID)
 
-    <div class="form-group">
-        <div>
-            @Html.LabelFor(model => model.CommentType)
-        </div>
-        <div>
-            @Html.DropDownListFor(model => model.CommentType.ID, (SelectList)ViewBag.ReferenceData.UserCommentTypeList)
-            @Html.ValidationMessageFor(model => model.CommentType)
-        </div>
+    <div class="mb-3">
+        @Html.LabelFor(model => model.CommentType, new { @class = "form-label" })
+        @Html.DropDownListFor(model => model.CommentType.ID, (SelectList)ViewBag.ReferenceData.UserCommentTypeList, new { @class = "form-select" })
+        @Html.ValidationMessageFor(model => model.CommentType)
     </div>
-    <div class="form-group">
-        <div>
-            @Html.LabelFor(model => model.CheckinStatusType)
-        </div>
-        <div>
-            @Html.DropDownListFor(model => model.CheckinStatusType.ID, (SelectList)ViewBag.ReferenceData.CheckinStatusTypeList)
-            @Html.ValidationMessageFor(model => model.CheckinStatusType)
-        </div>
+    <div class="mb-3">
+        @Html.LabelFor(model => model.CheckinStatusType, new { @class = "form-label" })
+        @Html.DropDownListFor(model => model.CheckinStatusType.ID, (SelectList)ViewBag.ReferenceData.CheckinStatusTypeList, new { @class = "form-select" })
+        @Html.ValidationMessageFor(model => model.CheckinStatusType)
     </div>
-    <div class="form-group">
-        <div>
-            @Html.LabelFor(model => model.Comment)
-        </div>
-        <div>
-            @Html.EditorFor(model => model.Comment)
-            @Html.ValidationMessageFor(model => model.Comment)
-        </div>
+    <div class="mb-3">
+        @Html.LabelFor(model => model.Comment, new { @class = "form-label" })
+        @Html.TextAreaFor(model => model.Comment, 4, 40, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Comment)
     </div>
-    <div class="form-group">
-        <div>
-            @Html.LabelFor(model => model.Rating)
-        </div>
-        <div>
-            @Html.DropDownListFor(model => model.Rating, (SelectList)ViewBag.ReferenceData.RatingTypeList)
-            @Html.ValidationMessageFor(model => model.Rating)
-        </div>
+    <div class="mb-3">
+        @Html.LabelFor(model => model.Rating, new { @class = "form-label" })
+        @Html.DropDownListFor(model => model.Rating, (SelectList)ViewBag.ReferenceData.RatingTypeList, new { @class = "form-select" })
+        @Html.ValidationMessageFor(model => model.Rating)
     </div>
-    <div class="form-group">
-        <div>
-            @Html.LabelFor(model => model.RelatedURL)
-        </div>
-        <div>
-            @Html.EditorFor(model => model.RelatedURL)
-            @Html.ValidationMessageFor(model => model.RelatedURL)
-        </div>
+    <div class="mb-3">
+        @Html.LabelFor(model => model.RelatedURL, new { @class = "form-label" })
+        @Html.EditorFor(model => model.RelatedURL, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.RelatedURL)
     </div>
 
     <partial name="_TermsLink"/>
 
-    <p>
-        <input type="submit" class="btn btn-primary" value="Submit Comment" />
-    </p>
+    <button type="submit" class="btn btn-primary">Submit Comment</button>
 }
-
-<script>
-    $(document).ready(function () {
-        //FIXME: use bootstrap styles for form controls
-        $(".text-box, select, textarea").addClass("form-control");
-    });
-
-</script>

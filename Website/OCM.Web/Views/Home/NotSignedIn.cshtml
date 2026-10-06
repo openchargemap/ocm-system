@@ -2,6 +2,9 @@
     ViewBag.Title = "Not Signed In";
 }
 
-<h2>Please sign in</h2>
-To continue you need to sign in or register:
-<a href="@Url.Action("SignIn","Profile", new { _redirectUrl=Context.Items["_postLoginRedirect"]?.ToString()})" class="btn btn-primary">Sign In or Register</a>
+<div class="ocm-empty-state">
+    <i class="fa-solid fa-circle-user" aria-hidden="true"></i>
+    <h1 class="h3">Please sign in</h1>
+    <p>To continue you need to sign in or register.</p>
+    <a href="@Url.Action("SignIn","Profile", new { _redirectUrl=Context.Items["_postLoginRedirect"]?.ToString()})" class="btn btn-primary">Sign In or Register</a>
+</div>

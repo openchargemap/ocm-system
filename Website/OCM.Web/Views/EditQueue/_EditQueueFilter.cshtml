@@ -1,65 +1,56 @@
-﻿@model OCM.API.Common.Model.EditQueueFilter
+@model OCM.API.Common.Model.EditQueueFilter
 
-<div class="well well-sm">
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-inline">
-
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ShowEditsOnly, new { @class = "control-label" })
+            <div class="row g-3 align-items-end">
+                <div class="col-sm-6 col-lg-2">
+                    @Html.LabelFor(model => model.ShowEditsOnly, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.ShowEditsOnly, new { htmlAttributes = new { @class = "form-select" } })
+                    @Html.ValidationMessageFor(model => model.ShowEditsOnly)
+                </div>
 
-                @Html.EditorFor(model => model.ShowEditsOnly, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShowEditsOnly)
-            </div>
+                <div class="col-sm-6 col-lg-2">
+                    @Html.LabelFor(model => model.ShowProcessed, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.ShowProcessed, new { htmlAttributes = new { @class = "form-select" } })
+                    @Html.ValidationMessageFor(model => model.ShowProcessed)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ShowProcessed, new { @class = "control-label" })
+                <div class="col-sm-6 col-lg-2">
+                    @Html.LabelFor(model => model.DateFrom, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.DateFrom, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateFrom)
+                </div>
 
-                @Html.EditorFor(model => model.ShowProcessed, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShowProcessed)
-            </div>
+                <div class="col-sm-6 col-lg-2">
+                    @Html.LabelFor(model => model.DateTo, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.DateTo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateTo)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.DateFrom, new { @class = "control-label" })
+                <div class="col-sm-6 col-lg-1">
+                    @Html.LabelFor(model => model.ID, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ID)
+                </div>
 
-                @Html.EditorFor(model => model.DateFrom)
-                @Html.ValidationMessageFor(model => model.DateFrom)
-            </div>
+                <div class="col-sm-6 col-lg-2">
+                    @Html.LabelFor(model => model.UserId, new { @class = "form-label" })
+                    @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserId)
+                </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.DateTo, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.MinimumDifferences)
+                @Html.HiddenFor(model => model.MaxResults)
 
-                @Html.EditorFor(model => model.DateTo)
-                @Html.ValidationMessageFor(model => model.DateTo)
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ID, new { @class = "control-label" })
-
-                @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ID)
-            </div>
-
-             <div class="form-group">
-                @Html.LabelFor(model => model.UserId, new { @class = "control-label" })
-
-                @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserId)
-            </div>
-
-            @Html.HiddenFor(model => model.MinimumDifferences)
-            @Html.HiddenFor(model => model.MaxResults)
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Refresh" class="btn btn-default" />
+                <div class="col-lg-1 d-grid">
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-rotate me-1" aria-hidden="true"></i>Refresh</button>
                 </div>
             </div>
-        </div>
-    }
-
+        }
+    </div>
 </div>

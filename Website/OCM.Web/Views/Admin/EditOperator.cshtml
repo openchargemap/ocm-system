@@ -14,9 +14,9 @@
     <fieldset>
         <legend>OperatorInfo</legend>
 
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.Title)
+                @Html.LabelFor(model => model.Title, new { @class = "form-label" })
                 </div>
                 <div class="editor-field">
                     @Html.EditorFor(model => model.Title)
@@ -24,81 +24,81 @@
                         </div>
                     </div>
 
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.WebsiteURL)
+                @Html.LabelFor(model => model.WebsiteURL, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.WebsiteURL)
                 @Html.ValidationMessageFor(model => model.WebsiteURL)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.Comments)
+                @Html.LabelFor(model => model.Comments, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.Comments)
                 @Html.ValidationMessageFor(model => model.Comments)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.PhonePrimaryContact)
+                @Html.LabelFor(model => model.PhonePrimaryContact, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.PhonePrimaryContact)
                 @Html.ValidationMessageFor(model => model.PhonePrimaryContact)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.PhoneSecondaryContact)
+                @Html.LabelFor(model => model.PhoneSecondaryContact, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.PhoneSecondaryContact)
                 @Html.ValidationMessageFor(model => model.PhoneSecondaryContact)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.IsPrivateIndividual)
+                @Html.LabelFor(model => model.IsPrivateIndividual, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.IsPrivateIndividual)
                 @Html.ValidationMessageFor(model => model.IsPrivateIndividual)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.BookingURL)
+                @Html.LabelFor(model => model.BookingURL, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.BookingURL)
                 @Html.ValidationMessageFor(model => model.BookingURL)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.ContactEmail)
+                @Html.LabelFor(model => model.ContactEmail, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.ContactEmail)
                 @Html.ValidationMessageFor(model => model.ContactEmail)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.FaultReportEmail)
+                @Html.LabelFor(model => model.FaultReportEmail, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.FaultReportEmail)
                 @Html.ValidationMessageFor(model => model.FaultReportEmail)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="editor-label">
-                @Html.LabelFor(model => model.IsRestrictedEdit)
+                @Html.LabelFor(model => model.IsRestrictedEdit, new { @class = "form-label" })
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.IsRestrictedEdit)

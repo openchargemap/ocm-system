@@ -1,4 +1,4 @@
-﻿@model OCM.MVC.Models.POIBrowseModel
+@model OCM.MVC.Models.POIBrowseModel
 
 @{
     ViewBag.Title = "Browse Charging Locations";
@@ -6,29 +6,28 @@
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
-<h2 data-localize="ocm.general.browsePOI">Browse Charging Locations</h2>
+<h1 data-localize="ocm.general.browsePOI">Browse Charging Locations</h1>
 
-<div class="alert alert-info">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
+<div class="alert alert-info alert-dismissible fade show">
     <strong data-localize="ocm.infoText.tip">Tip:</strong> <span data-localize="ocm.infoText.searching.quickWay">To quickly find your nearest charging location use our</span> <a href="https://map.openchargemap.io" data-localize="ocm.infoText.searching.webApp" class="alert-link">Map</a>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="well well-sm">
-            <partial name="_POISearch" model="(OCM.MVC.Models.POIBrowseModel)Model" />
-
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3"><i class="fa-solid fa-magnifying-glass me-2 text-body-secondary" aria-hidden="true"></i>Search</h2>
+                <partial name="_POISearch" model="(OCM.MVC.Models.POIBrowseModel)Model" />
+            </div>
         </div>
-
     </div>
-    <div class="col-md-6">
+    <div class="col-lg-7">
         @if (ViewBag.FormattedAddress != null)
         {
-            <div><strong>Searching location: @ViewBag.FormattedAddress</strong></div>
+            <div class="mb-2"><strong>Searching location: @ViewBag.FormattedAddress</strong></div>
         }
 
         <partial name="_POIList" model="Model.POIList" />
-
     </div>
-
 </div>

@@ -24,9 +24,9 @@
     {
         switch (status)
         {
-            case EditorActivityStatus.Active: return "badge-success";
-            case EditorActivityStatus.Occasional: return "badge-warning";
-            default: return "badge-secondary";
+            case EditorActivityStatus.Active: return "text-bg-success";
+            case EditorActivityStatus.Occasional: return "text-bg-warning";
+            default: return "text-bg-secondary";
         }
     }
 }
@@ -56,15 +56,15 @@
     since @FormatDate(report.ActivityPeriodStart).
 </p>
 <p>
-    <span class="badge badge-success">Active</span> contributed in the last @EditorActivityManager.RecentActivityDays days &nbsp;
-    <span class="badge badge-warning">Occasional</span> contributed in the last @EditorActivityManager.ActivityPeriodMonths months &nbsp;
-    <span class="badge badge-secondary">Inactive</span> no contributions in the last @EditorActivityManager.ActivityPeriodMonths months.
+    <span class="badge text-bg-success">Active</span> contributed in the last @EditorActivityManager.RecentActivityDays days &nbsp;
+    <span class="badge text-bg-warning">Occasional</span> contributed in the last @EditorActivityManager.ActivityPeriodMonths months &nbsp;
+    <span class="badge text-bg-secondary">Inactive</span> no contributions in the last @EditorActivityManager.ActivityPeriodMonths months.
     Signing in without contributing does not count as activity.
 </p>
 
-<form asp-action="CountryEditors" method="get" class="form-inline mb-3">
-    <label class="mr-2" for="countryId">Country</label>
-    <select class="form-control mr-3" id="countryId" name="countryId">
+<form asp-action="CountryEditors" method="get" class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <label class="me-2" for="countryId">Country</label>
+    <select class="form-select w-auto me-3" id="countryId" name="countryId">
         <option value="">All countries</option>
         @foreach (var country in Model.CountriesWithEditors)
         {
@@ -72,8 +72,8 @@
         }
     </select>
 
-    <label class="mr-2" for="status">Status</label>
-    <select class="form-control mr-3" id="status" name="status">
+    <label class="me-2" for="status">Status</label>
+    <select class="form-select w-auto me-3" id="status" name="status">
         <option value="">Any</option>
         @foreach (var status in Enum.GetValues<EditorActivityStatus>())
         {
@@ -81,7 +81,7 @@
         }
     </select>
 
-    <button type="submit" class="btn btn-primary mr-2">Filter</button>
+    <button type="submit" class="btn btn-primary me-2">Filter</button>
     @if (Model.IsFiltered)
     {
         <a class="btn btn-outline-secondary" href="@Url.Action("CountryEditors", "Admin")">Clear</a>
@@ -139,11 +139,11 @@ else
                             <a href="@Url.Action("View", "Profile", new { id = editor.UserID })">@editorName</a>
                             @if (editor.IsAdministrator)
                             {
-                                <span class="badge badge-info">Admin</span>
+                                <span class="badge text-bg-info">Admin</span>
                             }
                             @if (editor.IsEditingBlocked)
                             {
-                                <span class="badge badge-danger">Blocked from editing</span>
+                                <span class="badge text-bg-danger">Blocked from editing</span>
                             }
                             @if (!string.IsNullOrWhiteSpace(editor.EmailAddress))
                             {

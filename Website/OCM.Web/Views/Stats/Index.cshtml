@@ -5,52 +5,96 @@
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
-<h2><i class="fa fa-bar-chart-o"></i> Statistics</h2>
+<script>
+    // theme the charts to match the site
+    (function () {
+        var styles = getComputedStyle(document.documentElement);
+        var brand = styles.getPropertyValue("--ocm-brand-strong").trim() || "#1f6f35";
+        var g = Chart.defaults.global;
+        g.defaultFontFamily = styles.getPropertyValue("--bs-font-sans-serif");
+        g.defaultFontColor = styles.getPropertyValue("--bs-secondary-color").trim() || "#5b6a62";
+        g.elements.line.borderColor = brand;
+        g.elements.line.backgroundColor = "rgba(" + (styles.getPropertyValue("--ocm-brand-strong-rgb").trim() || "31, 111, 53") + ", 0.12)";
+        g.elements.point.backgroundColor = brand;
+        g.elements.point.borderColor = brand;
+        g.elements.rectangle.backgroundColor = brand;
+    })();
+</script>
+<h1>Statistics</h1>
 
-<div class="row well">
-    <div class="col-md-6">
-        <a href="@Url.Action("Index", "POI")">
-            <div class="stat">
-                <h2><span id="summary-locationcount">@Model.TotalLocations</span><br /><small data-localize="ocm.infoText.stats.locations">Locations<br /> @Model.TotalStations Stations</small></h2>
-            </div>
+<div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-3 mb-4">
+    <div class="col">
+        <a class="ocm-stat ocm-stat-primary" href="@Url.Action("Index", "POI")">
+            <span class="ocm-stat-value" id="summary-locationcount">@Model.TotalLocations.ToString("N0")</span>
+            <span class="ocm-stat-label" data-localize="ocm.infoText.stats.locations">Locations</span>
         </a>
-        <div id="datasummary"></div>
     </div>
-    <div class="col-md-6">
-        <h3><i class="fa fa-line-chart"></i> Summary for Last 90 Days</h3>
-
-        <ul>
-            <li>Total Active Editors: @Model.TotalActiveEditors.Quantity</li>
-            <li>Total Active Contributors: @Model.TotalActiveContributors.Quantity</li>
-            <li>Total Comment Contributors: @Model.TotalCommentContributors.Quantity</li>
-            <li>Total Photo Contributors: @Model.TotalPhotoContributors.Quantity</li>
-        </ul>
+    <div class="col">
+        <div class="ocm-stat">
+            <span class="ocm-stat-value">@Model.TotalStations.ToString("N0")</span>
+            <span class="ocm-stat-label">Stations</span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="ocm-stat">
+            <span class="ocm-stat-value">@Model.TotalActiveEditors.Quantity</span>
+            <span class="ocm-stat-label">Active editors <small>(90 days)</small></span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="ocm-stat">
+            <span class="ocm-stat-value">@Model.TotalActiveContributors.Quantity</span>
+            <span class="ocm-stat-label">Active contributors <small>(90 days)</small></span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="ocm-stat">
+            <span class="ocm-stat-value">@Model.TotalCommentContributors.Quantity</span>
+            <span class="ocm-stat-label">Comment contributors <small>(90 days)</small></span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="ocm-stat">
+            <span class="ocm-stat-value">@Model.TotalPhotoContributors.Quantity</span>
+            <span class="ocm-stat-label">Photo contributors <small>(90 days)</small></span>
+        </div>
     </div>
 </div>
+<div id="datasummary"></div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h3><i class="fa fa-star"></i> Most Changes Last 90 Days</h3>
-        <p>Users who have contributed the most new locations or edits:</p>
-        @Html.Partial("_TopContributors", Model.TopContributors)
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-star me-2 text-body-secondary" aria-hidden="true"></i>Most Changes Last 90 Days</h2>
+                <p class="small text-body-secondary">Users who have contributed the most new locations or edits:</p>
+                @Html.Partial("_TopContributors", Model.TopContributors)
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-users me-2 text-body-secondary" aria-hidden="true"></i>Community Activity</h2>
+                <partial name="_UserRegistrations" model="Model.UserRegistrations" />
 
+                <partial name="_EditStatistics" model="Model.UserEdits" />
 
-        <h2><i class="fa fa-users"></i> Community Activity</h2>
-        <partial name="_UserRegistrations" model="Model.UserRegistrations" />
-
-        <partial name="_EditStatistics" model="Model.UserEdits" />
-
-        <partial name="_UserComments" model="Model.UserComments" />
+                <partial name="_UserComments" model="Model.UserComments" />
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h3><i class="fa fa-commenting"></i> Most Comments Last 90 Days</h3>
-        <p>Users who have contributed the most location comments or check-ins:</p>
-        <partial name="_TopContributors" model="Model.TopCommentators" />
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5"><i class="fa-solid fa-comments me-2 text-body-secondary" aria-hidden="true"></i>Most Comments Last 90 Days</h2>
+                <p class="small text-body-secondary">Users who have contributed the most location comments or check-ins:</p>
+                <partial name="_TopContributors" model="Model.TopCommentators" />
 
-        <h3><i class="fa fa-commenting"></i> Most Photos Last 90 Days</h3>
-        <p>Users who have contributed the most location photos:</p>
-        <partial name="_TopContributors" model="Model.TopMediaItems" />
+                <h2 class="h5 mt-4"><i class="fa-solid fa-camera me-2 text-body-secondary" aria-hidden="true"></i>Most Photos Last 90 Days</h2>
+                <p class="small text-body-secondary">Users who have contributed the most location photos:</p>
+                <partial name="_TopContributors" model="Model.TopMediaItems" />
+            </div>
+        </div>
     </div>
 </div>

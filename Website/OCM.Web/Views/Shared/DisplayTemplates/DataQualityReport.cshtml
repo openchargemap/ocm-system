@@ -1,27 +1,25 @@
 ﻿@model OCM.API.Common.Model.Extended.DataQualityReport
 
 <div>
-    <h4>Data Quality Report</h4>
-    <hr />
-
+    <h2 class="ocm-section-title">Data Quality Report</h2>
 
     @foreach (var i in Model.POIReports)
     {
-
-        <h5>Data Quality Score: @i.DataQualityScore out of 100</h5>
-    <ul>
-        @foreach (var qualityItem in i.ReportItems)
-        {
-            <li>
-                <span class="@(qualityItem.IsPositive?"text-success":"text-warning")">
-                    <i class="fa fa-@(qualityItem.IsPositive?"check":"times")" aria-hidden="true"></i>
-                </span> &nbsp;
-                    @qualityItem.Category -
-                    @qualityItem.Comment
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="ocm-quality-score" aria-hidden="true">@i.DataQualityScore</div>
+            <div>
+                <div class="fw-semibold">Data Quality Score</div>
+                <div class="small text-body-secondary">@i.DataQualityScore out of 100</div>
+            </div>
+        </div>
+        <ul class="list-unstyled small mb-0 d-grid gap-1">
+            @foreach (var qualityItem in i.ReportItems)
+            {
+                <li class="d-flex gap-2">
+                    <i class="fa-solid fa-fw mt-1 @(qualityItem.IsPositive ? "fa-check text-success" : "fa-xmark text-warning")" aria-hidden="true"></i>
+                    <span>@qualityItem.Category - @qualityItem.Comment</span>
                 </li>
-        }
-        
-    </ul>
+            }
+        </ul>
     }
 </div>
-    

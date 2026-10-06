@@ -4,7 +4,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+    <div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @if (Model.RegistrationFailed == true)
@@ -13,59 +13,47 @@
                 Registration failed. If you are already registered with this email address please request a <a href="@Url.Action("PasswordReset", "LoginProvider", new { EmailAddress=Model.EmailAddress})">password reset</a>.
             </p>
         }
-        <div class="form-group">
-            @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
-            </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ConfirmedPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ConfirmedPassword, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ConfirmedPassword, "", new { @class = "text-danger" })
-            </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.ConfirmedPassword, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.ConfirmedPassword, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ConfirmedPassword, "", new { @class = "text-danger" })
         </div>
 
         <p>A public name or screen name is also required for attribution of submitted comments or photos:</p>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-            </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
         </div>
 
         <p class="alert alert-info">By registering as a user you agree to our <a class="alert-link" target="_blank" href="@Url.Action("Terms","About")">terms, conditions and privacy policy</a>. Information you submit to us will become public under an Open Data license.</p>
 
         @if (OCM.Web.Services.TurnstileValidator.IsEnabled)
         {
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <div class="cf-turnstile"
-                         data-sitekey="@OCM.Web.Services.TurnstileValidator.SiteKey"
-                         data-action="turnstile-spin-v1"></div>
-                    @Html.ValidationMessage("cf-turnstile-response", "", new { @class = "text-danger" })
-                </div>
+            <div class="mb-3">
+                <div class="cf-turnstile"
+                     data-sitekey="@OCM.Web.Services.TurnstileValidator.SiteKey"
+                     data-action="turnstile-spin-v1"></div>
+                @Html.ValidationMessage("cf-turnstile-response", "", new { @class = "text-danger" })
             </div>
 
             <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
         }
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Register" class="btn btn-primary" />
-            </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary w-100">Register</button>
         </div>
     </div>
 }

@@ -1,4 +1,4 @@
-﻿@model OCM.API.Common.Model.UserComment
+@model OCM.API.Common.Model.UserComment
 @using Microsoft.AspNetCore.Http;
 @using Microsoft.AspNetCore.Html;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
@@ -7,36 +7,42 @@
     bool isAdministrator = bool.Parse(HttpContextAccessor.HttpContext.Session.GetString("IsAdministrator") ?? "false");
 }
 
-<div>
-    @if (ViewBag.ShowPOILink == true)
-    {
-        <a href="@Url.Action("Details", "POI", new { id = Model.ChargePointID })">OCM-@Model.ChargePointID</a>
-    }
-    <blockquote>
-        @if (Model.Rating != null)
-        {
-            <strong>Rating: @Html.Raw(Model.Rating) out of 5</strong>
-        }
-        [
-        @if (Model.CommentType != null)
-        {
-            <strong>@Model.CommentType.Title</strong>
-        }
+<article class="card ocm-comment">
+    <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+            @if (ViewBag.ShowPOILink == true)
+            {
+                <a class="fw-semibold" href="@Url.Action("Details", "POI", new { id = Model.ChargePointID })">OCM-@Model.ChargePointID</a>
+            }
+            @if (Model.CommentType != null)
+            {
+                <span class="badge rounded-pill bg-body-tertiary text-body-secondary border">@Model.CommentType.Title</span>
+            }
+            @if (Model.CheckinStatusType != null)
+            {
+                <span class="badge rounded-pill @(Model.CheckinStatusType.IsPositive == true ? "bg-success-subtle text-success-emphasis" : "bg-body-tertiary text-body-secondary border")">@Model.CheckinStatusType.Title</span>
+            }
+            @if (Model.Rating != null)
+            {
+                <span class="ocm-rating" title="Rating: @Model.Rating out of 5">
+                    @for (var star = 1; star <= 5; star++)
+                    {
+                        <i class="@(star <= Model.Rating ? "fa-solid" : "fa-regular") fa-star" aria-hidden="true"></i>
+                    }
+                    <span class="visually-hidden">Rating: @Model.Rating out of 5</span>
+                </span>
+            }
+        </div>
 
-        @if (Model.CheckinStatusType != null)
-        {
-            <strong>, @Model.CheckinStatusType.Title</strong>
-        }
-
-        ]
-        <p>@Html.DisplayFor(m => m.Comment)</p>
+        <p class="mb-2">@Html.DisplayFor(m => m.Comment)</p>
         @if (Model.RelatedURL != null)
         {
-            @Html.DisplayFor(m => m.RelatedURL)
+            <div class="small text-break mb-2">@Html.DisplayFor(m => m.RelatedURL)</div>
         }
-        <small>
+
+        <div class="small text-body-secondary">
             Comment by
-            <cite title="Source Title">
+            <cite>
                 @if (Model.User != null)
                 {
                     <a href="@Url.Action("View", "Profile", new {id=Model.User.ID })">@Html.DisplayFor(m => m.User.Username)</a>
@@ -49,29 +55,31 @@
                     }
                     else
                     {<text>(Anonymous)</text>}
-            }
-            </cite> @Html.DisplayFor(m => m.DateCreated)
-        </small>
+                }
+            </cite>
+            &middot; @Html.DisplayFor(m => m.DateCreated)
+        </div>
 
-        @if (isAdministrator)
+        @if (isAdministrator || ViewBag.UserCanEditPOI == true)
         {
-            <p>
-                <a class="btn btn-danger" href="@Url.Action("CommentDelete", "Admin", new { id=Model.ID})" target="_blank"><span class="glyphicon glyphicon-remove"></span> Delete (as Admin)</a>
-            </p>
-        }
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                @if (isAdministrator)
+                {
+                    <a class="btn btn-sm btn-outline-danger" href="@Url.Action("CommentDelete", "Admin", new { id=Model.ID})" target="_blank"><i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>Delete (as Admin)</a>
+                }
 
-        @if (ViewBag.UserCanEditPOI == true)
-        {
-            if (Model.IsActionedByEditor != true)
-            {
-                <p>
-                    <a class="btn btn-warning" href="@Url.Action("CommentActioned", "POI", new { poiId = Model.ChargePointID, commentId = Model.ID })" target="_blank"><span class="glyphicon glyphicon-check"></span> Mark as Actioned</a>
-                </p>
-            }
-            else
-            {
-                <em class="text-info">Comment Actioned By Editor</em>
-            }
+                @if (ViewBag.UserCanEditPOI == true)
+                {
+                    if (Model.IsActionedByEditor != true)
+                    {
+                        <a class="btn btn-sm btn-outline-warning" href="@Url.Action("CommentActioned", "POI", new { poiId = Model.ChargePointID, commentId = Model.ID })" target="_blank"><i class="fa-solid fa-square-check me-1" aria-hidden="true"></i>Mark as Actioned</a>
+                    }
+                    else
+                    {
+                        <span class="badge text-bg-info align-self-center">Comment Actioned By Editor</span>
+                    }
+                }
+            </div>
         }
-    </blockquote>
-</div>
+    </div>
+</article>

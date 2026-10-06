@@ -37,7 +37,7 @@ else
 
     @if (isUserAdmin == true)
     {
-        <div class="well well-sm">
+        <div class="card card-body bg-body-tertiary py-2">
             @if (revertableCount > 0)
             {
                 <p>
@@ -55,12 +55,12 @@ else
         </div>
     }
 
-    <table class="table table-condensed">
+    <table class="table table-sm">
         <tr>
             @if (revertableCount > 0)
             {
                 <th>
-                    <input type="checkbox" id="revert-select-all" title="Select all revertable edits" />
+                    <input type="checkbox" class="form-check-input" id="revert-select-all" title="Select all revertable edits" />
                 </th>
             }
             <th>
@@ -83,7 +83,7 @@ else
                     <td rowspan="2">
                         @if (OCM.API.Common.EditQueueManager.CanItemBeReverted(item))
                         {
-                            <input type="checkbox" class="revert-select" name="selectedItems" value="@item.ID" />
+                            <input type="checkbox" class="form-check-input revert-select" name="selectedItems" value="@item.ID" />
                         }
                     </td>
                 }
@@ -130,9 +130,8 @@ else
                             {
 
                                 <div class="btn-group">
-                                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <a class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" href="#">
                                         Action
-                                        <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu">
 
@@ -154,7 +153,7 @@ else
                             if (OCM.API.Common.EditQueueManager.IsItemReverted(item))
                             {
                                 <br />
-                                <span class="label label-warning">Reverted</span>
+                                <span class="badge text-bg-warning">Reverted</span>
                                 <span class="text-muted">@item.Comment</span>
                             }
                         }

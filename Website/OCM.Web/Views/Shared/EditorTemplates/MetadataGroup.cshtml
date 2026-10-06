@@ -10,7 +10,7 @@
        
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.IsRestrictedEdit)
+            @Html.LabelFor(model => model.IsRestrictedEdit, new { @class = "form-label" })
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.IsRestrictedEdit)
@@ -20,7 +20,7 @@
         @Html.HiddenFor(model => model.ID)
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Title)
+            @Html.LabelFor(model => model.Title, new { @class = "form-label" })
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Title)

@@ -17,7 +17,7 @@ else
 {
     if (userId != null)
     {
-        using (Html.BeginForm("MediaItem", "POI", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+        using (Html.BeginForm("MediaItem", "POI", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
@@ -26,14 +26,14 @@ else
             <p>Thanks for contributing. Please choose your image to upload, then hit the upload button. If you encounter any problems please try using an image smaller than 2MB in size.</p>
 
             <div>
-                <div class="form-group">
+                <div class="mb-3">
                    
                     <input type="file" name="files"  />
                  
                 </div>
 
-                <div class="form-group">
-                    <label for="comment" class="control-label">Comment:</label>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Comment:</label>
 
                     <textarea id="comment" class="form-control" name="comment" maxlength="1000" placeholder="(Optional) Comment or description to accompany the image"></textarea>
                 </div>

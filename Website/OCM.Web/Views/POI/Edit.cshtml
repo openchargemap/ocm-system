@@ -46,14 +46,12 @@
 
             <!--begin preview dialog-->
             <div class="modal fade" id="modalpreview" tabindex="-1" role="dialog" aria-labelledby="modalpreviewtitle" aria-hidden="true">
-                <div class="modal-dialog modal-lg " role="document">
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
 
                             <h5 class="modal-title" id="modaltitle">Preview Submission</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div>
@@ -66,7 +64,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
                         </div>
                     </div>
@@ -75,9 +73,9 @@
             <!--end preview dialog-->
 
             <h3 id="editheading">Edit Submission:</h3>
-            <div class="checkbox" style="display:none;">
-                <label>
-                    <input type="checkbox" value="" id="editExtendedMode">
+            <div class="form-check" style="display:none;">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" value="" id="editExtendedMode">
                     Use Advanced Editor
                 </label>
             </div>
@@ -108,10 +106,10 @@
 
             @if (ViewBag.HideAdvancedInfo != null && ViewBag.HideAdvancedInfo == false)
             {
-                <div class="card bg-secondary">
+                <div class="card border-warning">
                     <div class="card-header">
                         
-                            <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver">
+                            <a data-bs-toggle="collapse" data-bs-parent="#wizardsteps" href="#step-approver">
                                 <i class="fa fa-edit"></i> Approver Options
                             </a>
                         
@@ -120,9 +118,9 @@
                         <div class="card-body">
 
                             <p class="text-info">To make a new listing public it's Submission Status must be set to <strong>Submission Published</strong>.</p>
-                            <div class="form-group col-sm-4">
+                            <div class="mb-3 col-sm-4">
                                 <div class="editor-label" data-localize="ocm.details.submissionStatus">
-                                    @Html.LabelFor(model => model.SubmissionStatus)
+                                    @Html.LabelFor(model => model.SubmissionStatus, new { @class = "form-label" })
                                 </div>
                                 <div class="editor-field col-sm-8">
                                     @Html.DropDownListFor(model => model.SubmissionStatus.ID, (SelectList)ViewBag.ReferenceData.SubmissionTypeList)
@@ -140,7 +138,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4>
-                        <a data-toggle="collapse" data-parent="#wizardsteps" href="#step1">
+                        <a data-bs-toggle="collapse" data-bs-parent="#wizardsteps" href="#step1">
                             <i class="fa fa-map-marker"></i> Step 1 - <span data-localize="ocm.details.location.sectionTitle">Location Details</span>
                         </a>
                     </h4>
@@ -163,7 +161,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">
-                        <a data-toggle="collapse" data-parent="#wizardsteps" href="#step2">
+                        <a data-bs-toggle="collapse" data-bs-parent="#wizardsteps" href="#step2">
                             <i class="fa fa-info-circle"></i> Step 2 - Basic Charging Details
                         </a>
                     </h4>
@@ -183,7 +181,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">
-                        <a data-toggle="collapse" data-parent="#wizardsteps" href="#step3">
+                        <a data-bs-toggle="collapse" data-bs-parent="#wizardsteps" href="#step3">
                             <i class="fa fa-flash"></i> Step 3 - <span data-localize="ocm.details.equipment.sectionTitle">Equipment Details</span>
                         </a>
                     </h4>
@@ -230,7 +228,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">
-                            <a data-toggle="collapse" data-parent="#wizardsteps" href="#step-approver-adv">
+                            <a data-bs-toggle="collapse" data-bs-parent="#wizardsteps" href="#step-approver-adv">
                                 <i class="fa fa-wrench"></i> Advanced Options
                             </a>
                         </h4>
@@ -240,36 +238,36 @@
                             <p class="text-info">This section contains options which are not usually changed or are deprecated.</p>
                             @Html.HiddenFor(model => model.DataProviderID)
                             
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="editor-label" data-localize="ocm.details.dataProvider.providersReference">
-                                    @Html.LabelFor(model => model.DataProvidersReference)
+                                    @Html.LabelFor(model => model.DataProvidersReference, new { @class = "form-label" })
                                 </div>
                                 <div class="editor-field">
                                     @Html.EditorFor(model => model.DataProvidersReference)
                                     @Html.ValidationMessageFor(model => model.DataProvidersReference)
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="editor-label" data-localize="ocm.details.operator.operatorsReference">
-                                    @Html.LabelFor(model => model.OperatorsReference)
+                                    @Html.LabelFor(model => model.OperatorsReference, new { @class = "form-label" })
                                 </div>
                                 <div class="editor-field">
                                     @Html.EditorFor(model => model.OperatorsReference)
                                     @Html.ValidationMessageFor(model => model.OperatorsReference)
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="editor-label" data-localize="ocm.details.datePlanned">
-                                    @Html.LabelFor(model => model.DatePlanned)
+                                    @Html.LabelFor(model => model.DatePlanned, new { @class = "form-label" })
                                 </div>
                                 <div class="editor-field">
                                     @Html.EditorFor(model => model.DatePlanned)
                                     @Html.ValidationMessageFor(model => model.DatePlanned)
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="editor-label" data-localize="ocm.details.dateLastConfirmed">
-                                    @Html.LabelFor(model => model.DateLastConfirmed)
+                                    @Html.LabelFor(model => model.DateLastConfirmed, new { @class = "form-label" })
                                 </div>
                                 <div class="editor-field">
                                     @Html.EditorFor(model => model.DateLastConfirmed)
@@ -340,7 +338,8 @@
             });
 
             //FIXME: use bootstrap styles for form controls
-            $(".text-box, select, textarea").addClass("form-control");
+            $(".text-box, textarea").addClass("form-control");
+            $("select").not(".form-control").addClass("form-select");
 
             refreshEditorMode();
 

@@ -1,96 +1,68 @@
-﻿@model IEnumerable<OCM.API.Common.Model.ConnectionInfo>
+@model IEnumerable<OCM.API.Common.Model.ConnectionInfo>
 
-<style>
-    .equipment-row {
-        min-height: 6em;
-        margin: 1em;
-    }
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 mb-0 ocm-equipment-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <h3 class="h6 mb-0">
+                            <i class="fa-solid fa-plug text-body-secondary me-1" aria-hidden="true"></i>
+                            @if (item.ConnectionType == null)
+                            {
+                                <span data-localize="ocm.reference.connectionType.value_0">Connection Type Unknown</span>
+                            }
+                            else
+                            {
+                                <span data-localize="ocm.reference.connectionType.value_@item.ConnectionTypeID">@item.ConnectionType.Title</span>
+                            }
+                        </h3>
+                        @if (item.Quantity != null)
+                        {
+                            <span class="badge rounded-pill bg-body-tertiary text-body-secondary border text-nowrap">@Html.DisplayFor(modelItem => item.Quantity) present</span>
+                        }
+                    </div>
 
-    .equipment-core {
-        min-height: 8em;
-        background-color: #eef3d7;
-        color: #303030;
-        padding: 1em;
-        border-right: 6px solid #e2e6ce;
-    }
+                    <div class="mb-3">
+                        @if (item.StatusType == null)
+                        {
+                            <span class="badge rounded-pill text-bg-secondary" data-localize="ocm.reference.statusType.value_0">Status Unknown</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill @(item.StatusType.IsOperational == true ? "bg-success-subtle text-success-emphasis" : "text-bg-warning")" data-localize="ocm.reference.statusType.value_@item.StatusTypeID">@item.StatusType.Title</span>
+                        }
+                    </div>
 
-    .equipment-extended {
-        min-height: 8em;
-        background-color: #fbfbfb;
-        color: #303030;
-        padding: 1em;
-    }
+                    <div class="ocm-equipment-specs">
+                        @if (item.PowerKW != null)
+                        {
+                            <div><span class="ocm-equipment-value">@item.PowerKW</span> kW</div>
+                        }
+                        @if (item.Voltage != null)
+                        {
+                            <div><span class="ocm-equipment-value">@item.Voltage</span> V</div>
+                        }
+                        @if (item.Amps != null)
+                        {
+                            <div><span class="ocm-equipment-value">@item.Amps</span> A</div>
+                        }
+                        @if (item.CurrentType != null)
+                        {
+                            <div data-localize="ocm.reference.supplyType.value_@item.CurrentTypeID">@item.CurrentType.Title</div>
+                        }
+                    </div>
 
-    .equipment-ref {
-        color: #a39e9e;
-        font-size: 80%;
-    }
-</style>
-
-@foreach (var item in Model)
-{
-    <div class="row equipment-row">
-        <div class="col-sm-4 equipment-core">
-            <h4>
-                <span class="glyphicon glyphicon-link"></span>
-
-                @if (item.ConnectionType == null)
-                {
-                    <span data-localize="ocm.reference.connectionType.value_0"> Connection Type Unknown</span>
-                }
-                else
-                {
-                    <span data-localize="ocm.reference.connectionType.value_@item.ConnectionTypeID">
-                        @item.ConnectionType.Title
-                    </span>
-                }
-            </h4>
-            
-            <div>
-                <span class="glyphicon glyphicon-transfer"></span>
-
-                @if (item.StatusType == null)
-                {
-                    <span data-localize="ocm.reference.statusType.value_0"> Status Unknown</span>
-                }
-                else
-                {
-                    <span data-localize="ocm.reference.statusType.value_@item.StatusTypeID">
-                        @item.StatusType.Title
-                    </span>
-                }
-            </div>
-            <div>
-                @if (item.Quantity != null)
-                {
-                    <span class="glyphicon glyphicon-star"></span> @Html.DisplayFor(modelItem => item.Quantity) <text> Present</text>
-                }
+                    @if (!string.IsNullOrEmpty(item.Comments))
+                    {
+                        <p class="small mt-3 mb-0">@item.Comments</p>
+                    }
+                </div>
+                <div class="card-footer small text-body-secondary">
+                    <i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>OCM-CN-@item.ID
+                </div>
             </div>
         </div>
-
-        <div class="col-sm-6 equipment-extended">
-            <div class="equipment-ref">
-                <span class="glyphicon glyphicon-flash"></span>
-                OCM-CN-@item.ID
-            </div>
-            <div>
-                @(item.PowerKW == null ? "" : item.PowerKW + " kW")
-                @if (item.CurrentType != null)
-                {
-                    <span data-localize="ocm.reference.supplyType.value_@item.CurrentTypeID">
-                        @item.CurrentType.Title
-                    </span>
-                }
-            </div>
-            <div>
-                @(item.Voltage == null ? "" :item.Voltage + " V")
-            </div>
-            <div>
-                @(item.Amps == null ? "" : item.Amps + " A")
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <p>@item.Comments</p>
-        </div>
-    </div>
-}
+    }
+</div>

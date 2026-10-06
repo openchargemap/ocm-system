@@ -1,70 +1,81 @@
 ﻿@{
     ViewBag.Title = "About Open Charge Map";
 }
-<h2 data-localize="ocm.infoText.about.ourService">Our Service</h2>
-<p data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit, electric vehicle data service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</p>
-@Html.Partial("_TermsLink")
+<div class="ocm-prose">
+    <h2 data-localize="ocm.infoText.about.ourService">Our Service</h2>
+    <p data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit, electric vehicle data service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</p>
+    @Html.Partial("_TermsLink")
 
-<h2 data-localize="ocm.infoText.about.aim.title">Our Aim</h2>
-<p data-localize="ocm.infoText.about.aim.p1">Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.</p>
-<p data-localize="ocm.infoText.about.aim.p2">
-    Our goal is to avoid the proliferation of independent conflicting charging location maps/websites/applications
-    and to provide (as much as possible) a reliable single point of reference for charging equipment location information.
-    Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for
-    data sharing and de-duplication efforts.
-</p>
-<h2 data-localize="ocm.infoText.about.whyOCM.title">Why Use Open Charge Map?</h2>
-<p data-localize="ocm.infoText.about.whyOCM.content">By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set.</p>
-
-<div>
-    <h2 data-localize="ocm.infoText.about.funding.title">Funding</h2>
-    <p data-localize="ocm.infoText.about.funding.p1">Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please <a href="@Url.Action("Contact", "About")" data-localize-id="link-contact">get in touch</a>. More information on funding and project costs <a href="@Url.Action("Funding", "About")" data-localize-id="link-funding">is available</a>.</p>
-    <h3>Sponsors</h3>
-    <p>
-        We are grateful to the following project sponsors:
-        <ul>
-            <li><a href="https://webprofusion.com">webprofusion.com</a> : Gold Sponsor</li>
-            <li><a href="https://cardog.app/">https://cardog.app/</a> : Silver Sponsor</li>
-        </ul>
+    <h2 data-localize="ocm.infoText.about.aim.title">Our Aim</h2>
+    <p data-localize="ocm.infoText.about.aim.p1">Our aim is to work with the community to develop and provide a high quality, public, free, open database of charging equipment locations globally.</p>
+    <p data-localize="ocm.infoText.about.aim.p2">
+        Our goal is to avoid the proliferation of independent conflicting charging location maps/websites/applications
+        and to provide (as much as possible) a reliable single point of reference for charging equipment location information.
+        Instead of competing with other data providers we aim to cooperate with and provide services to them, in exchange for
+        data sharing and de-duplication efforts.
     </p>
-    <p>If you would like to become a sponsor to help us fund service infrastructure costs, you can directly purchase a sponsorship <a href="https://buy.stripe.com/5kA6ru2Xrb2W4RacMP">via Stripe</a> or join our community discussions </p>
-</div>
+    <h2 data-localize="ocm.infoText.about.whyOCM.title">Why Use Open Charge Map?</h2>
+    <p data-localize="ocm.infoText.about.whyOCM.content">By using Open Charge Map and related apps you are helping to improve the information in the registry by providing peer review, edits, additions, comments, photos and by promoting the service to other users. The benefit of OCM over others providers is that OCM's purpose is to share information openly, whereas commercial providers have to keep their information to themselves (or within the confines of their own App etc.) in order to maintain a commercially marketable data set.</p>
 
-<div class="row">
-
-    <div class="col-md-12">
-        <h2 data-localize="ocm.infoText.about.developersContributors.sectionTitle">Developers and Contributors</h2>
-        <p data-localize="ocm.infoText.about.developersContributors.p1">Our <a href="https://github.com/openchargemap" data-localize-id="link_github">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://community.openchargemap.org/">community</a> forum is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
-        <p data-localize="ocm.infoText.about.developersContributors.p2">
-            You can take a look at the lists of our main contributors of
-            <a href="https://github.com/openchargemap/ocm-system/graphs/contributors" data-localize-id="link_code">code</a>
-            and
-            <a href="@Url.Action("Index", "Stats")" data-localize-id="link_data">data</a>.
+    <div>
+        <h2 data-localize="ocm.infoText.about.funding.title">Funding</h2>
+        <p data-localize="ocm.infoText.about.funding.p1">Open Charge Map is developed and operated by volunteers. If you can offer funding to support the project or to fund specific work please <a href="@Url.Action("Contact", "About")" data-localize-id="link-contact">get in touch</a>. More information on funding and project costs <a href="@Url.Action("Funding", "About")" data-localize-id="link-funding">is available</a>.</p>
+        <h3>Sponsors</h3>
+        <p>
+            We are grateful to the following project sponsors:
+            <ul>
+                <li><a href="https://webprofusion.com">webprofusion.com</a> : Gold Sponsor</li>
+            </ul>
         </p>
-        <h2 data-localize="ocm.infoText.about.projectStats.sectionTitle">Project Stats</h2>
+        <p>If you would like to become a sponsor to help us fund service infrastructure costs, you can directly purchase a sponsorship <a href="https://buy.stripe.com/5kA6ru2Xrb2W4RacMP">via Stripe ($199 per month)</a>.</p>
 
-        <p data-localize="ocm.infoText.about.projectStats.general">General statistics for Open Charge Map <a href="@Url.Action("Index", "Stats")" data-localize-id="link">data and usage</a> are available.</p>
+
+        <p>If you are an individual or group looking to make a small contribution per month to help support hosting costs, you can also do so <a href="https://buy.stripe.com/9B614ncyrf1vbAibbz1sQ04">via Stripe ($9.99 per month)</a>.</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <h2 data-localize="ocm.infoText.about.developersContributors.sectionTitle">Developers and Contributors</h2>
+            <p data-localize="ocm.infoText.about.developersContributors.p1">Our <a href="https://github.com/openchargemap" data-localize-id="link_github">GitHub project</a> provides a conduit for external technical contributors to discuss and influence our system and plans. Our <a href="https://community.openchargemap.org/">community</a> forum is our primary means of exchanging ideas and gathering feedback from interested parties.</p>
+            <p data-localize="ocm.infoText.about.developersContributors.p2">
+                You can take a look at the lists of our main contributors of
+                <a href="https://github.com/openchargemap/ocm-system/graphs/contributors" data-localize-id="link_code">code</a>
+                and
+                <a href="@Url.Action("Index", "Stats")" data-localize-id="link_data">data</a>.
+            </p>
+            <h2 data-localize="ocm.infoText.about.projectStats.sectionTitle">Project Stats</h2>
+
+            <p data-localize="ocm.infoText.about.projectStats.general">General statistics for Open Charge Map <a href="@Url.Action("Index", "Stats")" data-localize-id="link">data and usage</a> are available.</p>
+        </div>
     </div>
 </div>
-<h2 data-localize="ocm.infoText.about.dataSources.title">Data Providers</h2>
-<p data-localize="ocm.infoText.about.dataSources.p1">
-    The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly ("crowd sourced") by our users and those of apps using our services.
-</p>
-<p data-localize="ocm.infoText.about.dataSources.p2">Credit and our thanks goes to following major data sources currently included in our database:</p>
+<div class="ocm-prose">
+    <h2 data-localize="ocm.infoText.about.dataSources.title">Data Providers</h2>
+    <p data-localize="ocm.infoText.about.dataSources.p1">
+        The data made available through the Open Charge Map system and related services is sourced from many locations and is often provided directly ("crowd sourced") by our users and those of apps using our services.
+    </p>
+    <p data-localize="ocm.infoText.about.dataSources.p2">Credit and our thanks goes to following major data sources currently included in our database:</p>
+</div>
 @{
     var providers = (List<OCM.API.Common.Model.DataProvider>)new OCM.API.Common.ReferenceDataManager().GetCoreReferenceData(new OCM.API.Common.APIRequestParams()).DataProviders;
 }
 
-@foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))
-{
-    <h4>@provider.Title</h4>
-    <p>
-        DataProviderID: @provider.ID <br>
-        @(provider.WebsiteURL != null ? provider.WebsiteURL : "")
-    </p>
-    <p>
-        <em>
-            @(provider.License != null ? " License: " + @provider.License : "(not licensed)")
-        </em>
-    </p>
-}
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-4">
+    @foreach (var provider in providers.Where(p => p.IsApprovedImport == true || p.IsOpenDataLicensed == true))
+    {
+        <div class="col">
+            <div class="card h-100 mb-0">
+                <div class="card-body">
+                    <h3 class="h6 card-title mb-1">@provider.Title</h3>
+                    <div class="small text-body-secondary mb-2">Data provider ID @provider.ID</div>
+                    @if (provider.WebsiteURL != null)
+                    {
+                        <div class="small text-break mb-2">@provider.WebsiteURL</div>
+                    }
+                    <div class="small fst-italic text-body-secondary">@(provider.License != null ? "License: " + provider.License : "(not licensed)")</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

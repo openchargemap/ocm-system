@@ -21,8 +21,8 @@
             <td>@(itemDetails.DefaultDataProvider != null ? (itemDetails.DefaultDataProvider.DateLastImported.HasValue ? itemDetails.DefaultDataProvider.DateLastImported.ToString() : "Unknown") : "")</td>
             <!--<td>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-cloud-download"></i> Import <span class="caret"></span>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cloud-download"></i> Import
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>@Html.ActionLink("Preview Import (Live Data)", "Import", new { providerName = itemDetails.ProviderName, fetchLiveData = true, performImport = false })</li>
@@ -40,8 +40,8 @@
     }
 </table>
 
-<div class="well" id="upload" style="display:none;">
-    @using (Html.BeginForm("ImportUpload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+<div class="card card-body bg-body-tertiary" id="upload" style="display:none;">
+    @using (Html.BeginForm("ImportUpload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
@@ -51,7 +51,7 @@
         <h2>Upload file for Import</h2>
 
         <div class="container">
-            <div class="form-group">
+            <div class="mb-3">
 
                 <!--
         FileUpload.GetHtml(initialNumberOfFiles: 1, allowMoreFilesToBeAdded: false, includeFormTag: false, addText: "Add File", uploadText: "Upload File")

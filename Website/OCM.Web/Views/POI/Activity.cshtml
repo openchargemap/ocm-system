@@ -8,24 +8,24 @@
 
 <div>
     <h2>Recent Photos <small>contributed by OCM users</small></h2>
-    <div class="row">
+    <div class="row row-cols-4 row-cols-sm-6 row-cols-lg-10 g-2 mb-4">
         @foreach (var item in Model.RecentMedia.Where(i => i.IsEnabled))
         {
-            <div class="col-md-1 col-sm-1">
-                <a class="thumbnail" href="@Url.Action("Details","POI", new {id=item.ChargePointID})">
-                    <img class="img-fluid" src="@item.ItemThumbnailURL"/>
+            <div class="col">
+                <a class="ocm-activity-thumb" href="@Url.Action("Details","POI", new {id=item.ChargePointID})">
+                    <img src="@item.ItemThumbnailURL" alt="Photo of OCM-@item.ChargePointID" loading="lazy" />
                 </a>
-            </div>    
+            </div>
         }
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
+<div class="row g-4">
+    <div class="col-lg-6">
         <h2>New Locations <small>recently added</small></h2>
         @Html.Partial("_POIList", Model.POIRecentlyAdded)
     </div>
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h2>Recent Comments <small>added by users</small></h2>
         @Html.DisplayFor(poiSummary => poiSummary.RecentComments)
     </div>

@@ -81,12 +81,12 @@
 
                 </p>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="editor-label">
                     </div>
                     <div class="editor-field">
                         <strong>Your company hereby licenses your data (limited to the data present in the provided data feed) under the following Open Data license, which you have <a href="https://creativecommons.org/about/cclicenses/" target="_blank">reviewed and understood</a>:</strong>
-                        <select data-val="true" id="DataLicense" name="DataLicense" class="form-control" style="max-width:300px;">
+                        <select data-val="true" id="DataLicense" name="DataLicense" class="form-select" style="max-width:300px;">
                             <option value="CC0" selected="selected">Creative Commons CC0</option>
 
                         </select>
@@ -124,19 +124,19 @@
                 <h3>Required Information</h3>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group" data-editormode="core">
+                        <div class="mb-3" data-editormode="core">
                             <div class="editor-label">
                                 Country
                             </div>
                             <div>
-                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.CountryID, (SelectList)ViewBag.CountryList, new { @class = "form-select" })
                                 @Html.ValidationMessageFor(model => model.CountryID)
                             </div>
                         </div>
 
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="editor-label">
                                 Company Website URL
                             </div>
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="editor-label">
                                 Contact Email
                             </div>
@@ -163,12 +163,12 @@
                 <h3>Data Feed Details</h3>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="editor-label">
                                 Data Feed Type
                             </div>
                             <div class="editor-field">
-                                <select data-val="true" id="DataFeedType" name="DataFeedType" class="form-control">
+                                <select data-val="true" id="DataFeedType" name="DataFeedType" class="form-select">
                                     <option value="OCPI 2.2.x" selected="selected">OCPI 2.2.x</option>
                                     <option value="OCPI 2.1.x">OCPI 2.1.x</option>
                                     <option value="Other">Other (to be agreed)</option>
@@ -177,7 +177,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="editor-label">
                                 Data Feed URL
                             </div>
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="editor-label">
                                 Data Feed Credentials
                             </div>

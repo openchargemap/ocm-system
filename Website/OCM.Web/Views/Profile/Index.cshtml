@@ -4,42 +4,37 @@
     ViewBag.Title = "Profile";
 }
 
-<h2>Your Profile and Stats</h2>
+<header class="ocm-page-header">
+    <h1 class="mb-0">Your Profile</h1>
+    <div class="ocm-page-header-actions">
+        <a href="@Url.Action("Edit")" class="btn btn-primary"><i class="fa-solid fa-pen-to-square me-1" aria-hidden="true"></i>Edit your profile</a>
+        <a href="@Url.Action("ChangePassword","Profile")" class="btn btn-outline-secondary"><i class="fa-solid fa-key me-1" aria-hidden="true"></i>Set or change password</a>
+    </div>
+</header>
 
 @if (ViewBag.IsUserEditingBlocked == true)
 {
     @Html.Partial("_EditingBlockedNotice")
 }
 
-<div>
-        <fieldset>
-            <legend>Your Profile</legend>
-            
-            <div class="well clearfix">
-                
-                @(Model.ProfileImageURL != null ? Html.Raw("<img class='pull-left img-thumbnail' style='margin-right:1em;' src=\""+Model.ProfileImageURL+"\" />") : Html.Raw(""))
-                <a href="@Url.Action("Edit")" class="btn btn-primary clearfix">Edit Your Profile</a> 
-                <p>
-                    Note: you can edit your profile image using the popular <a href="http://gravatar.com/" target="_blank">Gravatar</a> service then adding your email address to your profile here (email address is not shared publically).
-                </p>
-            </div>
+@Html.Partial("_PublicProfile", Model)
 
-            @Html.Partial("_PublicProfile",Model)
-            
+<p class="small text-body-secondary mt-2">
+    Note: you can edit your profile image using the popular <a href="http://gravatar.com/" target="_blank">Gravatar</a> service then adding your email address to your profile here (email address is not shared publically).
+</p>
 
-            <h3>Other Account Details</h3>
-            <dl class="dl-horizontal">
-                <dt>@Html.DisplayNameFor(model => model.IdentityProvider)</dt>
-                <dd>@Html.DisplayFor(model => model.IdentityProvider)</dd>
-                <dt>@Html.DisplayNameFor(model => model.Identifier)</dt>
-                <dd>@Html.DisplayFor(model => model.Identifier)</dd>
-                <dt>@Html.DisplayNameFor(model => model.DateLastLogin)</dt>
-                <dd>@Html.DisplayFor(model => model.DateLastLogin)</dd>
-                <dt>@Html.DisplayNameFor(model => model.EmailAddress)</dt>
-                <dd>@Html.DisplayFor(model => model.EmailAddress)</dd>
-            </dl>
-
-            <a href="@Url.Action("ChangePassword","Profile")" class="btn btn-warning"><i class="fa fa-key"></i> Set or Change Your Password</a>
-        </fieldset>
-
+<div class="card mt-3">
+    <div class="card-body">
+        <h2 class="ocm-section-title">Other Account Details</h2>
+        <dl class="ocm-facts mb-0">
+            <dt>@Html.DisplayNameFor(model => model.IdentityProvider)</dt>
+            <dd>@Html.DisplayFor(model => model.IdentityProvider)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Identifier)</dt>
+            <dd class="text-break">@Html.DisplayFor(model => model.Identifier)</dd>
+            <dt>@Html.DisplayNameFor(model => model.DateLastLogin)</dt>
+            <dd>@Html.DisplayFor(model => model.DateLastLogin)</dd>
+            <dt>@Html.DisplayNameFor(model => model.EmailAddress)</dt>
+            <dd class="text-break">@Html.DisplayFor(model => model.EmailAddress)</dd>
+        </dl>
+    </div>
 </div>

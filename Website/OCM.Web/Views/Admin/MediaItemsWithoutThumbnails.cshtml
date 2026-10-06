@@ -14,10 +14,10 @@
     <div class="row mb-3">
         <div class="col-md-12">
             <button type="button" class="btn btn-primary" id="reprocessAllBtn">
-                <i class="glyphicon glyphicon-refresh"></i> Reprocess All (Batch of 10)
+                <i class="fa-solid fa-rotate"></i> Reprocess All (Batch of 10)
             </button>
             <button type="button" class="btn btn-secondary" id="refreshListBtn">
-                <i class="glyphicon glyphicon-list"></i> Refresh List
+                <i class="fa-solid fa-list"></i> Refresh List
             </button>
         </div>
     </div>
@@ -75,7 +75,7 @@
                         <td>@(item.User?.Username ?? "Unknown")</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-success reprocess-btn" data-id="@item.Id">
-                                <i class="glyphicon glyphicon-refresh"></i> Reprocess
+                                <i class="fa-solid fa-rotate"></i> Reprocess
                             </button>
                             <span class="status-msg-@item.Id"></span>
                         </td>
@@ -103,7 +103,7 @@
                 var statusSpan = $('.status-msg-' + mediaId);
                 
                 btn.prop('disabled', true);
-                btn.html('<i class="glyphicon glyphicon-refresh glyphicon-spin"></i> Processing...');
+                btn.html('<i class="fa-solid fa-rotate fa-spin"></i> Processing...');
                 statusSpan.html('');
                 
                 $.ajax({
@@ -113,8 +113,8 @@
                     success: function (result) {
                         if (result.success) {
                             statusSpan.html('<span class="text-success">✓ Success</span>');
-                            btn.html('<i class="glyphicon glyphicon-ok"></i> Done');
-                            btn.removeClass('btn-success').addClass('btn-default');
+                            btn.html('<i class="fa-solid fa-check"></i> Done');
+                            btn.removeClass('btn-success').addClass('btn-outline-secondary');
                             
                             // Remove row after 2 seconds
                             setTimeout(function() {
@@ -123,13 +123,13 @@
                         } else {
                             statusSpan.html('<span class="text-danger">✗ ' + result.message + '</span>');
                             btn.prop('disabled', false);
-                            btn.html('<i class="glyphicon glyphicon-refresh"></i> Retry');
+                            btn.html('<i class="fa-solid fa-rotate"></i> Retry');
                         }
                     },
                     error: function () {
                         statusSpan.html('<span class="text-danger">✗ Error</span>');
                         btn.prop('disabled', false);
-                        btn.html('<i class="glyphicon glyphicon-refresh"></i> Retry');
+                        btn.html('<i class="fa-solid fa-rotate"></i> Retry');
                     }
                 });
             });

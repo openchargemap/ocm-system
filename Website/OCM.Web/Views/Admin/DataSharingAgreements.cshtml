@@ -41,41 +41,11 @@
     <div class="alert alert-danger">@errorMessage</div>
 }
 
-<style>
-    .agreement-tabs {
-        margin: 0 0 15px 0;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .agreement-tab-link {
-        display: inline-block;
-        margin: 0 6px -1px 0;
-        padding: 10px 16px;
-        border: 1px solid transparent;
-        border-radius: 4px 4px 0 0;
-        color: #337ab7;
-        text-decoration: none;
-    }
-
-    .agreement-tab-link:hover,
-    .agreement-tab-link:focus {
-        color: #23527c;
-        text-decoration: none;
-        background-color: #f5f5f5;
-    }
-
-    .agreement-tab-link.active {
-        color: #555;
-        background-color: #fff;
-        border-color: #ddd #ddd #fff;
-    }
-</style>
-
-<div class="agreement-tabs">
-    <a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "pending" })" class="agreement-tab-link @(selectedTab == "pending" ? "active" : string.Empty)">Not Approved (@pendingItems.Count)</a>
-    <a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "approved" })" class="agreement-tab-link @(selectedTab == "approved" ? "active" : string.Empty)">Approved (@approvedItems.Count)</a>
-    <a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "notenabled" })" class="agreement-tab-link @(selectedTab == "notenabled" ? "active" : string.Empty)">Not Enabled (@notEnabledItems.Count)</a>
-</div>
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item"><a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "pending" })" class="nav-link @(selectedTab == "pending" ? "active" : string.Empty)">Not Approved (@pendingItems.Count)</a></li>
+    <li class="nav-item"><a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "approved" })" class="nav-link @(selectedTab == "approved" ? "active" : string.Empty)">Approved (@approvedItems.Count)</a></li>
+    <li class="nav-item"><a href="@Url.Action("DataSharingAgreements", "Admin", new { tab = "notenabled" })" class="nav-link @(selectedTab == "notenabled" ? "active" : string.Empty)">Not Enabled (@notEnabledItems.Count)</a></li>
+</ul>
 
 @if (selectedTab == "notenabled")
 {
@@ -85,7 +55,7 @@
     </p>
 }
 
-<div id="@(selectedTab)-agreements">
+<div id="@(selectedTab)-agreements" class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -154,22 +124,22 @@
                     <td>
                         @if (!item.IsImportEnabled)
                         {
-                            <span class="badge badge-default">Not Enabled</span>
+                            <span class="badge text-bg-secondary">Not Enabled</span>
                         }
                         else if (item.IsApproved)
                         {
-                            <span class="badge badge-success">Approved</span>
+                            <span class="badge text-bg-success">Approved</span>
                         }
                         else
                         {
-                            <span class="badge badge-warning">Pending Review</span>
+                            <span class="badge text-bg-warning">Pending Review</span>
                         }
                     </td>
                     <td>
                         @if (item.CurrentImportJob != null)
                         {
                             <div>
-                                <span class="label @(item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Completed ? "label-success" : item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Failed ? "label-danger" : "label-info")">@item.CurrentImportJob.ModeText @item.CurrentImportJob.StatusText</span>
+                                <span class="badge @(item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Completed ? "text-bg-success" : item.CurrentImportJob.Status == OCM.Web.Models.ImportJobStatus.Failed ? "text-bg-danger" : "text-bg-info")">@item.CurrentImportJob.ModeText @item.CurrentImportJob.StatusText</span>
                             </div>
                             <div class="small text-muted">@item.CurrentImportJob.QueuedUtc.ToString("yyyy-MM-dd HH:mm") UTC</div>
                             <div><a href="@(Url.Action("ReviewDataSharingAgreement", "Admin", new { id = item.Agreement.ID, jobId = item.CurrentImportJob.JobId }) + "#agreement-import-monitor")">View Progress</a></div>

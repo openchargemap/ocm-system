@@ -1,4 +1,4 @@
-﻿@using OCM.API.Common.Model
+@using OCM.API.Common.Model
 @using OCM.MVC
 @using OCM.API.Common
 @using System.Linq
@@ -16,48 +16,64 @@
     var currentUser = currentUserId.HasValue ? new UserManager().GetUser(currentUserId.Value) : null;
     bool canReviewOperatorProposals = isAdministrator || (currentUser != null &&
         new ReferenceDataManager().GetCountries(false).Any(country => UserManager.HasUserPermission(currentUser, country.ID, PermissionLevel.Editor)));
+
+    bool isHome = ViewBag.IsHome == true;
+    string currentController = (ViewContext.RouteData.Values["controller"] as string ?? "").ToLowerInvariant();
+    Func<string[], string> activeFor = controllers => controllers.Contains(currentController) ? " active" : "";
 }
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>Open Charge Map - @ViewBag.Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="@ViewBag.Description" />
     <meta name="author" content="openchargemap.org" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#1f6f35" />
 
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/lux/bootstrap.min.css" rel="stylesheet" integrity="sha384-hVpXlpdRmJ+uXGwD5W6HZMnR9ENcKVRn855pPbuI/mwPIEKAuKgTKgGksVGmlAvt" crossorigin="anonymous">
+    <script>
+        // apply the saved or preferred colour scheme before first paint to avoid a flash
+        (function () {
+            var stored = null;
+            try { stored = localStorage.getItem("ocm-theme"); } catch (e) { }
+            var theme = stored === "light" || stored === "dark" ? stored : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            document.documentElement.setAttribute("data-bs-theme", theme);
+        })();
+    </script>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/v4-shims.min.css">
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+
+    <!-- jQuery is loaded before Bootstrap so Bootstrap registers its jQuery plugins ($(..).modal(), .tab() etc.) used by existing pages -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
     <!--fav and touch icons -->
     <link rel="shortcut icon" href="/images/AppIcon_36x36.png">
-    <link href="https://fonts.googleapis.com/css?family=Oswald:300|Oxygen:300" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/v4-shims.min.css">
-
 
     <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
     <script>
         window.addEventListener("load", function () {
             window.cookieconsent.initialise({
                 "palette": {
                     "popup": {
-                        "background": "#efefef",
-                        "text": "#404040"
+                        "background": "#1c2620",
+                        "text": "#f1f5f2"
                     },
                     "button": {
                         "background": "#8ec760",
-                        "text": "#ffffff"
+                        "text": "#10210a"
                     }
                 },
-                "theme": "classic",
+                "theme": "edgeless",
                 "position": "bottom-right",
                 "content": {
                     "href": "https://openchargemap.org/site/about/terms"
@@ -65,7 +81,6 @@
             })
         });
     </script>
-
     <!-- End Cookie Consent plugin -->
 
     <script>
@@ -84,200 +99,251 @@
         gtag('config', 'G-Z72QN2CCLC');
     </script>
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="@(isHome ? "ocm-home" : "") d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" role="navigation">
-        <a class="navbar-brand" href="@Url.Action("Index", "Home")">open charge map</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="">...</span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav mr-auto">
+    <a class="visually-hidden-focusable ocm-skip-link" href="#main-content">Skip to content</a>
 
-                <li class="nav-item active"><a class="nav-link" id="nav_home" href="@Url.Action("Index", "Home")" data-localize="ocm.navigation.home">home</a></li>
+    <nav class="navbar navbar-expand-lg ocm-navbar sticky-top" aria-label="Main navigation">
+        <div class="container-fluid ocm-navbar-inner">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img src="~/images/AppIcon_36x36.png" alt="" width="32" height="32" />
+                <span>Open Charge Map</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
 
-                <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "POI")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.navigation.browse.sectionTitle">browse</span> <b class="caret"></b></a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="https://map.openchargemap.io" data-localize="ocm.general.map">map</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI")" data-localize="ocm.navigation.browse.allLocations">all locations</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "Country")" data-localize="ocm.navigation.browse.byCountry">by country</a>
-                        @if (username != null)
-                        {
-                            <a class="dropdown-item" href="@Url.Action("Index", "NetworkOperators")">network operators</a>
-                            @if (!isAdministrator)
+                    <li class="nav-item dropdown">
+                        <a href="@Url.Action("Index", "POI")" class="nav-link dropdown-toggle@(activeFor(new[] { "poi", "country", "networkoperators", "operatorproposals" }))" role="button" data-bs-toggle="dropdown" aria-expanded="false"><span data-localize="ocm.navigation.browse.sectionTitle">Browse</span></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="https://map.openchargemap.io"><i class="fa-solid fa-map-location-dot fa-fw me-2" aria-hidden="true"></i><span data-localize="ocm.general.map">Map</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="@Url.Action("Index", "POI")"><i class="fa-solid fa-list fa-fw me-2" aria-hidden="true"></i><span data-localize="ocm.navigation.browse.allLocations">All locations</span></a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Country")"><i class="fa-solid fa-earth-americas fa-fw me-2" aria-hidden="true"></i><span data-localize="ocm.navigation.browse.byCountry">By country</span></a>
+                            @if (username != null)
                             {
-                                <a class="dropdown-item" href="@Url.Action("Index", "OperatorProposals")">suggest an operator</a>
+                                <a class="dropdown-item" href="@Url.Action("Index", "NetworkOperators")"><i class="fa-solid fa-building fa-fw me-2" aria-hidden="true"></i>Network operators</a>
+                                @if (!isAdministrator)
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Index", "OperatorProposals")"><i class="fa-solid fa-lightbulb fa-fw me-2" aria-hidden="true"></i>Suggest an operator</a>
+                                }
                             }
-                        }
-                        <!-- <a class="dropdown-item" href="@Url.Action("Add", "POI")" data-localize="ocm.general.addLocation">add a location</a>-->
-
-
-
-                    </div>
-                </li>
-
-
-                <li class="nav-item dropdown">
-                    <a href="https://community.openchargemap.org" class="nav-link dropdown-toggle" data-toggle="dropdown">community <b class="caret"></b></a>
-                    <div class="dropdown-menu">
-
-                        <a class="dropdown-item" href="https://community.openchargemap.org">discussions</a>
-                        <a class="dropdown-item" href="https://github.com/openchargemap/ocm-system/issues">github</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Activity", "POI")" data-localize="ocm.navigation.browse.recentActivity">recent activity</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "Stats")" data-localize="ocm.navigation.browse.statistics">statistics</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">new locations awaiting approval</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">imported locations awaiting approval</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">edits awaiting approval</a>
-                        @if (canReviewOperatorProposals)
-                        {
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="@Url.Action("Review", "OperatorProposals")">operator proposals awaiting review</a>
-                        }
-                    </div>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "About")" class="nav-link dropdown-toggle" data-toggle="dropdown"><span data-localize="ocm.general.about">about</span> <b class="caret"></b></a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="@Url.Action("Index", "About")" data-localize="ocm.general.about">about</a>
-                        <a class="dropdown-item" href="@Url.Action("Index", "Develop")#api" data-localize="ocm.navigation.develop.api">API and embedding</a>
-                        <a class="dropdown-item" href="@Url.Action("Terms", "About")" data-localize="ocm.navigation.about.termsPrivacy">terms &amp; privacy</a>
-                        <a class="dropdown-item" href="@Url.Action("Guidance", "About")" data-localize="ocm.navigation.about.guidance">guidance for contributors</a>
-                        <a class="dropdown-item" href="@Url.Action("SubmitOCPI", "Profile")">submit an OCPI data feed</a>
-                        <a class="dropdown-item" href="@Url.Action("Contact", "About")" data-localize="ocm.navigation.about.contact">contact</a>
-                    </div>
-                </li>
-
-                @if (username != null)
-                {
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> <span data-localize="ocm.navigation.profile.sectionTitle">my profile</span> <b class="caret"></b></a>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-item">
-
-                                <span class="navbar-text text-primary">@Html.Encode(username)</span>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            @Html.ActionLink("my profile", "Index", "Profile", null, new { @class = "dropdown-item" })
-                            <!--@Html.ActionLink("my subscriptions", "Subscriptions", "Profile", null, new { @class = "dropdown-item" })-->
-                            @Html.ActionLink("my apps", "Applications", "Profile", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("my comments", "Comments", "Profile", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("my uploads", "Media", "Profile", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("my operator submissions", "MySubmissions", "OperatorProposals", null, new { @class = "dropdown-item" })
-                            <div class="nav-divider"></div>
-                            <a class="dropdown-item" href="@Url.Action("SignOut", "Profile")" data-localize="ocm.general.signOut">sign out</a>
                         </div>
                     </li>
 
-                }
-                else
-                {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("SignIn", "Profile", new { redirectUrl = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(Context.Request) })" data-localize="ocm.navigation.profile.sectionTitle">my profile</a></li>
-                }
-
-                <li class="nav-item pull-right"> <a class="nav-link" href="@Url.Action("DataSharing", "About")">promote your charging network</a></li>
-
-                @if (isAdministrator == true)
-                {
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="@Url.Action("Index", "Admin")" data-toggle="dropdown">admin <b class="caret"></b></a>
+                        <a href="https://community.openchargemap.org" class="nav-link dropdown-toggle@(activeFor(new[] { "stats", "editqueue" }))" role="button" data-bs-toggle="dropdown" aria-expanded="false">Community</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="@Url.Action("Index", "Admin")">dashboard</a>
-                            <a class="dropdown-item" href="@Url.Action("DataSharingAgreements", "Admin")">imports</a>
-                            <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")">edit queue</a>
-                            <a class="dropdown-item" href="@Url.Action("Users", "Admin")">users</a>
-                            <a class="dropdown-item" href="@Url.Action("CountryEditors", "Admin")">country editors</a>
-                            <a class="dropdown-item" href="@Url.Action("Operators", "Admin")">operators</a>
-                            <a class="dropdown-item" href="@Url.Action("RegisteredApplications", "Admin")">apps</a>
-                            <div class="nav-divider"></div>
-                            <a class="dropdown-item" href="@Url.Action("PollForTasks", "Admin", new { key = System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"] })">poll for system tasks</a>
+                            <a class="dropdown-item" href="https://community.openchargemap.org"><i class="fa-solid fa-comments fa-fw me-2" aria-hidden="true"></i>Discussions</a>
+                            <a class="dropdown-item" href="https://github.com/openchargemap/ocm-system/issues"><i class="fa-brands fa-github fa-fw me-2" aria-hidden="true"></i>GitHub</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="@Url.Action("Activity", "POI")"><i class="fa-solid fa-clock-rotate-left fa-fw me-2" aria-hidden="true"></i><span data-localize="ocm.navigation.browse.recentActivity">Recent activity</span></a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Stats")"><i class="fa-solid fa-chart-column fa-fw me-2" aria-hidden="true"></i><span data-localize="ocm.navigation.browse.statistics">Statistics</span></a>
+                            <div class="dropdown-divider"></div>
+                            <h6 class="dropdown-header">Awaiting approval</h6>
+                            <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Submitted_UnderReview) })" data-localize="ocm.navigation.browse.avaitingReview">New locations awaiting approval</a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "POI", new { submissionstatustypeid = ((int)StandardSubmissionStatusTypes.Imported_UnderReview) })" data-localize="ocm.navigation.browse.awaitingReviewImported">Imported locations awaiting approval</a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")" data-localize="ocm.navigation.browse.editqueue">Edits awaiting approval</a>
+                            @if (canReviewOperatorProposals)
+                            {
+                                <a class="dropdown-item" href="@Url.Action("Review", "OperatorProposals")">Operator proposals awaiting review</a>
+                            }
                         </div>
                     </li>
-                }
-            </ul>
-        </div>
 
-    </nav>
-
-    @if (ViewBag.IsHome == true)
-    {
-
-        <!--
-        <div style="margin-top:60px;padding:0px 30px;">
-            <div  class="d-none d-lg-block">
-                <div class="banner-background">
-
-
-                </div>
-                <div class="banner-container" style="padding-top:1em;background-image:none;">
-
-                    <div class="banner-backdrop">
-                        <div>
-                            <h3>Open Charge Map <br /><small data-localize="ocm.general.shortDescription">the global public registry of electric vehicle charging locations</small></h3>
+                    <li class="nav-item dropdown">
+                        <a href="@Url.Action("Index", "About")" class="nav-link dropdown-toggle@(activeFor(new[] { "about", "develop" }))" role="button" data-bs-toggle="dropdown" aria-expanded="false"><span data-localize="ocm.general.about">About</span></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="@Url.Action("Index", "About")" data-localize="ocm.general.about">About</a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Develop")#api" data-localize="ocm.navigation.develop.api">API and embedding</a>
+                            <a class="dropdown-item" href="@Url.Action("Terms", "About")" data-localize="ocm.navigation.about.termsPrivacy">Terms &amp; privacy</a>
+                            <a class="dropdown-item" href="@Url.Action("Guidance", "About")" data-localize="ocm.navigation.about.guidance">Guidance for contributors</a>
+                            <a class="dropdown-item" href="@Url.Action("SubmitOCPI", "Profile")">Submit an OCPI data feed</a>
+                            <a class="dropdown-item" href="@Url.Action("Contact", "About")" data-localize="ocm.navigation.about.contact">Contact</a>
                         </div>
-                        <div class="banner-foreground">
-                            <div class="applinks pull-right animated fadeInDown">
-                                <span data-localize="ocm.infoText.getApp">Get the app</span>:
-                                <a target="_blank" href="https://play.google.com/store/apps/details?id=com.webprofusion.openchargemap&hl=en"><i class="fa fa-android"></i> Android</a>
-                                <a target="_blank" href="https://itunes.apple.com/us/app/open-charge-map/id528951115"><i class="fa fa-apple"></i> iOS</a>
-                                <a target="_blank" href="https://map.openchargemap.io"><i class="fa fa-rocket"></i> Web App</a>
+                    </li>
+
+                    @if (isAdministrator == true)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle@(activeFor(new[] { "admin" }))" href="@Url.Action("Index", "Admin")" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("Index", "Admin")"><i class="fa-solid fa-gauge fa-fw me-2" aria-hidden="true"></i>Dashboard</a>
+                                <a class="dropdown-item" href="@Url.Action("DataSharingAgreements", "Admin")"><i class="fa-solid fa-file-import fa-fw me-2" aria-hidden="true"></i>Imports</a>
+                                <a class="dropdown-item" href="@Url.Action("Index", "EditQueue")"><i class="fa-solid fa-list-check fa-fw me-2" aria-hidden="true"></i>Edit queue</a>
+                                <a class="dropdown-item" href="@Url.Action("Users", "Admin")"><i class="fa-solid fa-users fa-fw me-2" aria-hidden="true"></i>Users</a>
+                                <a class="dropdown-item" href="@Url.Action("CountryEditors", "Admin")"><i class="fa-solid fa-user-shield fa-fw me-2" aria-hidden="true"></i>Country editors</a>
+                                <a class="dropdown-item" href="@Url.Action("Operators", "Admin")"><i class="fa-solid fa-building fa-fw me-2" aria-hidden="true"></i>Operators</a>
+                                <a class="dropdown-item" href="@Url.Action("RegisteredApplications", "Admin")"><i class="fa-solid fa-cubes fa-fw me-2" aria-hidden="true"></i>Apps</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("PollForTasks", "Admin", new { key = System.Configuration.ConfigurationManager.AppSettings["AdminPollingAPIKey"] })"><i class="fa-solid fa-rotate fa-fw me-2" aria-hidden="true"></i>Poll for system tasks</a>
                             </div>
-                        </div>
-                        <div>
+                        </li>
+                    }
+                </ul>
 
-                            <div id="datasummary"></div>
+                <ul class="navbar-nav align-items-lg-center gap-lg-1">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="btn btn-sm ocm-btn-cta my-2 my-lg-0 me-lg-2" href="@Url.Action("DataSharing", "About")"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>Promote your charging network</a>
+                    </li>
 
-                        </div>
-                    </div>
-                </div>
+                    <li class="nav-item dropdown">
+                        <button class="nav-link dropdown-toggle ocm-theme-toggle" id="theme-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Colour theme">
+                            <i class="fa-solid fa-circle-half-stroke" aria-hidden="true" data-theme-icon></i><span class="d-lg-none ms-2">Theme</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="theme-toggle">
+                            <li><button type="button" class="dropdown-item" data-theme-value="light"><i class="fa-solid fa-sun fa-fw me-2" aria-hidden="true"></i>Light</button></li>
+                            <li><button type="button" class="dropdown-item" data-theme-value="dark"><i class="fa-solid fa-moon fa-fw me-2" aria-hidden="true"></i>Dark</button></li>
+                            <li><button type="button" class="dropdown-item" data-theme-value="auto"><i class="fa-solid fa-circle-half-stroke fa-fw me-2" aria-hidden="true"></i>Auto</button></li>
+                        </ul>
+                    </li>
+
+                    @if (username != null)
+                    {
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle@(activeFor(new[] { "profile" }))" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-circle-user me-1" aria-hidden="true"></i><span data-localize="ocm.navigation.profile.sectionTitle">My profile</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <h6 class="dropdown-header text-truncate">Signed in as <strong>@username</strong></h6>
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("My profile", "Index", "Profile", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("My apps", "Applications", "Profile", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("My comments", "Comments", "Profile", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("My uploads", "Media", "Profile", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("My operator submissions", "MySubmissions", "OperatorProposals", null, new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("SignOut", "Profile")"><i class="fa-solid fa-arrow-right-from-bracket fa-fw me-2" aria-hidden="true"></i><span data-localize="ocm.general.signOut">Sign out</span></a>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("SignIn", "Profile", new { redirectUrl = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(Context.Request) })"><i class="fa-solid fa-right-to-bracket me-1" aria-hidden="true"></i><span data-localize="ocm.general.signIn">Sign in</span></a></li>
+                    }
+                </ul>
             </div>
         </div>
-            -->
+    </nav>
 
-        <div id="map-loading" style="width:100%;height:500px;background-color:gainsboro;padding:24px;font-size:24px;position:absolute;">
-            <i class="fa fa-map"></i> Map Loading..
-        </div>
-        <div id="map-container" style="position: fixed; width: 100%; height: 100%; padding-top:53px; max-height: fit-content;">
-            <iframe id="map-app" src="https://map.openchargemap.io" onload="mapLoaded();" frameborder="0" allow="geolocation" style="width:100%;height:100%"></iframe>
-        </div>
+    @if (isHome)
+    {
+        <main id="main-content" class="ocm-map-shell flex-grow-1">
+            <div id="map-loading" class="ocm-map-loading">
+                <div class="spinner-border text-success" role="status" aria-hidden="true"></div>
+                <span>Loading map&hellip;</span>
+            </div>
+            <iframe id="map-app" title="Open Charge Map" src="https://map.openchargemap.io" onload="mapLoaded();" allow="geolocation"></iframe>
+        </main>
 
         @RenderBody()
-
     }
     else
     {
-        <main class="site-content container-fluid flex-grow-1">
-            <div class="content">
-                @{
-                    if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
-                    {
-                        <div class="alert alert-warning">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Note: Open Charge Map is undergoing extensive maintenance and new edits/submission are not currently being accepted.
-                        </div>
-                    }
+        <main id="main-content" class="site-content flex-grow-1">
+            <div class="container-xxl content">
+                @if (System.Configuration.ConfigurationManager.AppSettings["EnableDataWrites"] == "false")
+                {
+                    <div class="alert alert-warning d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        <div>Note: Open Charge Map is undergoing extensive maintenance and new edits/submission are not currently being accepted.</div>
+                    </div>
                 }
                 @RenderBody()
             </div>
         </main>
 
-
-        <footer class="footer mt-auto py-3">
-            <div class="container-fluid">
-                <a href="https://www.facebook.com/openchargemap" title="Like us on Facebook" aria-label="Like us on Facebook" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                <a href="https://x.com/open_charge_map" title="Follow us on X" aria-label="Follow us on X" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-                <a href="https://github.com/openchargemap/" title="Get involved on Github" aria-label="Get involved on Github" target="_blank" rel="noopener noreferrer"><i class="fa fa-github" aria-hidden="true"></i></a>
-                <a href="@Url.Action("Contact", "About")" title="Contact Us"><i class="fa fa-comments"></i></a>
-                <br />
-                <span data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</span>
+        <footer class="ocm-footer mt-auto">
+            <div class="container-xxl">
+                <div class="row gy-4">
+                    <div class="col-lg-5">
+                        <a class="ocm-footer-brand" href="@Url.Action("Index", "Home")">
+                            <img src="~/images/AppIcon_36x36.png" alt="" width="28" height="28" />
+                            <span>Open Charge Map</span>
+                        </a>
+                        <p class="mt-3 mb-3" data-localize="ocm.infoText.shortProjectSummary">Open Charge Map is a non-commercial, non-profit service hosted and supported by a community of businesses, charities, developers and interested parties around the world.</p>
+                        <div class="ocm-footer-social">
+                            <a href="https://www.facebook.com/openchargemap" title="Like us on Facebook" aria-label="Like us on Facebook" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+                            <a href="https://x.com/open_charge_map" title="Follow us on X" aria-label="Follow us on X" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                            <a href="https://github.com/openchargemap/" title="Get involved on Github" aria-label="Get involved on Github" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+                            <a href="@Url.Action("Contact", "About")" title="Contact Us" aria-label="Contact Us"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-2 offset-lg-1">
+                        <h2 class="ocm-footer-heading">Explore</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="https://map.openchargemap.io">Map</a></li>
+                            <li><a href="@Url.Action("Index", "POI")">Browse locations</a></li>
+                            <li><a href="@Url.Action("Index", "Country")">By country</a></li>
+                            <li><a href="@Url.Action("Index", "Stats")">Statistics</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <h2 class="ocm-footer-heading">Contribute</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="@Url.Action("Guidance", "About")">Contributor guidance</a></li>
+                            <li><a href="@Url.Action("DataSharing", "About")">Share your data</a></li>
+                            <li><a href="https://community.openchargemap.org">Community</a></li>
+                            <li><a href="@Url.Action("Funding", "About")">Funding</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <h2 class="ocm-footer-heading">Project</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="@Url.Action("Index", "About")">About</a></li>
+                            <li><a href="@Url.Action("Index", "Develop")">API &amp; developers</a></li>
+                            <li><a href="@Url.Action("Terms", "About")">Terms &amp; privacy</a></li>
+                            <li><a href="@Url.Action("Contact", "About")">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </footer>
-
     }
 
+    <script>
+        // colour theme picker (light / dark / auto)
+        (function () {
+            var media = window.matchMedia("(prefers-color-scheme: dark)");
+            var icons = { light: "fa-sun", dark: "fa-moon", auto: "fa-circle-half-stroke" };
+
+            function getStored() {
+                try { return localStorage.getItem("ocm-theme") || "auto"; } catch (e) { return "auto"; }
+            }
+
+            function apply(choice) {
+                var theme = choice === "auto" ? (media.matches ? "dark" : "light") : choice;
+                document.documentElement.setAttribute("data-bs-theme", theme);
+
+                var icon = document.querySelector("[data-theme-icon]");
+                if (icon) {
+                    icon.classList.remove("fa-sun", "fa-moon", "fa-circle-half-stroke");
+                    icon.classList.add(icons[choice] || icons.auto);
+                }
+                document.querySelectorAll("[data-theme-value]").forEach(function (btn) {
+                    btn.classList.toggle("active", btn.getAttribute("data-theme-value") === choice);
+                });
+            }
+
+            document.querySelectorAll("[data-theme-value]").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var choice = btn.getAttribute("data-theme-value");
+                    try { localStorage.setItem("ocm-theme", choice); } catch (e) { }
+                    apply(choice);
+                });
+            });
+
+            media.addEventListener("change", function () {
+                if (getStored() === "auto") apply("auto");
+            });
+
+            apply(getStored());
+        })();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 
     @*
         @Html.Raw(CommonUtil.GetLocalizationScriptBlock(Url.Content("~/scripts"), this.ViewContext.RouteData.Values["languagecode"] as string))

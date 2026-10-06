@@ -4,24 +4,19 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <p>Sign In using your existing profile or Register as a new user</p>
-        <hr />
+    <div>
+        <p class="text-body-secondary">Sign in using your existing profile or register as a new user.</p>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
-            </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "form-label" })
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
         </div>
 
         @if (ViewBag.InvalidLogin == true)
@@ -30,13 +25,13 @@
                 Invalid email address or password.
             </p>
         }
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Sign In" class="btn btn-primary" />
-            </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary w-100">Sign In</button>
         </div>
 
-        <a href="@Url.Action("Register","LoginProvider")"><i class="fa fa-chevron-right"></i> Register as New User</a>
-        <a href="@Url.Action("PasswordReset","LoginProvider")"><i class="fa fa-chevron-right"></i> Reset Your Password</a>
+        <div class="d-flex flex-wrap justify-content-between gap-2 small">
+            <a href="@Url.Action("Register","LoginProvider")">Register as new user</a>
+            <a href="@Url.Action("PasswordReset","LoginProvider")">Reset your password</a>
+        </div>
     </div>
 }

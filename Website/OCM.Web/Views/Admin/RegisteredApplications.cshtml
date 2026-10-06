@@ -22,7 +22,7 @@
    asp-route-sortOrder="@ViewData["sortorder"]"
    asp-route-pageIndex="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["keyword"]"
-   class="btn btn-default @prevDisabled">
+   class="btn btn-outline-secondary @prevDisabled">
     Previous
 </a>
 
@@ -33,7 +33,7 @@ Page @Model.PageIndex of @Model.TotalPages  - Total Results: @Model.TotalResults
    asp-route-sortOrder="@ViewData["sortorder"]"
    asp-route-pageIndex="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["keyword"]"
-   class="btn btn-default @nextDisabled">
+   class="btn btn-outline-secondary @nextDisabled">
     Next
 </a>
 

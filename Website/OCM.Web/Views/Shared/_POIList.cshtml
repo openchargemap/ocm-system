@@ -1,67 +1,58 @@
-﻿@model IEnumerable<OCM.API.Common.Model.ChargePoint>
+@model IEnumerable<OCM.API.Common.Model.ChargePoint>
 
-<small>
+<p class="small text-body-secondary mb-2">
     @if (@Model.Count() >= 100)
     {
-        @:Showing a maximum of 100 matching results:
+        @:Showing a maximum of 100 matching results
     }
     else
     {
         @:There are @Model.Count() matching results
     }
-</small>
-<div class="results-list">
+</p>
+<div class="results-list ocm-poi-list">
     @foreach (var item in Model.Take(100))
     {
-        <h3>
-            <a href="@Url.Action("Details","POI",new{ID=item.ID})">
+        var addressParts = new[] { item.AddressInfo.AddressLine1, item.AddressInfo.AddressLine2, item.AddressInfo.Town, item.AddressInfo.StateOrProvince, item.AddressInfo.Postcode, item.AddressInfo.Country?.Title }
+            .Where(p => !string.IsNullOrWhiteSpace(p));
 
-                @Html.DisplayFor(m => item.AddressInfo.Title)
-                <div class="pull-right">
+        <article class="result ocm-poi-card">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <h3 class="ocm-poi-card-title">
+                    <a class="stretched-link" href="@Url.Action("Details","POI",new{ID=item.ID})">@Html.DisplayFor(m => item.AddressInfo.Title)</a>
+                </h3>
+                <div class="ocm-poi-card-counts text-body-secondary small text-nowrap">
                     @if (item.UserComments != null)
                     {
-                        <i class="fa fa-comment-o"></i> @item.UserComments.Count
-
+                        <span title="Comments"><i class="fa-regular fa-comment" aria-hidden="true"></i> @item.UserComments.Count</span>
                     }
-                    &nbsp;
                     @if (item.MediaItems != null)
                     {
-                        <i class="fa fa-camera"></i> @item.MediaItems.Count
+                        <span title="Photos"><i class="fa-solid fa-camera" aria-hidden="true"></i> @item.MediaItems.Count</span>
                     }
                 </div>
-
-
-            </a>
-        </h3>
-        <div class="result row">
-
-
-            <div class="col-sm-6">
-                @Html.DisplayFor(m => item.AddressInfo)
-
-                @Html.ActionLink("View", "Details", new { id = item.ID })
             </div>
-            <div class="col-sm-6">
+
+            <div class="ocm-poi-card-address">@string.Join(", ", addressParts)</div>
+
+            <div class="ocm-poi-card-meta">
                 @if (item.AddressInfo.Distance != null)
                 {
-                    @Html.Raw(Math.Round(item.AddressInfo.Distance.Value, 2) + " " + item.AddressInfo.DistanceUnit)<br />
+                    <span><i class="fa-solid fa-location-arrow" aria-hidden="true"></i> @(Math.Round(item.AddressInfo.Distance.Value, 2)) @item.AddressInfo.DistanceUnit</span>
                 }
                 @if (item.UsageType != null)
                 {
-                    @item.UsageType.Title
-                    <br />
+                    <span>@item.UsageType.Title</span>
                 }
                 @if (item.StatusType != null)
                 {
                     if (item.StatusType.IsOperational != true)
                     {
-                        <span class="label label-warning">
-                            @item.StatusType.Title
-                        </span>
+                        <span class="badge text-bg-warning">@item.StatusType.Title</span>
                     }
                     else
                     {
-                        <span>@item.StatusType.Title</span>
+                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis">@item.StatusType.Title</span>
                     }
                 }
 
@@ -90,13 +81,14 @@
                     {
                         var connectionType = "";
                         if (maxLevel.ConnectionType != null) { connectionType = maxLevel.ConnectionType.Title; }
-                        <br /><span class="fa fa-bolt"></span> @maxLevel.Level.Title
-                        <br /><span class="fa fa-link"></span> @connectionType
+                        <span><i class="fa-solid fa-bolt" aria-hidden="true"></i> @maxLevel.Level.Title</span>
+                        @if (!string.IsNullOrEmpty(connectionType))
+                        {
+                            <span><i class="fa-solid fa-plug" aria-hidden="true"></i> @connectionType</span>
+                        }
                     }
                 }
-
             </div>
-
-        </div>
+        </article>
     }
 </div>

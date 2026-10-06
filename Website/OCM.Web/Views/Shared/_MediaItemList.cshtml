@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OCM.API.Common.Model.MediaItem>
+@model IEnumerable<OCM.API.Common.Model.MediaItem>
 @using Microsoft.AspNetCore.Http;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
@@ -6,20 +6,24 @@
     bool isAdministrator = bool.Parse(HttpContextAccessor.HttpContext.Session.GetString("IsAdministrator") ?? "false");
 }
 
-<div class="row">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3">
 
     @foreach (var item in Model.Where(i => i.IsEnabled && i.ItemURL!=null))
     {
         var imgUrl = string.IsNullOrWhiteSpace(item.ItemThumbnailURL) ? item.ItemURL : item.ItemThumbnailURL.Replace("thmb", "medi");
 
-        <div class="col-sm-6 col-md-3">
-            <div class="img-thumbnail">
+        <div class="col">
+            <figure class="card h-100 mb-0 ocm-media-card">
+                <button type="button" class="ocm-media-thumb" onclick="showLightBox('@item.ItemURL');" aria-label="View full size photo">
+                    <img class="card-img-top" src="@(imgUrl)" alt="@(string.IsNullOrWhiteSpace(item.Comment) ? "Location photo" : item.Comment)" loading="lazy" />
+                </button>
 
-                <img class="img-fluid" src="@(imgUrl)" onclick="showLightBox('@item.ItemURL');" />
-
-                <blockquote>
-                    <p>@Html.DisplayFor(modelItem => item.Comment)</p>
-                    <small>
+                <figcaption class="card-body">
+                    @if (!string.IsNullOrWhiteSpace(item.Comment))
+                    {
+                        <p class="mb-2">@Html.DisplayFor(modelItem => item.Comment)</p>
+                    }
+                    <div class="small text-body-secondary">
                         Uploaded by <cite>
                             @if (item.User != null)
                             {
@@ -30,32 +34,30 @@
                                 @Html.DisplayFor(m => item.User.Username)
                             }
                         </cite> on @item.DateCreated.ToString("yyyy-MM-dd")
-                    </small>
+                    </div>
                     @if (isAdministrator)
                     {
-                        <p>
-                            <a class="btn btn-danger" href="@Url.Action("MediaDelete", "Admin", new { id=item.ID})" target="_blank"><span class="glyphicon glyphicon-remove"></span> Delete (as Admin)</a>
-                        </p>
+                        <a class="btn btn-sm btn-outline-danger mt-3" href="@Url.Action("MediaDelete", "Admin", new { id=item.ID})" target="_blank"><i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>Delete (as Admin)</a>
                     }
-                </blockquote>
-            </div>
+                </figcaption>
+            </figure>
         </div>
     }
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modal-lightbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal-lightbox" tabindex="-1" aria-labelledby="modal-lightbox-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Image Details</h4>
+                <h2 class="modal-title fs-5" id="modal-lightbox-title">Image Details</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modal-lightbox-content">
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -64,7 +66,7 @@
 <script>
 
     function showLightBox(imgUrl) {
-        $("#modal-lightbox-content").html("<img src='" + imgUrl + "' class='img-fluid' />");
+        $("#modal-lightbox-content").html("<img src='" + imgUrl + "' class='img-fluid rounded' />");
         $('#modal-lightbox').modal("show");
     }
 </script>

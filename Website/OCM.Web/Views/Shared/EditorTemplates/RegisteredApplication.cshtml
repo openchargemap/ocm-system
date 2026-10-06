@@ -19,35 +19,35 @@
             @Html.HiddenFor(model => model.IsWriteEnabled)
         }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "col-form-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-form-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.WebsiteURL, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.WebsiteURL, htmlAttributes: new { @class = "col-form-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.WebsiteURL, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsPublicListing, htmlAttributes: new { @class = "control-label col-md-10" })
-            <div class="col-md-2">
-                <div class="checkbox">
-                    @Html.CheckBoxFor(model => model.IsPublicListing)
+        <div class="row mb-3">
+            <div class="offset-md-2 col-md-10">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.IsPublicListing, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.IsPublicListing, htmlAttributes: new { @class = "form-check-label" })
                     @Html.ValidationMessageFor(model => model.IsPublicListing, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -55,28 +55,28 @@
 
         @if (ViewBag.IsAdmin == true)
         {
-            <div class="form-group">
-                @Html.LabelFor(model => model.IsEnabled, htmlAttributes: new { @class = "control-label col-md-10" })
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        @Html.CheckBoxFor(model => model.IsEnabled)
+            <div class="row mb-3">
+                <div class="offset-md-2 col-md-10">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.IsEnabled, new { @class = "form-check-input" })
+                        @Html.LabelFor(model => model.IsEnabled, htmlAttributes: new { @class = "form-check-label" })
                         @Html.ValidationMessageFor(model => model.IsEnabled, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.IsWriteEnabled, htmlAttributes: new { @class = "control-label col-md-10" })
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        @Html.CheckBoxFor(model => model.IsWriteEnabled)
+            <div class="row mb-3">
+                <div class="offset-md-2 col-md-10">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.IsWriteEnabled, new { @class = "form-check-input" })
+                        @Html.LabelFor(model => model.IsWriteEnabled, htmlAttributes: new { @class = "form-check-label" })
                         @Html.ValidationMessageFor(model => model.IsWriteEnabled, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
         }
         <div class="form-actions">
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+            <div class="row mb-3">
+                <div class="offset-md-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </div>

@@ -2,5 +2,8 @@
     ViewBag.Title = "GeneralError";
 }
 
-<h2>Ooops. Something broke.</h2>
-<p>Sorry, something went wrong. Our system administrators have been notified of the fault. Please check back later to see if the problem is fixed or @Html.ActionLink("Contact Us","Contact","About").</p>
+<div class="ocm-empty-state">
+    <i class="fa-solid fa-plug-circle-exclamation" aria-hidden="true"></i>
+    <h1 class="h3">Oops. Something broke.</h1>
+    <p>Sorry, something went wrong. Our system administrators have been notified of the fault. Please check back later to see if the problem is fixed or @Html.ActionLink("contact us", "Contact", "About").</p>
+</div>

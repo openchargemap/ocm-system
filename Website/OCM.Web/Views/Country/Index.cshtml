@@ -6,34 +6,40 @@
     var countryStats = (List<OCM.API.Common.DataSummary.CountrySummary>)ViewBag.CountryStats;
 }
 
-<h2>All Countries</h2>
+<h1>All Countries</h1>
 
 <p>
     We have information on charging locations in the following countries, if your country is not listed we need you to <a href="@Url.Action("Add","POI")">add the locations</a> you know about.
 </p>
 @Html.Partial("~/Views/Widget/_GeoChartWidget.cshtml")
 <div>
-
     @foreach (var continent in continents)
     {
-        <h1>@continent.Value</h1>
+        var continentCountries = Model.Where(c => c.ContinentCode == continent.Key)
+            .Select(c => new { Country = c, Stat = countryStats.FirstOrDefault(cs => cs.ISOCode == c.ISOCode) })
+            .Where(c => c.Stat != null)
+            .ToList();
 
-        foreach (var item in Model.Where(c => c.ContinentCode == continent.Key))
-        {
-            var countryNameParam = item.Title.Replace(" ", "").ToLower();
-            var countryStat = countryStats.FirstOrDefault(c => c.ISOCode == item.ISOCode);
+        if (!continentCountries.Any()) { continue; }
 
-            if (countryStat != null)
+        <h2 class="h4 mt-4 mb-3">@continent.Value</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3">
+            @foreach (var entry in continentCountries)
             {
-                <div class="well well-sm" style="display:inline-block;margin:1em;">
-                    <h3><a id="@item.ISOCode"></a>@Html.DisplayFor(modelItem => item.Title)</h3>
-                    <ul>
-                        <li><a href="@Url.Action("Index", "POI", new { CountryIDs=item.ID, CountryName=countryNameParam})">@countryStat.StationCount charging stations in @countryStat.LocationCount locations</a></li>
-                        <li><a href="@Url.Content("~/country/" +countryNameParam +"/networks")">Networks</a></li>
-                    </ul>
+                var item = entry.Country;
+                var countryStat = entry.Stat;
+                var countryNameParam = item.Title.Replace(" ", "").ToLower();
+
+                <div class="col">
+                    <div class="card h-100 mb-0" id="@item.ISOCode">
+                        <div class="card-body">
+                            <h3 class="h6 mb-2">@Html.DisplayFor(modelItem => item.Title)</h3>
+                            <a class="d-block small mb-1" href="@Url.Action("Index", "POI", new { CountryIDs=item.ID, CountryName=countryNameParam})">@countryStat.StationCount charging stations in @countryStat.LocationCount locations</a>
+                            <a class="small" href="@Url.Content("~/country/" +countryNameParam +"/networks")">Networks</a>
+                        </div>
+                    </div>
                 </div>
             }
-
-        }
+        </div>
     }
 </div>

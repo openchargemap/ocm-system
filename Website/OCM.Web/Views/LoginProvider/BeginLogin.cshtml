@@ -3,12 +3,14 @@
     ViewBag.Title = "Login";
 }
 
-<h2>Open Charge Map - Sign In</h2>
-@if (TempData["LoginFailed"] != null && (bool)TempData["LoginFailed"] == true)
-{
-    <div class="alert alert-danger">
-        There was a problem Signing In. This can be caused by intermittent issues with your chosen identify provider or because the login was refused. Please try again in a moment.
-    </div>
-}
+<div class="ocm-auth">
+    <h1 class="h3 mb-1">Sign In</h1>
+    @if (TempData["LoginFailed"] != null && (bool)TempData["LoginFailed"] == true)
+    {
+        <div class="alert alert-danger mt-3">
+            There was a problem Signing In. This can be caused by intermittent issues with your chosen identify provider or because the login was refused. Please try again in a moment.
+        </div>
+    }
 
-@Html.EditorFor(m => m)
+    @Html.EditorFor(m => m)
+</div>
