@@ -95,27 +95,25 @@ namespace OCM.API.Common
             }
         }
 
-        private void GenerateImageThumbnails(string sourceFile, string destFile, int maxWidth)
+        /// <summary>
+        /// Decodes the source image once and writes a copy per output, each scaled down to at most its max width (never scaled up).
+        /// </summary>
+        private async Task GenerateImageThumbnailsAsync(string sourceFile, params (string destFile, int maxWidth)[] outputs)
         {
-
-            using (Image image = Image.Load(sourceFile))
+            using (Image image = await Image.LoadAsync(sourceFile))
             {
-                int width = image.Width;
-                int height = image.Height;
-                float ratio = 1;
+                // apply any EXIF orientation (e.g. phone photos) to the pixels so width checks use the displayed dimensions
+                image.Mutate(ctx => ctx.AutoOrient());
 
-                if (width > maxWidth)
+                foreach (var (destFile, maxWidth) in outputs)
                 {
-                    ratio = (float)image.Width / (float)maxWidth;
-                    width = maxWidth;
-                    height = (int)(height / ratio);
+                    // height of 0 preserves the aspect ratio
+                    using (Image output = image.Width > maxWidth ? image.Clone(ctx => ctx.Resize(maxWidth, 0)) : image.Clone(ctx => { }))
+                    {
+                        // encoder is chosen from the file extension
+                        await output.SaveAsync(destFile);
+                    }
                 }
-
-                // image is now in a file format agnositic structure in memory as a series of Rgba32 pixels
-                image.Mutate(ctx => ctx.Resize(width, height)); // resize the image in place and return it for chaining
-
-
-                image.Save(destFile); // based on the file extension pick an encoder then encode and write the data to disk
             }
         }
 
@@ -146,12 +144,11 @@ namespace OCM.API.Common
                 //attempt thumbnails
                 try
                 {
-                    //generate thumbnail max 100 wide
-                    GenerateImageThumbnails(sourceImageFile, Path.Join(tempFolder, thumbFileName), 100);
-                    //generate medium max 400 wide
-                    GenerateImageThumbnails(sourceImageFile, Path.Join(tempFolder, mediumFileName), 400);
-                    //resize original max 2048
-                    GenerateImageThumbnails(sourceImageFile, Path.Join(tempFolder, largeFileName), 2048);
+                    //generate thumbnail max 100 wide, medium max 400 wide, and resize original max 2048
+                    await GenerateImageThumbnailsAsync(sourceImageFile,
+                        (Path.Join(tempFolder, thumbFileName), 100),
+                        (Path.Join(tempFolder, mediumFileName), 400),
+                        (Path.Join(tempFolder, largeFileName), 2048));
                 }
                 catch (Exception)
                 {
@@ -169,7 +166,7 @@ namespace OCM.API.Common
                     {
                         if (urls[0] == null)
                         {
-                            urls[0] = await storage.UploadImageAsync(sourceImageFile, destFolderPrefix + largeFileName, metadataTags);
+                            urls[0] = await storage.UploadImageAsync(Path.Join(tempFolder, largeFileName), destFolderPrefix + largeFileName, metadataTags);
                         }
 
                         if (urls[1] == null)
@@ -193,8 +190,6 @@ namespace OCM.API.Common
 
                         Thread.Sleep(1000); //wait a bit then try again
                     }
-                    attemptCount++;
-
                 }
                 if (!success)
                 {
@@ -338,8 +333,7 @@ namespace OCM.API.Common
                 string thumbFilePath = Path.Combine(tempFolderPath, thumbFileName);
                 string mediumFilePath = Path.Combine(tempFolderPath, mediumFileName);
 
-                GenerateImageThumbnails(tempOriginalFile, thumbFilePath, 100);
-                GenerateImageThumbnails(tempOriginalFile, mediumFilePath, 400);
+                await GenerateImageThumbnailsAsync(tempOriginalFile, (thumbFilePath, 100), (mediumFilePath, 400));
 
                 // Upload to storage
                 var storage = new StorageManager();
