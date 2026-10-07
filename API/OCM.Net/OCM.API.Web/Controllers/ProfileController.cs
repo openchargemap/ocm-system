@@ -148,7 +148,7 @@ namespace OCM.API.Web.Standard.Controllers
                 switch (commentManager.DeleteOwnComment(user.ID, id))
                 {
                     case DeleteCommentResult.NotFound: return NotFound();
-                    case DeleteCommentResult.NotOwner: return Forbid();
+                    case DeleteCommentResult.NotOwner: return StatusCode(403, new { status = "error", description = "You can only delete your own comments." });
                     default: return NoContent();
                 }
             }
