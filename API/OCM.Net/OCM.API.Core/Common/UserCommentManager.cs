@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace OCM.API.Common
 {
+    public enum DeleteCommentResult
+    {
+        Deleted,
+        NotFound,
+        NotOwner
+    }
+
     public class UserCommentManager : ManagerBase
     {
         public List<OCM.API.Common.Model.UserComment> GetUserComments(int userId)
@@ -21,6 +28,20 @@ namespace OCM.API.Common
             return results;
         }
 
+        /// <summary>
+        /// Delete a comment only if it was submitted by the given user
+        /// </summary>
+        public DeleteCommentResult DeleteOwnComment(int userId, int commentId)
+        {
+            var comment = DataModel.UserComments.FirstOrDefault(c => c.Id == commentId);
+
+            if (comment == null) return DeleteCommentResult.NotFound;
+            if (comment.UserId != userId) return DeleteCommentResult.NotOwner;
+
+            DeleteComment(userId, commentId);
+            return DeleteCommentResult.Deleted;
+        }
+
         public void DeleteComment(int userId, int commentId)
         {
             var comment = DataModel.UserComments.FirstOrDefault(c => c.Id == commentId);
@@ -29,7 +50,8 @@ namespace OCM.API.Common
             {
                 var cpID = comment.ChargePointId;
                 DataModel.UserComments.Remove(comment);
-                DataModel.ChargePoints.Find(cpID).DateLastStatusUpdate = DateTime.UtcNow;
+                var chargePoint = DataModel.ChargePoints.Find(cpID);
+                if (chargePoint != null) chargePoint.DateLastStatusUpdate = DateTime.UtcNow;
                 DataModel.SaveChanges();
 
                 var user = new UserManager().GetUser(userId);

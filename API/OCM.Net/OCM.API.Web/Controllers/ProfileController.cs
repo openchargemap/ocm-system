@@ -128,6 +128,32 @@ namespace OCM.API.Web.Standard.Controllers
             }
         }
 
+        [HttpDelete("/v4/profile/comment/{id:int}")]
+        public IActionResult DeleteComment(int id)
+        {
+            var apiKey = Request.Query["apikey"].FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(apiKey))
+                apiKey = Request.Headers["X-API-Key"].FirstOrDefault();
+
+            // Resolve authenticated user using the standard flow (apiKey → JWT → legacy session)
+            var user = new InputProviderBase().GetUserFromAPICall(HttpContext, apiKey);
+            if (user == null) return Unauthorized();
+            if (user.IsCurrentSessionTokenValid == false) return Unauthorized();
+
+            //users blocked from editing by an administrator cannot modify content
+            if (UserManager.IsUserEditingBlocked(user)) return StatusCode(403, new { status = "error", description = UserManager.EditingBlockedMessage });
+
+            using (var commentManager = new UserCommentManager())
+            {
+                switch (commentManager.DeleteOwnComment(user.ID, id))
+                {
+                    case DeleteCommentResult.NotFound: return NotFound();
+                    case DeleteCommentResult.NotOwner: return StatusCode(403, new { status = "error", description = "You can only delete your own comments." });
+                    default: return NoContent();
+                }
+            }
+        }
+
         [HttpDelete("/v4/profile/mediaitem/{id:int}")]
         public async Task<IActionResult> DeleteMediaItem(int id)
         {
