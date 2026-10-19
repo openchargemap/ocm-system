@@ -237,11 +237,18 @@ namespace OCM.API.Common
             {
                 return Model.Extensions.User.FromDataModel(reg.User);
             }
-            else
+
+            // otherwise, the primary key of a write enabled registered application acts on behalf of the app owner
+            var key = apiKey.ToLower();
+            var app = dataModel.RegisteredApplications.Include(a => a.User).FirstOrDefault(a => a.PrimaryApikey == key);
+
+            if (app != null && app.IsEnabled && app.IsWriteEnabled && app.User != null)
             {
-                // api key invalid
-                return null;
+                return Model.Extensions.User.FromDataModel(app.User);
             }
+
+            // api key invalid or not write enabled
+            return null;
         }
         public void AddReputationPoints(int userId, int amount)
         {
