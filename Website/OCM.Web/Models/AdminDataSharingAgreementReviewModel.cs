@@ -40,6 +40,16 @@ namespace OCM.Web.Models
         /// Why the scheduled import queue will or will not attempt this import automatically.
         /// </summary>
         public ImportEligibility ImportEligibility { get; set; }
+
+        /// <summary>
+        /// Existing data providers which could be the same organisation as this agreement.
+        /// </summary>
+        public List<OCM.API.Common.DataProviderMatch> PotentialProviderMatches { get; set; } = new List<OCM.API.Common.DataProviderMatch>();
+
+        /// <summary>
+        /// Operators from the feed which still have to be added to OCM and mapped.
+        /// </summary>
+        public List<string> NewOperatorsRequired { get; set; } = new List<string>();
     }
 
     public class AdminDataSharingAgreementEditModel
@@ -79,6 +89,12 @@ namespace OCM.Web.Models
 
         [Required]
         public string ProviderName { get; set; }
+
+        /// <summary>
+        /// Public title of the data provider, which can differ from the legal company name.
+        /// </summary>
+        [Required]
+        public string DataProviderTitle { get; set; }
 
         public int? DataProviderStatusTypeId { get; set; }
 

@@ -129,11 +129,6 @@ namespace OCM.Web.Models
         /// Available OCM operators for the mapping dropdown
         /// </summary>
         public List<OCM.API.Common.Model.OperatorInfo> AvailableOperators { get; set; } = new List<OCM.API.Common.Model.OperatorInfo>();
-
-        /// <summary>
-        /// Default operator ID if there is only one operator
-        /// </summary>
-        public int? DefaultOperatorId { get; set; }
     }
 
     /// <summary>

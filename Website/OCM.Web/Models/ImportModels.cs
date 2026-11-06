@@ -49,6 +49,11 @@ namespace OCM.Web.Models
         public List<ImportPreviewItemViewModel> UpdatedItems { get; set; } = new List<ImportPreviewItemViewModel>();
         public List<ImportPreviewItemViewModel> DelistedItems { get; set; } = new List<ImportPreviewItemViewModel>();
         public List<ImportPreviewItemViewModel> LowDataQualityItems { get; set; } = new List<ImportPreviewItemViewModel>();
+
+        /// <summary>
+        /// Operators in the feed with no operator mapping, and how many locations each one has.
+        /// </summary>
+        public Dictionary<string, int> UnmappedOperators { get; set; } = new Dictionary<string, int>();
     }
 
     /// <summary>

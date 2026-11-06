@@ -99,6 +99,32 @@ namespace OCM.Import.Providers.OCPI
         /// If true, this provider configuration is enabled for import
         /// </summary>
         public bool IsEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Operators in the feed which had no existing OCM operator when it was submitted, so have to be added
+        /// and mapped by an admin. Locations for these operators have no operator until they are mapped.
+        /// </summary>
+        public List<string> NewOperatorsRequired { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Keeps the settings which are not part of the admin review form when a reviewed configuration replaces
+        /// the stored one, so saving a review does not reset them. An operator which has since been mapped is no
+        /// longer outstanding.
+        /// </summary>
+        public void KeepSettingsNotReviewed(OCPIProviderConfiguration previous)
+        {
+            if (previous == null)
+            {
+                return;
+            }
+
+            AppendAddressToTitle = previous.AppendAddressToTitle;
+            IgnoredLocationTitles = previous.IgnoredLocationTitles ?? new List<string>();
+
+            var mappedOperators = new HashSet<string>((IEnumerable<string>)OperatorMappings?.Keys ?? new List<string>(), System.StringComparer.OrdinalIgnoreCase);
+            NewOperatorsRequired = (previous.NewOperatorsRequired ?? new List<string>())
+                .FindAll(name => !mappedOperators.Contains(name));
+        }
     }
 
     /// <summary>

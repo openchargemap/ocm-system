@@ -150,14 +150,25 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Data Provider Status</label>
-                        @Html.DropDownListFor(
-                            m => m.Review.DataProviderStatusTypeId,
-                            new SelectList(Model.AvailableDataProviderStatuses, "ID", "Title", Model.Review.DataProviderStatusTypeId),
-                            "Select status",
-                            new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Review.DataProviderStatusTypeId)
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Data Provider Title</label>
+                                @Html.TextBoxFor(m => m.Review.DataProviderTitle, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.DataProviderTitle)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Data Provider Status</label>
+                                @Html.DropDownListFor(
+                                    m => m.Review.DataProviderStatusTypeId,
+                                    new SelectList(Model.AvailableDataProviderStatuses, "ID", "Title", Model.Review.DataProviderStatusTypeId),
+                                    "Select status",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Review.DataProviderStatusTypeId)
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Locations Endpoint URL</label>
@@ -232,7 +243,7 @@
                                 formnovalidate="formnovalidate"
                                 name="id"
                                 value="@Model.Agreement.ID"
-                                onclick="return confirm('Delete this data sharing agreement? Linked data providers will be unlinked, but not deleted.');">
+                                onclick="return confirm('Delete this data sharing agreement? A linked data provider which has never been used is deleted too. One with imported data is unlinked and kept.');">
                             Delete Agreement
                         </button>
                     </div>
@@ -282,8 +293,62 @@
                 {
                     <div class="alert alert-warning">A linked data provider will be created when the review is saved.</div>
                 }
+
+                @if (Model.PotentialProviderMatches.Any())
+                {
+                    <hr />
+                    <p class="mb-2"><strong>This may already be an existing data provider</strong></p>
+                    <ul class="list-unstyled mb-0">
+                        @foreach (var match in Model.PotentialProviderMatches)
+                        {
+                            <li class="mb-2">
+                                @match.Title (#@match.DataProviderId) <span class="text-muted">@match.Reason</span>
+
+                                @if (match.CanLink)
+                                {
+                                    using (Html.BeginForm("LinkDataSharingAgreementProvider", "Admin", new { id = Model.Agreement.ID, dataProviderId = match.DataProviderId }, FormMethod.Post, null, new { style = "display:inline-block; margin-left:5px;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-primary"
+                                                onclick="return confirm('Use this existing data provider for this agreement? A provider created only for this submission is deleted, and the import has to be approved again.');">
+                                            Use this provider
+                                        </button>
+                                    }
+                                }
+                                else if (match.LinkedAgreementId.HasValue)
+                                {
+                                    <div class="small text-muted">Already linked to @Html.ActionLink($"agreement #{match.LinkedAgreementId}", "ReviewDataSharingAgreement", "Admin", new { id = match.LinkedAgreementId }, null).</div>
+                                }
+                                else
+                                {
+                                    <div class="small text-muted">Has its own import configuration, so it cannot be linked here.</div>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
             </div>
         </div>
+
+        @if (Model.NewOperatorsRequired.Any())
+        {
+            <div class="card mb-3">
+                <div class="card-header"><strong>New Operators Required</strong></div>
+                <div class="card-body">
+                    <p>The submitter could not map these operators. Until each one is mapped, its locations import with the default operator, or with no operator when there is no default.</p>
+                    <ul>
+                        @foreach (var name in Model.NewOperatorsRequired)
+                        {
+                            <li>@name</li>
+                        }
+                    </ul>
+                    <p class="form-text mb-0">
+                        @Html.ActionLink("Add an operator", "EditOperator", "Admin", null, new { target = "_blank", rel = "noopener" }), then add it to Operator Mappings and save.
+                    </p>
+                </div>
+            </div>
+        }
 
         <div class="card mb-3">
             <div class="card-header"><strong>Automatic Import</strong></div>
@@ -542,6 +607,19 @@
                                     <li>Low quality: @currentImportJob.PreviewSummary.LowDataQualityCount</li>
                                     <li>Delisted: @currentImportJob.PreviewSummary.DelistedCount</li>
                                 </ul>
+
+                                @if (currentImportJob.PreviewSummary.UnmappedOperators.Any())
+                                {
+                                    <div class="alert alert-warning">
+                                        <strong>Operators with no mapping</strong>
+                                        <ul class="mb-0">
+                                            @foreach (var unmapped in currentImportJob.PreviewSummary.UnmappedOperators.OrderByDescending(o => o.Value))
+                                            {
+                                                <li>@unmapped.Key (@unmapped.Value location(s))</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
 
                                 @if (currentImportJob.PreviewSummary.AddedItems.Any())
                                 {

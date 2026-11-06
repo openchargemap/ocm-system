@@ -224,6 +224,45 @@ namespace OCM.API.Common
         }
 
         /// <summary>
+        /// Finds the existing operator a name from a data feed most likely refers to, to preselect as its mapping:
+        /// an exact title, then the same name with the country code suffix, then a single operator with the same
+        /// distinctive words. Operators listed for another country are never chosen, as an international network
+        /// has one operator per country. Returns null when there is no confident match.
+        /// </summary>
+        public static OperatorInfo FindBestMatch(IEnumerable<OperatorInfo> operators, string operatorName, string countryIsoCode)
+        {
+            if (operators == null || string.IsNullOrWhiteSpace(operatorName)) return null;
+
+            var isoCode = (countryIsoCode ?? string.Empty).Trim().ToUpperInvariant();
+            var candidates = operators.Where(o => o != null && o.ID > 1 && !string.IsNullOrWhiteSpace(o.Title)).ToList();
+
+            var exactTitle = NormalizeTitle(operatorName);
+            var exactMatch = candidates.FirstOrDefault(o => NormalizeTitle(o.Title) == exactTitle);
+            if (exactMatch != null) return exactMatch;
+
+            if (isoCode.Length > 0)
+            {
+                var countryTitle = NormalizeTitle(RemoveCountryCode(operatorName) + " (" + isoCode + ")");
+                var countryMatch = candidates.FirstOrDefault(o => NormalizeTitle(o.Title) == countryTitle);
+                if (countryMatch != null) return countryMatch;
+            }
+
+            var comparisonName = GetComparisonName(operatorName);
+            if (comparisonName.Length == 0) return null;
+
+            var sameName = candidates
+                .Where(o => GetComparisonName(o.Title) == comparisonName)
+                .Where(o =>
+                {
+                    var candidateCountry = GetCountryCodeFromTitle(o.Title);
+                    return candidateCountry == null || candidateCountry == isoCode;
+                })
+                .ToList();
+
+            return sameName.Count == 1 ? sameName[0] : null;
+        }
+
+        /// <summary>
         /// Adds a new operator for a country, adding the country code to the title and enforcing the duplicate checks.
         /// Existing operators are never changed here: edits go through <see cref="UpdateOperatorInfo"/>.
         /// </summary>

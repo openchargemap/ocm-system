@@ -135,6 +135,7 @@ namespace OCM.MVC.Controllers
                 SubmittedCredentials = agreement.Credentials,
                 AgreementComments = agreement.Comments,
                 ProviderName = providerName,
+                DataProviderTitle = dataProvider?.Title ?? agreement.CompanyName,
                 DataProviderStatusTypeId = dataProvider?.DataProviderStatusType?.ID,
                 OutputNamePrefix = existingConfig?.OutputNamePrefix,
                 DataProviderOcpiId = dataProvider?.ID ?? 0,
@@ -142,7 +143,8 @@ namespace OCM.MVC.Controllers
                 AuthHeaderKey = existingConfig?.AuthHeaderKey ?? validationPreview?.ResolvedAuthHeaderKey,
                 AuthHeaderValuePrefix = existingConfig?.AuthHeaderValuePrefix ?? validationPreview?.ResolvedAuthHeaderValuePrefix ?? "Token ",
                 CredentialKey = existingConfig?.CredentialKey,
-                DefaultOperatorId = existingConfig?.DefaultOperatorId,
+                // submissions used to store 0 for a new operator, which is not a valid operator to save
+                DefaultOperatorId = existingConfig?.DefaultOperatorId > 0 ? existingConfig.DefaultOperatorId : null,
                 IsEnabled = existingConfig?.IsEnabled ?? true,
                 IsAutoRefreshed = existingConfig?.IsAutoRefreshed ?? true,
                 IsProductionReady = existingConfig?.IsProductionReady ?? false,
@@ -156,8 +158,15 @@ namespace OCM.MVC.Controllers
 
         private AdminDataSharingAgreementReviewModel BuildReviewModel(AgreementModel agreement, ProviderModel dataProvider, string importConfig, OCPIValidationResult validationPreview, AdminDataSharingAgreementEditModel review = null, ImportJobViewModel currentImportJob = null)
         {
+            using var dataProviderManager = new DataProviderManager();
+
             return new AdminDataSharingAgreementReviewModel
             {
+                PotentialProviderMatches = dataProviderManager.FindPotentialMatches(
+                    new[] { agreement.CompanyName, dataProvider?.Title },
+                    agreement.WebsiteURL,
+                    dataProvider?.ID),
+                NewOperatorsRequired = GetStoredProviderConfiguration(importConfig)?.NewOperatorsRequired ?? new List<string>(),
                 Agreement = agreement,
                 DataProvider = dataProvider,
                 ImportConfig = importConfig,
@@ -241,9 +250,9 @@ namespace OCM.MVC.Controllers
                 .ToList();
         }
 
-        private static OCPIProviderConfiguration BuildProviderConfiguration(AdminDataSharingAgreementEditModel review, int dataProviderId)
+        private static OCPIProviderConfiguration BuildProviderConfiguration(AdminDataSharingAgreementEditModel review, int dataProviderId, OCPIProviderConfiguration existingConfig)
         {
-            return new OCPIProviderConfiguration
+            var providerConfig = new OCPIProviderConfiguration
             {
                 ProviderName = review.ProviderName?.Trim(),
                 OutputNamePrefix = string.IsNullOrWhiteSpace(review.OutputNamePrefix) ? review.ProviderName?.Trim() : review.OutputNamePrefix.Trim(),
@@ -261,6 +270,10 @@ namespace OCM.MVC.Controllers
                 ExcludedLocationIds = ParseExcludedLocationIds(review.ExcludedLocationIdsText),
                 IsEnabled = review.IsEnabled
             };
+
+            providerConfig.KeepSettingsNotReviewed(existingConfig);
+
+            return providerConfig;
         }
 
         /// <summary>
@@ -630,10 +643,9 @@ namespace OCM.MVC.Controllers
                 if (dataProvider == null)
                 {
                     dataProvider = dataProviderManager.CreateOCPIDataProvider(
-                        title: review.CompanyName,
+                        title: review.DataProviderTitle,
                         websiteUrl: review.WebsiteUrl,
                         license: agreement.DataLicense,
-                        isOpenDataLicensed: true,
                         ocpiConfigJson: string.Empty,
                         submittedByUserId: (int)UserID,
                         dataSharingAgreementId: review.AgreementId);
@@ -642,15 +654,15 @@ namespace OCM.MVC.Controllers
                 review.DataProviderId = dataProvider.ID;
                 review.DataProviderOcpiId = dataProvider.ID;
 
-                var providerConfig = BuildProviderConfiguration(review, dataProvider.ID);
+                var existingConfig = GetStoredProviderConfiguration(dataProviderManager.GetImportConfigByAgreementId(review.AgreementId));
+                var providerConfig = BuildProviderConfiguration(review, dataProvider.ID, existingConfig);
                 var importConfig = JsonConvert.SerializeObject(providerConfig, Formatting.Indented);
 
                 dataProvider = dataProviderManager.UpdateOCPIDataProvider(
                     dataProviderId: dataProvider.ID,
-                    title: review.CompanyName,
+                    title: review.DataProviderTitle,
                     websiteUrl: review.WebsiteUrl,
                     license: agreement.DataLicense,
-                    isOpenDataLicensed: true,
                     ocpiConfigJson: importConfig,
                     dataProviderStatusTypeId: review.DataProviderStatusTypeId,
                     updatedByUserId: (int)UserID);
@@ -695,6 +707,19 @@ namespace OCM.MVC.Controllers
                 return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
             }
 
+            // submissions used to leave these as 0, and the linked provider is the only one this can target
+            var isConfigRepaired = storedConfig.DataProviderId != dataProvider.ID || storedConfig.DefaultOperatorId <= 0;
+            storedConfig.DataProviderId = dataProvider.ID;
+            storedConfig.DefaultOperatorId = storedConfig.DefaultOperatorId > 0 ? storedConfig.DefaultOperatorId : null;
+
+            // never approve a config the import job would refuse to load
+            var configErrors = OCPIProviderLoader.GetConfigurationErrors(storedConfig);
+            if (configErrors.Any())
+            {
+                TempData["ErrorMessage"] = $"Import not approved. {string.Join(" ", configErrors)}";
+                return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
+            }
+
             var provisioning = await _credentialService.ProvisionCredentialAsync(new OCPICredentialProvisioningRequest
             {
                 AgreementId = id,
@@ -716,7 +741,7 @@ namespace OCM.MVC.Controllers
 
             // a provisioned credential may have been renamed, and one which turned out not to be required
             // comes back as null, which must clear the stored name rather than leave a dangling secret
-            if (!string.Equals(storedConfig.CredentialKey, provisioning.CredentialKey, StringComparison.Ordinal))
+            if (isConfigRepaired || !string.Equals(storedConfig.CredentialKey, provisioning.CredentialKey, StringComparison.Ordinal))
             {
                 storedConfig.CredentialKey = provisioning.CredentialKey;
                 dataProviderManager.UpdateImportConfig(dataProvider.ID, JsonConvert.SerializeObject(storedConfig, Formatting.Indented));
@@ -732,6 +757,40 @@ namespace OCM.MVC.Controllers
             dataProviderManager.SetImportApprovalStatus(dataProvider.ID, true);
 
             TempData["StatusMessage"] = $"Import approved. {provisioning.Summary}";
+
+            return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
+        }
+
+        /// <summary>
+        /// Uses an existing data provider for this agreement in place of the one created for the submission.
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LinkDataSharingAgreementProvider(int id, int dataProviderId)
+        {
+            using var dataProviderManager = new DataProviderManager();
+
+            var storedConfig = GetStoredProviderConfiguration(dataProviderManager.GetImportConfigByAgreementId(id));
+            if (storedConfig != null)
+            {
+                storedConfig.DataProviderId = dataProviderId;
+            }
+
+            try
+            {
+                var dataProvider = dataProviderManager.LinkAgreementToProvider(
+                    id,
+                    dataProviderId,
+                    storedConfig == null ? null : JsonConvert.SerializeObject(storedConfig, Formatting.Indented),
+                    (int)UserID);
+
+                TempData["StatusMessage"] = $"Agreement linked to {dataProvider.Title} (#{dataProvider.ID}). Review and approve the import again.";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
 
             return RedirectToAction(nameof(ReviewDataSharingAgreement), new { id });
         }

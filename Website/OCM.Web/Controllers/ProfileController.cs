@@ -379,13 +379,16 @@ namespace OCM.MVC.Controllers
             // Fetch available operators for the mapping dropdown
             var operators = new OperatorInfoManager().GetOperators();
 
+            string countryIsoCode;
+            using (var refDataManager = new ReferenceDataManager())
+            {
+                countryIsoCode = refDataManager.GetCountries(false).FirstOrDefault(c => c.ID == model.CountryID)?.ISOCode;
+            }
+
             // Try to auto-match discovered operators to existing OCM operators
             foreach (var discovered in validationResult.DiscoveredOperators)
             {
-                var match = operators.FirstOrDefault(o =>
-                    o.Title != null &&
-                    (o.Title.Equals(discovered.Name, StringComparison.OrdinalIgnoreCase)
-                    || o.Title.Replace(" ", "").Equals(discovered.Name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)));
+                var match = OperatorInfoManager.FindBestMatch(operators, discovered.Name, countryIsoCode);
 
                 if (match != null)
                 {
@@ -438,12 +441,19 @@ namespace OCM.MVC.Controllers
                 return RedirectToAction("SubmitOCPI");
             }
 
+            var operatorMappings = model.OperatorMappings ?? new Dictionary<string, int>();
+
             var confirmModel = new OCPIConfirmModel
             {
                 SubmitDetails = submitDetails,
                 ValidationResult = validationResult,
-                OperatorMappings = model.OperatorMappings ?? new Dictionary<string, int>(),
-                DefaultOperatorId = model.DefaultOperatorId
+                OperatorMappings = operatorMappings,
+
+                // A feed with one operator defaults to it. Zero means a new operator is required, so there is
+                // nothing to default to until an admin has added one.
+                DefaultOperatorId = operatorMappings.Count == 1 && operatorMappings.Values.Single() > 0
+                    ? operatorMappings.Values.Single()
+                    : null
             };
 
             // Persist for the final submit
@@ -512,7 +522,7 @@ namespace OCM.MVC.Controllers
                 ProviderName = submitDetails.ProviderName.ToLower().Replace(" ", "-"),
                 OutputNamePrefix = submitDetails.ProviderName.ToLower().Replace(" ", "-"),
                 Description = $"User-submitted OCPI feed: {submitDetails.ProviderName}",
-                DataProviderId = 0, // will be updated after DataProvider is created
+                DataProviderId = 0, // replaced below once the DataProvider has been created
                 LocationsEndpointUrl = submitDetails.LocationsEndpointUrl,
                 AuthHeaderKey = submitDetails.AuthorizationHeaderKey,
                 AuthHeaderValuePrefix = submitDetails.AuthorizationHeaderValuePrefix,
@@ -565,11 +575,15 @@ namespace OCM.MVC.Controllers
                     title: submitDetails.ProviderName,
                     websiteUrl: submitDetails.WebsiteUrl,
                     license: "Licensed under CC0 by data sharing agreement",
-                    isOpenDataLicensed: true,
                     ocpiConfigJson: configJson,
                     submittedByUserId: (int)UserID,
                     dataSharingAgreementId: agreement.ID
                 );
+
+                // the config can only name its provider once the provider exists, and it cannot be imported without it
+                var storedConfig = Newtonsoft.Json.Linq.JObject.FromObject(providerConfig);
+                storedConfig["DataProviderId"] = dataProvider.ID;
+                dpManager.UpdateImportConfig(dataProvider.ID, storedConfig.ToString(Formatting.Indented));
 
                 return View("OCPISubmissionResult", new OCPISubmissionResultModel
                 {

@@ -88,19 +88,31 @@ namespace OCM.API.Common
                 return false;
             }
 
+            // a provider which was only ever created for this submission goes with it, otherwise a rejected
+            // submission would stay listed forever. Anything with imported data is kept and unlinked.
+            var removedProviders = new List<string>();
             var linkedProviders = dataModel.DataProviders.Where(dp => dp.DataSharingAgreementId == id).ToList();
             foreach (var provider in linkedProviders)
             {
-                provider.DataSharingAgreementId = null;
+                if (DataProviderManager.IsUnused(dataModel, provider))
+                {
+                    removedProviders.Add($"{provider.Title} (#{provider.Id})");
+                    dataModel.DataProviders.Remove(provider);
+                }
+                else
+                {
+                    provider.DataSharingAgreementId = null;
+                }
             }
 
             dataModel.DataSharingAgreements.Remove(item);
             dataModel.SaveChanges();
 
             var user = new UserManager().GetUser(deletedByUserId);
+            var removedSummary = removedProviders.Count > 0 ? $" and its unused data provider {string.Join(", ", removedProviders)}" : string.Empty;
             AuditLogManager.Log(user, AuditEventType.DeletedItem,
                 "{EntityType:\"DataSharingAgreement\",EntityID:" + id + "}",
-                $"Deleted data sharing agreement for {item.CompanyName}");
+                $"Deleted data sharing agreement for {item.CompanyName}{removedSummary}");
 
             return true;
         }

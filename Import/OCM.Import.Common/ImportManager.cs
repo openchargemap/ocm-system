@@ -82,6 +82,11 @@ namespace OCM.Import
 
         public List<ChargePoint> Duplicates { get; set; }
 
+        /// <summary>
+        /// Operators in the source data with no operator mapping, and how many locations each one has.
+        /// </summary>
+        public Dictionary<string, int> UnmappedOperators { get; set; }
+
         public string Log { get; set; }
 
         public bool IsSuccess { get; set; } = false;
@@ -96,6 +101,7 @@ namespace OCM.Import
             LowDataQuality = new List<ChargePoint>();
             Delisted = new List<ChargePoint>();
             Duplicates = new List<ChargePoint>();
+            UnmappedOperators = new Dictionary<string, int>();
         }
     }
 
@@ -1089,6 +1095,21 @@ namespace OCM.Import
 
                 var list = provider.Process(coreRefData);
                 resultReport.SourceItemCount = list.Count;
+
+                if (provider is ImportProvider_OCPI ocpiProvider)
+                {
+                    // these locations still import, so without this nothing shows they are missing an operator
+                    resultReport.UnmappedOperators = ocpiProvider.GetPostProcessingUnmappedOperators() ?? new Dictionary<string, int>();
+
+                    var outcome = ocpiProvider.DefaultOperatorID.HasValue
+                        ? $"using default operator #{ocpiProvider.DefaultOperatorID}"
+                        : "with no operator";
+
+                    foreach (var unmapped in resultReport.UnmappedOperators.OrderByDescending(o => o.Value))
+                    {
+                        Log($"Unmapped operator '{unmapped.Key}': {unmapped.Value} location(s) will import {outcome}.");
+                    }
+                }
 
                 if (settings.IsPreviewMode)
                 {

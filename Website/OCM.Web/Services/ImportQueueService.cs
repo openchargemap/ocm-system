@@ -241,6 +241,17 @@ namespace OCM.Web.Services
                     : string.Join(" ", configErrors)
             });
 
+            if (config.NewOperatorsRequired?.Any() == true)
+            {
+                eligibility.Checks.Add(new ImportEligibilityCheck
+                {
+                    Title = "New operators required",
+                    IsSatisfied = false,
+                    IsBlocking = false,
+                    Detail = $"Not mapped to an operator yet: {string.Join(", ", config.NewOperatorsRequired)}."
+                });
+            }
+
             // scheduled website imports create providers with enabledOnly false, so IsEnabled does not
             // stop an import here even though the standalone import worker would skip it
             if (!config.IsEnabled)
@@ -716,7 +727,8 @@ namespace OCM.Web.Services
                 AddedItems = CreatePreviewItems(report.Added),
                 UpdatedItems = CreatePreviewItems(report.Updated),
                 DelistedItems = CreatePreviewItems(report.Delisted),
-                LowDataQualityItems = CreatePreviewItems(report.LowDataQuality)
+                LowDataQualityItems = CreatePreviewItems(report.LowDataQuality),
+                UnmappedOperators = report.UnmappedOperators ?? new Dictionary<string, int>()
             };
         }
 

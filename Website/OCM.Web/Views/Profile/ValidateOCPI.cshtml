@@ -131,9 +131,7 @@ else
                                     <option value="0">(New Operator Required)</option>
                                     @foreach (var ocmOp in Model.AvailableOperators)
                                     {
-                                        var selected = op.MappedOperatorId == ocmOp.ID ? "selected" : "";
-                                        <option value="@ocmOp.ID"
-                                               >@ocmOp.Title (ID: @ocmOp.ID)</option>
+                                        <option value="@ocmOp.ID" selected="@(op.MappedOperatorId == ocmOp.ID)">@ocmOp.Title (ID: @ocmOp.ID)</option>
                                     }
                                 </select>
                             </td>
@@ -153,8 +151,7 @@ else
         {
             <div class="mb-3">
                 <label class="form-label">Default Operator</label>
-                <p class="form-text text-muted">Since there is only one operator, it will be set as the default.</p>
-                <input type="hidden" name="DefaultOperatorId" value="@(Model.ValidationResult.DiscoveredOperators.First().MappedOperatorId ?? 0)" />
+                <p class="form-text text-muted">Since there is only one operator, the operator you map it to will be set as the default.</p>
             </div>
         }
 
