@@ -99,6 +99,19 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // legacy links use a /site/ prefix (e.g. /site/poi/details/{id}), permanently redirect them to the unprefixed path
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.StartsWithSegments("/site", out var remainingPath))
+                {
+                    var target = context.Request.PathBase + (remainingPath.HasValue ? remainingPath : new PathString("/")) + context.Request.QueryString;
+                    context.Response.Redirect(target, permanent: true);
+                    return;
+                }
+
+                await next();
+            });
+
             app.UseSession();
 
             app.UseStatusCodePagesWithRedirects("~/Home/Error?code={0}");
