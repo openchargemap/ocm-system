@@ -757,6 +757,31 @@ a.ocm-stat:hover {
     white-space: nowrap;
 }
 
+/* keeps a wide table's last column in view while the rest scrolls beneath it */
+.table-sticky-actions > thead > tr > th:last-child,
+.table-sticky-actions > tbody > tr > td:last-child {
+    position: sticky;
+    right: 0;
+    background-color: var(--bs-body-bg);
+}
+
+/* a pseudo-element because collapsed table borders stay behind when a sticky cell moves */
+.table-sticky-actions > thead > tr > th:last-child::before,
+.table-sticky-actions > tbody > tr > td:last-child::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid var(--bs-border-color);
+}
+
+/* lets long unbroken text such as a URL wrap, without squeezing the column to a few characters */
+.table-cell-long-text {
+    min-width: 10rem;
+    overflow-wrap: anywhere;
+}
+
 /* forms */
 
 .form-label,
