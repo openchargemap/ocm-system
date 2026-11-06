@@ -1,0 +1,259 @@
+{
+  "_langTitle": "Catalan/Català",
+  "_langCode": "ca",
+  "ocm": {
+    "general": {
+      "shortDescription": "el registre públic global de punts de recàrrega de vehicles elèctrics",
+      "linkWebApp": "Cerca punts amb la nostra aplicació web",
+      "linkBrowsePOI": "Explora tots els punts",
+      "browsePOI": "Explora punts de recàrrega",
+      "loadingProgress": "S'està carregant...",
+      "addLocation": "Afegeix-hi un punt",
+      "addItem": "Afegeix",
+      "favourites": "Preferits",
+      "settings": "Configuració",
+      "about": "Quant a",
+      "signIn": "Inicia la sessió",
+      "signOut": "Tanca la sessió"
+    },
+    "details": {
+      "sectionTitle": "Punt de recàrrega",
+      "location": {
+        "sectionTitle": "Detalls del punt",
+        "title": "Títol del punt",
+        "address": "Adreça més propera",
+        "addressLine1": "Línia 1 de l'adreça",
+        "addressLine2": "Línia 2 de l'adreça",
+        "town": "Municipi",
+        "stateOrProvince": "Estat/Província",
+        "postcode": "Codi postal",
+        "country": "País",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "contactTelephone1": "Telèfon de contacte principal",
+        "contactTelephone2": "Telèfon de contacte secundari",
+        "contactEmail": "Adreça electrònica de contacte",
+        "map": "Mapa",
+        "streetView": "Vista de carrer",
+        "addressRelatedURL": "Lloc web"
+      },
+      "generalComments": "Informació general",
+      "accessComments": "Informació d'accés",
+      "advancedDetails": "Informació addicional",
+      "numberOfPoints": "Nombre d'estacions o places",
+      "usageType": "Ús",
+      "usageCost": "Cost d'ús",
+      "operationalStatus": "Estat operatiu",
+      "datePlanned": "Data prevista",
+      "dateLastConfirmed": "Data de la darrera confirmació",
+      "lastUpdated": "Darrera actualització",
+      "refNumber": "Ref. OpenChargeMap",
+      "dataQualityLevel": "Nivell de qualitat de les dades",
+      "importedDataNotice": "Nota: aquestes dades s'obtenen automàticament, els canvis s'han de comunicar directament al proveïdor de dades.",
+      "submissionStatus": "Estat de l'enviament",
+      "placesNearby": {
+        "sectionTitle": "Llocs propers"
+      },
+      "mediaItems": {
+        "sectionTitle": "Fotos",
+        "addPrompt": "Puja fotos per a aquest punt"
+      },
+      "metadataValues": {
+        "sectionTitle": "Etiquetes addicionals"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Comentaris i valoracions",
+        "zeroComments": "No hi ha comentaris d'usuaris enviats",
+        "addPrompt": "Afegeix un comentari o una actualització ràpida d'estat"
+      },
+      "equipment": {
+        "sectionTitle": "Detalls de l'equipament",
+        "connectionType": "Tipus de connexió",
+        "powerKW": "Potència màxima (KW)",
+        "powerLevel": "Nivell",
+        "quantity": "Quantitat",
+        "supplyType": "Tipus de subministrament",
+        "voltage": "Voltatge",
+        "current": "Corrent màxim",
+        "comment": "Comentaris",
+        "reference": "Referència"
+      },
+      "dataProvider": {
+        "sectionTitle": "Proveïdor de dades",
+        "website": "Lloc web",
+        "providersReference": "Ref. del proveïdor"
+      },
+      "operator": {
+        "sectionTitle": "Xarxa o operador",
+        "operatorsReference": "Ref. de l'operador"
+      }
+    },
+    "search": {
+      "sectionTitle": "Cerca",
+      "locationInput": "Ubicació",
+      "useMyLocation": "Cerca prop de mi",
+      "distance": "Distància",
+      "chargingLevels": "Nivell de recàrrega",
+      "minPowerKW": "Potència min. (kW)",
+      "connectionTypes": "Tipus de connexions",
+      "networkOperators": "Xarxa o operador",
+      "countries": "País",
+      "submissionStatus": "Estat de l'enviament",
+      "usageTypes": "Ús",
+      "operationalStatusTypes": "Estat",
+      "performSearch": "Cerca",
+      "progress": "S'està cercant..."
+    },
+    "navigation": {
+      "home": "Inici",
+      "browse": {
+        "sectionTitle": "Explora",
+        "allLocations": "Tots els punts",
+        "byCountry": "Per país",
+        "avaitingReview": "Pendent de revisió",
+        "recentActivity": "Activitat recent",
+        "webApp": "Aplicació web per a mòbils",
+        "statistics": "Estadístiques",
+        "awaitingReviewImported": "Punts importats pendents d'aprovació",
+        "editqueue": "Edicions pendents d'aprovació"
+      },
+      "develop": {
+        "sectionTitle": "Desenvolupament",
+        "api": "API",
+        "htmlWidgets": "Ginys HTML",
+        "examples": "Exemples",
+        "getInvolved": "Participa-hi",
+        "code": "Consulta el codi (a GitHub)",
+        "translate": "Ajuda'ns a traduir"
+      },
+      "discuss": "Discuteix",
+      "about": {
+        "termsPrivacy": "Termes i privacitat",
+        "contact": "Contacte",
+        "guidance": "Guia per als col·laboradors"
+      },
+      "profile": {
+        "sectionTitle": "El meu perfil",
+        "subscriptions": "Les meves subscripcions",
+        "comments": "Els meus comentaris",
+        "uploads": "Les meves pujades"
+      }
+    },
+    "infoText": {
+      "getInvolved": {
+        "youCan": "Pots",
+        "browseLocations": "explorar punts de recàrrega prop de tu",
+        "commentsPhotos": "i afegir-hi els teus propis comentaris i fotos",
+        "dontSeePOI": "No veus cap punt de recàrrega que sàpigues que existeix?"
+      },
+      "getStations": {
+        "sectionTitle": "Obtén dades de punts de recàrrega",
+        "who": "Fabricants de vehicles, proveïdors de navegadors GPS, desenvolupadors d'aplicacions, propietaris de llocs web:",
+        "what": "Pots accedir als nostres punts de recàrrega més recents i descarregar-los mitjançant la nostra",
+        "websiteOperators": "Si gestiones un lloc web i vols incloure-hi un mapa de punts de recàrrega, pots",
+        "embedMap": "incrustar un mapa al teu propi lloc web"
+      },
+      "supplyData": {
+        "sectionTitle": "Operadors i proveïdors de dades",
+        "who": "Proveïdors d'EVSE, operadors de xarxes, registres nacionals, aplicacions i llocs web d'informació local sobre recàrrega:",
+        "needData": "Necessitem les teves dades.",
+        "what": "Ens pots proporcionar la informació més recent dels teus punts de recàrrega, tant si la teva organització n'és propietària, els opera o simplement els cataloga. Si us plau,",
+        "contactUs": "posa't en contacte amb nosaltres",
+        "getStarted": "per començar"
+      },
+      "stats": {
+        "locations": "Punts",
+        "locationSummary": "{totalStations} estacions de recàrrega en {totalLocations} punts."
+      },
+      "shortProjectSummary": "Open Charge Map és un servei no comercial i sense ànim de lucre allotjat i recolzat per una comunitat d'empreses, entitats benèfiques, desenvolupadors i parts interessades d'arreu del món.",
+      "getApp": "Obtén l'aplicació",
+      "tip": "Consell:",
+      "searching": {
+        "quickWay": "Si només necessites una manera ràpida de trobar el punt de recàrrega més proper, també pots provar la nostra",
+        "webApp": "aplicació web",
+        "searchAppStore": "especialment en dispositius mòbils. També pots cercar a la botiga d'aplicacions del teu dispositiu una versió que puguis portar a sobre."
+      },
+      "sponsors": "Busquem finançament i patrocinadors; creus que ens pots ajudar? {link:Descobreix-ne més}.",
+      "termsNotice": "En utilitzar els nostres serveis o enviar informació a Open Charge Map, acceptes els nostres {link:termes estàndard, política de privacitat i llicència}.",
+      "about": {
+        "ourService": "El nostre servei",
+        "aim": {
+          "title": "El nostre objectiu",
+          "p1": "El nostre objectiu és treballar amb la comunitat per desenvolupar i oferir una base de dades pública, gratuïta, oberta i d'alta qualitat de punts d'equipament de recàrrega a escala mundial.",
+          "p2": "La nostra meta és evitar la proliferació de mapes, llocs web i aplicacions de punts de recàrrega independents i contradictoris, i proporcionar (tant com sigui possible) un punt de referència únic i fiable per a la informació sobre la ubicació dels equips de recàrrega. En lloc de competir amb altres proveïdors de dades, el nostre objectiu és cooperar-hi i oferir-los serveis, a canvi d'esforços de compartició de dades i de deduplicació."
+        },
+        "whyOCM": {
+          "title": "Per què utilitzar Open Charge Map?",
+          "content": "En utilitzar Open Charge Map i les aplicacions relacionades, ajudes a millorar la informació del registre mitjançant la revisió per parells, les edicions, les addicions, els comentaris i les fotos, i donant a conèixer el servei a altres usuaris. L'avantatge d'OCM respecte d'altres proveïdors és que el propòsit d'OCM és compartir informació obertament, mentre que els proveïdors comercials han de mantenir la seva informació per a ells mateixos (o dins dels límits de la seva pròpia aplicació, etc.) per conservar un conjunt de dades comercialment comercialitzable."
+        },
+        "funding": {
+          "title": "Finançament",
+          "p1": "Open Charge Map el desenvolupen i l'operen voluntaris. Si pots oferir finançament per donar suport al projecte o per finançar una feina concreta, {link-contact:posa't en contacte}. Hi ha més informació sobre el finançament i els costos del projecte {link-funding:disponible}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Desenvolupadors i col·laboradors",
+          "p1": "El nostre {link_github:projecte de GitHub} ofereix un canal perquè els col·laboradors tècnics externs discuteixin i influeixin en el nostre sistema i els nostres plans. La nostra comunitat de {link_google_plus:Google+} és el nostre mitjà principal per intercanviar idees i recollir comentaris de les parts interessades.",
+          "p2": "Pots consultar les llistes dels nostres principals col·laboradors de {link_code:codi}, {link_translations:traduccions} i {link_data:dades}."
+        },
+        "projectStats": {
+          "sectionTitle": "Estadístiques del projecte",
+          "general": "Hi ha disponibles les estadístiques generals d'Open Charge Map {link:sobre dades i ús}."
+        },
+        "dataSources": {
+          "title": "Fonts de dades",
+          "p1": "Les dades que ofereix el sistema Open Charge Map i els serveis relacionats provenen de molts llocs i sovint les proporcionen directament («crowd sourced») els nostres usuaris i els de les aplicacions que utilitzen els nostres serveis.",
+          "p2": "El reconeixement i el nostre agraïment van a les següents fonts de dades principals incloses actualment a la nostra base de dades:"
+        }
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "Desconegut",
+        "value_10": "Actualment disponible (estat automàtic)",
+        "value_20": "Actualment en ús (estat automàtic)",
+        "value_30": "Temporalment no disponible",
+        "value_50": "Operatiu",
+        "value_75": "Parcialment operatiu (mixt)",
+        "value_100": "No operatiu",
+        "value_150": "Previst per a una data futura",
+        "value_200": "Eliminat (desmantellat)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_1": "(Operador desconegut)",
+        "value_44": "(Residència privada o individual)",
+        "value_45": "(Propietari del negoci en la ubicació)"
+      },
+      "usageType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "(desconegut)",
+        "value_1": "Públic",
+        "value_2": "Privat - accés restringit",
+        "value_3": "Privat - cal avís previ",
+        "value_4": "Públic - cal ser-ne membre",
+        "value_5": "Públic - pagament al lloc",
+        "value_6": "Privat - només per a personal, visitants o clients",
+        "value_7": "Públic - cal avís previ"
+      },
+      "connectionType": {
+        "value_minus1": "(cap seleccionat)",
+        "value_0": "(desconegut)"
+      },
+      "levelType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "(Desconegut)",
+        "value_1": "Nivell 1: baix (menys de 2kW)",
+        "value_2": "Nivell 2: mitjà (més de 2kW)",
+        "value_3": "Nivell 3: alt (més de 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "(desconegut)",
+        "value_10": "CA (monofàsic)",
+        "value_20": "CA (trifàsic)",
+        "value_30": "CC"
+      }
+    }
+  }
+}
