@@ -99,6 +99,22 @@ namespace OCM.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // The site used to be served from /site, keep those links working now that it runs from the root
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.StartsWithSegments("/site", out var remainingPath))
+                {
+                    // Collapse leading slashes so /site//example.com can't redirect to another host
+                    var path = "/" + remainingPath.ToUriComponent().TrimStart('/');
+                    var target = context.Request.PathBase.ToUriComponent() + path + context.Request.QueryString;
+
+                    context.Response.Redirect(target, permanent: true, preserveMethod: true);
+                    return;
+                }
+
+                await next();
+            });
+
             app.UseSession();
 
             app.UseStatusCodePagesWithRedirects("~/Home/Error?code={0}");

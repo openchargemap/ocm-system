@@ -330,7 +330,7 @@ OCM_CommonUI.prototype.formatPOIDetails = function (poi, fullDetailsMode) {
         }
     }
     var advancedInfo = "";
-    advancedInfo += this.formatTextField("<a target='_blank' href='https://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, false, "ocm.details.refNumber");
+    advancedInfo += this.formatTextField("<a target='_blank' href='https://openchargemap.org/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, false, "ocm.details.refNumber");
     if (poi.DataProvider != null) {
         advancedInfo += this.formatTextField(poi.DataProvider.Title, "Data Provider", false, false, "ocm.details.dataProviderTitle");
         if (poi.DataProvider.WebsiteURL != null) {

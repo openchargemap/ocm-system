@@ -75,7 +75,7 @@ namespace OCM.API.Web.Standard.Controllers
 
             if (poi != null)
             {
-                var content = $"<meta http-equiv='refresh' content = '0;url=https://openchargemap.org/site/poi/details/{poi.ID}' />";
+                var content = $"<meta http-equiv='refresh' content = '0;url=https://openchargemap.org/poi/details/{poi.ID}' />";
 
                 content += $"<meta property='og: title' content='{poi.AddressInfo.Title} - OCM-{poi.ID}'>";
 

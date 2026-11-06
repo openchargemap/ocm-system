@@ -46,7 +46,7 @@ var OCM;
             _this.mappingManager.setParentAppContext(_this);
             _this.appConfig.maxResults = 1000;
             _this.appConfig.baseURL = "https://openchargemap.org/app/";
-            _this.appConfig.loginProviderRedirectBaseURL = "https://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+            _this.appConfig.loginProviderRedirectBaseURL = "https://openchargemap.org/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
             _this.appConfig.loginProviderRedirectURL = _this.appConfig.loginProviderRedirectBaseURL + _this.appConfig.baseURL;
             _this.appConfig.newsHomeUrl = null;
             _this.apiClient.clientName = "ocm.app.webapp";
@@ -65,7 +65,7 @@ var OCM;
             _this.enableLogging = true;
             /*  if (this.appState.appMode === OCM.AppMode.LOCALDEV) {
                   this.appConfig.baseURL = "http://localhost:81/app";
-                  this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+                  this.appConfig.loginProviderRedirectBaseURL = "http://localhost:81/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
                   this.apiClient.serviceBaseURL = "http://localhost:8080/v2";
                   this.apiClient.serviceBaseURL_Standard = "http://localhost:8080/v2";
                   //this.apiClient.serviceBaseURL = "http://localhost:81/api/v2";

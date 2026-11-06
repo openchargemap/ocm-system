@@ -501,7 +501,7 @@ namespace OCM.API.Common
         {
             int maxItemsShown = 20;
             var summaryHTML = "";
-            string siteUrl = "https://openchargemap.org/site";
+            string siteUrl = "https://openchargemap.org";
             string poiLinkText = "View POI Details";
 
             if (subscriptionResults.SubscriptionMatches == null || subscriptionResults.SubscriptionMatches.Count == 0)
@@ -641,7 +641,7 @@ namespace OCM.API.Common
 
         private string FormatPOIHeading(ChargePoint poi)
         {
-            string siteUrl = "https://openchargemap.org/site";
+            string siteUrl = "https://openchargemap.org";
             var html = "<h3><a href='" + siteUrl + "/poi/details/" + poi.ID + "'>OCM-" + poi.ID + ": " + poi.AddressInfo.Title + " : " + poi.AddressInfo.ToString().Replace(",", ", ") + "</a></h3>";
             return html;
         }
@@ -675,7 +675,7 @@ namespace OCM.API.Common
                         msgParams.Add("SubscriptionTitle", subscriptionMatch.Subscription.Title);
 
                         msgParams.Add("UserName", userDetails.Username);
-                        msgParams.Add("SubscriptionEditURL", "https://openchargemap.org/site/profile/subscriptionedit?id=" + subscriptionMatch.Subscription.ID);
+                        msgParams.Add("SubscriptionEditURL", "https://openchargemap.org/profile/subscriptionedit?id=" + subscriptionMatch.Subscription.ID);
 
                         if (!String.IsNullOrEmpty(userDetails.EmailAddress))
                         {

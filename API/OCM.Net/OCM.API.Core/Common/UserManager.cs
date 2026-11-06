@@ -106,7 +106,7 @@ namespace OCM.API.Common
             {
                 //update session token and send as verification token
                 AssignNewSessionToken(user.Id);
-                string resetConfirmationURL = "https://openchargemap.org/site/loginprovider/confirmpasswordreset?token=" + System.Web.HttpUtility.UrlEncode(user.CurrentSessionToken) + "&email=" + System.Web.HttpUtility.UrlEncode(email.ToLower());
+                string resetConfirmationURL = "https://openchargemap.org/loginprovider/confirmpasswordreset?token=" + System.Web.HttpUtility.UrlEncode(user.CurrentSessionToken) + "&email=" + System.Web.HttpUtility.UrlEncode(email.ToLower());
                 //send notification
 
                 var msgParams = new Hashtable();

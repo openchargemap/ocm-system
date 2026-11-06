@@ -189,6 +189,13 @@ namespace OCM.MVC.Controllers
             return regex.IsMatch(text);
         }
 
+        // GET: /POI/OCM-5
+        [Route("poi/ocm-{id:int:min(1)}")]
+        public ActionResult Reference(int id)
+        {
+            return RedirectToActionPermanent("Details", new { id });
+        }
+
         // GET: /POI/Details/5
 
         //[OutputCache(Duration=240, VaryByParam="id")]

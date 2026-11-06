@@ -290,7 +290,7 @@ var LocationEditor = /** @class */ (function () {
         }
         for (var i = 0; i < poiList.length; i++) {
             var poi = poiList[i];
-            var url = "https://openchargemap.org/site/poi/details/" + poi.ID;
+            var url = "https://openchargemap.org/poi/details/" + poi.ID;
             if (poi.ID === poiId) {
                 output += "<li>OCM-" + poi.ID + " : " + poi.AddressInfo.Title + " <span class='badge text-bg-info'>Being Edited</span></li>";
             }
